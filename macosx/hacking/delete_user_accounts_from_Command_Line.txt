@@ -1,0 +1,16 @@
+OSX 10.5: How to delete user accounts from Command Line....
+
+I ran into this problem a little while back and thought I should document it. It's kinda similar to the "How to get Admin rights in OSX Leopard using single user mode..." document from earlier this year. Here is the procedure:
+
+   1. Boot into single user mode. Hold Command-s at startup.
+   2. Check the filesystem: /sbin/fsck -fy
+   3. If no remaining errors, mount the filesystem: /sbin/mount -uw /
+   4. Start up directory services:launchctl load /System/Library/LaunchDaemons/com.apple.DirectoryServices.plistNote that single user mode said to use com.apple.DirectoryServicesLocal.plist, but that didn't work -- this did.
+   5. Find what groups the user belongs to: dscl . -list /groups GroupMembership | grep username -- repeat for each group except for the user's own group.
+   6. Remove the group corresponding to the username: dscl . delete /groups/username (this may not be necessary -- you may get an error that the group doesn't exist; you can ignore it and go on).
+   7. Remove the user account: dscl . delete /users/username
+   8. At this point, you may wish to remove or archive the user folder in /Users.
+   9. You may wish to remove the .AppleSetupDone file in /var/db to cause the Setup Assistant to run when next booted.
+  10. All done? Type reboot to reboot the system or shutdown -h now to shut down the system.
+
+Nice and squeaky clean..... 

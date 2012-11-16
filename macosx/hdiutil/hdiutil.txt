@@ -1,0 +1,48 @@
+hdiutil
+
+
+Creating Internet-enabled Disk images
+
+hdiutil internet-enable -yes /Path/to/image/myapp.dmg
+
+
+burn an iso
+
+hdiutil burn image.iso
+
+
+
+hdiutil create -fs HFS+ -volname Backup -size 100m ~/Desktop/backup.dmg
+hdiutil mount ~/Desktop/backup.dmg
+ditto -rsrc -V ~/Desktop/datatobackup /Volumes/Backup >> /Volumes/Backup/backup.log
+hdiutil unmount /Volumes/Backup
+hdiutil burn ~/Desktop/backup.dmg -noverifyburn -noeject
+
+
+hdiutil attach ./file.dmg
+
+hdiutil detach ./file.dmg
+
+
+Assuming your new image is called ~/Desktop/Master.cdr (the file is on your desktop and called Master.cdr) type:
+
+hdiutil makehybrid -iso -joliet -o Master.iso Master.cdr
+
+
+
+
+# Create an initial disk image (32 megs)
+hdiutil create -size 32m -fs HFS+ -volname "My Volume" myimg.dmg
+ 
+# Mount the disk image
+hdiutil attach myimg.dmg
+ 
+# Obtain device information
+DEVS=$(hdiutil attach myimg.dmg | cut -f 1)
+DEV=$(echo $DEVS | cut -f 1 -d ' ')
+ 
+# Unmount the disk image
+hdiutil detach $DEV
+ 
+# Convert the disk image to read-only
+hdiutil convert myimg.dmg -format UDZO -o myoutputimg.dmg

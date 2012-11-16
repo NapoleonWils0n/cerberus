@@ -1,0 +1,1 @@
+sudo bless -folder /Volumes/Igor\ 1/System/Library/CoreServices

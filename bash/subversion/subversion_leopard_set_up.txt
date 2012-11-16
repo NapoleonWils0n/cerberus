@@ -1,0 +1,27 @@
+subversion leopard set up
+
+create users and password
+
+this command will create the password user file - used when setting up for first time
+
+sudo htpasswd -cm /etc/apache2/.htpasswd-user username
+
+
+to add a new user
+
+omit the c flag which create the file
+
+sudo htpasswd -m /etc/apache2/.htpasswd-user username
+
+enter the admin password then you enter the password for the new user
+
+1 - password - enter admin password
+
+2 - password - enter password for the svn user you just created
+
+3 - re type password - enter password for the svn user you just created to confirm
+
+
+you should now be able to check out using the username and password you just created
+
+

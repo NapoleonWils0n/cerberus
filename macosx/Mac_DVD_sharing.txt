@@ -1,0 +1,50 @@
+Mac DVD/CD Sharing 
+
+/*========================================================================================*/
+
+On the Mac with the working DVD drive you want to share
+
+Go to System Preferences » Sharing, and enable 'DVD or CD Sharing.' 
+
+If you have your Firewall on it will say DVD sharing blocked by Firewall
+You can ignore this it is an error and DVD sharing will work with the Apple Firewall turned on
+
+/*========================================================================================*/
+
+Then, on the computer that does not have the CD drive on it, go to a Terminal window and enter:
+
+defaults write com.apple.NetworkBrowser EnableODiskBrowsing -bool true
+defaults write com.apple.NetworkBrowser ODSSupported -bool true
+
+Then option click on the Finder icon in the dock and select relaunch Finder
+
+/*========================================================================================*/
+
+After the Finder has relaunched you will now see an icon called Remote Disc in the Finder sidebar
+
+When you click the Remote Disc icon it comes up with the name of the Mac that is sharing its DVD drive
+
+Then you click a button that says Ask to use DVD drive
+
+/*========================================================================================*/
+
+
+You need to switch back to the Mac that is sharing its DVD drive
+
+You get a an alert message on the screen saying this account on this Mac has requested to use your DVD drive
+
+Click Accept
+
+
+Now insert the DVD or CD you want to share to your other Mac that doesnt have a working DVD drive
+
+/*========================================================================================*/
+
+Switch back to the Mac with the DVD drive that is not working
+
+Click the Remote Disc icon in the Finder Sidebar and select the Mac that is sharing its DVD drive
+
+You will now see the disc you inserted into the Mac which is sharing its DVD drive
+
+
+You can now use that disc like you would normally

@@ -1,0 +1,21 @@
+creating an encrypted disk image on leopard
+
+
+1 - open disk utility
+
+2 - new blank disk image
+
+
+3 - saves as - fill in name
+
+4 - volumne name - fill in name - can be a different name than save as
+
+5 - set the volume size - eg 1 gig
+
+6 - volume format - should be set to Mac OS Extended ( journaled )
+
+7 - Encryption - set to 256 AES encryption
+
+8 - partitions - set to - Single Partition - Apple Partition map
+
+9 - Image format - set to - sparse bundle disk image

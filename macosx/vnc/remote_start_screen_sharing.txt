@@ -1,0 +1,23 @@
+ ===============================
+ = remote start screen sharing =
+ ===============================
+
+
+10.5 Leopard
+
+cd /Library/Preferences
+echo -n enabled > com.apple.ScreenSharing.launchd
+
+
+
+10.6 Snow Leopard
+
+cd /private/etc/
+echo -n enabled > /private/etc/ScreenSharing.launchd
+
+
+
+
+# Remote ssh tunnel for vnc
+
+ssh -f -q -L 5900:localhost:5900 192.168.1.9 sleep 10 && open vnc://127.0.0.1

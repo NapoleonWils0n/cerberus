@@ -1,0 +1,11 @@
+unzip -o /path/to/YourApp.ipa -d /path/to
+
+codesign -dvvv /path/to/thepp.app
+
+open the payload folder drag the file.app into iTunes to create an .ipa file
+
+xcrun -sdk iphoneos PackageApplication \
+    "path/to/build/MyApp.app" \
+    -o "output/path/to/MyApp.ipa" \
+    --sign "iPhone Distribution: My Company" \
+    --embed "path/to/something.mobileprovision"

@@ -1,0 +1,71 @@
+
+
+googlecl command line tool 
+
+usage
+
+
+/***********************************************************************************************/
+
+download as word format to the current dir
+
+
+google docs get "google neo.doc" --format doc
+
+
+/***********************************************************************************************/
+
+download all files
+
+
+google docs get ".*" . --format doc
+
+google docs get ".*" .
+
+will download all files using the format specified in the config file
+
+
+google docs get ".*" . --format pdf
+
+
+first ".*" is a wild card to download all files
+
+second dot specifies the current working directory
+
+
+/***********************************************************************************************/
+
+download a folder
+
+google docs get ".*" --folder "Development" --dest "Development" --format doc 
+
+google docs get ".*" --folder "Development" --dest "Development" 
+
+/***********************************************************************************************/
+
+
+upload folder full of files
+
+eg
+
+you have a folder called up with word documents 
+
+you can upload all the files and the folder to google docs
+
+this will create a folder called up on google docs with all the files in it
+
+
+google docs upload up/
+
+
+
+google docs upload test.doc --folder Development
+
+
+/***********************************************************************************************/
+
+edit files
+
+
+google docs edit out --editor nano
+

@@ -1,0 +1,14 @@
+NSLog(@"Starting log...");
+NSTask *task = [[[NSTask alloc]init]autorelease];
+NSPipe *pipe = [NSPipe pipe];
+
+[task setLaunchPath:@"/bin/sh"];
+[task setArguments:args];
+[task setEnvironment:env];
+[task setStandardOutput:pipe];
+//The magic line that keeps your log where it belongs
+[task setStandardInput:[NSPipe pipe]];
+NSLog(@"Log is setup here. Preparing to launch...");
+...
+[task launch];
+NSLog(@"I usually am not in Xcode's console, but I am now!");

@@ -1,0 +1,1556 @@
+ ==================
+ = Google Hacking =
+ ==================
+
+Google hacking tips
+  
+======================================================================================================
+= Boolean Operators and Special Characters
+======================================================================================================
+ 
+* 
+Google’s wildcard, the asterisk (*), represents nothing more than a single word in a search phrase. 
+
++
+The plus symbol (+) forces the inclusion of the word that follows it.There should be no space following the plus symbol.
+
+-
+Another common Boolean operator is NOT.
+The best way to use this oper- ator is to preface a search word with the minus sign (–).
+
+|
+The OR operator, represented by the pipe symbol ( | )
+
+intext:(password | passcode) intext:(username | userid | user) filetype:csv
+
+
+======================================================================================================
+= Google URLs
+======================================================================================================
+
+How google urls are constructed
+
+
+======================================================================================================
+Variable            Value                             Description
+======================================================================================================
+
+q or as_q           The search query                  The search query.
+
+as_eq               A search term                     These terms will be excluded from the search.
+
+start               0 to the max number of hits       Used to display pages of results. 
+
+num maxResults      1 to 100                          The number of results per page (max 100).
+
+filter              0 or 1                            If filter is set to 0, show potentially duplicate results
+
+restrict            restrict code                     Restrict results to a specific country.
+
+hl                  language code                     This parameter describes the language
+
+lr                  language code                     Only display pages written in this language.
+
+ie                  UTF-8                             The input encoding of Web searches.
+
+oe                  UTF-8                             The output encoding of Web searches.
+
+as_epq              a search phrase                   The value is submitted as an exact phrase.
+
+as_ft               i = include file type             Include or exclude the file type
+                    e = exclude file type 
+                    
+as_filetype         a file extension                  Include or exclude this file type
+
+as_qdr              all - all results                 Locate pages updated within the specified timeframe.
+                    m3 = 3 months
+                    m6 = 6 months
+                    y = past year
+                    
+as_nlo              low number                        Find numbers between as_nlo and as_nhi.
+
+as_nhi              high number                       Find numbers between as_nlo and as_nhi.
+
+as_oq               a list of words                   Find at least one of these words.
+
+as_occt             any = anywhere                    Find search term in a specific location.
+                    title = title of page
+                    body = text of page
+                    url = in the page URL
+                    links = in links to the page
+                    
+as_dt               i = only include site or domain   Include or exclude searches from the domain
+                                                      specified by as_sitesearch.
+                    e = exclude site or domain
+        
+                    
+as_sitesearch       domain or site                    Include or exclude this domain or site 
+                                                      as specified by as_dt.
+                                                      
+                                                      
+safe                active = enable SafeSearch        Enable or disable SafeSearch.
+                    images = disable
+                    SafeSearch
+                    
+as_rq               URL                               Locate pages similar to this URL.
+
+as_lq               URL                               Locate pages that link to this URL.
+
+rights              cc_*                              Locate pages with specific usage rights  
+
+
+
+======================================================================================================
+= Language Restrict Codes
+======================================================================================================
+
+Some parameters accept a language restrict (lr) code as a value.The lr value instructs Google to only return pages written in a specific language. 
+
+======================================================================================================
+lr Language code          Language
+======================================================================================================
+
+lang_ar ................. Arabic 
+lang_hy ................. Armenian
+lang_bg ................. Bulgarian
+lang_ca ................. Catalan              
+lang_zh-CN .............. Chinese (Simplified)                
+lang_zh-TW .............. Chinese (Traditional)                   
+lang_hr ................. Croatian
+lang_cs ................. Czech
+lang_da ................. Danish
+lang_nl ................. Dutch
+lang_en ................. English
+lang_eo ................. Esperanto
+lang_et ................. Estonian
+lang_fi ................. Finnish
+lang_fr ................. French
+lang_de ................. German
+lang_el ................. Greek
+lang_iw ................. Hebrew
+lang_hu ................. Hungarian
+lang_is ................. Icelandic
+lang_id ................. Indonesian
+lang_it ................. Italian
+lang_ja ................. Japanese
+lang_ko ................. Korean
+lang_lv ................. Latvian
+lang_lt ................. Lithuanian
+lang_no ................. Norwegian
+lang_fa ................. Persian
+lang_pl ................. Polish
+lang_pt ................. Portuguese
+lang_ro ................. Romanian
+lang_ru ................. Russian
+lang_sr ................. Serbian
+lang_sk ................. Slovak
+lang_sl ................. Slovenian
+lang_es ................. Spanish
+lang_sv ................. Swedish
+lang_th ................. Thai
+lang_tr ................. Turkish
+lang_uk ................. Ukrainian
+lang_vi ................. Vietnamese
+
+  
+======================================================================================================
+= Advanced operators
+======================================================================================================
+
+intitle, allintitle 
+inurl, allinurl 
+filetype 
+allintext
+site 
+link 
+inanchor 
+daterange 
+cache 
+info 
+related 
+phonebook 
+rphonebook 
+bphonebook 
+author 
+group 
+msgid 
+insubject 
+stocks 
+define
+
+intitle:Google
+intitle:“index of”
+intitle:“index of” private
+intitle:“index of”“backup files”
+
+======================================================================================================
+= Find proxy servers
+======================================================================================================
+
+It’s a good idea to use a proxy server if you value your anonymity online. Penetration testers use proxy servers to emulate what a real attacker would do during an actual break-in attempt.
+
+
+inurl:"nph-proxy.cgi" "Start browsing"
+
+"cacheserverreport for" "This analysis was produced by calamaris"
+
+======================================================================================================
+= Directory listing
+======================================================================================================
+
+intitle:index.of
+intitle:index.of.admin
+intitle:index.of inurl:admin
+intitle:index.of ws_ftp.log
+
+======================================================================================================
+= Directory Listing of Web Servers
+======================================================================================================
+
+“AnWeb/1.42h” intitle:index.of
+“Apache Tomcat/” intitle:index.of
+“Apache-AdvancedExtranetServer/” intitle:index.of
+“Apache/df-exts” intitle:index.of
+“Apache/” intitle:index.of
+“Apache/AmEuro” intitle:index.of
+“Apache/Blast” intitle:index.of
+“Apache/WWW” intitle:index.of
+“Apache/df-exts” intitle:index.of
+“CERN httpd 3.0B (VAX VMS)” intitle:index.of
+“CompySings/2.0.40” intitle:index.of
+“Davepache/2.02.003 (Unix)” intitle:index.of
+“DinaHTTPd Server/1.15” intitle:index.of
+“HP Apache-based Web “Server/1.3.26” intitle:index.of
+“HP Apache-based Web “Server/1.3.27 (Unix) mod_ssl/2.8.11 OpenSSL/0.9.6g” intitle:index.of
+“HP-UX_Apache-based_Web_Server/2.0.43” intitle:index.of
+“httpd+ssl/kttd” * server at intitle:index.of
+“IBM_HTTP_Server” intitle:index.of
+“IBM_HTTP_Server/2.0.42” intitle:index.of
+“JRun Web Server” intitle:index.of
+“LiteSpeed Web” intitle:index.of
+“MCWeb” intitle:index.of
+“MaXX/3.1” intitle:index.of
+“Microsoft-IIS/* server at” intitle:index.of
+“Microsoft-IIS/4.0” intitle:index.of
+“Microsoft-IIS/5.0 server at” intitle:index.of
+“Microsoft-IIS/6.0” intitle:index.of
+“OmniHTTPd/2.10” intitle:index.of 
+“OpenSA/1.0.4” intitle:index.of 
+“OpenSSL/0.9.7d” intitle:index.of
+“Oracle HTTP Server/1.3.22” intitle:index.of 
+“Oracle-HTTP-Server/1.3.28” intitle:index.of 
+“Oracle-HTTP-Server” intitle:index.of
+“Oracle HTTP Server Powered by Apache” intitle:index.of 
+“Patchy/1.3.31” intitle:index.of
+“Red Hat Secure/2.0” intitle:index.of
+“Red Hat Secure/3.0 server at” intitle:index.of 
+“Savant/3.1” intitle:index.of
+“SEDWebserver *” “server at” intitle:index.of
+“SEDWebserver/1.3.26” intitle:index.of
+“TcNet httpsrv 1.0.10” intitle:index.of
+“WebServer/1.3.26” intitle:index.of
+“WebTopia/2.1.1a “ intitle:index.of
+“Yaws 1.65” intitle:index.of
+“Zeus/4.3” intitle:index.of
+
+
+======================================================================================================
+= Queries That Locate Apache Versions Through Directory Listings
+======================================================================================================
+
+“Apache/1.0” intitle:index.of 
+“Apache/1.1” intitle:index.of 
+“Apache/1.2” intitle:index.of 
+“Apache/1.2.0 server at” intitle:index.of 
+“Apache/1.2.4 server at” intitle:index.of 
+“Apache/1.2.6 server at” intitle:index.of 
+“Apache/1.3.0 server at” intitle:index.of 
+“Apache/1.3.2 server at” intitle:index.of 
+“Apache/1.3.1 server at” intitle:index.of 
+“Apache/1.3.1.1 server at” intitle:index.of
+“Apache/1.3.3 server at” intitle:index.of 
+“Apache/1.3.4 server at” intitle:index.of 
+“Apache/1.3.6 server at” intitle:index.of 
+“Apache/1.3.9 server at” intitle:index.of 
+“Apache/1.3.11 server at” intitle:index.of 
+“Apache/1.3.12 server at” intitle:index.of 
+“Apache/1.3.14 server at” intitle:index.of 
+“Apache/1.3.17 server at” intitle:index.of 
+“Apache/1.3.19 server at” intitle:index.of 
+“Apache/1.3.20 server at” intitle:index.of 
+“Apache/1.3.22 server at” intitle:index.of 
+“Apache/1.3.23 server at” intitle:index.of 
+“Apache/1.3.24 server at” intitle:index.of 
+“Apache/1.3.26 server at” intitle:index.of 
+“Apache/1.3.27 server at” intitle:index.of 
+“Apache/1.3.27-fil” intitle:index.of 
+“Apache/1.3.28 server at” intitle:index.of 
+“Apache/1.3.29 server at” intitle:index.of
+“Apache/1.3.31 server at” intitle:index.of 
+“Apache/1.3.33 server at” intitle:index.of 
+“Apache/1.3.34 server at” intitle:index.of 
+“Apache/1.3.35 server at” intitle:index.of 
+“Apache/2.0 server at” intitle:index.of 
+“Apache/2.0.32 server at” intitle:index.of 
+“Apache/2.0.35 server at” intitle:index.of 
+“Apache/2.0.36 server at” intitle:index.of 
+“Apache/2.0.39 server at” intitle:index.of 
+“Apache/2.0.40 server at” intitle:index.of 
+“Apache/2.0.42 server at” intitle:index.of 
+“Apache/2.0.43 server at” intitle:index.of 
+“Apache/2.0.44 server at” intitle:index.of 
+“Apache/2.0.45 server at” intitle:index.of
+“Apache/2.0.46 server at” intitle:index.of 
+“Apache/2.0.47 server at” intitle:index.of 
+“Apache/2.0.48 server at” intitle:index.of 
+“Apache/2.0.49 server at” intitle:index.of 
+“Apache/2.0.49a server at” intitle:index.of 
+“Apache/2.0.50 server at” intitle:index.of 
+“Apache/2.0.51 server at” intitle:index.of 
+“Apache/2.0.52 server at” intitle:index.of 
+“Apache/2.0.55 server at” intitle:index.of 
+“Apache/2.0.59 server at” intitle:index.of
+
+
+======================================================================================================
+= Queries That Locate Specific and Esoteric Server Versions
+======================================================================================================
+
+“Apache/1.3.12 (Unix) mod_fastcgi/2.2.12 mod_dyntag/1.0 mod_advert/1.12 mod_czech/3.1.1b2” intitle:index.of
+“Apache/1.3.12 (Unix) mod_fastcgi/2.2.4 secured_by_Raven/1.5.0” intitle:index.of
+“Apache/1.3.12 (Unix) mod_ssl/2.6.6 OpenSSL/0.9.5a” intitle:index.of
+
+“Apache/1.3.12 Cobalt (Unix) Resin/2.0.5 StoreSense-Bridge/1.3 ApacheJServ/1.1.1 mod_ssl/2.6.4 OpenSSL/0.9.5a mod_auth_pam/1.0a FrontPage/4.0.4.3 mod_perl/1.24” intitle:index.of
+
+“Apache/1.3.14 - PHP4.02 - Iprotect 1.6 CWIE (Unix) mod_fastcgi/2.2.12 PHP/4.0.3pl1” intitle:index.of
+
+“Apache/1.3.14 Ben-SSL/1.41 (Unix) mod_throttle/2.11 mod_perl/1.24_01 PHP/4.0.3pl1 FrontPage/4.0.4.3 rus/PL30.0” intitle:index.of
+
+“Apache/1.3.20 (Win32)” intitle:index.of
+“Apache/1.3.20 Sun Cobalt (Unix) PHP/4.0.3pl1 mod_auth_pam_external/0.1 FrontPage/4.0.4.3 mod_perl/1.25” intitle:index.of
+“Apache/1.3.20 Sun Cobalt (Unix) PHP/4.0.3pl1 mod_auth_pam_external/0.1 FrontPage/4.0.4.3 mod_perl/1.25” intitle:index.of
+“Apache/1.3.20 Sun Cobalt (Unix) PHP/4.0.6 mod_ssl/2.8.4 OpenSSL/0.9.6 FrontPage/5.0.2.2510 mod_perl/1.26” intitle:index.of
+“Apache/1.3.20 Sun Cobalt (Unix) mod_ssl/2.8.4 OpenSSL/0.9.6b PHP/4.0.3pl1 mod_auth_pam_external/0.1 FrontPage/4.0.4.3 mod_perl/1.25” intitle:index.of
+
+“Apache/1.3.20 Sun Cobalt (Unix) mod_ssl/2.8.4 OpenSSL/0.9.6b PHP/4.0.3pl1 mod_fastcgi/2.2.8 mod_auth_pam_external/0.1 mod_perl/1.25” intitle:index.of
+
+“Apache/1.3.20 Sun Cobalt (Unix) mod_ssl/2.8.4 OpenSSL/0.9.6b PHP/4.0.4 mod_auth_pam_external/0.1 mod_perl/1.25” intitle:index.of
+
+“Apache/1.3.20 Sun Cobalt (Unix) mod_ssl/2.8.4 OpenSSL/0.9.6b PHP/4.0.6 mod_auth_pam_external/0.1 FrontPage/4.0.4.3 mod_perl/1.25” intitle:index.of
+
+“Apache/1.3.20 Sun Cobalt (Unix) mod_ssl/2.8.4 OpenSSL/0.9.6b mod_auth_pam_external/0.1 mod_perl/1.25” intitle:index.of
+
+“Apache/1.3.26 (Unix) Debian GNU/Linux PHP/4.1.2 mod_dtcl” intitle:index.of
+“Apache/1.3.26 (Unix) PHP/4.2.2” intitle:index.of
+“Apache/1.3.26 (Unix) mod_ssl/2.8.9 OpenSSL/0.9.6b” intitle:index.of
+“Apache/1.3.26 (Unix) mod_ssl/2.8.9 OpenSSL/0.9.7” intitle:index.of
+“Apache/1.3.26+PH” intitle:index.of
+“Apache/1.3.27 (Darwin)” intitle:index.of
+
+“Apache/1.3.27 (Unix) mod_log_bytes/1.2 mod_bwlimited/1.0 PHP/4.3.1 FrontPage/5.0.2.2510 mod_ssl/2.8.12 OpenSSL/0.9.6b” intitle:index.of
+
+“Apache/1.3.27 (Unix) mod_ssl/2.8.11 OpenSSL/0.9.6g FrontPage/5.0.2.2510 mod_gzip/1.3.26 PHP/4.1.2 mod_throttle/3.1.2” intitle:index.of
+
+======================================================================================================
+= Cache 
+======================================================================================================
+
+Ninja stealth mode
+
+&strip=1
+ 
+append &strip=1 to the end of the url for the text only version
+which doesnt make an http connection to the target site
+
+
+http://webcache.googleusercontent.com/search?q=cache:slashdot.com&hl=en&strip=1
+
+
+======================================================================================================
+= Configuration Files 
+======================================================================================================
+
+Search for Configuration Files 
+
+
+======================================================================================================
+Description                                             Query
+======================================================================================================
+
+PHP configuration file ................................ intitle:index.of config.php
+PHP configuration file ................................ inurl:config.php dbuname dbpass
+CGIIRC configuration file ............................. intitle:index.of cgiirc.config
+CGIIRG configuration file ............................. inurl:cgiirc.config
+IPSEC configuration file .............................. inurl:ipsec.conf -intitle:manpage
+ws_ftp configuration file ............................. intitle:index.of ws_ftp.ini
+eggdrop configuration file ............................ eggdrop filetype:user user
+samba configuration file filetype:conf ................ inurl:”smb.conf” intext:”workgroup”
+firewall configuration file ........................... filetype:conf inurl:firewall -intitle:cvs 
+vtunnelD configuration file ........................... inurl:vtund.conf intext:pass -cvs
+OpenLDAP configuration file ........................... filetype:conf slapd.conf
+PHP configuration file ................................ inurl:php.ini filetype:ini
+FTP configuration file ................................ filetype:conf inurl:proftpd.conf -sample 
+WV Dial configuration file ............................ inurl:”wvdial.conf” intext:”password”
+
+OpenLDAP configuration file ........................... inurl:”slapd.conf” intext:”credentials” - manpage -”Manual Page” -man: - sample
+
+OpenLDAP configuration file ........................... inurl:”slapd.conf” intext:”rootpw” - manpage -”Manual Page” -man: - sample
+
+WS_FTP configuration file ............................. filetype:ini ws_ftp pwd
+MRTG configuration file ............................... filetype:cfg mrtg “target[*]” -sample - cvs -example
+WRQ Reflection configuration file ..................... filetype:r2w r2w
+Prestige router configuration file .................... “Welcome to the Prestige Web-Based Configurator”
+
+GNU Zebra configuration file .......................... inurl:zebra.conf intext:password -sample -test -tutorial -download
+
+GNU Zebra configuration file .......................... inurl:ospfd.conf intext:password -sample -test -tutorial -download
+
+YAST configuration file ............................... filetype:cfg ks intext:rootpw -sample - test -howto
+Netscape server configuration file .................... allinurl:”.nsconfig” -sample -howto - tutorial
+UnrealIRCd configuration file ......................... filetype:conf inurl:unrealircd.conf -cvs - gentoo
+psyBNC configuration file ............................. filetype:conf inurl:psybnc.conf “USER.PASS=”
+SSL configuration file ................................ inurl:ssl.conf filetype:conf
+
+LILO configuration file ............................... inurl:lilo.conf filetype:conf password - tatercounter2000 -bootpwd -man
+
+MySQL configuration file .............................. filetype:cnf my.cnf -cvs -example
+oracle client configuration file ...................... filetype:ora ora
+Mandrake configuration file ........................... filetype:cfg auto_inst.cfg
+Oekakibss configuration file .......................... filetype:conf oekakibbs
+LeapFTP client configuration file ..................... LeapFTP intitle:”index.of./” sites.ini modified
+a .Net Web Application configuration file ............. filetype:config config intext:appSettings “User ID”
+WS_FTP configuration file ............................. “index of/” “ws_ftp.ini” “parent directory”
+ODBC client configuration files ....................... inurl:odbc.ini ext:ini -cvs
+FlashFXP configuration file ........................... filetype:ini inurl:flashFXP.ini
+Generic configuration file ............................ ext:ini intext:env.ini
+Certificate Services configuration file ............... filetype:inf inurl:capolicy.inf
+NoCatAuth configuration file .......................... ext:conf NoCatAuth -cvs
+
+Putty saved session data .............................. inurl:”putty.reg”
+Icecast configuration file ............................ “liveice configuration file” ext:cfg - site:sourceforge.net
+SoftCart configuration file ........................... intitle:Configuration.File inurl:softcart.exe
+Cisco configuration data .............................. intext:”enable secret 5 $”
+IIS Web.config file ................................... filetype:config web.config -CVS
+VMWare configuration files ............................ ext:vmx vmx
+Radiator Radius configuration file .................... ext:cfg radius.cfg
+Rsync configuration file .............................. ext:conf inurl:rsyncd.conf -cvs -man
+Eudora configuration file ............................. ext:ini eudora.ini
+emule configuration file .............................. inurl:preferences.ini “[emule]”
+abyss webserver configuration file .................... intitle:index.of abyss.conf
+Frontpage Extensions for Unix configuration file....... filetype:cnf inurl:_vti_pvt access.cnf
+Shoutcast configuration file .......................... intitle:”Index of” sc_serv.conf sc_serv content
+HP Ethernet switch configuration file ................. intitle:”DEFAULT_CONFIG - HP”
+Oracle configuration files ............................ filetype:ora tnsnames
+Counterstrike configuration file ...................... inurl:server.cfg rcon password
+
+Steam configuration file .............................. intext:”SteamUserPassphrase=” intext:”SteamAppUser=” -”username” - ”user”
+
+CGI Calendar configuration file ....................... inurl:cgi-bin inurl:calendar.cfg
+Cisco configuration file .............................. intext:”enable password 7”
+YABB Forum administration file ........................ inurl:/yabb/Members/Admin.dat
+FlashFXP site data file ............................... inurl:”Sites.dat”+”PASS=”
+Ruby on Rails database connector file ................. ext:yml database inurl:config
+
+Cisco configuration file .............................. enable password | secret “current con- figuration” -intext:the
+
+Generic configuration file ............................ intitle:index.of.config
+
+
+======================================================================================================
+= Log Files 
+======================================================================================================
+
+the simplest base search for log files simply filetype:log inurl:log 
+or the even simpler ext:log log
+
+
+======================================================================================================
+Query                                                    Description
+======================================================================================================
+
+“ZoneAlarm Logging Client” ............................. ZoneAlarm log files
+“admin account info” filetype:log ...................... Admin logs
+“apricot - admin” 00h .................................. Apricot logs
+
+“by Reimar Hoven. All Rights 
+Reserved. Disclaimer” | inurl: 
+”log/logdb.dta” ........................................ PHP Web Statistik logs
+
+“generated by wwwstat” ................................. www statistics
+“Index of” / “chat/logs” ............................... Chat logs
+
+“MacHTTP” filetype:log inurl:machttp.log ............... MacHTTP
+
+“Most Submitted Forms and Scripts” “this section” ...... www statistics
+“sets mode: +k” ........................................ IRC logs, channel key set
+“sets mode: +p” ........................................ IRC chat logs
+“sets mode: +s” ........................................ IRC logs, secret channel set
+
+“The statistics were last updated” 
+“Daily”-microsoft.com .................................. Network activity logs
+
+“This report was generated by WebLog” .................. weblog-generated statistics
+“your password is” filetype:log ........................ Password logs
+
+QueryProgram “ZoneAlarm Logging Client” ................ ZoneAlarm log files
++htpasswd WS_FTP.LOG filetype:log ...................... WS_FTP client log files
+
++intext:”webalizer” +intext:
+”Total Usernames” +intext:”Usage Statistics for” ....... Webalizer statistics
+
+ext:log “Software: 
+Microsoft Internet Information Services *.*” ........... IIS server log files
+
+ext:log password END_FILE .............................. Java password files
+filetype:cfg login “LoginServer=” ...................... Ultima Online log files
+
+filetype:log “PHP Parse error” | “PHP Warning” | “ ..... PHP error logs
+
+filetype:log “See `ipsec —copyright” ................... BARF log files
+filetype:log access.log –CVS ........................... HTTPD server access logs
+filetype:log cron.log .................................. UNIX cron logs
+filetype:log hijackthis “scan saved” ................... Hijackthis scan log
+filetype:log inurl:”password.log” ...................... Password logs
+
+filetype:log inurl:access.log TCP_HIT .................. Squid access log
+filetype:log inurl:cache.log ........................... Squid cache log
+filetype:log inurl:store.log RELEASE ................... Squid disk store log
+filetype:log inurl:useragent.log ....................... Squid useragent log
+
+filetype:log iserror.log ............................... MS Install Shield logs
+filetype:log username putty ............................ Putty SSH client logs
+
+intext:”Session Start * * * *:*:* *” filetype:log ...... IRC/AIM log files
+
+intitle:”HostMonitor log” | intitle: 
+”HostMonitor report” ................................... HostMonitor
+
+intitle:”Index Of” -inurl:maillog maillog size ......... Mail log files
+
+intitle:”LOGREP - Log file 
+reporting system” -site:itefix.no ...................... Logrep
+
+intitle:index.of .bash_history ......................... UNIX bash shell history file
+intitle:index.of .sh_history ........................... UNIX shell history file
+intitle:index.of cleanup.log ........................... Outlook Express cleanup logs
+inurl:access.log filetype:log –cvs ..................... Apache access log (Windows)
+inurl:error.log filetype:log -cvs ...................... Apache error log
+inurl:log.nsf -gov ..................................... Lotus Domino
+log inurl:linklint filetype:txt -”checking” ............ Linklint logs
+Squid cache server reports ............................. squid server cache reports
+
+
+======================================================================================================
+= Locate Potentially Sensitive Office Documents
+======================================================================================================
+
+Sample Queries That Locate Potentially Sensitive Office Documents
+
+
+======================================================================================================
+Query                                                         Potential Exposure
+======================================================================================================
+
+filetype:xls username password email ........................ Passwords
+filetype:xls inurl:”password.xls” ........................... Passwords
+filetype:xls private ........................................ Private data (use as base search)
+Inurl:admin filetype:xls .................................... Administrative data
+filetype:xls inurl:contact .................................. Contact information, e-mail addresses
+filetype:xls inurl:”email.xls” .............................. E-mail addresses, names
+allinurl: admin mdb ......................................... Administrative database
+filetype:mdb inurl:users.mdb ................................ User lists, e-mail addresses
+Inurl:email filetype:mdb .................................... User lists, e-mail addresses
+Data filetype:mdb ........................................... Various data (use as base search)
+Inurl:backup filetype:mdb ................................... Backup databases
+Inurl:profiles filetype:mdb ................................. User profiles
+Inurl:*db filetype:mdb ...................................... Various data (use as base search)
+
+
+======================================================================================================
+= Login Portals
+======================================================================================================
+
+Queries That Locate Database Interfaces
+
+======================================================================================================
+Query                                                         Database Utility
+======================================================================================================
+
+allinurl: admin mdb ......................................... Administrative database
+Inurl:backup filetype:mdb ................................... Backup databases
+“ClearQuest Web Logon” ...................................... ClearQuest (CQWEB)
+inurl:/admin/login.asp ...................................... Common login page
+inurl:login.asp ............................................. Common login page
+filetype:fp5 fp5 -”cvs log” ................................. FileMaker Pro
+filetype:fp3 fp3 ............................................ FileMaker Pro
+filetype:fp7 fp7 ............................................ FileMaker Pro
+“Select a database to view” intitle: ”filemaker pro” ........ FileMaker Pro
+“Welcome to YourCo Financial” ............................... IBM Websphere
+“(C) Copyright IBM” “Welcome to Websphere” .................. IBM Websphere
+inurl:names.nsf?opendatabase ................................ Lotus Domino
+inurl:”/catalog.nsf” intitle:catalog ........................ Lotus Domino
+intitle:”messaging login” “© Copyright IBM” ................. Lotus Messaging
+intitle:”Web Data Administrator - Login” .................... MS SQL login
+intitle:”Gateway Configuration Menu” ........................ Oracle
+inurl:/pls/sample/admin_/help/ .............................. Oracle default manuals
+inurl:1810 “Oracle Enterprise Manager” ...................... Oracle Enterprise Manager
+inurl:admin_/globalsettings.htm ............................. Oracle HTTP Listener
+
+intitle:”oracle http server index” 
+“Copyright * Oracle Corporation.” ........................... Oracle HTTP Server
+
+inurl:pls/admin_/gateway.htm ................................ Oracle login portal
+inurl:orasso.wwsso_app_ admin.ls_login ...................... Oracle Single Sign-On
+
+“phpMyAdmin” “running on” inurl:”main.php” .................. phpMyAdmin
+“Welcome to phpMyAdmin” “ Create new database” .............. phpMyAdmin
+intitle:”index of /phpmyadmin” modified ..................... phpMyAdmin
+
+intitle:phpMyAdmin 
+“Welcome to phpMyAdmin ***” “running on * as root@*” ........ phpMyAdmin
+
+inurl:main.php phpMyAdmin ................................... phpMyAdmin
+
+intitle:”phpPgAdmin - Login” Language ....................... phpPgAdmin (PostgreSQL) Admin tool
+
+intext:SQLiteManager inurl:main.php ......................... SQLite Manager
+Data filetype:mdb ........................................... Various data (use as base search)
+
+======================================================================================================
+= Queries That Locate Database Support Files
+======================================================================================================
+
+Locate Database Support Files
+
+======================================================================================================
+Query                                                         Description
+======================================================================================================
+
+inurl:default_content.asp ClearQuest ........................ ClearQuest Web help files
+intitle:”index of” intext:globals.inc ....................... MySQL globals.inc file
+filetype:inc intext:mysql_connect ........................... PHP MySQL Connect file
+filetype:inc dbconn ......................................... Database connection file
+intitle:”index of” intext:connect.inc ....................... MySQL connection file
+filetype:properties inurl:db intext:password ................ db.properties file
+intitle:”index of” mysql.conf OR mysql_config ............... MySQL configuration file
+inurl:php.ini filetype:ini .................................. PHP.INI file
+filetype:ldb admin .......................................... Microsoft Access lock files
+inurl:config.php dbuname dbpass ............................. The old config.php script
+intitle:index.of config.php ................................. The config.php script
+“phpinfo.php” -manual ....................................... The output from phpinfo.php
+intitle:”index of” +myd size ................................ The MySQL data directory
+filetype:cnf my.cnf -cvs -example ........................... The MySQL my.cnf file
+filetype:ora ora ............................................ ORA configuration files
+filetype:pass pass intext:userid ............................ dbman files, list encoded passwords
+filetype:pdb pdb backup (Pilot | Pluckerdb) ................. Palm database files
+
+
+
+======================================================================================================
+= Error Messages
+======================================================================================================
+
+Error messages also play a key role in the detection and profiling of database systems.
+
+======================================================================================================
+Description                                                    Query
+======================================================================================================
+
+.NET error message reveals data sources,
+and even authentication credentials .......................... “ASP.NET_SessionId” “data source=”
+
+500 “Internal Server Error” 
+reveals the server administrator’s 
+email address, and Apache server banners ..................... “Internal Server Error” “server at”
+
+500 “Internal Server Error” 
+reveals the type of web server
+running on the site .......................................... intitle:”500 Internal Server Error” “server at”
+
+ASP error message reveals compiler used,
+language used, line numbers, 
+program names and partial source code ........................ filetype:asp “Custom Error Message” Category Source
+
+Access error message can reveal path names, 
+function names, filenames and partial code .................... “Syntax error in query expression “ -the
+
+Apache Tomcat Error messages 
+can reveal various kinds information
+depending on the type of error ................................ intitle:”Apache Tomcat” “Error Report”
+
+CGI error messages may reveal 
+partial code listings, PERL version, 
+detailed server information, usernames, 
+setup file names, form and query information,
+port and path information, and more ............................ intext:”Error Message : Error loading required libraries.”
+                                                                 
+Chatologica MetaSearch error reveals Apache version,
+CGI environment vars, path names, stack dumps, 
+process ID’s, PERL version, and more ............................ “Chatologica MetaSearch” “stack tracking:”
+
+Cocoon XML reveals library functions, 
+cocoon version number, 
+and full and/or relative path names ............................. “error found handling the request” cocoon filetype:xml
+
+Cold fusion error messages 
+trigger on SQL SELECT or INSERT statements 
+which could help locate SQL injection points. .................... intitle:”Error Occurred While Processing Request” +WHERE (SELECT|INSERT) filetype:cfm
+                                                                    
+ColdFusion error message can reveal 
+partial source code, full pathnames, 
+SQL query info, database name, 
+SQL state info and local time info ............................... intitle:”Error Occurred” “The error occurred in” filetype:cfm
+                                                                   
+ColdFusion error message, 
+can reveal SQL statements 
+and server information ........................................... intitle:”Error Occurred While Processing Request”
+
+ColdFusion error message, 
+can reveal source code, 
+full pathnames, SQL query info, 
+database name, SQL state information, 
+and local time information ........................................ intitle:”Error Occurred” “The error occurred in” filetype:cfm    
+                                                                    
+Coldfusion Error Pages reveal 
+many different types of information ............................... “Error Diagnostic Information” intitle:” Error Occurred While”  
+                                                                    
+DB2 error message can reveal path names, 
+function names, filenames,
+partial code and program state .................................... “detected an internal error [IBM][CLI Driver][DB2/6000]”   
+                                                                    
+DB2 error message can reveal path names, 
+function names, filenames,
+partial code and program state .................................... An unexpected token “END-OF-STATEMENT” was found
+
+DB2 error message can reveal path names, 
+function names, filenames,
+partial code and program state .................................... “detected an internal error [IBM] [CLI Driver][DB2/6000]”
+
+DB2 error message can reveal path names, 
+function names, filenames,
+partial code and program state .................................... An unexpected token “END-OF-STATEMENT” was found
+
+Discuz! Board error may reveal 
+path information or partial SQL code listings ..................... filetype:php inurl:”logging.php” “Discuz” error
+
+Generic SQL message,
+can reveal pathnames and partial SQL code ......................... “You have an error in your SQL syntax near”
+
+Generic error can reveal path information ......................... “Warning: Supplied argument is not a valid File-Handle resource in”
+                                                                    
+Generic error message can be used
+to determine operating system and web server version .............. intitle:”Under construction” “does not currently have” 
+                                                                    
+Generic error message can reveal compiler used, 
+language used, line numbers, 
+program names and partial source code ............................. “Fatal error: Call to undefined function” - reply -the -next
+
+Generic error message 
+reveals full path information ..................................... “Warning:” “SAFE MODE Restriction in effect.” “The script whose uid is” “is not allowed to access owned by uid 0 in” “on line”
+
+Generic error message, reveals various information ................ “Error Diagnostic Information” intitle:”Error Occurred While”
+
+Generic error messages reveal path names, 
+php file names, line numbers and include paths .................... intext:”Warning: Failed opening” “on line” “include_path”
+
+Generic error reveals full path info .............................. “Warning: Division by zero in” “on line” - forum
+
+HyperNews error reveals the server software, 
+server OS, server account user/group (unix), 
+server administrator email address, 
+and even stack traces ............................................. intitle:”Error using Hypernews” “Server Software”
+
+IIS 4.0 error messages reveal 
+the existence of an extremely old version of IIS .................. intitle:”the page cannot be found” inetmgr
+
+IIS error message reveals somewhat 
+unmodified (and perhaps unpatched) IIS servers .................... intitle:”the page cannot be found” “internet information services”
+
+Informix error message can reveal path names,
+function names, filenames and partial code ........................ “A syntax error has occurred” filetype:ihtml
+
+Informix error message can reveal path names, 
+function names, filenames and partial code ........................ “An illegal character has been found in the statement” -”previous message”
+
+MYSQL error message reveals path names ............................ “supplied argument is not a valid MySQL result resource”
+
+MySQL error message can reveal a variety of information ........... “mySQL error with query”
+
+MySQL error message can reveal database name, 
+path names and partial SQL code ................................... “Can’t connect to local” intitle:warning
+
+MySQL error message can reveal
+path names and partial SQL code ................................... “You have an error in your SQL syntax near”
+
+MySQL error message can reveal path names,
+function names, filenames and partial SQL code .................... “ORA-00921: unexpected end of SQL command”
+
+MySQL error message can reveal path names, 
+function names, filenames and partial SQL code .................... “Supplied argument is not a valid MySQL result resource”
+
+MySQL error message can reveal path names, 
+function names, filenames and partial code ........................ “Incorrect syntax near”
+
+MySQL error message can reveal path names, 
+function names, filenames and partial code ........................ “Incorrect syntax near” -the
+
+MySQL error message can reveal path names, 
+function names, filenames and partial code ........................ “Unclosed quotation mark before the character string”
+
+MySQL error message can reveal the username, 
+database, path names and partial SQL code ......................... “access denied for user” “using password”
+
+MySQL error message, reveals real pathnames
+and listings of other PHP scripts on the server ................... “supplied argument is not a valid MySQL result resource”
+
+MySQL error message, reveals various information .................. “MySQL error with query”
+
+MySQL error reveals database schema and usernames ................. “Warning: mysql_query()” “invalid query”
+
+Netscape Application Server or iPlanet application
+servers error reveals the installation of 
+extremely outdated software  ...................................... intitle:”404 SC_NOT_FOUND”
+
+ODBC SQL error may reveal table or row queried, 
+full database name and more ....................................... filetype:asp + “[ODBC SQL”
+
+Oracle SQL error message, 
+reveals full Web pathnames and/or php filenames ................... “ORA-00921: unexpected end of SQL command”
+
+Oracle SQL error message, reveals pathnames, 
+function names, filenames, and partial SQL code ................... “ORA-00933: SQL command not properly ended”
+
+Oracle SQL error message, reveals pathnames, 
+function names, filenames, and partial SQL code ................... “ORA-00936: missing expression”
+
+Oracle error message can reveal path names, 
+function names, filenames and partial SQL code .................... “ORA-00933: SQL command not properly ended”
+
+Oracle error message can reveal path names, 
+function names, filenames and partial database code ............... “ORA-00936: missing expression”
+
+Oracle error message may reveal partial 
+SQL code, path names, file names, and data sources ................ “ORA-12541: TNS:no listener” intitle: ”error occurred”
+
+Oracle error message, reveals SQL code, 
+pathnames, filenames, and data sources ............................ “ORA-12541: TNS:no listener” intitle: ”error occurred”
+
+PHP error logs can reveal various types of information ............ filetype:log “PHP Parse error” | “PHP Warning” | “PHP Error”
+
+PHP error message can reveal path names, 
+function names, filenames and partial code ........................ “Warning: Cannot modify header inform- ation - headers already sent”
+
+PHP error message can reveal the webserver’s 
+root directory and user ID ........................................ “The script whose uid is “ “is not allowed to access”
+
+PHP error messages reveal path names, 
+PHP file names, line numbers and include paths .................... PHP application warnings failing “include_path”
+
+PHP error reveals web root path ................................... “Parse error: parse error, unexpected T_VARIABLE” “on line” filetype:php
+
+PostgreSQL error message can reveal 
+path information and database names ............................... “Warning: pg_connect(): Unable to connect to PostgreSQL server: FATAL”
+
+PostgreSQL error message can reveal path names, 
+function names, filenames and partial code  ....................... “PostgreSQL query failed: ERROR: parser: parse error”
+
+PostgreSQL error message can reveal path names, 
+function names, filenames and partial code ........................ “Supplied argument is not a valid PostgreSQL result”
+
+PostgreSQL error message, can reveal pathnames, 
+function names, filenames, and partial code ....................... “PostgreSQL query failed: ERROR: parser: parse error”
+
+PostgreSQL error message, can reveal pathnames, 
+function names, filenames, and partial code ....................... “Supplied argument is not a valid PostgreSQL result”
+
+Postgresql error message, 
+reveals path information and database names ....................... “Warning: pg_connect(): Unable to connect to PostgreSQL server: FATAL”
+
+SQL error may reveal potential SQL injection points  .............. “[SQL Server Driver][SQL Server]Line 1: Incorrect syntax near” -forum -thread - showthread
+
+SQL error message reveals full path info .......................... “Invision Power Board Database Error”
+
+SQL error message reveals full pathnames
+and/or PHP filenames  ............................................. “ORA-00921: unexpected end of SQL command”
+
+SQL error message, can reveal pathnames, 
+function names, filenames, and partial code (variation) ........... “Can’t connect to local” intitle:warning
+
+SQL error message, can reveal pathnames, 
+function names, filenames, and partial code (variation) ........... “Incorrect syntax near” -the
+
+SQL error message, can reveal pathnames, 
+function names, filenames, and partial code (variation) ........... “access denied for user” “using password”
+
+SQL error message, can reveal pathnames, 
+function names, filenames, and partial code ....................... “Incorrect syntax near”
+
+SQL error message, can reveal pathnames, 
+function names, filenames, and partial code ....................... “Unclosed quotation mark before the character string”
+
+Sablotron XML error can reveal partial source code,
+path and filename information and more ............................ warning “error on line” php sablotron
+
+Snitz Microsoft Access database error 
+may reveal the location and name of the database,
+potentially making the forum vulnerable 
+to unwanted download .............................................. databasetype. Code : 80004005. Error Description :
+
+Softcart error message may reveal 
+configuration file location and server file paths ................. intitle:Configuration.File inurl:softcart.exe
+
+This dork reveals logins to databases 
+that were denied for some reason  ................................. “Warning: mysql_connect(): Access denied
+for user: ‘*@*” “on line” -help -forum
+
+Windows 2000 error messages reveal 
+the existence of an extremely old version of Windows .............. intitle:”the page cannot be found” “2004
+microsoft corporation”
+
+cgiwrap error message reveals admin name and email,
+port numbers, path names, and may also include optional 
+information like phone numbers for support personnel .............. intitle:”Execution of this script not permitted”
+
+ht://Dig error can reveal administrative email, 
+validation of a cgi-bin executable directory, 
+directory structure, location of a search database 
+file and possible naming conventions .............................. intitle:”htsearch error” ht://Dig error
+
+vbulletin error reveals SQL code snippets ......................... “There seems to have been a problem with the” “ Please try again by clicking the Refresh button in your web browser.”
+
+
+
+======================================================================================================
+= Queries That Locate SQL Database Dumps
+======================================================================================================
+
+Locate SQL Database Dumps
+
+======================================================================================================
+Query                                                            Description
+======================================================================================================
+
+inurl:nuke filetype:sql ........................................ php-nuke or postnuke CMS dumps
+filetype:sql password .......................................... SQL database dumps or batched SQL commands
+filetype:sql “IDENTIFIED BY” –cvs  ............................. SQL database dumps or batched SQL commands
+“# Dumping data for table (username|user|users|password)” ...... SQL database dumps or batched SQL commands
+“#mysql dump” filetype:sql  .................................... SQL database dumps
+“# Dumping data for table”  .................................... SQL database dumps
+“# phpMyAdmin MySQL-Dump” filetype:txt ......................... SQL database dumps created by phpMyAdmin
+“# phpMyAdmin MySQL-Dump” “INSERT INTO” -”the” ................. SQL database dumps created by phpMyAdmin (variation)
+
+
+======================================================================================================
+= Queries That Locate Database Files
+======================================================================================================
+
+Locate Database Files
+
+======================================================================================================
+Query                                                            Description
+======================================================================================================
+
+filetype:cfm “cfapplication name” password ..................... ColdFusion source code
+filetype:mdb inurl:users.mdb ................................... Microsoft Access user database
+inurl:email filetype:mdb ....................................... Microsoft Access e-mail database
+inurl:backup filetype:mdb ...................................... Microsoft Access backup databases
+inurl:forum filetype:mdb ....................................... Microsoft Access forum databases
+inurl:/db/main.mdb ............................................. ASP-Nuke databases
+inurl:profiles filetype:mdb .................................... Microsoft Access user profile databases
+filetype:asp DBQ=” * Server. MapPath(“*.mdb”) .................. Microsoft Access database connection string search
+allinurl: admin mdb ............................................ Microsoft Access administration databases
+
+
+======================================================================================================
+= Verifying an e-mail address
+======================================================================================================
+
+Here’s a quick hack to verify if an e-mail address exists. 
+While this might not work on all mail servers, it works on the majority of them – including Gmail.
+
+■	Step 1 – Find the mail server:
+
+$ host -t mx gmail.com
+
+gmail.com mail is handled by 5 gmail-smtp-in.l.google.com.
+gmail.com mail is handled by 10 alt1.gmail-smtp-in.l.google.com.
+gmail.com mail is handled by 10 alt2.gmail-smtp-in.l.google.com.
+gmail.com mail is handled by 50 gsmtp163.google.com.
+gmail.com mail is handled by 50 gsmtp183.google.com.
+
+■	Step 2 – Pick one and Telnet to port 25
+
+$ telnet gmail-smtp-in.l.google.com 25
+
+Trying 64.233.183.27...
+Connected to gmail-smtp-in.l.google.com.
+Escape character is '^]'.
+220 mx.google.com ESMTP d26si15626330nfh
+
+
+■	Step 3: Mimic the Simple Mail Transfer Protocol (SMTP):
+
+HELO test
+250 mx.google.com at your service
+MAIL FROM: <test@test.com>
+250 2.1.0 OK
+
+
+■	Step 4a: Positive test:
+
+RCPT TO: <roelof.temmingh@gmail.com>
+250 2.1.5 OK
+
+■	Step 4b: Negative test:
+
+RCPT TO: <kosie.kramer@gmail.com>
+550 5.1.1 No such user d26si15626330nfh
+
+
+■	Step 5: Say goodbye:
+
+quit
+221 2.0.0 mx.google.com closing connection d26si15626330nfh
+
+
+By inspecting the responses from the mail server we have now verified that roelof.temmingh@gmail.com exists,
+while kosie.kramer@gmail.com does not. In the same way, we can verify the existence of other e-mail addresses.
+
+
+
+======================================================================================================
+= Using “Special” Operators
+======================================================================================================
+
+filetype:ppt site:www.****.gov
+filetype:doc site:www.****.gov
+filetype:xls site:www.****.gov
+filetype:pdf site:www.****.gov
+
+iphone site:nl
+iphone site:fr
+iphone site:de
+iphone site:be
+iphone site:ch
+
+
+======================================================================================================
+= Netcat
+======================================================================================================
+
+(echo "GET / HTTP/1.0";echo "Host: www.google.com"; echo) | nc www.google.com 80
+
+======================================================================================================
+= Wget
+======================================================================================================
+
+wget -U Mozilla "http://www.google.com/search?hl=en&q=test" -O output.txt
+
+======================================================================================================
+= Curl
+======================================================================================================
+
+curl -A Mozilla "http://www.google.com/search?hl=en&q=test"
+
+
+======================================================================================================
+= Locating Source Code with Common Strings
+======================================================================================================
+
+Locating Source Code with Common Strings
+
+======================================================================================================
+Language                Extension (Optional)              Sample String
+======================================================================================================
+
+asp.net (C#) ........... Aspx ........................... “<%@ Page Language=”C#”” inherits
+asp.net (VB) ........... Aspx ........................... “<%@ Page Language=”vb”” inherits
+asp.net (VB) ........... Aspx ........................... <%@ Page LANGUAGE=”JScript”
+C ...................... C .............................. “#include <stdio.h>”
+C# ..................... Cs ............................. “using System;” class
+c++ .................... Cpp ............................ “#include “stdafx.h””
+Java ................... J, JAV ......................... class public static
+JavaScript ............. JS ............................. “<script language=”JavaScript”>“
+Perl ................... PERL, PL, PM ................... “#!/usr/bin/perl”
+Python ................. Py ............................. “#!/usr/bin/env”
+VBScript ............... .vbs ........................... “<%@ language=”vbscript” %>”
+Visual Basic ........... Vb ............................. “Private Sub”
+
+
+
+======================================================================================================
+= Google Code Search Operators
+======================================================================================================
+
+Google Code Search (www.google.com/codesearch) can be used to search for public source code. 
+
+======================================================================================================
+Operator                    Description                                     Example
+======================================================================================================
+
+
+file .................... Search for specific types of files .............. file:js
+
+package ................. Search within a specific package ................ package:linux.*.tar.gz buggy
+
+lang .................... Search for code written in specific languages ... lang:”c++”
+
+license ................. Search for code written under specific licenses . license:gpl
+
+
+
+======================================================================================================
+= Google Code Searches for Vulnerable Code
+======================================================================================================
+
+Google Code Search can also be used to locate software that contains potential vulnerabilities
+
+
+======================================================================================================
+Google Code Search Query                                          Description
+======================================================================================================
+
+
+lang:php (echo|print).*\$_(GET|POST| COOKIE|REQUEST) ............ Code which displays untrusted variables
+                                                                  passed GET/POST or cookies. 
+                                                                  Classic XSS (Cross-Site scripting) vulnerability.
+                                                                  
+                                                                  
+<%=.*getParameter* .............................................. Code that allows XSS in Java due to HTML-encoded user input.
+
+lang:php echo.*\$_SERVER\ [‘PHP_SELF’] .......................... XSS vulnerability due to echo of PHP_SELF.
+
+echo.*\$_(GET|POST).* ........................................... Generic version of above query.
+
+lang:php query\(.*\$_(GET|POST|COOKIE|REQUEST).*\) .............. SQL queries built from user-supplied GET/POST requests. 
+                                                                  This could be an SQL injection point.
+                                                                  
+                                                                  
+.*mysql_query\(.*\$_(GET|POST).* ................................ SQL queries built from user-supplied GET/POST requests. 
+                                                                  This could be an SQL injection point. MySQL-specific.   
+                                                                  
+                                                                  
+lang:php “WHERE username=’$_” ................................... SQL injection due to raw input to WHERE clause.
+
+.*executeQuery.*getParameter.* .................................. SQL injection in Java code due to execution of an SQL query
+                                                                  executed with untrusted user input.                                                                                                                             
+                                                                  
+
+lang:php header\s*\(“Location:.*\$_ (GET|POST|COOKIE|REQUEST).*\) .. Code import built from user-supplied GET/POST requests and cookies. 
+                                                                    This may allow execution of malicious code.
+                                                                    
+lang:php (system|popen|shell_exec| exec)\s*\(\$_(GET|POST|COOKIE| REQUEST).*\) ... Code that passes untrusted GET/ POST/COOKIE data to the                                                                                           
+                                                                                   system for execution. This allows remote code execution. 
+ 
+
+                                                                                   ======================================================================================================
+= Ten Simple Security Searches That Work 
+======================================================================================================
+ 
+site
+intitle:index.of
+error | warning
+login | logon
+username | userid | employee.ID | “your username is”
+password | passcode | “your password is”
+admin | administrator
+–ext:html –ext:htm –ext:shtml –ext:asp –ext:php
+inurl:temp | inurl:tmp | inurl:backup | inurl:bak
+intranet | help.desk
+
+
+======================================================================================================
+= Microsoft IIS HTTP/1.1 Error Page Titles 
+======================================================================================================
+
+Microsoft IIS HTTP/1.1 Error Page Titles 
+
+======================================================================================================
+Error Code                                  Page Title
+======================================================================================================
+
+400  ...................................... The page cannot be found
+401.1, 401.2, 401.3, 401.4, 401.5 ......... You are not authorized to view this page
+403.1, 403.2............................... The page cannot be displayed
+403.3 ..................................... The page cannot be saved
+403.4 ..................................... The page must be viewed over a secure channel
+403.5 ..................................... The page must be viewed with a high-security Web browser
+403.6 ..................................... You are not authorized to view this page
+403.7 ..................................... The page requires a client certificate
+403.8 ..................................... You are not authorized to view this page
+403.9 ..................................... The page cannot be displayed
+403.10, 403.11 ............................ You are not authorized to view this page
+403.12, 403.13 ............................ The page requires a valid client certificate
+403.15 .................................... The page cannot be displayed
+403.16, 403.17 ............................ The page requires a valid client certificate
+404.1, 404b ............................... The Web site cannot be found
+405 ....................................... The page cannot be displayed
+406 ....................................... The resource cannot be displayed
+407 ....................................... Proxy authentication required
+410 ....................................... The page does not exist
+412 ....................................... The page cannot be displayed
+414 ....................................... The page cannot be displayed
+500, 500.11, 500.12, 500.13, 500.14, 500.15 .. The page cannot be displayed
+502 ....................................... The page cannot be displayed
+
+
+intitle:“The Web site cannot be found” “please * * following”
+intitle:“The page cannot be displayed”“Internet Information Services” “please * * following”
+intitle:“the page cannot be found” inetmgr”
+intitle:“the page cannot be found” “internet information services”
+intitle:“Under construction” “Internet Information Services”
+
+
+======================================================================================================
+= The Title and Partial Text of English Apache 2.0 Error Pages
+======================================================================================================
+
+Apache error pages
+
+======================================================================================================
+Error Page Title                                    Error Page Partial Text
+======================================================================================================
+
+Bad gateway! ...................................... The proxy server received an invalid response 
+                                                    from an upstream server.
+                                                    
+Bad request! ...................................... Your browser (or proxy) sent a request that 
+                                                    this server could not understand.   
+                                                    
+Access forbidden! ................................. You don’t have permission to access the requested directory. 
+                                                    Either there is no index document or 
+                                                    the directory is read-protected.                                                                                               
+
+Resource is no longer available! .................. The requested URL is no longer available on this server 
+                                                    and there is no forwarding address.
+                                                    
+Server error! ..................................... The server encountered an internal error 
+                                                    and was unable to complete your request.    
+                                                    
+Method not allowed! ............................... A request with the method is not allowed for the requested URL.
+
+No acceptable object found! ....................... An appropriate representation of the requested resource 
+                                                    could not be found on this server. 
+                                                    
+Object not found! ................................. The requested Uniform Resource Locator (URL) 
+                                                    was not found on this server.  
+                                                    
+Cannot process request! ........................... The server does not support the action requested by the browser.
+
+Precondition failed! .............................. The precondition on the request for the URL failed positive evaluation.
+
+Request entity too large! ......................... The method does not allow the data transmitted, 
+                                                    or the data volume exceeds the capacity limit.     
+                                                    
+Request time-out! ................................ The server closed the network connection because the browser 
+                                                   didn’t finish the request within the specified time.   
+                                                   
+Submitted URI too large! ......................... The length of the requested URL exceeds the capacity limit for this server. 
+                                                   The request cannot be processed.     
+                                                   
+Service unavailable! ............................. The server is temporarily unable to service your request due to maintenance 
+                                                   downtime or capacity problems. Please try again later. 
+                                                   
+Authentication required! ......................... This server could not verify that you are authorized to access the URL. 
+                                                   You either supplied the wrong credentials (such as a bad password), 
+                                                   or your browser doesn’t understand how to supply the credentials required.   
+                                                   
+Unsupported media type! .......................... The server does not support the media type transmitted in the request.
+
+Variant also varies! ............................. A variant for the requested entity is itself a negotiable resource. Access not possible.                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+
+
+“Apache/1.3.27 Server at”“-intitle:index.of intitle:inf”
+“Apache/1.3.27 Server at” -intitle:index.of intitle:error 
+“Apache/2.0.40” intitle:“Object not found!”
+“response from * upstream server.” intitle:“Bad Gateway!”
+“think this is a server error” intitle:“Bad Gateway!”
+
+
+
+======================================================================================================
+= Queries That Locate Default Apache Installations
+======================================================================================================
+
+Queries That Locate Default Apache Installations
+
+======================================================================================================
+Apache Server Version               Query
+======================================================================================================
+
+Apache 1.2.6 ...................... intitle:”Test Page for Apache Installation” “You are free”
+Apache 1.3.0–1.3.9 ................ intitle:”Test Page for Apache” “It worked!” “this Web site!”
+Apache 1.3.11–1.3.31 .............. intitle:Test.Page.for.Apache seeing.this.instead
+Apache 2.0 ........................ intitle:Simple.page.for.Apache Apache.Hook.Functions
+Apache SSL/TLS .................... intitle:test.page “Hey, it worked !” “SSL/TLS-aware”
+Apache on Red Hat ................. “Test Page for the Apache Web Server on Red Hat Linux”
+Apache on Fedora .................. intitle:”test page for the apache http server on fedora core”
+Apache on Debian .................. intitle:”Welcome to Your New Home Page!” debian
+Apache on other Linux ............. intitle:”Test Page * * Apache Web Server on “ -red.hat -fedora
+
+
+
+======================================================================================================
+= Queries That Locate Specific IIS Server Versions
+======================================================================================================
+
+Queries That Locate Specific Microsoft IIS Server Versions
+
+======================================================================================================
+IIS Server Version                Query
+======================================================================================================
+
+Many ............................ intitle:”welcome to” intitle:internet IIS
+Unknown ......................... intitle:”Under construction” “does not currently have”
+IIS 4.0 ......................... intitle:”welcome to IIS 4.0”
+IIS 4.0 ......................... allintitle:Welcome to Windows NT 4.0 Option Pack
+IIS 4.0 ......................... allintitle:Welcome to Internet Information Server
+IIS 5.0 ......................... allintitle:Welcome to Windows 2000 Internet Services
+IIS 6.0 ......................... allintitle:Welcome to Windows XP Server Internet Services
+
+
+
+======================================================================================================
+= Sample Queries That Locate Usernames
+======================================================================================================
+
+Finding usernames and passwords
+
+======================================================================================================
+Query                                                            Description
+======================================================================================================
+
+inurl:admin inurl:userlist ..................................... Generic userlist files
+inurl:admin filetype:asp inurl:userlist ........................ Generic userlist files
+inurl:php inurl:hlstats intext: Server Username ................ Half-life statistics file, 
+                                                                 lists username and other information
+                                                                 
+filetype:ctl inurl:haccess.ctl Basic .......................... Microsoft FrontPage equivalent(?) of
+                                                                htaccess shows Web user credentials   
+                                                                
+filetype:reg reg intext:”internet account manager” ............ Microsoft Internet Account Manager
+                                                                can reveal usernames and more    
+                                                                
+filetype:wab wab .............................................. Microsoft Outlook Express Mail address books
+filetype:mdb inurl:profiles ................................... Microsoft Access databases containing (user) profiles.
+index.of perform.ini .......................................... mIRC IRC ini file can list IRC usernames and other information
+inurl:root.asp?acs=anon ....................................... Outlook Mail Web Access directory can be used to discover usernames
+filetype:conf inurl:proftpd.conf –sample ...................... PROFTP FTP server configuration file reveals username and server information
+filetype:log username putty ................................... PUTTY SSH client logs can reveal user- names and server information
+filetype:rdp rdp .............................................. Remote Desktop Connection files reveal user credentials
+intitle:index.of .bash_history ................................ UNIX bash shell history - usernames are often typed as argument strings
+intitle:index.of .sh_history .................................. UNIX shell history reveals - usernames are often typed as argument strings
+“index of ” lck ............................................... Various lock files list the user currently using a file
+
++intext:webalizer +intext:Total Usernames +intext:”Usage Statistics for” ...... Webalizer Web statistics page lists Web usernames and stats
+
+filetype:reg reg HKEY_CURRENT_ USER username .................. Windows Registry exports can reveal usernames and other information
+
+
+======================================================================================================
+= Queries That Locate Password Information
+======================================================================================================
+
+Password data, one of the “Holy Grails” during a penetration test, should be protected. 
+Unfortunately, many examples of Google queries can be used to locate passwords on the Web
+
+
+======================================================================================================
+Query                                                            Description
+======================================================================================================
+
+
+filetype:config config intext: appSettings “User ID” ........... .Net Web Application configuration 
+                                                                 may contain authentication information
+                                                                 
+                                                                 
+filetype:netrc password ........................................ .netrc file may contain cleartext passwords
+intitle:”Index of” passwords modified .......................... “Password” directories
+inurl:/db/main.mdb ............................................. ASP-Nuke database files often contain passwords
+filetype:bak inurl:”htaccess|passwd| shadow|htusers” ........... BAK files referring to passwords or usernames
+filetype:log “See `ipsec —copyright” ........................... BARF log files reveal ipsec data
+inurl:”calendarscript/users.txt” ............................... CalenderScript passwords
+inurl:ccbill filetype:log data ................................. CCBill log files may contain authentication
+inurl:cgi-bin inurl:calendar.cfg ............................... CGI Calendar (Perl) configuration file
+inurl:chap-secrets -cvs ........................................ chap-secrets file may list usernames and passwords
+enable password | secret “current configuration” -intext:the ... Cisco “secret 5” and “password 7” passwords
+intext:”enable secret 5 $” ..................................... Cisco enable secrets
+intext:”enable password 7” ..................................... Cisco router config files
+[WFClient] Password= filetype:ica .............................. Citrix WinFrame-Client may contain login information
+inurl:passlist.txt ............................................. Cleartext passwords. No decryption required!
+filetype:cfm “cfapplication name” password ..................... ColdFusion source code mentioning “passwords”
+intitle:index.of config.php .................................... Config.php files
+inurl:config.php dbuname dbpass ................................ Config.php files
+inurl:server.cfg rcon password ................................. Counter strike rcon passwords
+ext:inc “pwd=” “UID=” .......................................... Database connection strings
+ext:asa | ext:bak intext:uid intext:pwd -”uid..pwd” database | server | dsn . Database credentials in ASA and BAK files
+filetype:ldb admin ............................................. Database lock files may contain credential info
+filetype:properties inurl:db intext: password .................. db.properties file contains usernames, decrypted passwords
+filetype:inc dbconn ............................................ Dbconn.inc files
+filetype:pass pass intext:userid ............................... dbman password files
+allinurl:auth_user_file.txt .................................... DCForum’s password file
+“powered by ducalendar” -site:duware.com ....................... ducalendar database may reveal password data
+“Powered by Duclassified” -site:duware.com ..................... Duclassified database may reveal password data
+“powered by duclassmate” -site:duware.com ...................... duclassmate database may reveal password data
+“Powered by Dudirectory” -site:duware.com ...................... dudirectory database may reveal password data
+“powered by dudownload” -site:duware.com ....................... dudownload database may reveal password data
+“Powered by DUpaypal” -site:duware.com ......................... Dupaypal database may reveal password data.
+intitle:dupics inurl:(add.asp | default.asp | view.asp | voting.asp) -site:duware.com ... dupics database password data
+eggdrop filetype:user user ..................................... Eggdrop config files
+“Powered By Elite Forum Version *.*” ........................... Elite forums database contains authentication information
+intitle:”Index of” pwd.db ...................................... Encrypted pwd.db passwords
+ext:ini eudora.ini ............................................. Eudora INI file may contain usernames and encrypted passwords
+inurl:filezilla.xml -cvs ....................................... filezilla.xml contains passwords data
+filetype:ini inurl:flashFXP.ini ................................ FlashFXP configuration file may contain FTP passwords
+filetype:dat inurl:Sites.dat ................................... FlashFXP FTP passwords
+inurl:”Sites.dat”+”PASS=” ...................................... FlashFXP Sites.dat server configuration file
+ext:pwd inurl:(service | authors | administrators | users) “# -FrontPage-” ... Frontpage sensitive authentication-related files
+filetype:url +inurl:”ftp://” +inurl:”@” ........................ FTP bookmarks
+intitle:index.of passwd passwd.bak ............................. Generic PASSWD files
+inurl:zebra.conf intext:password -sample -test -tutorial -download .. GNU Zebra enable passwords
+intext:”powered by EZGuestbook” ................................ HTMLJunction EZGuestbook database
+intitle:”Index of” “.htpasswd” htpasswd.bak .................... htpasswd password files
+intitle:”Index of” “.htpasswd” “htgroup” -intitle:”dist” -apache -htpasswd.c .... htpasswd password files
+filetype:htpasswd htpasswd ..................................... htpasswd password files
+“http://*:*@www” bob:bob ....................................... HTTP web authentication information
+“liveice configuration file” ext:cfg -site:sourceforge.net ..... Icecast liveice.cfg file which may contain passwords
+“sets mode: +k” ................................................ IRC channel keys
+signin filetype:url ............................................ Javascript user validation mechanisms 
+LeapFTP intitle:”index.of./” sites.ini modified ................ LeapFTP client configuration file 
+inurl:lilo.conf filetype:conf password -tatercounter2000 -bootpwd -man ...... LILO boot passwords
+“Powered by Link Department” ................................... Link management script
+“your password is” filetype:log ................................ log files containing the phrase (Your pass- word is).
+“admin account info” filetype:log .............................. logs containing admin server account information
+intitle:index.of master.passwd ................................. master.passwd files
+allinurl: admin mdb ............................................ Microsoft Access “admin” databases
+filetype:mdb inurl:users.mdb ................................... Microsoft Access “user databases”
+filetype:xls username password email ........................... Excel spreadsheets containing username, password email
+intitle:index.of administrators.pwd ............................ Microsoft Front Page administrative usernames and passwords.
+filetype:pwd service ........................................... Microsoft Frontpage service info
+inurl:perform.ini filetype:ini ................................. mIRC IRC passwords
+inurl:perform filetype:ini ..................................... mIRC potential connection data
+filetype:cfg mrtg “target[*]” -sample -cvs -example ............ Mrtg.cfg SNMP configuration file
+intitle:”index of” intext:connect.inc .......................... MySQL database connection information
+intitle:”Index of” .mysql_history .............................. mysql history files
+intitle:”index of” intext:globals.inc .......................... MySQL user/password information
+“Your password is * Remember this for later use” ............... NickServ registration passwords
+filetype:conf oekakibbs........................................ Oekakibss configuration files may reveal passwords
+filetype:conf slapd.conf....................................... OpenLDAP slapd.conf file
+inurl:”slapd.conf” intext:”credentials” -manpage -”Manual Page” -man: -sample .... OpenLDAP slapd.conf file
+filetype:dat wand.dat.......................................... Opera web browser “magic wand” stored cerdentials
+inurl:pap-secrets -cvs......................................... pap-secrets file may list usernames and passwords
+filetype:dat inurl:pass.dat.................................... Pass.dat files may reveal passwords
+index.of passlist.............................................. Passlist password files
+filetype:dat “password.dat”.................................... Password.dat files 
+filetype:log inurl:”password.log”.............................. Password.log files
+filetype:pem intext:private.................................... PEM private key files
+intitle:index.of people.lst.................................... people.lst files
+intitle:index.of intext:”secring.skr”| ”secring.pgp”|”secring.bak” ... PGP secret keyrings
+inurl:secring ext:skr | ext:pgp | ext:bak...................... PGP secret keyrings
+filetype:inc mysql_connect OR mysql_pconnect................... PHP .inc files contain authentication information
+filetype:inc intext:mysql_connect.............................. PHP .inc files contain usernames, passwords
+ext:php intext:”$dbms””$dbhost” ”$dbuser””$dbpasswd””$table_ prefix””phpbb_installed” .... phpBB mySQL connection information
+intitle:”phpinfo()” +”mysql. default_password” +”Zend Scripting Language Engine” inurl:nuke filetype:sql ... PHP-Nuke 
+“parent directory” +proftpdpasswd.............................. ProFTPd User names
+filetype:conf inurl:psybnc.conf “USER.PASS=”................... psyBNC configuration files
+intitle:rapidshare intext:login................................ Rapidshare login passwords.
+inurl:”editor/list.asp” | inurl: ”database_editor.asp” | inurl: ”login.asa” “are set” ... Results Database Editor
+ext:yml database inurl:config.................................. Ruby on Rails database link file
+ext:ini Version=4.0.0.4 password............................... servU FTP Daemon ini
+filetype:ini ServUDaemon....................................... servU FTP Daemon INI files
+filetype:ini inurl:”serv-u.ini”................................ Serv-U INI file 
+intitle:”Index of” sc_serv.conf sc_ serv content ............... Shoutcast sc_serv.conf
+intitle:”Index of” spwd.db passwd -pam.conf .................... spwd.db password files
+filetype:sql “insert into” (pass|passwd|password) .............. SQL dumps
+filetype:sql (“passwd values” | “password values” | “pass values” ) ... SQL file password references
+filetype:sql (“values * MD5” | “values * password” | “values * encrypt”) .... SQL files
+filetype:sql +”IDENTIFIED BY” -cvs............................. SQL files mentioning authentication info
+filetype:sql password .......................................... SQL files mentioning authentication info
+filetype:reg reg HKEY_CURRENT_ USER SSHHOSTKEYS ................ SSH host keys stored in Windows Registry
+inurl:”GRC.DAT” intext:”password” .............................. Symantec Norton Anti-Virus Corporate
+filetype:inf sysprep........................................... Sysprep.inf files 
+server-dbs “intitle:index of”.................................. teamspeak server admin files
+filetype:ini wcx_ftp........................................... Total commander FTP passwords
+intitle:index.of trillian.ini.................................. Trillian INI files contain passwords.
+ext:txt inurl:unattend.txt..................................... unattend.txt files contain all information for a Windows
+index.of.etc................................................... Unix /etc directories
+intitle:”Index of..etc” passwd................................. Unix /etc/passwd files
+intitle:Index.of etc shadow.................................... UNIX /etc/shadow password files
+ext:passwd -intext:the -sample -example ........................ Various passwords
+filetype:bak createobject sa................................... VBScript database connection backups
+inurl:ventrilo_srv.ini adminpassword........................... ventrilo passwords for many servers
+filetype:reg reg +intext: WINVNC3.............................. vnc passwords
+!Host=*.* intext:enc_UserPassword= * ext:pcf................... VPN profiles often contain authentication data
+inurl:vtund.conf intext:pass -cvs.............................. vtund configuration files
+filetype:mdb wwforum........................................... Web Wiz Forums database
+intext:”powered by Web Wiz Journal”............................ Web Wiz Journal ASP Blog database
+“AutoCreate=TRUE password=*”................................... Website Access Analyzer passwords
+filetype:pwl pwl............................................... Windows Password List files
+filetype:reg reg +intext: ”defaultusername” +intext: ”defaultpassword” .... Windows registry keys
+filetype:ini ws_ftp pwd........................................ WS_FTP.ini file contains weakly encrypted passwords
+“index of/” “ws_ftp.ini” “parent directory” .................... WS_FTP.ini file contains weakly encrypted passwords
+inurl:”wvdial.conf” intext: ”password”......................... wvdial.conf may contain phone numbers, usernames and passwords
+inurl:/wwwboard................................................ WWWBoard “passwd.txt” authentication configuration files
+wwwboard WebAdmin inurl: passwd.txt wwwboard|webadmin .......... WWWBoard password files
+“login: *” “password= *” filetype:xls.......................... xls files containing login names and passwords
+inurl:/yabb/Members/Admin.dat.................................. YaBB forums Administrator password
+
+
+
+======================================================================================================
+= Queries That Locate Various Sensitive Information
+======================================================================================================
+
+Queries That Locate Various Sensitive Information
+
+
+======================================================================================================
+Query                                                           Description
+======================================================================================================
+
+intext:”Session Start * * * *:*:* *” filetype:log ............. AIM and IRC log files
+filetype:blt blt +intext:screenname ........................... AIM buddy lists
+buddylist.blt ................................................. AIM buddy lists
+intitle:index.of cgiirc.config ................................ CGIIRC (Web-based IRC client) config file
+inurl:cgiirc.config ........................................... CGIIRC (Web-based IRC client) config file
+“Index of” / “chat/logs” ...................................... Chat logs
+intitle:”Index Of” cookies.txt “size” ......................... cookies.txt file reveals user information
+“phone * * *” “address *” “e-mail” intitle:”curriculum vitae” . Curriculum vitae (resumes) 
+ext:ini intext:env.ini ........................................ Generic environment data
+intitle:index.of inbox ........................................ Generic mailbox files
+“Running in Child mode” ....................................... Gnutella client data and statistics
+“:8080” “:3128” “:80” filetype:txt ............................ HTTP Proxy lists
+intitle:”Index of” dbconvert.exe chats ........................ ICQ chat logs
+“sets mode: +p” ............................................... IRC private channel information
+“sets mode: +s” ............................................... IRC secret channel information
+“Host Vulnerability Summary Report” ........................... ISS vulnerability scanner report
+“Network Vulnerability Assessment Report” ..................... ISS vulnerability scanner reports
+filetype:pot inurl:john.pot ................................... John the Ripper password cracker results
+intitle:”Index Of” -inurl:maillog maillog size ................ Maillog files reveals e-mail traffic information
+ext:mdb inurl:*.mdb inurl:fpdb shop.mdb ....................... Microsoft FrontPage database folders
+filetype:xls inurl:contact .................................... Microsoft Excel sheets containing con- tact information.
+intitle:index.of haccess.ctl .................................. Microsoft FrontPage equivalent(?)of htaccess 
+ext:log “Software: Microsoft Internet Information Services *.*” .. Microsoft Internet Information Services (IIS) log files
+filetype:pst inurl:”outlook.pst” .............................. Microsoft Outlook e-mail and calendar backup files
+intitle:index.of mt-db-pass.cgi ............................... Movable Type default file
+filetype:ctt ctt messenger .................................... MSN Messenger contact lists
+“This file was generated by Nessus” ........................... Nessus vulnerability scanner reports
+inurl:”newsletter/admin/” ..................................... Newsletter administration information
+inurl:”newsletter/admin/” intitle: ”newsletter admin” ......... Newsletter administration information
+filetype:eml eml intext:”Subject” +From ....................... Outlook Express e-mail files
+intitle:index.of inbox dbx .................................... Outlook Express Mailbox files
+intitle:index.of inbox dbx .................................... Outlook Express Mailbox files
+filetype:mbx mbx intext:Subject ............................... Outlook v1–v4 or Eudora mailbox files
+inurl:/public/?Cmd=contents ................................... Outlook Web Access public folders or appointments
+filetype:pdb pdb backup (Pilot | Pluckerdb) ................... Palm Pilot Hotsync database files
+“This is a Shareaza Node” ..................................... Shareaza client data and statistics
+inurl:/_layouts/settings ...................................... Sharepoint configuration information
+inurl:ssl.conf filetype:conf .................................. SSL configuration files
+site:edu admin grades ......................................... Student grades
+intitle:index.of mystuff.xml .................................. Trillian user Web links
+inurl:forward filetype:forward –cvs ........................... UNIX mail forward files reveal e-mail addresses
+intitle:index.of dead.letter .................................. UNIX unfinished e-mails
+filetype:conf inurl:unrealircd.conf -cvs -gentoo .............. UnrealIRCd config file reveals configuration information
+filetype:bkf bkf .............................................. Windows XP/2000 backup files
+            

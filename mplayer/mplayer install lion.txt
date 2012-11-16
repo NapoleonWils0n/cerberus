@@ -1,0 +1,33 @@
+mplayer, mencoder, ffmpeg install
+
+
+install yasm
+
+download mplayer with git
+
+git clone git://git.mplayerhq.hu/mplayer
+
+cd mplayer
+
+./configure
+
+press enter to download ffmpeg
+
+cd ffmpeg
+
+./configure
+
+make 
+
+sudo make install
+
+cd mplayer
+
+./configure
+
+make 
+
+
+sudo make install
+
+

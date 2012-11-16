@@ -1,0 +1,96 @@
+textmate 2 compile
+
+#-----------------------------------------------#
+
+# autoconf
+curl -OL http://ftpmirror.gnu.org/autoconf/autoconf-2.68.tar.gz
+tar xzf autoconf-2.68.tar.gz
+cd autoconf-2.68
+./configure
+make
+sudo make install
+
+#-----------------------------------------------#
+
+# automake
+curl -OL http://ftpmirror.gnu.org/automake/automake-1.11.tar.gz
+tar xzf automake-1.11.tar.gz
+cd automake-1.11
+./configure
+make
+sudo make install
+
+#-----------------------------------------------#
+
+# libtool
+curl -OL http://ftpmirror.gnu.org/libtool/libtool-2.4.tar.gz
+tar xzf libtool-2.4.tar.gz
+cd libtool-2.4
+./configure
+make
+sudo make install
+
+#-----------------------------------------------#
+
+# ninja
+git clone git://github.com/martine/ninja.git
+cd ninja
+./bootstrap.py
+# creates the binary
+# move binary to /usr/local/bin
+
+#-----------------------------------------------#
+
+# ragel
+download ragel as a tar.gz not .git
+./configure
+make
+sudo make install
+
+#-----------------------------------------------#
+
+# boost
+# download boost as a tar.gz
+
+# untar and move folder to /usr/local
+cd /usr/local/boost_1_51_0
+sudo ./bootstrap.sh 
+sudo ./b2
+sudo ./b2 install
+
+#-----------------------------------------------#
+
+# mercurial
+http://mercurial.selenic.com/
+
+# download and run the installer
+
+#-----------------------------------------------#
+
+# MultiMarkdown
+
+# download the and run the installers
+# http://fletcherpenney.net/multimarkdown/download/
+
+# MultiMarkdown-Mac-3.6.pkg.zip
+# MultiMarkdown-Support-Mac-3.6.pkg.zip
+
+#-----------------------------------------------#
+
+# install textmate
+
+sudo xcodebuild -license
+
+mkdir ~/build
+mkdir ~/build/src
+cd ~/build/src
+git clone https://github.com/textmate/textmate.git
+cd textmate
+git submodule update --init
+./configure && ninja
+
+
+# copy the TextMate.app ~/build/TextMate/Applications/TextMate/TextMate.app 
+#to your Aplications folder 
+
+# delete the build folder ~/build/

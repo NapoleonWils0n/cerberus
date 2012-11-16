@@ -1,0 +1,62 @@
+rtmpdump install
+
+/*********************************/
+
+Install ming from git hub
+
+/*********************************/
+
+
+http://github.com/strk/libming
+
+
+git clone http://github.com/strk/libming.git
+
+
+To build Ming it needs libtoolize
+Apple renamed libtoolize to glibtollize in /usr/bin/glibtoolize
+
+So we need to make a symbolic link for lintoolize to glibtoolize
+
+sudo ln -s /usr/bin/glibtoolize /usr/bin/libtoolize
+
+
+then build Ming
+
+1. If you're using a development snapshot rather than a stable
+   release then,
+    $ sh autogen.sh
+
+2. Compile the library
+    $ ./configure
+    $ make
+
+3. Install (you usually need to be root to do this)
+    $ sudo make install
+
+
+/*********************************/
+
+Install rtmpdump
+
+
+Download from subversion
+
+
+svn co svn://svn.mplayerhq.hu/rtmpdump/trunk rtmpdump
+
+cd rtmpdump
+
+make SYS=darwin
+
+sudo make SYS=darwin install
+
+
+
+
+/*********************************/
+
+
+
+
+

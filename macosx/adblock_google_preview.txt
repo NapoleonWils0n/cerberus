@@ -1,0 +1,4 @@
+www.google.co.uk##BUTTON[class="vspib"]
+www.google.co.uk##DIV[id="vspb"]
+www.google.com##BUTTON[class="vspib"]
+www.google.com##DIV[id="vspb"]

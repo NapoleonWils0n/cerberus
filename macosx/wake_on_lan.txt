@@ -1,0 +1,23 @@
+property MAC_address : "00:16:cb:a3:84:0c"
+property WAN_IP_address : "255.255.255.255"
+
+on run
+set command to "/usr/bin/php -r " & quoted form of ("$mac = " & quoted form of MAC_address & "; $ip = " & quoted form of WAN_IP_address & "; " & " 
+$mac_bytes = explode(\":\", $mac); 
+$mac_addr = \"\"; 
+for ($i=0; $i<6; $i++) 
+$mac_addr .= chr(hexdec($mac_bytes[$i])); 
+$packet = \"\"; 
+for ($i=0; $i<6; $i++)	/*6x 0xFF*/ 
+$packet .= chr(255); 
+for ($i=0; $i<16; $i++)	/*16x MAC address*/ 
+$packet .= $mac_addr; 
+
+$port = 9; 
+$sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP); 
+socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, TRUE); 
+socket_sendto($sock, $packet, strlen($packet), 0, $ip, $port); 
+socket_close($sock); 
+")
+do shell script command
+end run

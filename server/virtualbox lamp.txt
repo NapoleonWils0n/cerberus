@@ -1,0 +1,212 @@
+lamp virtual box set up
+
+1 - download Ubuntu server iso
+
+2 - create directory structure for iso and vbox files
+
+3 - create new virtual machine
+
+4 - go to network and set to bridged
+
+5 - go to cd and add the path to the iso
+
+6 - specify where to save the vbox file
+
+7 - start the vbox machine and run the installer
+
+8 - select english for the language
+
+9 - select the guess keyboard layout and select gb
+
+10 - create host name
+
+11 - select time zone
+
+12 - partition disks - select 2nd option - use entire disk and set up LVM
+
+13 - create the user account and password
+
+14 - no auto updates
+
+15 - software selection - select lamp
+
+16 - visudo - add user to sudoers file, sudo su, visudo
+
+17 - sudo aptitude install build-essential
+
+18 - sudo apt-get install openssh-server
+
+mkdir /home/username/.ssh
+
+chown -R username:username /username/demo/.ssh
+
+chmod 700 /home/username/.ssh
+
+sudo nano /etc/ssh/sshd_config
+
+
+Port 22                           <--- change to a port of your choosing
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication no
+X11Forwarding no
+UsePAM no
+UseDNS no
+AllowUsers username
+
+
+scp ~/.ssh/id_rsa.pub username@192.168.1.18:/home/username/.ssh/authorized_keys
+
+
+sudo chmod 600 /home/username/.ssh/authorized_keys
+
+
+sudo /etc/init.d/ssh reload
+
+
+19 - ufw firewall
+
+sudo ufw default deny incoming
+
+sudo ufw allow ssh
+
+sudo ufw allow www
+
+sudo ufw enable
+
+20 - sudo apt-get update
+
+21 - sudo apt-get dist-upgrade
+
+22 - sudo tasksel install lamp-server
+
+23 - mysql root password: toor
+
+24 - apache2: Could not determine the server's fully qualified domain name, using 127.0.0.1 for servername
+
+echo "ServerName localhost" | sudo tee /etc/apache2/conf.d/fqdn
+
+
+add username to www-data group
+
+
+sudo usermod -G www-data username
+
+
+add group write permission to the drupal sites directory
+
+sudo chmod -R g+w sites
+
+
+
+25 - install guest additions
+
+sudo apt-get install dkms
+
+select install guest additions from the devices menu
+
+check the device menu, CD/DVD devices VboxGuestAdditions.iso should be selected
+
+switch to the terminal
+
+create the mount point for the cd
+
+sudo mkdir /media/cdrom
+
+sudo mount /dev/cdrom /media/cdrom
+
+cd /media/cdrom
+
+check which version server you are running 32 or 64 bit
+
+uname -a
+
+i386/i486/i586/i686 it is a 32 bit kernel.
+
+sudo ./VBoxLinuxAdditions-x86.run
+
+26 - php set up
+
+
+sudo nano /etc/php5/apache2/php.ini
+
+sudo /etc/init.d/apache2 restart
+
+
+27 - php gd image install
+
+sudo apt-get install php5-gd
+
+sudo /etc/init.d/apache2 restart
+
+
+28 - mounting and un-mounting mac file system
+
+mount
+
+sudo mount -t vboxsf [-o OPTIONS] sharename mountpoint
+
+unmount
+
+sudo umount -t vboxsf [-o OPTIONS] sharename mountpoint
+
+
+29 - php pdo set up
+
+sudo nano /etc/php5/apache2/php.ini
+
+add this to the bottom of the file and save
+
+extension=pdo.so
+extension=pdo_mysql.so
+
+
+30 - php pecl upload
+
+
+sudo apt-get install php5-dev php-pear make
+
+
+download the pecl upload progress
+
+cd /usr/local/src
+
+wget link
+
+un tar the file
+
+tar -zxvf file
+
+cd file
+
+phpize
+
+./configure
+
+make
+
+sudo make install
+
+
+edit php.ini
+
+sudo nano /etc/php5/apache/php.ini
+
+
+add this to the end of the file
+
+extension=uploadprogress.so
+extension_dir=/usr/lib/php5/20090626+lfs/
+
+
+restart apache 
+
+sudo /etc/init.d/apache restart
+
+
+pecl should now be working
+
+
+
+
+

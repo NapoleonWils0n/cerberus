@@ -1,0 +1,13 @@
+How to convert a .deb into .ipa for iPhone or iPad
+
+use the archiver browser to look inside the .deb 
+
+then extract the data. file
+
+
+ar vx app.deb
+
+rename to folder to payload
+
+
+ditto -c -k --keepParent -rsrc ./usrs/Payload/TheFolder ./application.ipa

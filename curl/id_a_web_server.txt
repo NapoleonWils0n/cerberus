@@ -1,0 +1,12 @@
+Two quick and dirty ways to ID a web server.
+
+
+1
+
+curl -I www.hak5.org
+
+2
+
+telnet www.hak5.org 80
+
+HEAD / HTTP/1.0

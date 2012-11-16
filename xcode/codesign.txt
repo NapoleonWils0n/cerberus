@@ -1,0 +1,6 @@
+#----------------------------------------------------------------------------------------#
+#	code sign app - create codesign certificate  #
+#----------------------------------------------------------------------------------------#
+
+# create a new certificate with keychain call it
+# 3rd Party Mac Developer Application

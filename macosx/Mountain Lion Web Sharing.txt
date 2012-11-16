@@ -1,0 +1,125 @@
+Mountain Lion Web Sharing
+
+
+Apache/WebSharing
+The first difference in the new OS X 10.8 is the dropping of the GUI option to turn on Web Sharing in the System Preferences, it may be gone but Apache is definitely installed in the lower level of the OS and ready to go.
+
+
+No Web Sharing Option in System Preferences
+
+Apache is pre-installed and needs to be enabled via the command line - /Applications/Utilities/Terminal
+
+to start it
+
+sudo apachectl start
+to stop it
+
+sudo apachectl stop
+to restart it
+
+sudo apachectl restart
+To find the Apache version
+
+httpd -v
+The version installed in Golden Master is Apache/2.2.22
+
+
+
+After starting Apache - test in the browser - http://localhost - you should see the "It Works!" text.
+
+Document Root
+Document root is the location where the files are shared from the file system and is similar to the traditional names of 'public_html' and 'htdocs', OSX has historically had 2 web roots one at a system level and one at a user level - you can set both up or just run with one, the user level one allows multiple acounts to have their own web root whilst the system one is global. It seems there is less effort from Apple in continuing with the user level one but it still can be set up with a couple of extra tweaks.
+
+System Level Web Root
+- the default system document root is still found at - 
+
+http://localhost/
+It is found in the filing system at -  
+
+/Library/WebServer/Documents/
+User Level Root
+Interestingly the user document root level is missing the '~/Sites' folder in the User account, you need to make a "Sites" folder at the root level of your account and then it will work.
+
+
+Create a Sites folder at the account root level 
+
+Check that you have a “username.conf” filed under:
+
+/etc/apache2/users/
+If you don’t then create one named by the short username of the account with the suffix .conf, its contents should be (swap in the real username):
+
+cd /etc/apache2/users
+
+sudo nano username.conf
+Then add the content below swapping in your username:
+
+<Directory "/Users/username/Sites/">
+Options Indexes MultiViews
+AllowOverride All
+Order allow,deny
+Allow from all
+</Directory>
+Permissions on the file should be:
+
+-rw-r--r--   1 root  wheel  298 Jun 28 16:47 username.conf
+Restart Apache for the new file to be read:
+
+sudo apachectl restart
+Then this user level document root will be viewable at:
+
+http://localhost/~username/
+ 
+
+PHP
+PHP 5.3.13 is loaded in OSX 10.8 Mountain Lion and needs to be turned on by uncommenting a line in the httpd.conf file.
+
+sudo nano /etc/apache2/httpd.conf
+Use "control" + "w" to search and search for 'php' this will land you on the right line then uncomment the line (remove the #):
+
+LoadModule php5_module libexec/apache2/libphp5.so
+Write out and Save using the nano short cut keys at the bottom 'control o' and 'control x'
+
+Re-load apache to kick in
+
+sudo apachectl restart
+To see and test PHP, create a file name it "phpinfo.php" and file it in your document root with the contents below, then view it in a browser.
+
+ <?php phpinfo(); ?>
+ 
+
+MySQL
+MySQL is again a missing component in OS X 10.8 and needs to be dowloaded from the MySQL site use the Mac OS X ver. 10.6 (x86, 64-bit), DMG Archive version (works fine on 10.8).
+
+When downloading you don’t have to sign up, look for » No thanks, just take me to the downloads!  - go straight to the download mirrors and download the software from a mirror which is closest to you.
+
+Once downloaded install the 3 components. You may need to adjust the Security and Privacy System Pref to allow installs.
+
+
+
+mysql5.5.xxx.pkg
+MySQLstartupitem.pkg
+MySQLPrefPane
+The first is the MySQL software, the 2nd item allows MySQL to start when the Mac is booted and the third is a System Preference that allows start/stop operation and a preference to enable it to start on boot.
+
+You can start the MySQL server from the System Preferences or via the command line 
+
+
+
+sudo /usr/local/mysql/support-files/mysql.server start 
+To find the MySQL version from the terminal, type at the prompt:
+
+/usr/local/mysql/bin/mysql -v
+This also puts you in to an interactive dialogue with mySQL, type \q to exit.
+
+After installation, in order to use mysql commands without typing the full path to the commands you need to add the mysql directory to your shell path, this is done in your “.bash_profile” file in your home directory, if you don’t have that file just create it using vi or nano:
+
+cd ; nano .bash_profile
+export PATH="/usr/local/mysql/bin:$PATH"
+The first command brings you to your home directory and opens the .bash_profile file or creates a new one if it doesn’t exist, then add in the line above which adds the mysql binary path to commands that you can run. Exit the file with type “control + x” and when prompted save the change by typing “y”. Last thing to do here is to reload the shell for the above to work straight away.
+
+source ~/.bash_profile
+mysql -v
+You will get the version number again, just type “\q” to exit.
+
+Set the root password
+/usr/local/mysql/bin/mysqladmin -u root password 'yourpasswordhere'

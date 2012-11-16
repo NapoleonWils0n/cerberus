@@ -1,0 +1,4 @@
+Stop Pasting Full Names When Copying an Email Address in Mac OS X Mail
+
+
+defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false

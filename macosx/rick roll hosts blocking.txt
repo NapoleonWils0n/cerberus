@@ -1,0 +1,47 @@
+/*----------------------------------------------------------------------------------------*/
+/*	rick roll hosts blocking */
+/*----------------------------------------------------------------------------------------*/
+
+
+used with /etc/hosts
+
+format
+
+127.0.0.1 somedomain.com
+
+/*----------------------------------------------------------------------------------------*/
+
+/Library/WebServer/Documents/index.html
+
+/*----------------------------------------------------------------------------------------*/
+
+
+<!DOCTYPE HTML>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <title>It works! dog</title>
+    <meta name="description" content="" /> 
+ <style>
+html {
+/*   width:100%;
+   height:100%;
+   background:url(banner.jpg) center center no-repeat;*/
+}
+</style>
+</head>
+<body>
+
+	<iframe width="420" height="315" src="http://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+
+</body>
+</html>
+
+
+
+# ============================
+# = reload macosx /etc/hosts =
+# ============================
+
+
+dscacheutil -flushcache

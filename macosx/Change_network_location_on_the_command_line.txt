@@ -1,0 +1,24 @@
+Change network location on the command line
+
+
+Type this command to list the available Locations
+
+scselect
+
+
+To change the location the syntax is as follows
+
+scselect location-name
+
+
+eg to switch to Ethernet
+
+
+scselect Ethernet
+
+
+
+eg to switch to Airport
+
+
+scselect Airport

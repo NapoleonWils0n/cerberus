@@ -1,0 +1,6 @@
+leopard show users and groups
+
+
+dscacheutil -q group
+
+dscacheutil -q user

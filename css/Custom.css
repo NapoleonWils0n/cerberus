@@ -1,0 +1,9 @@
+/*
+Google chrome user style sheet
+style sheet location
+~/Library/Applcation Support/Google/Chrome/Default/User StyleSheets/Custom.css
+
+.esw style blocks google plus button in search results
+*/
+
+.esw { display:none!important; }

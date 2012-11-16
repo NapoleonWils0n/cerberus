@@ -1,0 +1,137 @@
+/*----------------------------------------------------------------------------------------*/
+/*	Mac osx Lion tips */
+/*----------------------------------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	cycle through the different open windows */
+/*----------------------------------------------------------------------------------------*/
+
+You can cycle through the different open windows in one program without using the mouse. Just press c-~ (that is, the tilde key, to the left of the number 1 key on U.S. keyboards). With each press, you bring a different window forward within the current program. It works both in the Finder and in your everyday programs.
+
+/*----------------------------------------------------------------------------------------*/
+/*	Arranging files */
+/*----------------------------------------------------------------------------------------*/
+
+Arranging files is a new concept in Lion. It means, “Put my files into related clumps, separated by headings that identify them.” You can arrange files in any of the views— icon, list, column, Cover Flow—and there are some incredibly useful options here.
+For example, you can arrange your documents into Application groups (meaning, which program opens each one); now you can see at a glance which files will open in, say, iTunes when you double-
+click them.
+
+• Choose ViewÆArrange By. Choose one of the criteria from the submenu. Your options are Name (alphabetically); Kind (type of file, like Images, Movies, and Documents); Application (which program opens which documents); Date (Last Opened, Added [to the window], Modified, or Created); Size; or Label (Finder label colors, described on page 90). Marvel as the Finder puts your files into tidy categorized groups
+
+/*----------------------------------------------------------------------------------------*/
+/*	Quick look */
+/*----------------------------------------------------------------------------------------*/
+
+If you press Option-space bar, or Option-click the eyeball icon in any Finder window, you go straight into
+Full Screen mode without having to open the smaller Quick Look window first. Kewl.
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	delete and put back */
+/*----------------------------------------------------------------------------------------*/
+
+The same keystroke you use to hurl something into the trash—cmd-Delete—also works to hurl it back out again. 
+
+That is, you can highlight something in the Trash and press cmd-Delete to put it back where it once belonged.
+
+/*----------------------------------------------------------------------------------------*/
+/*	get info multiple items */
+/*----------------------------------------------------------------------------------------*/
+
+Ordinarily, when you click an icon and then choose FileÆGet Info, a new dialog box appears for each icon (unless you’ve highlighted a lot of icons, as described above).
+
+But there’s a useful variation on the Get Info dialog box called the Inspector. It’s a single Get Info window that changes, even though it remains open on the screen, as you click different icons. It’s a clutter-free way to explore different files, icons, and disks.
+
+To open the Inspector, highlight an icon and then press Option-c-I (or hold down Option and choose FileÆShow Inspector). The Get Info Inspector window that appears looks slightly different (it has a smaller title bar and a dimmed Minimize button), and it changes to reflect whatever icons you now click.
+
+/*----------------------------------------------------------------------------------------*/
+/*	New Email With Attachment.  */
+/*----------------------------------------------------------------------------------------*/
+
+For the first time, Mac OS X comes with a built-in “email this file right off the desktop” command. It whips open Mail and creates a new, outgoing message with the selected file (or files) already attached. Address and send, and make a sacrifice to the right-clicky gods.
+
+All you have to do is Control-click (or right-click) a file, a folder, or a group of icons, and, from the shortcut menu, choose ServicesÆNew Email With Attachment.
+
+/*----------------------------------------------------------------------------------------*/
+/*	New Folder with Selection */
+/*----------------------------------------------------------------------------------------*/
+
+Imagine this: You’ve got a bunch of scat- tered icons on your desktop, or a mass of related files in a window. You can now highlight all of them; right-click any one of them; and from the shortcut menu, choose “New Folder with Selection (8 items)” (or whatever the number of icons is).
+
+With a cool animation, the Finder visibly throws the selected icons into a brand- new folder. It’s initially named New Folder With Items (duh), but the hard part is over. All you have to do is rename it—and be grateful that you were spared the 736 steps it would have taken you to do the same job manually.
+
+/*----------------------------------------------------------------------------------------*/
+/*	Control Menulets */
+/*----------------------------------------------------------------------------------------*/
+
+Here’s a gem you may not have heard about: You can now operate menulets—those menu-bar status indicators for your speaker volume, wireless networks, and so on— from the keyboard, too.
+
+This time, the trick is to hit Control-F8. That highlights the leftmost Apple menulet. Now you can use your < and > arrow keys to move around the menu bar; when you’ve highlighted the one you want, press Return or the space bar to “click” that menu and open it.
+
+/*----------------------------------------------------------------------------------------*/
+/*	Control Dialog Boxes. */
+/*----------------------------------------------------------------------------------------*/
+
+You can also navigate and manipulate any dialog box from the keyboard.
+See the dialog box shown in Figure 5-25? If you turn on “All controls” at the bottom, then pressing the Tab key highlights the next control of any type, whatever it may be—radio button, pop-up menu, and so on. Press the space bar to “click” a button or to open a pop-up menu. 
+
+Once a menu is open, use the arrow keys (or type letter keys) to highlight commands on it, and use the space bar to “click” your choice.
+
+/*----------------------------------------------------------------------------------------*/
+/*	Open or Save dialog boxes */
+/*----------------------------------------------------------------------------------------*/
+
+When the Open or Save dialog box is open before you, you can press Shift-cmd-period (.) to make all your Mac’s hidden files appear. (As a Unix-based outfit, Mac OS X is crawling with these invisible files, which are of primary interest to technical types.) 
+
+Press that keystroke again to hide the hidden files once again. Fun for geeks!
+
+/*----------------------------------------------------------------------------------------*/
+/*	Versions */
+/*----------------------------------------------------------------------------------------*/
+
+If you press Option, the Restore button changes to say Restore a Copy. 
+
+In other words, you’ll create a previous-version duplicate of the document, without disturbing the current condition of the one you’ve just been working on.
+
+• Restore part of an earlier version. Often, the current version of your work is generally good, but you really wish you could recover one magical sentence or paragraph or section—something you’ve since edited or deleted.
+
+You can do that in Starry Versionland, too, because Copy and Paste work here!
+
+/*----------------------------------------------------------------------------------------*/
+/*	Keyboard shortcuts */
+/*----------------------------------------------------------------------------------------*/
+
+• Control-A. Moves your insertion point to the beginning of the paragraph. (Mnemonic: A = beginning of the Alphabet.)
+
+• Control-E. Deposits your insertion point at the end of the paragraph. (Mnemonic: E = End.)
+
+• Control-D. Forward delete (deletes the letter to the right of the insertion point).
+
+• Control-K. Instantly deletes all text from the insertion point to the right end of
+the line. (Mnemonic: K = Kills the rest of the line.)
+
+• Control-O. Inserts a paragraph break, much like Return, but leaves the insertion point where it was, above the break. This is the ideal trick for breaking a paragraph in half when you’ve just thought of a better ending for the first part.
+
+• Control-T. Moves the insertion point one letter to the right—and along with it, drags whichever letter was to its left. (Mnemonic: T = Transpose letters.)
+
+• Option-Delete. Deletes the entire word to the left of the insertion point. When you’re typing along in a hurry and you discover that you’ve just made a typo, this is the keystroke you want. It’s much faster to nuke the previous word and retype it than to fiddle around with the mouse and the insertion point just to fix one letter.
+
+Four additional keystrokes duplicate the functions of the arrow keys. Still, as long as you’ve got your pinky on that Control key...
+
+• Control-B, Control-F. Move the insertion point one character to the left or right, just like the left and right arrow keys. (Mnemonic: Back, Forward).
+
+• Control-N, Control-P. Move the insertion point one row down or up, like the down and up arrow keys. (Mnemonic: Next, Previous).
+
+/*----------------------------------------------------------------------------------------*/
+/*	Cool text-selection tricks */
+/*----------------------------------------------------------------------------------------*/
+
+By holding down certain keys while dragging through text in a Cocoa program, you gain some wild and wacky text-selection powers (especially useful in, for example, TextEdit and Pages):
+
+• Highlight only one column out of several by Option-dragging. Instead of high- lighting all the text, margin to margin, you get only the text within your selection rectangle.
+
+• Highlight several passages simultaneously by c-dragging. Each time you c-drag, you highlight another block of text, even though the earlier blocks are still selected (see Figure 5-33).
+
+Tip: In most Cocoa programs, you can combine these two tricks. That is, you can select multiple, arbitrary (not full-page-width) blocks of text by pressing both Option and c as you drag.
+

@@ -1,0 +1,20 @@
+   1. Click Restart at the login window
+   2. While the computer is restarting, hold down "Command-S" until you see text scrolling through the window. This boots the computer into single user mode.
+   3. At the Localhost% prompt type:
+
+      /sbin/mount -uw /
+      /sbin/SystemStarter
+
+      You will then see various services starting up.
+
+   4. When the Localhost% prompt reappears, type:
+
+      passwd root
+
+      It will then ask you to type the new root password twice, so do so.
+
+   5. After entering the new password, type:
+
+      reboot
+
+At the login window, enter username root wih the new password. Once you are connected, you can use the Multiple Users application (/Applications/Utilities) to change your normal user's password, or create a new user account. 

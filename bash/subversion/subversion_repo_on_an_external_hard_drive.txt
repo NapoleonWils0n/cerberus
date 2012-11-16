@@ -1,0 +1,8 @@
+subversion repo on an external hard drive
+
+
+1 - do a get info on the hard dive
+
+2 - uncheck - ignore ownership on this volume
+
+proceed as a normal subversion repo set up

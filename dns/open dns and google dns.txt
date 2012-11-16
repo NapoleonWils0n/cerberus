@@ -1,0 +1,12 @@
+Switching to Google DNS
+
+If you want to use Google’s DNS servers, you can add the following two items to the list:
+
+8.8.8.8
+8.8.4.4
+Switching to OpenDNS
+
+If you’d rather use OpenDNS instead, which has lots of extra features, you can use the following two entries:
+
+208.67.222.222
+208.67.220.220

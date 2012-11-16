@@ -1,0 +1,176 @@
+
+
+googlecl command line tool - manual
+
+
+/***********************************************************************************************/
+
+
+Docs
+
+Common options:
+
+format: Force docs to use the extension you provide.
+folder: Specify a folder on Docs to search in or upload to.
+Tasks:
+
+delete: Delete docs. delete --title "Evidence"
+edit: Edit or view a document. edit --title "Shopping list" --editor vim
+get: Download docs. get --title "Homework [0-9]*"
+list: List documents. list title,url-direct --delimiter ": "
+upload: Upload documents. upload the_bobs.csv ~/work/docs_to_share
+
+/***********************************************************************************************/
+
+	$ google docs get my_doc .
+is interpreted as "$ google docs get --title=my_doc --dest=.
+(folder is NOT set, since the title option is satisfied first.)
+
+/***********************************************************************************************/
+
+Available tasks for service docs: 'edit', 'delete', 'list', 'upload', 'get'
+ edit: Edit a document
+  Requires: title Optional: format, editor, folder
+
+ delete: Delete documents
+  Requires: title Optional: folder
+
+ list: List documents
+  Requires: fields AND delimiter Optional: title, folder
+
+ upload: Upload a document
+  Requires: src Optional: title, folder, format
+
+ get: Download a document
+  Requires: (title OR folder) AND dest Optional: format
+
+/***********************************************************************************************/
+
+
+
+Docs
+Note: --folder will take the name of any folder, even subfolders.
+
+delete
+Delete documents.
+
+Requires: title Optional: folder
+
+delete "Evidence"
+delete ".*" --folder junk
+edit
+Edit a document.
+
+Requires: title Optional: format, editor, folder
+
+Note: editing with Open Office will not work. See  Issue 79 .
+
+Note: You must have python-gdata >= 1.3.0 to edit documents.
+
+edit "Shopping list" --editor vim
+edit "Budget" --format html
+get
+Download a document.
+
+Requires: (title OR folder) AND dest Optional: format
+
+Note: You must have python-gdata >= 1.3.0 to download documents.
+
+get --folder Homework .
+get "Expense sheet" expenses.xls
+list
+List documents.
+
+Requires: fields AND delimiter Optional: title, folder
+
+list
+list --folder essays --fields title,url --delimiter " : "
+upload
+Upload a document.
+
+Requires: src Optional: title, folder, format
+
+Note: --folder will accept only one folder to upload into. If you have two or more folders with the same name, even subfolders, you will have to pick between them (hard to do when they have the same name).
+
+Note: Users with a Google Apps Premium account can use an additional option: --no-convert. This will let you upload arbitrary filetypes to Docs, like you can through the web interface. Unfortunately, this is not enabled for regular users.
+
+upload ~/docs/to/share/*
+upload Necronomicon.doc --folder "Book club" --title "Pride and Prejudice"
+upload my_contacts.csv # Upload a CSV file, automatically converted to a spreadsheet.
+upload my_contacts.csv --format txt # Upload a CSV file, keep as plain text.
+
+
+/***********************************************************************************************/
+
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  --access=ACCESS       Specify access/visibility level of an upload
+  --blog=BLOG           Blogger only - specify a blog other than your primary.
+  --cal=CAL             Calendar only - specify a calendar other than your
+                        primary.
+  -c CATEGORY, --category=CATEGORY
+                        YouTube only - specify video categories as a comma-
+                        separated list, e.g. "Film, Travel"
+  --commission=COMMISSION
+                        Finance only - specify commission for transaction
+  --config=CONFIG       Specify location of config file.
+  --currency=CURRENCY   Finance only - specify currency for portfolio
+  --devtags=DEVTAGS     YouTube only - specify developer tags as a comma-
+                        separated list.
+  --devkey=DEVKEY       YouTube only - specify a developer key
+  -d DATE, --date=DATE  Calendar only - date of the event to add/look for. Can
+                        also specify a range with a comma. Picasa only - sets
+                        the date of the album Finance only - transaction
+                        creation date
+  --debug               Enable all debugging output, including HTTP data
+  --delimiter=DELIMITER
+                        Specify a delimiter for the output of the list task.
+  --dest=DEST           Destination. Typically, where to save data being
+                        downloaded.
+  --draft               Blogger only - post as a draft. Shorthand for
+                        --access=draft
+  --editor=EDITOR       Docs only - editor to use on a file.
+  --fields=FIELDS       Fields to list with list task.
+  -f FOLDER, --folder=FOLDER
+                        Docs only - specify folder(s) to upload to / search
+                        in.
+  --force-auth          Force validation step for re-used access tokens
+                        (Overrides --skip-auth).
+  --format=FORMAT       Docs only - format to download documents as.
+  --hostid=HOSTID       Label the machine being used.
+  -n TITLE, --title=TITLE
+                        Title of the item
+  --no-convert          Google Apps Premier only - do not convert the file on
+                        upload. (Else converts to native Google Docs format)
+  --notes=NOTES         Finance only - specify notes for transaction
+  -o OWNER, --owner=OWNER
+                        Username or ID of the owner of the resource. For
+                        example, 'picasa list-albums -o bob' to list bob's
+                        albums
+  --photo=PHOTO         Picasa only - specify title or name of photo(s)
+  --price=PRICE         Finance only - specify price for transaction
+  -q QUERY, --query=QUERY
+                        Full text query string for specifying items. Searches
+                        on titles, captions, and tags.
+  --quiet               Print only prompts and error messages
+  --reminder=REMINDER   Calendar only - specify time for added event's
+                        reminder, e.g. "10m", "3h", "1d"
+  --shares=SHARES       Finance only - specify amount of shares for
+                        transaction
+  --skip-auth           Skip validation step for re-used access tokens.
+  --src=SRC             Source. Typically files to upload.
+  -s SUMMARY, --summary=SUMMARY
+                        Description of the upload, or file containing the
+                        description.
+  -t TAGS, --tags=TAGS  Tags for item, e.g. "Sunsets, Earth Day"
+  --ticker=TICKER       Finance only - specify ticker
+  --ttype=TTYPE         Finance only - specify transaction type, e.g. "Bye",
+                        "Sell", "Buy to Cover", "Sell Short"
+  --txnid=TXNID         Finance only - specify transaction id
+  -u USER, --user=USER  Username to log in with for the service.
+  -v, --verbose         Print all messages.
+  --yes                 Answer "yes" to all prompts
+
+

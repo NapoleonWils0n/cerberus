@@ -1,0 +1,26 @@
+Hide the Spotlight Menu Icon in OS X Lion
+
+
+This does not disable Spotlight, it only hides the icon on the menubar.
+
+Launch the Terminal from /Applications/Utilities/ and copy and paste the following code:
+
+sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+
+Next, you've to kill SystemUIServer to refresh the menubar and have the change take effect:
+
+killall SystemUIServer
+Icon should now be hidden like the image below:
+
+
+
+Show the Spotlight Menu Again
+
+
+If you ever hide yourself wanting the Spotlight icon back, it's simple just enter the following code:
+
+sudo chmod 755 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+And again, kill SystemUIServer:
+
+killall SystemUIServer
+The Spotlight menu will be visible again:

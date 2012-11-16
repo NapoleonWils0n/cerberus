@@ -1,0 +1,10 @@
+ =================
+ = Textmate tips =
+ =================
+
+
+textmate open files with default application
+
+so when you double click on css file in a textmate project it opens with css edits
+
+control click on the css file and select - treat files asa binary

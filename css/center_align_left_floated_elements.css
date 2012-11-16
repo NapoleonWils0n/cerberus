@@ -1,0 +1,40 @@
+ul	{
+	margin: 20px;
+	padding: 0;
+	list-style-type: none;
+	text-align: center;
+}
+
+li	{
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+li a	{
+	text-decoration: none;
+	color: #555;
+	padding: 4px 6px;
+	border: 1px solid #ccc;
+	margin: 0 4px;
+}
+
+li a:hover	{
+	border: 1px solid #999;
+	color: #333;
+	background-color: #f2f2f2;
+}
+
+
+* html li	{ display: inline; }
+*+html li	{ display: inline; }
+
+li a	{
+	text-decoration: none;
+	color: #555;
+	padding: 4px 6px;
+	border: 1px solid #ccc;
+	margin: 0 4px;
+	zoom: 1;
+}

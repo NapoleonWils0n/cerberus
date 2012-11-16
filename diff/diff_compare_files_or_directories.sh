@@ -1,0 +1,17 @@
+#!/bin/sh
+
+ # =====================================
+ # = diff compare files or directories =
+ # =====================================
+
+# As mentioned in other hints, diff can not only compare two files, it can, by using the -r option, walk entire directory trees, recursively checking differences between subdirectories and files that occur at comparable points in each tree. The trick is to use the -q option to suppress line-by-line comparisons in files that differ:
+
+diff -rq dirA dirB
+
+# This command will provide a nice list of files that occur in dirA but not in dirB, files that occur in dirB, but not in dirA, and files that differ between dirA and dirB. Pipe the output through grep to remove mention of uninteresting files, and sort to tidy it up, e.g.:
+
+diff -qr dirA dirB | grep -v -e 'DS_Store' -e 'Thumbs' | sort > diffs.txt
+
+# This list gives me a good feel for the big picture before I start overwriting things: which files or subdirectories can be deleted, which can be synced (and in which direction) using rsync, and which should be carefully checked before replacing, in case changes need to be merged.
+
+diff <(find /Users/$USER/Desktop) <(ssh -n 84.9.98.26 find /Users/$USER/Desktop) > out.txt

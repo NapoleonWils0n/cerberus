@@ -1,0 +1,23 @@
+Applescript 
+
+Hide the Finder toolbar ( classic mode )
+Boleean settings
+
+false = 0
+true = 1
+
+false
+
+tell application "Finder" to set toolbar visible of every Finder window to 0
+
+true
+
+tell application "Finder" to set toolbar visible of every Finder window to 1
+
+Set Finder sidebar width to 0
+
+tell application "Finder" to set the sidebar width of every Finder window to 0
+
+default width
+
+tell application "Finder" to set the sidebar width of every Finder window to 135

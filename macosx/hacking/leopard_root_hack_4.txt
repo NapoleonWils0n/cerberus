@@ -1,0 +1,31 @@
+This process basically forces your computer to re-run setup, which is what you see when you setup a new Mac.
+
+This process will take about 5-10 minutes. If you have a password, or WEP code for your network or internet, be sure to have that at hand.
+
+If the computer doesn't have an Open Firmware Password, that this should work fine. If it does, than you're out of luck
+
+Step 1: Boot in single user mode (Single user mode bypasses the GUI, which is all the visual stuff, and gives you something called "root access") by pressing Command + S (Apple+S) when the first shade of blue appears on the screen, and holding it down until the screen turns black with white text.
+
+Step 2: Wait for all the code stuff to load. Now, the first thing we need to do in single user mode is mount the hard drive so we can edit it. 
+
+You enter this command in: /sbin/fsck -fy
+You enter this command in : /sbin/mount -uw /
+
+It should say something about removing orphaned unlinked files.
+
+Step 3: We are going to delete a little file that tells your computer every time you start up that you've completed the setup 
+by entering this command: rm /var/db/.applesetupdone
+
+It should just bump down, waiting for the next command if it worked.
+
+Step 4: Now type, reboot
+
+Step 5: It should shut down and reboot. Than, a setup window will appear, asking you what language you want your computer to be in, just like you see when you setup a newly purchased Mac.
+
+A welcome video will play after you select the language. It has some pretty cool music, but if your in a room with other people, I'd mute it right after the video starts, or have headphones handy.
+
+Step 6: Setup the computer. Select "DO NOT TRANSFER MY DATA". Don't worry, all your old stuff will still be there. Choose your internet connection and network, here is where you need your WEP or security password if you have one.
+
+Step 7: Create a new local account to administer that computer. You usually want to enter the name of the computer as the longname, and the shortname what you'll log in as. Say your computer's old name was "Frank's Computer", than just put Frank as the longname, because it will automatically as " 's Computer" at the end. MAKE SURE THAT BOTH USERNAMES ARE DIFFERENT FROM THE EXSISTING ONES, OTHERWISE IT WILL OVERWRITE.
+
+Step 8: Finish the setup, and you should automatically be logged into your new administrator account.

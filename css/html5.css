@@ -1,0 +1,600 @@
+
+
+/* Structure -------------------- Structure -----------------------*/
+
+html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	}
+	
+
+@font-face {
+	font-family: "GraublauWeb";
+	src: local("GraublauWeb"),
+	url("fonts/GraublauWeb.otf") format("opentype");
+	}
+	
+@font-face {
+	font-family: "GraublauWebBold";
+	src: local("GraublauWebBold"),
+	url("fonts/GraublauWebBold.otf") format("opentype");
+	font-weight: bold;
+	}	
+
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font: 11px/1.5 "Lucida Grande", Lucida, Verdana, sans-serif;
+	background: rgba(51,51,51,1);
+/*	background: -moz-linear-gradient(top, rgba(178,178,178,1), rgba(255,255,255,1)) no-repeat;
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(178,178,178,1)), to(rgba(255,255,255,1))) no-repeat; */
+	color: rgba(51,51,51,1);
+	}
+
+
+/* html5 -------------------------- html5 -------------------------*/
+
+section {
+	display: block;
+	margin: 0;
+	padding: 0;
+	}
+
+article	{
+	display: block;
+	margin: 0;
+	padding: 0;
+	}
+
+aside {
+	display: block;
+	margin: 0;
+	padding: 0;
+	}
+	
+header {
+	display: block;
+	margin: 0;
+	padding: 0;
+	}
+
+hgroup {
+	display: block;
+	margin: 0;
+	padding: 0;
+	}
+	
+figure {display: block;}
+
+footer {display: block;}
+
+nav {display: block;}
+
+dialog {display: block;}
+
+time {display: inline;}
+
+/* Headings ------------------ Headings -------------------------*/
+
+h1 {
+	font-size: 16px;
+	margin: 0 0 5px 0;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 14px;
+	margin: 0 0 5px 0;
+	font-weight: bold;
+	}
+
+h3 {
+	font-size: 13px;
+	margin: 0 0 5px 0;
+	text-transform: none;
+	}
+
+h4 {
+	font-size: 11px;
+	margin: 0 0 5px 0;
+	letter-spacing: 1px;
+	font-variant: small-caps;
+	text-transform: none;
+	}
+
+h5, h6 {
+	font-size: 10px;
+	}
+
+/* Links ---------------------- Links -------------------------*/
+
+
+a, a:link, a:visited {
+	text-decoration: none;
+	word-wrap: break-word;
+	color: rgba(17,61,129,1);
+	-webkit-transition: color 1s linear;
+	-webkit-transition-timing-function:ease-out,cubic-bezier(0.5,0.2,0.3, 
+1.0); 
+	}
+
+a:hover {
+	text-decoration: none;
+	color: rgba(53,117,199,1);
+	}
+
+
+a:active {
+	text-decoration: none;
+	color: rgba(17,61,129,1);
+	}
+	
+.node .content a {
+	color: rgba(17,61,129,1);
+	} /* links in content */
+	
+.node footer li a {
+	color: rgba(17,61,129,1);
+	} /* links in node footer */
+	
+	
+h2 a, h2 a:link, h2 a:visited, h2 a:active {
+	color: rgba(0,0,0,1)
+	} /* post titles */
+
+h1.title {
+	color: rgba(0,0,0,1);
+	}	
+
+	
+/* Lists ---------------------- Lists -------------------------*/	
+
+menu {display: block;}
+
+ul {position: relative;}
+
+ol {position: relative;}
+
+li {
+	color: rgba(53,117,199,1);
+	line-height: 1.6;
+	}
+
+dl {
+	margin: 12px 0 12px 6px;
+	padding: 0;
+	line-height: 1.5;
+	position: relative;
+	}
+
+dlfn {}
+
+dl dt {
+	margin: 0 0 2px 0;
+	padding: 0;
+	}
+
+dl dd {
+	margin: 0 12px 6px 18px;
+	padding: 0;
+	}
+
+/* Forms ---------------------- Forms -------------------------*/
+
+form {
+	margin: 0;
+	padding: 0 0 10px 0;
+	}
+
+fieldset {
+	margin: 0 0 12px 0;
+	padding: 6px 12px;
+	border: solid 1px rgba(204,204,204,1);
+	}
+
+legend {}	
+
+button {}
+
+input[type="text"],
+input[type="password"] {
+	padding: 6px;
+	border: solid 1px rgba(229,229,229,1);
+	outline: 0;
+	background: -webkit-gradient(linear, left top, left 25, from(rgba(255,255,255,1)), color-stop(4%, transparent), to(transparent));
+	background: -moz-linear-gradient(top, rgba(255,255,255,1), transparent 1px, transparent 25px); 
+	-moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+	box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+	font: -webkit-small-control;
+	}
+	
+input[type="text"]:hover,
+input[type="text"]:focus,
+input[type="password"]:hover,
+input[type="password"]:focus  {  
+	border-color: rgba(201,201,201,1); 
+	-webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+	-moz-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+	box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+	}
+	
+input[type="button"],
+input[type="submit"] {
+	padding: 2px;
+	margin: 0;
+	color: rgba(51,51,51,1);
+	font-size: 10px;
+	cursor: pointer;
+}
+	
+label {
+	margin: 0;
+	padding: 0;
+	}
+
+textarea {
+	margin: 0;
+	padding: 9px;
+	line-height: 1.2;
+	background: rgba(255,255,255,1) -moz-linear-gradient(top, rgba(255,255,255,1), transparent 1px, transparent 25px); 
+	background: rgba(255,255,255,1) -webkit-gradient(linear, left top, left 25, from(rgba(255,255,255,1)), color-stop(4%, transparent), to(transparent));
+	-moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+	box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+	border: solid 1px rgba(229,229,229,1);
+	outline: 0;
+	resize: auto;
+	cursor: auto;
+	-webkit-appearance: textarea;
+	-webkit-rtl-ordering: logical;
+	-webkit-user-select: text;
+	-webkit-box-orient: vertical;
+	}
+	
+textarea:hover,
+textarea:focus { 
+	border-color: rgba(201,201,201,1);  
+	-moz-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+	box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+	}
+
+select {}
+
+optgroup {}
+
+option {}
+			
+/* Tables ---------------------- Tables -------------------------*/
+
+table {
+	border: 1px solid rgba(204,204,204,1);
+	border-collapse: collapse;
+	width: 100%;
+	}
+
+tbody {}
+
+thead {background: rgba(229,230,232,1);}
+
+thead th {
+	border-bottom: 1px solid rgba(204,204,204,1);
+	padding: 7px;
+	text-align: left;
+	}
+
+th {
+	margin: 0;
+	padding: 7px;
+	}
+
+td {
+	border-bottom: 1px solid rgba(204,204,204,1);
+	margin: 0;
+	padding: 7px;
+	}
+
+tfoot {}
+
+caption {}
+
+col {}
+
+colgroup {}
+
+/* General ---------------------- General -------------------------*/
+
+address {
+	margin: 10px 0 10px 0;
+	padding: 0;
+	}
+
+br {}
+
+div {
+	margin: 0;
+	padding: 0;
+	}
+	
+cite {}
+
+code {
+	margin: 0;
+	padding: 0;
+	}
+	
+hr {
+	background: rgba(153,153,153,1);
+	margin: 6px 0 20px 0;
+	padding: 0;
+	border: none;
+	height: 1px;
+	}
+
+iframe {
+	margin: 0;
+	padding: 0;
+	}	
+
+span {}
+
+script {}
+
+/* Text ---------------------- Text -------------------------*/
+
+abbr {}
+
+b {font-weight: bold;}
+
+blockquote {
+	background: rgba(239,239,239,.5);
+	margin: 0 16px 16px 16px;
+	padding: 8px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	}
+
+em {}
+
+i {font-style: italic;}
+
+p {
+	font-size: 12px;
+	line-height: 1.5;
+	margin: 0 0 14px 0;
+	padding: 0;
+	}
+
+pre {}
+
+q {}
+
+small {}
+
+strong {font-weight: bold;}
+
+sub {}
+
+sup {}
+
+/* Media ---------------------- Media -------------------------*/	
+
+area {}
+
+a img {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	text-decoration: none;
+	}
+	
+img {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	}
+	
+audio {
+	margin: 0;
+	padding: 0;
+	}
+	
+embed {
+	margin: 0;
+	padding: 0;
+	background: #000000;
+	}
+
+map {}	
+
+object {
+	margin: 0;
+	padding: 0;
+	}
+
+noscript {}
+	
+video {
+	background: rgba(0,0,0,1);
+	margin: 0;
+	padding: 0;
+	max-width: 100%;
+	}
+	
+/* Selectors -------------------- Selectors -------------------------*/	
+
+a[href^="http://"] { /* Style External Links */
+	margin: 0;
+	padding: 0 14px 0 0;
+	background: url(../images/icons/external_links.png) no-repeat right 0;
+	}
+		
+img + img { /* when 2 img are next to each other display block */
+	display: block;
+	margin: 12px 0 20px 0;
+	}
+	
+p::first-letter {color: rgba(204,204,204,1);} /* First letter */			
+p::first-line {color: rgba(10,10,10,1);} /* First line */	
+
+p:first-child {background: rgba(162,174,188,1);} /* first child of element */
+p:last-child {background: rgba(162,174,188,1);} /* last child of element */
+	
+p:nth-child(odd) {background: rgba(60,80,107,.5);} /* odd child of element */
+p:nth-child(even) {background: rgba(162,174,188,1);} /* even child of element */
+
+p:nth-child(2n) {margin: 0 0 50px 0;} /* number of children down from element */
+p:nth-child(2n+3) {color: rgba(204,204,204,1);} /* number offset */
+
+p:nth-last-child(2n) {color: rgba(290,290,290,1);} /* count backwards from the last child of element */
+
+p::-moz-selection {background: rgba(204,204,204,1);} /* Text selection colour */
+p::selection {background: rgba(204,204,204,1);} 
+
+
+tr:nth-child(odd) {background: rgba(255,255,255,1);} /* odd child of element */
+tr:nth-child(even) {background: rgba(241,245,250,1);} /* even child of element */
+
+img:nth-of-type(2n+1) {
+	float: right; 
+	background: rgba(255,255,255,1);
+	padding: 5px;
+	margin: 0 0 5px 5px; 
+	border: solid 1px rgba(204,204,204,1);
+	-moz-box-shadow: 5px 5px 5px rgba(136,136,136,1);
+	-webkit-box-shadow: 5px 5px 5px rgba(136,136,136,1);
+	box-shadow: 5px 5px 5px rgba(136,136,136,1);
+	} 
+	
+img:nth-of-type(2n) {
+	float: left; 
+	background: rgba(255,255,255,1);
+	padding: 5px;
+	margin: 0 5px 5px 0; 
+	border: solid 1px rgba(204,204,204,1);
+	-moz-box-shadow: 5px 5px 5px rgba(136,136,136,1);
+	-webkit-box-shadow: 5px 5px 5px rgba(136,136,136,1);
+	box-shadow: 5px 5px 5px rgba(136,136,136,1);
+	}
+	
+li:only-child {color: rgba(0,0,0,1);} /* element has only one child */
+li:first-of-type {color: rgba(162,174,188,1);} /* first of type */
+li:last-of-type {color: rgba(162,174,188,1);} /* last of type */
+
+
+E[att^=”val”] /* attribute begins with val */
+E[att$=”val”] /* attribute ends with val */
+E[att*=”val”] /* attribute that contains val */
+
+E > F /* an F element child of an E element */
+E + F /* an F element immediately preceded by an E element*/
+E ~ F /* matches second element when preceded by the first element */
+
+
+/*Gradients ---------------------- Gradients ---------------------------*/
+
+
+.linear-gradient { /* linear gradient */
+	background: -moz-linear-gradient(top, rgba(178,178,178,1), rgba(255,255,255,1)) no-repeat;
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(178,178,178,1)), to(rgba(255,255,255,1))) no-repeat; 
+}
+
+.radial-gradient { /* radial gradient */ 
+   background: -webkit-gradient(radial,
+                            50% 500, 1,
+                            50% 500, 400,
+                            from(rgba(255, 255, 255, 0.3)),
+                            to(rgba(255, 255, 255, 0)));
+	}
+	
+/*Shadows ---------------------- Shadows ---------------------------*/
+
+.box-shadow {
+	-webkit-box-shadow: 2px 2px 2px rgba(51,51,51,1);
+	-moz-box-shadow: 2px 2px 2px rgba(51,51,51,1);
+	box-shadow: 2px 2px 2px rgba(51,51,51,1);
+}
+	
+.text-shadow {text-shadow: 2px 2px 2px rgba(51,51,51,1);}	
+
+/*Scale ---------------------- Scale ---------------------------*/
+
+.scale {
+-webkit-transition: -webkit-transform .15s linear;
+-moz-transition: -moz-transform .15s linear;
+-webkit-box-shadow: 0 3px 6px rgba(0,0,0,.25);
+-moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);
+box-shadow: 0 3px 6px rgba(0,0,0,.25);
+}
+	
+.scale:hover {
+-webkit-transform: scale(1.25);
+-moz-transform: scale(1.25);
+position: relative;
+z-index: 5;
+-webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)),to(rgba(0,0,0,0)))
+}
+	
+/*Drop cap ---------------------- Drop cap ---------------------------
+ 
+article p:first-child:first-letter {
+	float: left;
+	font-size: 33px;
+	line-height: 0.70em;
+	margin: 0.18em 0.08em -0.25em 0;
+	}
+*/	
+	
+/*Columns -------------------------- Columns ---------------------------------	
+
+body.section-node article .content {
+	-moz-column-count: 2;
+	-moz-column-gap: 25px;
+	-moz-column-rule: 1px dotted rgba(204,204,204,1);
+	-webkit-column-count: 2;
+	-webkit-column-gap: 25px;
+	-webkit-column-rule: 1px dotted rgba(204,204,204,1);
+	column-count: 2;
+	column-gap: 25px;
+	column-rule: 1px dotted rgba(204,204,204,1);
+	}
+	
+*/	
+
+
+/*Rotate-------------------------- Rotate -------------------------*/
+
+.rotate {
+	-webkit-transform: rotate(-2deg);
+	-moz-transform: rotate(-2deg);
+	}
+
+/*Animation-------------------------- Animation -------------------------*/
+
+.fade {
+	background: rgba(241,245,250,1);
+	-webkit-animation-name: pulse;
+	-webkit-animation-duration: 5s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes pulse {
+	from {
+		background: rgba(241,245,250,1);
+	}
+	25% {
+		background-color: rgba(0,0,0,1);
+	}
+	50% {
+		background-color: rgba(0,0,0,1);
+	}
+	to {
+		background: rgba(241,245,250,1);
+	}
+}

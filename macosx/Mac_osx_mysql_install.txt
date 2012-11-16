@@ -1,0 +1,70 @@
+ =========================
+ = Mac osx mysql install =
+ =========================
+ 
+ 
+ Install mysql from dmg, with startup item and pref pane
+ 
+ 
+ edit your bash profile and add the path to mysql
+ 
+ mate ~/.bash_profile
+ 
+ add this to your path
+ 
+ /usr/local/mysql/bin:
+ 
+ or
+ 
+ echo export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH" >> ~/.profile
+ 
+ source ~/.profile
+ 
+ 
+ 
+  # ===============
+  # = mysql setup =
+  # ===============
+
+add password for root account
+
+mysqladmin -u root password 'password'
+
+
+
+ # change mysql root account
+
+ # Remove the anonymous accounts instead, do so as follows: 
+
+ shell> mysql -u root -p password
+
+ mysql> DELETE FROM mysql.user WHERE User = ''; 
+ mysql> FLUSH PRIVILEGES; 
+
+
+ # remove test account
+
+  mysqladmin -u root -p password drop test
+
+
+ # change the name of the mysql root account
+
+ mysql -u root -p password
+
+
+ mysql> USE mysql;
+
+ # Database changed
+
+ mysql> UPDATE user SET user='mydbadmin' WHERE user='root';
+
+ # Query OK, 1 row affected (0.19 sec)
+ # Rows matched: 1  Changed: 1  Warnings: 0
+
+ mysql> FLUSH PRIVILEGES;
+
+ # Query OK, 0 rows affected (0.23 sec)
+
+ mysql> QUIT;
+
+

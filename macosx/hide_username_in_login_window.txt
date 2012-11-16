@@ -1,0 +1,9 @@
+If you type the command 
+
+id
+
+in a Terminal window, you will get the UID and GID of the current user.
+
+
+sudo defaults write /Library/Preferences/com.apple.loginwindow Hide502Users 
+-bool YES 

@@ -1,0 +1,23 @@
+   1. Boot into single user mode (press Command-S at power on)
+   
+   2. Type: /sbin/fsck -fy
+   
+   3. Type: /sbin/mount -uw /
+   
+   4. Type: launchctl load /System/Library/LaunchDaemons/com.apple.DirectoryServices.plist
+   
+   5. Type: ls /Users
+   
+   This will show you a list of the users on the system
+   In the next step you can reset their password
+   
+   6. Type dscl . -passwd /Users/username password, replacing username with the targeted user and password with the desired password.
+   
+   7. type: reboot
+
+
+After you reboot and enter the password you will get a warning that your login keychain has changed 
+
+Click create new keychain login
+
+and it will log you in

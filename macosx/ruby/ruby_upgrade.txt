@@ -1,0 +1,19 @@
+Rails 3 upgrade
+
+
+1 - update ruby gems
+
+sudo gem update --system
+
+
+2 - update ruby
+
+sudo gem update rails
+
+
+
+rake db:migrate
+
+not
+
+rake migrate

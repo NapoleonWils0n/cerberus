@@ -1,0 +1,17 @@
+time machine set up
+
+1 - create the sparsebundle disk image with disk quitlity
+
+2 - set the volume size to partition size of hard drive its on
+
+3- name the sparsebundle with the ethernet id of the mac you are backing up
+
+computername_000000000000.sparsebundle
+
+4- save the sparsebundle disk image on the timemachine hard drive partition
+
+5 - mount the hard drive partion on your other mac
+
+6 open timemachine and select the time machine partion
+
+back up

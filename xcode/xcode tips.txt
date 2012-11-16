@@ -1,0 +1,8 @@
+xcode
+
+autosave
+
+
++ (BOOL)autosavesInPlace {
+	return YES;
+}

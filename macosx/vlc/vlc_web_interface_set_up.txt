@@ -1,0 +1,17 @@
+vlc web interface set up
+
+1 - slect vlc in applications and right click
+
+2 - select show package contents
+
+3 - go to this location contents/MacOS/share/http
+
+4 - use the terminal to edit the .host file which is hidden
+
+5 - cd contents/MacOS/share/http
+
+6 - ls -a
+
+7 - nano .hosts
+
+8 - uncomment this line ( #192.168.0.0/16 ) under private addresses

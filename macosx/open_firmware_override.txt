@@ -1,0 +1,3 @@
+Open Firmware password protection can be bypassed if the user changes the physical 
+memory configuration of the machine and then resets the PRAM three times (by 
+holding down Command, Option, P, and R keys during system startup). 

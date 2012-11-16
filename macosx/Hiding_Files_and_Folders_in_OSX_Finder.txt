@@ -1,0 +1,14 @@
+Hiding Files and Folders in OSX Finder.....
+
+If you ever have a need to simply hide extraneous files and/or folder entries in Finder you can use the following command:
+
+chflags hidden ~/Movies
+
+This example will hide the "Movies" folder from showing up in Finder. There is a easy way to get to the folder if you decide to later on, just go to Finder's "Go to Folder" menu option.
+ 
+If you want to reset this option you can use the following command:
+
+chflags nohidden ~/Movies
+
+If you want to check a file or folder for hidden files you can issue the following command:
+ls -lO

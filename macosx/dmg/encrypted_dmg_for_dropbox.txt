@@ -1,0 +1,27 @@
+
+hdiutil
+
+/*=================================================================*/
+
+# Create an encrypted dmg for Dropbox
+
+# Command notes: we echo the password to hdiutil and use the -stdinpass to recieve it via stdin
+
+
+echo -n "password" | hdiutil create -encryption AES-256 -size 5m -fs HFS+J -stdinpass -volname Daedalus Daedalus.dmg 
+
+/*=================================================================*/
+
+# attach and detach the dmg
+
+hdiutil attach /path/to/dmg/Daedalus.dmg
+hdiutil detach /Volumes/Daedalus
+
+/*=================================================================*/
+
+# resize disk image
+
+hdiutil resize -size 50m Daedalus.dmg 
+
+
+

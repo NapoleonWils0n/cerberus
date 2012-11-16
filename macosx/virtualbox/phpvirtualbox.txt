@@ -1,0 +1,15 @@
+phpvirtualbox
+
+mac set up
+
+open terminal
+
+# change directory to where the binary is
+cd /Applications/VirtualBox.app/Contents/MacOS
+
+# start the web server
+./vboxwebsrv >/dev/null
+
+
+# alternate command
+/Applications/VirtualBox.app/Contents/MacOS/vboxwebsrv >/dev/null

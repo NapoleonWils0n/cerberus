@@ -1,0 +1,31 @@
+ ====================================
+ = edit the root crontab on the mac =
+ ====================================
+
+this use the vi editor
+
+
+sudo crontab -e
+
+
+you are now using the vi text editor
+
+
+press i 
+
+that puts you in insert mode where you can enter text
+
+
+enter your text, then press escape when you are done
+
+
+then type
+
+:w
+
+this saves your changes
+
+to quit type this 
+
+:q
+

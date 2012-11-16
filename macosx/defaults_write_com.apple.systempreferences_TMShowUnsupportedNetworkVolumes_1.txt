@@ -1,0 +1,12 @@
+time machine
+
+enable non supported devices
+
+
+paste into the terminal and press return
+
+
+defaults write com.apple.systempreferences TMShowUnsupportedNetworkVolumes 1
+
+
+mount the drive on your desktop and then select it in the time machine options window under system prefs

@@ -1,0 +1,3 @@
+.reflect{
+		-webkit-box-reflect:below 5px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
+		}	

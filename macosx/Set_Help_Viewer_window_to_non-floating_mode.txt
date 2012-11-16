@@ -1,0 +1,17 @@
+Set Help Viewer window to non-floating mode. 
+
+have an icon in the Dock for Help Viewer
+and how to set its windows to non-floating mode.
+
+In DevMode Help Viewer has an icon in the Dock 
+and its windows are non-floating windows.
+
+
+To activate Help Viewer DevMode type this in a terminal window: 
+
+defaults write com.apple.helpviewer DevMode -bool true 
+
+
+and to deactivate it type this: 
+
+defaults write com.apple.helpviewer DevMode  -bool False

@@ -1,0 +1,9 @@
+# Write your default config options here!
+
+cache=8192
+cache-min=20
+af=volume=10:1
+fs=yes # fullscreen
+#vo=corevideo:device_id=0 # play video on primary display
+vo=corevideo:device_id=1 # play video on second display
+delay=+2.100 # audio delay for airfoil

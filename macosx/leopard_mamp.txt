@@ -1,0 +1,23 @@
+After that comes setting up Apache. Open up a terminal window, and type in "sudo pico /etc/apache2/httpd.conf". (Note that you must be a computer administrator to access the files in etc/) OS X 10.4 had Apache in /etc/httpd/, and that's part of why it didn't work after the upgrade. Find the line in httpd.conf that looks like "#LoadModule php5_module        libexec/apache2/libphp5.so", and remove the # sign at the beginning. Then search for AddType, and put the following somewhere around it.
+
+
+
+After upgrading, I found that there are a few incompatibilities with several applications. Thats to be expected I guess. The two biggies for me is CF 8 and MySQL. I havent managed to get CF 8 running yet but I found a fix for MySQL.
+
+It seems that the preference pane will not work to start or stop MySQL yet so you will have to start it manually from the command line and create a link to the socket file.
+
+First, start MySQL in a terminal window with the following command:
+
+sudo /usr/local/mysql/bin/safe_mysqld
+
+Then either close the terminal and open a new one, or just hit Command-N to open a new terminal window. Then type the following:
+
+sudo mkdir /var/mysql/
+
+And lastly, create a symbolic link to point the default socket file:
+
+sudo ln -s /tmp/mysql.sock /var/mysql/mysql.sock
+
+I will keep posting things as I find problems and fixes.
+
+

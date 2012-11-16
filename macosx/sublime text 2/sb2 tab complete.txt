@@ -1,0 +1,9 @@
+[
+	{ "keys": ["tab"], "command": "auto_complete" },
+	{ "keys": ["tab"], "command": "replace_completion_with_auto_complete", "context":
+		[
+			{ "key": "last_command", "operator": "equal", "operand": "insert_best_completion" },
+			{ "key": "setting.tab_completion", "operator": "equal", "operand": true }
+		]
+	}
+]

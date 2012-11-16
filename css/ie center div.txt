@@ -1,0 +1,24 @@
+Centering a Div in IE8 Using margin:auto
+
+On the count of 3 everybody scream “MICROSOFT SUCKS AND I HATE INTERNET EXPLODER”.
+
+1, 2, 3, go.
+
+I’ve been working on revamping my Sticky Footer code for IE8 compatibility when I ran into a little bug of sorts. If you are using margin:0 auto; to center a div it will cause problems in IE8 if the parent element has either no width already set, or you’ve not set text alignment to center for that parent div, or you are using the wrong doc type declaration.
+
+These are the three fixes I know of;
+
+Width:100%
+Set your containing element to width:100%; so then your centered div inside of that one will actually center. Like this;
+
+#container {width:100%;}
+#centered {width:400px; margin:0 auto;}
+
+Text-Align:Center
+If you apply text-align:center to the containing div IE8 will obey the margin:auto. You then have to un-center your text content inside that centered div with text-align:left. Kind of convoluted, I know. Apparently some web designer have been doing it like that for years as this was an issue with IE5.
+
+#container {text-align:center;}
+#centered {width:400px; margin:0 auto;text-align:left;}
+
+Use Transitional Doc Type
+If you are using XHTML 1.0 Strict as your doc type, IE8 will not obey the margin:auto method for centering an element, unless you use one of the above hacks. You can also just change your doc type declaration at the top of your page to be XHTML 1.0 Transitional. IE8 will then obey the margin:auto statement.

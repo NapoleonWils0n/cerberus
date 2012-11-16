@@ -1,0 +1,16 @@
+sudo aptitude install libapache2-mod-php5 php5 php5-common php5-curl php5-dev php5-gd \
+php5-imagick php5-mcrypt php5-memcache php5-mhash php5-mysql php5-pspell php5-snmp \
+php5-sqlite php5-xmlrpc php5-xsl php5-ming php5-tidy php-pear
+
+Install the PHP developer package for the version of PHP you're using. For example, in case of php5 run:
+$ sudo apt-get install php5-dev
+
+Install the PECL uploadprogress library:
+$ sudo pecl install uploadprogress
+
+Open php.ini :
+$ sudo gedit /etc/php5/apache2/php.ini
+Add the line "extension=uploadprogress.so" to php.ini
+
+Restart apache:
+$ sudo /etc/init.d/apache2 restart

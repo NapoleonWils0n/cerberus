@@ -1,0 +1,12 @@
+Take advantage of push email servers in Mail.app  
+
+This should be manifestly obvious (and that's probably why I couldn't find any documentation for it). But then again, you'd think they would put it in, for instance, Gmail's IMAP setup help page, but it's not... 
+
+I am sure we all have heard about Push in Apple's Mail by now. For those folks who use email to the point of obsession (I'm afraid I do), this is a great way to keep your mailboxes up-to-the-second current without having Mail.app hog the bandwidth, checking every minute or five minutes. 
+
+If your server supports IDLE (Gmail, .Mac/MobileMe, and most university servers do), then the only things you need to do are:
+
+Go into Mail » Preferences » Accounts (Advanced) and make sure that Use IDLE command if the server supports it is enabled (it's enabled by default).
+(This is the fun part) Again go into Mail » Preferences » General and set Check for new Mail to Manually.
+
+Now send yourself a new message (preferably from a different account) and watch the fun. 

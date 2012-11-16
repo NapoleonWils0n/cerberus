@@ -1,0 +1,91 @@
+There is a little command line tool built into your mac called "strings" that allows allows you to pull any strings (text) from a binary file. You simply fire up your Terminal and do something like:
+
+
+strings /Applications/MyCoolApplication.app/Contents/MacOS/MyCoolApplication
+…and it will flood your terminal with all of the strings it recovers!
+
+Now for the cool part: to make this even easier, without having to do it from the command line, you can create a Mac OS Service that you can run on any file to get the strings and drop them right into TextEdit. Here's how:
+
+Open Automator on your Mac and select the template to create a new service.
+Set the "Service receives selected" option to "files or folders"
+Set the "in" option to "Finder"
+Then add the action "Run Shell Script"
+Change the "pass input:" to "as arguments" in the drop down menu
+Remove all text in the window and replace it with: strings "$1"
+Then add the action "Set Contents of TextEdit Document"
+Save it. (I called mine "Get Strings")
+
+
+Click on the image for a closer look.
+
+Now if you right click on any Mac Application, choose the option to "Show Package Contents", and open the folder named "MacOS", you will see the executable binary of that program. Right click on it and select "Get Strings" (or whatever you named your service to), and a new TextEdit document will open up with all the strings there for you to discover!
+
+After finding a string you like, you may have to play around with it a bit in the Terminal—if you're familiar with these types of commands, that'll help. Generally, the terminal command will follow a specific structure, like defaults write com.apple.FaceTime AutoAcceptInvites -bool YES or NO for boolean commands. That is, you type defaults write, then the line at the top of your strings text file (in this case, com.apple.FaceTime), the string itself, and then the option.
+
+Non-boolean features may be a bit more complicated. For example, AutoAcceptInvites is just a yes or no option that allows FaceTime to auto-accept all incoming calls, but AutoAcceptInvitesFrom requires you to add -array-add AppleID to the end to specify specific users that you want to auto-accept. With a bit of playing around, you should be able to find some pretty neat features squirreled away in your favorite OS X applications. When you find them, of course, be sure to share them with us in our #tips thread, too!
+
+Rob "CornDog" Johnson is a personal technology blogger and Mac developer for CornDog Computers.
+The author of this post can be contacted at tips@lifehacker.com
+
+Follow us to see the most popular stories among your friends -- or sign up for our daily newsletter below.
+Get Lifehacker in your inbox:
+  
+
+
+  
+ 
+kiwis3
+12/21/10 
+
+THE OTHER WAY TO FIND HIDDEN FEATURES IN MAC APPLICATIONS 
+By: Jeremy Mills 
+
+There are only a few ways to find out about hidden settings. This is the easiest way to do this, and it will expand your terminal 
+
+The way to do this is to use the defaults command. This command allows you to look into and modify everything from the Terminal. All you need to know the identifier of the application. This can be found at 
+
+/Applications/App/Contents/info.plist 
+
+and will be under CFBundleIdentifier. To get into this folder, right click on the application, and select "Show Package Contents". You should be able to get there after that. Back to the CFBundleIdentifer though, because that is one of the crucial steps in this process. It should look something like; 
+
+com.company.appname 
+
+Example: 
+
+com.apple.dock 
+
+Now, to use this command, there are a couple of options. Right Now, we need to read the defaults, so we can take a look through the settings. I will continue to use the Dock as my example. 
+
+Terminal Code: 
+
+defaults read com.apple.dock 
+
+This allows you to see all of the hidden settings. Now, there are a few things you will need to know about the settings. 
+
+1. Settings are of 2 types, Strings and boolean options.
+2. Boolean is either 1, 0, TRUE, or FALSE 
+3. Strings can be any combo of numbers and letters. 
+
+When you find a setting you want to modify, use the "write" part of the defaults command. Let's say that I want to enable the no glass function for the dock. 
+
+Terminal Code: 
+
+defaults write com.apple.dock no-glass -bool TRUE 
+
+This has written that the no-glass option has been set to true. The "-bool" indicates that this setting is boolean. 
+
+If the program you are trying to modify is running, you will need to quit the application and relaunch it to see the changes. The dock is always running, so, we need to manually kill it using Terminal or Activity Monitor. Alternatively, you can also log out, and log back in. Personally, I prefer to do this via the Terminal.
+
+TERMINAL CODE: 
+
+killall processName 
+
+In the case of the dock, this would be... 
+
+TERMINAL CODE: 
+
+killall Dock 
+
+Your changes should take effect immediately. 
+
+Do you know any other ways to do stuff like this? What settings have you modifed? Let us know in the comments!

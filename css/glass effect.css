@@ -1,0 +1,12 @@
+
+/* glass */
+
+#poster:after { 
+	content: -webkit-gradient(linear,left top, right top,
+	from(rgba(255,255,255,0.2)),
+	to(rgba(255,255,255,0.2)),
+	color-stop(0.5, rgba(255,255,255,0.5)),
+	color-stop(0.6, rgba(255,255,255,0.1)),	
+	color-stop(0.605, rgba(255,255,255,0.1)));
+	}
+

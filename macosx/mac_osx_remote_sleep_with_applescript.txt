@@ -1,0 +1,15 @@
+set remote_machine to (get "eppc://mac.local")
+
+using terms from application "Finder"
+	tell application "Finder" of machine remote_machine
+		open ("/System/Library/CoreServices/System Events.app" as POSIX file as alias)
+	end tell
+end using terms from
+
+
+using terms from application "System Events"
+	tell application "System Events" of machine remote_machine
+		sleep
+	end tell
+end using terms from
+

@@ -1,0 +1,10 @@
+SMC Reset on Mac to fix Bluetooth
+
+
+1.) Shut down the computer
+2.) Disconnect all cables, printers, etc. including the power cord.
+3.) Remove the battery.
+4.) Press and hold the power button for 5 seconds (you won't hear a tone or anything).
+5.) Put battery back in and reconnect power cord.
+6.) Turn computer back on.
+7.) Open System Preferences- Bluetooth should show up under internet and wireless.

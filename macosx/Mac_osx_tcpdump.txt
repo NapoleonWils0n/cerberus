@@ -1,0 +1,14 @@
+Mac osx tcpdump
+
+
+tcpdump must be run as root
+
+sudo su
+
+enter password press return
+
+tcpdump -n
+
+
+
+tcpdump –Xx –s 500 –n

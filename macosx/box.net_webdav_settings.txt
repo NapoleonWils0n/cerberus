@@ -1,0 +1,13 @@
+
+box.net webdav settings
+
+
+url
+
+http://box.net/dav//
+
+
+username:
+
+password:
+

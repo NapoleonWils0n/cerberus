@@ -1,0 +1,13 @@
+/* Triangle */
+
+
+.arrow-up {
+	width:0px; 
+	height:0px; 
+	border-left:5px solid transparent;  /* left arrow slant */ 
+	border-right:5px solid transparent; /* right arrow slant */ 
+	border-bottom:5px solid #2f2f2f; /* bottom, add background color here */ 
+	margin:0 auto; /* centers the arrow within the parent container */ 
+	font-size:0px;
+	line-height:0px;
+}

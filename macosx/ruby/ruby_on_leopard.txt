@@ -1,0 +1,120 @@
+ruby
+
+Okay - I think I have the path situation sorted out. In order to get applications like NetBeans or Aptana to recognize the gem repositories after doing a gem update --system command you need to create a file ~/.MacOSX/environment.plist (it isn't there by default so you'll need to make one).
+
+I used the plist editor tool that comes with XCode's installation, but I imagine any text editor will be sufficient. You will want to add the following to restore your paths for RubyGem:
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+<plist version="1.0">
+
+<dict>
+
+	<key>GEM_HOME</key>
+
+	<string>/Library/Ruby/Gems/1.8</string>
+
+	<key>GEM_PATH</key>
+
+	<string>/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8</string>
+
+</dict>
+
+</plist>
+
+environment.plist (it isn't there by default so you'll need to make one).
+
+
+sudo gem update rails
+
+
+sudo gem update --system
+
+
+
+ruby on rails and apache and mysql
+
+see apache virtual hosts on how to create virtual host
+
+create mysql database
+
+ruby mysql config
+
+edit config/database.yml
+
+see example below for mysql commands and database.yml config
+
+
+password: rubyonrails
+database name: rails_dev
+
+mysqladmin -u root -p 
+password
+create rails_dev
+mysql -uroot -pindexfinger rails_dev
+
+    grant select, insert, update, delete, create, index, drop on rails_dev.* To rails_user@localhost IDENTIFIED BY 'rubyonrails';
+	FLUSH PRIVILEGES;
+	QUIT;
+
+
+repeat mysql commands for test and production databases
+
+
+
+	development:
+	  adapter: mysql
+	  database: rails_dev
+	  host: localhost
+	  username: rails_user
+	  password: rubyonrails
+
+	test:
+	  adapter: mysql
+	  database: rails_production
+	  host: localhost
+	  username: rails_user_test
+	  password: [your password here]
+
+	production:
+	  adapter: mysql
+	  database: rails_production
+	  host: localhost
+	  username: rails_user_production
+	  password: [your password here]
+	
+	
+	
+	
+	
+	create rails ap and symbolic link to apache virtual host
+	
+	eg create ruby directory in your home
+	
+	cd ruby
+	
+	rails myapp
+	
+	will create rails ap
+	
+	create symbolic link from the ruby ap to the apache vhost
+	
+	ln -s /Users/$USER/ruby/myapp/public /Library/WebServer/Documents/vhosts/ruby
+	
+	
+	give apache write permission to the ruby public directory
+	
+	/Users/$USER/ruby/myapp/public
+	
+	
+	change owner
+	
+   chown -R www:www /Users/$USER/ruby/myapp/public
+
+   change permissions
+
+   chmod -R 777 /Users/$USER/ruby/myapp/public
+	
+	

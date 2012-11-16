@@ -1,0 +1,64 @@
+
+webdav set up on mac osx for use with iPad pages keynote goodreader
+
+
+/*************************************************************************************************/
+
+Edit the file /etc/apache2/httpd.conf, (remember to use sudo to edit it) and locate this line:
+
+LoadModule dav_module libexec/apache2/mod_dav.so
+
+Make sure it is not commented out (there should be no “#” at the beginning of the line.)
+
+Next, locate this line (towards the bottom of the file):
+
+Include /private/etc/apache2/extra/httpd-dav.conf
+
+Again, make sure it is not commented out. It is disabled by default, so you need to remove the “#” from this line.
+
+/*************************************************************************************************/
+
+DavLockDB "/usr/var/DavLock"
+DAVMinTimeout 600
+
+Alias /webdav "/Users/username/Sites/webdav"
+
+<Directory "/Users/username/Sites/webdav">
+    Dav On
+    AllowOverride None
+    Options None
+    Order Allow,Deny
+    Allow from all
+    AuthType Digest
+    AuthName WebDAV-Realm 
+    AuthUserFile "/usr/var/user.passwd"
+    AuthDigestProvider file 
+    <LimitExcept GET HEAD OPTIONS CONNECT POST PROPFIND PUT DELETE PROPPATCH MKCOL COPY MOVE LOCK UNLOCK>
+        Require valid-user
+    </LimitExcept>
+</Directory>
+
+/*************************************************************************************************/
+
+sudo mkdir -p /usr/var
+
+sudo htdigest -c "/usr/var/user.passwd" WebDAV-Realm username
+
+New password:
+Re-type new password:
+Adding password for user [username]
+
+
+/*************************************************************************************************/
+
+sudo mkdir -p /Users/username/Sites/webdav
+sudo chown -R www:www /Users/username/Sites/webdav
+sudo chmod -R 775 /Users /Users/username/Sites/webdav
+
+sudo chown -R www:www /usr/var
+sudo chmod -R 775 var/
+
+sudo mkdir -p /usr/var/DavLock
+sudo chown -R www:www /usr/var/DavLock
+sudo chmod -R 775 /usr/var/DavLock
+

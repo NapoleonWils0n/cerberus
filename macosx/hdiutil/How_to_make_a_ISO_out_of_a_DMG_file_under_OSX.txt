@@ -1,0 +1,7 @@
+How to make a ISO out of a DMG file under OSX
+
+Here is a quick command line for all you OSX ppl. If you're ever in need of turning/converting a .dmg file into a .iso use the following command line:
+
+hdiutil makehybrid -iso -o newfile.iso yourfilename.dmg
+
+Where newfile is the name of the iso you want, and yourfilename.dmg is the dmg.

@@ -1,0 +1,14 @@
+VirtualBox usb set up
+
+# IMPORTANT
+# make sure to set the virtual machine to use only one procesor
+# if you select more it wont see the external usb wireless adaptor
+
+
+download and install the VirtualBox Oracle VM VirtualBox Extension Pack
+download here:
+
+https://www.virtualbox.org/wiki/Downloads
+
+double click to install
+Oracle_VM_VirtualBox_Extension_Pack-4.1.22-80657.vbox-extpack

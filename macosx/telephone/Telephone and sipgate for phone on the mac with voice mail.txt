@@ -1,0 +1,127 @@
+/*
+|------------------------------------------------------------------------------
+| Telephone and sipgate for phone on the mac with voice mail
+|------------------------------------------------------------------------------
+*/
+
+
+Sipgate UK
+www.sipgate.co.uk
+
+Domain: sipgate.co.uk
+
+// the username and password are you SIP-ID:, and SIP password:
+// not the username and password you used to sign up for sipgate
+
+User Name: 1234567
+Password: ABCEFGH
+
+// SIP-ID: 1234567
+// SIP password: ABCEFGH
+
+
+
+STUN Server: stun.sipgate.net
+Port: 10000
+
+
+#-----------------------------------------------#
+
+web site login: www.sipgate.co.uk
+
+username: username
+
+password: password
+
+
+#-----------------------------------------------#
+
+
+voicemail pin: 
+
+1234
+
+
+#-----------------------------------------------#
+
+You may access your voicemail remotely by dialling one of these numbers:
+
+0207 043 7777
+0845 004 7777
+
+Please note you will require your SIP ID and voicemail PIN in order to log in.
+
+#-----------------------------------------------#
+
+How do I record a personalised voicemail greeting?
+
+To record a personalised greeting:
+
+Dial 50000 from your sipgate device
+
+Dial 0 (for options)
+
+Dial 1 (and record your message from your phone handset)
+
+Press the hash key # when you are through recording.
+
+
+Alternatively, you can record a greeting via a fixed phone line by dialling one of the following numbers:
+
+0207 043 7777 
+0845 004 7777
+
+If dialling one of the above numbers you will need your SIP ID and voicemail PIN in order to log in.
+
+#-----------------------------------------------#
+
+What options are available on the voicemail menu?
+
+When you dial the voicemail number 50000 on your sip device or 020 7043 7777 or 0845 004 7777 on a regular landline you will hear the voicemail menu.
+
+The following options are available in the menu:
+
+Press the corresponding key to access the feature you require.
+
+  [ 1 ] For new messages
+
+  [ 4 ] For previous messages
+  [ 5 ] To repeat the message
+  [ 6 ] For the next message 
+  [ 7 ] to delete this message
+
+  [ 2 ]To change folders
+
+  [ 0 ] New messages
+  [ 1 ] Old messages
+  [ # ] Cancel
+
+  [ 0 ] Configure your sipgate voicemail
+
+  [ 1 ] Create your own greeting
+
+  [ 1 ] Save your greeting
+  [ 2 ] Listen to your greeting
+  [ 3 ] Change your greeting
+
+  [ 4 ] Change your voicemail PIN
+  [ * ] Main Menu
+
+You can also press [ * ] for help or press the [ # ] key to exit.
+
+#-----------------------------------------------#
+
+Setting up voice mail
+
+1 - set a voicemail pin number
+
+2 - open telephone and dial 50000
+
+3 - record and save message
+
+4 - go to the voicemail settings and set send wav attachment
+
+5 - go to the call forwarding tab and create a new rule
+
+after 20 seconds forward to voicemail
+

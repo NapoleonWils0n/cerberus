@@ -1,0 +1,141 @@
+
+google hacking
+
+
+/***************************************************************************************************/
+
+A third way to include ignored words in a search is to precede the term with a + sign, as in the query +and.
+
+not -
+
+
+OR (or the | symbol)
+
+
+Slightly more complex than a word search is a phrase search.A phrase is a group of words enclosed in double-quote marks. When Google encounters a phrase, it searches for all words in the phrase, in the exact order you provide them.
+
+“Google hacker”
+
+/***************************************************************************************************/
+
+“Locate all pages that have either password or pass- code in the text of the document. From those pages, show me only the pages that contain either the words username, userid, or user in the text of the document. From those pages, only show me documents that are CSV files.” 
+
+intext:(password | passcode) intext:(username | userid | user) filetype:csv
+
+
+/***************************************************************************************************/
+
+
+"! Interface's description. "
+
+"! Interface's description. " zebra.conf
+
+"! Interface's description. " zebra.conf -"hostname Router"
+
+
+/***************************************************************************************************/
+
+automatically escape with quotes
+
+
+input:
+
+www.google.com/search?q="i hack stuff"
+
+
+
+output:
+
+http://www.google.com/search?q=%22i%20hack%20stuff%22
+
+/***************************************************************************************************/
+
+	www.google.com This is the main Google Web page, the entry point for most searches.
+	http://groups.google.com The Google Groups Web page.
+	www.google.com/images Search Google for images and graphics.
+	www.google.com/language_tools Various language and translation options.
+	www.google.com/advanced_search The advanced search form.
+	www.google.com/preferences The Preferences page, which allows you to set options such as interface language, search language, SafeSearch filtering, and number of results per page.
+	www.google.com/intl/xx-hacker/ A hacker’s search page.
+
+
+
+
+/***************************************************************************************************/
+
+advanced operators
+
+
+There is no space between the operator, the colon, and the search term.
+
+syntax
+
+operator:search_term
+
+
+
+intitle
+allintitle 
+
+inurl
+allinurl 
+
+filetype 
+
+allintext
+site 
+link 
+inanchor 
+daterange 
+
+cache info 
+related 
+	
+phonebook 
+rphonebook 
+bphonebook 
+author
+
+group 
+msgid 
+insubject
+stocks 
+define
+
+
+
+intitle:“index of”
+
+intitle:index.of
+
+intitle:“index of” private
+
+intitle:“index of”“backup files”
+
+
+
+inurl:admin backup
+
+allinurl:admin backup
+
+
+(filetype:pdf | file- type:xls) -inurl:xls -inurl:pdf
+
+
+inanchor:click
+
+numrange:12344-12346 
+
+shorthand
+
+12344..12346
+
+
+
+
+
+
+
+
+
+

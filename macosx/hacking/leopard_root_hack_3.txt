@@ -1,0 +1,21 @@
+   1.  Restart in Single User mode (hold Command-S during startup). Note that single-user mode always uses the US English keyboard layout.
+   2. At the prompt, type this followed by Return: mount -uw /
+   3. Type this:
+
+launchctl load /System/Library/LaunchDaemons/com.apple.DirectoryServices.plist
+
+   5. Press Return
+   6. Type this, then press Return: ls /Users
+   7. Look at the listing and note the short name (username) of the affected user account.
+   8. Type this:
+
+      dscl . -delete /Users/username AuthenticationAuthority
+
+      Note: Replace "username" with the affected user account's short name you noted above.
+   9. Press Return
+  10. Type this, followed by Return: passwd username
+
+      Note: Replace "username" with the affected user account's short name you noted above.
+  11. At the "New password:" prompt, type the user's password, then Return. Note: It is recommended that the original user's password be used to match the keychain password.
+  12. At the "Retype new password" prompt, type the same password, followed by Return.
+  13. Type this, followed by Return: reboot

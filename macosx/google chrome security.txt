@@ -1,0 +1,7 @@
+google chrome security
+
+# shortcut to administer https
+chrome://net-internals/
+
+# shortcut to plugins page
+about:plugins

@@ -1,0 +1,22 @@
+Last week Apple released an update for Snow Leopard, bringing Mac OS X to version 10.6.5. In case you missed it, details about the update are available in About the Mac OS X v10.6.5 Update.
+
+This update changed the apachectl script (used to restart Apache from the command line, for instance), causing it to give you an error when you run it. I noticed this when trying to restart Apache after adding a new virtual host:
+
+username:~ username$ sudo apachectl graceful
+/usr/sbin/apachectl: line 82: ulimit: open files: cannot modify limit: Invalid argument
+I quickly found this being discussed in apachectl script is broken under 10.6.5 in the Apple Support Forums. The solution suggested there is to edit line 64 of the apachectl script, where the ULIMIT variable is set.
+
+First, open a terminal window and then open the file in a text editor (TextMate in this example) in sudo mode:
+
+sudo mate /usr/sbin/apachectl
+Next, find
+
+ULIMIT_MAX_FILES="ulimit -S -n `ulimit -H -n`"
+and replace it with
+
+ULIMIT_MAX_FILES=""
+I made a copy of the file first, just in case, and also kept a commented-out version of the edited line, so I now have this in my apachectl:
+
+#ULIMIT_MAX_FILES="ulimit -S -n `ulimit -H -n`"
+ULIMIT_MAX_FILES=""
+Seems to fix the problem.

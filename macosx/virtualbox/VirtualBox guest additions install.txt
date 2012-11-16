@@ -1,0 +1,31 @@
+# VirtualBox guest additions install
+
+
+sudo apt-get install linux-headers-$(uname -r)
+
+
+25 - install guest additions
+
+sudo apt-get install dkms
+
+select install guest additions from the devices menu
+
+check the device menu, CD/DVD devices VboxGuestAdditions.iso should be selected
+
+switch to the terminal
+
+create the mount point for the cd
+
+sudo mkdir /media/cdrom
+
+sudo mount /dev/cdrom /media/cdrom
+
+cd /media/cdrom
+
+check which version server you are running 32 or 64 bit
+
+uname -a
+
+i386/i486/i586/i686 it is a 32 bit kernel.
+
+sudo ./VBoxLinuxAdditions-x86.run

@@ -1,0 +1,48 @@
+
+googlecl, gdata-python-client  
+
+installation and configuration
+
+
+/***********************************************************************************************/
+
+gdata-python-client  install
+
+
+http://code.google.com/p/gdata-python-client/downloads/list
+
+
+sudo python setup.py install
+
+
+/***********************************************************************************************/
+
+install googlecl
+
+http://code.google.com/p/googlecl/
+
+
+sudo python setup.py install
+
+
+create the dir for authentitcation token
+
+mkdir -p ~/.local/share/googlecl/
+
+/***********************************************************************************************/
+
+
+.config 
+
+set up the config so it automatically downloads doc files
+
+[DOCS]
+spreadsheet_format = xls
+format = txt
+spreadsheet_editor = openoffice.org
+presentation_format = ppt
+presentation_editor = openoffice.org
+document_format = doc
+user = username@gmail.com
+drawing_format = png
+skip_auth = True

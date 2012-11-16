@@ -1,0 +1,15 @@
+Bandwidth throttling in OS X  
+
+Advanced OS X users know that Darwin comes with ipfw, which can be used to set up a custom firewall. This same service however can be used to also limit bandwidth on specific ports. 
+
+Example:
+sudo ipfw pipe 1 config bw 15KByte/s
+creates a pipe that only allows up to 15KB/s to go through. 
+
+Then:
+sudo ipfw add 1 pipe 1 src-port 80
+will attach that pipe to the outgoing traffic on port 80, effectively limiting the outgoing traffic of the web server.
+sudo ipfw delete 1
+will remove the pipe from the port. 
+
+[kirkmc adds: I haven't tested this. Just make sure you remember to turn this off when you no longer need it!]

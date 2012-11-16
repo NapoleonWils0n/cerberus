@@ -1,0 +1,14 @@
+php pdo set up on mac osx
+
+copy /etc/php.ini.default and rename it /etc/php.ini
+
+Edit your /etc/php.ini :
+
+; Default socket name for local MySQL connects.  If empty, uses the built-in
+; MySQL defaults.
+; http://php.net/pdo_mysql.default-socket
+#pdo_mysql.default_socket=/var/mysql/mysql.sock
+pdo_mysql.default_socket=/tmp/mysql.sock
+
+sudo apachectl stop
+sudo apachectl start

@@ -1,0 +1,8 @@
+Virtual box shared folders on Windows XP
+
+
+Alternatively, on the Windows command line, use the following:
+
+net use x: \\vboxsvr\sharename
+
+While vboxsvr is a fixed name (note that vboxsrv would also work), replace “x:“ with the drive letter that you want to use for the share, and sharename with the share name specified with VBoxManage.

@@ -1,0 +1,57 @@
+
+Back up my Dropbox to a USB Stick with Time Machine
+
+You exclude every folder on your Mac except the Dropbox folder from your Time Machine back up
+
+
+1 - Insert USB stick into Mac ( Make sure the usb stick is bigger than the size of your Dropbox )
+
+2 - Open Disk Utility and then select the USB in the left pane and click the erase button
+
+It should then erase the usb stick and reformat it for Mac osx extended journalled
+( most usb stick come formatted for PCs - MS dot or Fat 32)
+
+3 - Go to System preferences on your Mac and then open the Time Machine preference
+
+4 - Click the Select Disk Button
+
+5 - This opens a new drop down sheet where you will see your USB Stick, select the the USB stick and click OK
+
+ 6 - Now click the Options button underneath the the Select Disk Button
+
+7 - This opens a new drop down sheet and you will see the words "Exclude these items from back up"
+
+8 - Click the plus icon in the bottom left of the drop down sheet
+
+9 - This opens another drop down sheet and shows you a finder window where you select folders to exclude from the back up
+
+10 - In the drop down finder window go to the the top level of your hard drive, you should see the following folders
+Applications, Library, System, Users
+
+11 - Select the System folder and click ok, it will then open a dialog box and ask if you want to exclude all system files
+
+Click to exclude all the system files, which should be the button on the right in the dialog box
+
+12 - Then click the plus button again and select the Applications, Library and any other folders at the top level except the Users folder
+
+13 - After you have done that click the plus button again and then go in to the Users folder and select the Shared folder and any other accounts except your own to exclude them from the back up
+
+14 - Then click the plus button again and go into your Home folder in the drop down finder sheet
+
+15 - Now check the box that says show invisible files
+
+16 - Now press cmd A to select all the invisible files and folders in your Home folder
+
+17 - Then click and press cmd on your Dropbox folder to deselect it
+
+So you should have everything in your Home folder select except your Dropbox folder
+
+18 - press OK to close the window
+
+19 - Make sure the slider is set to On in the left hand pane of the main Time Machine window 
+
+
+Now Time Machine will backup your Dropbox to your USB stick
+
+Make sure the usb stick is bigger than the size of your Dropbox
+

@@ -1,0 +1,4 @@
+input::-webkit-input-placeholder,
+input:-moz-placeholder {
+	color: rgba(170,170,170,1);
+	}

@@ -1,0 +1,47 @@
+
+Vlc stream to ipad with apache mediastreamsegmenter html5
+
+/*=======================================================================================*/
+
+Append following lines to /etc/apache2/mime.types MIME types of video and playlist.
+
+
+sudo nano /etc/apache2/mime.types
+
+
+video/MP2T            ts
+application/x-mpegURL m3u8
+
+sudo apachectl restart
+
+/*=======================================================================================*/
+
+Turn on Websharing in system preferences
+
+Create a temp folder in  this location
+
+/Users/yourusername/Sites/temp
+
+
+then create an index.html file with the code below
+
+
+/*=======================================================================================*/
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>HTML5 Streaming Video</title>
+</head>
+<body>
+
+<video controls src="temp/prog_index.m3u8" x-webkit-airplay="allow" />
+
+</body>
+</html>
+
+/*=======================================================================================*/
+
+/Applications/VLC.app/Contents/MacOS/VLC -vvv -I dummy "/Users/$USER/Desktop/foo.avi" --sout="#transcode{vcodec=h264,samplerate=44100,vb=800,fps=25,acodec=mp4a,ab=128,height=480,width=640,scale=1}:standard{access=file,mux=ts,dst='-'}" | mediastreamsegmenter -f /Users/$USER/Sites/video/stream -t 30 -p
+

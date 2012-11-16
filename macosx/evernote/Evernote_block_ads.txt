@@ -1,0 +1,8 @@
+Evernote block ads
+
+Go to /Users/your-usrename/Library/Application Support/Evernote/promos/
+create a folder called bak inside the promos folder then move all the gif pictures in the “promos” directory into the bak folder but not “stats.plist” 
+select “promos” and press command-I
+at the bottom, under “sharing & permissions”, set all privileges to “read only” and click on the small lock at the bottom right.
+launch Evernote, the ads should not be displayed anymore.
+

@@ -1,0 +1,45 @@
+alfred scripts
+
+#---------------------------------------------------------------------------#
+	Mute Volume
+#---------------------------------------------------------------------------#
+
+
+Title: Mute Volume
+
+description: Toggle mute volume
+
+keyword: mute
+
+command: 
+
+set _muted to (get (output muted of (get volume settings)))
+if _muted is false then
+	set volume with output muted
+else
+	set volume without output muted
+end if
+
+#---------------------------------------------------------------------------#
+	vpn
+#---------------------------------------------------------------------------#
+
+Title: vpn
+
+description: vpn toggle connection
+
+keyword: vpn
+
+command: 
+
+tell application "System Events"
+	tell current location of network preferences
+		set VPNservice to service "VPN Reactor" -- name of the VPN service
+		set isConnected to connected of current configuration of VPNservice
+		if isConnected then
+			disconnect VPNservice
+		else
+			connect VPNservice
+		end if
+	end tell
+end tell

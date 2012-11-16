@@ -1,0 +1,70 @@
+Backtrack 5 install
+
+use the kde 64 bit
+
+select the iso as the disc during the install
+
+then select more linux - linux kernal 2.6 as the distro
+
+uncheck the exppress install 
+
+check customize before install
+
+change the cd to point to the iso
+
+when you see a black screen with boot: press return
+
+on the install page select the first option
+
+log in with username: root
+
+password: toor
+
+startx
+
+on the desktop double click install backtrack 
+
+select the default options and install
+
+after reboot install the parallels tools
+
+from the virtual machine menu select install parallels tools
+
+in the bottom of the Backtrack 5 desktop you will see an icon that looks like a usb cable
+
+click the usb icon in the toolbar panel at the bottom of the screen
+
+it slides up and shows the paralells disk, press the arrow to the right to mount the disc
+
+then cd /media/Parallels\ Tools
+
+./install
+
+then reboot
+
+
+#----------------------------------------------------------------------------------------#
+#	wireless  #
+#----------------------------------------------------------------------------------------#
+
+
+make sure the you dont install the realtek driver for the mac
+
+if you have unistall it
+
+
+1 - dont install the wireless driver for the mac - otherwise backtrack cant load the wireless card
+
+2 - boot BackTrack in Parallels
+
+3 - plug in the usb wireless card - parallels asks if you want to use it with the Mac or Backtrack - select Backtrack
+
+4 - in the terminal type: iwconfig
+
+5 - that lists the wireless as wlan0
+
+6 - to activate the wireless you type: ifconfig wlan0 up
+
+7 - theres an app called wcid that lets you connect to wireless networks like you do on a mac
+
+8 - i selected my network and put in the password and now im on the net in backtrack on parallels with my usb wireless card

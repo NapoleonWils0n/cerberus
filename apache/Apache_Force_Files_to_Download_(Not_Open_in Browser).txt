@@ -1,0 +1,12 @@
+<IfModule mime_module>
+   AddType application/octet-stream .csv
+   AddType application/octet-stream .xls
+   AddType application/octet-stream .doc
+   AddType application/octet-stream .avi
+   AddType application/octet-stream .mpg
+   AddType application/octet-stream .mov
+   AddType application/octet-stream .mp4
+   AddType application/octet-stream .m4v
+   AddType application/octet-stream .mp3
+   AddType application/octet-stream .pdf
+</IfModule>

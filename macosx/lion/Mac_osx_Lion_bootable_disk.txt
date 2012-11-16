@@ -1,0 +1,56 @@
+Mac osx Lion bootable disk
+
+
+1 - reformat external hard drive as mac osx journalled
+
+2 - restart mac and press: apple r
+
+3 - this boots into the recovery parition
+
+4 - press use english for language
+
+5 - select disk utility in the next screen
+
+6 - plug in external drive and wait for it to mount
+
+7 - select the internal hard drive of your mac 
+
+8 - you need to select the volume and not the disk
+
+9  - the internal disk will be called: Apple ...
+
+10 - Internal hard disk is called Macintosh HD, and it will be intended under the disk
+
+11 - making sure you have selected the macs internal hard drive in the left column ( the intended volume )
+
+12 - click the restore tab
+
+13 - The Macs internal hard drive will be listed next to the source
+
+14 - if you are running filevault go to the file menu 
+
+15 - select unlock Macintosh HD (or whatever your drive is called)
+
+16 - in the dialog box to unlock your mac hard drive you need to enter your filevault recovery key to unlock the drive
+ (you cant unlock the drie with just your admin password)
+
+17 - under the restore tab make sure the internal hard drive volume is listed next to source, 
+and your external drive volume is listed next to destination
+
+18 - click restore to clone the internal to external hard drive
+
+19 - when it finished quit disk utility and quit the recovery partition and select restart
+
+20 - after you have restarted go to system preferences, startup disk
+
+21 - select to start up from your external drive ( to check it works and bless the drive)
+
+22 - after you log in to the external hard drive you need to enter you recovery key to decrypt the drive
+
+23 - when you do this click save to keychain
+
+24 - go to system preferences/ start up disk
+
+25 - Select the internal drive on your Mac and restart
+
+26 - Once you have booted back into your internal hard drive and have logged in, eject your bootable back up

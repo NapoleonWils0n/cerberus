@@ -1,0 +1,30 @@
+/* Footer ---------------------  Sticky Footer  --------------------  */
+
+html, body, #page {height: 100%;}
+
+body > #page {height: auto; min-height: 100%;}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	}
+	
+.clearfix {display: inline-block;}
+* html .clearfix { height: 1%;}
+.clearfix {display: block;}
+
+#main {
+	/* position: relative; */
+	padding-bottom: 310px; /* must be same height as the footer */
+	}  
+
+#footer {
+	width: 1020px;
+	position: relative;
+	margin: -310px auto 0 auto; /* negative value of footer height */
+	height: 310px;
+	clear:both;
+	} 

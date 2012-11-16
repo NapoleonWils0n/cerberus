@@ -1,0 +1,28 @@
+evernote import bookmarks
+
+
+1 - export bookmarks from diigo in delicious format
+
+you get an email when the bookmarks are ready to download and a link to the download
+
+
+2 - open the zip file you downloaded from diigo inside is a html file
+
+3 - open the html file with textmate and do a find and replace for single quotes
+
+'
+replace the single quote with nothing
+
+4 - do a save as in textmate and make sure you save the file as utf
+
+5 - open the evernote import applescript in applescript editor
+
+6 - press apple r to run the script
+
+7 - an open file window opens, select the bookmarks html file you did a find and replace with textmate
+
+8 - the script should run and import all the bookmarks into a bookmarks notebook
+
+9 - install the evernote google chrome extensions 
+
+10 - set the extension preferences

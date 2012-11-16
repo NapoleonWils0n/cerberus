@@ -1,0 +1,36 @@
+The first steps will link your Gmail folders on the internet with your local "Sent", "Trash", etc. mail boxes and may prevent synchronising issues. It makes them also disappear out of the separate list:
+1) Select the "Sent Mail" folder out of the separate Gmail box you describe
+2) Then go to: the menubar and choose the menu "Mailbox" > "Use this mailbox for" > "Sent"
+3) Select the "Spam" folder out of the separate Gmail box you describe
+4) Then go to: the menubar and choose the menu "Mailbox" > "Use this mailbox for" > "Junk"
+5) Select the "Trash" folder out of the separate Gmail box you describe
+6) Then go to: the menubar and choose the menu "Mailbox" > "Use this mailbox for" > "Trash"
+7) Select the "Sent Mail" folder out of the separate Gmail box you describe
+8) Then go to: the menubar and choose the menu "Drafts" > "Use this mailbox for" > "Concepts"
+ 
+The following steps will make sure that the other folders still in the separate Gmail box, will disappear from the Mail application:
+9) Go to and login in your Gmail account on the internet.
+10) Click the wheel in the right above corner in Gmail to go to the Gmail settings.
+11) In settings, choose "Labels"
+12) Deselect everything in the "Show in IMAP"-section, except "Inbox", "Sent mail", "Drafts", "Spam" and "Trash".
+13) Save the settings if necessary and logout
+ 
+14) Go to the Mail preferences in the Apple Mail applications, go to "Accounts" and select your Gmail-account
+15) Select the tab "Mailbox behaviors"
+16) Switch on "Store sent messages on the server", "Store junk messages on the server", "Move deleted messages to the Trash mailbox" and "Store deleted messages on the server".
+17) Go to the "Advaced" tab
+ 
+The following step will make the strange white Gmail folder disappear:
+18) Enter exactly the following (or just copy it from here) in the IMAP Path Prefix: [Gmail]
+ 
+And now, to finish it up:
+19) Close the preferences panel and save it if it asks.
+20) Quit Mail by choosing "Mail" in the menubar and then "Quit Mail".
+21) Relaunch Mail and after a few moments the dreaded separate Gmail box should disappear
+ 
+If somehow folders like "Sent" or "Trash", etc. reappear in the separate Gmail box, repeat the appropriate steps 1 to 8 I described here above. In the end, you should prevail 
+ 
+In respect to the Drafts folder I have the following remark. The standard setting for a Gmail account in "Mailbox Behaviors" in the Mail preference panel is to store drafts on the server. However and unlike Yahoo! or another service, Gmail causes problems when composing a large email with photos for example. When you compose an email in Mail, your Gmail account will initiate an uploading of your draft to the Gmail servers every 30 to 60 seconds. The problem is that it takes a lot of time to upload with large emails. Another problem is that Gmail will remember every single time it wanted to upload something. If you are composing an email of 8 megabytes for example, and that let us say for 10 minutes, Gmail will remember to upload your message 10 to 20 times.
+And it will continue to upload until it has done ALL of its work, even when you quit and relaunch Mail.
+Unfortunately Gmail doesn't let you switch off this autosave behavior.
+For more information of how to prevent this I responded here in this discussion:

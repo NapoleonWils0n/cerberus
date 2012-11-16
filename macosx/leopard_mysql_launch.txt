@@ -1,0 +1,11 @@
+leopard mysql launch
+
+
+Copy this MySQL launchd configuration file to /Library/LaunchDaemons, and change its owner to root:
+sudo chown root /Library/LaunchDaemons/com.mysql.mysqld.plist
+
+Change your MySQL owner to mysql:
+sudo chown -R mysql /usr/local/mysql-5.0.45-osxyour_previous_os_x_version-your_architecture /usr/local/mysql
+
+Load the MySQL launchd configuration file:
+sudo launchctl load /Library/LaunchDaemons/com.mysql.mysqld.plist

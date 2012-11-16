@@ -1,0 +1,10 @@
+ =========================
+ = mac osx sshd location =
+ =========================
+
+/etc/sshd_config
+
+
+sudo su 
+
+mate /etc/sshd_config

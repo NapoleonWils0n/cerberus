@@ -1,0 +1,43 @@
+Sublime text tips
+
+# Access the Command Palette
+
+Similar to TextMate, we can use Sublime’s command palette by accessing the Tools menu, or by pressing Shift + Command + P, on the Mac. Whether you need to visit a Preferences page, or paste in a snippet, all of that can be accomplished here.
+
+# Lightning-Fast File Switching
+
+Press Command + P, type in the name of the file you wish to access (fuzzy finder), and, without even pressing Enter, you’ll instantly be transported to that file.
+
+# Multi-Selection
+
+To enable multi-selection, you have several options:
+
+Press Alt or Command and then click in each region where you require a cursor.
+Select a block of lines, and then press Shift + Command + L.
+Place the cursor over a particular word, and press Control/Command + D repeatedly to select additional occurrences of that word.
+Alternatively, add an additional cursor at all occurrences of a word by typing Alt+F3 on Windows, or Ctrl+Command+G on the Mac. Amazing!!
+
+# Package Control
+
+To install “Package Control,” open Sublime and press Control + `. Next, paste the following snippet into the console.
+
+import urllib2,os;pf='Package Control.sublime-package';ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read())
+
+Lastly, restart Sublime Text, and browse to Preferences -> Package Settings. If the installation was successful, you’ll now see a Package Control item in that list.
+
+# You Can Still Use TextMate Bundles
+
+TextMate snippets and themes port over nicely to Sublime Text. 
+
+You only need to drop them in the Packages folder — .tmbundle extension intact, and Sublime will recognize the files. This means that the entire catalog of TextMate themes will work in Sublime!
+
+For example, I’ve been working with the (fantastic) Slim templating engine a good bit lately, and needed better syntax highlighting. Fred Wu created a bundle for TextMate, but, tada, it works perfectly in Sublime Text as well! If you’re interested, you can download the Slim bundle here; it includes both snippets and syntax highlighting.
+
+
+# Function Crawling
+
+Type Control/Command + r to reveal a popup that allows for this very thing! Even better, the search is fuzzy as well, which is particularly helpful for huge classes.
+
+# create symlink to start Sublime Text 2 from command line
+
+sudo ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl

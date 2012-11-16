@@ -1,0 +1,13 @@
+#progress {
+  background: white url('progressbar.png') repeat-x 0 0; 
+}
+
+@webkit-keyframes spin { 
+	from { background-origin: 32px 0; }
+	to { background-origin: 0 0; }
+
+}
+
+.running { 
+	-webkit-animation: spin 1s infinite linear;
+ }

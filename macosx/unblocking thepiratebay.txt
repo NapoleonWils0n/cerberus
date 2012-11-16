@@ -1,0 +1,18 @@
+/*----------------------------------------------------------------------------------------*/
+/*	unblocking thepiratebay */
+/*----------------------------------------------------------------------------------------*/
+
+* ipv4.sixxs.org link - http://thepiratebay.se.ipv4.sixxs.org/
+
+* Opera web browser turbo mode sends all traffic thru opera's servers which dont block tpb
+
+* Tor browser
+
+* VPN
+
+* socks 5 ssh tunnel
+
+* ipv6 tunnel from tunnelbroker.net - enable ipv6 connection with script, then browse tpb over ipv6 http://thepiratebay.se.ipv6.sixxs.org/
+
+
+

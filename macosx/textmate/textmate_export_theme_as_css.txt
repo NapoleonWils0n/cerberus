@@ -1,0 +1,9 @@
+textmate export theme as css
+
+
+select the bundles menu
+
+then select the textmate bundle
+
+
+then select - create css from current theme

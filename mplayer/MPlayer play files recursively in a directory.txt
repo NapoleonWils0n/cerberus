@@ -1,0 +1,5 @@
+MPlayer play files recursively in a directory.
+
+I wanted to have my files played in alphabetical order and only avi files (since a couple .srt subtitle files were in there…), so I came up with this :
+
+mplayer -playlist <(find "$PWD" -name "*.avi" -type f | sort)

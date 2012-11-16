@@ -1,0 +1,120 @@
+
+dns tunnel set up
+/*--------------------------------------------*/
+
+install tun/tap driver for mac osx
+
+install the tuna and tap package
+
+download iodine
+
+/*--------------------------------------------*/
+
+iodine install 
+
+1 - untar iodine
+
+2 - cd iodine
+
+3 - sudo su
+
+4 - make 
+
+5 - make install
+
+/*--------------------------------------------*/
+
+firewall set up
+
+1 - open noobproof 
+
+2 - create new rule for port 53
+
+3 - set the rule to allow
+
+4 - set the mac osx application firewall to allow iodine incoming connections
+
+5 - create a new firewall rule for port 53 udp on the router
+
+6 - forward port 53 on the router to the iodine server
+
+/*--------------------------------------------*/
+
+create the ssh tunnel location
+
+1 - go to sysytem pref, network tab
+
+2 - create new location
+
+3 - set the service order for the network interfaces
+
+4 - click the advanced tab, cick the proxy tab
+
+5 - click the socks checkbox
+
+6 - add this address - 127.0.0.1 port 8080
+
+7 - click ok and apply
+
+/*--------------------------------------------*/
+
+start the server
+
+1 - sudo su
+
+2 - iodined -P password 10.0.0.1 tu.tomt.mooo.com
+
+command syntax - iodined -P password 10.0.0.1 domain
+
+
+/*--------------------------------------------*/
+
+change location to the ssh tunnel
+
+click the apple menu in the top left and select location and ssh tunnel
+
+/*--------------------------------------------*/
+
+start the ssh tunnel
+
+set up public private keys
+
+
+1 - ssh -D 8080 80.100.10.4
+
+
+command syntax - ssh -D 8080 (local port to listen on)  server ip
+
+/*--------------------------------------------*/
+
+
+start the client
+
+1 - sudo su
+
+2 - iodine -P password tu.tomt.mooo.com
+
+switch to root then run the command
+
+command syntax - iodine -P password domain
+
+/*--------------------------------------------*/
+
+
+change the proxy settings in firefox
+
+1 -go to preferences
+
+2 - go to advanced, select the network tab
+
+3 - click the settings button
+
+4 - select - manual proxy
+
+5 - make sure the socks v5 radio button is selected
+
+6 - in the Socks host fill in these details
+
+Socks Host: 127.0.0.1
+
+Port: 8080

@@ -1,0 +1,78 @@
+ ==============================
+ = Mac osx keyboard shortcuts =
+ ==============================
+ 
+ 
+/* Paragraphs =============================================================================*/ 
+
+control-A move to start of current paragraph
+control-E move to end of current paragraph
+
+command-left arrow move to start of current line
+command-right arrow move to end of current line
+
+control-N move down one line
+control-P move up one line
+control-O insert new line after cursor
+
+option-up arrow move up one paragraph
+option-down arrow move down one paragraph
+
+option-left arrow move left one word
+option-right arrow move right one word
+
+control-B move left one character
+control-F move right one character
+
+
+/* Making Text Selections ====================================================================*/
+
+click then drag select text
+double-click then drag select text, wrapping to word ends
+triple-click then drag select text, wrapping to paragraph ends
+
+shift-select text with mouse add to selection (contiguous)
+command-select text with mouse add to selection (non-contiguous)
+
+option-drag select rectangular area (non-contiguous)
+command-option-drag add rectangular area to selection
+
+drag selection move text
+option-drag selection copy text
+
+
+/* Delete ====================================================================================*/
+
+option-delete back delete one word
+shift-option-delete foward delete one word
+
+control-D forwards delete
+control-H delete
+control-K delete remainder of current paragraph
+
+control-T transpose (swap) two surrounding character
+control-V move to end, then left one character
+control-Y paste text previously deleted with control-K
+
+ ==============
+ = Dictionary =
+ ==============
+
+select some text then press the key combination below to open the dictionary
+
+⌘+Ctrl+D
+
+
+ =================
+ = cut and paste =
+ =================
+
+
+Kill: Ctrl-K
+Yank: Ctrl-Y
+
+
+With text selected, Ctrl-K works as a secondary “cut” command by removing the highlighted text without replacing what is currently residing in your clipboard (cool!). To bring the text back, hit Ctrl-Y.
+
+
+“Kill” has a special use beyond that of the “cut” command. If you place your cursor at a given point in a paragraph and hit Ctrl-K, all of the text from that point forward will be cut. This is a great way to quickly grab and move an entire paragraph of text.

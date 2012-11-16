@@ -1,0 +1,9 @@
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font: 10px/1.2 "Lucida Grande", Lucida, Verdana, sans-serif;
+	background: -moz-linear-gradient(top, rgba(178,178,178,1), rgba(255,255,255,1)) no-repeat;
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(178,178,178,1)), to(rgba(255,255,255,1))) no-repeat;
+	color: rgba(78,77,78,1);
+	}

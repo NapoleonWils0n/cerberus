@@ -1,0 +1,57 @@
+/*----------------------------------------------------------------------------------------*/
+/*	squidman proxy set up */
+/*----------------------------------------------------------------------------------------*/
+
+
+install squidman
+
+leave the port set to 8080
+
+
+open squidman preferences and go to the clients tab
+
+click the new button and add this ip range
+
+
+192.168.1.0/24
+
+
+then click the template tab
+
+add this line to add the hosts file
+
+# We'll play with this later
+hosts_file /private/etc/hosts
+
+
+then click start squid
+
+/*----------------------------------------------------------------------------------------*/
+/*	proxy settings on iPad or iPhone */
+/*----------------------------------------------------------------------------------------*/
+
+open the settings app
+
+select Wifi in the left column
+
+then select your network which should have a tick next to it
+
+click the blue circle with the white arrow
+
+on the next page at the bottom under HTTP Proxy select the Manual tab
+
+then enter the ip address of your mac and the port number of the squidman proxy which should be 8080
+
+/*----------------------------------------------------------------------------------------*/
+/*	pac file - proxy auto configuration */
+/*----------------------------------------------------------------------------------------*/
+
+
+function FindProxyForURL(url, host) {
+	return "SOCKS 192.168.1.4:8080";
+}
+
+/*----------------------------------------------------------------------------------------*/
+iPad proxy set to auto
+
+add url to proxy.pac file

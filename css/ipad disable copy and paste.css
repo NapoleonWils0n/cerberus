@@ -1,0 +1,3 @@
+/* Disable copy and paste */
+
+article {-webkit-user-select: none;}	

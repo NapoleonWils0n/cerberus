@@ -1,0 +1,20 @@
+'You cannot share your own computer.' when trying to connect to 'vnc://localhost:[lport]' afterwards. I understand that Apple probably did this to prevent naive users from confusing themselves by connecting to their own systems. However, it's a pain for those who need to connect to localhost for ssh-tunneling. Here's a temporary way to eliminate this restriction:
+
+
+1 - From the terminal:
+
+defaults write com.apple.ScreenSharing skipLocalAddressCheck -boolean YES
+
+2 - create the ssh tunnel
+
+ssh -L 5900:localhost:5900 ip address
+
+
+3 - launch screen sharing ap
+
+connect to shared computer
+
+ip address = localhost
+
+
+Look for file com.apple.ScreenSharing.plist and open it with Property List Editor. Look for ShowBonjourBrowser_Debug entry and change Boolean to Yes. Save, exit and open ScreenSharing.

@@ -1,0 +1,37 @@
+
+
+download the code with subversion
+
+
+svn checkout http://svn.calendarserver.org/repository/calendarserver/CalendarServer/trunk CalendarServer
+
+
+The server requires a number of libraries in order to operate. The run script in the sources will automatically download or check out the appropriate libraries and build them for you:
+
+set up the server the first time and download dependencies
+
+./run -s
+
+
+cp ./conf/caldavd-test.plist ./conf/caldavd-dev.plist
+
+
+open ./conf/caldavd-dev.plist
+
+and change the bindaddresses
+
+change from 127.0.0.1 to dns name
+
+this is set in the sharing pane of system prefs
+
+
+you must restart the mac for the changes to take affect
+
+
+start the server
+
+cd into calendar source then 
+
+./run
+
+

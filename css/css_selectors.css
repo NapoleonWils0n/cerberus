@@ -1,0 +1,264 @@
+/*----------------------------------------------------------------------------------------*/
+/*	CSS Selectors */
+/*----------------------------------------------------------------------------------------*/
+
+*  /* any element */
+E  /* an element of type E */
+E[foo] 	/* an E element with a "foo" attribute */
+E[foo="bar"]  /* an E element whose "foo" attribute exactly equal to "bar" */
+E[foo~="bar"] /* an E element whose "foo" attribute of whitespace-separated values, one of which is exactly equal to "bar" */
+
+E[foo^="bar"] /* an E element whose "foo" attribute value begins exactly with the string "bar" */
+E[foo$="bar"] /* an E element whose "foo" attribute value ends exactly with the string "bar" */
+E[foo*="bar"] /* an E element whose "foo" attribute value contains the substring "bar" */
+E[hfoo|="en"] /* an E element whose "foo" attribute has a hyphen-separated list of values beginning (from the left) with "en" */
+E:root  /* an E element, root of the document */
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	Child Selectors */
+/*----------------------------------------------------------------------------------------*/
+
+
+E:first-child /* an E element, first child of its parent */
+E:last-child  /* an E element, last child of its parent */
+E:nth-child(n) /* an E element, the n-th child of its parent */
+E:nth-child(2n) {}
+E:nth-child(2n+1) {}
+E:nth-last-child(2n) {}
+E:nth-last-child(n)	/* an E element, the n-th child of its parent, counting from the last one */
+
+/* Odd and Even */
+E:nth-child(odd) {}
+E:nth-child(even) {}
+
+tr:nth-child(2n+1) 	/* represents every odd row of an HTML table */
+tr:nth-child(odd)  	/* same */
+tr:nth-child(2n)	/* represents every even row of an HTML table */
+tr:nth-child(even)	 /* same */
+
+tr:nth-child(2n+0) /* represents every even row of an HTML table */ 
+tr:nth-child(2n) /* same */
+
+html|tr:nth-child(-n+6) /* represents the 6 first rows of XHTML tables */
+
+:nth-child(10n-1) /* represents the 9th, 19th, 29th, etc, element */ 
+:nth-child(10n+9) /* Same */
+
+tr:nth-last-child(-n+2) /* represents the two last rows of an HTML table */
+foo:nth-last-child(odd) /* represents all odd foo elements in their parent element, counting from the last one */
+
+
+/* Alternate paragraph colours in CSS */ 
+
+p:nth-child(4n+1) { color: navy; } 
+p:nth-child(4n+2) { color: green; } 
+p:nth-child(4n+3) { color: maroon; } 
+p:nth-child(4n+4) { color: purple; }
+
+
+/*	Float images by nth of Type */
+/* This allows an author to alternate the position of floated images: */
+
+img:nth-of-type(2n+1) { float: right; } 
+img:nth-of-type(2n) { float: left; }
+
+
+/* The following selector represents a p element that is the first child of a div element: */
+
+div > p:first-child
+
+* > a:first-child /* a is first child of any element */ 
+a:first-child /* Same (assuming a is not the root element) */
+
+
+/* The following selector represents a list item li that is the last child of an ordered
+list ol. */
+
+ol > li:last-child
+
+/*----------------------------------------------------------------------------------------*/
+/*	Type Selectors */
+/*----------------------------------------------------------------------------------------*/
+
+E:nth-of-type(n)	/* an E element, the n-th sibling of its type */
+E:nth-last-of-type(n)	/* an E element, the n-th sibling of its type, counting from the last one */
+
+E:first-of-type /* an E element, first sibling of its type */
+E:last-of-type /* an E element, last sibling of its type */
+E:only-child 	/* an E element, only child of its parent */
+E:only-of-type 	/* an E element, only sibling of its type */
+E:empty	 /* an E element that has no children (including text nodes) */
+
+
+/* The following selector represents a definition title dt inside a definition list dl, this
+dt being the first of its type in the list of children of its parent element. */
+
+dl dt:first-of-type
+
+/* The following selector represents the last data cell td of a table row. */
+
+tr > td:last-of-type
+
+/* To represent all h2 children of an XHTML body except the first and last, 
+one could use the following selector: */
+
+body > h2:nth-of-type(n+2):nth-last-of-type(n+2)
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	First Line and First Letter */
+/*----------------------------------------------------------------------------------------*/
+
+E::first-line  	/* the first formatted line of an E element */
+E::first-letter  	/* the first formatted letter of an E element */
+
+/*----------------------------------------------------------------------------------------*/
+/*	Before and After  */
+/*----------------------------------------------------------------------------------------*/
+
+E::before  	/* generated content before an E element */
+E::after  /* generated content after an E element */
+
+/*----------------------------------------------------------------------------------------*/
+/*	:not selector */
+/*----------------------------------------------------------------------------------------*/
+
+E:not(s)	/* an E element that does not match simple selector s */
+
+/* The following selector matches all button elements in an HTML document that are not disabled. */
+
+button:not([DISABLED])
+
+/* The following selector represents all but FOO elements.*/
+
+*:not(FOO)
+
+/* The following group of selectors represents all HTML elements except links.*/
+
+html|*:not(:link):not(:visited)
+
+/* In this case, one could also use :not(), although the selector ends up being just
+as long: */
+
+body > h2:not(:first-of-type):not(:last-of-type)
+
+/*----------------------------------------------------------------------------------------*/
+/*	Text selection colour */
+/*----------------------------------------------------------------------------------------*/
+
+p::selection {background: rgba(204,204,204,1);}
+
+/*----------------------------------------------------------------------------------------*/
+/*	Class and ID Selectors */
+/*----------------------------------------------------------------------------------------*/
+
+E.warning 	/* an E element whose class is "warning" (the document language specifies how class is determined). */
+E#myid  	/* an E element with ID equal to "myid". */
+
+/*----------------------------------------------------------------------------------------*/
+/*	Child Selectors */
+/*----------------------------------------------------------------------------------------*/
+
+E F 	/* an F element descendant of an E element */
+E>F  	/* an F element child of an E element */
+
+/*----------------------------------------------------------------------------------------*/
+/*	Sibling Selector */
+/*----------------------------------------------------------------------------------------*/
+
+
+E+F 	/* an F element immediately preceded by an E element */
+E~F 	/* an F element preceded by an E element */
+
+/*----------------------------------------------------------------------------------------*/
+
+h1[title] /* h1 with title attribute */
+span[class="example"] /* the selector represents a span element whose class attribute has exactly the value "example": */
+span[class="Cleveland"][id="Columbus"] /* match multiple selectors */
+
+a[rel~="copyright"] /* an a element with the value "copyright copyleft copyeditor" on a rel attribute.  */
+a[href="http://www.w3.org/"] /* only match an a element with an href attribute having the exact value "http://www.w3.org/" */
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	Attribute selectors */
+/*----------------------------------------------------------------------------------------*/
+
+[att] 	/* Represents an element with the att attribute, whatever the value of the attribute. */
+[att=val]  /* Represents an element with the att attribute whose value is exactly "val". */
+[att~=val] 	/* Represents an element with the att attribute whose value is a whitespace- separated list of words, one of which is exactly "val". If "val" contains whitespace, it will never represent anything (since the words are separated by spaces). Also if "val" is the empty string, it will never represent anything. */
+
+[att^=val] /* Represents an element with the att attribute whose value begins with the prefix
+"val". If "val" is the empty string then the selector does not represent anything. */
+
+[att$=val] /* Represents an element with the att attribute whose value ends with the suffix
+"val". If "val" is the empty string then the selector does not represent anything. */
+
+[att*=val]  /* Represents an element with the att attribute whose value contains at least one instance of the substring "val". If "val" is the empty string then the selector does not represent anything. */
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	Pseudo-classes - Link Styles */
+/*----------------------------------------------------------------------------------------*/
+
+E:link /* an E element being the source anchor of a hyperlink of which the target is not yet visited (:link) */
+E:visited /* an E element being the source anchor of a hyperlink of which the target or has already visited (:visited) */
+E:active 	/* an E element during certain user actions */
+E:hover  	/* hovering over an element */
+E:focus 	/* element has focus */
+E:target /* an E element being the target of the referring URI */
+
+/*----------------------------------------------------------------------------------------*/
+/*	language selector */
+/*----------------------------------------------------------------------------------------*/
+
+E:lang(fr) 	/* an element of type E in language "fr" (the document language specifies how language is determined) */
+
+/*----------------------------------------------------------------------------------------*/
+/*	The UI element states pseudo-classes */
+/*----------------------------------------------------------------------------------------*/
+
+E:enabled  /* a user interface element E which is enabled */
+E:disabled 	/* a user interface element E which is disabled */
+E:checked  	/* a user interface element E which is checked (for instance a radio-button or checkbox) */
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	input by type */
+/*----------------------------------------------------------------------------------------*/
+
+input[type="text"], input[type="password"] {font: -webkit-small-control;}
+input[type="text"]:hover, input[type="text"]:focus, input[type="password"]:hover, input[type="password"]:focus {}
+input[type="button"], input[type="submit"] {}
+
+/*----------------------------------------------------------------------------------------*/
+
+
+object[type^="image/"] 	/* selector represents an HTML object, referencing an image */
+
+a[href$=".html"] 	/* The following selector represents an HTML anchor a with an href attribute whose value ends with ".html". */
+
+p[title*="hello"]  /* The following selector represents an HTML paragraph with a title attribute
+whose value contains the substring "hello" */
+
+
+/*----------------------------------------------------------------------------------------*/
+/*	Media Queries for device widths */
+/*----------------------------------------------------------------------------------------*/
+
+@media screen and (min-device-width: 1025px) {}
+
+@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+	html {-webkit-text-size-adjust: none;}
+}	
+	
+@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
+	html {-webkit-text-size-adjust: none;}
+}
+	
+@media only screen and (max-device-width: 480px) {
+	html {-webkit-text-size-adjust: none;}
+	}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {}

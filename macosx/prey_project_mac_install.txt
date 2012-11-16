@@ -1,0 +1,69 @@
+ ===========================
+ = preyproject mac install =
+ ===========================
+
+go to the preyproject site and create a new account
+
+click the 1password icon in google chrome and select the pasword generator
+create a new 40 character password ( max allowed )
+
+fill in your usename, email address and paste in your password
+
+
+download and install the preyproject and select use existing account in the installer
+
+fill in your details
+
+
+On the Mac
+
+If you’re using LittleSnitch, 
+open the configuration pane and allow curl to make connections over port 80 to control.preyproject.com.
+
+Report the mac missing on the preyproject site
+
+And click allow for any little snitch alerts that pop up
+
+
+check the preyproject connection
+
+sudo /usr/share/prey/prey.sh --check
+
+
+if you get an error about the root crontab follow the steps below
+
+
+ ====================================
+ = edit the root crontab on the mac =
+ ====================================
+
+this use the vi editor
+
+
+sudo crontab -e
+
+
+you are now using the vi text editor
+
+
+press i 
+
+that puts you in insert mode where you can enter text
+
+
+enter your text, then press escape when you are done
+
+
+then type
+
+:w
+
+this saves your changes
+
+to quit type this 
+
+:q
+
+
+
+

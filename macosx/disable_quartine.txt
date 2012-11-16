@@ -1,0 +1,3 @@
+Snow Leopard
+
+xattr -d -r com.apple.quarantine filepath

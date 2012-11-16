@@ -1,0 +1,6 @@
+change zen coding expand key to tab
+
+OK, I'll think about new shortcut TM.
+
+whitink, go to Bundles > Bundle Editor > Show Bundle Editor, find and expand Zen Coding item, choose "Espand 
+Abbreviation" command and change activation key

@@ -1,0 +1,9 @@
+vlc airfoil audio delay streaming
+
+
+set the audio delay in vlc to -2100 so the video stays in sync with airplay audio
+
+
+Use VLC instead (i.e. choose VLC as the app whose sound AirFoil should capture). Within VLC, use F and G keys to adjust the delay/advance of sound. Usually, an advance (F-key) of -2100 ms is enough. Works great!
+
+open the advanced preferences in VLC and enter the value in Audio desynchronization compensation.

@@ -1,0 +1,40 @@
+Windows XP sp2 install iss
+
+double click the windows.cdr
+
+once its mounted copy the i386 file to the desktop
+
+zip it up
+
+put it in the sites folder on your mac
+
+on Windows XP open internet explorer and download the i386.zip file to the desktop
+
+copy the i386.zip to c:/
+
+
+install 7zip
+
+extract the zip file to c:/
+
+you will then have a this dirctory structure
+
+c:/i386/i386
+
+move c:/i386/i386 to the desktop 
+
+then delete the empty c:/i386 folder
+
+move i386 from the desktop to c:/
+
+so you now have this directory structure c:/i386
+
+
+To begin, navigate to the Control Panel and open "Add or Remove Programs". Select "Add/Remove Windows Components" on the left-hand side. 
+
+Select the "Internet Information Services (IIS)" checkbox and click "Details". Select the "File Transfer Protocol (FTP) Service" checkbox and click "OK". By default, the installed IIS FTP service allows for anonymous connections. 
+
+Lastly, select the "Management and Monitoring Tools" checkbox and click "Details". Ensure that both options are selected and click "OK". When all is ready, click "Next" to proceed with the installation of IIS and SNMP. 
+
+
+when it prompts for the cd browse to c:/i386 and it will install
