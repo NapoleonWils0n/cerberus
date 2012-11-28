@@ -1,0 +1,13 @@
+#|------------------------------------------------------------------------------
+#| PLex dlna server stream to nexus 7
+#|------------------------------------------------------------------------------
+
+1 - install the plex dlna server
+
+2-  open the following ports in the firewall with icefloor
+
+tcp ports: 32400 32469
+
+udp ports: 32400 32469 1900 5353
+
+3 - Install Skifta dlna app for android
