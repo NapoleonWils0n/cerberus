@@ -1,0 +1,1 @@
+python -c "print ''.join(chr(int(c, 16) ^ 170) for c in '`sudo nvram security-password`'.split('%')[1:])"
