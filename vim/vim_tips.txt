@@ -21,11 +21,8 @@ s
 #| change surrounding tags
 #|------------------------------------------------------------------------------
 
-# enter visual mode and select whole line
-shift + V
-
-# press s
-s
+# enter command mode 
+,e
 
 # cst
 cst
