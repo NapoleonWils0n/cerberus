@@ -45,3 +45,30 @@ S
 
 # add brackets
 <h1
+
+#|------------------------------------------------------------------------------
+#|	delete surrounding tag
+#|------------------------------------------------------------------------------
+
+dst
+
+#|------------------------------------------------------------------------------
+#|	change " to ' on this text: "lorem"
+#|------------------------------------------------------------------------------
+
+cs"'
+
+#|------------------------------------------------------------------------------
+#|	personal dictionary
+#|------------------------------------------------------------------------------
+
+# create a dictionary file at this location /Users/djwilcox/.vim/dict.txt
+
+# onmi completion: control + o or control x
+# use control p or control n to select completion
+
+# vimrc
+set dictionary+=/Users/djwilcox/.vim/dict.txt
+
+
+
