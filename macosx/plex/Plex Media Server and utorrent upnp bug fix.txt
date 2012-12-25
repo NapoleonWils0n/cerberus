@@ -1,0 +1,17 @@
+#|------------------------------------------------------------------------------
+#|	Plex Media Server and utorrent upnp bug fix
+#|------------------------------------------------------------------------------
+
+utorrent stops Plex media server from starting its upnp server
+
+The fix
+
+You have to open uTorrents prefences and then select the network tab
+
+deselect the following checkbox:
+
+Automatically map port ( using NAT-PMP or UPnP)
+
+and then restart utorrent for the change to take affect
+
+
