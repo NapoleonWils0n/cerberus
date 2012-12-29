@@ -1,0 +1,22 @@
+send to xbmc localhost
+
+# set up xbmc settings for streaming
+
+open the yatse widget ( xbmc remote control )
+
+manually add a new remote with the ip address 127.0.0.1
+
+and port 8080
+
+
+1 - open xbmc on the nexus
+
+2 - open yatse widget and select nexus 7 xbms as the remote
+
+3 - plug in the usb cable and thumb stick
+
+4  -when the nexus media importer open select a video 
+
+5 - click the play button in the menu
+
+6 - select send to XBMC and then switch to the xbmc app
