@@ -1,0 +1,9 @@
+Launch and Run Multiple Instances of Any Application in Mac OS X
+
+Open Terminal, type the command
+
+open -na Safari
+
+The -n option is for “new” or “new instance”. 
+The -a option tells your computer you are opening an application, 
+so that the path (usually /Applications/) and the extensions (.app) are no longer needed.
