@@ -1,0 +1,13 @@
+# raspbmc overscan settings for panasonic tv
+
+arm_freq=800
+force_turbo=1
+disable_overscan=1
+gpu_mem_256=128
+gpu_mem_512=256
+sdtv_mode=2
+overscan_scale=1
+overscan_left=40
+overscan_right=20
+overscan_top=10
+overscan_bottom=10
