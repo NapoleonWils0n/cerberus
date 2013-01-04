@@ -1,0 +1,7 @@
+Raspberry Pi find serial number for license key
+
+
+To find your serial number, 
+type cat /proc/cpuinfo at the command line as shown below:
+
+pi@raspberrypi:~$ cat /proc/cpuinfo
