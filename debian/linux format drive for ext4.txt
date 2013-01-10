@@ -1,0 +1,60 @@
+# format drive for ext4
+
+sudo /sbin/parted /dev/sdb
+(parted) mklabel gpt
+(parted) mkpart primary 1 -1 
+(parted) print
+(parted) quit
+
+# format the drive as ext4
+sudo mkfs -t ext4 /dev/sdb1
+
+# By default, this formatting reserves 5% of the disk for root. 
+# But as this disk is not the system disk, we can safely remove  this limit:
+
+tune2fs -m 0 /dev/sdb1
+
+# change the volume label name
+sudo tune2fs -L linux /dev/sdb1
+
+#-----------------------------------------------#
+
+# mount the macs hard drive on linux
+sudo su
+mount -t vboxsf Turing /home/djwilcox/mnt
+
+# unmount the shared folder
+sudo su
+umount -t vboxsf Turing /home/djwilcox/mnt
+
+#-----------------------------------------------#
+
+[homes]
+comment = Home Directories
+browseable = no
+valid users = @users
+writable = yes
+create mask = 0700
+directory mask = 0700
+
+
+[usb]
+comment = All Users
+path = /media/linux
+browseable = yes
+valid users = @users
+writable = yes
+create mask = 0700
+directory mask = 0700
+
+
+#-----------------------------------------------#
+
+# hfs support
+
+So here is 1-2-3 style how to mount HFS+ partition in Ubuntu, so that you are able to write on it:
+
+1) sudo apt-get install hfsplus hfsprogs hfsutils
+
+2) mount -o force -t hfsplus /dev/XXX /mnt/v
+
