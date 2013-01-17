@@ -241,3 +241,39 @@ javac -version
 cd /opt/google/chrome/plugins
 
 sudo ln -s /usr/local/java/jre1.7.0_11/lib/i386/libnpjp2.so .
+
+#|------------------------------------------------------------------------------
+#|	Install Java plugin for Mozilla Firefox
+#|------------------------------------------------------------------------------
+
+* Become the root user by running the su command and then enter the super-user password. Type: 
+sudo -s
+
+* Create a directory called plugins if you do not have it. Type: 
+
+mkdir -p /usr/lib/mozilla/plugins
+  
+* Go to Google chrome plugins directory before you make the symbolic link. Type: 
+
+cd /usr/lib/mozilla/plugins
+
+* Create a symbolic link. 
+
+Type: 
+
+sudo ln -s /usr/local/java/jre1.7.0_11/lib/i386/libnpjp2.so .
+
+
+#|------------------------------------------------------------------------------
+#| open jnlp with javaws
+#|------------------------------------------------------------------------------
+
+# Downloads a .jnlp file
+
+# open firefox prefences / Applications
+
+# select jnlp, and then select open with other
+# then go to the filesystem and browse to /usr/bin/javaws and select javaws
+
+# javaws location
+/usr/bin/javaws
