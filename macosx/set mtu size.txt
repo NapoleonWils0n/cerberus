@@ -1,0 +1,7 @@
+# set mtu size
+
+# find mtu size
+networksetup -getMTU
+
+# set mtu size
+networksetup -setMTU en0 1453
