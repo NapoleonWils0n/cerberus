@@ -1,0 +1,3 @@
+xbmc turn off embeded subs in mkv
+
+stop the video and press t
