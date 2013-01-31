@@ -1,0 +1,50 @@
+Things you will need:
+
+1.  A Nexus 7, obviously (https://play.google.com/store/devices/details?id=nexus_7_8gb)
+2.  A PC or laptop that runs windows 7 (just for the unlocking part, there are plenty of other guides on how to unlock for other OS's)
+3.  An OTG cable (ex. http://www.amazon.com/T-Flash-Adapter-Samsung-GT-i9100-GT-N7000/dp/B005FUNYSA/ref=sr_1_1?ie=UTF8&qid=1347667703&sr=8-1&keywords=OTG+cable)
+4.  A standard plug and play USB dac (preferably one that can run on battery power otherwise you get into problems with power management)
+5.  Nexus 7 Toolkit:  http://forum.xda-developers.com/showthread.php?t=1766475
+6.  Poitee kernel:  http://rootzwiki.com/topic/30129-kernel-nexus-7-cifsnfsusb-otg-gpu-oc-cpu-oc-072912/
+
+Step 1: Prep tablet for use with the toolkit
+    Swipe down from the top of the screen to open the notification area.
+    Tap the settings icon next to the time and date.
+    Scroll down to the Developer options area and tap it.
+    Slide the switch to turn on Developer options.
+    Check the box that says USB debugging
+    Hit the back button to return to the previous screen
+    Tap the “About tablet” option.
+    Make a note of the Build number — the last item on this screen.
+
+Another word about this step, if you have been using your tablet and it is still stock, make sure you backup all the files you have on it onto your computer as unlocking the tablet will erase absolutely all user data, including the /sdcard/.
+
+Step 2: Install the nexus toolkit to help unlock your tablet (windows 7 only, if you have a different os google a guide for that os and then skip to step 3)
+    Install the Nexus toolkit that you downloaded (posted in the things you will need section)
+    When you start up the toolkit it will ask what model type you are using, scroll down to the nexus 7 portion and select the build that you have
+    Start it up, and under the initial setup click on the Full Driver Installation, this will walk your through how to install the drivers to unlock the device
+    (YOUR DEVICE SHOULD BE ATTACHED TO THE COMPUTER BY THIS POINT)
+    If you haven't done so, take a backup of the device by clicking on the backup button
+    Click on the Unlock button to unlock your device
+    Under the root button, tick the Custom Recovery box and then click on root and follow the script
+ 
+Step 3: Flash the poitee kernel
+    Download the kernel that is posted above in the things you will need section of this guide
+    Boot up the Nexus 7 and go through the initial setup again
+    Put the poitee kernel onto the /sdcard/ of the nexus 7
+    Power down the tablet completely
+    Power on the tablet by holding the power button and down on the volume rocker, you should be in fastboot mode
+    Use the volume rocker to select recovery mode and hit the power button to select
+    At this point it would be a good idea to take a backup of your current state in your recovery's backup and restore menu
+    If you are using CWM recovery, select wipe cache.  Once that is done click on install zip from sdcard and look for the poitee kernel that you downloaded, select it and follow through with the flashing
+    If you are using TWRP recovery (which I personally prefer), touch the wipe tab and then touch Cache under the wipe menu, once that is done go back to the home menu and touch the install tab and look for the poitee kernel and select it, follow the prompts to install
+You have now flashed the kernel
+ 
+Step 4: Final steps (the easy part)
+    Reboot back into the system, hopefully everything has gone ok and you now have poitee kernel installed, if you run into problems then reboot back into recovery and restore the backup that you took in step 3, then repeat part 8 or 9 depending on which recovery you have installed.
+    If everything went smooth, then power down the tablet and attach the OTG cable to it, then attach your DAC to the other side of the OTG cable
+    When you power on your tablet, the sound should be routed through the USB DAC instead of the built in one as long as you don't disconnect the DAC
+    Enjoy much higher quality sound from your new tablet XD
+ 
+ 
+NOTE:  If you do disconnect the DAC at any point, you will have to reboot the tablet with it attached.  Also to route sound out of the tablet, you always have to boot it up with the DAC attached otherwise it won't switch.  Also if you are using the E17, make sure you turn the USB charge feature off so it only uses the battery, it seems to draw too much current for the tablet to handle and doesn't work well when relying on the tablet's power.
