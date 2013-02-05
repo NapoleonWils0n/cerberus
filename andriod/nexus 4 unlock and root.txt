@@ -1,0 +1,66 @@
+nexus 4 unlock and root
+
+
+open eclipse on ubuntu
+
+/home/djwilcox/Development/adt-bundle-linux-x86/eclipse/eclipse
+
+from the window menu select adk device manager
+
+install the intel driver and download
+
+#|------------------------------------------------------------------------------
+#| unlocking
+#|------------------------------------------------------------------------------
+
+
+adb reboot bootloader
+
+sudo su
+
+fastboot devices
+
+fastboot oem unlock
+
+# turn usb debugging back on, by click the build number 7 times in settings
+# then turning on developer options and usb debugging
+
+
+
+# download twrp 
+wget http://techerrata.com/file/twrp2/grouper/recovery-clockwork-touch-6.0.2.3-tilapia.img
+
+# download CWM-SuperSU-v0.99.zip 
+
+download CWM-SuperSU-v0.97.zip to the downloads folder on the nexus
+
+#-----------------------------------------------#
+
+adb reboot bootloader
+
+fastboot flash recovery recovery-clockwork-touch-6.0.2.3-tilapia.img
+
+# select recovery mode on the andriod boot screeen with the volume buttons and select with the power button
+
+# select install zip from sdcard
+CWM-SuperSU-v0.97.zip
+
+#-----------------------------------------------#
+
+# rename file
+# select mounts and storage, then mount system
+
+adb shell
+
+cd /system
+
+ls
+
+mv recovery-from-boot.p recovery-from-boot.p.bak
+
+exit
+
+#-----------------------------------------------#
+
+# select option to keep flash rom as well
+
