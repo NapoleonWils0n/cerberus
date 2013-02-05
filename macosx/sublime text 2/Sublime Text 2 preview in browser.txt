@@ -1,0 +1,19 @@
+Sublime Text 2 preview in browser
+
+
+# open_browser.py
+
+
+import sublime, sublime_plugin
+import webbrowser
+
+class OpenBrowserCommand(sublime_plugin.TextCommand):
+   def run(self,edit):
+      url = self.view.file_name()
+      print url
+      chrome = webbrowser.get("open -a /Applications/Google\ Chrome.app %s")
+      chrome.open_new(url)
+
+
+
+command + shift + b
