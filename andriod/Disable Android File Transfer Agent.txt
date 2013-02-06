@@ -1,0 +1,15 @@
+Disable Android File Transfer Agent.app
+
+Download and install the Android File Transfer app
+
+Open it once then quit it
+
+Open Activity Monitor, find the Android File Transfer Agent and quit it (the big stop button in the Activity Monitor toolbar).
+
+And here's the solution to disable the Agent app:
+- Go to where you installed "Android File Transfer.app" (I have it under /Applications)
+- Ctrl+click --> "Show package contents"
+- Go to Contents/Resources
+- Rename "Android File Transfer Agent.app" to e.g. "Android File Transfer Agent.app_DISABLED"
+
+Then go to /Users/username/Library/Application Support/Google/Android File Transfer.app and again rename the Agent app. (make sure you've quitted the process before doing this).
