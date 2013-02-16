@@ -1,0 +1,17 @@
+send video link from chrome on Nexus 4 and 7 to xbmc
+
+
+# make sure to configure the yatse widget (xbmc remote) 
+# to connect to your computer running xbmc
+
+1 - go to archive.org movie section
+
+2 - find a movie you want to watch
+
+3 - on the page with the video, look in the left hand sidebar for the http links to the mp4
+
+4 - long click on the link to the video 
+
+5 - this will open a pop up menu, select open in new tab
+
+6 - the share menu will then appear, select send to xbmc to beam the video to xbmc
