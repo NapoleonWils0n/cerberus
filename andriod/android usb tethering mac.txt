@@ -1,0 +1,8 @@
+Android usb tethering mac
+
+Install HoRNDIS
+
+http://joshuawise.com/horndis
+
+
+That should create a new network in system preferences network
