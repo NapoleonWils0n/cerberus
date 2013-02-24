@@ -1,0 +1,27 @@
+ubuntu nexus 7 install
+
+https://launchpad.net/~ubuntu-nexus7/+archive/ubuntu-nexus7-installer
+
+add the following to software sources for quantal
+
+deb http://ppa.launchpad.net/ubuntu-nexus7/ubuntu-nexus7-installer/ubuntu quantal main 
+deb-src http://ppa.launchpad.net/ubuntu-nexus7/ubuntu-nexus7-installer/ubuntu quantal main 
+
+
+add the following to software sources for raring
+
+deb http://ppa.launchpad.net/ubuntu-nexus7/ubuntu-nexus7-installer/ubuntu raring main 
+deb-src http://ppa.launchpad.net/ubuntu-nexus7/ubuntu-nexus7-installer/ubuntu raring main 
+
+
+sudo apt-get update
+sudo apt-get install ubuntu-nexus7-installer
+
+
+sudo fastboot devices
+
+sudo fastboot oem unlock
+
+sudo fastboot reboot-bootloader
+
+
