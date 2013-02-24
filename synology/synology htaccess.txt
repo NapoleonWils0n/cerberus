@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Restricted resources"
+AuthUserFile /usr/syno/apache/.htpasswd
+Require valid-user
