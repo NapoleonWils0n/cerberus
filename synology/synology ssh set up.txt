@@ -1,0 +1,162 @@
+
+#=========================================================================================#
+
+synology ssh set up 
+
+#=========================================================================================#
+
+1 - Go to the control panel, then select Terminal and check Enable SSH Service and then click apply
+
+#=========================================================================================#
+
+2 - Go to the control panel, and select Users, then click the User Home Tab, and select Enable user home service choose a volume that you want your users’ home directories to reside and click ok
+
+then select your user and control click on it and selct edit, go to the Priviledges tab, and check read write access for homes and click ok
+
+#=========================================================================================#
+
+
+connect via ssh as root to the synology nas
+
+ssh root@192.168.1.25
+
+
+#=========================================================================================#
+
+copy the ssh public from your mac to the users /volume1/homes/username/.ssh/authorized_keys on the nas
+
+cat ~/.ssh/id_rsa.pub > ~/Desktop/authorized_keys
+
+
+cd /volume1/homes/username
+
+mkdir .ssh
+touch .ssh/authorized_keys
+
+vi .ssh/authorized_keys
+
+copy the contents ~/Desktop/authorized_keys on your mac to the .ssh/authorized_keys on the nas
+
+chmod 700 .ssh
+chmod 644 .ssh/authorized_keys
+
+chown -R username:users .ssh
+
+#=========================================================================================#
+
+
+To enable your user’s to login with a shell, you have to edit the file /etc/passwd. Here is an example with the common contents when you have 2 users, one with a enabled shell (/bin/sh) the other without (/sbin/nologin)
+
+edit the /etc/passwd with vi and change /sbin/nologin to /bin/sh next to the user you want to enable ssh acces for
+
+
+change from:
+username:x:1026:100:name admin:/var/services/homes/username:/sbin/nologin
+
+
+change to:
+username:x:1026:100:name admin:/var/services/homes/username:/bin/sh
+#=========================================================================================#
+
+3 - copy the contents of the /root/.profile to your new user /volume1/homes/username/.profile
+
+vi /root/.profile
+
+change HOME=/root to HOME=/volume1/homes/username
+
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/syno/sbin:/usr/syno/bin:/usr/local/sbin:/usr/local/bin
+export PATH
+
+#This fixes the backspace when telnetting in.
+#if [ "$TERM" != "linux" ]; then
+#        stty erase
+#fi
+
+HOME=/volume1/homes/username
+export HOME
+
+TERM=${TERM:-cons25}
+export TERM
+
+PAGER=more
+export PAGER
+
+PS1="`hostname`> "
+
+alias dir="ls -al"
+alias ll="ls -la"
+
+#=========================================================================================#
+
+4 - change permissions on the /volume1/homes/username/.profile
+
+cd /volume1/homes/username
+
+chown username:users .profile
+
+#=========================================================================================#
+
+5 - edit the ssh config file
+
+vi /etc/ssh/sshd_config
+
+
+uncomment the following for ssh keys
+
+#RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+
+uncomment the following disable ssh root login
+
+# Authentication:
+#LoginGraceTime 2m 
+PermitRootLogin no
+#StrictModes yes
+MaxAuthTries 2
+#MaxSessions 10
+
+
+
+#=========================================================================================#
+
+restart ssh
+
+/usr/syno/etc/rc.d/S95sshd.sh restart
+
+
+#=========================================================================================#
+
+enable root login from a shell using su
+
+chmod u+s /bin/busybox
+
+#=========================================================================================#
+
+switch to root using su
+
+su 
+
+
+#=========================================================================================#
+
+edit your ssh config on your mac and add a ssh alias
+
+mate ~/.ssh/config 
+
+# nas
+Host nas
+User username
+Port 443
+HostName 192.168.1.25
+
+
+#=========================================================================================#
+
+
+log in with the ssh alias and ssh keys
+
+ssh nas
+
