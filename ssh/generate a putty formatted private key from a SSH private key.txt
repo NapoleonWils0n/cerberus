@@ -1,0 +1,12 @@
+Generate a putty formatted private key from a SSH private key
+
+
+Install putty on ubuntu
+
+sudo apt-get install putty
+
+Open up a terminal window on your Linux computer. See here for more detail. At the $ prompt, type following (commands to type in italics):
+
+cd ~/.ssh
+ls 
+puttygen id_rsa -o id_rsa.ppk 
