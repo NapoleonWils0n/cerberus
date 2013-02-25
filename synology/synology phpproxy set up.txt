@@ -1,0 +1,67 @@
+
+#============================================#
+
+Synology phpproxy set up
+
+#============================================#
+
+use htpasswd on the mac to create a hashed version of username and password
+
+
+cd ~/Desktop
+
+htpasswd -c .htpasswd username
+
+enter your new password at the prompt twice
+
+#============================================#
+
+Go to the control panel on synology and select terminal services
+
+turn on ssh
+
+
+make sure your user has permissions to use ssh
+
+connect via ssh as root to the synology nas
+
+
+ssh root@192.168.1.25
+
+#============================================#
+
+create the .htpasswd file
+
+
+cd /usr/syno/apache
+
+vi .htpasswd
+
+copy in username:password from htpasswd created on mac
+
+change permission on the htpasswd so root and apache can read it
+chown root:nobody .htpasswd
+
+
+#============================================#
+
+create .htaccess file
+
+cd /volume1/web/
+
+vi .htaccess
+
+AuthType Basic
+AuthName "Restricted resources"
+AuthUserFile /usr/syno/apache/.htpasswd
+Require valid-user
+
+
+#============================================#
+
+create a robots.txt file to stop the site from being indexed
+
+vi robots.txt:
+
+User-agent: *
+Disallow: /
