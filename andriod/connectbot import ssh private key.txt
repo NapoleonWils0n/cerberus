@@ -1,0 +1,28 @@
+#|------------------------------------------------------------------------------
+#|	connectbot import ssh private key 
+#|------------------------------------------------------------------------------
+
+1 - connect nexus 4 or 7 to your mac with the micro usb cable
+
+2 - open the android file transfer app and copy ~/.ssh/id_rsa to /sdcard on the nexus
+
+3 - open connecbot and click the 3 vertical dots at the bottom right of the screen ( menu )
+
+4 - then select Manage Pubkeys 
+
+5 - click the 3 vertical dots at the bottom right of the screen ( menu )
+
+6 - then select import
+
+7 - this opens a window that says pick from /sdcard, select id_rsa this imports the ssh private key 
+
+8 - you should see id_rsa listed with a red locked padlock next to it, now we need to unlock the key by entering the ssh private key password
+
+10 -  click on the id_rsa key, this opens another window where you have to enter the password for the ssh private key
+
+12 - the id_rsa key should now have a green open lock next to it 
+
+13 - you should now be able to connect to a ssh server with just the private key
+
+14 - when you connect to a server you should prompted to accept the servers key
+
