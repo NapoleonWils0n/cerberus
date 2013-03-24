@@ -1,0 +1,21 @@
+#!/bin/bash
+# /etc/init.d/tightvncserver
+#
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+start)
+    su pi -c "/usr/bin/vncserver -geometry 1440x900"
+    echo "Starting VNC server "
+    ;;
+stop)
+    pkill vncserver
+    echo "VNC Server has been stopped (didn't double check though)"
+    ;;
+*)
+    echo "Usage: /etc/init.d/blah {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

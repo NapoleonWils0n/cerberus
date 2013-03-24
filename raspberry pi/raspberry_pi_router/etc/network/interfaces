@@ -1,0 +1,19 @@
+# Set up the local loopback interface
+auto lo usb0 wlan0 eth0
+iface lo inet loopback
+
+
+# Ethernet
+iface eth0 inet static 
+address 10.0.1.2
+netmask 255.255.255.0
+
+# Wlan
+iface wlan0 inet static
+address 10.0.0.1
+netmask 255.255.255.0
+pre-up iptables-restore < /etc/iptables.rules
+
+# USB
+#allow-hotplug usb0
+iface usb0 inet dhcp
