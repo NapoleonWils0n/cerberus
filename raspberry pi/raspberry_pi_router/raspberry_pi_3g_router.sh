@@ -500,7 +500,7 @@ ieee80211n=1
 
 
 wpa=2
-wpa_passphrase=strawberry
+wpa_passphrase=wifipassword
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=CCMP
 rsn_pairwise=CCMP
