@@ -1,0 +1,48 @@
+#-----------------------------------------------#
+
+# iptables
+
+sudo iptables -F
+sudo iptables -X
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+
+
+#  Accepts all established inbound connections
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+
+#  Allows SSH connections
+#
+# THE -dport NUMBER IS THE SAME ONE YOU SET UP IN THE SSHD_CONFIG FILE
+#
+-A INPUT -p tcp -m state --state NEW --dport 30000 -j ACCEPT
+
+
+# forwarding dont accept connection from the outside
+sudo iptables -A FOWARD -i usb0 -o wlan0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A FOWARD -i wlan0 -o usb0 -j ACCEPT
+
+
+# ssh open ports before postrouting in iptables
+sudo iptables -A PREROUTING -i usb0 -p tcp --dport 22 -j DNAT --to-destination 10.0.0.1:22
+
+
+# stop ping
+sudo iptables -A INPUT -i usb0 -p icmp -m icmp --icmp-type 8 -j DROP
+# block port 1 and 0
+sudo iptables -A INPUT -i usb0 -p tcp -m tcp --dport 0 -j DROP
+sudo iptables -A INPUT -i usb0 -p tcp -m tcp --dport 1 -j DROP
+
+
+# drop icoming tcp 
+sudo iptables -A INPUT -m state --state NEW -m tcp -j DROP
+
+
+# ssh forwarding
+sudo iptables -A FORWARD -d 10.0.0.1 -i usb0 -p tcp --dport -j ACCEPT
+
+# nat forwarding
+sudo iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE
+
+
