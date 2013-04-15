@@ -24,6 +24,9 @@ df -h
 
 diskutil unmount /dev/disk2s1
 
+# 2nd umount option
+diskutil unmountDisk /dev/rdisk2
+
 
 # Using the device name of the partition work out the raw device name for the entire disk,
 # by omitting the final "s1" and replacing "disk" with "rdisk":
@@ -34,6 +37,9 @@ diskutil unmount /dev/disk2s1
 # In the terminal write the image to the card with this command, using the raw disk device name from above:
 
 sudo dd bs=1m if=~/Downloads/debian6-19-04-2012/debian6-19-04-2012.img of=/dev/rdisk2
+
+# Raspberry Pi set up
+sudo dd bs=2m if=~/Desktop/2013-02-09-wheezy-raspbian.img of=/dev/rdisk2
 
 
 # After the dd command finishes, eject the card:
