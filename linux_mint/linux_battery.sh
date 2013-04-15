@@ -13,9 +13,9 @@ sudo nano /etc/fstab
 # disable last access time
 # enable trim, by adding discard
 
-# "noatime,nodirtime,discard" to drive options in /etc/fstab
+# "noatime,nodiratime,discard" to drive options in /etc/fstab
 
-/dev/mapper/mint-root /					ext4	noatime,nodirtime,discard
+/dev/mapper/mint-root /					ext4	noatime,nodiratime,discard
 
 # swap disk
 
