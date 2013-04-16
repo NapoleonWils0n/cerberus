@@ -1,0 +1,33 @@
+Set a Fully Transparent Panel
+When you select a theme from Menu > Cinnamon Settings > themes, the theme may come with a non-transparent or semi-transparent panel. But you can adjust the level of transparency for the panel if you like. For example, I've selected a theme like Jelly Bean or ICS, and I can make it more transparent with the steps below. (Caution: changing the code incorrectly might result in a non-responsive desktop environment.)
+
+For Linux Mint 14
+
+Press Alt-F2, type gksu gedit and press Enter.
+
+Browse to the folder /usr/share/themes/Nightlife\ Graphite/cinnamon under "File System" and open this file cinnamon.css
+
+cd /usr/share/themes/Nightlife\ Graphite/cinnamon
+
+Search for a section beginning with #panel
+
+After the last line within the section, insert a new line for example background-color: rgba(0,0,0,0.35); (The alpha value ranges from 0 [full transparency] to 1 [full opacity].)
+
+Click Save and close the file.
+
+Switch to another theme and back to the original theme.
+
+
+
+
+#panel {
+    color: #ffffff;
+    background-gradient-start: rgba(70,70,70,1);
+    background-gradient-end: rgba(50,50,50,1);
+    background-gradient-direction: vertical;
+    font-size: 9pt;
+    font-weight: normal;
+    height: 25px;
+    box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.35);
+}
