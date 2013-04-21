@@ -29,20 +29,22 @@ sudo make install
 # But we're not done yet. Shairport doesn't automatically load when you start your Raspberry Pi, and since we want to make our AirPlay device work without any peripherals we need to do one more step. From your home directory, type:
 
 cd shairport
-make install
-cp shairport.init.sample /etc/init.d/shairport
+sudo make install
+sudo cp shairport.init.sample /etc/init.d/shairport
 cd /etc/init.d
-chmod a+x shairport
+sudo chmod a+x shairport
 update-rc.d shairport defaults
 
 
 # Finally, we need to add Shairport as a launch item. Type:
 
-sudo nano shairport
+sudo nano /etc/init.d/shairport
 
 # This loads up Shairport file we need to edit. Look through the file for the # "DAEMON_ARGS" line, and change it so it looks like this:
-# DAEMON_ARGS="-w $PIDFILE -a AirPi"
 
-DAEMON_ARGS="-w $PIDFILE -a AirPi"
+# DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
 
+DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
+
+# plughw:1,0 is your usb dac
 
