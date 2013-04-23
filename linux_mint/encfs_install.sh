@@ -12,26 +12,23 @@ sudo apt-get install encfs
 # install
 sudo apt-get update && sudo apt-get install gnome-encfs-manager
 
-# add yourself ro the fuse group
-sudo usermod -a -G fuse $USER
-
-
 # create the encrypted directory
 encfs ~/Dropbox/.encrypted ~/Private
 
 # press p for paranoid mode
 # then enter your password
 
+# press y to create the ~/Dropbox/.encrypted directory
+# press y to create the ~/Private directory
 
-# mount the encrypted directory from the command line
-encfs ~/Dropbox/.encrypted ~/Private
 
-# use gnome-encfs to mount the encrypted directory
-gnome-encfs -a ~/Dropbox/.encrypted ~/Private
+# open the Gnome Encfs Manager application
+# click import stash, select the ~/Dropbox/.encrypted directory as the stash
+# select the ~/Private directory as the mount point
 
 
 # back up the ~/Dropbox/.encrypted/.encfs6.xml file
-~/Dropbox/.encrypted/.encfs6.xml ~/Documents/.encfs6.xml
+cp ~/Dropbox/.encrypted/.encfs6.xml ~/Documents/.encfs6.xml
 
 # dropbox exclude the EncFS key .encfs6.xml file
 # this will delete the .encfs6.xml file from the dropbox directory
