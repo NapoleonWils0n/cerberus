@@ -45,9 +45,5 @@ iptables-restore < /etc/iptables.rules
 # Set up the local loopback interface
 auto lo
 iface lo inet loopback
-
-# Wlan
-auto wlan0
-iface wlan0 inet dhcp
 pre-up iptables-restore < /etc/iptables.rules
 
