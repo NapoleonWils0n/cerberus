@@ -111,3 +111,44 @@ sudo ubiquity
 # after you log in for the first time update the system
 
 # open the update manager, and then select all update and click apply
+
+
+#|------------------------------------------------------------------------------
+#|	linux batery life fstab settings ( props to darren at hak5 )
+#|------------------------------------------------------------------------------
+
+
+# back up fstab
+sudo cp /etc/fstab{,.backup}
+
+# edit fstab
+sudo nano /etc/fstab
+
+# disable last access time
+# enable trim, by adding discard
+
+# "noatime,nodiratime,discard" to drive options in /etc/fstab
+
+/dev/mapper/mint-root /					ext4	noatime,nodiratime,discard
+
+# swap disk
+
+#Don't use swap until physical memory is full.
+sudo cat /proc/sys/vm/swappiness
+sudo echo 0 > /proc/sys/vm/swappiness
+
+
+#Create RAM disk for temp filesystem
+
+# check memory
+df -h
+
+#Find avail for tempfs, now edit /etc/fstab and add
+
+tmpfs /tmp tmpfs defaults,noatime,size=512M,mode=1777 0 0
+tmpfs /var/spool tmpfs defaults,noatime,size=512M,mode=1777 0 0
+tmpfs /var/tmp tmpfs defaults,noatime,size=512M,mode=1777 0 0
+# If you don't care about log files after reboots
+tmpfs /var/log tmpfs defaults,noatime,size=512M,mode=0755 0 0
+# the mode is the file permission. this is a single user system
+# size=512M - size isn't allocated immediately, used as needed
