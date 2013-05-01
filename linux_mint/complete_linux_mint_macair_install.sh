@@ -152,3 +152,141 @@ tmpfs /var/tmp tmpfs defaults,noatime,size=512M,mode=1777 0 0
 tmpfs /var/log tmpfs defaults,noatime,size=512M,mode=0755 0 0
 # the mode is the file permission. this is a single user system
 # size=512M - size isn't allocated immediately, used as needed
+
+
+#|------------------------------------------------------------------------------
+#| iptables
+#|------------------------------------------------------------------------------
+
+
+# iptables for avahi and shairport speakers
+
+sudo iptables -L
+
+
+# Now you have to define certain rules, so that the IP packages can be handed over. 
+
+# This file contains the following lines
+
+sudo iptables -F
+sudo iptables -X
+sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+sudo iptables -A INPUT -p tcp -m tcp --dport 5353 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p tcp -m tcp --dport 5000:5005 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p udp -m udp --dport 6000:6005 -s 192.168.1.0/24 -j ACCEPT
+
+
+# save the ip tables, switch to root first
+sudo su
+
+iptables-save > /etc/iptables.rules
+
+
+# resote iptables, switch to root first
+sudo su
+
+iptables-restore < /etc/iptables.rules
+
+
+#|------------------------------------------------------------------------------
+#| edit /etc/network/interfaces
+#|------------------------------------------------------------------------------
+
+# add pre-up iptables-restore < /etc/iptables.rules 
+
+# Edit the /etc/network/interfaces file to look like this:
+
+# Set up the local loopback interface
+auto lo
+iface lo inet loopback
+pre-up iptables-restore < /etc/iptables.rules
+
+
+#|------------------------------------------------------------------------------
+#| emerging threats iptables and fwsnort install
+#|------------------------------------------------------------------------------
+
+# fwsnort and perl modules install
+sudo apt-get install fwsnort
+
+# install perl modules
+sudo apt-get install libnetaddr-ip-perl
+
+# download the latest emerging threats list
+sudo fwsnort --update-rules
+
+# run fwsnort so it picks up the the emerging threats list
+sudo fwsnort
+
+# run the generated script to add the emerging threats list to iptables
+sudo /var/lib/fwsnort/fwsnort.sh
+
+
+#|------------------------------------------------------------------------------
+#|	xbmc install
+#|------------------------------------------------------------------------------
+
+#  add xbmc repository
+sudo add-apt-repository ppa:team-xbmc/ppa
+
+# apt-get update
+sudo apt-get update
+
+# install xbmc
+sudo apt-get install xbmc
+
+
+#|------------------------------------------------------------------------------
+#| shairport install
+#|------------------------------------------------------------------------------
+
+sudo apt-get install git libao-dev libssl-dev libcrypt-openssl-rsa-perl libio-socket-inet6-perl libwww-perl avahi-utils libmodule-build-perl
+
+# Let this process run for a little while. When it's complete, we need to install an update so Shairport will work with iOS 6 (you can skip this step if you're not on or plan to upgrade iOS 6):
+
+git clone https://github.com/njh/perl-net-sdp.git perl-net-sdp
+cd perl-net-sdp
+perl Build.PL
+sudo ./Build
+sudo ./Build test
+sudo ./Build install
+cd ..
+
+# Once the iOS 6 module is installed (give it a little while), it's finally time to get Shairport installed. from your home directory type:
+
+git clone https://github.com/hendrikw82/shairport.git
+cd shairport
+sudo make install
+
+# Now, let's run Shairport:
+
+./shairport.pl -a AirPi
+
+# This command starts Shairport with your Raspberry Pi named "AirPi" (you can change it to whatever you want). Grab your iOS device, pick the music app of your choice, and tap the AirPlay button. You should see "AirPi" listed as an output device. Tap that, and the music should start streaming out of your USB sound card within a couple seconds.
+
+# But we're not done yet. Shairport doesn't automatically load when you start your Raspberry Pi, and since we want to make our AirPlay device work without any peripherals we need to do one more step. From your home directory, type:
+
+cd shairport
+sudo make install
+sudo cp shairport.init.sample /etc/init.d/shairport
+cd /etc/init.d
+sudo chmod a+x shairport
+update-rc.d shairport defaults
+
+
+# Finally, we need to add Shairport as a launch item. Type:
+
+sudo nano /etc/init.d/shairport
+
+# This loads up Shairport file we need to edit. Look through the file for the # "DAEMON_ARGS" line, and change it so it looks like this:
+
+# DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
+
+DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
+
+# plughw:1,0 is your usb dac
+
+
+
