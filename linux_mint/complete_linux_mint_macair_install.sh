@@ -83,7 +83,31 @@ sudo ubiquity
 #|------------------------------------------------------------------------------
 
 
+# select guided install full disk encryption
+
+# select the drive to install to
+
+# then enter the password for full disk encryption
+
 # change your keyboard layout to Macintosh UK, 
 # or the same keyboard layout you chose when you booted into the live usb drive
 
 # because you cant see the passwords when are typing them in so you need to make sure you have the right keyboard layout
+
+# create the user account
+
+# when the installer finshes reboot the mac hold down alt and select the drive marked Windows ( dont worry its the linux drive )
+
+# enter your password for full disk encryption
+
+# then enter your user name and password
+
+
+#|------------------------------------------------------------------------------
+#| update the system after boot up
+#|------------------------------------------------------------------------------
+
+
+# after you log in for the first time update the system
+
+# open the update manager, and then select all update and click apply
