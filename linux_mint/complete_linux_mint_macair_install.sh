@@ -290,3 +290,195 @@ DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
 
 
 
+#|------------------------------------------------------------------------------
+#| clementine bit perfect audio with usb dac
+#|------------------------------------------------------------------------------
+
+# open clementine preferences
+
+# select the playback section in the left sidebar and scroll down
+
+# under the GStreamer audio engine change the output plugin and output device
+
+# change the Output plugin to Audio sink (ALSA)
+
+# change the Output device to hw:1,0
+
+
+# location of mounted network shares
+/run/user/username/gvfs
+
+#|------------------------------------------------------------------------------
+#|	turn on emacs keyboard bindings for themes
+#|------------------------------------------------------------------------------
+
+# open cinnamon settings / themes / other settings
+
+# change keybinding theme to Emacs
+
+
+#|------------------------------------------------------------------------------
+#|	install clamav
+#|------------------------------------------------------------------------------
+
+# install clamav
+sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk
+
+# update freshclam
+sudo freshclam
+
+# start clamav daemon
+sudo /etc/init.d/clamav-daemon start
+
+
+#|------------------------------------------------------------------------------
+#|	install encfs
+#|------------------------------------------------------------------------------
+
+# install encfs
+sudo apt-get install encfs
+
+
+# install gnome-encfs-manager 
+
+# Add the following line to your /etc/apt/sources.list:
+# deb http://ppa.launchpad.net/gencfsm/ppa/ubuntu precise main
+
+# install
+sudo apt-get update && sudo apt-get install gnome-encfs-manager
+
+# create the encrypted directory
+encfs ~/Dropbox/.encrypted ~/Private
+
+# press p for paranoid mode
+# then enter your password
+
+# press y to create the ~/Dropbox/.encrypted directory
+# press y to create the ~/Private directory
+
+
+# open the Gnome Encfs Manager application
+# click import stash, select the ~/Dropbox/.encrypted directory as the stash
+# select the ~/Private directory as the mount point
+
+
+# back up the ~/Dropbox/.encrypted/.encfs6.xml file
+cp ~/Dropbox/.encrypted/.encfs6.xml ~/Documents/.encfs6.xml
+
+# dropbox exclude the EncFS key .encfs6.xml file
+# this will delete the .encfs6.xml file from the dropbox directory
+dropbox exclude add ~/Dropbox/.encrypted/.encfs6.xml
+
+# copy the .encfs6.xml back to ~/Dropbox/.encrypted/.encfs6.xml
+cp ~/Documents/.encfs6.xml ~/Dropbox/.encrypted/.encfs6.xml
+
+# Open the Dropbox site and delete the .encrypted/.encfs6.xml file
+
+
+#|------------------------------------------------------------------------------
+#|	Show location bar in nemo file browser
+#|------------------------------------------------------------------------------
+
+
+# Preferences->Cinnamon Settings->Themes->Other Settings tab
+
+# Check: Always Location Entry in Nemo
+
+# Restart Nemo
+
+#|------------------------------------------------------------------------------
+#|	tor browser install
+#|------------------------------------------------------------------------------
+
+# add tor repository
+sudo add-apt-repository ppa:upubuntu-com/tor64
+
+# apt-get update
+sudo apt-get update
+
+# install tor
+sudo apt-get install tor-browser
+
+# change file permissions on ~/.tor-browser/
+sudo chown $USER -R ~/.tor-browser/
+
+
+#|------------------------------------------------------------------------------
+#| install fonts in user directory
+#|------------------------------------------------------------------------------
+
+
+# in your home directory, create .fonts/
+mkdir .fonts
+
+# copy font files to the new location
+
+# update your font cache
+fc-cache -fv
+
+
+
+#|------------------------------------------------------------------------------
+#|	applications to install
+#|------------------------------------------------------------------------------
+
+
+# ngrep install to kill tcp connections
+sudo apt-get install ngrep
+
+# install keepassx pasword manager
+sudo apt-get install keepassx
+
+# install vim
+sudo apt-get install vim
+
+# install meld
+sudo apt-get install meld
+
+# gparted
+sudo apt-get install gparted
+
+# filezilla
+sudo apt-get install filezilla
+
+# putty
+sudo apt-get install putty
+
+# nmap
+sudo apt-get install nmap
+
+# curl 
+sudo apt-get install curl
+
+# lynx
+sudo apt-get install lynx
+
+# ffmpeg
+sudo apt-get install ffmpeg
+
+# mplayer
+sudo apt-get install mplayer
+
+# mencoder
+sudo apt-get install mencoder
+
+# chromium-browser
+sudo apt-get install chromium-browser
+
+# ffmpeg codecs
+sudo apt-get install chromium-codecs-ffmpeg-extra
+
+# enviornment to compile c programs
+apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
+
+# sync google contacts to local address book app
+
+# export photos from iphoto
+
+# dropbox
+sudo apt-get install nemo-dropbox
+
+# truecrypt
+# download the 64 bit tar.gz file from truecrypt
+# untar the file and run the script
+
