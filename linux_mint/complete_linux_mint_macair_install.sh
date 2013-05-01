@@ -14,13 +14,13 @@ df -h
 # unmount the drive
 diskutil unmountDisk /dev/disk2
 
-# copy the img to the usb stick
+# copy the img to the usb drive
 sudo dd if=~/Desktop/mint.img of=/dev/rdisk2 bs=1m
 
-# After the dd command finishes, eject the card:
+# After the dd command finishes, eject the drive:
 diskutil eject /dev/rdisk2
 
-# reboot the mac insert the usb stick and press option and then boot into linux
+# reboot the mac insert the usb drive and press option and then boot into linux
 
 
 #|------------------------------------------------------------------------------
@@ -41,10 +41,19 @@ diskutil eject /dev/rdisk2
 
 # connect to wifi network
 
-# enable LUKS full disk encryption
+
+# we need to update the ubiquity installer to enable LUKS full disk encryption
+
+# remove ubiquity
 sudo apt-get remove ubiquity
+
+# apt-get update
 sudo apt-get update
+
+# reinstall ubiquity
 sudo apt-get install ubiquity
+
+# start the ubiquity installer
 sudo ubiquity
 
 
