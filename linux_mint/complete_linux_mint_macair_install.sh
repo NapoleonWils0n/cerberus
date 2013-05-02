@@ -358,19 +358,21 @@ encfs ~/Dropbox/Private/.logs ~/Private
 
 
 # open the Gnome Encfs Manager application
-# click import stash, select the ~/Dropbox/.encrypted directory as the stash
+# click import stash, select the ~/Dropbox/Private/.logs directory as the stash
 # select the ~/Private directory as the mount point
 
 
-# back up the ~/Dropbox/.encrypted/.encfs6.xml file
-cp ~/Dropbox/.encrypted/.encfs6.xml ~/Documents/.encfs6.xml
+# back up the ~/Dropbox/Private/.logs/.encfs6.xml file
+cp ~/Dropbox/Private/.logs/.encfs6.xml ~/Documents/.encfs6.xml
 
 # dropbox exclude the EncFS key .encfs6.xml file
 # this will delete the .encfs6.xml file from the dropbox directory
-dropbox exclude add ~/Dropbox/.encrypted/.encfs6.xml
+dropbox exclude add ~/Dropbox/Private/.logs/.encfs6.xml
 
-# copy the .encfs6.xml back to ~/Dropbox/.encrypted/.encfs6.xml
-cp ~/Documents/.encfs6.xml ~/Dropbox/.encrypted/.encfs6.xml
+# cp the .encfs6.xml back to ~/Dropbox/Private/.logs/.encfs6.xml
+cp ~/Documents/.encfs6.xml ~/Dropbox/Private/.logs/.encfs6.xml
+
+# then keep move the ~/Documents/.encfs6.xml into a truecrypt container as a back up
 
 # Open the Dropbox site and delete the .encrypted/.encfs6.xml file
 
