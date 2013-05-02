@@ -273,7 +273,7 @@ sudo make install
 sudo cp shairport.init.sample /etc/init.d/shairport
 cd /etc/init.d
 sudo chmod a+x shairport
-update-rc.d shairport defaults
+sudo update-rc.d shairport defaults
 
 
 # Finally, we need to add Shairport as a launch item. Type:
@@ -348,12 +348,12 @@ sudo apt-get install encfs
 sudo apt-get update && sudo apt-get install gnome-encfs-manager
 
 # create the encrypted directory
-encfs ~/Dropbox/.encrypted ~/Private
+encfs ~/Dropbox/Private/.logs ~/Private
 
 # press p for paranoid mode
 # then enter your password
 
-# press y to create the ~/Dropbox/.encrypted directory
+# press y to create the ~/Dropbox/Private/.logs directory
 # press y to create the ~/Private directory
 
 
