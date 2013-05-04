@@ -469,6 +469,25 @@ gksu gedit /etc/hosts
 
 
 #|------------------------------------------------------------------------------
+#|	change home directory file permissions
+#|------------------------------------------------------------------------------
+
+
+# change the file permissions to remove read and write access for other users
+
+chmod 700 Desktop
+chmod 700 Documents
+chmod 700 Downloads
+chmod 700 Music
+chmod 700 Pictures
+chmod 700 Templates
+chmod 700 Videos
+
+# change permissons on the home directory
+chmod 700 /home/username/
+
+
+#|------------------------------------------------------------------------------
 #|	applications to install
 #|------------------------------------------------------------------------------
 
