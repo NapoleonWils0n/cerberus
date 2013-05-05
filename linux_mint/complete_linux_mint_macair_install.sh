@@ -716,3 +716,23 @@ net.ipv4.conf.all.log_martians = 1
 #
 
 
+#|------------------------------------------------------------------------------
+#| /etc/avahi/avahi-daemon.conf hardening
+#|------------------------------------------------------------------------------
+
+# avahi daemon hardening
+
+# edit /etc/avahi/avahi-daemon.conf and add the following options
+
+use-ipv4=yes
+use-ipv6=no
+check-response-ttl=yes
+disallow-other-stacks=yes
+
+# use-ipv6=no dont use ipv6
+# Check Responses’ TTL Field, Avahi can be set to ignore IP packets unless their TTL field is 255
+
+# To make Avahi ignore packets unless the TTL field is 255, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: check-response-ttl=yes
+
+# Avahi can stop other mDNS stacks from running on the host by preventing other processes from binding to port 5353.
+# To prevent other mDNS stacks from running, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: disallow-other-stacks=yes
