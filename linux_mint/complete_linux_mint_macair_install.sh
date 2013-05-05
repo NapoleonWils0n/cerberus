@@ -580,6 +580,25 @@ sudo apt-get install nemo-dropbox
 # download the 64 bit tar.gz file from truecrypt
 # untar the file and run the script
 
+
+#|------------------------------------------------------------------------------
+#| bash set up
+#|------------------------------------------------------------------------------
+
+# copy thes system bash.bashrc to your home directory
+sudo cp /etc/bash.bashrc ~/.bashrc
+
+# change file permissions from root to your your username
+sudo chown username:username .bashrc
+
+# add .inputrc
+
+# add .vim directory
+
+# add .vimrc
+
+# add .git-prompt
+
 #|------------------------------------------------------------------------------
 #| dotfiles
 #|------------------------------------------------------------------------------
