@@ -600,6 +600,76 @@ sudo chown username:username .bashrc
 # add .git-prompt
 
 #|------------------------------------------------------------------------------
+#| install conky
+#|------------------------------------------------------------------------------
+
+sudo apt-get install conky-all
+
+
+# create ~/.conkyrc
+
+vim ~/.conkyrc
+
+
+# paste in the following code and save
+
+background no
+cpu_avg_samples 2
+net_avg_samples 2
+out_to_console no
+use_xft yes
+xftfont Bitstream Vera Sans:size=12
+xftalpha 1
+on_bottom yes
+update_interval 3
+
+own_window_class Conky
+own_window yes
+own_window_type conky
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+stippled_borders no
+border_margin 4
+border_width 1
+
+default_color green
+default_shade_color white
+default_outline_color black
+
+gap_x 30
+gap_y 0
+alignment bottom_right
+minimum_size 200 5
+maximum_width 900
+
+use_spacer no
+no_buffers yes
+uppercase no
+text_buffer_size 2048
+
+TEXT
+${color green}RAM Usage:$color $mem/$memmax - $memperc% ${membar 4}
+${color green}Swap Usage:$color $swap/$swapmax - $swapperc% ${swapbar 4}
+${color green}CPU Usage:$color $cpu% ${cpubar 4}
+${color green}Processes:$color $processes  ${color green}Running:$color $running_processes
+$hr
+${color green}File systems:
+ / $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
+${color green}Networking:
+Up:$color ${upspeed wlan0} ${color green1} - Down:$color ${downspeed wlan0}
+$hr
+${color green}Name              PID   CPU%   MEM%
+${color green} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
+${color green} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+${color green} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+${color green} ${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}
+
+#|------------------------------------------------------------------------------
 #| dotfiles
 #|------------------------------------------------------------------------------
 
@@ -738,3 +808,19 @@ disallow-other-stacks=yes
 
 # Avahi can stop other mDNS stacks from running on the host by preventing other processes from binding to port 5353.
 # To prevent other mDNS stacks from running, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: disallow-other-stacks=yes
+
+
+#|------------------------------------------------------------------------------
+#| set up the terminal in linux mint
+#|------------------------------------------------------------------------------
+
+# edit the keyboard shortcut for full screen and press cmd + enter
+#
+# the key combo will show up as super + return
+#
+# now edit the profile preferences and deselect show menu bar on new terminal windows
+#
+# we want to hide the menu bar by default because when we toggle the terminal,
+# between normal size and fullscreen the text will jump to accomadte the menu bar
+#
+# you can show the menu bar again by clicking with 2 fingers on the trackpad and selecting show menubar or by right clicking in the terminal window
