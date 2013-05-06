@@ -615,6 +615,7 @@ mv ~/.profile ~/.dotfiles
 mv ~/.vimrc ~/.dotfiles
 mv ~/.vim ~/.dotfiles
 mv ~/.fonts ~/.dotfiles
+mv ~/.conkyrc ~/.dotfiles
 
 
 # create the symlinks
@@ -626,6 +627,7 @@ ln -s ~/.dotfiles/.profile ~/.profile
 ln -s ~/.dotfiles/.vimrc ~/.vimrc
 ln -s ~/.dotfiles/.vim ~/.vim
 ln -s ~/.dotfiles/.fonts ~/.fonts
+ln -s ~/.dotfiles/.conkyrc ~/.conkyrc
 
 # create the git repo in dotfiles
 cd ~/.dotfiles
