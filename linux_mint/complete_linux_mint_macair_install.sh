@@ -643,7 +643,7 @@ default_outline_color black
 
 gap_x 30
 gap_y 0
-alignment bottom_right
+alignment bottom_left
 minimum_size 200 5
 maximum_width 900
 
@@ -662,12 +662,6 @@ ${color green}File systems:
  / $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
 ${color green}Networking:
 Up:$color ${upspeed wlan0} ${color green1} - Down:$color ${downspeed wlan0}
-$hr
-${color green}Name              PID   CPU%   MEM%
-${color green} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
-${color green} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
-${color green} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
-${color green} ${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}
 
 #|------------------------------------------------------------------------------
 #| dotfiles
