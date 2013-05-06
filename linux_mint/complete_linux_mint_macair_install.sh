@@ -661,6 +661,27 @@ $hr
 ${color green}File systems:
  / $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
 
+
+#|------------------------------------------------------------------------------
+#| conky autostart file
+#|------------------------------------------------------------------------------
+
+
+# create an autostart file to start conky at login, then paste in the code below
+vim .config/autostart/conky.desktop
+
+[Desktop Entry]
+Type=Application
+Exec=conky
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=Conky
+Name=Conky
+Comment[en_US]=Auto run conky
+Comment=Auto run conky.
+
+
 #|------------------------------------------------------------------------------
 #| dotfiles
 #|------------------------------------------------------------------------------
