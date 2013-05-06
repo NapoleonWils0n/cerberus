@@ -660,8 +660,6 @@ ${color green}Processes:$color $processes  ${color green}Running:$color $running
 $hr
 ${color green}File systems:
  / $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
-${color green}Networking:
-Up:$color ${upspeed wlan0} ${color green1} - Down:$color ${downspeed wlan0}
 
 #|------------------------------------------------------------------------------
 #| dotfiles
