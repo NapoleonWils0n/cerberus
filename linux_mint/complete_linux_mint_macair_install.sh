@@ -738,6 +738,33 @@ git remote add origin git@github.com:username/dotfiles.git
 git push -u origin master
 
 #|------------------------------------------------------------------------------
+#| chkrootkit and rkhunter to check for rootkits
+#|------------------------------------------------------------------------------
+
+# chkrootkit
+
+# install chkrootkit
+sudo apt-get install chkrootkit
+
+# run chkrootkit
+sudo chkrootkit
+
+
+# rkhunter
+
+# rkhunter install for finding rootkits
+sudo apt-get install rkhunter
+
+# update rkhunter
+sudo rkhunter --update
+
+# check for rootkits
+sudo rkhunter --check
+
+# update and create dat file for rkhunter
+sudo rkhunter --propupd
+
+#|------------------------------------------------------------------------------
 #| /etc/sysctl.conf hardening
 #|------------------------------------------------------------------------------
 
