@@ -252,200 +252,76 @@ sudo vim /etc/psad/psad.conf
 
 ALERTING_METHODS            noemail;
 
-
 #|------------------------------------------------------------------------------
-#|	xbmc install
-#|------------------------------------------------------------------------------
-
-#  add xbmc repository
-sudo add-apt-repository ppa:team-xbmc/ppa
-
-# apt-get update
-sudo apt-get update
-
-# install xbmc
-sudo apt-get install xbmc
-
-
-#|------------------------------------------------------------------------------
-#| shairport install
+#| /etc/sysctl.conf hardening
 #|------------------------------------------------------------------------------
 
-sudo apt-get install git libao-dev libssl-dev libcrypt-openssl-rsa-perl libio-socket-inet6-perl libwww-perl avahi-utils libmodule-build-perl
-
-# Let this process run for a little while. When it's complete, we need to install an update so Shairport will work with iOS 6 (you can skip this step if you're not on or plan to upgrade iOS 6):
-
-git clone https://github.com/njh/perl-net-sdp.git perl-net-sdp
-cd perl-net-sdp
-perl Build.PL
-sudo ./Build
-sudo ./Build test
-sudo ./Build install
-cd ..
-
-# Once the iOS 6 module is installed (give it a little while), it's finally time to get Shairport installed. from your home directory type:
-
-git clone https://github.com/hendrikw82/shairport.git
-cd shairport
-sudo make install
-
-# Now, let's run Shairport:
-
-./shairport.pl -a AirPi
-
-# This command starts Shairport with your Raspberry Pi named "AirPi" (you can change it to whatever you want). Grab your iOS device, pick the music app of your choice, and tap the AirPlay button. You should see "AirPi" listed as an output device. Tap that, and the music should start streaming out of your USB sound card within a couple seconds.
-
-# But we're not done yet. Shairport doesn't automatically load when you start your Raspberry Pi, and since we want to make our AirPlay device work without any peripherals we need to do one more step. From your home directory, type:
-
-cd shairport
-sudo make install
-sudo cp shairport.init.sample /etc/init.d/shairport
-cd /etc/init.d
-sudo chmod a+x shairport
-sudo update-rc.d shairport defaults
-
-
-# Finally, we need to add Shairport as a launch item. Type:
-
-sudo nano /etc/init.d/shairport
-
-# This loads up Shairport file we need to edit. Look through the file for the # "DAEMON_ARGS" line, and change it so it looks like this:
-
-# DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
-
-DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
-
-# plughw:1,0 is your usb dac
-
-
-
-#|------------------------------------------------------------------------------
-#| clementine bit perfect audio with usb dac
-#|------------------------------------------------------------------------------
-
-# open clementine preferences
-
-# select the playback section in the left sidebar and scroll down
-
-# under the GStreamer audio engine change the output plugin and output device
-
-# change the Output plugin to Audio sink (ALSA)
-
-# change the Output device to hw:1,0
-
-
-# location of mounted network shares
-/run/user/username/gvfs
-
-#|------------------------------------------------------------------------------
-#|	turn on emacs keyboard bindings for themes
-#|------------------------------------------------------------------------------
-
-# open cinnamon settings / themes / other settings
-
-# change keybinding theme to Emacs
-
-
-#|------------------------------------------------------------------------------
-#|	install clamav
-#|------------------------------------------------------------------------------
-
-# install clamav
-sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk
-
-# update freshclam
-sudo freshclam
-
-# start clamav daemon
-sudo /etc/init.d/clamav-daemon start
-
-
-#|------------------------------------------------------------------------------
-#|	install encfs
-#|------------------------------------------------------------------------------
-
-# install encfs
-sudo apt-get install encfs
-
-
-# install gnome-encfs-manager 
-
-# Add the following line to your /etc/apt/sources.list:
-# deb http://ppa.launchpad.net/gencfsm/ppa/ubuntu precise main
-
-# install
-sudo apt-get update && sudo apt-get install gnome-encfs-manager
-
-# create the encrypted directory
-encfs ~/Dropbox/Private/.logs ~/Private
-
-# press p for paranoid mode
-# then enter your password
-
-# press y to create the ~/Dropbox/Private/.logs directory
-# press y to create the ~/Private directory
-
-
-# open the Gnome Encfs Manager application
-# click import stash, select the ~/Dropbox/Private/.logs directory as the stash
-# select the ~/Private directory as the mount point
-
-
-# back up the ~/Dropbox/Private/.logs/.encfs6.xml file
-cp ~/Dropbox/Private/.logs/.encfs6.xml ~/Documents/.encfs6.xml
-
-# dropbox exclude the EncFS key .encfs6.xml file
-# this will delete the .encfs6.xml file from the dropbox directory
-dropbox exclude add ~/Dropbox/Private/.logs/.encfs6.xml
-
-# cp the .encfs6.xml back to ~/Dropbox/Private/.logs/.encfs6.xml
-cp ~/Documents/.encfs6.xml ~/Dropbox/Private/.logs/.encfs6.xml
-
-# then keep move the ~/Documents/.encfs6.xml into a truecrypt container as a back up
-
-# Open the Dropbox site and delete the .encrypted/.encfs6.xml file
-
-
-#|------------------------------------------------------------------------------
-#|	Show location bar in nemo file browser
-#|------------------------------------------------------------------------------
-
-
-# Preferences->Cinnamon Settings->Themes->Other Settings tab
-
-# Check: Always Location Entry in Nemo
-
-# Restart Nemo
-
-#|------------------------------------------------------------------------------
-#|	tor browser install
-#|------------------------------------------------------------------------------
-
-# add tor repository
-sudo add-apt-repository ppa:upubuntu-com/tor64
-
-# apt-get update
-sudo apt-get update
-
-# install tor
-sudo apt-get install tor-browser
-
-# change file permissions on ~/.tor-browser/
-sudo chown $USER -R ~/.tor-browser/
-
-
-#|------------------------------------------------------------------------------
-#| install fonts in user directory
-#|------------------------------------------------------------------------------
-
-
-# in your home directory, create .fonts/
-mkdir .fonts
-
-# copy font files to the new location
-
-# update your font cache
-fc-cache -fv
+# edit /etc/sysctl.conf and the following options
+
+sudo vim /etc/sysctl.conf
+
+#
+# /etc/sysctl.conf - Configuration file for setting system variables
+# See /etc/sysctl.d/ for additional system variables
+# See sysctl.conf (5) for information.
+#
+
+#kernel.domainname = example.com
+
+# Uncomment the following to stop low-level messages on console
+#kernel.printk = 3 4 1 3
+
+##############################################################3
+# Functions previously found in netbase
+#
+
+# Uncomment the next two lines to enable Spoof protection (reverse-path filter)
+# Turn on Source Address Verification in all interfaces to
+# prevent some spoofing attacks
+net.ipv4.conf.default.rp_filter=1
+net.ipv4.conf.all.rp_filter=1
+
+# Uncomment the next line to enable TCP/IP SYN cookies
+# See http://lwn.net/Articles/277146/
+# Note: This may impact IPv6 TCP sessions too
+net.ipv4.tcp_syncookies=1
+
+# Uncomment the next line to enable packet forwarding for IPv4
+net.ipv4.ip_forward=0
+
+# Uncomment the next line to enable packet forwarding for IPv6
+#  Enabling this option disables Stateless Address Autoconfiguration
+#  based on Router Advertisements for this host
+#net.ipv6.conf.all.forwarding=1
+
+
+###################################################################
+# Additional settings - these settings can improve the network
+# security of the host and prevent against some network attacks
+# including spoofing attacks and man in the middle attacks through
+# redirection. Some network environments, however, require that these
+# settings are disabled so review and enable them as needed.
+#
+# Do not accept ICMP redirects (prevent MITM attacks)
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.icmp_ignore_bogus_error_messages = 1
+#net.ipv6.conf.all.accept_redirects = 0
+# _or_
+# Accept ICMP redirects only for gateways listed in our default
+# gateway list (enabled by default)
+net.ipv4.conf.all.secure_redirects = 0
+#
+# Do not send ICMP redirects (we are not a router)
+net.ipv4.conf.all.send_redirects = 0
+#
+# Do not accept IP source route packets (we are not a router)
+net.ipv4.conf.all.accept_source_route = 0
+#net.ipv6.conf.all.accept_source_route = 0
+#
+# Log Martian Packets
+net.ipv4.conf.all.log_martians = 1
+#
 
 
 #|------------------------------------------------------------------------------
@@ -516,6 +392,67 @@ chmod 700 Videos
 chmod 700 /home/username/
 
 
+#|------------------------------------------------------------------------------
+#|	install encfs and dropbox
+#|------------------------------------------------------------------------------
+
+# install dropbox
+sudo apt-get install nemo-dropbox
+
+# install encfs
+sudo apt-get install encfs
+
+
+# install gnome-encfs-manager 
+
+# Add the following line to your /etc/apt/sources.list:
+# deb http://ppa.launchpad.net/gencfsm/ppa/ubuntu precise main
+
+# install
+sudo apt-get update && sudo apt-get install gnome-encfs-manager
+
+# create the encrypted directory
+encfs ~/Dropbox/Private/.logs ~/Private
+
+# press p for paranoid mode
+# then enter your password
+
+# press y to create the ~/Dropbox/Private/.logs directory
+# press y to create the ~/Private directory
+
+
+# open the Gnome Encfs Manager application
+# click import stash, select the ~/Dropbox/Private/.logs directory as the stash
+# select the ~/Private directory as the mount point
+
+
+# back up the ~/Dropbox/Private/.logs/.encfs6.xml file
+cp ~/Dropbox/Private/.logs/.encfs6.xml ~/Documents/.encfs6.xml
+
+# dropbox exclude the EncFS key .encfs6.xml file
+# this will delete the .encfs6.xml file from the dropbox directory
+dropbox exclude add ~/Dropbox/Private/.logs/.encfs6.xml
+
+# cp the .encfs6.xml back to ~/Dropbox/Private/.logs/.encfs6.xml
+cp ~/Documents/.encfs6.xml ~/Dropbox/Private/.logs/.encfs6.xml
+
+# then keep move the ~/Documents/.encfs6.xml into a truecrypt container as a back up
+
+# Open the Dropbox site and delete the .encrypted/.encfs6.xml file
+
+
+#|------------------------------------------------------------------------------
+#|	install clamav
+#|------------------------------------------------------------------------------
+
+# install clamav
+sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk
+
+# update freshclam
+sudo freshclam
+
+# start clamav daemon
+sudo /etc/init.d/clamav-daemon start
 
 #|------------------------------------------------------------------------------
 #|  oathtool install for google 2 factor codes
@@ -525,69 +462,17 @@ sudo apt-get install oathtool
 
 
 #|------------------------------------------------------------------------------
-#|	applications to install
+#| install fonts in user directory
 #|------------------------------------------------------------------------------
 
 
-# ngrep install to kill tcp connections
-sudo apt-get install ngrep
+# in your home directory, create .fonts/
+mkdir .fonts
 
-# install keepassx pasword manager
-sudo apt-get install keepassx
+# copy font files to the new location
 
-# install vim
-sudo apt-get install vim
-
-# install meld
-sudo apt-get install meld
-
-# gparted
-sudo apt-get install gparted
-
-# filezilla
-sudo apt-get install filezilla
-
-# putty
-sudo apt-get install putty
-
-# nmap
-sudo apt-get install nmap
-
-# curl 
-sudo apt-get install curl
-
-# lynx
-sudo apt-get install lynx
-
-# ffmpeg
-sudo apt-get install ffmpeg
-
-# mplayer
-sudo apt-get install mplayer
-
-# mencoder
-sudo apt-get install mencoder
-
-# chromium-browser
-sudo apt-get install chromium-browser
-
-# ffmpeg codecs
-sudo apt-get install chromium-codecs-ffmpeg-extra
-
-# enviornment to compile c programs
-apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
-
-# sync google contacts to local address book app
-
-# export photos from iphoto
-
-# dropbox
-sudo apt-get install nemo-dropbox
-
-# truecrypt
-# download the 64 bit tar.gz file from truecrypt
-# untar the file and run the script
-
+# update your font cache
+fc-cache -fv
 
 #|------------------------------------------------------------------------------
 #| bash set up
@@ -613,11 +498,8 @@ sudo chown username:username .bashrc
 
 sudo apt-get install conky-all
 
-
 # create ~/.conkyrc
-
 vim ~/.conkyrc
-
 
 # paste in the following code and save
 
@@ -737,6 +619,136 @@ git remote add origin git@github.com:username/dotfiles.git
 # push origin master
 git push -u origin master
 
+
+#|------------------------------------------------------------------------------
+#|	xbmc install
+#|------------------------------------------------------------------------------
+
+#  add xbmc repository
+sudo add-apt-repository ppa:team-xbmc/ppa
+
+# apt-get update
+sudo apt-get update
+
+# install xbmc
+sudo apt-get install xbmc
+
+
+#|------------------------------------------------------------------------------
+#| shairport install
+#|------------------------------------------------------------------------------
+
+sudo apt-get install git libao-dev libssl-dev libcrypt-openssl-rsa-perl libio-socket-inet6-perl libwww-perl avahi-utils libmodule-build-perl
+
+# Let this process run for a little while. When it's complete, we need to install an update so Shairport will work with iOS 6 (you can skip this step if you're not on or plan to upgrade iOS 6):
+
+git clone https://github.com/njh/perl-net-sdp.git perl-net-sdp
+cd perl-net-sdp
+perl Build.PL
+sudo ./Build
+sudo ./Build test
+sudo ./Build install
+cd ..
+
+# Once the iOS 6 module is installed (give it a little while), it's finally time to get Shairport installed. from your home directory type:
+
+git clone https://github.com/hendrikw82/shairport.git
+cd shairport
+sudo make install
+
+# Now, let's run Shairport:
+
+./shairport.pl -a AirPi
+
+# This command starts Shairport with your Raspberry Pi named "AirPi" (you can change it to whatever you want). Grab your iOS device, pick the music app of your choice, and tap the AirPlay button. You should see "AirPi" listed as an output device. Tap that, and the music should start streaming out of your USB sound card within a couple seconds.
+
+# But we're not done yet. Shairport doesn't automatically load when you start your Raspberry Pi, and since we want to make our AirPlay device work without any peripherals we need to do one more step. From your home directory, type:
+
+cd shairport
+sudo make install
+sudo cp shairport.init.sample /etc/init.d/shairport
+cd /etc/init.d
+sudo chmod a+x shairport
+sudo update-rc.d shairport defaults
+
+
+# Finally, we need to add Shairport as a launch item. Type:
+
+sudo nano /etc/init.d/shairport
+
+# This loads up Shairport file we need to edit. Look through the file for the # "DAEMON_ARGS" line, and change it so it looks like this:
+
+# DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
+
+DAEMON_ARGS="-w $PIDFILE -a Mint -ao_devicename=plughw:1,0"
+
+# plughw:1,0 is your usb dac
+
+
+
+#|------------------------------------------------------------------------------
+#| /etc/avahi/avahi-daemon.conf hardening
+#|------------------------------------------------------------------------------
+
+# avahi daemon hardening
+
+# edit /etc/avahi/avahi-daemon.conf and add the following options
+
+use-ipv4=yes
+use-ipv6=no
+check-response-ttl=yes
+disallow-other-stacks=yes
+
+# use-ipv6=no dont use ipv6
+# Check Responses’ TTL Field, Avahi can be set to ignore IP packets unless their TTL field is 255
+
+# To make Avahi ignore packets unless the TTL field is 255, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: check-response-ttl=yes
+
+# Avahi can stop other mDNS stacks from running on the host by preventing other processes from binding to port 5353.
+# To prevent other mDNS stacks from running, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: disallow-other-stacks=yes
+
+
+#|------------------------------------------------------------------------------
+#| clementine bit perfect audio with usb dac
+#|------------------------------------------------------------------------------
+
+# install Clementine
+sudo apt-get install clementine
+
+# open clementine preferences
+
+# select the playback section in the left sidebar and scroll down
+
+# under the GStreamer audio engine change the output plugin and output device
+
+# change the Output plugin to Audio sink (ALSA)
+
+# change the Output device to hw:1,0
+
+
+# location of mounted network shares
+/run/user/username/gvfs
+
+#|------------------------------------------------------------------------------
+#|	turn on emacs keyboard bindings for themes
+#|------------------------------------------------------------------------------
+
+# open cinnamon settings / themes / other settings
+
+# change keybinding theme to Emacs
+
+
+#|------------------------------------------------------------------------------
+#|	Show location bar in nemo file browser
+#|------------------------------------------------------------------------------
+
+
+# Preferences->Cinnamon Settings->Themes->Other Settings tab
+
+# Check: Always Location Entry in Nemo
+
+# Restart Nemo
+
 #|------------------------------------------------------------------------------
 #| chkrootkit and rkhunter to check for rootkits
 #|------------------------------------------------------------------------------
@@ -765,97 +777,82 @@ sudo rkhunter --check
 sudo rkhunter --propupd
 
 #|------------------------------------------------------------------------------
-#| /etc/sysctl.conf hardening
+#|	tor browser install
 #|------------------------------------------------------------------------------
 
-# edit /etc/sysctl.conf and the following options
+# add tor repository
+sudo add-apt-repository ppa:upubuntu-com/tor64
 
-sudo vim /etc/sysctl.conf
+# apt-get update
+sudo apt-get update
 
-#
-# /etc/sysctl.conf - Configuration file for setting system variables
-# See /etc/sysctl.d/ for additional system variables
-# See sysctl.conf (5) for information.
-#
+# install tor
+sudo apt-get install tor-browser
 
-#kernel.domainname = example.com
-
-# Uncomment the following to stop low-level messages on console
-#kernel.printk = 3 4 1 3
-
-##############################################################3
-# Functions previously found in netbase
-#
-
-# Uncomment the next two lines to enable Spoof protection (reverse-path filter)
-# Turn on Source Address Verification in all interfaces to
-# prevent some spoofing attacks
-net.ipv4.conf.default.rp_filter=1
-net.ipv4.conf.all.rp_filter=1
-
-# Uncomment the next line to enable TCP/IP SYN cookies
-# See http://lwn.net/Articles/277146/
-# Note: This may impact IPv6 TCP sessions too
-net.ipv4.tcp_syncookies=1
-
-# Uncomment the next line to enable packet forwarding for IPv4
-net.ipv4.ip_forward=0
-
-# Uncomment the next line to enable packet forwarding for IPv6
-#  Enabling this option disables Stateless Address Autoconfiguration
-#  based on Router Advertisements for this host
-#net.ipv6.conf.all.forwarding=1
-
-
-###################################################################
-# Additional settings - these settings can improve the network
-# security of the host and prevent against some network attacks
-# including spoofing attacks and man in the middle attacks through
-# redirection. Some network environments, however, require that these
-# settings are disabled so review and enable them as needed.
-#
-# Do not accept ICMP redirects (prevent MITM attacks)
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.icmp_echo_ignore_broadcasts = 1
-net.ipv4.icmp_ignore_bogus_error_messages = 1
-#net.ipv6.conf.all.accept_redirects = 0
-# _or_
-# Accept ICMP redirects only for gateways listed in our default
-# gateway list (enabled by default)
-net.ipv4.conf.all.secure_redirects = 0
-#
-# Do not send ICMP redirects (we are not a router)
-net.ipv4.conf.all.send_redirects = 0
-#
-# Do not accept IP source route packets (we are not a router)
-net.ipv4.conf.all.accept_source_route = 0
-#net.ipv6.conf.all.accept_source_route = 0
-#
-# Log Martian Packets
-net.ipv4.conf.all.log_martians = 1
-#
+# change file permissions on ~/.tor-browser/
+sudo chown $USER -R ~/.tor-browser/
 
 
 #|------------------------------------------------------------------------------
-#| /etc/avahi/avahi-daemon.conf hardening
+#| truecrypt install
 #|------------------------------------------------------------------------------
 
-# avahi daemon hardening
+# truecrypt install
+# download the 64 bit tar.gz file from truecrypt
+# untar the file and run the script
 
-# edit /etc/avahi/avahi-daemon.conf and add the following options
+#|------------------------------------------------------------------------------
+#|	applications to install
+#|------------------------------------------------------------------------------
 
-use-ipv4=yes
-use-ipv6=no
-check-response-ttl=yes
-disallow-other-stacks=yes
 
-# use-ipv6=no dont use ipv6
-# Check Responses’ TTL Field, Avahi can be set to ignore IP packets unless their TTL field is 255
+# ngrep install to kill tcp connections
+sudo apt-get install ngrep
 
-# To make Avahi ignore packets unless the TTL field is 255, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: check-response-ttl=yes
+# install keepassx pasword manager
+sudo apt-get install keepassx
 
-# Avahi can stop other mDNS stacks from running on the host by preventing other processes from binding to port 5353.
-# To prevent other mDNS stacks from running, edit /etc/avahi/avahi-daemon.conf and ensure the following line appears in the [server] section: disallow-other-stacks=yes
+# install vim
+sudo apt-get install vim
+
+# install meld
+sudo apt-get install meld
+
+# gparted
+sudo apt-get install gparted
+
+# filezilla
+sudo apt-get install filezilla
+
+# putty
+sudo apt-get install putty
+
+# nmap
+sudo apt-get install nmap
+
+# curl 
+sudo apt-get install curl
+
+# lynx
+sudo apt-get install lynx
+
+# ffmpeg
+sudo apt-get install ffmpeg
+
+# mplayer
+sudo apt-get install mplayer
+
+# mencoder
+sudo apt-get install mencoder
+
+# chromium-browser
+sudo apt-get install chromium-browser
+
+# ffmpeg codecs
+sudo apt-get install chromium-codecs-ffmpeg-extra
+
+# enviornment to compile c programs
+apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
 
 
 #|------------------------------------------------------------------------------
@@ -872,3 +869,5 @@ disallow-other-stacks=yes
 # between normal size and fullscreen the text will jump to accomadte the menu bar
 #
 # you can show the menu bar again by clicking with 2 fingers on the trackpad and selecting show menubar or by right clicking in the terminal window
+
+
