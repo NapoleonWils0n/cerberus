@@ -246,6 +246,10 @@ sudo apt-get install psad
 
 # press enter during the install to accept the default options
 
+# select ok on the first screen
+
+# then select local install on the second screen
+
 
 # edit psad.conf and change the ALERTING_METHODS to noemail
 sudo vim /etc/psad/psad.conf
