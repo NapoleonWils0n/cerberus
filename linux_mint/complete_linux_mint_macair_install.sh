@@ -82,8 +82,33 @@ sudo ubiquity
 #| install Linux Mint on 11 inch Mac airs ssd
 #|------------------------------------------------------------------------------
 
+# 1 - clone the macs internal drive to an external usb drive
 
+# shutdown your mac 
 
+# turn your mac on and boot into recovery mode by holding r while the mac boots up
+
+# on the recovery mode screen select disk utility
+
+# select the top level of your macs internal drive in the left sidebar
+
+# then select the recovery tab
+
+# you should see a source and destination filefield where you can select drives
+
+# the source should be filled with the internal drive of your mac,
+# if you have filevault encryption turned on you need to go to the file menu and select unlock drivename
+# and then enter your recovery password to decrypt the drive before you clone it
+
+# now plug in a usb drive the same size or bigger than your macs internal drive
+
+# you should see the usb drive appear in the left sidebar of the disk utilty window
+
+# select the top level of your external usb drive in the left sidebar and drag it into the destintion filefield
+
+# you should now have your macs internal hard drive in the source filefield and the external usb drive in the destintion filefield
+
+# double check and then click ok to start cloning the macs internal drive to the external usb drive
 
 
 
