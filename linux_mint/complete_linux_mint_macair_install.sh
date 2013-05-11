@@ -42,40 +42,6 @@ diskutil eject /dev/rdisk2
 # the drive needs to have the GUID Partition Table so the mac will boot up from the drive
 
 
-#|------------------------------------------------------------------------------
-#|	boot into the live linux mint live usb drive
-#|------------------------------------------------------------------------------
-
-
-# reboot the mac insert the usb drive and press option and then boot into linux
-
-# Boot your system using the Linux Mint 14 live CD or USB stick
-
-
-# IMPORTANT
-
-# change your keyboard layout to Macintosh UK staight away
-
-# then check your keyboard layout by typing out the passwords you are going to use in a text file
-# because when you run the ubiquity installer you cant see the passwords you are typing in
-
-
-# connect to wifi network
-
-
-# we need to update the ubiquity installer to enable LUKS full disk encryption
-
-# remove ubiquity
-sudo apt-get remove ubiquity
-
-# apt-get update
-sudo apt-get update
-
-# reinstall ubiquity
-sudo apt-get install ubiquity
-
-# start the ubiquity installer
-sudo ubiquity
 
 
 #|------------------------------------------------------------------------------
@@ -162,6 +128,44 @@ sudo ubiquity
 # after you have erased the macs internal drive quit disk utility
 
 # and then shut down the mac and unplug the external usb drive that you have boot up from
+
+#|------------------------------------------------------------------------------
+#| boot up from the linux mint live usb drive
+#|------------------------------------------------------------------------------
+
+# now plug in the linux mint live usb drive and boot up from it
+
+# now you can either install linux mint to either an external usb drive or the macs internal ssd
+
+# reboot the mac insert the usb drive and press option and then boot into linux
+
+# Boot your system using the Linux Mint 14 live CD or USB stick
+
+
+# IMPORTANT
+
+# change your keyboard layout to Macintosh UK staight away
+
+# then check your keyboard layout by typing out the passwords you are going to use in a text file
+# because when you run the ubiquity installer you cant see the passwords you are typing in
+
+
+# connect to wifi network
+
+
+# we need to update the ubiquity installer to enable LUKS full disk encryption
+
+# remove ubiquity
+sudo apt-get remove ubiquity
+
+# apt-get update
+sudo apt-get update
+
+# reinstall ubiquity
+sudo apt-get install ubiquity
+
+# start the ubiquity installer
+sudo ubiquity
 
 
 #|------------------------------------------------------------------------------
