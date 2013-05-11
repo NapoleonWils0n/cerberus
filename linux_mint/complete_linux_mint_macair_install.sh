@@ -110,7 +110,11 @@ sudo ubiquity
 
 # double check and then click ok to start cloning the macs internal drive to the external usb drive
 
+# when disk utility has finished cloning you can quit to return to main recovery mode screen
 
+# then quit the recovery mode screen and it will ask you to select a start up disk
+
+# select the external usb you just created to boot up from to make sure it works
 
 #|------------------------------------------------------------------------------
 #| ubiquity installer
