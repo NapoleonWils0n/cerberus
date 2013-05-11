@@ -82,7 +82,17 @@ sudo ubiquity
 #| install Linux Mint on 11 inch Mac airs ssd
 #|------------------------------------------------------------------------------
 
-# 1 - clone the macs internal drive to an external usb drive
+
+#|------------------------------------------------------------------------------
+#| back up your files
+#|------------------------------------------------------------------------------
+
+#  backup everything from your mac
+# back up paswords, ssh keys, file etc to an external drive
+
+#|------------------------------------------------------------------------------
+#| clone the macs internal drive to an external usb drive
+#|------------------------------------------------------------------------------
 
 # shutdown your mac 
 
@@ -115,6 +125,15 @@ sudo ubiquity
 # then quit the recovery mode screen and it will ask you to select a start up disk
 
 # select the external usb you just created to boot up from to make sure it works
+
+#|------------------------------------------------------------------------------
+#| erase and format the mac internal drive to fat
+#|------------------------------------------------------------------------------
+
+
+
+
+
 
 #|------------------------------------------------------------------------------
 #| ubiquity installer
