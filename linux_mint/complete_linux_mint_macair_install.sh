@@ -79,6 +79,15 @@ sudo ubiquity
 
 
 #|------------------------------------------------------------------------------
+#| install Linux Mint on 11 inch Mac airs ssd
+#|------------------------------------------------------------------------------
+
+
+
+
+
+
+#|------------------------------------------------------------------------------
 #| ubiquity installer
 #|------------------------------------------------------------------------------
 
@@ -873,5 +882,21 @@ apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
 # between normal size and fullscreen the text will jump to accomadte the menu bar
 #
 # you can show the menu bar again by clicking with 2 fingers on the trackpad and selecting show menubar or by right clicking in the terminal window
+
+
+#|------------------------------------------------------------------------------
+#| double click to minimize windows
+#|------------------------------------------------------------------------------
+
+# open cinnamon settings
+
+# then open the windows tab
+
+# change Action on title bar double click to Minimize
+
+
+
+
+
 
 
