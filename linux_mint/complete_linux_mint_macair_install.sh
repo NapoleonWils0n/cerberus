@@ -130,9 +130,38 @@ sudo ubiquity
 #| erase and format the mac internal drive to fat
 #|------------------------------------------------------------------------------
 
+# make sure you have backup everything from your macs internal drive
 
+# boot up into external usb clone of your macs internal drive
 
+# open disk utility 
 
+# in the left hand sidebar you will see 4 drives listed
+
+# the external usb drive should be listed at the top and have a coloured icon
+# underneath it and slightly indent to the right will be usb drive partition
+
+# you should also see your macs internal drive in the lefthand sidebar which doesnt have a cloured icon
+# underneath it and slightly indent to the right will be internal drive partition
+
+# you need to select the internal drive partition that is under the main drive and slightly indented to the right
+
+# do not select the top level of the internal drive otherwsie you will erase the efi bootloader
+
+# now you have internal drive partition selected click the erase tab and from the pop up menu select the top option, mac osx journal
+
+# then click the erase button to erase the macs internal hard drive, this wont erase the bootloader which is on a seperate partition
+# but it will erase the recovery partition
+
+# after you have erased the macs internal drive you need to format it as Fat so linux mint can right to it during the install
+
+# double check you have the internal drive partition that is under the main drive and slightly indented to the right selected
+
+# then in the erase tab select mos dos fat from the format menu and erase the drive to format it as fat
+
+# after you have erased the macs internal drive quit disk utility
+
+# and then shut down the mac and unplug the external usb drive that you have boot up from
 
 
 #|------------------------------------------------------------------------------
