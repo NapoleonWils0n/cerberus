@@ -972,10 +972,3 @@ apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
 # edit the keyboard shortcut for full screen and press cmd + enter
 #
 # the key combo will show up as super + return
-#
-# now edit the profile preferences and deselect show menu bar on new terminal windows
-#
-# we want to hide the menu bar by default because when we toggle the terminal,
-# between normal size and fullscreen the text will jump to accomadte the menu bar
-#
-# you can show the menu bar again by clicking with 2 fingers on the trackpad and selecting show menubar or by right clicking in the terminal window
