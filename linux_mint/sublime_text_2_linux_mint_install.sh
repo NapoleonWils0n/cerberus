@@ -20,25 +20,25 @@ sudo mv Sublime\ Text\ 2 /opt/
 sudo ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/sublime
 
 # Create a desktop launcher. 
-# To do this, we’re going to create a .desktop file in “/usr/share/applications”:
-sudo sublime /usr/share/applications/sublime.desktop
+# To do this, we’re going to create a .desktop file in “~/.local/share/applications”:
+sudo sublime ~/.local/share/applications/sublime.desktop
 
 # paste in the following content
+# you need "Exec=sublime %u" for sublime text to show up in the properties window
 
 [Desktop Entry]
 Encoding=UTF-8
 Name=Sublime Text
 Comment=Sublime Text 2
-Exec=sublime
+Exec=sublime %u
 Icon=/opt/Sublime Text 2/Icon/48x48/sublime_text.png
 Terminal=false
 Type=Application
 Categories=GNOME;GTK;Utility;TextEditor;
 StartupNotify=true
 
+
 # Now you would probably want to open all text files with Sublime Text 2. 
-# The easiest way to do that is to open up the file associations list:
-
-gksu sublime /usr/share/applications/defaults.list
-
-# And replace all occurrences of gedit.desktop with sublime.desktop.
+# control click on a file type you want to open with sublime text
+# then select properties and the open with tab
+# then select sublime text and set as the default app for that file type
