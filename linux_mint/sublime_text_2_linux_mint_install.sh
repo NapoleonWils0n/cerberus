@@ -48,3 +48,7 @@ StartupNotify=true
 # control click on a file type you want to open with sublime text
 # then select properties and the open with tab
 # then select sublime text and set as the default app for that file type
+
+# install package control from - http://wbond.net/sublime_packages/package_control
+
+# then install emmet which used to be called zen coding
