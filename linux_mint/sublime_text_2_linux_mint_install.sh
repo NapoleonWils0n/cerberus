@@ -19,6 +19,12 @@ sudo mv Sublime\ Text\ 2 /opt/
 # Create a symbolic link in “/usr/bin”
 sudo ln -s /opt/Sublime\ Text\ 2/sublime_text /usr/bin/sublime
 
+# copy the system applcation defaults.list to "~/.local/share/applications/defaults.list"
+sudo cp /usr/share/applications/defaults.list ~/.local/share/applications/defaults.list
+
+# now open "~/.local/share/applications/defaults.list" and find and relace gedit.desktop with sublime.desktop
+
+
 # Create a desktop launcher. 
 # To do this, we’re going to create a .desktop file in “~/.local/share/applications”:
 sudo sublime ~/.local/share/applications/sublime.desktop
