@@ -1027,3 +1027,7 @@ StartupNotify=true
 # install package control from - http://wbond.net/sublime_packages/package_control
 
 # then install emmet which used to be called zen coding
+
+# install sublime linter 
+
+# install git package
