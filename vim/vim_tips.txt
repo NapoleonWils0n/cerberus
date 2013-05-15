@@ -3,6 +3,19 @@
 #|------------------------------------------------------------------------------
 
 
+
+#|------------------------------------------------------------------------------
+#| browse file system
+#|------------------------------------------------------------------------------
+
+# start vim
+vim
+
+# press :
+# then type e .
+# to browse the current directory
+
+
 #|------------------------------------------------------------------------------
 #| add surrounding tags
 #|------------------------------------------------------------------------------
@@ -70,5 +83,58 @@ cs"'
 # vimrc
 set dictionary+=/Users/djwilcox/.vim/dict.txt
 
+#|------------------------------------------------------------------------------
+#|	general commands
+#|------------------------------------------------------------------------------
 
 
+# left down up right
+h	j	k	l
+
+# change word
+cw
+
+# change 2 words
+c2w
+
+# visual select word
+vw
+
+# visual select inner word
+viw
+
+# change text between double quotes
+ci"
+
+# change text between single quotes
+ci'
+
+# change text between braces
+ci{
+
+# visual select till ,
+vt,
+
+# visual select including ,
+vf,
+
+# go to the end of the line A
+A
+
+# go to the begining of the line I
+I
+
+# capital V to select the entire line
+V
+
+# y for yank to copy
+y
+
+# p for paste
+p
+
+# d to delete
+d
+
+# dd to delete line
+dd
