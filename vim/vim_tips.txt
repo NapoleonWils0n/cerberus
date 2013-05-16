@@ -148,3 +148,35 @@ M
 
 # go to the bottom of the page
 L
+
+# undo 
+u
+
+# go to line : then line number in command mode
+:1
+
+# go into insert cursor after letter
+a
+
+# go into insert cursor before letter
+i
+
+# go into insert mode on new line below
+o
+
+# go into insert mode on a new line above
+O
+
+# go forward a word
+w
+
+# go back a word
+b
+
+# go forward 3 words
+3w
+
+# go back 3 words
+3b
+
+
