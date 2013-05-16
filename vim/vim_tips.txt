@@ -179,4 +179,8 @@ b
 # go back 3 words
 3b
 
+# delete word
+dw
 
+# change until end of line
+c$
