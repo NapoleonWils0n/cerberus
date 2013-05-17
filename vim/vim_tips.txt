@@ -188,6 +188,9 @@ B
 # delete word
 dw
 
+# delete character under cursor
+x
+
 # change until end of line
 c$
 
