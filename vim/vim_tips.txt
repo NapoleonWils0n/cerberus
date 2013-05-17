@@ -173,6 +173,12 @@ w
 # go back a word
 b
 
+# go forward a word including spceial characters
+W
+
+# go back a word including spceial characters
+B
+
 # go forward 3 words
 3w
 
@@ -200,5 +206,11 @@ bd
 # open all buffers
 ball
 
-# apply command to all buffers
+# apply command to all buffers ( replace command with the command to run)
 bufdo command
+ 
+# nerdtree open all files in directory
+n *
+
+# place your cursor over a link and then open linked file
+ctrl w f
