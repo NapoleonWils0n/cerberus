@@ -184,3 +184,21 @@ dw
 
 # change until end of line
 c$
+
+# visually select inner word
+viw
+
+# show buffers
+ls
+
+# switch to buffer 2
+b2
+
+# close buffer
+bd
+
+# open all buffers
+ball
+
+# apply command to all buffers
+bufdo command
