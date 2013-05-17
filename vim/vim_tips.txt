@@ -217,3 +217,13 @@ n *
 
 # place your cursor over a link and then open linked file
 ctrl w f
+
+# change letters ( replace 7 with number of characters to change )
+c7l
+
+# change until ( replace . with other character )
+ct.
+
+# find next occurance of a letter on a line ( replace "a" with character to search for )
+fa
+
