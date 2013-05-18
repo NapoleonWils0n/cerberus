@@ -63,4 +63,4 @@ git remote add ssh johndoe@sshserver:/home/johndoe/git/home.git
 scp -r ~/Desktop/home.git johndoe@sshserver:/home/johndoe/git/home.git
 
 # push local copy your remote
-git push ssh master
+git push -u ssh master
