@@ -6,10 +6,10 @@
 git clone --bare ~/cerberus ~/Desktop/cerberus.git
 
 # scp git to sshserver
-scp -r ~/Desktop/cerberus.git djwilcox@nas.local:/volume1/homes/djwilcox/git/public/cerberus.git
+scp -r ~/Desktop/cerberus.git username@nas.local:/volume1/homes/username/git/public/cerberus.git
 
 # add remote location to local git working copy
-git remote add nas djwilcox@nas.local:/volume1/homes/djwilcox/git/public/cerberus.git
+git remote add nas username@nas.local:/volume1/homes/username/git/public/cerberus.git
 
 # push local copy your remote
 git push -u ssh master
@@ -19,7 +19,7 @@ git push -u ssh master
 
 # nas lan
 Host nas
-User djwilcox
+User username
 Port 443
 HostName nas.local
 
