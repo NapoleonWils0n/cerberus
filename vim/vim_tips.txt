@@ -233,3 +233,8 @@ fa
 # repeat the last command with .
 .
 
+# select everything including curly braces {}
+vaB
+
+# temporary normal mode in insert mode
+ctrl o
