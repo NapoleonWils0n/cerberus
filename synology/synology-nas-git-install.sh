@@ -83,3 +83,27 @@ ipkg update
 
 # install git as root
 ipkg install git
+
+# switch to root
+su 
+
+# create symbolic links for git binaries to /usr/bin
+ln -s /opt/bin/git* /usr/bin
+
+reboot the nas
+
+# clone the git repos and copy to the nas
+git clone --bare ~/cerberus ~/Desktop/cerberus.git
+
+# scp to the nas
+# you need to use the full file path including the volume
+scp -r ~/Desktop/cerberus.git username@nas.local:/volume1/homes/username/git/public/cerberus.git
+
+# change directory in your git repo
+cd ~/cerberus
+
+# add the remote git repo remembering to including the volume name in the file path
+git remote add nas username@nas.local:/volume1/homes/username/git/public/cerberus.git
+
+# push local copy your remote
+git push -u nas master
