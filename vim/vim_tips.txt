@@ -206,6 +206,9 @@ b2
 # close buffer
 bd
 
+# switch between buffers
+bn
+
 # open all buffers
 ball
 
