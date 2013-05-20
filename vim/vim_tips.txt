@@ -129,7 +129,7 @@ I
 V
 
 # y for yank to copy
-y
+yy
 
 # p for paste
 p
