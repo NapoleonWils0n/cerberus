@@ -230,3 +230,6 @@ ct.
 # find next occurance of a letter on a line ( replace "a" with character to search for )
 fa
 
+# repeat the last command with .
+.
+
