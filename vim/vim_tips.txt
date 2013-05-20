@@ -238,3 +238,19 @@ vaB
 
 # temporary normal mode in insert mode
 ctrl o
+
+# visual block mode
+ctrl v
+
+# set up dictionary for custom completion
+
+# save things to complete on there own line
+# save the file as dict.tx in your ~/.vim/ direc
+tory
+
+# reference the dict.txt file from your ~/.vimrc file
+# add the following to your ~/.vimrc
+set dictionary+=/Users/username/.vim/dict.txt
+
+# expand dictionary 
+ctrl x ctrl o
