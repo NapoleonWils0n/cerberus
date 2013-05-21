@@ -272,3 +272,7 @@ C
 
 # delete until the end of the line
 D
+
+# delete character under cursor
+x
+
