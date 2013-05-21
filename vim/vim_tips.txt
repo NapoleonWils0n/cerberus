@@ -260,3 +260,15 @@ s/text/replacementtext/g
 
 # move text to a specific line
 m10
+
+# go to insert mode at the start of the line
+I
+
+# delete text but dont move text up 
+cc
+
+# change from cursor to end of line
+C
+
+# delete until the end of the line
+D
