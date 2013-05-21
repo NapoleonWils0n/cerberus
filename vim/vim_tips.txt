@@ -258,3 +258,5 @@ ctrl x ctrl o
 # search and replace
 s/text/replacementtext/g
 
+# move text to a specific line
+m10
