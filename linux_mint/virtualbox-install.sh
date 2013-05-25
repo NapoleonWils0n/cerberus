@@ -10,3 +10,4 @@ sudo usermod -a -G vboxusers username
 # then download and install the VirtualBox 4.2.12 Oracle VM VirtualBox Extension Pack
 # https://www.virtualbox.org/wiki/Downloads
 # double click the download file to install the extension pack
+
