@@ -276,3 +276,13 @@ D
 # delete character under cursor
 x
 
+# search in command mode / then search term # /head
+/
+
+# split
+sp
+
+# vertical split
+vsp
+
+# switch between splits ctrl w w
