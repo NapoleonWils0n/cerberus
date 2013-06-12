@@ -290,4 +290,6 @@ vsp
 # switch to shell in command mode ( type exit to quit the shell and return to vim) 
 sh
 
-
+# execute command by prefixing with ! in command mode
+! 
+# ! ls
