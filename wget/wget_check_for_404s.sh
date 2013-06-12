@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # =======================
 # = wget check for 404s =

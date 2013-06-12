@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # VirtualBox command line
 

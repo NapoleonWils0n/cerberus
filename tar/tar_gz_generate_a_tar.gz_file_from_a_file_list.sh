@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ==================================================
 # = tar gz generate a tar.gz file from a file list =

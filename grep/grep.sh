@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # pipe in clipboard and grep for http links
 

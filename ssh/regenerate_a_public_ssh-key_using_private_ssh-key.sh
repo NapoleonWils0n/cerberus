@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # =====================================================
 # = REGENERATE A PUBLIC SSH-KEY USING PRIVATE SSH-KEY =

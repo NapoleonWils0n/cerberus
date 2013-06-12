@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # fwsnort and perl modules install
 sudo apt-get install fwsnort

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # crop images with sips
 

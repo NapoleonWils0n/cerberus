@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =======================================
  # = Subversion set up Mac OSX and Linux =

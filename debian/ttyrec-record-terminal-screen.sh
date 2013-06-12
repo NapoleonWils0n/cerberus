@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # record terminal sessions
 sudo apt-get install ttyrec 

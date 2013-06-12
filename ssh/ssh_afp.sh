@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # self closing ssh tunnel for afp file sharing
 

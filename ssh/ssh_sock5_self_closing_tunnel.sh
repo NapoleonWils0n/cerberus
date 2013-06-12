@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =================================
  # = ssh sock5 self closing tunnel =

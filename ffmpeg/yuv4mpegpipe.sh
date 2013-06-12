@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ====================================
 # = Change the frame rate of a video =

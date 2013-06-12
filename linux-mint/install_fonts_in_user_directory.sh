@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # in your home directory, create .fonts/
 mkdir .fonts

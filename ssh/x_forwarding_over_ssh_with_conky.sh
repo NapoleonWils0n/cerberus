@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ====================================
  # = x forwarding over ssh with conky =

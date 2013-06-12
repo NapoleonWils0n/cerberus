@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
  
 INFIFO="/tmp/infifo.$$"
 OUTFIFO="/tmp/outfifo.$$"

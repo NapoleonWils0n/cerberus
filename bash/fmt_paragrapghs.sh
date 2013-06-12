@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # fmt command to wrap paragrapghs to line length
 

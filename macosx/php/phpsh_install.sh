@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # web page
 # http://phpsh.org/

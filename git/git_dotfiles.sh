@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # put ~ .dotfiles under git
 

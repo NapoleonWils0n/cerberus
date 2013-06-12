@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===========================================
  # = textutil convert text to another format =

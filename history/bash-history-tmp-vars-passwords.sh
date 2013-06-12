@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # store passwords in tmp vars so they dont show up in bash history
 

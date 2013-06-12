@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
  
 FIRST_ARGUMENT="$1"
 if [ "$FIRST_ARGUMENT" = "Silly" ] ; then

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Git local and remote set up 
 # install git

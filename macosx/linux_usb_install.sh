@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Convert the .iso file to .img using the convert option of hdiutil 
 hdiutil convert -format UDRW -o ~/Desktop/mint.img ~/Desktop/mint.iso

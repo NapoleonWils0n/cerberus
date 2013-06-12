@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ssh g switch for sharing ssh tunnel on the lan as a socks 5 proxy
 ssh -g -D 8001 -p 443 username@sshserver.com

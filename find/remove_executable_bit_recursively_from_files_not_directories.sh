@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remove executable bit recursively from files not directories
 

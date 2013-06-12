@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # head show first 10 lines of file by default
 

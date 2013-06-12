@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # virtualbox install
 sudo apt-get install virtualbox-nonfree

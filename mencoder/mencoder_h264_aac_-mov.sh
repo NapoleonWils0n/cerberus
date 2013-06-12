@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =================================
  # = mencoder dvd ripping h264 aac =

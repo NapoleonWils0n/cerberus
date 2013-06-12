@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # vnc over ssh tunnel
 # Use the local port 5901

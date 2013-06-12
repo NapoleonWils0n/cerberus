@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===================================
  # = pngcrush for compressing images =

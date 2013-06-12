@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # install google command line tools
 sudo apt-get install googlecl

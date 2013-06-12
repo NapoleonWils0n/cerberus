@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # edit psad.conf and change the ALERTING_METHODS to noemail
 sudo vim /etc/psad/psad.conf

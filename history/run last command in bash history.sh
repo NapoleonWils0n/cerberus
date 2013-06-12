@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # run last command in bash history
 

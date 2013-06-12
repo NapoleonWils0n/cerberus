@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # install encfs
 sudo apt-get install encfs

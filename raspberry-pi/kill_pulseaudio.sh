@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # clean pulseaudio config properly:
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===================================
  # = afconvert convert audio formats =

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =======================================
  # = How to mount a drive on Backtrack 4 =

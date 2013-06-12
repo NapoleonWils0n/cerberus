@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # middler javascript keylogger with iframe
 

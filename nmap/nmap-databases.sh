@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Discovering Databases
 # Discovering SQL Server default TCP Port:

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # df -h show available disk space
 df -h

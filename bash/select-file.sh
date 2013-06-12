@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Displays a list of files in current directory and prompt for which
 # file to edit
 

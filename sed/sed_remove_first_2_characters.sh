@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # =================================
 # = sed remove first 2 characters =

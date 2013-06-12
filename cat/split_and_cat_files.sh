@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # split files into chunk and rejoin with cat
 

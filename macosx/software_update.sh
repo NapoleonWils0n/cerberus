@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #-----------------------------------------------#
 # software update from the command line

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 # compress a folder with tar to create a .tar.gz archive

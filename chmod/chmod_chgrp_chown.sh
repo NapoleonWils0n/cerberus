@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ===============================================
 # = chmod - chgrp chown - Modifying Permissions =

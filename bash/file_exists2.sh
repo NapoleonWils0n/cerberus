@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ls mysillyfilename
 if [ $? = 0 ] ; then

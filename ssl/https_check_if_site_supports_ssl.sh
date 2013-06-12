@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # https check if site supports ssl
 

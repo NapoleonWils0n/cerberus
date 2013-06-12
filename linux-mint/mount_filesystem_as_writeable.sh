@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 # if you mess up your /etc/fstab and cant boot up, heres how to fix it

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # rkhunter install for finding rootkits
 sudo apt-get install rkhunter

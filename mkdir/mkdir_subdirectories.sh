@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # mkdir create multiple directories
 mkdir -p playground/dir-{00{1..9},0{10..99},100}

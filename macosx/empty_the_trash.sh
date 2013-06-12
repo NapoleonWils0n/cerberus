@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # empty the trash
 cd ~/.Trash

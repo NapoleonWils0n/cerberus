@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =================================================
  # = remove dot underscore file and ds_store files =

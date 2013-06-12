@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ffmpeg dump audio from video
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #-----------------------------------------------#
 # Sendmail fix on Mountain Lion

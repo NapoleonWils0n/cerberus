@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 # method 1

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # psad install to work with fwsnort and iptables
 sudo apt-get install psad

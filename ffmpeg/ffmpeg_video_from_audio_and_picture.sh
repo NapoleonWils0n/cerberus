@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create video from audio and image
 

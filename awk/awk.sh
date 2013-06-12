@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # print the first word of every line of input
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # default .bashrc location on linux
 

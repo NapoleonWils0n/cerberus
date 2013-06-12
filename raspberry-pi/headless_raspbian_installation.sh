@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Headless Raspbian installation
 # For those who want to run the Pi as server only, here you can see how to remove all the unused GUI packages.

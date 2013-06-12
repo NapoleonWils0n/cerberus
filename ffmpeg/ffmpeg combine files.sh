@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ffmpeg combine seperate audio and video files into a single video
 

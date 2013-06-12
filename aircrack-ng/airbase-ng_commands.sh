@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # evil twin
 # respond to probe for an access point and generate respone and beacon frames

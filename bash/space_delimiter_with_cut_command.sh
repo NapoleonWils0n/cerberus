@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # space as a delimiter with the cut command
 

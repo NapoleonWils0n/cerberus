@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ==============================================
  # = Using meld to compare directories over ssh =

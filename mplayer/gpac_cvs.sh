@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # gpac 
 cvs -d:pserver:anonymous@gpac.cvs.sourceforge.net:/cvsroot/gpac login 

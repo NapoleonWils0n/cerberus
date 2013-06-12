@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # install ipkg and git on synology nas
 

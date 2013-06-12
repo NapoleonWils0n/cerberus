@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # basic git gui
 gitk

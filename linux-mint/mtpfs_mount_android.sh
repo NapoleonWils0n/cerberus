@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # mtpfs install to mount android devices
 sudo apt-get install mtpfs mtp-tools

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ssh -o Tunnel=point-to-point -w 0:0 remote
 

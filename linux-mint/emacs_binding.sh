@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # turn on emacs keyboard bindings for themes
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 	BSSID              PWR  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID
 

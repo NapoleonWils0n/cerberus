@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # show octal version of file permission
 

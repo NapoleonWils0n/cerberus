@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ping with date stamp
 

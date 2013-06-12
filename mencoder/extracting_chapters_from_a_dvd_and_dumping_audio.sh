@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ==================================
  # = extracting chapters from a dvd =

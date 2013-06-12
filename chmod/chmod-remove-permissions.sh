@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remove write permission for group and other recurcivly
 

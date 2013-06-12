@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # avoid stoing passwords in bash history
 

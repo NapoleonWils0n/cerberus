@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # echo_supress_new_line. 
 

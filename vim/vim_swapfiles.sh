@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # keep vim swap files in ~/.vim/swap_files 
 # to keep them out of git repos

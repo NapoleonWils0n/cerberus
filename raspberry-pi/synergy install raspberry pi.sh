@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # synergy install on Raspberry Pi
 

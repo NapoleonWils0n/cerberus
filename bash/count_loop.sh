@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 COUNT=0
 while [ $COUNT -lt '4' ] ; do

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # install tor from source for command line tools
 # tor-resolve

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===============================
  # = h264 acc iphone for the web =

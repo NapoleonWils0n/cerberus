@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # sshfs Raspberry Pi
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # use lynx to dump page source and grep for http links
 

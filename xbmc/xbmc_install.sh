@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # xbmc install
 sudo add-apt-repository ppa:team-xbmc/ppa

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # get the process id
 ps -cvx | grep "someapp"

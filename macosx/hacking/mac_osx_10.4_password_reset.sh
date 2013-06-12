@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ===============================
 # = mac osx 10.4 password reset =

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # mtime: file modification time
 ls -l

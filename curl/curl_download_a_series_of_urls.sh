@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ==================================
 # = curl download a series of urls =

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #mplayer full screen on second display
 

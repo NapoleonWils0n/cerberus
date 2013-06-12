@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 # back up files with braces

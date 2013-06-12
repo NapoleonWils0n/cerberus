@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Square brackets—matches any of a series of characters in a filename. 
 #For example, ls a[rn]t.jpg matches art.jpg and ant.jpg, but does not match aft.jpg. 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # growl notify loop grepping web page
 

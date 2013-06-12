@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ==================================
 # = check exit status of a command =

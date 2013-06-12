@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # streaming 1080p h264 to the ipad
 

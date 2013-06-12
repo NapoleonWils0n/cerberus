@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Verifying an e-mail address
 # Step 1 – Find the mail server:

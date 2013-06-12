@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # check how many arguments are passed to the script
 

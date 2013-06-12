@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =====================================
  # = sshfs mount ssh server on desktop =

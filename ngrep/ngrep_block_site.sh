@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sudo ngrep -q 'facebook.com'
 

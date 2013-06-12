@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # xkill, kill windowed applications by touching the window
 

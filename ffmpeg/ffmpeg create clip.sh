@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create a clip from a video with ffmpeg and convert to x264 aac
 

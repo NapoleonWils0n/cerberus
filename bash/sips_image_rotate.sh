@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
  
 # Adjust paths as needed
 EXIFTOOL=/usr/local/bin/exiftool

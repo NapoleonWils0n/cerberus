@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #The last number is the time interval in seconds, making hours grouped by 3600 second segments. 
 #If you wanted to wait 4 hours between backups, the number would be 14400, and so on. 

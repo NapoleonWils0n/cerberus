@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
  
 # Get an absolute path for the poem.txt file.
 POEM="$PWD/../poem.txt"

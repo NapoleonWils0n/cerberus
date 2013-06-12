@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create a shared folder in VirtualBox settings
 

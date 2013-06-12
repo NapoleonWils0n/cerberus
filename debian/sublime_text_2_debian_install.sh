@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Sublime Text 2 debian install
 

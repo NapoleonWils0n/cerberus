@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # everpad install
 sudo add-apt-repository ppa:nvbn-rm/ppa

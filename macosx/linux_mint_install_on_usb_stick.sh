@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # linux mint install on usb stick
 

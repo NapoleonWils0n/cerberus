@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ========================================================
 # = Use Mencoder to rebuild the header of our avi file.  =

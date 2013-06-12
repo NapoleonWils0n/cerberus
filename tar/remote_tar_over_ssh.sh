@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copies the directory called directory_name from
 # /path/to/source/directory_name on a remote server

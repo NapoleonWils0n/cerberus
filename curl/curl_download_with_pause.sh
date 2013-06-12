@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ============================
  # = curl download with pause =

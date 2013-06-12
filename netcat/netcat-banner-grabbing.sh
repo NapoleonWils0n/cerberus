@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # grabbing web server banners with netcat
 

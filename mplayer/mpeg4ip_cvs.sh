@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ========================
  # = mpeg4ip cvs commands =

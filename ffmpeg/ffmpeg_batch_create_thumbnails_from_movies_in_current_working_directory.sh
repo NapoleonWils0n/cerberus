@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===========================================================================
  # = ffmpeg batch create thumbnails from movies in current working directory =

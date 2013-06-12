@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # textmate rmate script set up
 

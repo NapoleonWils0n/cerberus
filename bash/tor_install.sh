@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ============================================================
  # = install and tor and the tor firefox button with synaptic =

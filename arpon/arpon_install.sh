@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # arpon install to stop arp poisioning
 sudo apt-get install arpon

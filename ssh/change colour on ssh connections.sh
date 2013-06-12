@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # this code goes in your .bash_profile
 

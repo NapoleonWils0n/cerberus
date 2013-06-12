@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # sublime text 2 linux mint install
 

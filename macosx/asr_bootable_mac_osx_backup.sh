@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===============================
  # = asr bootable Mac OSX backup =

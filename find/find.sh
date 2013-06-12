@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # The find utility can locate all of those files and then execute a command to move them where you want.
 

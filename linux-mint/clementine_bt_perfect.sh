@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # clementine bit perfect audio with usb dac
 

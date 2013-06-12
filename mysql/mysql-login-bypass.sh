@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # mysql injection
 SELECT * FROM SOMETABLE WHERE UID = ' ' AND PWD = ' '

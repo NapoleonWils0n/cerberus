@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #sql injection - log in bypass
 

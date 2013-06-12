@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # to flush the DNS cache in Mac OS X 10.5 and 10.6, run this command in Terminal: 
 sudo dscacheutil -flushcache 

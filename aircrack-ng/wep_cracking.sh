@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # 00:1F:33:F0:53:45  -89       17        0    0  11  54   WEP  WEP         Corrib Rest 
 

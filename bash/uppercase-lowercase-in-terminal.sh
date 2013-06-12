@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # change text to upper or lowercase in the terminal
 

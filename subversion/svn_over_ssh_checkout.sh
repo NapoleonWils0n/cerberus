@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =========================
  # = svn over ssh checkout =

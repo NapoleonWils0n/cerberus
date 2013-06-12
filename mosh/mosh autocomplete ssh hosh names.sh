@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # mosh autocomplete ssh hosh names
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # install httrack for downloading websites
 sudo apt-get install httrack

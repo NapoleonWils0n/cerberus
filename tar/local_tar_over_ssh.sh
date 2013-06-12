@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copies directory_or_file_name on the local machine
 # to /path/to/destination/directory_or_file_name on

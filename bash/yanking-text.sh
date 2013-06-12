@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # cut text from the cursor to the begining of the line
 # ctrl k 

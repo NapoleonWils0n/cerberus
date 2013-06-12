@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create a generic password item in keychain
 # you have 3 text fields to fill in

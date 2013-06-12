@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # =============================
  # = Ubuntu lamp server set up =

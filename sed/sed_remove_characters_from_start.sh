@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remove first four characters from file name
 

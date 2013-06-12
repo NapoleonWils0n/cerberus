@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # using hydra to bruteforce router username password
 

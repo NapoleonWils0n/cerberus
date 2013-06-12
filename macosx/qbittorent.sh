@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #---------------------------------------------------------------------------#
 #	qbittorent run an external program on torrent completion 

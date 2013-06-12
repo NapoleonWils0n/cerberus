@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # tail show last 10 lines of file by default
 

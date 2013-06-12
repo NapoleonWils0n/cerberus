@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  # ===================
  # = mp4box commands =

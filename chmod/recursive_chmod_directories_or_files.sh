@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This will recursively search your directory tree (starting at dir 'dot') and chmod 755 all directories only.
 find . -type d -exec chmod 755 {} \;
