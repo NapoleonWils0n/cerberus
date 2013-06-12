@@ -286,3 +286,8 @@ sp
 vsp
 
 # switch between splits ctrl w w
+
+# switch to shell in command mode ( type exit to quit the shell and return to vim) 
+sh
+
+
