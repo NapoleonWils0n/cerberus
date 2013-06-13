@@ -8,6 +8,15 @@ screen -S name
 # attach to a running session with name
 screen -r name
 
+# create a new screen
+ctrl a c
+
+# switch to previous screen
+ctrl a p
+
+# switch to next screen
+ctrl a n
+
 # exit screen
 Control-a d
 
@@ -16,3 +25,9 @@ Control-a D D
 
 # Help
 Control-a ?
+
+# list screens
+screen -list
+
+# kill detached screen ( replace 23536 with output from screen -list )
+screen -S 23536 -X quit
