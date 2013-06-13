@@ -31,3 +31,9 @@ screen -list
 
 # kill detached screen ( replace 23536 with output from screen -list )
 screen -S 23536 -X quit
+
+# split screen
+ctrl a S
+
+# kill split screen
+ctrl a X
