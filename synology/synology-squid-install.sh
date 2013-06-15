@@ -18,16 +18,12 @@ vi /opt/etc/squid/squid.conf
 # acl localnet src 192.168.1.0/16 # RFC1918 possible internal network
 # hosts_file /etc/hosts
 
-# download hosts file from someonewhocares and save to /etc/hosts
-
-# validate the configuration with squid –k parse
-squid -k parse
-
-# create the temp dir
-squid -Z
+# download hosts file from someonewhocares and append to /etc/hosts
 
 # create a symbolic link so squid starts at boot
 ln -s /opt/etc/init.d/S80squid /usr/syno/etc/rc.d/
 
-# start the squid daemon
+# reboot and squid should be working 
+
+# start the squid daemon manually
 /opt/etc/init.d/S80squid [stop - start - restart ]
