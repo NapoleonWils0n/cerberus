@@ -14,6 +14,12 @@ su -l
 # change the cache size by editing the  parameter cache_dir to 4096( line 1953) in the file /opt/ec/squid/squid.conf
 vi /opt/etc/squid/squid.conf
 
+# cache_dir ufs /opt/var/squid/cache 4096 16 256
+# acl localnet src 192.168.1.0/16 # RFC1918 possible internal network
+# hosts_file /etc/hosts
+
+# download hosts file from someonewhocares and save to /etc/hosts
+
 # validate the configuration with squid –k parse
 squid -k parse
 
