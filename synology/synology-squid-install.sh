@@ -11,7 +11,7 @@ su -l
 /opt/bin/ipkg squid_2.7.9-1_arm.ipk
 
 # edit the squid.conf
-# change the cache size by editing the  parameter cache_dir ( line 1953) in the file /opt/ec/squid/squid.conf
+# change the cache size by editing the  parameter cache_dir to 4096( line 1953) in the file /opt/ec/squid/squid.conf
 vi /opt/etc/squid/squid.conf
 
 # validate the configuration with squid –k parse
