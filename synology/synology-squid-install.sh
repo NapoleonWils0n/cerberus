@@ -14,9 +14,15 @@ su -l
 # change the cache size by editing the  parameter cache_dir to 4096( line 1953) in the file /opt/ec/squid/squid.conf
 vi /opt/etc/squid/squid.conf
 
-# cache_dir ufs /opt/var/squid/cache 4096 16 256
-# acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
-# hosts_file /etc/hosts
+cache_dir ufs /opt/var/squid/cache 4096 16 256
+acl localnet src 192.168.1.0/24 # RFC1918 possible internal network
+hosts_file /etc/hosts
+
+#  TAG: visible_hostname                                            
+visible_hostname cephalopoda
+
+acl block_websites dstdomain .data.flurry.com
+http_access deny block_websites 
 
 # download hosts file from someonewhocares and append to /etc/hosts
 
