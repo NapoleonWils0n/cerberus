@@ -15,7 +15,7 @@ su -l
 vi /opt/etc/squid/squid.conf
 
 # cache_dir ufs /opt/var/squid/cache 4096 16 256
-# acl localnet src 192.168.1.0/16 # RFC1918 possible internal network
+# acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
 # hosts_file /etc/hosts
 
 # download hosts file from someonewhocares and append to /etc/hosts
