@@ -19,3 +19,6 @@ touch ~/.mpd/{mpd.db,mpd.log,mpd.pid,mpdstate}
 # edit the mpd.conf in your home directory
 vim ~/.mpd/mpd.conf
 
+# check if mpd is running
+ps aux|grep mpd
+
