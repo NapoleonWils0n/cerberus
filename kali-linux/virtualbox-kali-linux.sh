@@ -73,13 +73,12 @@ vim /usr/share/beef-xss/extensions/metasploit/comfig.yml
 # start msfconsole
 msfconsole
 
-# connect to the database
-db_connect
-
 # add the following into the msfconsole with your ip address
 load msgrpc ServerHost=<PUT_YOUR_IP_ADDRESS_HERE> Pass=abc123
 
-# start beef
+# keep the msfconsole open 
+
+# open another tab in the terminal and start beef
 cd /usr/share/beef-xss/
 ./beef
 
