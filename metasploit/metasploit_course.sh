@@ -15,6 +15,9 @@ nmap -v -sP 192.168.1.0/24
 # scan for targets with nmap
 nmap -v -n 192.168.1.50
 
+# service scan
+namp -sV -n 192.168.1.50
+
 #-----------------------------------------------#
 #	check for service vulnerabiltes
 #-----------------------------------------------#
