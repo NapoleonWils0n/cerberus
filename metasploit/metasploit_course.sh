@@ -9,11 +9,11 @@
 # nmap scan
 #-----------------------------------------------#
 
-# scan for targets with nmap
-nmap -Sv -n 192.168.1.50
+# scan subnet
+nmap -v -sP 192.168.1.0/24
 
-# -Sv = scan for services
-# -n 192.168.1.50 = scan ip address
+# scan for targets with nmap
+nmap -v -n 192.168.1.50
 
 #-----------------------------------------------#
 #	check for service vulnerabiltes
