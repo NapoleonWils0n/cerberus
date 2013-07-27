@@ -98,3 +98,9 @@ sudo vim /etc/resolv.conf
 
 # restart the NetworkManager
 sudo restart network-manager
+
+
+# check if you are using opendns with dnscrypt
+# ============================================
+
+# https://www.opendns.com/welcome/
