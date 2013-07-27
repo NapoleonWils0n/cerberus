@@ -64,6 +64,7 @@ sudo su
 # install
 make install
 
+
 # start dnscrypt
 # ==============
 
@@ -80,3 +81,20 @@ sudo vim /etc/resolv.conf
 # nameserver=127.0.0.2
 
 
+# chnage dns settings in the NetworkManager
+# =========================================
+
+# open Network ( either by clicking on the network menulet and selecting Network settings, or by opening Network from the HUD )
+
+# select your the Wireless interface in the left sidebar and then click the options button in the bottom right of the window
+
+# in the new window select the IPv4 Settings tab
+
+# change the Method: drop down from Automatic (DHCP) to Automatic (DHCP) address only
+
+# in the DNS servers: field add 127.0.0.2
+
+# then click Save... and close the Network window
+
+# restart the NetworkManager
+sudo restart network-manager
