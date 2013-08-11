@@ -1,0 +1,6 @@
+#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1, BANDWIDTH=4000000, RESOLUTION=480x854
+ http://192.168.1.2/video/stream/big-buck-bunny/480p/output.m3u8
+ 
+#EXT-X-STREAM-INF:PROGRAM-ID=1, BANDWIDTH=6000000, RESOLUTION=720x1280
+ http://192.168.1.2/video/stream/big-buck-bunny/720p/output.m3u8
