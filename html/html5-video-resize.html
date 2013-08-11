@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <title>Resizing Movies</title>
+    <script type="text/javascript">
+        // set height and width to native values
+        function naturalSize() {
+            var myVideo = document.getElementsByTagName('video')[0];
+            myVideo.height = myVideo.videoHeight;
+            myVideo.width = myVideo.videoWidth;
+        }
+        // register listener function on metadata load
+        function myAddListener(){
+            var myVideo = document.getElementsByTagName('video')[0];
+            myVideo.addEventListener('loadedmetadata', naturalSize, false);
+        }
+    </script>
+</head>
+<body onload="myAddListener()">
+     <video src="http://127.0.01/video/video.m4v" controls>
+     </video>
+</body>
+</html>
+
