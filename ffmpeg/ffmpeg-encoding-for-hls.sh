@@ -28,13 +28,13 @@ ffmpeg -i infile.mp4 \
 # pass 1
 #=======
 ffmpeg -i infile.mp4 \
--c:v libx264 -crf 18 -profile:v high -bsf:v h264_mp4toannexb -preset slow -b:v 2500k -bufsize 1835k -vf scale=1130:480 \
+-c:v libx264 -crf 18 -profile:v high -bsf:v h264_mp4toannexb -preset slow -b:v 2500k -bufsize 1835k -vf scale=854:480 \
 -threads 0 -pix_fmt yuv420p -flags -global_header -x264opts keyint=100:min-keyint=100 -pass 1 -an -f mp4 out-480p.mp4
 
 # pass 2
 #=======
 ffmpeg -i infile.mp4 \
--c:v libx264 -crf 18 -profile:v high -bsf:v h264_mp4toannexb -preset slow -b:v 2500k -bufsize 1835k -vf scale=1130:480 \
+-c:v libx264 -crf 18 -profile:v high -bsf:v h264_mp4toannexb -preset slow -b:v 2500k -bufsize 1835k -vf scale=854:480 \
 -threads 0 -pix_fmt yuv420p -flags -global_header -x264opts keyint=100:min-keyint=100 -pass 2 -c:a libfdk_aac -b:a 128k -bsf:a aac_adtstoasc -f mp4 out-480p.mp4
 
 
