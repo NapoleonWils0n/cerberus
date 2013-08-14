@@ -14,7 +14,7 @@ ffmpeg -i input.avi -ss 00:00:00 -t 00:05:00 -async 1 -vcodec copy -acodec copy 
 #=========
 
 ffmpeg -i infile.mp4 \
--c:v libx264 -profile:v high -level:v 4.0 -preset slow \
+-c:v libx264 -profile:v high -level:v 4.1 -preset slow \
 -b:v 4750k -bufsize 1835k \
 -vf "yadif=0:-1:0, scale=1280:trunc(ow/a/2)*2" \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
@@ -26,7 +26,7 @@ ffmpeg -i infile.mp4 \
 #=========
 
 ffmpeg -i infile.mp4 \
--c:v libx264 -profile:v high -level:v 4.0 -preset slow \
+-c:v libx264 -profile:v high -level:v 4.1 -preset slow \
 -b:v 4750k -bufsize 1835k \
 -vf "yadif=0:-1:0, scale=1280:trunc(ow/a/2)*2" \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
@@ -41,7 +41,7 @@ ffmpeg -i infile.mp4 \
 #=========
 
 ffmpeg -i infile.mp4 \
--c:v libx264 -profile:v main -level:v 4.0 -preset slow \
+-c:v libx264 -profile:v main -level:v 3.1 -preset slow \
 -b:v 2500k -bufsize 1835k \
 -vf "yadif=0:-1:0, scale=720:trunc(ow/a/2)*2" \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
@@ -53,7 +53,7 @@ ffmpeg -i infile.mp4 \
 #=========
 
 ffmpeg -i infile.mp4 \
--c:v libx264 -profile:v main -level:v 4.0 -preset slow \
+-c:v libx264 -profile:v main -level:v 3.1 -preset slow \
 -b:v 2500k -bufsize 1835k \
 -vf "yadif=0:-1:0, scale=720:trunc(ow/a/2)*2" \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
