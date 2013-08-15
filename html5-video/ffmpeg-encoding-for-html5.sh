@@ -60,3 +60,10 @@ ffmpeg -i infile.mp4 \
 
 qt-faststart infile.mp4 outfile.mp4
 
+
+#==========================================================#
+# ffmpeg save video frame as image for poster
+#==========================================================#
+ 
+ffmpeg -i input.mp4 -ss 00:00:30 -f image2 -vframes 1 poster.png
+
