@@ -118,5 +118,3 @@ ffmpeg -i infile.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb -hls_time 
 # none
 #==========================================================#
 ffmpeg -i infile.mp4 -vcodec copy -acodec copy -hls_time 10 -hls_list_size 99999 output.m3u8
-
-
