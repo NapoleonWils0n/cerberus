@@ -1,0 +1,34 @@
+html {-webkit-touch-callout: none; -webkit-user-select: none; -webkit-text-size-adjust: none; -webkit-tap-highlight-color: rgba(0,0,0,0);}
+
+body {
+	margin: 0; 
+	padding: 0; 
+	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif; 
+	background: rgba(0,0,0,1); 
+	color: rgba(255,255,255,1);
+	}
+
+video {
+    background: rgba(0,0,0,1);
+	 max-width: 100%;
+	 max-height: 100%;
+    }
+
+/* Media Queries */
+
+@media screen and (min-device-width: 1025px) {}
+
+@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {}	
+	
+@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {}
+	
+@media only screen and (max-device-width: 480px) {
+	html {-webkit-text-size-adjust: none;}
+	}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {}
+
+
+
+
+
