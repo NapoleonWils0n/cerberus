@@ -4,7 +4,7 @@ body {
 	margin: 0; 
 	padding: 0; 
 	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif; 
-	background: rgba(0,0,0,1); 
+	background: rgba(0,0,0,1);
 	color: rgba(255,255,255,1);
 	}
 
@@ -14,12 +14,17 @@ video {
 	max-height: 100%;
 	display: block;
 	margin: 0 auto;
-	-webkit-animation: fadein 3s;
+	-webkit-animation: fadein 2s;
     }
+
+a, a:link, a:visited {text-decoration: none;}
+a:hover {text-decoration: none;}
+a:active {text-decoration: none;}
 
 @-webkit-keyframes fadein {
     from {
         opacity:0;
+ 	-webkit-animation-timing-function: ease-in;
     }
     to {
         opacity:1;
