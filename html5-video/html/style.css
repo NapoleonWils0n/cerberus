@@ -14,15 +14,16 @@ video {
 	max-height: 100%;
 	display: block;
 	margin: 0 auto;
-	-webkit-animation: fadein 2s;
+	-webkit-animation: fadein 3s;
     }
 
-@webkit-keyframes fadein {
+@-webkit-keyframes fadein {
     from {
         opacity:0;
     }
     to {
         opacity:1;
+ 	-webkit-animation-timing-function: ease-out;
     }
 }
 
@@ -39,6 +40,7 @@ video {
 	}
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {}
+
 
 
 
