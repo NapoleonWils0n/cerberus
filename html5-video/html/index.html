@@ -7,16 +7,19 @@
    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
    <title>media stream</title>
    <link rel="stylesheet" href="style.css">
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+   <script src="script.js"></script> 
    <script src="video-resize.js"></script> 
 </head>
 
 <body onload="myAddListener()">
 
 <video width="1280" height="720" preload="none" poster="poster.png" controls>
-	<source src="720p-mp4/big-buck-bunny-720p.mp4"/>
-	<source src="480p-mp4/big-buck-bunny-480p.mp4"/>
-	<source src="webm/big-buck-bunny.webm"/>
+	<source src="720p/big-buck-bunny-720p.mp4"/>
+	<source src="480p/big-buck-bunny-480p.mp4"/>
+	<source src="baseline/big-buck-bunny-baseline.mp4"/>
 </video>
+
 
 </body>
 </html>
