@@ -17,9 +17,21 @@ video {
 	-webkit-animation: fadein 2s;
     }
 
+img {border: 1px solid white;}
+
 a, a:link, a:visited {text-decoration: none;}
 a:hover {text-decoration: none;}
 a:active {text-decoration: none;}
+
+ul {
+	list-style-type: none;
+	margin: 10px 0 0 10px;
+	padding: 0;
+}	
+li {
+	margin: 0 0 10px 0;
+	padding: 0;
+}
 
 @-webkit-keyframes fadein {
     from {
@@ -34,19 +46,14 @@ a:active {text-decoration: none;}
 
 /* Media Queries */
 
-@media screen and (min-device-width: 1025px) {}
 
-@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {}	
-	
-@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {}
-	
-@media only screen and (max-device-width: 480px) {
-	html {-webkit-text-size-adjust: none;}
+@media screen and (orientation:portrait) {
+	img {max-height: 30%}
 	}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 2) {}
-
-
+	
+@media screen and (orientation:landscape) {
+	img {max-width: 32%}
+	}
 
 
 
