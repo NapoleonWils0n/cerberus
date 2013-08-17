@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+   	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>media stream</title>
+    	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	 <link rel="stylesheet" href="style.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+<script src="script.js"></script>
+<link rel="StyleSheet" href="portrait.css" type="text/css"  media="screen" id="orient_css">
+<script type="text/javascript">
+		function orient()
+		{
+			switch(window.orientation){  
+					case 0: document.getElementById("orient_css").href = "stream/portrait.css";
+			        break;
+
+					case -90: document.getElementById("orient_css").href = "stream/landscape.css";
+				    break;
+					
+					case 90: document.getElementById("orient_css").href = "stream/landscape.css";
+					break;
+
+		}
+	}
+		window.onload = orient();
+		</script>
+</head>
+<body onorientationchange="orient();">
+
+<ul>
+	<li>
+		<a href="/video/stream/big-buck-bunny/">
+	<img src="stream/thumbnails/big-buck-bunny.png"> 
+	</a>
+	</li>
+	<li>
+		<a href="/video/stream/sintel/">
+		<img src="stream/thumbnails/sintel.png">
+		</a>
+	</li>
+	<li>
+		<a href="/video/stream/elephants-dream/">
+		<img src="stream/thumbnails/elephants-dream.png">
+		</a>
+	</li>
+</ul>
+
+</body>
+</html>
