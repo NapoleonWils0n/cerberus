@@ -29,4 +29,4 @@ mplayer $(youtube-dl -g "$1")
 
 
 # usage
-mplayer-youtube https://www.youtube.com/watch?v=dQw4w9WgXcQ
+mplayer-youtube-dl.sh https://www.youtube.com/watch?v=dQw4w9WgXcQ
