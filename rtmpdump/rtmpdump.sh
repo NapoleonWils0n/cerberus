@@ -33,7 +33,7 @@ rtmpsrv
 # remove iptables rtmp redirect
 # =============================
 
-iptables -t nat -A OUTPUT -p tcp --dport 1935 -m owner \! --uid-owner root -j REDIRECT
+iptables -t nat -D OUTPUT -p tcp --dport 1935 -m owner \! --uid-owner root -j REDIRECT
 
 
 # run the rtmpdump command from rtmpsuck
