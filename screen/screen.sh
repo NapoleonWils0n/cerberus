@@ -37,3 +37,24 @@ ctrl a S
 
 # kill split screen
 ctrl a X
+
+# show all window
+ctrl a w
+
+# choose window
+# ctrl a " 
+
+# create split screen and press Ctrl+a c to create new window in the split
+ctrl a S 
+
+# switch between split screens
+ctrl a TAB
+
+# enter copy mode for scrolling
+ctrl a [
+
+# scroll screen up
+ctrl u
+
+# scroll screen down
+ctrl d
