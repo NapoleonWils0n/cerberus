@@ -12,21 +12,18 @@ sudo apt-get install rtmpdump
 sudo iptables -t nat -A OUTPUT -p tcp --dport 1935 -m owner \! --uid-owner root -j REDIRECT
 
 
-# run rtmpsrv
-# ===========
+# run rtmpsuck
+# ============
 
-rtmpsrv
+sudo rtmpsuck
 
 # open the video stream in a browser
 # ==================================
 
-# now open the stream in a browser and rtmpsrv should capture the urls
+# now open the stream in a browser and rtmpsuck should download the video
 
 # press control c to stop rtmpsrv
 
-# rtmpsrv will give you the command for rtmpdump to dump the video stream
-
-# before you run the rtmpdump command you need to remove the iptables rules
 
 
 # remove iptables rtmp redirect
