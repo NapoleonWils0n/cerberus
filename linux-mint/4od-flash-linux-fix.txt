@@ -1,0 +1,11 @@
+4od flash set up on linux mint
+
+remove the adobe cache:
+
+rm ~/.adobe -rf
+Install hal & hal-info:
+
+sudo apt-get install hal hal-info
+Reinstall adobe player:
+
+sudo apt-get install mint-flashplugin --reinstall
