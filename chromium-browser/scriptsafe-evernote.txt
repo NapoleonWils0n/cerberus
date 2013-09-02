@@ -1,0 +1,5 @@
+# set scriptsafe chrome extension to work with the evernote clipper
+
+1 - add evernote.com as a whitelisted domain
+
+2 - allow the evernote clipper by check Respect Same-Domain: 
