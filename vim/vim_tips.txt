@@ -299,3 +299,9 @@ gg
 
 # go to bottom of the page
 G
+
+# delete a line - to delete line 18 for example
+18d
+
+# delete a range of line - to delete lines 13 thru 18
+13,18d
