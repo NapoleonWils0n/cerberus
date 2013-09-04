@@ -59,5 +59,5 @@ ctrl u
 # scroll screen down
 ctrl d
 
-# show a list of active windows in the current sessions
-ctrl a ”
+# rename a session window
+crtl a A
