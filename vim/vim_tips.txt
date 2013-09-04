@@ -293,3 +293,8 @@ sh
 # execute command by prefixing with ! in command mode
 ! 
 # ! ls
+
+# go to top of the page
+gg
+
+# go to bottom of the page
