@@ -298,3 +298,4 @@ sh
 gg
 
 # go to bottom of the page
+G
