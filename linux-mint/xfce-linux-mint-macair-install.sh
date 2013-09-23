@@ -202,6 +202,8 @@ laptop-mode-tools powertop imagemagick
 # enviornment to compile c programs
 apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
 
+# openvpn client install
+sudo apt-get install openvpn
 
 # linux batery life fstab settings ( props to darren at hak5 )
 #=============================================================
