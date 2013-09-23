@@ -208,6 +208,9 @@ sudo apt-get install openvpn
 # rtmpdump install
 sudo apt-get install rtmpdump
 
+# install tor
+sudo apt-get install tor
+
 # linux batery life fstab settings ( props to darren at hak5 )
 #=============================================================
 
