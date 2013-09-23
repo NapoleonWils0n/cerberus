@@ -197,7 +197,7 @@ diskutil eject /dev/rdisk2
 sudo apt-get install mplayer mencoder git-core vim \
 mpd mpc screen nmap ngrep curl lynx gparted meld \
 keepassx chromium-browser chromium-codecs-ffmpeg-extra qbittorrent \
-laptop-mode-tools powertop
+laptop-mode-tools powertop imagemagick
 
 # enviornment to compile c programs
 apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
