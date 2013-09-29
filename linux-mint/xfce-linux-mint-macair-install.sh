@@ -950,5 +950,5 @@ sudo dpkg --get-selections > installed-packages-backup.txt
 # switch to second computer and reinstall the packages
 sudo apt-get install aptitude 
 sudo dpkg --clear-selections 
-sudo dpkg --set-selections < backup.txt 
+sudo dpkg --set-selections < installed-packages-backup.txt 
 sudo aptitude install
