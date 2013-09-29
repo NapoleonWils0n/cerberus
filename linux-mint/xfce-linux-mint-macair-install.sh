@@ -919,3 +919,23 @@ sudo apt-get autoremove autoconf automake build-essential git libass-dev libgpac
 libmp3lame-dev libopus-dev libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev \
 libvorbis-dev libvpx-dev libx11-dev libxext-dev libxfixes-dev texi2html zlib1g-dev
 hash -r
+
+
+# gitignore_global for bittorent sync
+#====================================
+
+# create the gitignore_global file
+vim ~/.gitignore_global
+
+# switch to insert mode: i
+# add the files to ignore
+.SyncID
+.SyncIgnore
+
+# switch to command mode then write to file
+ctrl c
+shift :
+w
+
+# add gitignore_global to all git repos
+git config --global core.excludesfile ~/.gitignore_global
