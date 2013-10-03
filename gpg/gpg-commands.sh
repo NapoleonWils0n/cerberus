@@ -43,5 +43,6 @@ gpg --edit-key username@gmail.com
 
 # sign the key
 sign
+check
 yes
 save
