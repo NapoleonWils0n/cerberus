@@ -46,3 +46,21 @@ sign
 check
 yes
 save
+
+# encrypt a file with an other user public key
+#=============================================
+
+# create an encrypted binary file
+#================================
+gpg --recipient bob --encrypt filename
+
+
+# create a ASCII-encrypted-file
+#==============================
+gpg --recipient bob --armor --encrypt filename
+
+
+# decrypt a file
+#===============
+
+gpg --decrypt test-file.asc > file.txt
