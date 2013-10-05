@@ -1007,3 +1007,9 @@ sudo apt-get install aptitude
 sudo dpkg --clear-selections 
 sudo dpkg --set-selections < installed-packages-backup.txt 
 sudo aptitude install
+
+
+# rsync system backup
+#====================
+
+rsync -aAXv /* /media/djwilcox/usb --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found}
