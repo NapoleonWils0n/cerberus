@@ -1,0 +1,7 @@
+# force ssl for a domain
+
+open chrome and go to this url
+
+chrome://net-internals/#hsts
+
+then add a domain without the http and www and click add
