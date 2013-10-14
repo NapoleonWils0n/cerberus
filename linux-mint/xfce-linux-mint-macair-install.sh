@@ -1122,21 +1122,18 @@ sudo restart network-manager
 
 
 
+# linux desktop launcher for chromium
+#====================================
 
-# dont send referrer headers with chrome
-# ======================================
+cp /usr/share/applications/chromium-browser.desktop ~/.local/share/applications/chromium-browser.desktop
 
-# start chromium with the no reffers switch
-# =========================================
+# edit the chromium-browser.desktop launcher in your home directory
 
-chromium-browser --no-referrers
+vim ~/.local/share/applications/chromium-browser.desktop
 
 
-# create a bash alias in .bashrc 
-# ==============================
-
-# dont send referrer headers with chrome
-alias chromium-browser='chromium-browser --no-referrers'
+# change line 170 so chromium starts up with the no referrers switch
+Exec=chromium-browser --no-referrers %U
 
 
 # sabnzbd usenet client install
