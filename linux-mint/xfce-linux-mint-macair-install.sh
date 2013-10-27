@@ -1012,7 +1012,7 @@ sudo aptitude install
 # rsync system backup
 #====================
 
-rsync -aAXv /* /media/djwilcox/usb --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found}
+sudo rsync -aAXv /* /media/djwilcox/usb --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found}
 
 
 # dnscrypt linux mint /  ubuntu install
