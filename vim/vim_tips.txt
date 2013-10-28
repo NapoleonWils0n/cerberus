@@ -305,3 +305,10 @@ G
 
 # delete a range of line - to delete lines 13 thru 18
 13,18d
+
+
+# find and replace
+#=================
+
+# find the word content and replace with the word copy
+:%s/content/copy/g
