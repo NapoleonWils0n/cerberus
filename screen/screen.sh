@@ -61,3 +61,6 @@ ctrl d
 
 # rename a session window
 crtl a A
+
+# vertical split
+ctrl a shift |
