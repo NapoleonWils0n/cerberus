@@ -1362,3 +1362,6 @@ make
 sudo make install
 
 # reboot and you should have a backlit keyboard
+
+# enable gnome services to unlock ssh keys on login
+# goto Settings-Session and Startup-Advanced and select Launch GNOME services on startup and it saved the identity to the keyring.
