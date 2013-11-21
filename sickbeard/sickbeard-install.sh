@@ -47,7 +47,7 @@ sudo service sickbeard start
 sudo service sickbeard stop
 
 # rename file
-mv ~/.sickbeard/autoProcessTV.cfg.sample ~/sickbeard/autoProcessTV.cfg
+mv ~/.sickbeard/autoProcessTV.cfg.sample ~/.sickbeard/autoProcessTV.cfg
 
 # add path to sickbeard autoProcessTV to sabnzbd
 # replace "username" with your username
