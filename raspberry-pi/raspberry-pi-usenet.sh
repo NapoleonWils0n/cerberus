@@ -15,7 +15,7 @@ sudo fdisk -l
 umount /dev/sdb
 
 # copy the disk image to the sdcard
-sudo dd bs=1m if=~/Downloads/debian6-19-04-2012.img of=/dev/sdb
+sudo dd bs=1M if=~/Downloads/debian6-19-04-2012.img of=/dev/sdb
 
 
 # find the pi on the network and ssh in
