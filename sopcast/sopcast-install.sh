@@ -20,16 +20,16 @@ cd sopcast-player/
 # open port 6881 with iptables if you want to share the sopcast stream on your lan
 
 # play sopcast stream with mplayer
-(sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &); sleep 10; wait $(mplayer -cache 8192 http://127.0.0.1:9901); killall sp-sc;
+(sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &); sleep 10; wait $(mplayer -cache 8192 http://127.0.0.1:6881); killall sp-sc;
 
 # save sopcast stream with ffmpeg
 sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &
-ffmpeg -i http://127.0.0.1:9901 -acodec copy -vcodec copy sopcast-stream.mkv
+ffmpeg -i http://127.0.0.1:6881 -acodec copy -vcodec copy sopcast-stream.mkv
 
 # save sopcast stream with tv-maxe
 
 # play sopcast stream with vlc
-(sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &); sleep 10; wait $(vlc http://127.0.0.1:9901); killall sp-sc;
+(sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &); sleep 10; wait $(vlc http://127.0.0.1:6881); killall sp-sc;
 
 
 # sopcast mplayer function for your ~/.bashrc
