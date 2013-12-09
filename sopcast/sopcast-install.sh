@@ -16,6 +16,8 @@ wget http://sopcast-player.googlecode.com/files/sopcast-player-0.8.5.tar.gz
 tar -zxvf sopcast-player-0.8.5.tar.gz
 cd sopcast-player/
 
+make 
+sudo make install
 
 # open port 6881 with iptables if you want to share the sopcast stream on your lan
 
