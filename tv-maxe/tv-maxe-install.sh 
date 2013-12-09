@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# tv-maxe install 
+sudo add-apt-repository ppa:venerix/pkg
+sudo apt-get update; sudo apt-get install tv-maxe
