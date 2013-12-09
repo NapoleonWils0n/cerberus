@@ -36,12 +36,27 @@ sudo make install
 # sopcast mplayer function for your ~/.bashrc
 # source ~/.bashrc
 # usage: smplayer sop://broker.sopcast.com:3912/143877
-smplayer () {
+
+# sopcast play stream with mplayer
+sopmplayer () {
         (sp-sc "$1" 8901 6881 &>/dev/null &); 
-	sleep 10; 
-	wait $(mplayer -cache 8192 http://localhost:6881); 
-	killall sp-sc;
-}
+        sleep 10; 
+        wait $(mplayer -cache 8192 -cache-min 25 http://localhost:6881); 
+        killall sp-sc;
+} 
+
+# sopcast save stream with ffmpeg
+sopffmpeg () {
+        (sp-sc "$1" 8901 6881 &>/dev/null &); 
+        sleep 10; 
+        wait $(ffmpeg -i http://127.0.0.1:6881 -acodec copy -vcodec copy sopcast-stream.mkv); 
+        killall sp-sc;
+} 
+
+# sopcast open stream
+sopstream () {
+        (sp-sc "$1" 8901 6881 &>/dev/null &); 
+} 
 
 # ~/.mplayer/config
 prefer-ipv4 = yes
