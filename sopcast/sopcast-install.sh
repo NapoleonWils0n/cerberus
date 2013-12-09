@@ -25,8 +25,7 @@ sudo make install
 (sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &); sleep 10; wait $(mplayer -cache 8192 http://127.0.0.1:6881); killall sp-sc;
 
 # save sopcast stream with ffmpeg
-sp-sc sop://broker.sopcast.com:3912/143876 8901 6881 &>/dev/null &
-ffmpeg -i http://127.0.0.1:6881 -acodec copy -vcodec copy sopcast-stream.mkv
+(sp-sc sop://broker.sopcast.com:3912/143877 8901 6881 &>/dev/null &); sleep 10; wait $(ffmpeg -i http://127.0.0.1:6881 -acodec copy -vcodec copy sopcast-stream.mkv); killall sp-sc;
 
 # save sopcast stream with tv-maxe
 
