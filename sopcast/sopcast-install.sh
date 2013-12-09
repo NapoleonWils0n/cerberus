@@ -36,7 +36,7 @@ ffmpeg -i http://127.0.0.1:9901 -acodec copy -vcodec copy sopcast-stream.mkv
 # source ~/.bashrc
 # usage: smplayer sop://broker.sopcast.com:3912/143877
 smplayer () {
-        (sp-sc "$1" 8901 9901 &>/dev/null &); 
+        (sp-sc "$1" 8901 6881 &>/dev/null &); 
 	sleep 10; 
 	wait $(mplayer -cache 8192 http://localhost:6881); 
 	killall sp-sc;
