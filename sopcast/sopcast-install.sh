@@ -38,6 +38,7 @@ sudo make install
 # usage: smplayer sop://broker.sopcast.com:3912/143877
 
 # sopcast play stream with mplayer
+# usage: sopmplayer sop://broker.sopcast.com:3912/143876
 sopmplayer () {
         (sp-sc "$1" 8901 6881 &>/dev/null &); 
         sleep 10; 
@@ -46,6 +47,7 @@ sopmplayer () {
 } 
 
 # sopcast save stream with ffmpeg
+# usage: sopffmpeg sop://broker.sopcast.com:3912/143876
 sopffmpeg () {
         (sp-sc "$1" 8901 6881 &>/dev/null &); 
         sleep 10; 
@@ -54,6 +56,7 @@ sopffmpeg () {
 } 
 
 # sopcast open stream
+# usage: sopstream sop://broker.sopcast.com:3912/143876
 sopstream () {
         (sp-sc "$1" 8901 6881 &>/dev/null &); 
 } 
