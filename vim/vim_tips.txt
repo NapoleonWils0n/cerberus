@@ -312,3 +312,9 @@ G
 
 # find the word content and replace with the word copy
 :%s/content/copy/g
+
+# delete to begining of a word
+db
+
+# delete a word
+daw
