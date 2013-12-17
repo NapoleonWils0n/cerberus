@@ -318,3 +318,6 @@ db
 
 # delete a word
 daw
+
+# delete a paragraph
+dap
