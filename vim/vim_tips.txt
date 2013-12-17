@@ -321,3 +321,15 @@ daw
 
 # delete a paragraph
 dap
+
+# deleting text in insert mode
+#=============================
+
+# Delete back one character (backspace)
+ctrl h
+
+# Delete back one word
+ctrl w
+
+# Delete back to start of line
+ctrl u
