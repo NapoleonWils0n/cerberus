@@ -354,3 +354,11 @@ ctrl u
 :[range]substitute/{pattern}/{string}/[flags] Replace occurrences of {pattern} with {string} on each specified line
 
 :[range]global/{pattern}/[cmd] Execute the Ex command [cmd] on all specified lines where the {pattern} matches
+
+# print a specific line
+
+# print the 1st line
+:1p
+
+# print the last line
+:$p
