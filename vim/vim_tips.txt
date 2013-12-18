@@ -370,3 +370,23 @@ ctrl u
 
 # replace the first occurance of a word
 :%s/Practical/Pragmatic/
+
+# Specify a Range of Lines by Patterns
+
+# specify the opening and closing html tag
+:/<html>/,/<\/html>/p
+
+# specify lines inside the html tags
+:/<html>/+1,/<\/html>/-1p
+
+# range syntax
+1 First line of the file
+$ Last line of the file
+0 Virtual line above first line of the file
+. Line where the cursor is placed
+'m Line containing mark m
+'< Start of visual selection
+'> End of visual selection
+% The entire file (shorthand for :1,$)
+
+
