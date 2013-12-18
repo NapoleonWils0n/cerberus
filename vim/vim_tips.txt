@@ -355,10 +355,18 @@ ctrl u
 
 :[range]global/{pattern}/[cmd] Execute the Ex command [cmd] on all specified lines where the {pattern} matches
 
-# print a specific line
+
+# print lines to the console
+#===========================
 
 # print the 1st line
 :1p
 
 # print the last line
 :$p
+
+# print the whole document
+:%p
+
+# replace the first occurance of a word
+:%s/Practical/Pragmatic/
