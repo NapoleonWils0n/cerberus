@@ -380,6 +380,8 @@ ctrl u
 :/<html>/+1,/<\/html>/-1p
 
 # range syntax
+#=============
+
 1 First line of the file
 $ Last line of the file
 0 Virtual line above first line of the file
