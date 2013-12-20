@@ -198,22 +198,24 @@ c$
 viw
 
 # show buffers
-ls
+#=============
+
+:ls
 
 # switch to buffer 2
-b2
+:b2
 
 # close buffer
-bd
+:bd
 
-# switch between buffers
-bn
+# next buffer
+:bn
 
 # open all buffers
-ball
+:ball
 
 # apply command to all buffers ( replace command with the command to run)
-bufdo command
+:bufdo command
  
 # nerdtree open all files in directory
 n *
