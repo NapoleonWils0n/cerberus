@@ -415,3 +415,13 @@ exit
 #==============================
 
 :!ls
+
+# change focus between windows
+#=============================
+
+<C-w>w Cycle between open windows
+<C-w>h Focus the window to the left
+<C-w>j Focus the window below
+<C-w>k Focus the window above
+<C-w>l Focus the window to the right
+
