@@ -216,7 +216,15 @@ viw
 
 # apply command to all buffers ( replace command with the command to run)
 :bufdo command
- 
+
+
+# Group Buffers into a Collection with the Argument List
+#=======================================================
+
+
+# args
+:args
+
 # nerdtree open all files in directory
 n *
 
