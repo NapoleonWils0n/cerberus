@@ -392,3 +392,14 @@ $ Last line of the file
 % The entire file (shorthand for :1,$)
 
 
+# switch to the shell
+#====================
+
+:shell
+$ls
+exit
+
+# execute programs in the shell
+#==============================
+
+:!ls
