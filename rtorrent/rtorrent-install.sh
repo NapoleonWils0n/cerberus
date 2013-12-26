@@ -5,7 +5,12 @@
 
 sudo apt-get install rtorrent
 
-# ~/.rtorrent.rc
+
+# iptables 
+#=========
+
+sudo iptables -A INPUT -p tcp --dport 6881 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 6882 -s 192.168.1.0/24 -j ACCEPT
 
 # This is an example resource file for rTorrent. Copy to
 # ~/.rtorrent.rc and enable/modify the options as needed. Remember to
@@ -24,7 +29,7 @@ max_uploads = 4
 
 # Global upload and download rate in KiB. "0" for unlimited.
 #download_rate = 0
-#upload_rate = 0
+upload_rate = 20
 
 # Default directory to save the downloaded torrents.
 directory = /home/djwilcox/Downloads 
@@ -61,7 +66,7 @@ port_range = 6881-6881
 #check_hash = no
 
 # Set whetever the client should try to connect to UDP trackers.
-#use_udp_trackers = yes
+use_udp_trackers = yes
 
 # Alternative calls to bind and ip that should handle dynamic ip's.
 #schedule = ip_tick,0,1800,ip=rakshasa
@@ -74,18 +79,18 @@ port_range = 6881-6881
 # outgoing connections but retries with encryption if they fail, preferring
 # plaintext to RC4 encryption after the encrypted handshake
 #
-encryption = allow_incoming, try_outgoing, require, require_RC4, enable_retry
+encryption = allow_incoming, try_outgoing, enable_retry
 
 # Enable DHT support for trackerless torrents or when all trackers are down.
 # May be set to "disable" (completely disable DHT), "off" (do not start DHT),
 # "auto" (start and stop DHT as needed), or "on" (start DHT immediately).
 # The default is "off". For DHT to work, a session directory must be defined.
 # 
-dht = auto
+dht = on
 
 # UDP port to use for DHT. 
 # 
-dht_port = 63425
+dht_port = 6882
 
 # Enable peer exchange (for torrents not marked private)
 #
