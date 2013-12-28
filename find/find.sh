@@ -11,3 +11,6 @@ find some_directory -type f -print0 | xargs -0 chmod 0644
 
 # find follow symbolic links
 find . -follow -name '*.mp3' -print0 | xargs -i -0 mv '{}' ~/songs
+
+# find files modified in the last 7 days
+find . -name '*.jpg' -mtime +7 -print
