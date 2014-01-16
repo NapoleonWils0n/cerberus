@@ -1,0 +1,29 @@
+# choose which files to download from a torrent
+
+press the down arrow in the start view to select a torrent, you should see an asterix to the left of the torrent
+then press the right arrow to show the torrent information
+next press i to show the file list or use the down arrow to select the file list
+press the right arrow to select files in the torrent, press the up and down arrow to move up and down the file list
+press the space bar to change the priority of the file to off if you dont want to download the file
+or leave it blank to download the file, or change the priority to low or high
+
+# use rtorrent over an openvpn connection, by changing the bind address
+start your openvpn connection
+sudo openvpn --config vpn.opvn
+
+enter you admin password, and the username and password for the openvpn connection
+
+find the local ip address for the openvpn connection
+ifconfig -a
+
+look for the network interface for the openvpn connection
+the network interface should be called tun0
+
+next look for the ip address next to inet addr:
+
+inet addr: 10.185.50.1
+
+start rtorrent with the -b option for bind address and add the ip address from the tun0 interface you found with ifconfig -a
+rtorrent -b 10.185.50.1
+
+
