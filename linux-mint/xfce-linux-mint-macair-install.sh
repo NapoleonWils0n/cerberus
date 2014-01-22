@@ -278,10 +278,18 @@ sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 #============
 
 sudo iptables -A INPUT -i lo -j ACCEPT
+
+# apache webs server
 sudo iptables -A INPUT -p tcp --dport 80 -s 192.168.1.0/24 -j ACCEPT
+
+# mpd server
 sudo iptables -A INPUT -p tcp --dport 6600 -s 192.168.1.0/24 -j ACCEPT
+
+# rtorrent
 sudo iptables -A INPUT -p tcp --dport 6881 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 6882 -s 192.168.1.0/24 -j ACCEPT
+
+# shairport
 sudo iptables -A INPUT -p tcp -m tcp --dport 5353 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp -m tcp --dport 5000:5005 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p udp -m udp --dport 6000:6005 -s 192.168.1.0/24 -j ACCEPT
