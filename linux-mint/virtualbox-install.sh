@@ -12,10 +12,10 @@ sudo usermod -a -G vboxusers username
 # double click the download file to install the extension pack
 
 # in the guest download the latest guest additions
-# http://download.virtualbox.org/virtualbox/4.2.8/VBoxGuestAdditions_4.2.8.iso
+# http://download.virtualbox.org/virtualbox/4.2.12/VBoxGuestAdditions_4.2.12.iso
 
 # mount the iso
-mount VBoxGuestAdditions_4.2.8.iso /media/cdrom
+mount VBoxGuestAdditions_4.2.12.iso /media/cdrom
 
 # copy the VBoxLinuxAdditions.run to /root/
 cp /media/cdrom/VBoxLinuxAdditions.run /root/
