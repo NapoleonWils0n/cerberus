@@ -1,0 +1,6 @@
+toggle nerdtree sidebar 
+,,
+
+switch between windows
+ctrl w w
+
