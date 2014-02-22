@@ -1,0 +1,16 @@
+Create a file "mylist.txt" with all the files you want to have concatenated
+in the following form ( Lines starting with a dash are ignored ) :
+
+# this is a comment
+file '/path/to/file1'
+file '/path/to/file2'
+file '/path/to/file3'
+
+
+cd videos
+ls > list.txt
+
+Note that these can be either relative or absolute paths. 
+Then you can encode your files with:
+
+ffmpeg -f concat -i mylist.txt -c copy output.mp4
