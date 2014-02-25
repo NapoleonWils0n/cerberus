@@ -43,6 +43,13 @@ pandoc -f html -t markdown index.htm --parse-raw --smart --self-contained -o ind
 pandoc -f markdown index.markdown -o index.pdf
 
 #===============================================================#
+# BeautifulSoup
+
+python
+
+from bs4 import BeautifulSoup
+
+#===============================================================#
 
 # strip out just the content to paragraphs - makingnetwork.org
 hxnormalize -x index.htm | \
