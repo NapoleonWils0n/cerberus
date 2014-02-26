@@ -38,40 +38,32 @@ find . -type f -regex ".*\.\(htm\|html\)$" -exec sed -i 's/\.\(jpe\?g\|gif\)/\.p
 
 #===============================================================#
 
-# markdown --parse-raw html
-pandoc -f html -t markdown index.htm --parse-raw --smart --self-contained -o index.markdown
-pandoc -f markdown index.markdown -o index.pdf
-
-#===============================================================#
-# BeautifulSoup
-
-python
-
-from bs4 import BeautifulSoup
-
-#===============================================================#
-
 # strip out just the content to paragraphs - makingnetwork.org
 hxnormalize -x index.htm | \
 hxselect -s '\n' -c  \
-'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' > table.htm
+'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' > clean-index.htm
 
 #===============================================================#
 
-sed -i 's/<font[^>]*>\s*<\/font>//gpi'
+# tidy html remove font tags
+tidy -mibq -omit --doctype omit --drop-font-tags yes --tidy-mark no --show-body-only yes --output-xhtml yes clean-index.htm
 
-sed -n 's/.*<img src="\([^"]*\)".*/\1/Ip' index.html > links.html
-
+# m = modify original file
+# i = indent
+# b = bare strip quotes
+# q = quiet
+# -omit = omit optional end tags
+# --doctype omit = omit doctype
+# --drop-font-tags yes = remove font tags
+# --tidy-mark no = dont show tidy text
+# --show-body-only yes = only output text between body tags
+# --output-xhtml yes = output closing tags
 
 #===============================================================#
 
-## protect fix for image
-\subsection{\href{../index.htm}{\emph{\includegraphics{../images/partline.png}}}}
-\subsection{\href{../index.htm}{\emph{\includegraphics\protect{../images/partline.png}}}}
-
-# making network fix
-file:///Macintosh\%20HD/Web\%20sites/mtnwlatest/images/mtnw-design_02_02.png
-../images/mtnw-design_02_02.png
+# markdown 
+pandoc -f html -t markdown clean-index.htm --self-contained -o index.markdown
+pandoc -f markdown index.markdown -o index.pdf
 
 #===============================================================#
 
