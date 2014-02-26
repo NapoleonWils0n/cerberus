@@ -175,9 +175,16 @@ cabal install pandoc
 sudo apt-get install texlive
 
 
-#===============================================================#
+# create latex document
+#======================
+
+pandoc -f html -t latex clean-index.htm --self-contained -o clean-index.tex
+pandoc -f latex clean-index.tex -o clean-index.pdf
+
 
 # markdown 
+#=========
+
 pandoc -f html -t markdown clean-index.htm --self-contained -o index.markdown
 pandoc -f markdown index.markdown -o index.pdf
 
