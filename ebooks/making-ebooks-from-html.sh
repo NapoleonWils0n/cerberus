@@ -67,6 +67,12 @@ hxselect -s '\n' -c  \
 'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' > clean-index.htm
 
 
+# install tidy for cleaning html
+#===============================
+
+sudo apt-get install tidy
+
+
 # tidy html remove font tags
 #=======================================================================
 
