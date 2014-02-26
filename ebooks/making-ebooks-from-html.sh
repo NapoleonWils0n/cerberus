@@ -53,6 +53,12 @@ done
 find . -type f -regex ".*\.\(htm\|html\)$" -exec sed -i 's/\.\(jpe\?g\|gif\)/\.png/Ig' '{}' \;
 
 
+# install html-xml-utils for hxnormalize and hxselect
+#====================================================
+
+sudo apt-get install html-xml-utils
+
+
 # strip out just the content to paragraphs - makingnetwork.org
 #======================================================================
 
