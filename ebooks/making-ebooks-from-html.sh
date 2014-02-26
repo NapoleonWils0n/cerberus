@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# convert website to ebook
-#=========================
+# converting websites to ebooks and pdfs
+#=======================================
+
+
+# download the website with wget
+#=========================================================
 
 # cd to desktop
 cd ~/Desktop
@@ -10,18 +14,30 @@ cd ~/Desktop
 wget -m http://makingthenetwork.org
 
 # -m = mirror website
-
 # k = convert links so they work locally
 
+# cd into the directory you downloaded with wget
 cd makingthenetwork.org
 
-#===============================================================#
 
-# convert images to png
+# convert all the images to png
+#========================================================
+
 find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec convert '{}' '{}.png' \;
+
+# find = find command
+# . = current working directory
+# -type f = find only file types
+# -regex ".*\.\(gif\|jpg\|jpeg\)$" = use a regular expresion to search for .jpg .jpeg .gif
+# -exec = execute command 
+# convert = imagemagik convert command
+# '{}' = original file
+# '{}.png' = save file with png extension
+
 
 
 # rename png files to remove .jpg, .jpeg and .gif from the file name
+#====================================================================
 
 find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)\.png$" |
 while read file
@@ -31,21 +47,23 @@ mv "$file" "$newname"
 done
 
 
-#===============================================================#
-
 # sed change image urls in html file to png
+#====================================================================
+
 find . -type f -regex ".*\.\(htm\|html\)$" -exec sed -i 's/\.\(jpe\?g\|gif\)/\.png/Ig' '{}' \;
 
-#===============================================================#
 
 # strip out just the content to paragraphs - makingnetwork.org
+#======================================================================
+
 hxnormalize -x index.htm | \
 hxselect -s '\n' -c  \
 'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' > clean-index.htm
 
-#===============================================================#
 
 # tidy html remove font tags
+#=======================================================================
+
 tidy -mibq -omit --doctype omit --drop-font-tags yes --tidy-mark no --show-body-only yes --output-xhtml yes clean-index.htm
 
 # m = modify original file
