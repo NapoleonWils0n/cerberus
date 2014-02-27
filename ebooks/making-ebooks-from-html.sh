@@ -140,12 +140,6 @@ pandoc -f html -t latex clean-index.htm --self-contained -o clean-index.tex
 pandoc -f latex clean-index.tex -o clean-index.pdf
 
 
-# markdown 
-#=========
-
-pandoc -f html -t markdown clean-index.htm --self-contained -o index.markdown
-pandoc -f markdown index.markdown -o index.pdf
-
 #===============================================================#
 
 # find pdfs that are part of the site and save as a list, then exclude from moving so you dont break links
