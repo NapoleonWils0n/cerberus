@@ -4,6 +4,46 @@
 #=======================================
 
 
+
+# install html-xml-utils
+#=======================
+
+sudo apt-get install html-xml-utils
+
+
+# install tidy for cleaning html
+#===============================
+
+sudo apt-get install tidy
+
+
+# install pandoc - linux mint 14
+# ==============================
+
+sudo apt-get install haskell-platform
+
+
+# update cabal
+cabal update
+
+# add to ~/.bashrc
+export PATH=$HOME/.cabal/bin:$PATH
+
+cabal install pandoc
+ 
+
+# textlive install for latex support
+#===================================
+sudo apt-get install texlive
+
+
+# haskell-platform and pandoc install - linux mint 15
+#====================================================
+
+# https://github.com/NapoleonWils0n/cerberus/blob/master/pandoc/pandoc-install-linux-mint-15.sh
+
+
+
 # download the website with wget
 #=========================================================
 
@@ -53,21 +93,10 @@ done
 find . -type f -regex ".*\.\(htm\|html\)$" -exec sed -i 's/\.\(jpe\?g\|gif\)/\.png/Ig' '{}' \;
 
 
-# install html-xml-utils for hxnormalize and hxselect
-#====================================================
-
-sudo apt-get install html-xml-utils
-
-
-# install tidy for cleaning html
-#===============================
-
-sudo apt-get install tidy
-
-
 # strip out just the content to paragraphs - makingnetwork.org
 #======================================================================
 
+# strip out the content from a single page
 hxnormalize -x index.htm | \
 hxselect -s '\n' -c  \
 'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' > clean-index.htm
@@ -100,42 +129,33 @@ tidy -mibq --doctype strict --drop-font-tags yes --tidy-mark no --output-xhtml y
 # --tidy-mark no = dont show tidy text
 # --output-xhtml yes = output closing tags
 
+
+
+# find html files and convert to latex
+#======================================
+
+find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html -t latex '{}' -S -s -N --self-contained --toc --normalize -o '{}'.tex \;
+
+# -f html = read html format file
+# -t latex = write to latex format
+# -S = smart quotes
+# -s = standalone, Produce output with an appropriate header and footer
+# -N = Number section headings
+# --self-contained = self contained
+# --toc = create table of contents
+# --normalize = remove repeated spaces
+
+
+
+# rename tex files to remove .htm and .html from the file name
 #=============================================================
 
-
-# install pandoc - linux mint 14
-# ==============================
-
-sudo apt-get install haskell-platform
-
-
-# update cabal
-#=============
-cabal update
-
-# add to ~/.bashrc
-export PATH=$HOME/.cabal/bin:$PATH
-
-cabal install pandoc
- 
-# textlive install for latex support
-#===================================
-sudo apt-get install texlive
-
-
-
-# haskell-platform and pandoc install - linux mint 15
-#====================================================
-
-# https://github.com/NapoleonWils0n/cerberus/blob/master/pandoc/pandoc-install-linux-mint-15.sh
-
-
-
-# create latex document
-#======================
-
-pandoc -f html -t latex clean-index.htm --self-contained -o clean-index.tex
-pandoc -f latex clean-index.tex -o clean-index.pdf
+find . -type f -regex ".*\.\(htm\|html\)\.tex$" |
+while read file
+do
+newname=`echo $file | sed 's/\.\(htm\|html\)//g'`
+mv "$file" "$newname"
+done
 
 
 #===============================================================#
@@ -143,7 +163,7 @@ pandoc -f latex clean-index.tex -o clean-index.pdf
 # find pdfs that are part of the site and save as a list, then exclude from moving so you dont break links
 
 # create pdfs
-find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html '{}' --toc -o '{}'.pdf \;
+find . -type f -regex ".*\.tex$" -exec pandoc -f latex '{}' -o '{}'.pdf \;
 
 # make pdfs directory
 mkdir -p pdfs
@@ -154,7 +174,7 @@ find . -type f -name '*.pdf' -exec mv '{}' pdfs/ \;
 #===============================================================#
 
 # create epubs
-find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html -t epub '{}' --toc -o '{}'.epub \;
+find . -type f -regex ".*\.tex$" -exec pandoc -f latex -t epub '{}' --toc -o '{}'.epub \;
 
 # make epubs directory
 mkdir -p epub
