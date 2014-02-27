@@ -76,6 +76,19 @@ sudo apt-get install tidy
 # tidy html remove font tags
 #=======================================================================
 
+# tidy remove font tags and output html head and body tags
+tidy -mibq --doctype strict --drop-font-tags yes --tidy-mark no --output-xhtml yes clean-index.htm
+
+# m = modify original file
+# i = indent
+# b = bare strip quotes
+# q = quiet
+# --doctype strict = strict xhtml doctype
+# --drop-font-tags yes = remove font tags
+# --tidy-mark no = dont show tidy text
+# --output-xhtml yes = output closing tags
+
+# tidy remove font tags and dont output html head and body tags
 tidy -mibq -omit --doctype omit --drop-font-tags yes --tidy-mark no --show-body-only yes --output-xhtml yes clean-index.htm
 
 # m = modify original file
