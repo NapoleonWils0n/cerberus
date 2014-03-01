@@ -4,64 +4,22 @@
 #=======================================
 
 
-
-# install html-xml-utils
-#=======================
-
-sudo apt-get install html-xml-utils
-
-
-# install tidy for cleaning html
-#===============================
-
-sudo apt-get install tidy
-
-
-# install pandoc - linux mint 14
-# ==============================
-
-sudo apt-get install haskell-platform
-
-
-# update cabal
-cabal update
-
-# add to ~/.bashrc
-export PATH=$HOME/.cabal/bin:$PATH
-
-cabal install pandoc
- 
-
-# textlive install for latex support
-#===================================
-sudo apt-get install texlive
-
-
-# haskell-platform and pandoc install - linux mint 15
-#====================================================
-
-# https://github.com/NapoleonWils0n/cerberus/blob/master/pandoc/pandoc-install-linux-mint-15.sh
-
-
-
-# download the website with wget
-#=========================================================
-
-# cd to desktop
-cd ~/Desktop
-
 # wget miror website
+#====================
+
 wget -m http://makingthenetwork.org
 
 # -m = mirror website
-# k = convert links so they work locally
-
-# cd into the directory you downloaded with wget
-cd makingthenetwork.org
 
 
 # convert all the images to png
 #========================================================
+
+# cd into the website directory
+cd makingthenetwork.org
+
+
+# we need to fine and convert all the images to png so they work with pandoc
 
 find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec convert '{}' '{}.png' \;
 
@@ -96,45 +54,22 @@ find . -type f -regex ".*\.\(htm\|html\)$" -exec sed -i 's/\.\(jpe\?g\|gif\)/\.p
 # strip out just the content to paragraphs - makingnetwork.org
 #======================================================================
 
-# strip out the content from a single page
-hxnormalize -x index.htm | \
-hxselect -s '\n' -c  \
-'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' > clean-index.htm
 
-
-# find html pages strip out the content, tidy the html re add the html, head and body tags and save the file
+# find html pages strip out the content re add the html, head and body tags and save the file as html5
 find . -type f -regex ".*\.\(htm\|html\)$" |
 while read file
 do
 hxnormalize -x "$file" | \
 hxselect -s '\n' -c  \
 'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' | \
-tidy -mibq --doctype strict --drop-font-tags yes --tidy-mark no --output-xhtml yes -o "$file"
+pandoc -f html -t html5 --email-obfuscation none --section-divs --self-contained -o "$file"
 done
-
-
-
-# tidy html remove font tags
-#=======================================================================
-
-# tidy remove font tags and output html head and body tags
-tidy -mibq --doctype strict --drop-font-tags yes --tidy-mark no --output-xhtml yes clean-index.htm
-
-# m = modify original file
-# i = indent
-# b = bare strip quotes
-# q = quiet
-# --doctype strict = strict xhtml doctype
-# --drop-font-tags yes = remove font tags
-# --tidy-mark no = dont show tidy text
-# --output-xhtml yes = output closing tags
-
 
 
 # find html files and convert to latex
 #======================================
 
-find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html -t latex '{}' -S -s -N --self-contained --toc --normalize -o '{}'.tex \;
+find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html -t latex '{}' -S -s -N --chapters --normalize --toc --self-contained  -o '{}'.tex \;
 
 # -f html = read html format file
 # -t latex = write to latex format
@@ -181,5 +116,3 @@ mkdir -p epub
 
 # move epubs in to epub directory
 find . -type f -name '*.epub' -exec mv '{}' pdfs/ \;
-
-
