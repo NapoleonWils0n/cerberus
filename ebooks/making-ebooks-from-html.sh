@@ -67,7 +67,7 @@ do
 hxnormalize -x "$file" | \
 hxselect -s '\n' -c  \
 'html>body>table>tbody>tr>td:nth-of-type(2)>table>tbody>tr:nth-of-type(5)>td>table>tbody>tr>td' | \
-pandoc -f html -t html5 --email-obfuscation none --section-divs --self-contained -o "$file"
+pandoc -f html -t html5 --email-obfuscation none --section-divs -s -o "$file"
 done
 
 
