@@ -9,7 +9,9 @@
 
 wget -m http://makingthenetwork.org
 
+
 # -m = mirror website
+
 
 
 # convert all the images to png
@@ -17,9 +19,6 @@ wget -m http://makingthenetwork.org
 
 # cd into the website directory
 cd makingthenetwork.org
-
-
-# we need to fine and convert all the images to png so they work with pandoc
 
 find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec convert '{}' '{}.png' \;
 
@@ -31,6 +30,8 @@ find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec convert '{}' '{}.png' \;
 # convert = imagemagik convert command
 # '{}' = original file
 # '{}.png' = save file with png extension
+
+# we need to find and convert all the images to png so they work with pandoc
 
 
 
@@ -48,14 +49,18 @@ done
 # sed change image urls in html file to png
 #====================================================================
 
-find . -type f -regex ".*\.\(htm\|html\)$" -exec sed -i 's/\.\(jpe\?g\|gif\)/\.png/Ig' '{}' \;
+find . -type f -regex ".*\.\(htm\|html\)$" \
+-exec sed -i 's/\.\(jpe\?g\|gif\)/\.png/Ig' '{}' \;
 
 
-# strip out just the content to paragraphs - makingnetwork.org
+
+# strip out just the content to paragraphs
 #======================================================================
 
 
-# find html pages strip out the content re add the html, head and body tags and save the file as html5
+# find html pages strip out the content re add the html, 
+# head and body tags and save the file as html5
+
 find . -type f -regex ".*\.\(htm\|html\)$" |
 while read file
 do
@@ -69,7 +74,9 @@ done
 # find html files and convert to latex
 #======================================
 
-find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html -t latex '{}' -S -s -N --chapters --normalize --toc --self-contained  -o '{}'.tex \;
+find . -type f -regex ".*\.\(htm\|html\)$" \
+-exec pandoc -f html -t latex '{}' \
+-S -s -N --chapters --normalize --toc --self-contained  -o '{}'.tex \;
 
 # -f html = read html format file
 # -t latex = write to latex format
@@ -95,8 +102,6 @@ done
 
 #===============================================================#
 
-# find pdfs that are part of the site and save as a list, then exclude from moving so you dont break links
-
 # create pdfs
 find . -type f -regex ".*\.tex$" -exec pandoc -f latex '{}' -o '{}'.pdf \;
 
@@ -116,3 +121,4 @@ mkdir -p epub
 
 # move epubs in to epub directory
 find . -type f -name '*.epub' -exec mv '{}' pdfs/ \;
+
