@@ -71,6 +71,25 @@ pandoc -f html -t html5 --email-obfuscation none --section-divs -s -o "$file"
 done
 
 
+# rename htm files to html if needed
+#===============================================================#
+
+find . -type f -regex ".*\.\(htm\)$" |
+while read file
+do
+newname=`echo $file | sed 's/\.\(htm\)/\.html/g'`
+mv "$file" "$newname"
+done
+
+
+# change links in htm files so links point to html not htm
+#===============================================================#
+
+find . -type f -regex ".*\.\(html\)$" \
+-exec sed -i 's/\.\(htm\)/\.html/g' '{}' \;
+
+
+
 # find html files and convert to latex
 #======================================
 
