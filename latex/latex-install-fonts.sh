@@ -10,3 +10,5 @@ sudo getnonfreefonts-sys -a
 
 # install t1 fonts
 sudo apt-get install cm-super
+
+sudo apt-get install texlive-extra-fonts
