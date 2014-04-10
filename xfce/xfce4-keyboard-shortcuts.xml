@@ -29,7 +29,7 @@
       <property name="&lt;Primary&gt;Escape" type="string" value="xfdesktop --menu"/>
       <property name="override" type="bool" value="true"/>
       <property name="Print" type="string" value="xfce4-screenshooter"/>
-      <property name="Super_L" type="string" value="xfce4-popup-whiskermenu"/>
+      <property name="Control_R" type="string" value="xfce4-popup-whiskermenu"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">
