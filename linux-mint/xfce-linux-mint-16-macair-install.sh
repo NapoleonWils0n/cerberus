@@ -297,7 +297,10 @@ tar -zxvf truecrypt-7.1a-linux-x64.tar.gz
 # run the install script
 sudo ./truecrypt-7.1a-setup-x64
 
-
+# set ownership of all files inside the encrypted file system to the currently logged in user
+# change /media/truecrypt7 to the slot you mounted the truecrypt drive on
+cd /media/truecrypt7
+sudo chown -R $USER .
 
 # textlive install for latex support
 #===================================
