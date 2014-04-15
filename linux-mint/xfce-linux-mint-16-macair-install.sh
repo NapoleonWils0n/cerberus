@@ -955,17 +955,6 @@ make install
 make distclean
 
 
-# install libvpx, VP8/VP9 video encoder and decoder.
-# ==================================================
-
-cd ~/ffmpeg_sources
-git clone --depth 1 http://git.chromium.org/webm/libvpx.git
-cd libvpx
-./configure --prefix="$HOME/ffmpeg_build" --disable-examples
-make
-make install
-make clean
-
 
 # install ffmpeg
 # ==============
@@ -978,7 +967,7 @@ export PKG_CONFIG_PATH
 ./configure --prefix="$HOME/ffmpeg_build" \
   --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --bindir="$HOME/bin" --extra-libs="-ldl" --enable-gpl --enable-libass --enable-libfdk-aac \
-  --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx \
+  --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis \
   --enable-libx264 --enable-nonfree --enable-x11grab
 make
 make install
