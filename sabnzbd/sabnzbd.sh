@@ -3,4 +3,4 @@
 # sabnzbd usenet client install
 #==============================
 
-sudo apt-get install sabnzbdplus
+sudo apt-get install sabnzbdplus par2
