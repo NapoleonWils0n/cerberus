@@ -1,0 +1,64 @@
+installer
+
+boot mac from mac osx installer
+
+open disk utitilty 
+
+select the top level drive and then click the partition tab 
+
+format the partition as fat
+
+
+1 - choose language
+
+2 - installation type: choose something else
+
+3 - on the partition screen you should see 2 partitions
+
+# 1 /dev/sda1 efi
+
+select /dev/sda2 and parition it into 5
+
+
+/dev/sda1 efi 
+
+# create a 4 mb parition as reserved bios boot area
+
+
+delete /dev/sda2 and save as free space 
+
+partition the rest of the drive as below
+
+# bios grub 4m 
+/dev/sda2 biosgrub
+
+# boot 1 gig
+/dev/sda3 /boot
+
+# root 30 gig
+/dev/sda4 /
+
+# home 
+/dev/sda5 /home
+
+# swap 4 gig  
+/dev/sda6 swap
+
+
+# install bootloader on the main drive /dev/sda
+device for bootloader /dev/sda4
+
+
+# click install now
+
+# set the keyboard layout
+
+# set up user account
+
+# encrypt my home folder
+
+
+
+
+
+
