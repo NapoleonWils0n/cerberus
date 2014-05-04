@@ -219,7 +219,7 @@ keepassx chromium-browser chromium-codecs-ffmpeg-extra \
 imagemagick openvpn rtmpdump get-iplayer \
 seahorse fonts-inconsolata laptop-mode-tools \
 powertop mutt urlview abook python-bs4 html-xml-utils \
-nautilus-dropbox oathtool meld tree
+nautilus-dropbox oathtool meld tree pommed
 
 
 # enviornment to compile c programs
@@ -420,42 +420,13 @@ sudo apt-get install tor
 
 
 
-
-# lightum keyboard backlighting daemon
-#========================================================================================
-
-sudo apt-get install build-essential
-
-# Clone the repository by running 
-git clone https://github.com/poliva/lightum 
-
-# cd into the lightum git repo
-cd lightum
-
-# Install the dependencies 
-sudo apt-get install libxss-dev libdbus-glib-1-dev
-
-# make
-make
-
-# sudo make install
-sudo make install
-
-# reboot and you should have a backlit keyboard
-
-
-
-
 # xbmc install
 #========================================================================================
 
-#  add xbmc repository
+sudo apt-get install python-software-properties pkg-config
+sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:team-xbmc/ppa
-
-# apt-get update
 sudo apt-get update
-
-# install xbmc
 sudo apt-get install xbmc
 
 
