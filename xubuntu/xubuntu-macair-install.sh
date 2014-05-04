@@ -219,7 +219,8 @@ keepassx chromium-browser chromium-codecs-ffmpeg-extra \
 imagemagick openvpn rtmpdump get-iplayer \
 seahorse fonts-inconsolata laptop-mode-tools \
 powertop mutt urlview abook python-bs4 html-xml-utils \
-nautilus-dropbox oathtool meld tree pommed
+nautilus-dropbox oathtool meld tree pommed \
+texmaker sox traceroute
 
 
 # enviornment to compile c programs
