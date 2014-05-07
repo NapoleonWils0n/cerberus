@@ -214,14 +214,16 @@ setxkbmap -option altwin:ctrl_win
 #========================================================================================
 
 sudo apt-get install mplayer mencoder git-core vim \
-mpd mpc ncmpc screen nmap ngrep curl lynx gparted \
+mpd mpc ncmpc nmap ngrep curl lynx gparted \
 keepassx chromium-browser chromium-codecs-ffmpeg-extra \
 imagemagick openvpn rtmpdump get-iplayer \
 seahorse fonts-inconsolata laptop-mode-tools \
 powertop mutt urlview abook python-bs4 html-xml-utils \
 nautilus-dropbox oathtool meld tree pommed \
-texmaker sox traceroute
+texmaker sox traceroute rtorrent tmux
 
+# rtorrent create sessions directory
+mkdir -p ~/.session
 
 # enviornment to compile c programs
 apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
