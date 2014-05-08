@@ -1,0 +1,13 @@
+# join hak5 irc with weechat
+#===========================
+
+# set nick
+/set irc.server_default.nicks comma,separated,list,of,nicks
+
+/server add hak5 irc.hak5.org/7000 -ssl
+/set irc.server.hak5.ssl on
+/set irc.server.hak5.ssl_verify off
+/save
+
+/connect hak5
+/join #hak5
