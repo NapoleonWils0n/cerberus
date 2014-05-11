@@ -220,7 +220,9 @@ imagemagick openvpn rtmpdump get-iplayer \
 seahorse fonts-inconsolata laptop-mode-tools \
 powertop mutt urlview abook python-bs4 html-xml-utils \
 nautilus-dropbox oathtool meld tree pommed \
-texmaker sox traceroute rtorrent tmux htop
+texmaker sox traceroute rtorrent tmux htop \
+gnome-system-monitor gnome-disk-utility \
+usb-creator-gtk baobab
 
 # rtorrent create sessions directory
 mkdir -p ~/.session
