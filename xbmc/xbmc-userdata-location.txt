@@ -1,0 +1,12 @@
+# xbmc userdata location
+#=======================
+
+Location of the userdata folder
+
+Operative system	 File path
+Android (see note)	 Android/data/org.xbmc.xbmc/files/.xbmc/userdata/
+iOS	 /private/var/mobile/Library/Preferences/XBMC/userdata/
+Linux	 ~/.xbmc/userdata/
+Mac OS X	 /Users/<your_user_name>/Library/Application Support/XBMC/userdata/
+OpenELEC	 /storage/.xbmc/userdata/
+Windows XP, 7, 8	 %appdata%\XBMC\userdata\
