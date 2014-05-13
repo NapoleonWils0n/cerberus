@@ -1,19 +1,14 @@
 <playercorefactory>
  <players>
-   <player name="mplayer" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/mplayer</filename>
-     <args>"{1}" "-fs"</args>
-     <hidexbmc>true</hidexbmc>
-   </player>
    <player name="vlc" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/vlc</filename>
-		<args>"{1}" "-f"</args>
+     <args>"{1}" "-f"</args>
      <hidexbmc>true</hidexbmc>
    </player>
  </players>
  <rules action="prepend">
+   <rule video="true" player="vlc"></rule>
    <rule name="rtmp" protocols="rtmp" player="vlc"></rule>
    <rule name="smb" protocols="smb" player="vlc"></rule>
-  <rule video="true" player="mplayer"></rule>
  </rules>
 </playercorefactory>
