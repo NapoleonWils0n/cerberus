@@ -6,7 +6,7 @@
      <hidexbmc>true</hidexbmc>
    </player>
  </players>
- <rules action="prepend">
+ <rules action="overwrite">
    <rule video="true" player="vlc"></rule>
    <rule name="rtmp" protocols="rtmp" player="vlc"></rule>
    <rule name="smb" protocols="smb" player="vlc"></rule>
