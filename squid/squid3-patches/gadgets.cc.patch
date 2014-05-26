@@ -1,0 +1,11 @@
+--- squid3-3.3.8/src/ssl/gadgets.cc	2013-07-13 15:25:14.000000000 +0200
++++ squid3-3.3.8/src/ssl/gadgets.cc.new	2013-12-01 12:58:36.047007719 +0100
+@@ -257,7 +257,7 @@
+ mimicExtensions(Ssl::X509_Pointer & cert, Ssl::X509_Pointer const & mimicCert)
+ {
+     static int extensions[]= {
+-        NID_key_usage,
++        //NID_key_usage,
+         NID_ext_key_usage,
+         NID_basic_constraints,
+         0

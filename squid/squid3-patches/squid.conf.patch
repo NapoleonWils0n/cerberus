@@ -1,0 +1,154 @@
+--- squid.conf	2013-11-20 19:53:56.941556440 +0100
++++ squid.conf.new	2013-11-20 19:53:33.817439926 +0100
+@@ -920,7 +920,7 @@
+ # should be allowed
+ #acl localnet src 10.0.0.0/8	# RFC1918 possible internal network
+ #acl localnet src 172.16.0.0/12	# RFC1918 possible internal network
+-#acl localnet src 192.168.0.0/16	# RFC1918 possible internal network
++acl localnet src 192.168.0.0/16	# RFC1918 possible internal network
+ #acl localnet src fc00::/7       # RFC 4193 local private network range
+ #acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+ 
+@@ -1073,7 +1073,7 @@
+ # Example rule allowing access from your local networks.
+ # Adapt localnet in the ACL section to list your (internal) IP networks
+ # from where browsing should be allowed
+-#http_access allow localnet
++http_access allow localnet
+ http_access allow localhost
+ 
+ # And finally deny all other access to this proxy
+@@ -1476,8 +1476,11 @@
+ #
+ #
+ 
++# ssl-bump settings managed by Diladele Web Safety for Squid Proxy
++include "/etc/opt/quintolabs/qlproxy/squid/squid.acl"
++
+ # Squid normally listens to port 3128
+-http_port 3128
++http_port 3128 ssl-bump generate-host-certificates=on dynamic_cert_mem_cache_size=4MB cert=/etc/opt/quintolabs/qlproxy/myca.pem
+ 
+ #  TAG: https_port
+ #	Usage:  [ip:]port cert=certificate.pem [key=key.pem] [mode] [options...]
+@@ -2156,7 +2159,7 @@
+ #	For more information use:
+ #		/usr/lib/squid3/ssl_crtd -h
+ #Default:
+-# sslcrtd_program /usr/lib/squid3/ssl_crtd -s /var/lib/ssl_db -M 4MB
++sslcrtd_program /usr/lib/squid3/ssl_crtd -s /var/spool/squid3_ssldb -M 4MB
+ 
+ #  TAG: sslcrtd_children
+ #	The maximum number of processes spawn to service ssl server.
+@@ -2698,7 +2701,7 @@
+ #	local memory as they need. For more details about the shared memory
+ #	cache, see memory_cache_shared.
+ #Default:
+-# cache_mem 256 MB
++cache_mem 2096 MB
+ 
+ #  TAG: maximum_object_size_in_memory	(bytes)
+ #	Objects greater than this size will not be attempted to kept in
+@@ -2706,7 +2709,7 @@
+ #	accessed frequently in memory to improve performance whilst low
+ #	enough to keep larger objects from hoarding cache_mem.
+ #Default:
+-# maximum_object_size_in_memory 512 KB
++maximum_object_size_in_memory 1024 KB
+ 
+ #  TAG: memory_cache_shared	on|off
+ #	Controls whether the memory cache is shared among SMP workers.
+@@ -2963,7 +2966,7 @@
+ #
+ 
+ # Uncomment and adjust the following to add a disk cache directory.
+-#cache_dir ufs /var/spool/squid3 100 16 256
++cache_dir ufs /var/spool/squid3 14000 16 256
+ 
+ #  TAG: store_dir_select_algorithm
+ #	How Squid selects which cache_dir to use when the response
+@@ -5902,7 +5905,7 @@
+ #	This clause supports both fast and slow acl types.
+ #	See http://wiki.squid-cache.org/SquidFaq/SquidAcl for details.
+ #Default:
+-# Prevent any cache_peer being used for this request.
++always_direct allow all
+ 
+ #  TAG: never_direct
+ #	Usage: never_direct allow|deny [!]aclname ...
+@@ -6036,7 +6039,7 @@
+ #  TAG: icap_enable	on|off
+ #	If you want to enable the ICAP module support, set this to on.
+ #Default:
+-# icap_enable off
++icap_enable on
+ 
+ #  TAG: icap_connect_timeout
+ #	This parameter specifies how long to wait for the TCP connect to
+@@ -6113,7 +6116,7 @@
+ #Example:
+ #icap_preview_enable off
+ #Default:
+-# icap_preview_enable on
++icap_preview_enable on
+ 
+ #  TAG: icap_preview_size
+ #	The default size of preview data to be sent to the ICAP server.
+@@ -6148,7 +6151,7 @@
+ #	Whether or not Squid should use persistent connections to
+ #	an ICAP server.
+ #Default:
+-# icap_persistent_connections on
++icap_persistent_connections on
+ 
+ #  TAG: adaptation_send_client_ip	on|off
+ #	If enabled, Squid shares HTTP client IP information with adaptation
+@@ -6157,7 +6160,7 @@
+ #
+ #	See also: adaptation_uses_indirect_client
+ #Default:
+-# adaptation_send_client_ip off
++adaptation_send_client_ip on
+ 
+ #  TAG: adaptation_send_username	on|off
+ #	This sends authenticated HTTP client username (if available) to
+@@ -6167,7 +6170,7 @@
+ #	icap_client_username_encode option and is sent using the header
+ #	specified by the icap_client_username_header option.
+ #Default:
+-# adaptation_send_username off
++adaptation_send_username on
+ 
+ #  TAG: icap_client_username_header
+ #	ICAP request header name to use for adaptation_send_username.
+@@ -6265,8 +6268,9 @@
+ #	deprecated but supported for backward compatibility.
+ #
+ #Example:
+-#icap_service svcBlocker reqmod_precache icap://icap1.mydomain.net:1344/reqmod bypass=0
+-#icap_service svcLogger reqmod_precache icap://icap2.mydomain.net:1344/respmod routing=on
++icap_service qlproxy1 reqmod_precache icap://127.0.0.1:1344/reqmod bypass=0
++icap_service qlproxy2 respmod_precache icap://127.0.0.1:1344/respmod bypass=0
++
+ #Default:
+ # none
+ 
+@@ -6470,7 +6474,17 @@
+ #        See also: icap_service and ecap_service
+ #
+ #Example:
+-#adaptation_access service_1 allow all
++acl qlproxy_icap_edomains dstdomain "/etc/opt/quintolabs/qlproxy/squid/icap_exclusions_domains.conf"
++acl qlproxy_icap_etypes rep_mime_type "/etc/opt/quintolabs/qlproxy/squid/icap_exclusions_contenttypes.conf"
++
++adaptation_access qlproxy1 deny qlproxy_icap_edomains
++adaptation_access qlproxy2 deny qlproxy_icap_edomains
++adaptation_access qlproxy2 deny qlproxy_icap_etypes
++adaptation_access qlproxy1 allow all
++adaptation_access qlproxy2 allow all
++
++
++
+ #Default:
+ # Allow, unless rules exist in squid.conf.
+ 
