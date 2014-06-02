@@ -21,3 +21,17 @@ sudo apt-get install deb.torproject.org-keyring
 
 # install tor
 sudo apt-get install tor
+
+# copy tor config to home directory
+cp /etc/tor/torrc ~/.torrc
+
+# start tor with the config file in your home directory
+tor -f ~/.torrc
+
+# create a bash alias for tor
+vim ~/.bashrc
+
+alias tor="tor -f ~/.torrc"
+
+# update your ~/.bashrc
+source ~/.bashrc
