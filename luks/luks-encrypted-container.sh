@@ -31,7 +31,7 @@ sudo mount /dev/mapper/crypt_mount /tmp/crypt_mount
 
 
 # change ownership on container
-sudo chown -R $USER .
+sudo chown -R $USER:$USER .
 
 
 # umount the file
