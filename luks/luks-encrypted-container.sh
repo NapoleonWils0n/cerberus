@@ -3,22 +3,34 @@
 # luks encrypted container
 #=========================
 
-# create a container 
+# create a 2 gig container wth dd on the desktop called crypt
+cd ~/Desktop
 dd if=/dev/urandom of=crypt bs=1M count=2048
+
+# rename the file and give it a file extension to disguise it
+mv crypt friday-the-13th.iso 
 
 # find a free loop device to mount the file
 sudo losetup -f
 
-# use the block device
-sudo losetup /dev/loop0 /home/djwilcox/Desktop/crypt
+# the free loop device is /dev/loop0 in this case
+# if you have a different free loop device use that number
+
+
+# use the block device and the path to the file you just created
+sudo losetup /dev/loop0 /home/$USER/Desktop/friday-the-13th.iso
 
 # create the luks container inside the file
+# you will be prompted to enter a password for the new luks container
 sudo cryptsetup luksFormat /dev/loop0
 
-# check the file
-file /home/djwilcox/Desktop/crypt
 
-# map the luks container
+# check the file is now an encrypted luks container
+file /home/$USER/Desktop/friday-the-13th.iso
+
+
+# map the luks container to the loop device
+# and give it a luks alias in this case crypt_mount
 sudo cryptsetup luksOpen /dev/loop0 crypt_mount
 
 # format the container as ext4
@@ -26,11 +38,11 @@ sudo mkfs.ext4 /dev/mapper/crypt_mount
 
 # mount the file
 mkdir /tmp/crypt_mount
-
 sudo mount /dev/mapper/crypt_mount /tmp/crypt_mount
 
 
-# change ownership on container
+# change ownership on container to the current user
+cd /tmp/crypt_mount
 sudo chown -R $USER:$USER .
 
 
