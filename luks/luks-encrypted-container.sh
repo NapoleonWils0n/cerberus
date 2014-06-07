@@ -53,7 +53,7 @@ sudo umount /tmp/luks
 sudo cryptsetup luksClose luks
 
 # free the loop device
-sudo losetup -d /dev/loop
+sudo losetup -d /dev/loop0
 
 
 # open luks encrypted container
