@@ -30,27 +30,27 @@ file /home/$USER/Desktop/friday-the-13th.iso
 
 
 # map the luks container to the loop device
-# and give it a luks alias in this case crypt_mount
-sudo cryptsetup luksOpen /dev/loop0 crypt_mount
+# and give it a luks alias in this case luks
+sudo cryptsetup luksOpen /dev/loop0 luks
 
 # format the container as ext4
-sudo mkfs.ext4 /dev/mapper/crypt_mount
+sudo mkfs.ext4 /dev/mapper/luks
 
 # mount the file
-mkdir /tmp/crypt_mount
-sudo mount /dev/mapper/crypt_mount /tmp/crypt_mount
+mkdir /tmp/luks
+sudo mount /dev/mapper/luks /tmp/luks
 
 
 # change ownership on container to the current user
-cd /tmp/crypt_mount
+cd /tmp/luks
 sudo chown -R $USER:$USER .
 
 
 # umount the file
-sudo umount /tmp/crypt_mount
+sudo umount /tmp/luks
 
 # close the luks container
-sudo cryptsetup luksClose crypt_mount
+sudo cryptsetup luksClose luks
 
 # free the loop device
 sudo losetup -d /dev/loop
@@ -59,19 +59,19 @@ sudo losetup -d /dev/loop
 # open luks encrypted container
 #==============================
 
-sudo losetup /dev/loop0 /path/to/crypt_data
+sudo losetup /dev/loop0 /path/to/crypt_file
 
-sudo cryptsetup luksOpen /dev/loop0 raw_data
+sudo cryptsetup luksOpen /dev/loop0 luks
 
-sudo mount /dev/mapper/raw_data /tmp/raw_data
+sudo mount /dev/mapper/luks /tmp/luks
 
 
 # umount luks encrypted container
 #================================
 
-sudo umount /tmp/raw_data
+sudo umount /tmp/luks
 
-sudo cryptsetup luksClose raw_data
+sudo cryptsetup luksClose luks
 
 sudo losetup -d /dev/loop0
 
@@ -79,25 +79,25 @@ sudo losetup -d /dev/loop0
 # resize the container
 #=====================
 
-$ dd if=/dev/urandom bs=1M count=128 | cat - >> /path/to/crypt_data
+$ dd if=/dev/urandom bs=1M count=128 | cat - >> /path/to/crypt_file
 
-sudo losetup /dev/loop0 /path/to/crypt_data
+sudo losetup /dev/loop0 /path/to/crypt_file
 
-sudo cryptsetup luksOpen /dev/loop0 raw_data
+sudo cryptsetup luksOpen /dev/loop0 luks
 
 
 # resize the encrypted container
-sudo cryptsetup resize raw_data
+sudo cryptsetup resize luks
 
 # resize the filesystem
 
-sudo e2fsck -f /dev/mapper/raw_data
+sudo e2fsck -f /dev/mapper/luks
 
-sudo resize2fs /dev/mapper/raw_data
+sudo resize2fs /dev/mapper/luks
 
 
 # mount the container
-sudo mount /dev/mapper/raw_data /tmp/raw_data
+sudo mount /dev/mapper/luks /tmp/luks
 
 # back up luks header
 sudo cryptsetup luksHeaderBackup --header-backup-file /homevol_luksheader /dev/loop0
