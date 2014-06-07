@@ -59,17 +59,22 @@ sudo losetup -d /dev/loop0
 # open luks encrypted container
 #==============================
 
+sudo losetup -f
+
 sudo losetup /dev/loop0 /path/to/crypt_file
 
 sudo cryptsetup luksOpen /dev/loop0 luks
 
-sudo mount /dev/mapper/luks /tmp/luks
+
+# the luks container will be automatically mounted at 
+# /media/$USER/e847dd4c-12fc-4b04-bf9a-8a9282d777ce
+# you will have a different uid number
 
 
 # umount luks encrypted container
 #================================
 
-sudo umount /tmp/luks
+sudo umount /media/$USER/e847dd4c-12fc-4b04-bf9a-8a9282d777ce
 
 sudo cryptsetup luksClose luks
 
