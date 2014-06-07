@@ -111,3 +111,70 @@ sudo service squid3 start
 
 # start qlproxy
 sudo service qlproxy
+
+
+# create custom error pages for ad blocking
+#==========================================
+
+# create a directory for your custom error pages
+mkdir ~/Desktop/custom
+
+# copy the error pages for your langauage to the directory you just created
+sudo cp /usr/share/squid3/errors/en-gb/* ~/Desktop/custom
+
+# now we will create a html page repeats the transparent gif to create a blank page for ad blocking
+
+# change directory to the desktop
+cd ~/Desktop
+
+# create a html page called index.html
+vim index.html
+
+# paste in the code below into index.html and save the file
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+body {background:url('transparent.gif') repeat;}
+	</style>
+</head>
+<body>
+	
+</body>
+</html>
+
+
+# change directory into the custom errors directory on the desktop
+
+cd ~/Desktop/custom
+
+# now we cat the contents of index.html into each of the error pages
+
+find . -type f |
+while read file
+do
+cat ~/Desktop/index.html > "$file"
+done
+
+
+# create a transparent 1 pixel gif image called transparent.gif
+# which we will use for ad blocking and save it to your custom error directory
+
+
+# copy your custom error directory to the squid errors directory
+sudo cp ~/Desktop/custom /usr/share/squid3/errors
+
+# download a ad blocking list to your desktop
+curl "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&mimetype=plaintext" > ~/Desktop/adblock.acl
+
+# move the ad blocking list into the squid directory
+sudo mv adblock.acl /etc/squid3/adblock.acl
+
+# code for ad blocking and custom error page in /etc/squid3/squid.conf
+acl ads dstdom_regex "/etc/squid3/adblock.acl"
+http_access deny ads
+deny_info ERR_BLOCKED ads
+error_directory /usr/share/squid3/errors/custom
