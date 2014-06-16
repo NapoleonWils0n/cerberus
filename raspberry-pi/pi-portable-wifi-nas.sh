@@ -473,7 +473,7 @@ sudo mount -t auto /dev/sda1 /media/usbdrive
 sudo nano /etc/fstab
 
 # add an entry for the usb drive so it mounts on boot
-/dev/sda1 /media/usbdrive auto noatime 0 0
+/dev/sda1 /media/usbdrive auto noatime nodiratime 0 0
 
 
 # change permissions on the drive so both pi and new user djwilcox have write access
