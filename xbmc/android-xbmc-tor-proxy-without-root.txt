@@ -1,0 +1,140 @@
+
+# android xbmc tor proxy without root 
+#====================================
+
+projectfreetv.com is blocked by british isp's,
+which means the xbmc projectfreetv plugin doesnt work 
+
+we'll unblock projectfree.com and other sites using tor as an http proxy and by changing our dns
+then we will be able to stream videos from projectfreetv with xbmc
+
+
+# android
+#========
+
+install orbot from the google play store
+
+turn on orbot 
+
+we will connect as a http proxy on port 8118, because we dont have root
+
+
+
+# change your wifi settings
+#==========================
+
+click on the android settings app
+then click wifi
+
+long press on the wifi network you are connected too and select modify network
+
+
+# change your wifi settings for proxy and ip settings as below
+
+
+proxy settings
+
+proxy hostname: 127.0.0.1
+
+proxy port: 8118
+
+
+ip setting: change to static
+
+change dns to google dns
+
+8.8.8.8
+8.8.4.4
+
+
+
+# connect your android device via usb to your laptop
+#===================================================
+
+# Copy the guisettings.xml from the location below to your desktop when mounted with usb
+
+/Internal storage/Android/data/org.xbmc.xbmc/files/.xbmc/userdata/guisettings.xml
+
+
+# edit the guisettings.xml on your desktop and change the network settings as below
+
+<network>
+     <bandwidth default="true">0</bandwidth>
+     <httpproxypassword default="true"></httpproxypassword>
+     <httpproxyport>8118</httpproxyport>
+     <httpproxyserver>127.0.0.1</httpproxyserver>
+     <httpproxytype>0</httpproxytype>
+     <httpproxyusername default="true"></httpproxyusername>
+     <usehttpproxy>true</usehttpproxy>
+</network>
+
+# copy the modified guisettings.xml file from your desktop to your android devices downloads folder via usb
+# then unmount your android device and unplug the usb
+
+
+# xbmc 
+#======
+
+
+# open xbmc on your android devices and go to System / Profiles
+# then click profiles
+# click add profile
+
+# create a new xbmc profile called tor
+# when it ask you where to save the profile accept the default and click ok
+
+# long pressing on the tor profile and then select load profile, so it creates the profile folder
+# then change back to the master profile long pressing on the master profile and then select load profile
+
+# on xbmc on your andriod device go to System / File Manager
+# on the right pane click add and browse for your downloads folder and add it
+
+# in the left pane of the file manager select the profiles directory and then go into the tor directory
+# you should see a guisettings.xml file in the tor profile directory 
+
+# in the right pane of the file manager make sure your are in the downloads directory you added
+# you should see the guisettings.xml file you modified in the downloads directory in the right pane
+
+# click in the left pane and select guisettings.xml, in the pop up select delete
+# confirm you want to delete the guisettings.xml in the left pane
+
+# click in the right pane and select guisettings.xml, in the pop up select copy
+# this copies the modified guisettings.xml from the download directory to the tor profiles directory
+
+# go back to System / Profiles
+# then click profiles
+# load the tor profile by long pressing on it
+# this will load the modified guisettings.xml with the network settings for the tor http proxy
+
+# the projectfreetv xbmc plugin should now be unblocked and you can stream videos over tor
+
+# remember you have to turn on orbot first and then modify your wifi networks proxy and dns settings
+
+
+# stop xbmc using the tor proxy
+#==============================
+
+# when you have finished watching videos over tor you need to switch back to the master profile in xbmc
+
+# open xbmc on your android devices and go to System / Profiles
+# then click profiles
+# then change back to the master profile by long pressing on it and selecting load profile
+
+
+# stop using tor proxy in the wifi settings
+#===========================================
+
+
+click on the android settings app
+then click wifi
+
+long press on the wifi network you are connected too and select modify network
+
+# change the proxy settings back to none, to stop using the tor http proxy
+
+
+# stop tor
+#=========
+
+# open the orbot app and turn off tor
+
