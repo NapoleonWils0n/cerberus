@@ -470,8 +470,7 @@ export LANG=en_US.UTF-8
 
 nano /etc/vconsole.conf
 
-KEYMAP=de-latin1
-FONT=lat9w-16
+# add your country code to the KEYMAP
 
 
 # set up the timezone
@@ -591,16 +590,11 @@ lspci | grep VGA
 
 # install xorg driver
 sudo pacman -S xorg-server xorg-xinit xorg-server-utils xf86-video-intel xf86-input-synaptics 
-mesa xfce4 xfce4-goodies gamin 
+xfce4 ttf-deja
 
-# font
-ttf-deja
- 
-# samba
-samba smbclient gvfs gvfs-smb sshfs
 
 # network manager
-networkmanager networkmanager-applet
+sudo pacman -S networkmanager networkmanager-applet
 
 
 # xinitrc
