@@ -1,0 +1,9 @@
+# firefox disable missing flash pop up
+
+# in the url bar type
+about:config
+
+# then search for notifyMissingFlash
+# change the value to false
+
+plugins.notifyMissingFlash
