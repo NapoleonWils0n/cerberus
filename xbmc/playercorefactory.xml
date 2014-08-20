@@ -2,7 +2,7 @@
  <players>
    <player name="vlc" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/vlc</filename>
-     <args>"{1}" "-f"</args>
+     <args>"{0}" "-f"</args>
      <hidexbmc>true</hidexbmc>
    </player>
  </players>
