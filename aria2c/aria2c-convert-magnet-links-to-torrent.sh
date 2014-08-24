@@ -44,8 +44,10 @@ source ~/.bashrc
 # convert the magnet link to a torrent
 #=====================================
 
-# run the magnet2torrent function and pass in a magnet link 
-magnet2torrent magnet-link-goes-here
+# run the mag2torrent bash alias and pass in a magnet link 
+mag2torrent 'magnet-link-goes-here'
+
+# important you need to add single quotes around the magnet url 
 
 # this will create a .torrent file in the dir you specified in ~/.aria2/aria2.config
 
