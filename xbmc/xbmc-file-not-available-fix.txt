@@ -1,0 +1,30 @@
+# xbmc fle not available fix
+#===========================
+ 
+Find the xbmc userdata directory on your machine
+
+
+# xbmc userdata location
+#=======================
+Location of the userdata folder
+Operative system File path
+Android (see note) Android/data/org.xbmc.xbmc/files/.xbmc/userdata/
+iOS /private/var/mobile/Library/Preferences/XBMC/userdata/
+Linux ~/.xbmc/userdata/
+Mac OS X /Users/<your_user_name>/Library/Application Support/XBMC/userdata/
+OpenELEC /storage/.xbmc/userdata/
+Windows XP, 7, 8 %appdata%\XBMC\userdata\
+
+
+In the userdata directory you should see a Database directory
+Inside the userdata\Database directory you should see a file called MyVideos78.db
+
+
+rename the MyVideos78.db file to MyVideos78.db.bak
+
+then restart xbmc which will create a new MyVideos78.db file
+
+you can then delete the MyVideos78.db.bak file
+
+
+Then you can rescan your media files
