@@ -1,0 +1,4 @@
+# start btsync on synology nas and specify config file
+./btsync --config ~/.btsync/btsync.conf
+
+
