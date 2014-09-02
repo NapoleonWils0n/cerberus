@@ -31,7 +31,7 @@ cp /usr/lib/systemd/user/mpd.service ~/.config/systemd/user/
 
 # edit the mpd.service and add the path
 # to the /home/username/.mpd/mpd.conf file
-
+# replace username with your username
 vim ~/.config/systemd/user/mpd.service
 
 
