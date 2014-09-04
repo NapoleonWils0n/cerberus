@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/bash 
 # sickbeard arch install
 #=======================
 
@@ -44,12 +43,3 @@ ExecStart=/usr/bin/env python2 /opt/sickbeard/SickBeard.py --quiet --config /hom
 [Install]
 WantedBy=multi-user.target
 
-
-
-#==========================================
-
-
-systemctl --user daemon-reload
-systemctl --user start sickbeard
-systemctl --user stop sickbeard
-systemctl --user status sickbeard
