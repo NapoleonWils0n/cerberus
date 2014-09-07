@@ -43,3 +43,16 @@ ExecStart=/usr/bin/env python2 /opt/sickbeard/SickBeard.py --quiet --config /hom
 [Install]
 WantedBy=multi-user.target
 
+#=============================================
+
+
+# rename autoProcessTV.cfg.sample to autoProcessTV.cfg
+cd /opt/sickbeard/autoProcessTV/
+sudo mv autoProcessTV.cfg.sample autoProcessTV.cfg
+
+# create a scripts directory
+mkdir -p ~/.sabnzbd.ini/scripts
+
+# copy autoProcessTV directory to home sab directory
+cp -r /opt/sickbeard/autoProcessTV/ ~/.sabnzbd.ini/scripts
+
