@@ -1,0 +1,11 @@
+[Unit]
+Description=SickBeard Daemon
+After=network.target
+
+[Service]
+User=djwilcox
+Group=wheel
+ExecStart=/usr/bin/env python2 /opt/sickbeard/SickBeard.py --quiet --config /home/djwilcox/.sickbeard/config.ini --datadir /home/djwilcox/.sickbeard
+
+[Install]
+WantedBy=multi-user.target

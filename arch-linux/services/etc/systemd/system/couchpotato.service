@@ -1,0 +1,14 @@
+[Unit]
+Description=An automatic NZB and torrent movie downloader
+
+[Service]
+ExecStart=/usr/bin/python2 /opt/couchpotato/CouchPotato.py --config_file /home/djwilcox/.couchpotato/config.ini --data_dir /home/djwilcox/.couchpotato/data --daemon --quiet
+GuessMainPID=no
+Type=forking
+User=djwilcox
+Group=wheel
+
+[Install]
+WantedBy=multi-user.target
+
+

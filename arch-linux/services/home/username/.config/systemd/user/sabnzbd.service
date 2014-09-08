@@ -1,0 +1,12 @@
+[Unit]
+Description = SABnzbd binary newsreader
+
+[Service]
+EnvironmentFile = /etc/conf.d/sabnzbd_systemd
+ExecStart = /bin/sh/ -c "python2 /opt/sabnzbd/SABnzbd.py ${SABNZBD_ARGS} --pid /tmp"
+ExecStop = /usr/bin/curl -f "${SABNZBD_PROTOCOL}://${SABNZBD_USPW}${SABNZBD_IP}:${SABNZBD_PORT}/sabnzbd/api?mode=shutdown&apikey=${SABNZBD_KEY}"
+Type = forking
+PIDFile = /tmp/sabnzbd-8080.pid
+
+[Install]
+WantedBy = default.target
