@@ -49,3 +49,39 @@ alias btsync='btsync --config ~/.btsync/btsync.conf'
 
 # source ~/.bashrc
 . ~/.bashrc
+
+
+# create btsync.service for systemd
+#==================================
+
+sudo vim /etc/systemd/system/btsync.service
+
+# paste in the code below
+
+[Unit]
+Description=BTSync
+After=network.target
+ 
+[Service]
+User=djwilcox
+Group=wheel
+ExecStart=/home/djwilcox/bin/btsync --config /home/djwilcox/.btsync/btsync.conf --nodaemon
+ 
+[Install]
+WantedBy=multi-user.target
+
+
+#=======================================
+
+# systemctl daemon-reload 
+sudo systemctl daemon-reload
+
+# start btsync.service
+sudo systemctl start btsync.service
+
+# stop btsync.servic
+sudo systemctl stop btsync.service
+
+# btsync.service status
+sudo systemctl status btsync.service
+
