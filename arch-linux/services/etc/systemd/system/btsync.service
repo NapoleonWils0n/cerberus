@@ -1,0 +1,11 @@
+[Unit]
+Description=BTSync
+After=network.target
+ 
+[Service]
+User=djwilcox
+Group=wheel
+ExecStart=/home/djwilcox/bin/btsync --config /home/djwilcox/.btsync/btsync.conf --nodaemon
+ 
+[Install]
+WantedBy=multi-user.target
