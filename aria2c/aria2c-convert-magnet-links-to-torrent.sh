@@ -30,11 +30,17 @@ on-download-complete=exit
 # convert magnet file to torrent
 aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 'magnet link url goes here'
 
-# create a bash alias to make things easier in ~/.bashrc
+# create a bash function  to make things easier in ~/.bashrc
 vim ~/.bashrc
 
-# convert magnet 
-alias mag2torrent='aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881'
+
+# convert magnet link to torrent
+#===============================
+
+# mag2torrent
+function mag2torrent {
+aria2c --bt-metadata-only=true --bt-save-metadata=true --listen-port=6881 "$1"
+}
 
 
 # reload ~/.bashrc
@@ -45,9 +51,7 @@ source ~/.bashrc
 #=====================================
 
 # run the mag2torrent bash alias and pass in a magnet link 
-mag2torrent 'magnet-link-goes-here'
-
-# important you need to add single quotes around the magnet url 
+mag2torrent magnet-link-goes-here
 
 # this will create a .torrent file in the dir you specified in ~/.aria2/aria2.config
 
