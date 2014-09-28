@@ -10,3 +10,9 @@ sudo pacman -S docker
 #replace username with your username
 
 sudo gpasswd -a username docker
+
+# start docker
+sudo systemctl start docker
+
+# stop docker
+sudo systemctl stop docker
