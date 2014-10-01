@@ -19,3 +19,6 @@ sudo systemctl stop docker
 
 # run ubuntu
 docker run -it ubuntu:14.04 /bin/bash
+
+# find docker container ip address
+docker inspect -f '{{ .NetworkSettings.IPAddress }}' container_name
