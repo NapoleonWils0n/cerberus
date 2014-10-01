@@ -16,3 +16,6 @@ sudo systemctl start docker
 
 # stop docker
 sudo systemctl stop docker
+
+# run ubuntu
+docker run -it ubuntu:14.04 /bin/bash
