@@ -12,7 +12,7 @@ sudo modprobe ecryptfs
 # create the directories for ecryptfs
 #====================================
 
-mkdir -p ~/Dropbox/.logs ~/Private ~/.ecryptfs
+mkdir -p ~/Dropbox/.logs ~/.private ~/.ecryptfs
 touch ~/.ecryptfs/dropbox.conf ~/.ecryptfs/dropbox.sig
 
 # ~/Dropbox/.logs will be hold the encrypted data
@@ -20,7 +20,7 @@ touch ~/.ecryptfs/dropbox.conf ~/.ecryptfs/dropbox.sig
 # ~/.ecryptfs is the ecryptfs directory
 
 # add the filepaths to the ~/.encryptfs/secret.conf
-echo "/home/username/Dropbox/.logs /home/username/Private ecryptfs" > ~/.ecryptfs/dropbox.conf
+echo "/home/username/Dropbox/.logs /home/username/.private ecryptfs" > ~/.ecryptfs/dropbox.conf
 
 
 # add the passphrase
