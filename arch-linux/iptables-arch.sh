@@ -38,11 +38,16 @@ sudo iptables -A INPUT -p tcp -m tcp --dport 5353 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp -m tcp --dport 5000:5005 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p udp -m udp --dport 6000:6005 -s 192.168.1.0/24 -j ACCEPT
 
+# ntp time
+sudo iptables -I INPUT -p udp --dport 123 -j ACCEPT
+
+
 # OUTPUT chain
 #=============
 
 sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-ip-options --log-tcp-options
 sudo iptables -A OUTPUT -m state --state INVALID -j DROP
+sudo iptables -I OUTPUT -p udp --sport 123 -j ACCEPT
 sudo iptables -A OUTPUT -o lo -j ACCEPT
 
 
