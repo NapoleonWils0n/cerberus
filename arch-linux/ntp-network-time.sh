@@ -12,4 +12,4 @@ sudo iptables -I OUTPUT -p udp --sport 123 -j ACCEPT
 
 
 # start ntp
-sudo systemctl start ntp
+sudo systemctl start ntpdate
