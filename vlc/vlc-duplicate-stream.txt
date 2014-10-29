@@ -1,0 +1,3 @@
+# vlc duplicate stream
+
+#duplicate{dst="http{mux=ts,dst=:6881/tv.asf}",dst=display} 
