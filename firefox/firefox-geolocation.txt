@@ -1,0 +1,19 @@
+# firefox geo location
+#=====================
+
+about:config
+
+# double click to toggle geo.enabled to false
+geo.enabled 
+
+
+# geo wifi 
+geo.wifi.url
+
+https://www.googleapis.com/geolocation/v1/geolocate?key=%GOOGLE_API_KEY%
+
+delete string and restart firefox
+
+34.090517, -118.317723
+
+{"location":{"latitude":34.090517,"longitude":-118.317723, "accuracy":20.0}}
