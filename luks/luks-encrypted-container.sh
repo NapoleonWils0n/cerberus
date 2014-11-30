@@ -43,7 +43,7 @@ sudo mount /dev/mapper/luks /tmp/luks
 
 # change ownership on container to the current user
 cd /tmp/luks
-sudo chown -R $USER:$USER .
+sudo chown -R $USER:users .
 
 
 # umount the file
@@ -64,6 +64,21 @@ sudo losetup -f
 sudo losetup /dev/loop0 /path/to/crypt_file
 
 sudo cryptsetup luksOpen /dev/loop0 luks
+
+# create mount point
+sudo mkdir -p /mnt/luks
+
+# mount the container
+sudo mount -t ext4 /dev/mapper/luks /mnt/luks
+
+# umount
+sudo umount /mnt/luks
+
+# close luks
+sudo cryptsetup luksClose luks
+
+# free loop
+sudo losetup -d /dev/loop0
 
 
 # the luks container will be automatically mounted at 
