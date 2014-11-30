@@ -1,0 +1,16 @@
+# xbmc p2p stream plugin acesteam
+#================================
+
+
+/home/djwilcox/.xbmc/userdata/addon_data/plugin.video.p2p-streams/acestream/acestreamengine --client-console --lib-path /home/djwilcox/.xbmc/userdata/addon_data/plugin.video.p2p-streams/acestream
+
+#============================================================================
+
+sudo systemctl start tinyproxy
+
+# connect to the proxy in ios system prefs
+# switch to acestream profile in xbmc with proxy settings
+
+# start the ssh tunnel
+ssh -R 62062:localhost:62062 root@192.168.1.4
+
