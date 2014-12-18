@@ -1,0 +1,5 @@
+# fix for distorted audio with aac audio and alsa 
+
+open vlc preferences, and then select audio
+
+uncheck: Use S/PDIF when available
