@@ -12,7 +12,7 @@ sudo vim /etc/tinyproxy/tinyproxy.conf
 #================================================
 
 # change the port to one open in your firewall
-Port 6881
+Port 6882
 
 # comment out Listen 127.0.0.1 so you can access the proxy on the lan network
 
