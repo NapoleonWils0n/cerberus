@@ -1,0 +1,6 @@
+# kodi override built in video player
+
+sometimes a video will play with kodi built in video player even if you have a corefactory.xml file
+
+start a video and when its playing in the built in player press y,
+and select the external player and it will switch to the external player
