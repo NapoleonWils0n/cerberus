@@ -2,13 +2,38 @@
  <players>
    <player name="vlc" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/vlc</filename>
-     <args>"{0}" "-f"</args>
-     <hidexbmc>true</hidexbmc>
+     <args>"{0}"</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="rtmpdump" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/rtmpdump</filename>
+     <args>-i "{0}" | vlc fd://0</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+<player name="vlc-save" type="ExternalPlayer" audio="false" video="true">
+  <filename>/usr/bin/vlc</filename>
+     <args>"{0}" --sout=file/ts:/home/djwilcox/Downloads/vlc.mp4</args>
+   <hidexbmc>false</hidexbmc>
+</player>
+   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/mpv</filename>
+     <args>"{0}"</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="mpv stream capture" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/mpv</filename>
+     <args>"{0}" --stream-capture=/home/djwilcox/Downloads/video-capture.mp4</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="mpv stream dump" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/mpv</filename>
+     <args>"{0}" --stream-dump=/home/djwilcox/Downloads/video-dump.mp4</args>
+     <hidexbmc>false</hidexbmc>
    </player>
  </players>
  <rules action="overwrite">
+   <rule name="rtmp" protocols="rtmp" player="rtmpdump"></rule>
    <rule video="true" player="vlc"></rule>
-   <rule name="rtmp" protocols="rtmp" player="vlc"></rule>
    <rule name="smb" protocols="smb" player="vlc"></rule>
  </rules>
 </playercorefactory>
