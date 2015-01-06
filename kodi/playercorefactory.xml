@@ -3,37 +3,38 @@
    <player name="vlc" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/vlc</filename>
      <args>"{0}"</args>
-     <hidexbmc>false</hidexbmc>
+     <hidexbmc>true</hidexbmc>
    </player>
    <player name="rtmpdump" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/rtmpdump</filename>
      <args>-i "{0}" | vlc fd://0</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
+   <player name="ffmpeg-save" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -vcodec copy -acodec copy "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
      <hidexbmc>false</hidexbmc>
    </player>
 <player name="vlc-save" type="ExternalPlayer" audio="false" video="true">
-  <filename>/usr/bin/vlc</filename>
-     <args>"{0}" --sout=file/ts:/home/djwilcox/Downloads/vlc.mp4</args>
-   <hidexbmc>false</hidexbmc>
+	<filename>/usr/bin/vlc</filename>
+	<args>"{0}" --sout=file/ts:"/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+	<hidexbmc>false</hidexbmc>
 </player>
+   <player name="save-url" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/echo</filename>
+     <args>"{0}" > "/home/djwilcox/Desktop/video-url-$(date +"%H-%M-%m-%d-%y").txt"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
    <player name="mpv" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/mpv</filename>
      <args>"{0}"</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="mpv stream capture" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/mpv</filename>
-     <args>"{0}" --stream-capture=/home/djwilcox/Downloads/video-capture.mp4</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="mpv stream dump" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/mpv</filename>
-     <args>"{0}" --stream-dump=/home/djwilcox/Downloads/video-dump.mp4</args>
-     <hidexbmc>false</hidexbmc>
+     <hidexbmc>true</hidexbmc>
    </player>
  </players>
  <rules action="overwrite">
    <rule name="rtmp" protocols="rtmp" player="rtmpdump"></rule>
-   <rule video="true" player="vlc"></rule>
+   <rule video="true" internetstream="true" player="vlc"></rule>
    <rule name="smb" protocols="smb" player="vlc"></rule>
  </rules>
 </playercorefactory>
+
