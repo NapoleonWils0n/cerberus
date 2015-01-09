@@ -10,6 +10,11 @@
      <args>-i "{0}" | vlc fd://0</args>
      <hidexbmc>true</hidexbmc>
    </player>
+   <player name="rtmpdump-vlc-stdout" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/rtmpdump</filename>
+     <args>-i "{0}" | vlc fd://0 --sout=file/ts:"/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
    <player name="ffmpeg-save" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/ffmpeg</filename>
      <args>-i "{0}" -vcodec copy -acodec copy "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
@@ -47,5 +52,3 @@
    <rule name="smb" protocols="smb" player="vlc"></rule>
  </rules>
 </playercorefactory>
-
-
