@@ -30,6 +30,16 @@
      <args>"{0}"</args>
      <hidexbmc>true</hidexbmc>
    </player>
+   <player name="mpv-capture" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/mpv</filename>
+     <args>"{0}" --stream-capture="/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
+   <player name="mpv-dump" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/mpv</filename>
+     <args>"{0}" --stream-dump="/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
  </players>
  <rules action="overwrite">
    <rule name="rtmp" protocols="rtmp" player="rtmpdump"></rule>
@@ -37,4 +47,5 @@
    <rule name="smb" protocols="smb" player="vlc"></rule>
  </rules>
 </playercorefactory>
+
 
