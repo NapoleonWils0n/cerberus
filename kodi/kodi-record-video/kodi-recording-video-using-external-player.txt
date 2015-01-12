@@ -1,0 +1,105 @@
+# kodi recording video streams with an external player
+#======================================================
+
+
+# playercorefactory.xml 
+#==============================================
+
+https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/kodi/kodi-record-video/playercorefactory.xml
+
+
+
+# arch linux set up
+#==================
+
+sudo pacman -S kodi vlc mpv rtmpdump
+
+yaourt -S ffmpeg-full
+
+
+# if you get an error while installing or upgrading ffmpeg use this fix
+
+uncomment ~/.gnupg-personal/gpg.conf
+
+#keyserver-options auto-key-retrieve
+
+
+
+# software to install
+#==============================================
+
+# kodi
+http://kodi.tv/
+
+# ffmpeg
+https://www.ffmpeg.org/
+
+# rtmpdump
+https://rtmpdump.mplayerhq.hu/
+
+# vlc
+https://www.videolan.org/vlc/index.html
+
+# mpv
+http://mpv.io/
+
+
+
+# kodi userdata location
+#==============================================
+http://kodi.wiki/view/Userdata
+
+
+
+
+# mac osx set up
+#==============================================
+
+
+# vlc command line set up
+#========================
+
+# create a bin directory in your home folder
+
+mkdir -p ~/bin
+
+
+create a symbolic link from the vlc binary to the ~/bin directory
+
+ln -s /Applications/VLC.app/Contents/MacOS/VLC ~/bin/vlc
+
+
+
+# ~/.swfinfo 
+#==============================================
+
+url: 
+ctim: 
+date: 
+size: 
+hash: 
+
+
+# rtmpdump boilerplate for rtmp streams
+#==============================================
+
+
+rtmpdump -V -v -i \
+"" \
+−−swfAge 0 \
+−−swfUrl  \
+−−swfsize  \
+−−swfhash  \
+-o out.mkv
+
+
+
+# ffmpeg boilerplate for rtmp streams
+#==============================================
+
+ffmpeg -i \
+"" \
+-rtmp_swfverify \
+-c:v copy -c:a copy video.mkv
+
+
