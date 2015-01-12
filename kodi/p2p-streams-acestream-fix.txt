@@ -1,0 +1,12 @@
+# p2p plugin acestream fix
+
+
+# install acestream
+# change plugin settings to use server remote engine
+
+settings: acestream - player type 
+
+server remote engine
+
+
+# start acestreamengine on the command line first
