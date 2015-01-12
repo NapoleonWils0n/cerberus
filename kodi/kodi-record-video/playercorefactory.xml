@@ -12,22 +12,22 @@
    </player>
    <player name="vlc-save" type="ExternalPlayer" audio="false" video="true">
 	<filename>/usr/bin/vlc</filename>
-	<args>"{0}" --sout=file/ts:"/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+	<args>"{0}" --sout=file/ts:"/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
 	<hidexbmc>false</hidexbmc>
    </player>
    <player name="rtmpdump-vlc-stdout" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/rtmpdump</filename>
-     <args>-i "{0}" | vlc fd://0 --sout=file/ts:"/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <args>-i "{0}" | vlc fd://0 --sout=file/ts:"/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
      <hidexbmc>true</hidexbmc>
    </player>
    <player name="ffmpeg-save" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/ffmpeg</filename>
-     <args>-i "{0}" -c:v copy -c:a copy "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <args>-i "{0}" -c:v copy -c:a copy "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
      <hidexbmc>false</hidexbmc>
    </player>
    <player name="save-url" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/echo</filename>
-     <args>"{0}" > "/home/djwilcox/Desktop/video-url-$(date +"%H-%M-%m-%d-%y").txt"</args>
+     <args>"{0}" > "/home/username/Desktop/video-url-$(date +"%H-%M-%m-%d-%y").txt"</args>
      <hidexbmc>true</hidexbmc>
    </player>
    <player name="mpv" type="ExternalPlayer" audio="false" video="true">
@@ -37,12 +37,12 @@
    </player>
    <player name="mpv-capture" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/mpv</filename>
-     <args>"{0}" --stream-capture="/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv"</args>
+     <args>"{0}" --stream-capture="/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv"</args>
      <hidexbmc>true</hidexbmc>
    </player>
    <player name="mpv-dump" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/mpv</filename>
-     <args>"{0}" --stream-dump="/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <args>"{0}" --stream-dump="/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
      <hidexbmc>false</hidexbmc>
    </player>
  </players>
