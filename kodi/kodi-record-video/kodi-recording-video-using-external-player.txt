@@ -100,6 +100,14 @@ rtmpdump -V -v -i \
 ffmpeg -i \
 "" \
 -rtmp_swfverify \
--c:v copy -c:a copy video.mkv
+-t 00:30:00 \
+-c:v copy -c:a copy video.mkv \
+</dev/null >/dev/null 2>&1 &
 
 
+
+# explanation
+
+-t 00:30:00 = duration in hours, minutes, seconds
+
+</dev/null >/dev/null 2>&1 & = redirect stdin, stdout, stderr to /dev/null and run ffmpeg in the background
