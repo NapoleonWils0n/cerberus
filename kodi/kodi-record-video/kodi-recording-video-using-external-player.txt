@@ -90,7 +90,8 @@ rtmpdump -V -v -i \
 −−swfUrl  \
 −−swfsize  \
 −−swfhash  \
--o out.mkv
+-o ~/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv \
+</dev/null >/dev/null 2>&1 &
 
 
 
@@ -98,10 +99,11 @@ rtmpdump -V -v -i \
 #==============================================
 
 ffmpeg -i \
-"" \
--rtmp_swfverify \
--t 00:30:00 \
--c:v copy -c:a copy video.mkv \
+"url-goes-here" \
+-rtmp_swfverify swf-url-goes-here \
+-c:v copy -c:a copy -loglevel error \
+-t 00:00:30 \
+~/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv \
 </dev/null >/dev/null 2>&1 &
 
 
