@@ -1,14 +1,26 @@
-# raspberry pi backup sdcard
+#!/bin/bash
 
-# plug in the sdcard and wait for it mount
-# find the disk has been called by running the df -h command
+
+# rapsberry pi backup sdcard
+#===========================
+
+
+
+# backup sdcard to image
+#=======================
+
 df -h
 
-# the disk should be labeled something like /dev/disk2s1
-# you need to unmount the disk before you can copy it
+sudo su
 
-# unmount the disk
-diskutil unmountDisk /dev/disk2s1
+dd bs=4M if=/dev/sdb of=/home/djwilcox/Desktop/raspberry_pi-$(date +"%H-%M-%m-%d-%y").img
 
-# backup the sdcard wth dd
-sudo dd bs=1m if=/dev/disk2s1 of=/Users/djwilcox/Desktop/rasbmc.img
+
+# restore image to sdcard
+#=========================
+
+df -h
+
+sudo su
+
+dd bs=4M if=/home/djwilcox/Desktop/raspberry_pi-$(date +"%H-%M-%m-%d-%y").img of=/dev/sdb 
