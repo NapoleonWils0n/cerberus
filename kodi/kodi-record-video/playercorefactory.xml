@@ -25,6 +25,36 @@
      <args>-i "{0}" -c:v copy -c:a copy "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
      <hidexbmc>false</hidexbmc>
    </player>
+   <player name="record 30 minutes" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy -t 00:30:00 "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+  <player name="record 1 hour" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy -t 01:00:00 "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+  <player name="record 2 hours" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh record 30 minutes" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 00:30:00 "/home/username/mount/ffmpeg/video-$(date +"%H-%M-%m-%d-%y").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh record 1 hour" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 01:00:00 "/home/username/mount/ffmpeg/video-$(date +"%H-%M-%m-%d-%y").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh record 2 hours" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/username/mount/ffmpeg/video-$(date +"%H-%M-%m-%d-%y").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
    <player name="save-url" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/echo</filename>
      <args>"{0}" > "/home/username/Desktop/video-url-$(date +"%H-%M-%m-%d-%y").txt"</args>
@@ -45,10 +75,10 @@
      <args>"{0}" --stream-dump="/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
      <hidexbmc>false</hidexbmc>
    </player>
- </players>
  <rules action="overwrite">
    <rule name="rtmp" protocols="rtmp" player="rtmpdump"></rule>
    <rule video="true" internetstream="true" player="vlc"></rule>
    <rule name="smb" protocols="smb" player="vlc"></rule>
  </rules>
+ </players>
 </playercorefactory>
