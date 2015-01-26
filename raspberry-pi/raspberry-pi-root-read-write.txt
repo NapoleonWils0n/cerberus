@@ -1,0 +1,24 @@
+# raspberry pi make root partition read write
+#============================================
+
+# fix if root partition isnt read write
+
+
+# mount / as read write
+sudo su
+mount -o remount,rw /
+
+# edit fstab
+
+# add root to fstab
+/dev/mmcblk0p6  /       ext4    rw,relatime,data=ordered        0       1
+
+sudo su
+nano /etc/fstab
+
+# 
+# /etc/fstab: static file system information
+#
+# <file system> <dir>   <type>  <options>       <dump>  <pass>
+/dev/mmcblk0p5  /boot   vfat    defaults        0       0
+/dev/mmcblk0p6  /       ext4    rw,relatime,data=ordered        0       1
