@@ -98,6 +98,18 @@ rtmpdump -V -v -i \
 # ffmpeg boilerplate for rtmp streams
 #==============================================
 
+
+ffmpeg -i \
+"url-goes-here" \
+-c:v copy -c:a copy -loglevel error \
+-t 00:00:30 \
+~/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv \
+</dev/null >/dev/null 2>&1 &
+
+
+# if you get a swf verification error use -rtmp_swfverify with the swf url
+
+
 ffmpeg -i \
 "url-goes-here" \
 -rtmp_swfverify swf-url-goes-here \
