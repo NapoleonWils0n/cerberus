@@ -1,0 +1,16 @@
+# synology logitech media server fix
+#===================================
+
+
+1  - ssh into your nas as root
+
+2 - cd into cd /volume1/@appstore/SqueezeCenter/Slim
+
+cd /volume1/@appstore/SqueezeCenter/Slim
+
+3 - run find and sed to edit files and fix login issue
+
+find . -name '*.pm' -exec sed -ie "s/^use Digest\:\:SHA1 qw(sha1_base64);/use Digest\:\:SHA qw(sha1_base64);/" {} \;
+find . -name '*.pm' -exec sed -ie "s/^use Digest\:\:SHA1;/use Digest\:\:SHA;/" {} \;
+find . -name '*.pm' -exec sed -ie "s/my \$sha1 = Digest::SHA1->new;/my \$sha1 = Digest::SHA->new;/" {} \;
+
