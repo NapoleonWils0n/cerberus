@@ -259,7 +259,35 @@ mkdir -p /home/username/mount
 sudo mount -t cifs //192.168.1.25/video/Downloads/ffmpeg /home/username/mount -o user=username,workgroup=workgroup,rw
 
 
-sudo mount -t cifs //192.168.1.25/video/Downloads /home/username/mount -o user=username,workgroup=workgroup,uid=username,gid=users,rw
+sudo mount -t cifs //192.168.1.25/video/Downloads /home/djwilcox/mount -o user=djwilcox,workgroup=workgroup,uid=djwilcox,gid=users,rw
+
+
+
+# fstab smb share
+#===================
+
+# create sambacreds file and add username and password, instead of hardcoding into fstab
+
+
+vim /home/djwilcox/documents/sambacreds
+
+username=username
+password=password
+
+
+# change permissions on the sambacreds file
+
+sudo chmod 600 /home/djwilcox/documents/sambacreds
+
+
+
+# edit fstab and add smb share
+
+sudo su
+vim /etc/fstab
+
+//192.168.1.25/video/Downloads /home/djwilcox/mount cifs credentials=/home/djwilcox/documents/sambacreds,comment=systemd.automount,workgroup=workgroup,rw,uid=djwilcox,gid=users, 0 0
+
 
 
 # unmount smb share
