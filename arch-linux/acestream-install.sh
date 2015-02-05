@@ -20,5 +20,3 @@ alias acestreamengine='acestreamengine --client-console --port 6881'
 source ~/.bashrc
 
 # use jack audio out in the ace stream player if you use a usb dac the audio isnt working
-#
-
