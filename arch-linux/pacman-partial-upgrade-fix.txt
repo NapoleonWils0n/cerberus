@@ -1,0 +1,19 @@
+# pacman partial upgrade fix
+#===========================
+
+
+
+Arch Linux is a rolling release, and new library versions will be pushed to the repositories. The developers and Trusted Users will rebuild all the packages in the repositories that need to be rebuilt against the libraries. If the system has locally installed packages (such as AUR packages), users will need to rebuild them when their dependencies receive a soname bump.
+
+This means that partial upgrades are not supported. Do not use pacman -Sy package or any equivalent such as pacman -Sy and then pacman -S package. Always upgrade before installing a package -- particularly if pacman has refreshed the sync repositories. Be very careful when using IgnorePkg and IgnoreGroup for the same reason.
+
+If a partial upgrade scenario has been created, and binaries are broken because they cannot find the libraries they are linked against, do not "fix" the problem simply by symlinking. Libraries receive soname bumps when they are not backwards compatible. A simple pacman -Syu to a properly synced mirror will fix the problem as long as pacman is not broken.
+
+The bash script checkupdates, included with the pacman package, provides a safe way to check for upgrades to installed packages without running a system update at the same time. 
+
+
+# eg to fix mpd
+
+sudo pacman -Sy mpd
+
+sudo pacman -S mpd
