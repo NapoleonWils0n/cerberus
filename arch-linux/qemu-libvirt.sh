@@ -119,15 +119,30 @@ sudo sysctl net.ipv4.ip_forward=1
 
 
 # Allow qemu to access to the bridge br0
-#==========================================================================
+#=======================================
 
 
 sudo cp /etc/qemu/bridge.conf.sample /etc/qemu/bridge.conf
 
 
+
+# test if libvirt is working properly 
+#=============================================================
+
+# To test if the daemon is working properly on a system level:
+
+virsh -c qemu:///system
+
+
+# To test if libvirt is working properly for a user-session: 
+
+
+virsh -c qemu:///session
+
+
+
+
 #==========================================================================
-
-
 # Add o+x Permission to Your Home Directory
 
 chmod o+x $HOME
