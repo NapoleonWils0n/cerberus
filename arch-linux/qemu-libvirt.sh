@@ -140,9 +140,3 @@ virsh -c qemu:///system
 virsh -c qemu:///session
 
 
-
-
-#==========================================================================
-# Add o+x Permission to Your Home Directory
-
-chmod o+x $HOME
