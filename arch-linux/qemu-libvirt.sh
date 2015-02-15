@@ -65,6 +65,13 @@ sudo gpasswd -a djwilcox kvm
 #==========================================================================
 
 
+
+# set ethernet device down 
+#=========================
+
+sudo ip link set dev ens9 down
+
+
 # create bridge
 #==============
 
@@ -82,6 +89,12 @@ sudo brctl addif br0 ens9
 
 brctl show
 
+
+# set ethernet device up 
+#=========================
+
+
+sudo ip link set up dev ens9
 
 
 # Set the bridge device up:
@@ -109,7 +122,7 @@ sudo sysctl net.ipv4.ip_forward=1
 #==========================================================================
 
 
-sudo mv /etc/qemu/bridge.conf.sample /etc/qemu/bridge.conf
+sudo cp /etc/qemu/bridge.conf.sample /etc/qemu/bridge.conf
 
 
 #==========================================================================
