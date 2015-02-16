@@ -140,3 +140,21 @@ virsh -c qemu:///system
 virsh -c qemu:///session
 
 
+
+# change libvirt default storage pool directory
+#==============================================
+
+
+# switch to root
+
+sudo su
+
+# virsh pool-dumpxml
+
+virsh pool-dumpxml default > default.xml 
+
+
+# the default.xml file will be owned with root, so we need to change ownership before we can edit it
+
+sudo chown djwilcox:users default.xml 
+
