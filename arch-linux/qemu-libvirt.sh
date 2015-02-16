@@ -65,6 +65,16 @@ sudo gpasswd -a djwilcox kvm
 #==========================================================================
 
 
+# check ethernet device name
+
+ip a
+
+
+# the ethernet device is usually called eth0
+# my ethernet device is called ens9
+
+# if your ethernet is called eth0, replace ens9 with eth0 in the commands below
+
 
 # set ethernet device down 
 #=========================
@@ -92,7 +102,6 @@ brctl show
 
 # set ethernet device up 
 #=========================
-
 
 sudo ip link set up dev ens9
 
@@ -140,6 +149,12 @@ virsh -c qemu:///system
 virsh -c qemu:///session
 
 
+# home directory file permissions
+#=============================================================
+
+chmod o+x /home/djwilcox
+
+
 
 # change libvirt default storage pool directory
 #==============================================
@@ -149,6 +164,7 @@ virsh -c qemu:///session
 
 sudo su
 
+
 # virsh pool-dumpxml
 
 virsh pool-dumpxml default > default.xml 
@@ -157,4 +173,20 @@ virsh pool-dumpxml default > default.xml
 # the default.xml file will be owned with root, so we need to change ownership before we can edit it
 
 sudo chown djwilcox:users default.xml 
+
+
+
+# Remove the current default pool
+
+virsh pool-destroy default 
+
+
+
+# Now create a new storage pool based on the updated XML file
+
+virsh pool-create pool.xml
+
+
+virsh pool-refresh name
+
 
