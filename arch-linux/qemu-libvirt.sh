@@ -225,9 +225,11 @@ chmod o+x /home/username
 sudo virsh pool-list --all
 
 
+
 # virsh pool-dumpxml
 
 sudo virsh pool-dumpxml default 
+
 
 
 # Stopping a Pool
@@ -235,9 +237,11 @@ sudo virsh pool-dumpxml default
 sudo virsh pool-destroy poolname
 
 
-# undefine a Pool
+
+# Remove the storage pools definition
 
 sudo virsh pool-undefine poolname
+
 
 
 # Starting a Pool
@@ -245,7 +249,14 @@ sudo virsh pool-undefine poolname
 sudo virsh pool-start poolname
 
 
+
 # Enable Autostarting a Pool
 
 sudo virsh pool-autostart poolname
+
+
+
+# Verify that the storage pool was created correctly and is running
+
+sudo virsh pool-info poolname
 
