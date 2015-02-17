@@ -215,8 +215,34 @@ chmod o+x /home/username
 
 
 
-
 # change libvirt default storage pool directory
+#===============================================
+
+
+# list pools
+sudo virsh pool-list --all
+
+
+# stop default pool
+sudo virsh pool-destroy default
+
+# remove default pool
+sudo virsh pool-undefine default
+
+
+# create new pool
+sudo virsh pool-define-as --name default --type dir --target /home/username/libvirt/images 
+
+# start the new pool
+sudo virsh pool-start default
+
+# autostart the new pool
+sudo virsh pool-autostart default
+
+
+
+
+# libvirt commands
 #===============================================
 
 
