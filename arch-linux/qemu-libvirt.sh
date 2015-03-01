@@ -286,3 +286,54 @@ sudo virsh pool-autostart poolname
 
 sudo virsh pool-info poolname
 
+
+
+
+# install openbsd
+#====================
+
+
+# live cd
+#==========
+
+qemu-system-x86_64 -cdrom cd56.iso -m 256
+
+qemu-system-x86_64 -net nic -net bridge,br=br0 -cdrom cd56.iso -m 256
+
+
+
+# install openbsd to img file
+#=============================
+
+
+# cd into the storage pool directory
+
+cd ~/libvrt/images
+
+
+# create a 10 gig image file to use as a hard drive
+
+qemu-img create openbsd.img 10G
+
+
+
+# run qemu with a network bridge, hard drive and cdrom
+
+qemu-system-x86_64 \
+-net nic -net bridge,br=br0 \
+-hda openbsd.img \
+-cdrom cd56.iso \
+-boot d \
+-m 1024
+
+
+
+# run qemu without cd rom
+
+qemu-system-x86_64 \
+-net nic -net bridge,br=br0 \
+-hda openbsd.img \
+-m 1024
+
+
+
