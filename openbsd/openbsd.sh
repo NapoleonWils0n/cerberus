@@ -137,22 +137,53 @@ echo $PKG_PATH
 sudo pkg_add -i xfce4-session gtk-xfce-engine xfdesktop xfwm4 xfce4-panel xfce4-notifyd xfce4-settings
 thunar xfwm4-themes xfce4-terminal
 
-
 # choose gnupg as dependiency
 
 
 # packages not installed yet 
+xfce4-appfinder xfce4-mixer xfce4-power-manager gvfs-mtp gvfs-smb
 
-xf86-input-synaptics  xf86-video-intel
-xfce4-appfinder xfce4-mixer xfce4-power-manager xfconf xfsprogs gvfs-mtp gvfs-smb
-firefox youtube-dl vim gstreamer-plugins-ugly mplayer ubuntu-fonts
+
+
+# firefox youtube-dl vim gstreamer-plugins-ugly mplayer ubuntu-fonts xfconf xfsprogs
 
 
 # macbook touchpad right click
 #====================================================
 
 
-# press shift and click on the touchpad to get a right click 
+# press shift and click on the touchpad button to get a right click 
+
+
+# open keyboard from the application menu
+# switch to layout tab
+# uncheck use system defaults
+
+# change keyboard model to: Generic 104-key pc
+# change keyboard layout to: English (UK) English (UK, Macintosh)
+
+
+# create /etc/X11/xorg.conf.d directory
+
+sudo mkdir -p /etc/X11/xorg.conf.d
+
+
+# create 00-keyboard.conf to remap ctrl and cmd on the mac
+
+
+sudo vi /etc/X11/xorg.conf.d/00-keyboard.conf
+
+
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "gb"
+        Option "XkbModel" "pc104"
+        Option "XkbVariant" "mac"
+        Option "XkbOptions" "altwin:ctrl_win"
+	Option "XkbOptions" "terminate:ctrl_alt_bksp"
+EndSection
+
 
 
 
