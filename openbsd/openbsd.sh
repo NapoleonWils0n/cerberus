@@ -148,6 +148,13 @@ xfce4-appfinder xfce4-mixer xfce4-power-manager xfconf xfsprogs gvfs-mtp gvfs-sm
 firefox youtube-dl vim gstreamer-plugins-ugly mplayer ubuntu-fonts
 
 
+# macbook touchpad right click
+#====================================================
+
+
+# press shift and click on the touchpad to get a right click 
+
+
 
 # pf firewall
 #====================================================
