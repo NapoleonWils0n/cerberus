@@ -140,8 +140,14 @@ thunar xfwm4-themes xfce4-terminal
 # choose gnupg as dependiency
 
 
-# packages not installed yet 
-xfce4-appfinder xfce4-mixer xfce4-power-manager gvfs-mtp gvfs-smb
+
+sudo pkg_add -i  xfce4-appfinder xfce4-mixer xfce4-power-manager 
+
+
+
+sudo pkg_add -i gvfs-mtp gvfs-smb
+
+# choose samba as dependiency
 
 
 
