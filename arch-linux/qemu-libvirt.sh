@@ -74,6 +74,11 @@ sudo gpasswd -a username kvm
 # set up networking
 #===============================================
 
+
+sudo pacman -S ebtables
+
+
+
 # check ethernet device name
 
 ip a
