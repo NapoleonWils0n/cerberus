@@ -224,8 +224,11 @@ sudo vi /etc/rc.conf.local
 
 multicast_host="YES"
 ntpd_flags="-s"
-hotplugd_flags=""
-pkg_scripts="${pkg_scripts} dbus_daemon avahi_daemon"
+pkg_scripts="dbus_daemon avahi_daemon"
+sshd_flags="NO"
+apmd_flags="-C"
+unbound_flags="-c /var/unbound/etc/unbound.conf"
+
 
 
 
@@ -263,4 +266,27 @@ mkdir -p ~/.local/share/fonts
 
 mkdir ~/.themes
 
+
+# icons
+#========================
+
+
+sudo mkdir -p /usr/share/icons
+
+# copy Faience to /usr/share/icons
+
+
+
+# toad
+#=========================
+
+
+# pkg_add toad
+sudo /etc/rc.d/toad start
+sudo /etc/rc.d/hotplugd start
+
+
+Try to insert a USB disk and access it.
+
+ls /run/media/username/usb0/
 
