@@ -251,18 +251,6 @@ sudo vim /etc/fstab
 
 
 
-# startx
-#========================
-
-# vi ~/.xinitrc
-vi ~/.xinitrc
-
-exec startxfce4
-
-# save and exit
-
-
-
 # fonts and themes
 #========================
 
