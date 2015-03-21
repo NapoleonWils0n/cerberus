@@ -290,3 +290,22 @@ Try to insert a USB disk and access it.
 
 ls /run/media/username/usb0/
 
+
+
+# packages to install
+#===================================
+
+sudo pkg_add i zip unzip firefox vlc
+
+sudo pkg_add i evince 
+# evince - you want to update your font path for /usr/local/share/ghostscripts/fonts
+
+sudo pkg_add i git
+# chose rysnc as a dependency
+
+sudo pkg_add i wget mplayer nano ristretto youtube-dl
+sudo pkg_add i ngrep nmap mousepad
+
+sudo pkg_add -i vim
+
+# choose 1 to install gvim
