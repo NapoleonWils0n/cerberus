@@ -54,7 +54,7 @@ reboot
 
 
 # switch to root
-sudo su
+su
 
 # change directory to /
 cd /
@@ -69,47 +69,27 @@ mv bsd.rd bsd.rd.bak
 #================================================================
 
 
-# create a snapshot directory
+# create a /usr/rel directory
 
 # make sure you are root
 
-sudo su
+su
 
 
-# create /snapshot
+# create /usr/rel
 
-mkdir -p /snapshot
-
-
-# change directory in /snapshot
-
-cd /snapshot
+mkdir -p /usr/rel
 
 
-# download snapshot with ftp in /snapshot
+# change directory in /usr/rel
+
+cd /usr/rel
+
+
+# download snapshot with ftp in /usr/rel
 
 ftp -ia ftp://ftp.openbsd.org/pub/OpenBSD/snapshots/`uname -m`/{index.txt,*tgz,bsd*,INS*}
 
-
-# sysmerge
-#================================================================
-
-
-# make sure you are in the /snapshot and root
-
-# copy bsd.rd to /
-cp bsd.rd /
-
-# then execute sysmerge
-# merge files
-
-sudo su
-cd /snapshot
-
-# run sysmerge
-# if you don't have SHA256.sig available, use the -S option to skip the signature check
-
-sysmerge -s etc49.tgz -x xetc49.tgz
 
 
 
@@ -122,6 +102,29 @@ boot> boot bsd.rd
 
 
 # press u to upgrade at the boot prompt
+
+
+
+# sysmerge
+#================================================================
+
+
+# make sure you are in the /usr/rel and root
+
+# copy bsd.rd to /
+cp bsd.rd /
+
+# then execute sysmerge
+# merge files
+
+su
+cd /usr/rel
+
+# run sysmerge
+# if you don't have SHA256.sig available, use the -S option to skip the signature check
+
+sysmerge -s etc49.tgz -x xetc49.tgz
+
 
 
 
