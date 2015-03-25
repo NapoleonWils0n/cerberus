@@ -97,6 +97,15 @@ ftp -ia ftp://ftp.openbsd.org/pub/OpenBSD/snapshots/`uname -m`/{index.txt,*tgz,b
 #================================================================
 
 
+# make sure you are in the /usr/rel and root
+
+# copy bsd.rd to /
+cp bsd.rd /
+
+
+# reboot
+
+
 # boot
 boot> boot bsd.rd
 
@@ -110,9 +119,6 @@ boot> boot bsd.rd
 
 
 # make sure you are in the /usr/rel and root
-
-# copy bsd.rd to /
-cp bsd.rd /
 
 # then execute sysmerge
 # merge files
