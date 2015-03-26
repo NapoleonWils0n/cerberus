@@ -4,9 +4,8 @@
 # openbsd install snapshot upgrade to current branch
 #====================================================
 
-
-# work in progress - not ready for use yet !
-
+# thanks to mulander from #openbsd irc channel
+# http://homing-on-code.blogspot.co.uk/2015/02/rolling-with-snapshots.html
 
 
 # stop services
@@ -43,10 +42,10 @@ pkg_scripts="dbus_daemon avahi_daemon"
 #================================================================
 
 
-# make sure you us ethernet in case your wifi craps out during install
+# make sure you use ethernet in case your wifi craps out during install
 
 
-reboot
+sudo reboot
 
 
 # back up the current bsd.rd file
@@ -59,10 +58,11 @@ su
 # change directory to /
 cd /
 
-# back up the current bsd.rd file, just in case
-# rename the bsd.rd file bsd.rd.bak
+# back up bsd.rd, bsd.rd, bsd.mp
 
-mv bsd.rd bsd.rd.bak
+cp bsd bsd.b
+cp bsd.rd bsd.sp.b
+cp bsd.mp bsd.mp.b
 
 
 # download snapshot
@@ -70,11 +70,9 @@ mv bsd.rd bsd.rd.bak
 
 
 # create a /usr/rel directory
-
 # make sure you are root
 
 su
-
 
 # create /usr/rel
 
@@ -93,7 +91,7 @@ ftp -ia ftp://ftp.openbsd.org/pub/OpenBSD/snapshots/`uname -m`/{index.txt,*tgz,b
 
 
 
-# boot into bsd.rd upgrade
+# boot into bsd.rd then upgrade
 #================================================================
 
 
@@ -118,63 +116,23 @@ boot> boot bsd.rd
 #================================================================
 
 
-# make sure you are in the /usr/rel and root
-
-# then execute sysmerge
-# merge files
-
-su
-cd /usr/rel
-
-# run sysmerge
-# if you don't have SHA256.sig available, use the -S option to skip the signature check
-
-sysmerge -s etc49.tgz -x xetc49.tgz
+su 
+sysmerge
 
 
-
-
-# change pkg_path in ~/.bashrc if using bash shell, otherwise edit ~/.profile
+# change pkg_path in ~/.bashrc if using bash shell, 
+# otherwise edit ~/.profile
 #================================================================
 
 vim ~/.bashrc
 
-export PKG_PATH=ftp://ftp.openbsd.org/pub/OpenBSD/snapshots/packages/$(uname -m)/
-
-# use http mirror
-http mirror
+export PKG_PATH=http://ftp.openbsd.org/pub/OpenBSD/snapshots/packages/$(uname -m)/
 
 
 # update packages
 #================================================================
 
-sudo pkg_add -u
-
-
-
-
-
-# untested notes
-#=============================================================
-
-
-# Install new boot blocks: 
-#================================================================
-
-
-# This should actually be done at the end of any upgrade, 
-# but we will assume this has been neglected. 
-# Failure to do this may break serial console or other things, depending on platform.
-
-installboot -v sd0
-
-
-# Generate the new device nodes
-#================================================================
-
-$ cd /dev/
-$ sudo ./MAKEDEV all
-
-
+su
+pkg_add -uiv
 
 
