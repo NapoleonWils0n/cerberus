@@ -56,19 +56,19 @@ cvs -d anoncvs@anoncvs.usa.openbsd.org:/cvs -q up -rOPENBSD_`uname -r | sed 's/\
 
 sudo vim /etc/mk.conf
 
-WRKOBJDIR=/home/ports/wrkobjdir
-DISTDIR=/home/ports/distdir
-PLIST_BD=/home/ports/plist
-BULK_COOKIES_DIR=/home/ports/bulk_cookies
-UPDATE_COOKIES_DIR=/home/ports/update_cookies
-PACKAGE_REPOSITORY=/home/ports/pkgrepo
+WRKOBJDIR=/home/djwilcox/ports/wrkobjdir
+DISTDIR=/home/djwilcox/ports/distdir
+PLIST_BD=/home/djwilcox/ports/plist
+BULK_COOKIES_DIR=/home/djwilcox/ports/bulk_cookies
+UPDATE_COOKIES_DIR=/home/djwilcox/ports/update_cookies
+PACKAGE_REPOSITORY=/home/djwilcox/ports/pkgrepo
 FETCH_PACKAGES=Yes
 
 
 # create the directories
 #========================
 
-mkdir -p /home/ports/{wrkobjdir,distdir,plist,bulk_cookies,update_cookies,pkgrepo}
+mkdir -p /home/djwilcox/ports/{wrkobjdir,distdir,plist,bulk_cookies,update_cookies,pkgrepo}
 
 
 
