@@ -7,3 +7,8 @@ yaourt -S ffmpeg-full
 
 
 
+# reinstall to fix misisng libraries
+
+yaourt -Sy fmpeg-full
+
+yaourt -S fmpeg-full
