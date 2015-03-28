@@ -1,0 +1,13 @@
+sudo tcpdump -s 0 host 192.168.1.11 -i wlp2s0 -w wlan0.pcap
+
+
+tshark -r file.pcap -q -z hosts,ipv4 > tshark-hosts.txt
+
+
+tshark -r file.pcap -q -z hosts,ipv4 > tshark-hosts.txt
+
+
+tshark -r wlan0.pcap -q -z 'http.request.method == "GET" || http.request.method == "HEAD"' > tshark-hosts.txt
+
+
+ngrep -q -W byline "GET|POST HTTP" -I wlan0.pcap > pcap.txt
