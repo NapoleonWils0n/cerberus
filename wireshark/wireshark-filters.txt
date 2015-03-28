@@ -1,0 +1,5 @@
+# get filter
+http.request.method == "GET"
+
+# http response 200
+http.response.code == 200
