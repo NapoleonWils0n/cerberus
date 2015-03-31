@@ -1,0 +1,12 @@
+about:config
+
+# turn off webm
+media.webm.enabled
+
+# disable rtc
+media.peerconnection.enabled
+
+# disable gstreamer
+media.gstreamer.enabled
+
+
