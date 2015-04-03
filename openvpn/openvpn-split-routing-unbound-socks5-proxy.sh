@@ -141,6 +141,39 @@ block {
 
 
 
+# openvpn auth-user-pass
+#=============================================================
+
+
+# add to end of vpn config
+auth-user-pass auth.txt
+
+
+# change directory to where your openvpn .ovpn 
+
+cd /home/username/Documents/vpn/
+
+
+# find .ovpn files echo auth-user-pass auth.txt
+
+find . -name '*.ovpn' \
+| while read FILENAME; \
+do echo "auth-user-pass auth.txt" >> "${FILENAME}" \
+&& sed -i '/^$/d' "${FILENAME}"; \
+done
+
+
+# create auth.txt in same directory as openvpn files
+# username and password on seperate lines
+
+
+# auth.txt
+
+username
+password
+
+
+
 # openvpn split tunnel
 #=============================================================
 
@@ -158,11 +191,6 @@ openvpn \
 --up /home/username/bin/openvpn-up.sh \
 --down /home/username/bin/openvpn-down.sh \
 --config /home/username/Documents/vpn/us-cal-split.ovpn
-
-
-
-# enter vpn user name
-# enter vpn password
 
 
 
