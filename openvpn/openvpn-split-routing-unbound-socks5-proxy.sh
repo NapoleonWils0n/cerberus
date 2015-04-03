@@ -30,7 +30,6 @@ sudo touch /etc/unbound/unbound_outgoing_interface
 # ~/bin/openvpn-up.sh
 #=============================================================
 
-
 #!/usr/bin/env sh
 
 # openvpn-up.sh
@@ -49,8 +48,12 @@ sudo touch /etc/unbound/unbound_outgoing_interface
 | grep inet | head -1 | sed 's/\:/ /' | \
 awk '{print $2}')" > /etc/unbound/unbound_outgoing_interface
 
+# uncomment include
+sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/^#//' sed.txt
+
 # restart unbound dns server
 /usr/bin/systemctl restart unbound.service
+
 
 
 
@@ -72,6 +75,9 @@ awk '{print $2}')" > /etc/unbound/unbound_outgoing_interface
 
 # clear unbound_outgoing_interface
 /usr/bin/echo > /etc/unbound/unbound_outgoing_interface
+
+# comment out include
+sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/^/#/' sed.txt
 
 # restart unbound dns server
 /usr/bin/systemctl restart unbound.service
