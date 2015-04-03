@@ -16,5 +16,8 @@
 | grep inet | head -1 | sed 's/\:/ /' | \
 awk '{print $2}')" > /etc/unbound/unbound_outgoing_interface
 
+# uncomment include
+sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/^#//' sed.txt
+
 # restart unbound dns server
 /usr/bin/systemctl restart unbound.service
