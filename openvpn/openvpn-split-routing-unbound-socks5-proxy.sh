@@ -51,6 +51,9 @@ awk '{print $2}')" > /etc/unbound/unbound_outgoing_interface
 # uncomment include
 sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/#//' /etc/unbound/unbound.conf
 
+# sleep for 1 second
+sleep 1
+
 # restart unbound dns server
 /usr/bin/systemctl restart unbound.service
 
@@ -78,6 +81,9 @@ sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/#//' /etc/unbound
 
 # comment out include
 sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/^/#/' /etc/unbound/unbound.conf
+
+# sleep for 1 second
+sleep 1
 
 # restart unbound dns server
 /usr/bin/systemctl restart unbound.service
