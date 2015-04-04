@@ -1,0 +1,15 @@
+Modify the dhcpcd config
+
+dhcpcd's configuration file may be edited to prevent the dhcpcd daemon from overwriting /etc/resolv.conf. 
+To do this, add the following to the last section of /etc/dhcpcd.conf:
+
+nohook resolv.conf
+
+Alternatively, you can create a file called /etc/resolv.conf.head containing your DNS servers. 
+dhcpcd will prepend this file to the beginning of /etc/resolv.conf.
+
+Or you can configure dhcpcd to use the same DNS servers every time. 
+To do this, add the following line at the end of your /etc/dhcpcd.conf:
+
+static domain_name_servers=8.8.4.4 8.8.8.8
+
