@@ -14,7 +14,10 @@
 /usr/bin/echo > /etc/unbound/unbound_outgoing_interface
 
 # comment out include
-sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/^/#/' sed.txt
+sed -i '/include: \/etc\/unbound\/unbound_outgoing_interface/s/^/#/' /etc/unbound/unbound.conf
+
+# sleep for 1 second
+sleep 1
 
 # restart unbound dns server
 /usr/bin/systemctl restart unbound.service
