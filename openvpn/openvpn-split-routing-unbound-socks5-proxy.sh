@@ -4,6 +4,27 @@
 #=============================================================
 
 
+# create /etc/resolv.conf.head
+#=============================
+
+sudo vim /etc/resolv.conf.head
+
+nameserver 127.0.0.1
+
+
+
+# /etc/dhcpcd.conf
+#==================================
+
+# dhcpcd's configuration file may be edited to prevent the dhcpcd daemon from overwriting /etc/resolv.conf. 
+# To do this, add the following to the last section of /etc/dhcpcd.conf:
+# nohook resolv.conf
+
+
+sudo vim /etc/dhcpcd.conf
+
+nohook resolv.conf
+
 
 # create a route table named tunnel
 #=============================================================
