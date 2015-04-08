@@ -9,4 +9,5 @@ media.peerconnection.enabled
 # disable gstreamer
 media.gstreamer.enabled
 
-
+# Stop all animated gifs
+image.animation_mode none
