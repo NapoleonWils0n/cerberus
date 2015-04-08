@@ -1,0 +1,29 @@
+
+# openbsd -openvpn up and down scripts
+
+
+# ~/bin/openvpn-up.sh
+#========================
+
+
+# create vpn route
+/sbin/pfctl -t 1 -T add "$ifconfig_local"
+/sbin/route -T 1 add default "$ifconfig_remote" 
+
+# doesnt work
+/sbin/route -T 1 add "$ifconfig_remote" "$ifconfig_local" "$dev"
+
+
+# linux version of the command
+# route add table tunel "vpn remote ip" via "local ip" device tun0
+
+# /usr/bin/ip route add table tunnel "$ifconfig_remote" via "$ifconfig_local" dev "$dev"
+
+
+
+# ~/bin/openvpn-down.sh
+#======================
+
+# delete vpn route and flush
+/sbin/pfctl -t 1 -T delete "$ifconfig_local"
+/sbin/route -T 1 flush 
