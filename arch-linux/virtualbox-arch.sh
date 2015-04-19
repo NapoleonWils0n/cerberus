@@ -15,11 +15,30 @@ sudo vim /etc/modules-load.d/virtualbox.conf
 
 # add vboxdrv to the /etc/modules-load/virtualbox.conf file
 vboxdrv
+vboxnetadp
+vboxnetflt
 
 # add our user to the virtualbox group
 sudo gpasswd -a $USER vboxusers
 
-# reboot your machine and virtual box should work
 
-# download and install the extension pack
-sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.12.vbox-extpack 
+# install virtualbox guest utils
+sudo pacman -S virtualbox-guest-utils
+
+# install guest iso
+sudo pacman -S virtualbox-guest-iso
+
+
+# install virtualbox extension pack
+
+yaourt -S virtualbox-ext-oracle
+
+# manually load modules
+sudo su
+modprobe -a vboxdrv vboxnetadp vboxnetflt 
+
+# modules not loaded
+# vboxpci vboxguest vboxsf vboxvideo
+
+
+# reboot your machine and virtual box should work
