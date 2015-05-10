@@ -1,0 +1,2 @@
+# use system clipboard add to your ~/.vimrc file
+set clipboard=unnamedplus
