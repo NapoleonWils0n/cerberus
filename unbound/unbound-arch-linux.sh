@@ -36,6 +36,13 @@ sudo vim /etc/dhcpcd.conf
 
 nohook resolv.conf
 
+# Write-protect /etc/resolv.conf
+#===============================
+
+# protect your /etc/resolv.conf from being modified by anything is setting the immutable (write-protection) attribute:
+
+sudo chattr +i /etc/resolv.conf
+
 
 # DNSSEC validation
 #==================
