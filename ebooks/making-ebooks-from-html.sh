@@ -54,6 +54,19 @@ find . -type f -regex ".*\.\(htm\|html\)$" \
 
 
 
+
+# remove jpg, gif that arent needed as we converted to png
+#========================================================
+
+
+# echo files before deleting
+find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec echo '{}' \;
+
+# delete jpg, gifs
+find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec rm '{}' \;
+
+
+
 # strip out just the content to paragraphs
 #======================================================================
 
