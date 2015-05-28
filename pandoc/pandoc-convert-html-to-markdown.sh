@@ -96,12 +96,3 @@ pandoc -f html -t markdown -o "$file"
 done
 
 
-
-
-
-
-
-
-
-
-
