@@ -36,7 +36,7 @@ find . -type f -regex ".*\.\(htm\|html\)$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\html/.md/g'`
-pandoc -s -f html -t markdown -o "$filebasename" "$file"
+pandoc -f html -t markdown -o "$filebasename" "$file"
 done
 
 
