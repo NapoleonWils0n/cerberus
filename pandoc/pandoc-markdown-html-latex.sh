@@ -44,7 +44,7 @@ done
 # convert markdown to latex
 #========================================
 
-find . -type f -regex ".*\.\(htm\|html\)$" |
+find . -type f -regex ".*\.md$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.tex/g'`
