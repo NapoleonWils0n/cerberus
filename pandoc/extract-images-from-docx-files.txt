@@ -1,0 +1,13 @@
+# extract images from docx file
+#===================================
+
+rename .docx file to .zip
+
+unzip the zip file
+
+you will find a directory called word, 
+inside that is a directory called media 
+
+in the media directory you will find all the images contained in the word document
+
+all the image links in the word doc point to the /media/imagename.png 
