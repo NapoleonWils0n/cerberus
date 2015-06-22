@@ -1,0 +1,39 @@
+/* This defines styles and classes used in the book */
+@font-face {
+font-family: DejaVuSans;
+font-style: normal;
+font-weight: normal;
+src:url("DejaVuSans.ttf");
+}
+@font-face {
+font-family: DejaVuSans;
+font-style: normal;
+font-weight: bold;
+src:url("DejaVuSans-Bold.ttf");
+}
+@font-face {
+font-family: DejaVuSans;
+font-style: italic;
+font-weight: normal;
+src:url("DejaVuSans-Oblique.ttf");
+}
+@font-face {
+font-family: DejaVuSans;
+font-style: italic;
+font-weight: bold;
+src:url("DejaVuSans-BoldOblique.ttf");
+}
+
+body { margin: 5%; text-align: justify; font-size: medium; font-family: "DejaVuSans"; }
+code { font-family: monospace; }
+h1 { text-align: left; }
+h2 { text-align: left; }
+h3 { text-align: left; }
+h4 { text-align: left; }
+h5 { text-align: left; }
+h6 { text-align: left; }
+h1.title { }
+h2.author { }
+h3.date { }
+ol.toc { padding: 0; margin-left: 1em; }
+ol.toc li { list-style-type: none; margin: 0; padding: 0; }
