@@ -55,7 +55,7 @@ done
 # convert tex to epub
 #=============================================================
 
-find . -type f -regex ".*\.\(htm\|html\)$" |
+find . -type f -regex ".*\.\(tex\)$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\tex/.epub/g'`
