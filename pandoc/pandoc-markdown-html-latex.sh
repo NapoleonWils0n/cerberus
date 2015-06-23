@@ -11,6 +11,17 @@ pandoc -s -f markdown -t html5 -o "$filebasename" "$file"
 done
 
 
+# remove original markdown files
+#========================================================
+
+
+# echo files before deleting
+find . -type f -regex ".*\.md$" -exec echo '{}' \;
+
+# delete jpg, gifs
+find . -type f -regex ".*\.md$" -exec rm '{}' \;
+
+
 
 # sed find all local links that dont start with http and add html extension
 #==========================================================================
@@ -40,6 +51,38 @@ pandoc -f html -t markdown -o "$filebasename" "$file"
 done
 
 
+# remove html5 files
+#========================================================
+
+
+# echo files before deleting
+find . -type f -regex ".*\.html$" -exec echo '{}' \;
+
+# delete jpg, gifs
+find . -type f -regex ".*\.html$" -exec rm '{}' \;
+
+
+# convert markdown to pdf
+#=============================================================
+
+find . -type f -regex ".*\.md$" |
+while read file
+do
+filebasename=`echo $file | sed 's/\.\md/.pdf/g'`
+pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
+done
+
+
+# convert markdown to epub
+#=============================================================
+
+find . -type f -regex ".*\.md$" |
+while read file
+do
+filebasename=`echo $file | sed 's/\.\md/.epub/g'`
+pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
+done
+
 
 # convert markdown to latex
 #========================================
@@ -48,16 +91,5 @@ find . -type f -regex ".*\.md$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.tex/g'`
-pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
-done
-
-
-# convert tex to epub
-#=============================================================
-
-find . -type f -regex ".*\.\(tex\)$" |
-while read file
-do
-filebasename=`echo $file | sed 's/\.\tex/.epub/g'`
 pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
 done
