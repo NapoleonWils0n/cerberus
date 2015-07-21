@@ -19,5 +19,9 @@ aspell --lang=en_GB -t -c filename.tex
 # spell check a single file
 aspell -c filename.md
 
+# spell check a single file, 
+# -b dont create a .bak file
+aspell -b -c filename.md
+
 # aspell find latex file and spell check
 find ch*.tex -exec aspell --lang=en_GB -t -c {} \
