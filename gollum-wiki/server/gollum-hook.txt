@@ -1,0 +1,9 @@
+wiki = Gollum::Wiki.new("/var/wiki/.git")
+
+Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
+  committer.wiki.repo.git.pull
+  committer.wiki.repo.git.push
+end
+
+Gollum::Hook.unregister(:post_commit, :hook_id)
+

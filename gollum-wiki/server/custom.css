@@ -1,0 +1,18 @@
+iframe {
+max-width: 100%;
+}
+
+/* hide buttons */
+.minibutton a.action-page-history,
+.minibutton a.action-all-pages,
+.minibutton a.action-fileview { display: none; }
+
+
+ul.actions li:nth-child(3),
+ul.actions li:nth-child(4)
+{ margin-left: 0; }
+
+/* hide last edit
+#footer p#last-edit { display: none; }
+.page #footer { border-top: 0px; }
+*/

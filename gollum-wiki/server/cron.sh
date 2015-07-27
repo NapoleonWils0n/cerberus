@@ -1,0 +1,1 @@
+*/5 * * * * /home/wiki-sync.sh &> /dev/null
