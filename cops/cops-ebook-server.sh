@@ -47,6 +47,10 @@ sudo nano /etc/apache2/apache2.conf
 </Directory>
 
 
+# enable apache rewrite
+#==============================================
+
+a2enmod rewrite
 
 
 # restart apache 
