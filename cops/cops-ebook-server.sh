@@ -31,7 +31,7 @@ sudo echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.con
 
 # edit virtual host and enable .htaccess
 
-sudo nano /etc/apache2/sites-available/default
+sudo nano /etc/apache2/apache2.conf
 
 
 # Once inside that file, find the following section, 
@@ -40,12 +40,12 @@ sudo nano /etc/apache2/sites-available/default
 # The section should now look like this:
 
 
- <Directory /var/www/>
-                Options Indexes FollowSymLinks MultiViews
-                AllowOverride All
-                Order allow,deny
-                allow from all
- </Directory>
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+</Directory>
+
 
 
 
@@ -57,10 +57,10 @@ sudo service apache2 restart
 
 # install cops
 #==============================================
-cd /var/www
+cd /var/www/html
 
 
-# clone cops with git to the /var/www directory
+# clone cops with git into the /var/www/html 
 #==============================================
 
 git clone https://github.com/seblucas/cops.git .
@@ -71,7 +71,7 @@ git clone https://github.com/seblucas/cops.git .
 # on the server to to the .gitignore file
 #==============================================
 
-vim .gitignore
+nano .gitignore
 
 calibre/*
 
@@ -80,10 +80,22 @@ calibre/*
 #==============================================
 
 # If a first-time install, copy config_local.php.example to config_local.php
+
+cp config_local.php.example config_local.php
+
 # Edit config_local.php to match your config. The most important config item to edit are :
+
+nano config_local.php
 
 # $config['calibre_directory'] : Path to your Calibre directory.
 # $config['cops_use_url_rewriting'] : If you want to enable URL rewriting.
+
+
+$config['calibre_directory'] = '/var/www/html/calibre/';
+$config['cops_title_default'] = "ebook library";
+$config['cops_use_url_rewriting'] = "1";
+
+
 
 # Add some other config item from config_default.php
 
