@@ -1,0 +1,33 @@
+To configure the 'Email' app on an Android device for access to Google Apps email, just follow the steps below:
+
+On the 'Incoming server settings' page, some fields may be pre-populated. Make sure to change the following:
+
+On the 'Outgoing server settings' page, some fields may be pre-populated. Make sure to change the following:
+
+Enable IMAP in your Mail settings.
+Open the Email application.
+Tap Menu and the Settings
+In the top corner, tap  select Next to get started with setup.
+Enter your full Google Apps email address and password, then tap Next.
+For 'Username,' enter your full Google Apps email address
+Tap IMAP account.
+Update the Incoming Settings:
+For 'IMAP server,' enter 'imap.gmail.com'
+For 'Port,' enter '993'
+For 'Security type,' select 'SSL/TLS''
+Tap Next and fill in the Outgoing Settings.
+For 'SMTP server' enter 'smtp.gmail.com'
+For 'Port,' enter '465'
+For 'Security type,' select 'SSL/TLS''
+Tap Next and continue through the setup options.
+And you're done. You can verify your settings from the Inbox view by tapping Menu, select Account and then scroll to Server settings.
+
+Incoming settings
+IMAP server: imap.gmail.com
+Port: 993
+Security type: SSL (always)
+
+Outgoing settings
+SMTP server: smtp.gmail.com
+Port: 465
+Security type: SSL (always)
