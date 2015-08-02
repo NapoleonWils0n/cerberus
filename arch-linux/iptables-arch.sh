@@ -33,6 +33,15 @@ sudo iptables -A INPUT -i lo -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 6881 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 6882 -s 192.168.1.0/24 -j ACCEPT
 
+# iptables for ntp
+sudo iptables -I INPUT -p udp --dport 123 -j ACCEPT
+sudo iptables -I OUTPUT -p udp --sport 123 -j ACCEPT
+
+# syncthing
+sudo iptables -A INPUT -p tcp -m tcp --dport 22000 -j ACCEPT
+sudo iptables -A INPUT -p udp -m udp --dport 21025 -j ACCEPT
+
+
 # shairport iptables
 sudo iptables -A INPUT -p tcp -m tcp --dport 5353 -s 192.168.1.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp -m tcp --dport 5000:5005 -s 192.168.1.0/24 -j ACCEPT
