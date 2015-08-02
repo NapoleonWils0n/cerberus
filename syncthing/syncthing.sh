@@ -119,3 +119,6 @@ ExecStart=/usr/bin/syncthing-inotify -logflags=0 -api="uxcYP98gjhgjhTRVVH7666-yu
 #===================================
 
 systemctl --user daemon-reload
+
+# start syncthing-inotify
+systemctl --user start syncthing-inotify.service
