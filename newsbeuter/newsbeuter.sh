@@ -15,7 +15,11 @@ touch ~/.newsbeuter/urls
 # create the file ~/.newsbeuter/config
 touch ~/.newsbeuter/config
 
+
 # edit ~/.newsbeuter/config
+# set the browser
+
 vim  ~/.newsbeuter/config
 
 auto-reload yes
+browser "/usr/bin/chromium %u"
