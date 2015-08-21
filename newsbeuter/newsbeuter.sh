@@ -29,3 +29,15 @@ vim  ~/.newsbeuter/config
 auto-reload yes
 browser "/usr/bin/chromium %u"
 macro y set browser "/usr/bin/mpv %u"; open-in-browser ; set browser "/usr/bin/chromium %u"
+
+
+# you have to add one feed before starting up newsbeuter, either in  ~/.newsbeuter/urls
+# or by starting newsbeuter with -i and then the url, for example
+# newsbeuter -i http://example.com/feed.rss
+
+# start newsbeuter
+newsbeuter 
+
+# clean cache
+newsbeuter -X
+
