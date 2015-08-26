@@ -5,6 +5,56 @@
      <args>"{0}"</args>
      <hidexbmc>true</hidexbmc>
    </player>
+   <player name="save url" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/echo</filename>
+     <args>"{0}" > "/home/djwilcox/Desktop/video-url-$(date +"%m-%d-%y-%H-%M").txt"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
+  <player name="download with wget" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/wget</filename>
+     <args>-i "{0}" -O "/home/djwilcox/Desktop/video-url-$(date +"%m-%d-%y-%H-%M").mkv" &</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
+   <player name="ffmpeg-record" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy "/home/djwilcox/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="record 30 minutes" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy -t 00:30:00 "/home/djwilcox/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+  <player name="record 1 hour" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy -t 01:00:00 "/home/djwilcox/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+  <player name="record 2 hours" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ffmpeg</filename>
+     <args>-i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/djwilcox/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh-ffmpeg-record" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy "/home/djwilcox/mount/ffmpeg/video-$(date +"%m-%d-%y-%H-%M").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh record 30 minutes" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 00:30:00 "/home/djwilcox/mount/ffmpeg/video-$(date +"%m-%d-%y-%H-%M").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh record 1 hour" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 01:00:00 "/home/djwilcox/mount/ffmpeg/video-$(date +"%m-%d-%y-%H-%M").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ssh record 2 hours" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/ssh</filename>
+     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/djwilcox/mount/ffmpeg/video-$(date +"%m-%d-%y-%H-%M").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
    <player name="rtmpdump" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/rtmpdump</filename>
      <args>-i "{0}" | vlc fd://0</args>
@@ -12,53 +62,8 @@
    </player>
    <player name="vlc-save" type="ExternalPlayer" audio="false" video="true">
 	<filename>/usr/bin/vlc</filename>
-	<args>"{0}" --sout=file/ts:"/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
+	<args>"{0}" --sout=file/ts:"/home/djwilcox/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv" &</args>
 	<hidexbmc>false</hidexbmc>
-   </player>
-   <player name="rtmpdump-vlc-stdout" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/rtmpdump</filename>
-     <args>-i "{0}" | vlc fd://0 --sout=file/ts:"/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
-     <hidexbmc>true</hidexbmc>
-   </player>
-   <player name="ffmpeg-save" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ffmpeg</filename>
-     <args>-i "{0}" -c:v copy -c:a copy "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="record 30 minutes" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ffmpeg</filename>
-     <args>-i "{0}" -c:v copy -c:a copy -t 00:30:00 "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-  <player name="record 1 hour" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ffmpeg</filename>
-     <args>-i "{0}" -c:v copy -c:a copy -t 01:00:00 "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-  <player name="record 2 hours" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ffmpeg</filename>
-     <args>-i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/username/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="ssh record 30 minutes" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ssh</filename>
-     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 00:30:00 "/home/username/mount/ffmpeg/video-$(date +"%H-%M-%m-%d-%y").mkv"' &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="ssh record 1 hour" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ssh</filename>
-     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 01:00:00 "/home/username/mount/ffmpeg/video-$(date +"%H-%M-%m-%d-%y").mkv"' &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="ssh record 2 hours" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/ssh</filename>
-     <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/username/mount/ffmpeg/video-$(date +"%H-%M-%m-%d-%y").mkv"' &</args>
-     <hidexbmc>false</hidexbmc>
-   </player>
-   <player name="save-url" type="ExternalPlayer" audio="false" video="true">
-		<filename>/usr/bin/echo</filename>
-     <args>"{0}" > "/home/username/Desktop/video-url-$(date +"%H-%M-%m-%d-%y").txt"</args>
-     <hidexbmc>true</hidexbmc>
    </player>
    <player name="mpv" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/mpv</filename>
