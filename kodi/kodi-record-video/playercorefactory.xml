@@ -15,6 +15,16 @@
      <args>export SDL_AUDIODRIVER="alsa"; export AUDIODEV="plughw:2,0"; /usr/bin/ffplay -fs "{0}"</args>
      <hidexbmc>true</hidexbmc>
    </player>
+  <player name="ffplay - xforward" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/echo</filename>
+     <args>export SDL_AUDIODRIVER="alsa"; export AUDIODEV="plughw:1,0"; /usr/bin/echo "{0}" | while read url
+do
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
+/usr/bin/ffplay -fs -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' "$VIDEOURL"
+done</args>
+     <hidexbmc>true</hidexbmc>
+   </player>
    <player name="save url" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/echo</filename>
      <args>"{0}" > "/home/djwilcox/Desktop/video-url-$(date +"%m-%d-%y-%H-%M").txt"</args>
@@ -63,6 +73,26 @@
    <player name="ssh record 2 hours" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/ssh</filename>
      <args>pi '/usr/bin/ffmpeg -i "{0}" -c:v copy -c:a copy -t 02:00:00 "/home/djwilcox/mount/ffmpeg/video-$(date +"%m-%d-%y-%H-%M").mkv"' &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="ffmpeg - xforward" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/echo</filename>
+     <args>"{0}" | while read url
+do
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
+/usr/bin/ffmpeg -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' -i "$VIDEOURL" -c:v copy -bsf:a aac_adtstoasc -loglevel error "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mp4" &
+done</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+  <player name="ffmpeg - xforward record 2 hours" type="ExternalPlayer" audio="false" video="true">
+		<filename>/usr/bin/echo</filename>
+     <args>"{0}" | while read url
+do
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
+/usr/bin/ffmpeg -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' -i "$VIDEOURL" -c:v copy -bsf:a aac_adtstoasc -loglevel error -t 02:00:00 "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mp4" &
+done</args>
      <hidexbmc>false</hidexbmc>
    </player>
    <player name="rtmpdump" type="ExternalPlayer" audio="false" video="true">
