@@ -13,7 +13,7 @@ http://example.com/video.m3u8|X-Forwarded-For=11.111.111.111
 # grep http links
 #=================
 
-grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*" url.txt
+grep -Eo '(http|https)://[a-zA-Z0-9./?=_-]*\.(m3u8)' url.txt
 
 
 grep -E : is the same as egrep
@@ -54,7 +54,7 @@ video-$(date +"%H-%M-%m-%d-%y").mp4
 cat url.txt | 
 while read url
 do
-VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_-]*\.(m3u8)'`
 XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
 /usr/bin/echo -fs -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' "$VIDEOURL"
 done
@@ -68,7 +68,7 @@ done
 		<filename>/usr/bin/echo</filename>
      <args>export SDL_AUDIODRIVER="alsa"; export AUDIODEV="plughw:1,0"; /usr/bin/echo "{0}" | while read url
 do
-VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_-]*\.(m3u8)'`
 XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
 /usr/bin/ffplay -fs -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' "$VIDEOURL"
 done</args>
@@ -85,9 +85,9 @@ done</args>
 		<filename>/usr/bin/echo</filename>
      <args>"{0}" | while read url
 do
-VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_-]*\.(m3u8)'`
 XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
-/usr/bin/ffmpeg -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' -i "$VIDEOURL" -c:v copy -bsf:a aac_adtstoasc -loglevel error "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mp4" &
+/usr/bin/ffmpeg -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' -i "$VIDEOURL" -c:v copy -bsf:a aac_adtstoasc -loglevel error "$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &
 done</args>
      <hidexbmc>false</hidexbmc>
    </player>
@@ -104,9 +104,9 @@ done</args>
 		<filename>/usr/bin/echo</filename>
      <args>"{0}" | while read url
 do
-VIDEOURL=`/usr/bin/echo "$url" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_-]*"`
+VIDEOURL=`/usr/bin/echo "$url" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_-]*\.(m3u8)'`
 XFORWARD=`/usr/bin/echo "$url" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
-/usr/bin/ffmpeg -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' -i "$VIDEOURL" -c:v copy -bsf:a aac_adtstoasc -loglevel error -t 02:00:00 "/home/djwilcox/Desktop/video-$(date +"%H-%M-%m-%d-%y").mp4" &
+/usr/bin/ffmpeg -headers 'X-Forwarded-For: '"$XFORWARD"''$'\r\n' -i "$VIDEOURL" -c:v copy -bsf:a aac_adtstoasc -loglevel error -t 02:00:00 "/$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv" &
 done</args>
      <hidexbmc>false</hidexbmc>
    </player>
