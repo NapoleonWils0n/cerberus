@@ -2,6 +2,11 @@
 #======================================================
 
 
+This page is outdated please download the new scripts here:
+
+https://github.com/NapoleonWils0n/kodi-playercorefactory
+
+
 # playercorefactory.xml 
 #==============================================
 

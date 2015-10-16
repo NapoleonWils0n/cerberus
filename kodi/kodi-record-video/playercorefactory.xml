@@ -1,3 +1,4 @@
+<!-- This page is outdated - download the new scripts here: https://github.com/NapoleonWils0n/kodi-playercorefactory -->
 <playercorefactory>
  <players>
    <player name="vlc" type="ExternalPlayer" audio="false" video="true">
