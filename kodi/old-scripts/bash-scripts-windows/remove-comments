@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[[ $# -eq 0 ]] || exit
+read -erp "enter a path to a directory or text file: " DIR
+[[ -d $DIR || -f $DIR ]] && /usr/bin/find $DIR -maxdepth 1 -regex ".*\.\(txt\|txt[?0-9=]*\)" -type f \
+| while read file
+do
+sed '/^[^(http|https)]/d' -i "$file"
+done || echo no directory or file found

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# pandoc m3u8 web cliper
+#=======================
+
+read -p "Enter the url to clip: " URL
+read -p "Enter the css path: " CSSPATH
+read -p "Enter a file name: " FILENAME
+
+hxnormalize -x "$URL" nul 2> | \
+hxselect -s '\n' -c "$CSSPATH" | 
+pandoc -f html -t plain --normalize -o "$FILENAME".m3u

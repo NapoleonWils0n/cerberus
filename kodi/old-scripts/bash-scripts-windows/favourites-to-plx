@@ -1,0 +1,18 @@
+#!/bin/bash
+
+[[ $# -eq 0 ]] && CURLINE=0 || exit
+read -erp "enter the path to your favourites.xml: " FILE
+[[ -f "$FILE" ]] && find "$FILE" -maxdepth 1 -name '*.xml' -type f \
+| while read line; do
+	VER='version=1'
+	BGROUND='background='
+	TITLE='title='
+	DESC='description='
+	TYPE='type=video'
+	NAME=`echo "$line" | grep -Eo 'name="[a-zA-Z0-9+&;[:blank:]]*"' | sed 's/\"//g'`
+	THUMB=`echo "$line" | grep -Eo 'thumb="[a-zA-Z0-9:./_]*"' | sed 's/\"//g'`
+	URL=`echo "$line" | grep -Eo 'plugin://[a-zA-Z0-9./_?&%+=;]*[^(&quot;)]'`
+	[[ "$CURLINE" -eq 0 ]] && echo -e "$VER"'\n'"$BGROUND"'\n'"$TITLE"'\n'"$DESC"'\n'"$VIEW"'\n''#' > iptv-favourites.plx
+	[[ "$CURLINE" -gt 0 && -n "$URL" ]] && echo -e "$TYPE"'\n'"$NAME"'\n'"$THUMB"'\n'URL="$URL"'\n''#' >> iptv-favourites.plx
+        ((CURLINE++))
+done < "$FILE" || echo no file found

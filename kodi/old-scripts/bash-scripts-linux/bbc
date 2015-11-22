@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo 'BBC TV'
+echo '======'
+echo ''
+
+PS3="Select a channel or press '6' to quit: " #set the prompt
+OLD_IFS=${IFS}; #ifs space seperator
+IFS=$'\t\n' #change ifs seperator from spaces to new line
+
+select fileName in 'BBC-One' 'BBC-Two' 'BBC-Three' 'BBC-Four' 'BBC-News' Quit; do
+	case $fileName in
+	BBC-One ) get_iplayer --livetvmode=best --type=livetv --stream "BBC One" 2>/dev/null | ffplay -hide_banner -fs - ;;
+	BBC-Two ) get_iplayer --livetvmode=best --type=livetv --stream "BBC Two" 2>/dev/null | ffplay -hide_banner -fs - ;;
+	BBC-Three ) get_iplayer --livetvmode=best --type=livetv --stream "BBC Three" 2>/dev/null | ffplay -hide_banner -fs - ;;
+	BBC-Four ) get_iplayer --livetvmode=best --type=livetv --stream "BBC Four" 2>/dev/null | ffplay -hide_banner -fs - ;;
+	BBC-News ) get_iplayer --livetvmode=best --type=livetv --stream "BBC News" 2>/dev/null | ffplay -hide_banner -fs - ;;
+	Quit ) echo Quitting; IFS=${OLD_IFS}; break ;;
+	* ) echo “Invalid Selection” ;;
+	esac
+done

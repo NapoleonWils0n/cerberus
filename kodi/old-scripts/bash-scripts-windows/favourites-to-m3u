@@ -1,0 +1,16 @@
+#!/bin/bash
+
+[[ $# -eq 0 ]] && CURLINE=0 || exit
+read -erp "enter the path to your favourites.xml: " FILE
+[[ -f "$FILE" ]] && find "$FILE" -maxdepth 1 -name '*.xml' -type f \
+| while read line; do
+	EXTM3U='#EXTM3U'
+	EXTINF='#EXTINF:-'
+	TVGNAME=`echo "$line" | grep -Eo 'name="[a-zA-Z0-9+&;[:blank:]]*"' | sed 's/name/tvg-&/'`
+	TVGLOGO=`echo "$line" | grep -Eo 'thumb="[a-zA-Z0-9:./_]*"' | sed 's/thumb/tvg-logo/'`
+	CHANNEL=`echo "$line" | grep -Eo 'name="[a-zA-Z0-9[:blank:]]*"' | sed 's/[name=\"]//g'`
+	PLUGIN=`echo "$line" | grep -Eo 'plugin://[a-zA-Z0-9./_?&%+=;]*[^(&quot;)]'`
+	[[ "$CURLINE" -eq 0 ]] && echo "$EXTM3U" > iptv-favourites.m3u
+	[[ "$CURLINE" -gt 0 ]] && echo -e "${EXTINF}""${CURLINE}" "$TVGNAME" "$TVGLOGO" ,"$CHANNEL" '\n'"$PLUGIN" >> iptv-favourites.m3u
+        ((CURLINE++))
+done < "$FILE" || echo no file found
