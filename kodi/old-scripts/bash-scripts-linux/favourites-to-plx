@@ -1,18 +1,19 @@
 #!/bin/bash
 
 [[ $# -eq 0 ]] && CURLINE=0 || exit
-read -erp "enter the path to your favourites.xml: " FILE
-[[ -f "$FILE" ]] && find "$FILE" -maxdepth 1 -name '*.xml' -type f \
+read -erp "enter the path to your txt file: " FILE
+[[ -f "$FILE" ]] && find "$FILE" -maxdepth 1 -name '*.txt' -type f \
 | while read line; do
+	PLX=`printf '%s' "$FILE" | sed -e 's/.txt/.plx/g'`
 	VER='version=1'
 	BGROUND='background='
 	TITLE='title='
-	DESC='description='
-	TYPE='type=video'
-	NAME=`echo "$line" | grep -Eo 'name="[a-zA-Z0-9+&;[:blank:]]*"' | sed 's/\"//g'`
-	THUMB=`echo "$line" | grep -Eo 'thumb="[a-zA-Z0-9:./_]*"' | sed 's/\"//g'`
-	URL=`echo "$line" | grep -Eo 'plugin://[a-zA-Z0-9./_?&%+=;]*[^(&quot;)]'`
-	[[ "$CURLINE" -eq 0 ]] && echo -e "$VER"'\n'"$BGROUND"'\n'"$TITLE"'\n'"$DESC"'\n'"$VIEW"'\n''#' > iptv-favourites.plx
-	[[ "$CURLINE" -gt 0 && -n "$URL" ]] && echo -e "$TYPE"'\n'"$NAME"'\n'"$THUMB"'\n'URL="$URL"'\n''#' >> iptv-favourites.plx
+	NAME='name='
+	LINK=`printf '%s\n' "$line" | grep -Eo 'http://[a-zA-Z0-9./_?&%+=;]*'`
+	[[ "$CURLINE" -eq 0 ]] && printf '%s\n%s\n%s\n%s\n' "$VER" "$BGROUND" "$TITLE" '#' > "$PLX"
+	[[ -n "$LINK" ]] && printf '%s\n' 'type=video' >> "$PLX"
+	printf '%s%s\n' 'name=' "$CURLINE" >> "$PLX"
+	printf '%s\n' "$line" | grep -Eo '(http|plugin)://[a-zA-Z0-9./_?&%+=;]*' | sed 's/http/URL=&/' >> "$PLX" 
+	[[ -n "$LINK" ]] && printf '%s\n' '#' >> "$PLX"
         ((CURLINE++))
-done < "$FILE" || echo no file found
+done < "$FILE"
