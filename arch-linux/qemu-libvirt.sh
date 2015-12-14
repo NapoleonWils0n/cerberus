@@ -170,7 +170,8 @@ sudo systemctl start libvirtd
 sudo systemctl enable libvirtd
 
 
-
+# start libvirt socket
+sudo systemctl start virtlogd.socket
 
 
 # Test if libvirt is working properly 
