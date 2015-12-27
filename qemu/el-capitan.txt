@@ -1,0 +1,110 @@
+# As of Yosemite, this really only works if executed as root,
+	# so let's start with that:
+	sudo -s
+
+	# Mount the installer image:
+	hdiutil attach /Users/djwilcox/Desktop/Install\ OS\ X\ El\ Capitan.app/Contents/SharedSupport/InstallESD.dmg -noverify -nobrowse -mountpoint /Volumes/install_app
+
+	# Convert the boot image to a sparse bundle:
+	hdiutil convert /Volumes/install_app/BaseSystem.dmg -format UDSP -o /tmp/ElCapitan
+
+	# Increase the sparse bundle capacity for packages, kernel, etc.:
+	hdiutil resize -size 8g /tmp/ElCapitan.sparseimage
+
+	# Mount the sparse bundle target for further processing:
+	hdiutil attach /tmp/ElCapitan.sparseimage -noverify -nobrowse -mountpoint /Volumes/install_build
+
+	# Remove Package link and replace with actual files:
+	rm /Volumes/install_build/System/Installation/Packages
+	cp -rp /Volumes/install_app/Packages /Volumes/install_build/System/Installation/
+
+	# NEW: As of Yosemite, there are additional installer dependencies:
+	cp -rp /Volumes/install_app/BaseSystem* /Volumes/install_build/
+
+	# NEW: As of Yosemite, we also need a kernel image!
+	# Assuming we're executing these steps on a Yosemite machine:
+	cp -rp /System/Library/Kernels /Volumes/install_build/System/Library/
+	# NOTE: on older versions of OS X, it is possible to extract the
+	#       necessary files (/System/Library/Kernels/*) from the
+	#       /Volumes/install_app/Packages/Essentials.pkg package,
+	#       using third party software.
+
+	# Unmount both the installer image and the target sparse bundle:
+	hdiutil detach /Volumes/install_app
+	hdiutil detach /Volumes/install_build
+
+	# Resize the partition in the sparse bundle to remove any free space:
+	hdiutil resize -size $(hdiutil resize -limits /tmp/ElCapitan.sparseimage | tail -n 1 | awk '{ print $1 }')b /tmp/ElCapitan.sparseimage
+
+	# Convert the sparse bundle to ISO/CD master:
+	hdiutil convert /tmp/ElCapitan.sparseimage -format UDTO -o /tmp/ElCapitan
+
+	# Remove the sparse bundle:
+	rm /tmp/ElCapitan.sparseimage
+
+	# Rename the ISO and move it to the desktop:
+	mv /tmp/ElCapitan.cdr /Users/djwilcox/Desktop/ElCapitan.iso
+
+
+#=================================================================
+
+
+
+Start with going to AppStore and installing El Capitan, so you'll have an application named Install El Capitan in your Application list. Then, you should follow the steps below.
+
+There is an installation image file inside /Applications/Install El Capitan.app, named InstallESD.dmg. It's not a bootable ISO that can be used to install the system on a virtual machine, but we'll get there. Mount this image to some directory by using the hdiutil tool:
+
+$ hdiutil attach "/Applications/Install OS X El Capitan.app/Contents/SharedSupport/InstallESD.dmg" -noverify -nobrowse -mountpoint /Volumes/esd
+/dev/disk1              GUID_partition_scheme
+/dev/disk1s1            EFI
+/dev/disk1s2            Apple_HFS                 /Volumes/esd
+The -noverify and -nobrowse options are there to make mounting operation faster and to make sure that Finder will not automatically pop up.
+
+Now let's create a placeholder image of our ISO file.
+
+$ hdiutil create -o ElCapitan3.cdr -size 7316m -layout SPUD -fs HFS+J
+......................................................................
+created: /Users/antek/vm/ElCapitan3.cdr.dmg
+This can take a while.
+
+After an empty ISO file will be created, we need to mount it:
+
+$ hdiutil attach ElCapitan3.cdr.dmg -noverify -nobrowse -mountpoint /Volumes/iso
+/dev/disk4              Apple_partition_scheme
+/dev/disk4s1            Apple_partition_map
+/dev/disk4s2            Apple_HFS                       /Volumes/iso
+Then, we will use asr tool to populate the contents of our new drive:
+
+$ asr restore -source /Volumes/esd/BaseSystem.dmg -target /Volumes/iso -noprompt -noverify -erase
+Validating target...done
+Validating source...done
+Retrieving scan information...done
+Validating sizes...done
+Restoring  ....10man ..^R
+..20....30....40....50....60....70....80....90....100
+Remounting target volume...done
+The asr tool will automatically create a new mountpoint, /Volumes/OS X Base System. We're going to put some files into this directory.
+
+First of all, remove an invalid link that won't be needed here:
+
+$ rm /Volumes/OS\ X\ Base\ System/System/Installation/Packages
+Instead of this link, we need a proper directory, full of package files. We're going to copy this directory from the ESD image that we have mounted few steps earlier.
+
+$ cp -rp /Volumes/esd/Packages /Volumes/OS\ X\ Base\ System/System/Installation
+We're going to copy some additional installer dependencies as well.
+
+$ cp -rp /Volumes/esd/BaseSystem.chunklist /Volumes/OS\ X\ Base\ System/
+$ cp -rp /Volumes/esd/BaseSystem.dmg /Volumes/OS\ X\ Base\ System/
+After that, we can unmount stuff we don't need anymore:
+
+$ hdiutil detach /Volumes/esd
+"disk3" unmounted.
+"disk3" ejected.
+
+$ hdiutil detach /Volumes/OS\ X\ Base\ System
+"disk4" unmounted.
+"disk4" ejected.
+Last step is to convert our ISO file into the UDTO format.
+
+$ hdiutil convert ElCapitan3.cdr.dmg -format UDTO -o ElCapitan3.iso
+The ElCapitan3.iso.cdr can be renamed to ElCapitan.iso, and can be used in virtualization software like VirtualBox 5.
