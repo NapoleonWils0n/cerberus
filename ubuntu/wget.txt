@@ -1,0 +1,1 @@
+wget ftp://FTP.INTERNIC.NET/domain/named.cache -O /etc/unbound/root.hints

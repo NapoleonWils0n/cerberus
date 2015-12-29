@@ -1,0 +1,32 @@
+
+
+sudo nano /etc/dhcp/dhclient.conf
+
+nohook resolv.conf
+
+#=================================
+
+sudo nano /etc/resolv.conf.head
+
+nameserver 127.0.0.1
+
+
+
+sudo chattr +i /etc/resolv.conf
+
+
+# start unbound dns server
+#===================================================================
+
+
+# start unbound
+
+sudo systemctl start unbound.service
+
+
+# enable unbound to start automatically
+
+sudo systemctl enable unbound.service
+
+
+sudo systemd-sysv-install enable unbound

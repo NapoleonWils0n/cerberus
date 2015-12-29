@@ -1,0 +1,16 @@
+#!/bin/bash
+
+sudo apt-get install synapse
+
+#====================================
+
+# dconf
+sudo apt-get install dconf-tools
+
+#====================================
+
+
+# minimize windows
+#====================================
+
+gsettings set org.gnome.desktop.wm.preferences action-double-click-titlebar 'minimize'
