@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+ffmpeg -i kodi-macosx.mov \
+-c:v libx264 -profile:v high -level:v 4.0 -preset slow \
+-b:v 4750k -bufsize 1835k \
+-vf "yadif=0:-1:0, scale=1280:trunc(ow/a/2)*2" \
+-threads 0 -x264opts keyint=250:min-keyint=25 \
+-c:a aac -b:a 192k -strict -2 \
+resize.mkv
+
+
+
+
+ffmpeg -i \
+kodi-macosx.mov \
+-c:v libx264 -profile:v high -level:v 4.0 \
+-b:v 3000k \
+-c:a copy \
+-vf "yadif=0:-1:0, scale=1280:trunc(ow/a/2)*2" \
+-threads 0 -x264opts keyint=250:min-keyint=25 \
+-pix_fmt yuv420p -movflags +faststart -f mp4 \
+video-$(date +"%H-%M-%m-%d-%y").mp4
+
+
