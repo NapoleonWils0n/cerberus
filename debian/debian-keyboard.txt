@@ -1,0 +1,30 @@
+# set keyboard layout for mac
+#============================
+
+sudo vim /etc/default/keyboard
+
+XKBMODEL="pc105"
+XKBLAYOUT="gb"
+XKBVARIANT="mac"
+XKBOPTIONS=""
+
+
+
+
+
+XKBOPTIONS="altwin:ctrl_win"
+
+# setxkbmap to swap control with cmd
+#===================================
+
+setxkbmap -option altwin:ctrl_win
+
+
+
+# Use tweak tool on debain 
+
+open tweak tool and go to the typing section
+
+select Ctrl key position
+
+select Swap Right Win Key with Right Ctrl key
