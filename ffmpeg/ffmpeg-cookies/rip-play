@@ -1,0 +1,27 @@
+#!/bin/bash
+
+[[ $# -eq 1 ]] || exit
+[[ -f "$1" ]] && VIDEOURL=`cat "$1"` || VIDEOURL="$1"
+echo $VIDEOURL | while read url; do source video-regex.sh
+
+case "$url" in
+	"$VIDEOFILE") ffplay -hide_banner -x 640 -y 360 "$VIDEOFILE";;
+	"$M3U8") ffplay -hide_banner -x 640 -y 360 "$M3U8" 2>&1 | sed '/\[/d';;
+	"$M3U8TOKEN") ffplay -hide_banner -x 640 -y 360 "$M3U8TOKEN" 2>&1 | sed '/\[/d';;
+	"$XFORWARD") ffplay -hide_banner -x 640 -y 360 -headers 'X-Forwarded-For: '"$XFORWARDIP"''$'\r\n' "$M3U8";;
+	"$USEREF") ffplay -hide_banner -x 640 -y 360 -user-agent "$USERAGENT" -headers 'Referer: '"$REFERER"''$'\r\n' "$VIDEOFILE";;
+	"$M3U8USERAGENT") ffplay -hide_banner -x 640 -y 360 -user-agent "$USERAGENT" "$M3U8";;
+	"$M3U8USERAGENT2") ffplay -hide_banner -x 640 -y 360 -user-agent "$USERAGENT" "$M3U8UAG";;
+	"$GVID") ffplay -hide_banner -x 640 -y 360 "$GVID";;
+	"$M3U8UAGENTREFERER") ffplay -hide_banner -x 640 -y 360 -user-agent "$USERAGENT" -headers 'Referer: '"$REFERER"''$'\r\n' "$M3U8UAGNTREF";;
+	"$REFUSERAGENT") ffplay -hide_banner -x 640 -y 360 -headers 'Referer: '"$REFERER"''$'\r\n' -user-agent "$USERAGENT" "$VIDEOFILE";;
+	"$COOKIE") 
+		ffplay -hide_banner \
+		-user-agent "$COOKIEUSERAGTENT" \
+		-cookies "$COOKIEURL; path=/; $COOKIEDOMAIN;" \
+		-x 640 -y 360 "$COOKIEM3U8" 2>&1 | sed '/\[/d';;
+	"$BEEB") ffplay -hide_banner -x 640 -y 360 "$BEEB";;
+	"$RTMP") rtmpdump -i "$RTMP" | ffplay -hide_banner -x 640 -y 360 -;;
+	*) ffplay -hide_banner -x 640 -y 360 "$VIDEOURL";;
+esac 
+done

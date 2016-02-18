@@ -1,0 +1,76 @@
+#!/bin/bash
+
+[[ $# -eq 1 ]] || [[ $# -eq 3 ]] || exit
+[[ -f "$1" ]] && VIDEOURL=`cat "$1"` || VIDEOURL="$1"
+TFLAG="$2"; DURATION="$3"
+echo $VIDEOURL | while read url; do source video-regex.sh
+
+case "$url" in
+	"$VIDEOFILE")
+		ffmpeg -hide_banner -i "$VIDEOFILE" \
+		-c:v copy -c:a copy ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	"$M3U8")
+		ffmpeg -hide_banner -i "$M3U8" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv" 2>&1 | sed '/\[/d';;
+	"$M3U8TOKEN")
+		ffmpeg -hide_banner -loglevel panic -i "$M3U8TOKEN" \
+		-bsf:v mpeg4_unpack_bframes -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	"$XFORWARD")
+		ffmpeg -hide_banner -headers 'X-Forwarded-For: '"$XFORWARDIP"''$'\r\n' -i "$M3U8" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	"$USEREF")
+		ffmpeg -hide_banner -user-agent "$USERAGENT" -headers 'Referer: '"$REFERER"''$'\r\n' -i "$URL" \
+		-c:v copy -c:a copy ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv";;
+	"$M3U8USERAGENT")
+		ffmpeg -hide_banner -loglevel error -user-agent "$USERAGENT" -i "$M3U8" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv";;
+	"$M3U8USERAGENT2")
+		ffmpeg -hide_banner -loglevel error -user-agent "$USERAGENT" -i "$M3U8UAG" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv";;
+	"$GVID")
+		ffmpeg -hide_banner -i "$GVID" \
+		-c:v copy -c:a copy ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	"$M3U8UAGENTREFERER")
+		ffmpeg -hide_banner -loglevel error -user-agent "$USERAGENT" \
+		-headers 'Referer: '"$REFERER"''$'\r\n' \
+		-i "$M3U8UAGNTREF" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv";;
+	"$REFUSERAGENT")
+		ffmpeg -hide_banner -loglevel error \
+		-headers 'Referer: '"$REFERER"''$'\r\n' \
+		-user-agent "$USERAGENT" \
+		-i "$VIDEOFILE" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv";;
+	"$COOKIE")
+		ffmpeg -hide_banner -loglevel panic \
+		-user-agent "$COOKIEUSERAGTENT" \
+		-cookies "$COOKIEURL; path=/; $COOKIEDOMAIN;" \
+		-i "$COOKIEM3U8" \
+		-c:v copy -bsf:a aac_adtstoasc ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	"$BEEB")
+		ffmpeg -hide_banner -i "$BEEB" \
+		-c:v copy -c:a copy ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	"$RTMP")
+		rtmpdump -i "$RTMP" | ffmpeg -hide_banner -i - \
+		-c:v copy -c:a copy ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+	*)
+		ffmpeg -hide_banner -i "$VIDEOURL" \
+		-c:v copy -c:a copy ${TFLAG} ${DURATION} \
+		"$HOME/Desktop/video-$(date +"%m-%d-%y-%H-%M").mkv";;
+esac 
+done \
+&& type -P notify-send &> /dev/null && [[ $? -eq 0 ]] \
+&& notify-send -i kodi "Finished Recording" "$VIDEOURL"
