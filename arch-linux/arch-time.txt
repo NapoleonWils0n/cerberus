@@ -1,7 +1,0 @@
-      Local time: Sun 2016-03-27 14:16:56 UTC
-  Universal time: Sun 2016-03-27 14:16:56 UTC
-        RTC time: Sun 2016-03-27 14:04:27
-       Time zone: n/a (UTC, +0000)
- Network time on: no
-NTP synchronized: no
- RTC in local TZ: no
