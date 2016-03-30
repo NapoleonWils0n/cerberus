@@ -1,6 +1,6 @@
 # custom xkb symbols file 
 
-map ctrl to alt, alt to win, win to ctrl
+#### map ctrl to alt, alt to win, win to ctrl
 
 create the ~/.xkb/symbols directory
 
