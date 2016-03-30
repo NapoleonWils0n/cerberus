@@ -15,6 +15,8 @@ touch ~/.xkb/symbols/custom
 ```
 
 add the code below to ~/.xkb/symbols/custom
+to map ctrl to alt, alt to win, win to ctrl
+
 
 ```
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
