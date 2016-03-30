@@ -1,3 +1,5 @@
+mkdir -p ~/.xkb/symbols/custom
+
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
 partial modifier_keys
 xkb_symbols "alt_win_ctrl" {
