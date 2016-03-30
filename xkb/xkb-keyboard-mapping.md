@@ -35,6 +35,7 @@ Section "InputClass"
 EndSection
 ```
 
+### custom xkb symbols file
 
 create the ~/.xkb/symbols directory
 
