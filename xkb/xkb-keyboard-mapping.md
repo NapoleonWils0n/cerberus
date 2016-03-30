@@ -2,6 +2,21 @@
 
 #### map ctrl to alt, alt to win, win to ctrl
 
+## localectl
+
+set the keyboard layout with localectl
+
+```
+localectl --no-convert set-x11-keymap gb pc104 mac
+```
+
+use the --no-convert option so we dont set a keymap in the console
+check that /etc/vconsole.conf is empty
+
+```
+less /etc/vconsole.conf
+```
+
 create the ~/.xkb/symbols directory
 
 ```
