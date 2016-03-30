@@ -52,7 +52,6 @@ vim ~/.xkb/symbols/custom
 add the code below to ~/.xkb/symbols/custom
 to map ctrl to alt, alt to win, win to ctrl
 
-
 ```
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
 partial modifier_keys
@@ -64,4 +63,12 @@ xkb_symbols "alt_win_ctrl" {
     modifier_map Mod1 { <LALT>, <RALT>, Meta_L };
     modifier_map Mod4 { <LWIN>, <RWIN> };
 };
+```
+
+### XkbOptions
+
+custom:alt_win_ctrl
+
+```
+localectl --no-convert set-x11-keymap gb pc104 mac altwin:ctrl_win
 ```
