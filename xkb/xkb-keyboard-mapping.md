@@ -11,7 +11,7 @@ mkdir -p ~/.xkb/symbols
 create the ~/.xkb/symbols/custom file
 
 ```
-touch ~/.xkb/symbols/custom
+vim ~/.xkb/symbols/custom
 ```
 
 add the code below to ~/.xkb/symbols/custom
