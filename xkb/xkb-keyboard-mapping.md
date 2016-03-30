@@ -65,10 +65,15 @@ xkb_symbols "alt_win_ctrl" {
 };
 ```
 
-### XkbOptions
+the symbols file is called custom
+and the xkb_symbols is called alt_win_ctrl
 
-custom:alt_win_ctrl
+the syntax for localectl would be custom:alt_win_ctrl
+
+
+#### XkbOptions
 
 ```
 localectl --no-convert set-x11-keymap gb pc104 mac altwin:ctrl_win
 ```
+
