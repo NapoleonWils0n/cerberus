@@ -1,4 +1,17 @@
-mkdir -p ~/.xkb/symbols/custom
+#!/bin/bash
+
+# custom xkb symbols file 
+# to map ctrl to alt, alt to win, win to ctrl
+
+# create the ~/.xkb/symbols directory
+
+mkdir -p ~/.xkb/symbols
+
+# create the ~/.xkb/symbols/custom file
+
+touch ~/.xkb/symbols/custom
+
+# add the code below to ~/.xkb/symbols/custom
 
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
 partial modifier_keys
