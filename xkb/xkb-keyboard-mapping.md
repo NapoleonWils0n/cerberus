@@ -123,3 +123,36 @@ Section "InputClass"
 EndSection
 ```
 
+#### evdev
+
+edit evdev in /usr/share/X11/xkb/rules to include:
+
+```
+custom:alt_win_ctrl               =       +custom(alt_win_ctrl)
+```
+
+(under the option = symbols section)
+
+add your new option to evdev.lst (same dir):
+
+```
+custom:alt_win_ctrl
+```
+
+(under the option section)
+
+now edit your 01-Keyboard conf file to include the new option that you've created. 
+
+```
+# Read and parsed by systemd-localed. It's probably wise not to edit this file
+# manually too freely.
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "gb"
+        Option "XkbModel" "pc104"
+        Option "XkbVariant" "mac"
+        Option "XkbOptions" "custom:alt_win_ctrl"
+EndSection
+```
+
