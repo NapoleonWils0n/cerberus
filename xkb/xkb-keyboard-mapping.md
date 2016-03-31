@@ -49,7 +49,7 @@ create the ~/.xkb/symbols/custom file
 vim ~/.xkb/symbols/custom
 ```
 
-add the code below to ~/.xkb/symbols/custom
+add the code below to ~/.xkb/symbols/custom  
 to map ctrl to alt, alt to win, win to ctrl
 
 ```
@@ -65,13 +65,16 @@ xkb_symbols "alt_win_ctrl" {
 };
 ```
 
-the symbols file is called custom
+the symbols file is called custom   
 and the xkb_symbols is called alt_win_ctrl
 
 the syntax for localectl would be custom:alt_win_ctrl
 
 
 #### XkbOptions
+
+to set altwin:ctrl_win XKbOptions with localectl  
+we would use the following command
 
 ```
 localectl --no-convert set-x11-keymap gb pc104 mac altwin:ctrl_win
