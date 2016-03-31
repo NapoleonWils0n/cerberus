@@ -21,6 +21,8 @@ less /etc/vconsole.conf
 
 ### X configuration files
 
+running localectl will create a file at this location
+
 /etc/X11/xorg.conf.d/00-keyboard.conf
 
 ```
@@ -79,4 +81,12 @@ we would use the following command
 ```
 localectl --no-convert set-x11-keymap gb pc104 mac altwin:ctrl_win
 ```
+
+our custom xkb symbols command with localectl should look like this
+
+
+```
+localectl --no-convert set-x11-keymap gb pc104 mac custom:alt_win_ctrl
+```
+
 
