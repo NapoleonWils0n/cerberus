@@ -103,23 +103,3 @@ and the xkb_symbols is called alt_win_ctrl
 
 the syntax for localectl would be custom:alt_win_ctrl
 
-our custom xkb symbols command with localectl should look like this
-
-```
-localectl --no-convert set-x11-keymap gb pc104 mac custom:alt_win_ctrl
-```
-which should create a file like this
-
-```
-# Read and parsed by systemd-localed. It's probably wise not to edit this file
-# manually too freely.
-Section "InputClass"
-        Identifier "system-keyboard"
-        MatchIsKeyboard "on"
-        Option "XkbLayout" "gb"
-        Option "XkbModel" "pc104"
-        Option "XkbVariant" "mac"
-        Option "XkbOptions" "custom:alt_win_ctrl"
-EndSection
-```
-
