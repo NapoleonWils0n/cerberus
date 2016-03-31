@@ -111,4 +111,9 @@ the syntax for localectl would be custom:alt_win_ctrl
 
 ### xkbcomp
 
+load the local keymap and symbols
+
+```
+xkbcomp -I$HOME/.xkb $HOME/.keymap.xkb $DISPLAY
+```
 
