@@ -109,3 +109,6 @@ and the xkb_symbols is called alt_win_ctrl
 
 the syntax for localectl would be custom:alt_win_ctrl
 
+### xkbcomp
+
+
