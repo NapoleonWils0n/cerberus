@@ -68,6 +68,12 @@ using altwin:ctrl_win with localectl adds the following line to 000-keyboard.con
         Option "XkbOptions" "altwin:ctrl_win"
 ```
 
+### setxkbmap
+
+```
+setxkbmap -model pc104 -layout gb -variant mac -option altwin:ctrl_win
+```
+
 ### custom xkb symbols file
 
 create the ~/.xkb/symbols directory
