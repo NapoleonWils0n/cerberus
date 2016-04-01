@@ -47,6 +47,6 @@ and the xkb_symbols is called alt_win_ctrl
 load the local keymap and symbols
 
 ```
-xkbcomp -I$HOME/.xkb $HOME/.xkb/symbols/keymap.xkb $DISPLAY
+xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 ```
 
