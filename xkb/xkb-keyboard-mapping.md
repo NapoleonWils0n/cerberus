@@ -50,3 +50,4 @@ load the local keymap and symbols
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 ```
 
+start at login using ~/.xinitrc or simmilar ?
