@@ -119,6 +119,8 @@ create the ~/.xkb/keymap/ directory
 mkdir -p ~/.xkb/keymap
 ```
 
+export the keymap with setxkbmap
+
 ```
 setxkbmap -model pc104 -layout gb -variant mac -print > ~/.xkb/keymap/custom.xkb
 ```
