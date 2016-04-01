@@ -43,42 +43,6 @@ create the ~/.xkb/keymap/ directory
 mkdir -p ~/.xkb/keymap
 ```
 
-export the keymap with setxkbmap
-
-```
-setxkbmap -model pc104 -layout gb -variant mac -print > ~/.xkb/keymap/custom.xkb
-```
-the exported file will look like this
-
-```
-xkb_keymap {
-	xkb_keycodes  { include "evdev+aliases(qwerty)"	};
-	xkb_types     { include "complete"	};
-	xkb_compat    { include "complete"	};
-	xkb_symbols   { include "pc+gb(mac)+inet(evdev)"	};
-	xkb_geometry  { include "pc(pc104)"	};
-};
-```
-
-we need to append the custom keymap file and symbols to the keymap file
-under the xkb_symbols line
-
-```
-+custom(alt_win_ctrl)
-```
-
-the keymap file should looks like this
-
-```
-xkb_keymap {
-	xkb_keycodes  { include "evdev+aliases(qwerty)"	};
-	xkb_types     { include "complete"	};
-	xkb_compat    { include "complete"	};
-	xkb_symbols   { include "pc+gb(mac)+inet(evdev)+custom(alt_win_ctrl)"	};
-	xkb_geometry  { include "pc(pc104)"	};
-};
-```
-
 load the local keymap and symbols
 
 ```
