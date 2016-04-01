@@ -70,6 +70,8 @@ using altwin:ctrl_win with localectl adds the following line to 000-keyboard.con
 
 ### setxkbmap
 
+set the keymap with setxkbmap
+
 ```
 setxkbmap -model pc104 -layout gb -variant mac -option altwin:ctrl_win
 ```
@@ -109,13 +111,8 @@ and the xkb_symbols is called alt_win_ctrl
 
 the syntax for localectl would be custom:alt_win_ctrl
 
-### xkbcomp
 
-export the keyboard layout with xkbcomp
 
-```
-xkbcomp $DISPLAY custom.xkb
-```
 create the ~/.xkb/keymap/ directory
 
 ```
