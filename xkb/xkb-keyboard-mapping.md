@@ -125,6 +125,16 @@ export the keymap with setxkbmap
 setxkbmap -model pc104 -layout gb -variant mac -print > ~/.xkb/keymap/custom.xkb
 ```
 
+```
+xkb_keymap {
+	xkb_keycodes  { include "evdev+aliases(qwerty)"	};
+	xkb_types     { include "complete"	};
+	xkb_compat    { include "complete"	};
+	xkb_symbols   { include "pc+gb(mac)+inet(evdev)"	};
+	xkb_geometry  { include "pc(pc104)"	};
+};
+```
+
 load the local keymap and symbols
 
 ```
