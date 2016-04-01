@@ -124,6 +124,7 @@ export the keymap with setxkbmap
 ```
 setxkbmap -model pc104 -layout gb -variant mac -print > ~/.xkb/keymap/custom.xkb
 ```
+the exported file will look like this
 
 ```
 xkb_keymap {
