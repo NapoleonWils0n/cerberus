@@ -116,6 +116,11 @@ export the keyboard layout with xkbcomp
 ```
 xkbcomp $DISPLAY custom.xkb
 ```
+create the ~/.xkb/keymap/ directory
+
+```
+mkdir -p ~/.xkb/keymap
+```
 
 ```
 setxkbmap -model pc104 -layout gb -variant mac -print > ~/.xkb/keymap/custom.xkb
