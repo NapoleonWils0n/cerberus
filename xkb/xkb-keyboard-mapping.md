@@ -111,6 +111,16 @@ the syntax for localectl would be custom:alt_win_ctrl
 
 ### xkbcomp
 
+export the keyboard layout with xkbcomp
+
+```
+xkbcomp $DISPLAY custom.xkb
+```
+
+```
+setxkbmap -model pc104 -layout gb -variant mac -print > ~/.xkb/keymap/custom.xkb
+```
+
 load the local keymap and symbols
 
 ```
