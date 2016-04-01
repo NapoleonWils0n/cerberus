@@ -7,6 +7,11 @@ create the ~/.xkb/keymap/ directory
 ```
 mkdir -p ~/.xkb/keymap
 ```
+exprt the current keymap 
+
+```
+xkbcomp $DISPLAY ~/.xkb/keymap/keymap.xkb
+```
 
 create the ~/.xkb/symbols directory
 
@@ -42,6 +47,6 @@ and the xkb_symbols is called alt_win_ctrl
 load the local keymap and symbols
 
 ```
-xkbcomp -I$HOME/.xkb/keymap/custom.xkb $HOME/.xkb/symbols/custom $DISPLAY
+xkbcomp -I$HOME/.xkb $HOME/.xkb/symbols/keymap.xkb $DISPLAY
 ```
 
