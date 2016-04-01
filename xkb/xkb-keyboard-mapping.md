@@ -2,6 +2,12 @@
 
 #### map ctrl to alt, alt to win, win to ctrl
 
+create the ~/.xkb/keymap/ directory
+
+```
+mkdir -p ~/.xkb/keymap
+```
+
 create the ~/.xkb/symbols directory
 
 ```
@@ -32,16 +38,6 @@ xkb_symbols "alt_win_ctrl" {
 
 the symbols file is called custom   
 and the xkb_symbols is called alt_win_ctrl
-
-the syntax for localectl would be custom:alt_win_ctrl
-
-
-
-create the ~/.xkb/keymap/ directory
-
-```
-mkdir -p ~/.xkb/keymap
-```
 
 load the local keymap and symbols
 
