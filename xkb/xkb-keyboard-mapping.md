@@ -2,14 +2,6 @@
 
 #### map ctrl to alt, alt to win, win to ctrl
 
-### setxkbmap
-
-set the keymap with setxkbmap
-
-```
-setxkbmap -model pc104 -layout gb -variant mac -option altwin:ctrl_win
-```
-
 ### custom xkb symbols file
 
 create the ~/.xkb/symbols directory
