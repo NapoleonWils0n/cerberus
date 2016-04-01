@@ -7,7 +7,7 @@ create the ~/.xkb/keymap/ directory
 ```
 mkdir -p ~/.xkb/keymap
 ```
-exprt the current keymap 
+export the current keymap with xkbcomp
 
 ```
 xkbcomp $DISPLAY ~/.xkb/keymap/keymap.xkb
