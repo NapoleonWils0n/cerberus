@@ -85,4 +85,9 @@ load the local keymap and symbols
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 ```
 
-start at login using ~/.bashrc
+add xkbcomp to your ~/xinitrc
+
+```
+vim ~/.xinitrc
+```
+
