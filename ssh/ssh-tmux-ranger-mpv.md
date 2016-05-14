@@ -31,3 +31,5 @@ we need to use :open_with mpv with ranger so we can control mpv
 ```
 :open_with_mpv video.mkv
 ```
+
+Issuing a <ctrl> + b + d will detach the tmux session and disconnect the SSH connection
