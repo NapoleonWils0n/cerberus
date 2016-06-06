@@ -30,4 +30,5 @@ set edit_new_command="gvim -v +999999 \"%file%\""
 # command for free editing of the reminders file, given a filename %file%
 set edit_any_command="gvim -v \"%file%\""
 
-
+# remind with desktop notifications
+remind -z -k'notify-send --icon=dialog-information "Reminder" %s &' ~/documents/reminders &
