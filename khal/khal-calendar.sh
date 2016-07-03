@@ -4,11 +4,13 @@
 #==========================================
 
 # install python2 pip
-sudo pacman -S python2-pip
+sudo pacman -S python-pip
 
 # use pip to install khal git repo
-pip2 install --user git+https://github.com/geier/khal.git
+pip install --user git+https://github.com/geier/khal.git
 
+# install oauthlib
+pip install --user requests-oauthlib
 
 # create the khal directory
 mkdir -p ~/.khal
@@ -123,5 +125,12 @@ password = password
 # sync contacts and calendars
 #======================================
 
-vdirsyncer sync
+# discover
+vdirsyncer discover contacts
+vdirsyncer discover calendar
 
+# sync
+vdirsyncer sync --force-delete
+
+# import
+khal import todo.ics
