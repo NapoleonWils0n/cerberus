@@ -31,4 +31,8 @@ set edit_new_command="gvim -v +999999 \"%file%\""
 set edit_any_command="gvim -v \"%file%\""
 
 # remind with desktop notifications
-remind -z -k'notify-send --icon=dialog-information "Reminder" %s &' ~/documents/reminders &
+remind -z -k'notify-send --icon=dialog-information "Reminder" %s &' ~/.reminders &
+
+# export to ical
+remind -s ~/.reminders | rem2ics > ~/Desktop/todo-$(date +"%Y-%m-%d-%H-%M-%S").ics
+
