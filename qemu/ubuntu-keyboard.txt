@@ -1,0 +1,72 @@
+sudo vi /etc/default/keyboard
+
+XKBOPTIONS="altwin:ctrl_win"
+
+
+sudo dpkg-reconfigure keyboard-configuration
+
+
+
+#=======================================
+
+When it says Console, 
+it means it — not a terminal window, 
+an actual login console — try pressing Ctrl + Alt + F1 and logging in, then running:
+
+$ setupcon
+$ udevadm trigger --subsystem-match=input --action=change
+These don’t print anything out when they run, disconcertingly. Zini 1Zini 1550550
+Once you’ve run them in the Console, 
+Ctrl + Alt + F7 should get you back to the default console session you were in before.
+
+
+# always show menus
+#=======================================
+
+gsettings set com.canonical.Unity always-show-menus true
+
+
+# install gnome flashback
+#=======================================
+
+
+sudo apt-get install gnome-session-flashback
+
+
+
+#=======================================
+
+
+# Find out which partitions are decrypted by dm-crypt:
+
+cat /etc/crypttab
+
+
+# You should get something like this:
+
+vda5_crypt /dev/disk/by-uuid/1234abcd-5678-1337-2342-123456789abc none luks
+
+
+# Add a new passphrase:
+
+sudo cryptsetup luksAddKey /dev/vda5
+
+
+# You will be asked for any existing passphrase before you can add a new passphrase. 
+# So type in your old passphrase when you are asked to enter any passphrase.
+
+
+# Or add a keyfile
+
+sudo cryptsetup luksAddKey /dev/vda5 /path/to/keyfile
+
+
+# Reboot and decrypt with your new passphrase.
+
+
+# If your new key works, you can remove the old one:
+
+sudo cryptsetup luksRemoveKey /dev/vda5
+
+
+# enter the old password to delete
