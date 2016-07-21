@@ -1,0 +1,1 @@
+sudo apt-get install i3-wm i3status i3lock suckless-tools

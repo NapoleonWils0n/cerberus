@@ -1,0 +1,70 @@
+sudo apt-get install --no-install-recommends \ 
+xserver-xorg \
+xinit \
+x11-xserver-utils \
+xserver-xorg-input-synaptics \
+xserver-xorg-video-intel \
+xserver-xorg-input-evdev \
+xfce4 \
+network-manager \
+gnome-keyring \
+seahorse \ 
+wireless-tools \
+wpasupplicant \
+ttf-dejavu \
+alsa-utils \
+build-essential \
+gdb \
+firmware-linux-nonfree \
+xfce4-power-manager \
+xfce4-terminal 
+
+#
+synaptic
+
+#
+ffmpeg \
+vlc \
+mplayer \
+
+# dist-upgrade
+#===============
+sudo apt-get update
+sudo apt-get dist-upgrade
+
+# network manager
+#===============
+
+following network interfaces founf in 
+/etc/network/interfaces
+which means they are configured with ifupdown
+enp3s0f0
+
+if you want to manage those with network manager instead
+remove their configuration from 
+/etc/network/interfaces
+
+
+# xsession setup
+#===============
+
+nano ~/.xsession
+
+exec startxfce4
+
+# startx
+startx
+
+
+# keyboard
+#===============
+
+localectl set-x11-keymap gb pc104 mac
+
+# change keyboard settings in gui
+
+edit /etc/vconsole.conf
+remove 
+
+keymap=uk
+

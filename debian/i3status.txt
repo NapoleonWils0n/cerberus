@@ -1,0 +1,1 @@
+cp /etc/i3status.conf ~/.config/i3status/config

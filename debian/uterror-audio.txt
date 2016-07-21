@@ -1,0 +1,1 @@
+gstreamer1.0-pulseaudio

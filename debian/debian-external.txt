@@ -1,0 +1,34 @@
+# dont install grub during the install
+
+# boot up from a live debian cd and select advanced options from the instal menu
+# then select rescue mode
+# enter the luks password for the external root drive
+# select the /dev/mapper/main-root to use as the root partition
+# select the first option enter a shell on root
+# mount the efi partion on the external drive to /boot/efi
+mount -t vfat /dev/sdb1 /boot/efi
+
+# install grub-efi
+apt install grub-efi
+
+# install grub to /dev/sdb1
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=debian /dev/sdb1 --recheck --debug
+
+# create the /boot/efi/EFI/boot directory
+mkdir -p /boot/efi/EFI/boot
+
+# copy the efi file 
+
+cp /boot/efi/EFI/debian/grubx64.efi /boot/efi/EFI/boot/bootx64.efi
+
+# boot set up
+
+# create mount point
+mkdir /mnt/usb
+
+# mount /boot partition, partition after the efi partition
+mount /dev/sdb2 /mnt/usb
+
+# install grub to mount boot
+
+grub-mkconfig -o /mnt/usb/grub/grub.cfg
