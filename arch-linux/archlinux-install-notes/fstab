@@ -1,0 +1,14 @@
+# /dev/mapper/main-root
+UUID=46b033a0-3ed7-4994-b982-b2b7abd11118	/         	ext4      	rw,relatime,data=ordered	0 1
+
+# /dev/sda2
+UUID=1af530e4-5dec-4678-848b-76747beb3196	/boot     	ext2      	rw,relatime	0 2
+
+# /dev/mapper/main-home
+UUID=a5a5b4d6-83b0-4765-ad58-dc2d4dc09f36	/home     	ext4      	rw,relatime,data=ordered	0 2
+
+# /dev/mapper/main-swap
+UUID=0c045916-21b4-4aad-aada-c2d417bbb165	none      	swap      	defaults  	0 0
+
+nas:/volume1/Video	/home/djwilcox/video/	nfs noauto,noatime,user,rsize=32768,wsize=32768 0 0
+nas:/volume1/music	/home/djwilcox/music/	nfs noauto,noatime,user,rsize=32768,wsize=32768 0 0

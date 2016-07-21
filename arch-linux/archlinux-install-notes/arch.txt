@@ -1,0 +1,14 @@
+efi size in kb
+q
+1048580
+
+file system code: EF00
+
+
+boot
+
+size in kb
+
+409600
+
+file system code: 8300

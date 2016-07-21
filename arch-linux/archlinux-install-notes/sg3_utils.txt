@@ -1,0 +1,3 @@
+for disk drive
+
+sudo pacman -S sg3_utils

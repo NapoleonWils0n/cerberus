@@ -1,0 +1,1 @@
+sudo pacman -S android-tools android-udev

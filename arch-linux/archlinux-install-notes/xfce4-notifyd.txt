@@ -1,0 +1,2 @@
+# desktop notifications
+sudo pacman -S xfce4-notifyd 

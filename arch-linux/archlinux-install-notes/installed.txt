@@ -1,0 +1,9 @@
+# nfs client
+sudo pacman -S nfs-utils
+
+# alsa
+sudo pacman alsa alsa-lib alsa-plugins
+
+# video
+sudo pacman -S vlc 
+sudo pacman -S mplayer

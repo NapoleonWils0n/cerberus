@@ -1,0 +1,31 @@
+vim ~/.config/systemd/user/ssh-agent.service
+
+[Unit]
+Description=SSH key agent
+
+[Service]
+Type=forking
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/ssh-agent -a $SSH_AUTH_SOCK
+
+[Install]
+WantedBy=default.target
+
+add to your ~/.bashrc
+
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+
+systemctl --user daemon-reload
+systemctl --user enable ssh-agent
+systemctl --user disable ssh-agent
+
+systemctl --user start ssh-agent
+systemctl --user stop ssh-agent
+
+
+# after login
+
+ssh-add ~/.ssh/id_rsa
+
+then add your password
