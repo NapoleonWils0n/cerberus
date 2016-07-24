@@ -22,6 +22,12 @@ sudo apt install proxychains
 sudo vim /etc/proxychains.conf
 ```
 
+* you can comment out the socks4 used for tor at the bottom of the file 
+
+```
+#socks4         127.0.0.1 9050
+```
+
 * add your socks5 details and save
 
 ```
