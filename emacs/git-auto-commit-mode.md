@@ -15,6 +15,7 @@ M-x package-install <RET> git-auto-commit-mode <RET>
 
 ### emacs config set up
 
+To automatically push to head after each commit
 Add the code below to your ~/.emacs file
 
 ```
@@ -22,7 +23,15 @@ Add the code below to your ~/.emacs file
 (setq-default gac-automatically-push-p t)
 ```
 
-#### git set up
+#### As a file-local variable
+
+If you’re using Emacs 24 or newer you should set an eval file-local variable:
+
+```
+;; -*- eval: (git-auto-commit-mode 1) -*-
+```
+
+#### As a directory-local variable
 
 Add a .dir-locals.el file at the root of your git repo, 
 and put in it (if you’re using Emacs 24 or newer) the code below
