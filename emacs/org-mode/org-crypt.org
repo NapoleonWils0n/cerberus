@@ -1,0 +1,7 @@
+# -*- mode:org; epa-file-encrypt-to: ("username@gmail.com") -*-
+# -*- buffer-auto-save-file-name: nil; -*-
+* Crypt
+
+** gpg encrypted org file
+- change username@gmail.com to gpg email address
+- auto save disabled, so gpg encrypted file isnt stored unencrypted as an auto saved file
