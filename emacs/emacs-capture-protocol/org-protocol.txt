@@ -1,0 +1,20 @@
+org-protocol Instructions
+
+1. Add protocol handler
+
+Create the file ~/.local/share/applications/org-protocol.desktop containing:
+
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/org-protocol;
+Note: Each line’s key must be capitalized exactly as displayed, or it will be an invalid .desktop file.
+
+Then update ~/.local/share/applications/mimeinfo.cache by running:
+
+On KDE: kbuildsycoca4
+On GNOME: 
+update-desktop-database ~/.local/share/applications/

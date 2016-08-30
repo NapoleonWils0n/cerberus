@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Emacs Client
+Exec=emacs-capture %u 
+Icon=emacs-icon
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/org-protocol;
