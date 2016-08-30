@@ -7,8 +7,12 @@
 cd ~/Desktop
 dd if=/dev/urandom of=crypt bs=1M count=2048
 
+# create a 128 mb container wth dd on the desktop called crypt
+cd ~/Desktop
+dd if=/dev/urandom of=crypt bs=1M count=128
+
 # rename the file and give it a file extension to disguise it
-mv crypt friday-the-13th.iso 
+mv crypt superfly.iso
 
 # find a free loop device to mount the file
 sudo losetup -f
@@ -18,15 +22,16 @@ sudo losetup -f
 
 
 # use the block device and the path to the file you just created
-sudo losetup /dev/loop0 /home/$USER/Desktop/friday-the-13th.iso
+sudo losetup /dev/loop0 /home/$USER/Desktop/superfly.iso
 
 # create the luks container inside the file
 # you will be prompted to enter a password for the new luks container
 sudo cryptsetup luksFormat /dev/loop0
 
+sudo cryptsetup --cipher aes-xts-plain64 --hash sha512 --verify-passphrase --key-size 512 luksFormat /dev/loop0
 
 # check the file is now an encrypted luks container
-file /home/$USER/Desktop/friday-the-13th.iso
+file /home/$USER/Desktop/superfly.iso
 
 
 # map the luks container to the loop device
@@ -35,6 +40,9 @@ sudo cryptsetup luksOpen /dev/loop0 luks
 
 # format the container as ext4
 sudo mkfs.ext4 /dev/mapper/luks
+
+#Get 5% space from luks container
+sudo tune2fs -m 0 /dev/mapper/luks
 
 # mount the file
 mkdir /tmp/luks
