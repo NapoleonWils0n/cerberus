@@ -2,12 +2,12 @@
 
 [[ $# -eq 0 ]] || exit 
 read -erp "enter a path to a directory or m3u8 files: " DIR
-[[ -d $DIR || -f $DIR ]] && find $DIR -maxdepth 1 -name '*.m3u' -type f \
+[[ -d $DIR || -f $DIR ]] && find $DIR -maxdepth 1 -name '*.m3u8' -type f \
 | while read file
 do 
 for line in `cat "$file"`; do
-	LINK=`echo "$line" | grep -Eo '(http|https|rtmp)://[a-zA-Z0-9:0-9./?=_@&%|()[:blank:],;-]*'`
+	LINK=`echo "$line" | grep -Eo '(http|https|rtmp|rtmpe)://[a-zA-Z0-9:0-9./?=_@&%|()[:blank:],;-]*'`
  	[ $? -eq 0 ] && ffprobe -hide_banner "$LINK"
-	[ $? -eq 0 ] && grep -B 1 "$LINK" "$file" | sed -e '/--/d' >> iptv.m3u
+	[ $? -eq 0 ] && grep -B 1 "$LINK" "$file" | sed -e '/--/d' >> iptv.m3u8
 done
-done && sed -i '1i #EXTM3U' iptv.m3u || echo no directory or file found
+done && sed -i '1i #EXTM3U' iptv.m3u8 || echo no directory or file found
