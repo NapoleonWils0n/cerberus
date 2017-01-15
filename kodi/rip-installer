@@ -1,0 +1,94 @@
+#!/bin/bash
+
+#+========================================================+#
+# check number of arguments passed to script               #
+#+========================================================+#
+
+[[ $# -eq 0 ]] || exit
+
+#+========================================================+#
+# check linux distro                                      +#
+#+========================================================+#
+
+PS3="Select your Linux Distro to install rip-record, press '1' to quit: " #set the prompt
+OLD_IFS=${IFS}; #ifs space seperator
+IFS=$'\t\n' #change ifs seperator from spaces to new line
+
+select distro in "quit" "ubuntu" "ubuntu-mate" "arch-linux" "debian"; do
+case $distro in
+    quit)        # quit
+    printf "%s\n" "quiting"
+    IFS=${OLD_IFS}
+	 exit;;
+    ubuntu)      # ubuntu
+    printf "%s\n" "Installing packages"
+    sudo apt install -y git ffmpeg fdk-aac-dev rtmpdump vlc mpv youtube-dl aria2;;
+    ubuntu-mate) # ubuntu mate
+    printf "%s\n" "Installing packages"
+    sudo apt install -y git ffmpeg fdkaac rtmpdump vlc mpv youtube-dl aria2;;
+    arch-linux)  # arch linux
+    printf "%s\n" "Installing packages"
+    sudo pacman -S git ffmpeg libfdk-aac rtmpdump vlc mpv youtube-dl aria2c;;
+    debian)      # debian
+    printf "%s\n" "Installing packages"
+    sudo apt install -y git-core ffmpeg libfdk-aac-dev rtmpdump vlc mpv youtube-dl aria2;;
+    *)           # invalid selection
+    printf "%s\n" "invalid selection"
+esac
+break
+done
+
+#+========================================================+#
+# create the git directory                                +#
+#+========================================================+#
+
+sleep 1
+printf "%s\n" "Creating ~/git directory"
+
+mkdir -p ~/git && cd ~/git
+sleep 1
+
+#+========================================================+#
+# clone the git repo                                      +#
+#+========================================================+#
+
+printf "%s\n" "Cloning git repository"
+
+git clone https://github.com/NapoleonWils0n/kodi-playercorefactory.git
+sleep 1
+
+#+========================================================+#
+# set up the ~/.bashrc
+#+========================================================+#
+
+printf "%s\n" "Setting up ~/.bashrc"
+
+printf "%s\n" 'if [ -d "$HOME/git/kodi-playercorefactory/bash-scripts" ] ; then
+        PATH="$HOME/git/kodi-playercorefactory/bash-scripts:$PATH"
+fi' >> ~/.bashrc
+sleep 1
+
+#+========================================================+#
+# source the ~/.bashrc                                    +#
+#+========================================================+#
+
+printf "%s\n" "Sourcing ~/.bashrc"
+
+source ~/.bashrc
+sleep 1
+
+#+========================================================+#
+# copy playercorefactory.xml into place                   +#
+#+========================================================+#
+
+printf "%s\n" "Copying playercorefactory.xml to ~/.kodi/userdata/"
+
+cp  ~/git/kodi-playercorefactory/linux/combined/playercorefactory.xml ~/.kodi/userdata/playercorefactory.xml
+sleep 1
+
+#+========================================================+#
+# exit                                                    +#
+#+========================================================+#
+
+printf "%s\n" "Installation complete"
+exit
