@@ -15,8 +15,12 @@ Select root on zfs during install
 ## set the root password
 
 * set the root password
+
+## create new user
+
 * create new user
 * add new user to wheel group
+
 ## single user mode require root password
 
 change single user mode to requite root password
@@ -48,4 +52,12 @@ instal xorg
 
 ```
 # pkg install xorg
+```
+
+## fonts
+
+install truetype fonts
+
+```
+# pkg install urwfonts
 ```
