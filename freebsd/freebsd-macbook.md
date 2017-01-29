@@ -39,5 +39,5 @@ console none unknown off insecure
 To bootstrap the system, run:
 
 ```
-# /usr/sbin/pk
+# /usr/sbin/pkg
 ```
