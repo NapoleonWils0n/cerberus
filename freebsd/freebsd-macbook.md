@@ -12,13 +12,12 @@ Insert disc restart mac and hold down alt to boot into efi mode
 
 Select root on zfs during install
 
-encrypt discs
-encrypt swap
-swap size 8gig
+* encrypt discs
+* encrypt swap
+* swap size 8gig
 
 ## set the root password
 
-set the root password
-
-create new user
-add new user to wheel group
+* set the root password
+* create new user
+* add new user to wheel group
