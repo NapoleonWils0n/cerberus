@@ -34,3 +34,10 @@ sudo nano /etc/ttys
 console none unknown off insecure
 ```
 
+## bootstrap the system
+
+To bootstrap the system, run:
+
+```
+# /usr/sbin/pk
+```
