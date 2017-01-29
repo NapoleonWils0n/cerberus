@@ -41,3 +41,11 @@ To bootstrap the system, run:
 ```
 # /usr/sbin/pkg
 ```
+
+## xorg
+
+instal xorg
+
+```
+# pkg install xorg
+```
