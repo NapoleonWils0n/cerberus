@@ -6,6 +6,21 @@
 
 ## single user mode require root password
 
+change single user mode to requite root password
+change setting from secure to insecure to require root password
+
+edit /etc/ttys
+
+```
+sudo nano /etc/ttys
+```
+
+* change settings to insecure
+
+```
+console none unknown off insecure
+```
+
 ## root on zfs
 
 Select root on zfs during install
