@@ -4,6 +4,19 @@
 * Burn to disc
 * Insert disc restart mac and hold down alt to boot into efi mode
 
+## root on zfs
+
+Select root on zfs during install
+
+* encrypt discs
+* encrypt swap
+* swap size 8gig
+
+## set the root password
+
+* set the root password
+* create new user
+* add new user to wheel group
 ## single user mode require root password
 
 change single user mode to requite root password
@@ -21,16 +34,3 @@ sudo nano /etc/ttys
 console none unknown off insecure
 ```
 
-## root on zfs
-
-Select root on zfs during install
-
-* encrypt discs
-* encrypt swap
-* swap size 8gig
-
-## set the root password
-
-* set the root password
-* create new user
-* add new user to wheel group
