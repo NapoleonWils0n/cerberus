@@ -1,10 +1,8 @@
 # Freebsd macbook install
 
-Download iso file
-
-Burn to disc
-
-Insert disc restart mac and hold down alt to boot into efi mode
+* Download iso file
+* Burn to disc
+* Insert disc restart mac and hold down alt to boot into efi mode
 
 ## single user mode require root password
 
