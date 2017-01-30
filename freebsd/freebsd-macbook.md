@@ -130,3 +130,19 @@ reload pf firewall
 ```
 # pfctl -f /etc/pf.conf
 ```
+
+## /boot/loader.conf
+
+load audio driver at boot
+
+edit /boot/loader.conf
+
+```
+# nano /boot/loader.conf
+```
+
+add the following line
+
+```
+snd_hda_load="YES"
+```
