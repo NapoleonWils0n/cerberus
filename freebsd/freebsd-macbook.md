@@ -18,7 +18,12 @@ Select root on zfs during install
 
 ## create new user
 
-* create new user
+create new user
+
+```
+useradd
+```
+
 * add new user to wheel group
 
 ## single user mode require root password
