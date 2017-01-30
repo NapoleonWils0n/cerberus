@@ -84,6 +84,17 @@ install i3wm
 edit /etc/rc.conf
 
 ```
+moused_enable="YES"
+
+# powerd: hiadaptive speed while on AC power, adaptive while on battery power
+powerd_enable="YES"
+powerd_flags="-a hiadaptive -b adaptive"
+
+# Synchronize system time
+ntpd_enable="YES"
+# Let ntpd make time jumps larger than 1000sec
+ntpd_flags="-g"
+
 hald_enable="YES"
 dbus_enable="YES"
 ```
