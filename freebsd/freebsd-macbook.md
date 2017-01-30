@@ -51,10 +51,6 @@ To bootstrap the system, run:
 # /usr/sbin/pkg
 ```
 
-```
-# pkg update -f
-```
-
 ## sudo
 
 install sudo 
