@@ -21,7 +21,7 @@ Select root on zfs during install
 create new user
 
 ```
-useradd
+adduser
 ```
 
 * add new user to wheel group
