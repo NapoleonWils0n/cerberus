@@ -55,6 +55,26 @@ To bootstrap the system, run:
 # pkg update -f
 ```
 
+## sudo
+
+install sudo 
+
+```
+# pkg install sudo
+```
+
+edit /etc/sudoers
+
+```
+# visudo
+```
+
+add your user to the sudoers file, replace username with your username
+
+```
+%username   ALL=(ALL:ALL) ALL
+```
+
 ## xorg
 
 instal xorg
