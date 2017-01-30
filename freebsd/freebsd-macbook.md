@@ -120,3 +120,13 @@ hw.syscons.bell=0
 # Shared memory for Chromium
 kern.ipc.shm_allow_removed=1
 ```
+
+## /etc/pf.conf
+
+pf firewall
+
+reload pf firewall
+
+```
+# pfctl -f /etc/pf.conf
+```
