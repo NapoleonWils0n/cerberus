@@ -98,13 +98,23 @@ sudo pkg install dmenu
 
 ## applications
 
-xkbcomp set keyboard
+* xkbcomp set keyboard
 
 ```
 sudo pkg install xkbcomp
 ```
 
-urxvt-unicode terminal
+* urxvt-unicode terminal
+
+```
+sudo pkg install urxvt-unicode
+```
+
+network manager
+
+```
+sudo pkg install networkmanager
+```
 
 ## dotfiles
 
