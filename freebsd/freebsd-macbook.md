@@ -76,7 +76,7 @@ username   ALL=(ALL:ALL) ALL
 instal xorg
 
 ```
-# pkg install xorg-server xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
+sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
 ```
 
 ## fonts
@@ -92,9 +92,21 @@ install truetype fonts
 install i3wm
 
 ```
-# pkg install -y i3 i3lock i3status
-# pkg install dmenu
+sudo pkg install -y i3 i3lock i3status
+sudo pkg install dmenu
 ```
+
+## applications
+
+xkbcomp set keyboard
+
+```
+sudo pkg install xkbcomp
+```
+
+## dotfiles
+
+freebsd dot files
 
 ## /etc/rc.conf
 
