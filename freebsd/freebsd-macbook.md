@@ -68,7 +68,7 @@ edit /etc/sudoers
 add your user to the sudoers file, replace username with your username
 
 ```
-%username   ALL=(ALL:ALL) ALL
+username   ALL=(ALL:ALL) ALL
 ```
 
 ## xorg
@@ -76,11 +76,7 @@ add your user to the sudoers file, replace username with your username
 instal xorg
 
 ```
-# pkg install xorg
-```
-
-```
-pkg install -y xinit xf86-input-keyboard xf86-input-mouse
+# pkg install xorg-server xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
 ```
 
 ## fonts
