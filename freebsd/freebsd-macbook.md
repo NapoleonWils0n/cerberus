@@ -116,6 +116,12 @@ network manager
 sudo pkg install networkmanager
 ```
 
+chromium
+
+```
+sudo pkg install chromium
+```
+
 ## dotfiles
 
 freebsd dot files
