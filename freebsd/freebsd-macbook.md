@@ -104,6 +104,8 @@ xkbcomp set keyboard
 sudo pkg install xkbcomp
 ```
 
+urxvt-unicode terminal
+
 ## dotfiles
 
 freebsd dot files
