@@ -79,6 +79,8 @@ instal xorg
 sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
 ```
 
+add freetype to modules, and filepath to dejavu in xorg.conf
+
 ## fonts
 
 install truetype fonts
@@ -96,6 +98,16 @@ sudo pkg install -y i3 i3lock i3status
 sudo pkg install dmenu
 ```
 
+create ~/.xinitrc
+
+```
+vi ~/.xinitrc
+```
+
+```
+exec /usr/local/bin/i3
+```
+
 ## applications
 
 * xkbcomp set keyboard
@@ -107,7 +119,7 @@ sudo pkg install xkbcomp
 * urxvt-unicode terminal
 
 ```
-sudo pkg install urxvt-unicode
+sudo pkg install urxvt-unicode urxvt-perls
 ```
 
 network manager
