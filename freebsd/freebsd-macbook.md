@@ -89,6 +89,12 @@ install truetype fonts
 # pkg install urwfonts
 ```
 
+powerline fonts
+
+```
+sudo pkg install powerline-fonts
+```
+
 ## i3wm tiling window manager
 
 install i3wm
@@ -107,6 +113,21 @@ vi ~/.xinitrc
 ```
 exec /usr/local/bin/i3
 ```
+## change shell to bash
+
+change the shell to bash
+
+```
+chsh -s /usr/local/bin/bash
+```
+
+install bash-completion
+
+```
+sudo pkg install bash-completion
+```
+
+edit ~/.bashrc and add path
 
 ## applications
 
