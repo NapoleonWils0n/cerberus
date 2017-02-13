@@ -24,7 +24,7 @@ create new user
 adduser
 ```
 
-* add new user to wheel group
+* add new user to wheel and video groups
 
 ## single user mode require root password
 
@@ -51,12 +51,32 @@ To bootstrap the system, run:
 # /usr/sbin/pkg
 ```
 
+## ports
+
+1 To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
+
+```
+# portsnap fetch
+```
+
+2 When running Portsnap for the first time, extract the snapshot into /usr/ports:
+
+```
+# portsnap extract
+```
+
+3 After the first use of Portsnap has been completed as shown above, /usr/ports can be updated as needed by running:
+
+```
+# portsnap fetch update
+```
+
 ## sudo
 
 install sudo 
 
 ```
-# pkg install sudo
+# cd /usr/ports/security/sudo/ && make install clean
 ```
 
 edit /etc/sudoers
@@ -74,6 +94,17 @@ username   ALL=(ALL:ALL) ALL
 ## xorg
 
 instal xorg
+
+```
+# cd /usr/ports/x11/xorg
+```
+
+make install
+
+```
+# make install clean
+```
+
 
 ```
 sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
