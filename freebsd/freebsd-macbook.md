@@ -76,7 +76,7 @@ To bootstrap the system, run:
 install sudo 
 
 ```
-# cd /usr/ports/security/sudo/ && make install clean
+# pkg install sudo
 ```
 
 edit /etc/sudoers
@@ -95,16 +95,6 @@ username   ALL=(ALL:ALL) ALL
 
 instal xorg
 
-```
-# cd /usr/ports/x11/xorg
-```
-
-make install
-
-```
-# make install clean
-```
-
 
 ```
 sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
@@ -112,18 +102,38 @@ sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-video-inte
 
 add freetype to modules, and filepath to dejavu in xorg.conf
 
+Generating an xorg.conf:
+
+```
+# Xorg -configure
+```
+
+location of new file
+
+```
+/root/xorg.conf.new
+```
+
+add the follwoing to the Modules of x config file
+
+```
+Load "freetype"
+```
+
+add following to Files section of x config
+
+```
+FontPath "/usr/local/share/fonts/dejavu/"
+FontPath "/usr/local/share/fonts/urwfonts/"
+FontPath "/usr/local/share/fonts/powerline-fonts/"
+```
+
 ## fonts
 
 install truetype fonts
 
 ```
-# pkg install urwfonts
-```
-
-powerline fonts
-
-```
-sudo pkg install powerline-fonts
+# pkg install urwfonts powerline-fonts
 ```
 
 ## i3wm tiling window manager
@@ -131,11 +141,16 @@ sudo pkg install powerline-fonts
 install i3wm
 
 ```
-sudo pkg install -y i3 i3lock i3status
-sudo pkg install dmenu
+sudo pkg install -y i3 i3lock i3status dmenu
 ```
 
-create ~/.xinitrc
+copy default xinitrc to ~/.xinitrx
+
+```
+cp /usr/local/etc/X11/xinit/xinitrc ~/.xinitrc
+```
+
+edit ~/.xinitrc
 
 ```
 vi ~/.xinitrc
@@ -158,7 +173,12 @@ install bash-completion
 sudo pkg install bash-completion
 ```
 
-edit ~/.bashrc and add path
+bash add the following to you ~/.bashrc
+
+```
+[[ $PS1 && -f /usr/local/share/bash-completion/bash_completion.sh ]] && \
+        source /usr/local/share/bash-completion/bash_completion.sh
+```
 
 ## applications
 
@@ -172,12 +192,6 @@ sudo pkg install xkbcomp
 
 ```
 sudo pkg install urxvt-unicode urxvt-perls
-```
-
-network manager
-
-```
-sudo pkg install networkmanager
 ```
 
 chromium
@@ -249,7 +263,7 @@ load audio driver at boot
 edit /boot/loader.conf
 
 ```
-# nano /boot/loader.conf
+# vi /boot/loader.conf
 ```
 
 add the following line
