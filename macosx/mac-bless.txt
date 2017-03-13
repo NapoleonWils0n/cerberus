@@ -1,0 +1,18 @@
+boot in to mac recovery by pressing option and selecting
+
+disable sips on the mac so we can use the bless comand on the efi partition for freebsd
+
+sudo csrutil disable
+
+shut the mac from recovery mode
+
+reboot the mac hold down alt and boot into mac osx, needed so sip is disabled
+shutdown  the mac, reboot hold down alt and boot into the macs recovery parition
+
+open the terminal
+bless the freebsd efi partition
+
+# bless --device /dev/disk0s1 --setBoot --legacy --label FreeBSD
+
+# bless --device /dev/disk0s1 --setBoot --legacy
+# bless --device /dev/disk0s1
