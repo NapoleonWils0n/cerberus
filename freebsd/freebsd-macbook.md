@@ -271,3 +271,113 @@ add the following line
 ```
 snd_hda_load="YES"
 ```
+
+# pandoc
+
+binaries built with toolchain
+may want to link
+
+```
+-Wl, -rpath=/usr/local/lib/gcc49
+```
+
+# openvpn
+
+```
+openvpn-client <spec>.ovpn
+```
+
+# moutn ext4 as read only
+
+# add user to operator group
+
+```
+sudo pw groupmod operator -m djwilcox
+```
+
+Edit /etc/devfs.rules to allow the operator group to be able to read and write the device:
+
+```
+sudo vim /etc/devfs.rules
+```
+
+/etc/devfs.rules
+
+
+```
+[localrules=5]
+add path 'da*' mode 0660 group operator
+```
+
+Then edit /etc/rc.conf to enable the devfs.rules(5) ruleset:
+
+```
+sudo vi /etc/rc.conf
+```
+
+```
+devfs_system_ruleset="localrules"
+```
+
+Next allow regular user to mount file system:
+
+```
+sudo vi /etc/sysctl.conf
+```
+
+```
+vfs.usermount=1
+```
+
+Also execute sysctl to make the update available now:
+
+```
+sudo sysctl vfs.usermount=1
+```
+
+```
+vfs.usermount: 0 -> 1
+```
+
+Create a directory which a regular use can mount to:
+
+```
+sudo mkdir /mnt/usb
+```
+
+change the permission so your user own the directory with chown
+replace username with your username
+
+```
+sudo chown username:username /mnt/usb
+```
+
+install ext4 fuse
+
+```
+sudo pkg install fusefs-ext4fuse
+```
+
+Lastly, edit /boot/loader.conf to load the module each boot:
+
+```
+sudo vim /boot/loader.conf
+```
+
+```
+fuse_load="YES"
+fusefs_load="YES"
+```
+
+Now mounting USB drive with ext4 filesystem is working!
+
+```
+ext4fuse /dev/da0s1 /mnt/usb
+```
+
+# gpg
+To export your secret keys, use:
+  gpg --export-secret-key -a > secret.key
+
+and to import them again:
+  gpg --import secret.key
