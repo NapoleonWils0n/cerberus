@@ -544,3 +544,35 @@ exit root
 ```
 exit
 ```
+
+install ca_root_nss for ssl certs and subversion
+
+```
+sudo pkg install ca_root_nss subversion
+```
+
+checkout src to /usr/src
+
+```
+sudo svn checkout https://svn.freebsd.org/base/releng/11.0/ /usr/src
+```
+
+build generic kernel and modules
+
+```
+cd /usr/src/sys/amd64/conf; config GENERIC; cd ../compile/GENERIC && make cleandepend && make depend && make -j 2 && make install
+```
+
+# keyboard backlight
+
+keyboard backlight on
+
+```
+sysctl dev.asmc.0.light.control:255
+```
+
+ keyboard backlight off
+
+ ```
+ sysctl dev.asmc.0.light.control:0
+ ```
