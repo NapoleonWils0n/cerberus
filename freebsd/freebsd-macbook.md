@@ -381,3 +381,166 @@ To export your secret keys, use:
 
 and to import them again:
   gpg --import secret.key
+
+# freebsd dbus
+
+```
+sudo dbus-uuidgen > /etc/machine-id
+```
+
+# freebsd dhclient
+
+avoid overwriting /etc/resolv.conf
+
+* edit /etc/dhclient-enter-hooks
+
+```
+sudo vim /etc/dhclient-enter-hooks
+```
+
+add the following to /etc/dhclient-enter-hooks
+
+```
+add_new_resolv_conf() {
+  # We don't want /etc/resolv.conf changed
+  # So this is an empty function
+  return 0
+}
+```
+
+# freebsd wireshark
+
+In order for wireshark be able to capture packets when used by unprivileged
+user, /dev/bpf should be in network group and have read-write permissions.
+For example:
+
+```
+sudo chgrp network /dev/bpf*
+sudo chmod g+r /dev/bpf*
+sudo chmod g+w /dev/bpf*
+```
+
+In order for this to persist across reboots, add the following to
+/etc/devfs.conf:
+
+```
+sudo chown  bpf* root:network
+perm bpf* 0660
+```
+
+# pf firewall emerging threats
+
+## create /etc/pf.anchors/emerging-threats
+
+```
+sudo vim /etc/pf.anchors/emerging-threats
+```
+
+add the follow to the file
+
+```
+table <emerging_threats> persist file "/etc/emerging-Block-IPs.txt"
+block log from <emerging_threats> to any
+```
+
+### edit the /etc/pf.conf file
+
+```
+sudo vim /etc/pf.conf
+```
+
+add the following code to the file
+
+```
+anchor "emerging-threats"
+load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
+```
+
+### download emerging threats text file
+
+```
+$ curl http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt -o /tmp/emerging-Block-IPs.txt
+$ sudo cp /tmp/emerging-Block-IPs.txt /etc
+$ sudo chmod 644 /etc/emerging-Block-IPs.txt
+$ sudo pfctl -f /etc/pf.conf
+```
+
+### logging
+
+```
+
+$ sudo ifconfig pflog0 create
+$ sudo tcpdump -n -e -ttt -i pflog0
+```
+
+# dump smc stats from mac osx
+
+You need to have SMCFanControl on your system and know where the smcFanControl.app is located.
+
+[smc fan control](https://github.com/hholtmann/smcFanControl/tree/master/smc-command)
+
+Open Terminal, cd to the directory that has the smcFanControl.app
+
+```
+cd /Applications/smcFanControl.app/Contents/Resources
+```
+
+dump the smc stats to a text file on the desktop
+
+```
+type ./smc -l
+```
+
+# bless freebsd efi partition
+
+boot in to mac recovery by pressing option and selecting
+disable sips on the mac so we can use the bless comand on the efi partition for freebsd
+
+```
+sudo csrutil disable
+```
+
+shut the mac
+boot into mac osx ,open the terminal
+
+list the disk with diskutil
+
+```
+diskutil list
+```
+
+switch to root
+
+```
+sudo su
+```
+
+create a mount point called ESP in /Volumes
+
+```
+mkdir /Volumes/ESP
+```
+
+mount the efi partition you found by running diskutil list, it will have efi next to the drive
+
+```
+mount -t msdos /dev/disk0s1 /Volumes/ESP
+```
+
+bless the freebsd efi file
+
+```
+bless --mount /Volumes/ESP --setBoot --file /Volumes/ESP/EFI/BOOT/BOOTX64.efi --shortform
+```
+
+unmount the /Volume/ESP and the mounted freebsd efi partition
+
+```
+umount /Volumes/ESP
+```
+
+exit root
+
+```
+exit
+```
