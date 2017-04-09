@@ -209,17 +209,30 @@ freebsd dot files
 edit /etc/rc.conf
 
 ```
-moused_enable="YES"
-
-# powerd: hiadaptive speed while on AC power, adaptive while on battery power
+moused_enable="NO"
+clear_tmp_enable="YES"
+syslogd_flags="-ss"
+sendmail_enable="NONE"
+hostname="pollux"
+#ifconfig_bge0="DHCP"
+ifconfig_ue0="DHCP"
+local_unbound_enable="YES"
+ntpd_enable="YES"
+ntpd_flags="-g"
 powerd_enable="YES"
 powerd_flags="-a hiadaptive -b adaptive"
-
-# Synchronize system time
-ntpd_enable="YES"
-# Let ntpd make time jumps larger than 1000sec
-ntpd_flags="-g"
-
+# Set dumpdev to "AUTO" to enable crash dumps, "NO" to disable
+dumpdev="AUTO"
+zfs_enable="YES"
+# pf firewall
+pf_enable="YES"
+pflog_enable="YES"
+# rules to mount filesystem
+devfs_system_ruleset="localrules"
+# nf client
+nfs_client_enable="YES"
+# clone loopback device
+#cloned_interfaces="lo1"
 hald_enable="YES"
 dbus_enable="YES"
 ```
@@ -229,21 +242,37 @@ dbus_enable="YES"
 edit /etc/sysctl.conf
 
 ```
-# Enhance shared memory X11 interface
+# $FreeBSD: releng/11.0/etc/sysctl.conf 112200 2003-03-13 18:43:50Z mux $
+#
+#  This file is read when going to multi-user and its contents piped thru
+#  ``sysctl'' to adjust kernel values.  ``man 5 sysctl.conf'' for details.
+#
+
+# Uncomment this to prevent users from seeing information about processes that
+# are being run under another UID.
+#security.bsd.see_other_uids=0
+security.bsd.see_other_uids=0
+security.bsd.see_other_gids=0
+security.bsd.unprivileged_read_msgbuf=0
+security.bsd.unprivileged_proc_debug=0
+security.bsd.stack_guard_page=1
+# enhance shared memory x11 interface
 kern.ipc.shmmax=67108864
 kern.ipc.shmall=32768
-
-# Enhance desktop responsiveness under high CPU use (200/224)
+# enhance desktop responsiveness under high cpu use (200/224) 
 kern.sched.preempt_thresh=224
-
-# Bump up maximum number of open files
+# bump up max number of open files
 kern.maxfiles=200000
-
-# Disable PC Speaker
+# disable pc speaker
 hw.syscons.bell=0
-
-# Shared memory for Chromium
+# shared memory for chromium
 kern.ipc.shm_allow_removed=1
+# allow users to mount drives
+vfs.usermount=1
+# automatically use new audio devices
+hw.snd.default_auto=1
+# sleep resume
+hw.acpi.lid_switch_state=s3
 ```
 
 ## /etc/pf.conf
