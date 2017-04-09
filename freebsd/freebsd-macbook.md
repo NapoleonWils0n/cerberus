@@ -53,7 +53,7 @@ To bootstrap the system, run:
 
 ## ports
 
-1 To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
+To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 
 ```
 # portsnap fetch
@@ -272,7 +272,7 @@ add the following line
 snd_hda_load="YES"
 ```
 
-# pandoc
+## pandoc
 
 binaries built with toolchain
 may want to link
@@ -281,15 +281,15 @@ may want to link
 -Wl, -rpath=/usr/local/lib/gcc49
 ```
 
-# openvpn
+## openvpn
 
 ```
-openvpn-client <spec>.ovpn
+openvpn <spec>.ovpn
 ```
 
-# moutn ext4 as read only
-
-# add user to operator group
+# mount ext4 as read only
+	
+## add user to operator group
 
 ```
 sudo pw groupmod operator -m djwilcox
@@ -382,7 +382,7 @@ To export your secret keys, use:
 and to import them again:
   gpg --import secret.key
 
-# freebsd dbus
+## freebsd dbus
 
 ```
 sudo dbus-uuidgen > /etc/machine-id
@@ -408,7 +408,7 @@ add_new_resolv_conf() {
 }
 ```
 
-# freebsd wireshark
+## freebsd wireshark
 
 In order for wireshark be able to capture packets when used by unprivileged
 user, /dev/bpf should be in network group and have read-write permissions.
@@ -473,7 +473,9 @@ $ sudo ifconfig pflog0 create
 $ sudo tcpdump -n -e -ttt -i pflog0
 ```
 
-# dump smc stats from mac osx
+# build custom kernel
+
+## dump smc stats from mac osx
 
 You need to have SMCFanControl on your system and know where the smcFanControl.app is located.
 
@@ -491,7 +493,7 @@ dump the smc stats to a text file on the desktop
 type ./smc -l
 ```
 
-# bless freebsd efi partition
+## bless freebsd efi partition
 
 boot in to mac recovery by pressing option and selecting
 disable sips on the mac so we can use the bless comand on the efi partition for freebsd
@@ -563,7 +565,7 @@ build generic kernel and modules
 cd /usr/src/sys/amd64/conf; config GENERIC; cd ../compile/GENERIC && make cleandepend && make depend && make -j 2 && make install
 ```
 
-# keyboard backlight
+### keyboard backlight
 
 keyboard backlight on
 
@@ -576,3 +578,4 @@ sysctl dev.asmc.0.light.control:255
  ```
  sysctl dev.asmc.0.light.control:0
  ```
+	
