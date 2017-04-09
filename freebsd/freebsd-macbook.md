@@ -4,6 +4,10 @@
 * Burn to disc
 * Insert disc restart mac and hold down alt to boot into efi mode
 
+* [freebsd dotfiles](https://github.com/NapoleonWils0n/freebsd-dotfiles)
+* [freebsd root dotfiles](https://github.com/NapoleonWils0n/freebsd-root)
+* [freebsd home bin](https://github.com/NapoleonWils0n/freebsd-bin)
+
 ## root on zfs
 
 Select root on zfs during install
