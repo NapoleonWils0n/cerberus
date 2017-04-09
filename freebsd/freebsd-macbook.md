@@ -375,6 +375,29 @@ add the following line
 snd_hda_load="YES"
 ```
 
+```
+geli_ada0p5_keyfile0_load="YES"
+geli_ada0p5_keyfile0_type="ada0p5:geli_keyfile0"
+geli_ada0p5_keyfile0_name="/boot/encryption.key"
+aesni_load="YES"
+geom_eli_load="YES"
+vfs.root.mountfrom="zfs:zroot/ROOT/default"
+kern.geom.label.disk_ident.enable="0"
+kern.geom.label.gptid.enable="0"
+zpool_cache_load="YES"
+zpool_cache_type="/boot/zfs/zpool.cache"
+zpool_cache_name="/boot/zfs/zpool.cache"
+geom_eli_passphrase_prompt="YES"
+zfs_load="YES"
+snd_hda_load="YES"
+fuse_load="YES"
+fusefs_load="YES"
+net.fibs=2
+net.add_addr_allfibs=0
+asmc_load="YES"
+```
+
+
 ## pandoc
 
 binaries built with toolchain
