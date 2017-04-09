@@ -413,9 +413,9 @@ may want to link
 openvpn <spec>.ovpn
 ```
 
-# mount ext4 as read only
+## mount ext4 as read only
 	
-## add user to operator group
+add user to operator group
 
 ```
 sudo pw groupmod operator -m djwilcox
