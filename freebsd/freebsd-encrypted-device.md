@@ -88,13 +88,14 @@ zfs set compression=lz4 crypt
 zfs set mountpoint=/usr/home/djwilcox/mnt crypt
 ```
 
-* mount the encrypted drive to home mnt
+* change the permission on the container
 
 ```
-zfs mount crypt
+sudo chmod -R djwilcox:djwilcox ~/mnt
 ```
 
 Finally, when you want to unmount, we also want to detach from GELI and detach from md:
+
 
 * zfs unmount
 
