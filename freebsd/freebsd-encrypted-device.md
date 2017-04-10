@@ -110,16 +110,18 @@ mdconfig -d -u 0
 
 ## mounting and unmounting
 
-Now, if you want to load the system up later, do the following
+* mount
 
 ```
 mdconfig -a -t vnode -f disk.img -u 0
 geli attach -k storage.key /dev/md0
-mount /dev/md0.eli /mnt
+zfs mount crypt
+```
 
-...
+* umount
 
-umount /mnt
+```
+zfs umount crypt
 geli detach md0.eli
 mdconfig -d -u 0
 ```
