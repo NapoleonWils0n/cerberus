@@ -79,7 +79,7 @@ zpool set compression=lz4 crypt
 * zfs set mount point
 
 ```
-zfs set mountpoint=/home/djwilcox/mnt crypt
+zfs set mountpoint=/home/username/mnt crypt
 ```
 
 * mount the encrypted drive to home mnt
