@@ -73,7 +73,7 @@ zpool create crypt /dev/md0.eli
 * add compression and duplication to the zfs pool
 
 ```
-placeholder code will go here
+zpool set compression=lz4 crypt
 ```
 
 
