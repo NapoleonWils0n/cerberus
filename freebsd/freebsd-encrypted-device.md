@@ -76,18 +76,35 @@ zpool create crypt /dev/md0.eli
 zpool set compression=lz4 crypt
 ```
 
+* zfs set mount point
+
+```
+zfs set mountpoint=/home/djwilcox/mnt crypt
+```
 
 * mount the encrypted drive to home mnt
 
 ```
-mount /dev/md0.eli ~/mnt
+zfs mount crypt
 ```
 
 Finally, when you want to unmount, we also want to detach from GELI and detach from md:
 
+* zfs unmount
+
 ```
-umount /mnt
+zfs umount crypt
+```
+
+* geli detach
+
+```
 geli detach md0.eli
+```
+
+* mdconfig free loop device
+
+```
 mdconfig -d -u 0
 ```
 
@@ -106,3 +123,4 @@ umount /mnt
 geli detach md0.eli
 mdconfig -d -u 0
 ```
+	
