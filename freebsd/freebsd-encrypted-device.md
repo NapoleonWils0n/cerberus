@@ -67,7 +67,7 @@ Next, format the device with the ZFS file system and mount it on an existing mou
 * use dd to write random data to geli container before adding file system
 
 ```
-dd if=/dev/random of=/dev/md0.eli bs=1m
+dd if=/dev/random of=/dev/md0.eli bs=1M
 ```
 
 * To create a simple, non-redundant pool using a single disk device:
@@ -79,13 +79,13 @@ zpool create crypt /dev/md0.eli
 * add compression and duplication to the zfs pool
 
 ```
-zpool set compression=lz4 crypt
+zfs set compression=lz4 crypt
 ```
 
 * zfs set mount point
 
 ```
-zfs set mountpoint=/home/djwilcox/mnt crypt
+zfs set mountpoint=/usr/home/djwilcox/mnt crypt
 ```
 
 * mount the encrypted drive to home mnt
