@@ -44,12 +44,18 @@ Here, the -a option forces the disk mounting, -t vnode is used for opening a reg
 
 ## Generate the Master Key
 
+create directory to store geli key
+
+```
+mkdir ~/.ossuary
+```
+
 Now we want to create a key for GELI to encrypt with, and attach it to our disk image device:
 
 ```
-dd if=/dev/zero of=/root/storage.key bs=256 count=1
-geli init -e aes -l 256 -s 4096 -K /root/storage.key /dev/md0
-geli attach -k /root/storage.key /dev/md0
+dd if=/dev/zero of=/usr/home/djwilcox/.ossuary/ossuary.key bs=256 count=1
+geli init -e aes -l 256 -s 4096 -K /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
+geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
 ```
 
 Enter passphrase:
@@ -79,7 +85,7 @@ zpool set compression=lz4 crypt
 * zfs set mount point
 
 ```
-zfs set mountpoint=/home/username/mnt crypt
+zfs set mountpoint=/home/djwilcox/mnt crypt
 ```
 
 * mount the encrypted drive to home mnt
