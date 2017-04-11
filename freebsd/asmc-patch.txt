@@ -1,0 +1,68 @@
+--- sys/dev/asmc/asmc.orig	2017-04-11 21:39:55.078949000 +0100
++++ sys/dev/asmc/asmc.c	2017-04-07 15:04:31.085292000 +0100
+@@ -33,7 +33,7 @@
+  */
+ 
+ #include <sys/cdefs.h>
+-__FBSDID("$FreeBSD: releng/11.0/sys/dev/asmc/asmc.c 298990 2016-05-03 17:11:33Z adrian $");
++__FBSDID("$FreeBSD: stable/11/sys/dev/asmc/asmc.c 298990 2016-05-03 17:11:33Z adrian $");
+ 
+ #include <sys/param.h>
+ #include <sys/bus.h>
+@@ -282,6 +282,14 @@
+ 	},	
+ 
+ 	{
++          "MacBookAir4,1", "Apple SMC Macbook Air 11-inch (Mid 2011)",
++	  ASMC_SMS_FUNCS_DISABLED,
++	  ASMC_FAN_FUNCS2, 
++	  ASMC_LIGHT_FUNCS,
++	  ASMC_MBA4_TEMPS, ASMC_MBA4_TEMPNAMES, ASMC_MBA4_TEMPDESCS
++	},
++
++	{
+ 	  "MacBookAir5,1", "Apple SMC MacBook Air 11-inch (Mid 2012)",
+ 	  ASMC_SMS_FUNCS_DISABLED,
+ 	  ASMC_FAN_FUNCS2, 
+--- sys/dev/asmc/asmcvar.orig	2017-04-11 21:40:03.106210000 +0100
++++ sys/dev/asmc/asmcvar.h	2017-04-07 15:04:31.086215000 +0100
+@@ -23,7 +23,7 @@
+  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  * POSSIBILITY OF SUCH DAMAGE.
+  *
+- * $FreeBSD: releng/11.0/sys/dev/asmc/asmcvar.h 298990 2016-05-03 17:11:33Z adrian $
++ * $FreeBSD: stable/11/sys/dev/asmc/asmcvar.h 298990 2016-05-03 17:11:33Z adrian $
+  *
+  */
+ 
+@@ -378,6 +378,30 @@
+ #define	ASMC_MBA3_TEMPDESCS	{ "Enclosure Bottom", "TB1T", "TB2T", \
+ 				  "TC0D", "TC0E", "TC0P" }
+ 
++#define	ASMC_MBA4_TEMPS { "TB0T", "TB1T", "TB2T", "TC0C", \
++                         	"TC0D", "TC0E", "TC0F", "TC0P", \
++	                        "TC1C", "TC2C", "TCGC", "TCSA", \
++	                        "TH0F", "TH0J", "TH0O", "TH0o", \
++	                        "TM0P", "TPCD", "Ta0P", "Th1H", \
++	                        "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
++                                NULL }
++
++#define	ASMC_MBA4_TEMPNAMES { "TB0T", "TB1T", "TB2T", "TC0C", \
++                             	"TC0D", "TC0E", "TC0F", "TC0P", \
++                               "TC1C", "TC2C", "TCGC", "TCSA", \
++                               "TH0F", "TH0J", "TH0O", "TH0o", \
++                               "TM0P", "TPCD", "Ta0P", "Th1H", \
++                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
++                                NULL }
++
++#define	ASMC_MBA4_TEMPDESCS { "TB0T", "TB1T", "TB2T", "TC0C", \
++                             	"TC0D", "TC0E", "TC0F", "TC0P", \
++                               "TC1C", "TC2C", "TCGC", "TCSA", \
++                               "TH0F", "TH0J", "TH0O", "TH0o", \
++                               "TM0P", "TPCD", "Ta0P", "Th1H", \
++                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
++                                NULL }
++
+ #define	ASMC_MBA5_TEMPS		{ "TB0T", "TB1T", "TB2T", "TC0C", \
+                          	  "TC0D", "TC0E", "TC0F", "TC0P", \
+ 	                          "TC1C", "TC2C", "TCGC", "TCSA", \
