@@ -131,17 +131,12 @@ mdconfig -a -t vnode -f disk.img -u 0
 geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
 ```
 
-* we need to import the zpool before mounting
+* we need to import the zpool which will also mount the container
 
 ```
-zfs import crypt
+zpool import crypt
 ```
 
-* use zfs mount to mount the poolname to the mount point we set earlier
-
-```
-zfs mount crypt
-```
 
 * umount
 
@@ -154,7 +149,7 @@ zfs umount crypt
 * we need to export the zfs pool before we use geli detach, otherwise geli thinks the device is busy
 
 ```
-zfs export crypt
+zpool export crypt
 ```
 
 * use geli to detach the encrypted device
