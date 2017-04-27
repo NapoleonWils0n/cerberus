@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=pandoc-protocol
+Exec=web-clipper %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/pandoc-protocol;

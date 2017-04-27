@@ -1,0 +1,1 @@
+javascript:(function()%7Bvar node%3Ddocument.createElement('div')%3Bnode.appendChild(getSelection().getRangeAt(0).cloneContents())%3Blocation.href='pandoc-protocol://'+'[title]'+(document.title)+'[/title]'+'[content]'+(node.innerHTML)+'[/content]'%3B%7D)()%3B

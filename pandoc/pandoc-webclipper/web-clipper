@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# extract title, content with awk
+title=$(awk -F "[][]" '/title/{print $3}' <<<"$@")
+content=$(awk -F "[][]" '/content/{print $7}' <<<"$@")
+
+# pandoc convert content and save with title as filename
+pandoc <<<"$content" -f html -t html5 --normalize -s --self-contained --variable pagetitle="$title" -o "$HOME/Desktop/${title}.html"

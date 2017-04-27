@@ -1,0 +1,3 @@
+[MIME Cache]
+x-scheme-handler/org-protocol=org-protocol.desktop;
+x-scheme-handler/pandoc-protocol=pandoc-protocol.desktop;
