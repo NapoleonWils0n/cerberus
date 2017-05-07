@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=Chrome Web Store Payments
+Exec=/usr/local/share/chromium/chrome ${1+"$@"} --force-device-scale-factor=1 --disable-gpu --profile-directory=Default --app-id=nmmhkkegccagdldgiimedpiccmgmieda
+Icon=chrome-nmmhkkegccagdldgiimedpiccmgmieda-Default
+NoDisplay=true
+StartupWMClass=crx_nmmhkkegccagdldgiimedpiccmgmieda
