@@ -1,0 +1,16 @@
+sudo apt-get -y install -q build-essential \
+ruby ruby-dev make zlib1g-dev libicu-dev git cmake \
+pandoc pandoc-citeproc
+
+
+# Install gollum
+gem install gollum redcarpet github-markdown --no-ri --no-rdoc
+
+# Initialize wiki data
+mkdir /var/wiki
+
+# back up file
+mv /var/lib/gems/2.3.0/gems/gollum-lib-4.2.5/lib/gollum-lib/sanitization.rb /var/lib/gems/2.3.0/gems/gollum-lib-4.2.5/lib/gollum-lib/sanitization.rb.bak
+
+# add custom html santizer options
+scp sanitization.rb ssh-server:/var/lib/gems/2.3.0/gems/gollum-lib-4.2.5/lib/gollum-lib/sanitization.rb
