@@ -1,0 +1,21 @@
+# sed wrap link
+
+sed wrap video link in ahref and li
+
+link
+
+```
+http://socialreporter.co.uk/videos/001_John_Perkins.mp4
+```
+
+convert to this fomat
+
+<li>
+<a href="http://socialreporter.co.uk/videos/001_John_Perkins.mp4">John_Perkins</a>
+</li>
+
+sed command
+
+```
+sed -i.bak 's|^http://[a-zA-Z./]*\([0-9]*_\)\([-a-zA-Z0-9_]*\)\(.mp4\)*|<li><a href="&">\2</a></li>|' links.txt
+```
