@@ -1,0 +1,17 @@
+# drush digitial ocean
+
+Digital ocean support found this solution and I can now update with Drush.
+
+Basically, to resolve this log in as root, and make sure you're in the root user's home directory:
+
+cd ~
+
+After doing this, move the .my.cnf file to rename it:
+
+mv .my.cnf backup.my.cnf
+
+# install composer
+
+reinstall composer
+composer require php-ffmpeg/php-ffmpeg
+composer require michelf/php-markdown
