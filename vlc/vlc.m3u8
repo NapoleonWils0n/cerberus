@@ -1,0 +1,5 @@
+#EXTM3U
+#EXTINF:0,ccloud
+#EXTVLCOPT:http-referer=
+#EXTVLCOPT:http-user-agent=
+https://example.com/video.m3u8
