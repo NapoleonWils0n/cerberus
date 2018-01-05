@@ -23,7 +23,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: stable/11/sys/dev/asmc/asmcvar.h 298990 2016-05-03 17:11:33Z adrian $
+ * $FreeBSD: releng/11.1/sys/dev/asmc/asmcvar.h 298990 2016-05-03 17:11:33Z adrian $
  *
  */
 
@@ -379,28 +379,29 @@ struct asmc_softc {
 				  "TC0D", "TC0E", "TC0P" }
 
 #define	ASMC_MBA4_TEMPS { "TB0T", "TB1T", "TB2T", "TC0C", \
-                         	"TC0D", "TC0E", "TC0F", "TC0P", \
-	                        "TC1C", "TC2C", "TCGC", "TCSA", \
-	                        "TH0F", "TH0J", "TH0O", "TH0o", \
-	                        "TM0P", "TPCD", "Ta0P", "Th1H", \
-	                        "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
-                                NULL }
+                	"TC0D", "TC0E", "TC0F", "TC0P", \
+                        "TC1C", "TC2C", "TCGC", "TCSA", \
+                        "TH0F", "TH0J", "TH0O", "TH0o", \
+                        "TM0P", "TPCD", "Ta0P", "Th1H", \
+                        "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                         NULL }
 
 #define	ASMC_MBA4_TEMPNAMES { "TB0T", "TB1T", "TB2T", "TC0C", \
-                             	"TC0D", "TC0E", "TC0F", "TC0P", \
-                               "TC1C", "TC2C", "TCGC", "TCSA", \
-                               "TH0F", "TH0J", "TH0O", "TH0o", \
-                               "TM0P", "TPCD", "Ta0P", "Th1H", \
-                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
-                                NULL }
+                       	   "TC0D", "TC0E", "TC0F", "TC0P", \
+                           "TC1C", "TC2C", "TCGC", "TCSA", \
+                           "TH0F", "TH0J", "TH0O", "TH0o", \
+                           "TM0P", "TPCD", "Ta0P", "Th1H", \
+                           "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                            NULL }
 
 #define	ASMC_MBA4_TEMPDESCS { "TB0T", "TB1T", "TB2T", "TC0C", \
-                             	"TC0D", "TC0E", "TC0F", "TC0P", \
-                               "TC1C", "TC2C", "TCGC", "TCSA", \
-                               "TH0F", "TH0J", "TH0O", "TH0o", \
-                               "TM0P", "TPCD", "Ta0P", "Th1H", \
-                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
-                                NULL }
+                           "TC0D", "TC0E", "TC0F", "TC0P", \
+                           "TC1C", "TC2C", "TCGC", "TCSA", \
+                           "TH0F", "TH0J", "TH0O", "TH0o", \
+                           "TM0P", "TPCD", "Ta0P", "Th1H", \
+                           "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                            NULL }
+
 
 #define	ASMC_MBA5_TEMPS		{ "TB0T", "TB1T", "TB2T", "TC0C", \
                          	  "TC0D", "TC0E", "TC0F", "TC0P", \

@@ -23,7 +23,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: releng/11.0/sys/dev/asmc/asmcvar.h 298990 2016-05-03 17:11:33Z adrian $
+ * $FreeBSD: releng/11.1/sys/dev/asmc/asmcvar.h 298990 2016-05-03 17:11:33Z adrian $
  *
  */
 

@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: stable/11/sys/dev/asmc/asmc.c 298990 2016-05-03 17:11:33Z adrian $");
+__FBSDID("$FreeBSD: releng/11.1/sys/dev/asmc/asmc.c 298990 2016-05-03 17:11:33Z adrian $");
 
 #include <sys/param.h>
 #include <sys/bus.h>
@@ -281,13 +281,13 @@ struct asmc_model asmc_models[] = {
 	  ASMC_MBA3_TEMPS, ASMC_MBA3_TEMPNAMES, ASMC_MBA3_TEMPDESCS
 	},	
 
-	{
-     "MacBookAir4,1", "Apple SMC Macbook Air 11-inch (Mid 2011)",
-	  ASMC_SMS_FUNCS_DISABLED,
-	  ASMC_FAN_FUNCS2, 
-	  ASMC_LIGHT_FUNCS,
-	  ASMC_MBA4_TEMPS, ASMC_MBA4_TEMPNAMES, ASMC_MBA4_TEMPDESCS
-	},
+        {
+          "MacBookAir4,1", "Apple SMC Macbook Air 11-inch (Mid 2011)",
+          ASMC_SMS_FUNCS_DISABLED,
+          ASMC_FAN_FUNCS2,
+          ASMC_LIGHT_FUNCS,
+          ASMC_MBA4_TEMPS, ASMC_MBA4_TEMPNAMES, ASMC_MBA4_TEMPDESCS
+        },
 
 	{
 	  "MacBookAir5,1", "Apple SMC MacBook Air 11-inch (Mid 2012)",
