@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# exit status, error codes
+SUCCESS=0      # success exit code
+E_WRONGARGS=65 # wrong number of arguments passed to script
+E_NOMATCH=66   # url not matched by regular expression
+
+# script usage
+script_usage="Usage: $(basename "$0") [(http|https)://example.com/somepage]"
+
+# check number of arguments passed to script
+[[ $# -eq 1 ]] || { printf "%s\n" "$script_usage"; exit "$E_WRONGARGS"; }
+
+# url equals first argument
+url=$1
+
+# validate user imput and make sure string is a http or https url
+first_arg_validated="^(http|https)://*"    # matches: http|https
+
+if [[ $# -eq 1 ]]; then                               # + one argument is passed to the script
+   if ! [[ $url =~ $first_arg_validated ]]; then # - if videourl doesnt match validation regular expression
+      printf "%s\n%s\n" "'$url' invalid input" "$script_usage" # - display invalid user input with error message
+      exit "$E_NOMATCH"                               # - exit with E_NOMATCH error code
+   fi
+fi
+
+# play url with mpv
+mpv $(wget -q "$url" --no-check-certificate -O -| awk  -F'"' '/source src=/ || /video src=/ {print $2}')
+
+# save url
+#wget -q "$url" --no-check-certificate -O -| awk  -F'"' '/source src=/ || /video src=/ {print $2}' \
+#> ~/Desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# exit status, error codes
+SUCCESS=0      # success exit code
+E_WRONGARGS=65 # wrong number of arguments passed to script
+
+# script usage
+script_usage="Usage: $(basename "$0")"
+
+# check number of arguments passed to script
+[[ $# -eq 0 ]] || { printf "%s\n" "$script_usage"; exit "$E_WRONGARGS"; }
+
+# config file with urls
+config="$(<"$HOME/Desktop/tvurls.txt")"
+
+# menu function
+function main_menu {
+PS3="Enter a number next to a video, or press '1' to quit: "
+COLUMNS=80
+select channel in quit $config; do
+        case $channel in
+	quit) exit;;
+	$channel) mpv $(wget -q "$channel" --no-check-certificate -O -| \
+        awk  -F'"' '/source src=/ || /video src=/ {print $2}') 2> /dev/null;;
+	*) echo “Invalid Selection, enter a number”;;
+esac
+break
+done
+}
+while true; do main_menu; done
