@@ -17,3 +17,27 @@ Where path is you xpath query
 ```
 $x("//title")
 ```
+
+### xpath queries
+
+* a href
+
+find all links on the page and return the link
+
+```
+$x("//a/@href")
+```
+
+find all links on the page and return the link text
+
+```
+$x("//a/text()")
+```
+
+* Images
+
+find all the images on the page and return the src attribute
+
+```
+$x("//img/@src")
+```
