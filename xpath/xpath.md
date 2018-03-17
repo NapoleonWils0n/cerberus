@@ -28,7 +28,15 @@ find all links on the page and return the link
 $x("//a/@href")
 ```
 
+find all links on the page that contain a string of text and return the link
+where some string is the string to search for 
+
+```
+$x("//a[contains(@href, 'somestring')]/@href")
+```
+
 find all links on the page and return the link text
+
 
 ```
 $x("//a/text()")
