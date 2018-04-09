@@ -86,10 +86,17 @@ sudo tcpdump -s 0 -i wlan0 -w file.pcap
 
 Wireshark filters for video
 
+```
 http.content_type == "application/x-mpegurl"
-http.content_type == "application/vnd.apple.mpegurl"
-http.content_type == "video/mpt2"
+```
 
+```
+http.content_type == "application/vnd.apple.mpegurl"
+```
+
+```
+http.content_type == "video/mpt2"
+```
 
 # tshark 
 
