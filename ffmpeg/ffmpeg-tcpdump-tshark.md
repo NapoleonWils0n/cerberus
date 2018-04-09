@@ -108,7 +108,7 @@ tshark -r file.pcap -q -T fields -e http.request.full_uri -Y 'http.request.metho
 
 ## tshark export http objects
 
-export http objects to tmpfolder
+export http objects to folder called pcapdump
 
 ```
 tshark -nr file.pcap -q --export-objects http,pcapdump
