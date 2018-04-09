@@ -75,7 +75,7 @@ sudo tcpdump -D
 
 ## tcpdump capture network traffic
 
-Replace wlan0 with the name of your network interface
+Replace wlan0 with the name of your network interface  
 if you use tcpdump -D, you can use the number next to your network interface
 
 ```
