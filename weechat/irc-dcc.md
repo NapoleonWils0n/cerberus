@@ -13,6 +13,8 @@ Download files from irc chat
 /set weechat.look.prefix_align none
 /set weechat.look.buffer_time_format [%H:%M]
 /set weechat.color.chat_time_delimiters 2
+/set irc.look.server_buffer independent
+/set logger.file.auto_log off
 ```
 
 configure weechat
