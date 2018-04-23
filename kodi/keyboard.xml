@@ -100,9 +100,11 @@
       <e>ActivateWindow(TVGuide)</e>
       <epg>ActivateWindow(TVGuide)</epg>
       <h>Left</h>
+      <h mod="ctrl">PreviousMenu</h>
       <j>Down</j>
       <k>Up</k>
       <l>Right</l>
+      <l mod="ctrl">Select</l>
       <b>ActivateWindow(TVTimers)</b>
       <!-- PVR -->
       <red>ActivateWindow(TVChannels)</red>
