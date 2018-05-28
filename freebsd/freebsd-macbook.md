@@ -399,6 +399,7 @@ fusefs_load="YES"
 net.fibs=2
 net.add_addr_allfibs=0
 asmc_load="YES"
+acpi_video_load="YES"
 ```
 
 
