@@ -299,8 +299,8 @@ icmp_types = "{ echoreq, unreach }"
 tcp_state="flags S/SA keep state"
 udp_state="keep state"
 
-table <internet> { $all_networks, !self, !$int_if:network } # internet
-table <lan> { $int_if:network, !self }                      # lan network
+#table <internet> { $all_networks, !self, !$int_if:network } # internet
+#table <lan> { $int_if:network, !self }                      # lan network
 table <myself> { self }                                     # self
 table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
 	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
@@ -353,8 +353,9 @@ pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_
 
 # outbound traffic
 block out on $int_if all
-pass out quick on $int_if from <myself> to <lan> modulate state tag LAN_OUT
-pass out quick on $int_if from <myself> to <internet> modulate state tag INTERNET_OUT
+pass out quick on $int_if all modulate state
+#pass out quick on $int_if from <myself> to <lan> modulate state tag LAN_OUT
+#pass out quick on $int_if from <myself> to <internet> modulate state tag INTERNET_OUT
 ```
 
 reload pf firewall
