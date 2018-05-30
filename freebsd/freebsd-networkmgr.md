@@ -6,12 +6,12 @@ install networkmgr
 sudo pkg install networkmgr
 ```
 
-create the /etc/doas.conf file
+create the /usr/local/etc/doas.conf file
 
 ```
-sudo vim /etc/doas.conf
+sudo vim /usr/local/etc/doas.conf file
 ```
-add the code below to the /etc/doas.conf file
+add the code below to the /usr/local/etc/doas.conf
 
 ```
 permit nopass keepenv :wheel cmd netcardmgr                                                                                                       
