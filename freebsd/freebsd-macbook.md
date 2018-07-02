@@ -679,6 +679,8 @@ exit root
 exit
 ```
 
+## Subversion check out src
+
 install ca_root_nss for ssl certs and subversion
 
 ```
@@ -686,12 +688,84 @@ sudo pkg install ca_root_nss subversion
 ```
 
 checkout src to /usr/src
+replace 11.0 with the release you want
 
 ```
 sudo svn checkout https://svn.freebsd.org/base/releng/11.0/ /usr/src
 ```
 
-build generic kernel and modules
+## asmc add macbook air entries
+
+Change directory into the asmc directory you checked out with subversion
+
+```
+cd /usr/src/sys/dev/asmc/
+```
+
+Back up asmc.c and asmcvar.h  
+and add .bak extension
+
+```
+cp asmc.c{,.bak}
+```
+
+```
+cp asmcvar.h{,.bak}
+```
+
+edit /usr/src/sys/dev/asmc/asmc.c
+
+```
+sudo vim /usr/src/sys/dev/asmc/asmc.c
+```
+
+add new entry for macbook air 4,1
+
+```
+    {
+     "MacBookAir4,1", "Apple SMC Macbook Air 11-inch (Mid 2011)",
+     ASMC_SMS_FUNCS_DISABLED,
+     ASMC_FAN_FUNCS2, 
+     ASMC_LIGHT_FUNCS,
+     ASMC_MBA4_TEMPS, ASMC_MBA4_TEMPNAMES, ASMC_MBA4_TEMPDESCS
+    },
+```
+
+edit /usr/src/sys/dev/asmc/asmcvar.h
+
+```
+sudo vim /usr/src/sys/dev/asmc/asmcvar.h
+```
+
+add the smc stats we dumped from the mac, you need to add NULL to the end of the array
+
+```
+#define    ASMC_MBA4_TEMPNAMES { "TB0T", "TB1T", "TB2T", "TC0C", \
+                                "TC0D", "TC0E", "TC0F", "TC0P", \
+                               "TC1C", "TC2C", "TCGC", "TCSA", \
+                               "TH0F", "TH0J", "TH0O", "TH0o", \
+                               "TM0P", "TPCD", "Ta0P", "Th1H", \
+                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                                NULL }
+
+#define    ASMC_MBA4_TEMPDESCS { "TB0T", "TB1T", "TB2T", "TC0C", \
+                                "TC0D", "TC0E", "TC0F", "TC0P", \
+                               "TC1C", "TC2C", "TCGC", "TCSA", \
+                               "TH0F", "TH0J", "TH0O", "TH0o", \
+                               "TM0P", "TPCD", "Ta0P", "Th1H", \
+                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                                NULL }
+```
+
+After editing the asmc files we can now build the custom kernel
+
+## build generic kernel and modules
+
+Switch to root
+
+```
+sudo su
+```
 
 ```
 cd /usr/src/sys/amd64/conf; config GENERIC; cd ../compile/GENERIC && make cleandepend && make depend && make -j 2 && make install
