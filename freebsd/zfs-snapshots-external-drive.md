@@ -13,11 +13,17 @@ gpart destroy -F da0
 dd if=/dev/zero of=/dev/da0 bs=1m count=128
 ```
 
+create mount point
+
+```
+sudo mkdir -p /mnt/usb
+```
+
 crete zfs pool on the external drive
 
 ```
 zpool create zbackup /dev/da0
-zfs set readonly=on zbackup
+zfs set mountpoint=/mnt/usb zbackup
 ```
 
 list zfs directory structure
@@ -98,4 +104,10 @@ zfs send -v -I zroot/var/crash@2017-04-18 zroot/var/crash@2017-04-21 | zfs recei
 zfs send -v -I zroot/var/log@2017-04-18 zroot/var/log@2017-04-21 | zfs receive -F zbackup/zroot/var/log
 zfs send -v -I zroot/var/mail@2017-04-18 zroot/var/mail@2017-04-21 | zfs receive -F zbackup/zroot/var/mail
 zfs send -v -I zroot/var/tmp@2017-04-18 zroot/var/tmp@2017-04-21 | zfs receive -F zbackup/zroot/var/tmp
+```
+
+### zfs unmount drive
+
+```
+sudo zfs unmount zbackup
 ```
