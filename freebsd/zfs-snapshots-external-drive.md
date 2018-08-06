@@ -107,3 +107,9 @@ zfs send -v -I zroot/var/log@2017-04-18 zroot/var/log@2017-04-21 | zfs receive -
 zfs send -v -I zroot/var/mail@2017-04-18 zroot/var/mail@2017-04-21 | zfs receive -F zbackup/zroot/var/mail
 zfs send -v -I zroot/var/tmp@2017-04-18 zroot/var/tmp@2017-04-21 | zfs receive -F zbackup/zroot/var/tmp
 ```
+
+### zfs unmount drive
+
+```
+sudo zfs unmount zbackup
+```
