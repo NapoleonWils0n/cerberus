@@ -13,12 +13,20 @@ gpart destroy -F da0
 dd if=/dev/zero of=/dev/da0 bs=1m count=128
 ```
 
+create mount point
+
+```
+sudo mkdir -p /mnt/usb
+```
+
 crete zfs pool on the external drive
 
 ```
 zpool create zbackup /dev/da0
-zfs set readonly=on zbackup
+zfs set mountpoint=/mnt/usb zbackup
 ```
+
+zfs set readonly=on zbackup
 
 list zfs directory structure
 
