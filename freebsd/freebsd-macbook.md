@@ -165,6 +165,12 @@ exec /usr/local/bin/i3
 ```
 ## change shell to bash
 
+install bash
+
+```
+sudo pkg install bash
+```
+
 change the shell to bash
 
 ```
@@ -195,7 +201,7 @@ sudo pkg install xkbcomp
 * urxvt-unicode terminal
 
 ```
-sudo pkg install urxvt-unicode urxvt-perls
+sudo pkg install rxvt-unicode urxvt-perls
 ```
 
 chromium
@@ -406,17 +412,14 @@ acpi_video_load="YES"
 
 ## pandoc
 
-binaries built with toolchain
-may want to link
-
 ```
--Wl, -rpath=/usr/local/lib/gcc49
+sudo pkg install hs-pandoc hs-pandoc-citeproc
 ```
 
 ## openvpn
 
 ```
-openvpn <spec>.ovpn
+sudo pkg install openvpn
 ```
 
 ## mount ext4 as read only
