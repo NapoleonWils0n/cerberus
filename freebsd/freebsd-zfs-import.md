@@ -23,7 +23,7 @@ sudo zpool export zbackup
 mount the pool and set the mount point
 
 ```
-sudo zfs import -o altroot=/mnt -f zbackup
+sudo zpool import -o altroot=/mnt -f zbackup
 ```
 
 if the zpool was created with a mount point like this
@@ -36,6 +36,6 @@ then we can mount the pool with this command
 and it will be mounted at the mountpoint set with the zfs set command
 
 ```
-sudo zfs import -f zbackup
+sudo zpool import -f zbackup
 ```
 
