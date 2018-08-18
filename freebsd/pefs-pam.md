@@ -92,7 +92,7 @@ umount ~/storage
 move the /tmp/.pefs.db file back into the pefs encrypted directory
 
 ```
-mv /tmp/.pefs.db /home/djwilcox/storage
+mv /tmp/.pefs.db ~/storage
 ```
 
 mount the pefs directory
@@ -140,8 +140,8 @@ auth		sufficient	pam_opie.so		no_warn no_fake_prompts
 auth		requisite	pam_opieaccess.so	no_warn allow_local
 #auth		sufficient	pam_krb5.so		no_warn try_first_pass
 #auth		sufficient	pam_ssh.so		no_warn try_first_pass
-auth		required	pam_unix.so		no_warn try_first_pass nullok
 auth        sufficient  pam_pefs.so     try_first_pass delkeys
+auth		required	pam_unix.so		no_warn try_first_pass nullok
 
 # account
 #account	required	pam_krb5.so
@@ -150,8 +150,8 @@ account		required	pam_unix.so
 
 # session
 #session	optional	pam_ssh.so		want_agent
-session		required	pam_lastlog.so		no_fail
 session     optional    pam_pefs.so     delkeys
+session		required	pam_lastlog.so		no_fail
 
 # password
 #password	sufficient	pam_krb5.so		no_warn try_first_pass
