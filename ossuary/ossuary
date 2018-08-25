@@ -1,0 +1,111 @@
+#!/usr/local/bin/bash
+
+# geli container mount and umount script
+#=======================================
+
+# script usage
+script_usage=$(printf "%s\n%s\n" \
+"mount: sudo $(basename "$0") mount -f container -k gelikey" \
+"umount: sudo $(basename "$0") umount -f container")
+
+# check to see if script was run as root
+if [[ $UID -ne 0 ]]; then
+  printf "%s\n" "$0 must be run as root using sudo" &&
+  printf "%s\n" "$script_usage"
+  exit 1
+fi
+
+# mount function
+mount () {
+    # group commands
+    { 
+    # container
+    container="$1" && \
+    # gelikey
+    gelikey="$2" && \
+    # mdconfig loopname from container
+    loopdevice=$(mdconfig -lf "$container" | sed 's/[ \t]*$//')
+    # eli filepath
+    loopcrypt="/dev/${loopdevice}.eli"
+    # mdconfig create vnode from container
+    printf "%s\n" "+ mdconfig creating vnode for '$container'" && \
+    loop=$(mdconfig -a -t vnode -f "$container") && \
+    # geli attach key to vnode
+    printf "%s\n" "+ geli attaching '$gelikey' key to '$container' file" && \
+    geli attach -k "$gelikey" "$loop" && \
+    # mdconfig loop device for container
+    loopdevice=$(mdconfig -lf "$container" | sed 's/[ \t]*$//') && \
+    # path to mdconfig eli file
+    loopcrypt="/dev/${loopdevice}.eli" && \
+    # zpool name from mdconfig eli file
+    poolname=$(zdb -l "$loopcrypt" | awk -F\' '/[[:blank:]]name/ {print $2; exit;}') && \
+    # zpool import pool
+    printf "%s\n" "+ zpool importing '$poolname'" && \
+    zpool import "$poolname" && \
+    # mount point from zpool
+    mountpoint=$(zfs get -H -o value mountpoint "$poolname") && \
+    printf "%s\n" "+ '$poolname' mounted to '$mountpoint'";
+    } || { mdconfig -du "$loopdevice" && exit; }
+}
+
+# umount function
+umount () {
+    # group commands
+    {
+    # container
+    container="$1" && \
+    # mdconfig loopname from container
+    loopdevice=$(mdconfig -lf "$container" | sed 's/[ \t]*$//') && \
+    # eli filepath
+    loopcrypt="/dev/${loopdevice}.eli" && \
+    # zpool name from eli file
+    poolname=$(zdb -l "$loopcrypt" | awk -F\' '/[[:blank:]]name/ {print $2; exit;}') && \
+    # zfs umount poolname
+    printf "%s\n" "- zfs unmounting '$poolname'" && \
+    zfs umount "$poolname" && \
+    # zpool export poolname
+    printf "%s\n" "- zpool exporting '$poolname'" && \
+    zpool export "$poolname" && \
+    sleep 1 && \
+    # geli detach
+    printf "%s\n" "- geli detaching '$loopcrypt'" && \
+    geli detach "$loopcrypt" && \
+    # mdconfig remove md file
+    printf "%s\n" "- mdconfig clearing '$loopdevice'" && \
+    mdconfig -du "$loopdevice" && \
+    printf "%s\n" "- unmounted device";
+    } || { printf "%s\n" 'container not mounted' && exit; }
+}
+
+# check if mount is first argument
+# + 2nd argument shuld be -f for the file to mount
+# + 3rd argument should be the path to the file to mount
+# + 4th argunent should be -k for key
+# + 5th argument should be the path to the keyfile
+
+# check if umount is first argument
+# + 2nd argument shuld be -f for the file to unmount
+# + 3rd argument should be the path to the file to unmount
+
+# check arguments
+if [[ "$1" =~ ^mount$ && $# -eq 5 ]]; then
+   # group commands
+   {
+   [[ "$2" =~ '-f' ]] && \
+   [[ -f "$3" ]] && \
+   [[ "$4" =~ '-k' ]] && \
+   [[ -f "$5" ]];
+   } || { printf "%s\n" "$script_usage" && exit; }
+   # mount function pass conatainer and key to function
+   mount "$3" "$5"
+elif [[ "$1" =~ ^umount$ && $# -eq 3 ]]; then
+   # group commands
+   {
+   [[ "$2" =~ '-f' ]] && \
+   [[ -f "$3" ]];
+   } || { printf "%s\n" "$script_usage" && exit; }
+   # umount function pass container to function
+   umount "$3"
+else
+   printf "%s\n" "$script_usage" 
+fi
