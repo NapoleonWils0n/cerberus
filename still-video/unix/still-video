@@ -1,0 +1,50 @@
+#!/usr/local/bin/bash
+
+# create a video from an jpg image and m4a audio file
+
+# script checks
+script_usage='Too many arguments passed to script'
+
+# video file destination
+videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# record ffmpeg function
+record () {
+image="$1" \
+audio="$2" \
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-loop 1 \
+-r 1 \
+-i "$image" \
+-i "$audio" \
+-c:v libx264 \
+-preset veryfast \
+-tune stillimage \
+-crf 17 \
+-c:a copy \
+-vf "yadif=0:-1:0, scale=720:trunc(ow/a/2)*2" \
+-pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+-shortest \
+"$videofile" \
+&& printf "%s\n" "Created $videofile"
+}
+
+# check arguments
+if [[ $# -eq 5 ]]; then
+   # group commands
+   {
+   [[ "$2" =~ '-i' ]] && \
+   [[ -f "$3" && "$3" =~ \.jpg$ ]] && \
+   [[ "$4" =~ '-a' ]] && \
+   [[ -f "$5" && "$5" =~ \.m4a$ ]];
+   } || { printf "%s\n" "$script_usage" && exit; }
+   # run record function to combine image and audio into a video
+   printf "%s\n" "Combining $image and $audio into video file"
+   record "$3" "$5"
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
