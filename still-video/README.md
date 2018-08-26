@@ -15,7 +15,7 @@ and audio.m4a is you m4a audio file
 
 install still-video script and ffmpeg
 
-### bin directory
+### still-video install
 
 create a folder called bin in your home folder, /Users/your-username/bin
 
@@ -75,8 +75,9 @@ sudo apt-get update
 sudo apt install -y ffmpeg
 ```
 
-## Mac osx ffmpeg install
+## Mac osx setup 
 
+ffmpeg install  
 download the ffmpeg
 
 https://evermeet.cx/ffmpeg/
@@ -94,7 +95,7 @@ open kekaosx from the application folder and click ok for dialog asking if you w
 then double click the .7zip and they will unzip
 
 
-### install ffmpeg
+### still-video install
 
 create a folder called bin in your home folder, /Users/your-username/bin
 
