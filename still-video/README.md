@@ -2,23 +2,30 @@
 
 still-video script to create video from m4a audio and jpg image files
 
-## linux set up
+Usage:
 
-## Step 1 - installing software
+```
+still-video -i image.jpg -a audio.m4a
+```
 
-### arch linux install ffmpeg
+Where image.jpg is your image file,  
+and audio.m4a is you m4a audio file
+
+## linux ffmpeg install
+
+## arch linux install ffmpeg
 
 ```
 sudo pacman -S ffmpeg
 ```
 
-### ubuntu and debian install ffmpeg
+## ubuntu and debian install ffmpeg
 
 ```
 sudo apt install -y ffmpeg
 ```
 
-### linux mint 17 install ffmpeg
+## linux mint 17 install ffmpeg
 
 linux mint 17 doesnt have ffmpeg in the main software repository so you have to add it via a ppa
 
@@ -35,7 +42,7 @@ sudo apt-get update
 sudo apt install -y ffmpeg
 ```
 
-## Mac osx set up
+## Mac osx ffmpeg install
 
 download the ffmpeg
 
@@ -44,7 +51,7 @@ https://evermeet.cx/ffmpeg/
 The files are in 7zip files 
 so you need to download and install kekaosxto open the 7 zip files
  
-## download kekaosx 
+### download kekaosx 
 
 http://www.kekaosx.com/en/
 
@@ -54,7 +61,7 @@ open kekaosx from the application folder and click ok for dialog asking if you w
 then double click the .7zip and they will unzip
 
 
-### install ffmpeg
+#### install ffmpeg
 
 create a folder called bin in your home folder, /Users/your-username/bin
 
