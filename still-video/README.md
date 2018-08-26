@@ -13,19 +13,19 @@ and audio.m4a is you m4a audio file
 
 ## linux ffmpeg install
 
-## arch linux install ffmpeg
+### arch linux install ffmpeg
 
 ```
 sudo pacman -S ffmpeg
 ```
 
-## ubuntu and debian install ffmpeg
+### ubuntu and debian install ffmpeg
 
 ```
 sudo apt install -y ffmpeg
 ```
 
-## linux mint 17 install ffmpeg
+### linux mint 17 install ffmpeg
 
 linux mint 17 doesnt have ffmpeg in the main software repository so you have to add it via a ppa
 
@@ -40,6 +40,38 @@ sudo apt-get update
 
 ```
 sudo apt install -y ffmpeg
+```
+
+#### bin directory
+
+create a folder called bin in your home folder, /Users/your-username/bin
+
+```
+mkdir -p ~/bin
+```
+
+copy ffmpeg in to the bin folder
+
+then edit your ~/.bashrc, for example with nano
+
+```
+nano ~/.bashrc
+```
+
+and add the code below to your ~/.bashrc, 
+which will add any binaries in ~/bin to your bash path
+
+
+```
+if [ -d "$HOME/bin" ] ; then
+        PATH="$HOME/bin:$PATH"
+fi
+```
+ 
+Then source your ~/.bashrc
+
+```
+. ~/.bashrc
 ```
 
 ## Mac osx ffmpeg install
