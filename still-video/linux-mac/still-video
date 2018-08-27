@@ -3,37 +3,38 @@
 # create a video from an jpg image and m4a audio file
 
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i image.jpg -a audio.m4a" \
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i image.jpg -a audio.m4a")
 
 # video file destination
 videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # record ffmpeg function
 record () {
-image="$1" \
-audio="$2" \
-ffmpeg \
--hide_banner \
--stats -v panic \
--loop 1 \
--r 1 \
--i "$image" \
--i "$audio" \
--c:v libx264 \
--preset veryfast \
--tune stillimage \
--crf 17 \
--c:a copy \
--vf "yadif=0:-1:0, scale=720:trunc(ow/a/2)*2" \
--pix_fmt yuv420p \
--movflags +faststart -f mp4 \
--shortest \
-"$videofile" \
-&& printf "%s\n" "Created $videofile"
+    image="$1" && \
+    audio="$2" && \
+    printf "%s\n" "+ Combining '$image' and '$audio' into video file" && \
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -loop 1 \
+    -r 1 \
+    -i "$image" \
+    -i "$audio" \
+    -c:v libx264 \
+    -preset veryfast \
+    -tune stillimage \
+    -crf 17 \
+    -c:a copy \
+    -vf "yadif=0:-1:0, scale=720:trunc(ow/a/2)*2" \
+    -pix_fmt yuv420p \
+    -movflags +faststart -f mp4 \
+    -shortest \
+    "$videofile" \
+    && printf "%s\n" "+ Created '$videofile'"
 }
 
 # check arguments
-if [[ $# -eq 5 ]]; then
+if [[ $# -eq 4 ]]; then
    # group commands
    {
    [[ "$1" =~ '-i' ]] && \
@@ -42,9 +43,7 @@ if [[ $# -eq 5 ]]; then
    [[ -f "$4" && "$4" =~ \.m4a$ ]];
    } || { printf "%s\n" "$script_usage" && exit; }
    # run record function to combine image and audio into a video
-   printf "%s\n" "Combining $image and $audio into video file"
    record "$2" "$4"
 else
    { printf "%s\n" "$script_usage" && exit; }
 fi
-
