@@ -23,25 +23,34 @@ mount () {
     container="$1" && \
     # gelikey
     gelikey="$2" && \
+
     # mdconfig loopname from container
     loopdevice=$(mdconfig -lf "$container" | sed 's/[ \t]*$//')
+
     # eli filepath
     loopcrypt="/dev/${loopdevice}.eli"
+
     # mdconfig create vnode from container
     printf "%s\n" "+ mdconfig creating vnode for '$container'" && \
     loop=$(mdconfig -a -t vnode -f "$container") && \
+
     # geli attach key to vnode
     printf "%s\n" "+ geli attaching '$gelikey' key to '$container' file" && \
     geli attach -k "$gelikey" "$loop" && \
+
     # mdconfig loop device for container
     loopdevice=$(mdconfig -lf "$container" | sed 's/[ \t]*$//') && \
+
     # path to mdconfig eli file
     loopcrypt="/dev/${loopdevice}.eli" && \
+
     # zpool name from mdconfig eli file
     poolname=$(zdb -l "$loopcrypt" | awk -F\' '/[[:blank:]]name/ {print $2; exit;}') && \
+
     # zpool import pool
     printf "%s\n" "+ zpool importing '$poolname'" && \
     zpool import "$poolname" && \
+
     # mount point from zpool
     mountpoint=$(zfs get -H -o value mountpoint "$poolname") && \
     printf "%s\n" "+ '$poolname' mounted to '$mountpoint'";
@@ -54,22 +63,29 @@ umount () {
     {
     # container
     container="$1" && \
+
     # mdconfig loopname from container
     loopdevice=$(mdconfig -lf "$container" | sed 's/[ \t]*$//') && \
+
     # eli filepath
     loopcrypt="/dev/${loopdevice}.eli" && \
+
     # zpool name from eli file
     poolname=$(zdb -l "$loopcrypt" | awk -F\' '/[[:blank:]]name/ {print $2; exit;}') && \
+
     # zfs umount poolname
     printf "%s\n" "- zfs unmounting '$poolname'" && \
     zfs umount "$poolname" && \
+
     # zpool export poolname
     printf "%s\n" "- zpool exporting '$poolname'" && \
     zpool export "$poolname" && \
     sleep 1 && \
+
     # geli detach
     printf "%s\n" "- geli detaching '$loopcrypt'" && \
     geli detach "$loopcrypt" && \
+
     # mdconfig remove md file
     printf "%s\n" "- mdconfig clearing '$loopdevice'" && \
     mdconfig -du "$loopdevice" && \
