@@ -2,8 +2,8 @@
 
 # create a video from an jpg image and m4a audio file
 
-# script checks
-script_usage='Too many arguments passed to script'
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i image.jpg -a audio.m4a" \
 
 # video file destination
 videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
@@ -36,14 +36,14 @@ ffmpeg \
 if [[ $# -eq 5 ]]; then
    # group commands
    {
-   [[ "$2" =~ '-i' ]] && \
-   [[ -f "$3" && "$3" =~ \.jpg$ ]] && \
-   [[ "$4" =~ '-a' ]] && \
-   [[ -f "$5" && "$5" =~ \.m4a$ ]];
+   [[ "$1" =~ '-i' ]] && \
+   [[ -f "$2" && "$2" =~ \.jpg$ ]] && \
+   [[ "$3" =~ '-a' ]] && \
+   [[ -f "$4" && "$4" =~ \.m4a$ ]];
    } || { printf "%s\n" "$script_usage" && exit; }
    # run record function to combine image and audio into a video
    printf "%s\n" "Combining $image and $audio into video file"
-   record "$3" "$5"
+   record "$2" "$4"
 else
    { printf "%s\n" "$script_usage" && exit; }
 fi
