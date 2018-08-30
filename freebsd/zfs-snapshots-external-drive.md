@@ -6,6 +6,12 @@ list the disks
 geom disk list
 ```
 
+switch to root
+
+```
+sudo su
+```
+
 destroy drive
 
 ```
@@ -13,10 +19,22 @@ gpart destroy -F da0
 dd if=/dev/zero of=/dev/da0 bs=1m count=128
 ```
 
+create gpt partition
+
+```
+gpart create -s gpt da0
+```
+
+create zfs partition
+
+```
+gpart add -t freebsd-zfs -l zfsbackup da0
+```
+
 create mount point
 
 ```
-sudo mkdir -p /mnt/usb
+mkdir -p /mnt/usb
 ```
 
 crete zfs pool on the external drive
