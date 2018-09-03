@@ -62,7 +62,16 @@ zfs snapshot -r bootpool@2017-04-18
 zfs snapshot -r zroot@2017-04-18
 ```
 
-send incremental snapshots
+send incremental snapshots  
+use the -R option on the zroot pool to send incremental snapshots of the descendant file system
+
+
+```
+zfs send -v -I bootpool@2017-04-18 bootpool@2017-04-21 | zfs recv -F zbackup/bootpool
+zfs send -Rv -I zroot@2017-04-18 zroot@2017-04-21 | zfs recv -F zbackup/zroot
+```
+
+old code
 
 ```
 zfs send -v -I bootpool@2017-04-18 bootpool@2017-04-21 | zfs receive -F zbackup/bootpool
