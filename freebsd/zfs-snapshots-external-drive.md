@@ -19,18 +19,6 @@ gpart destroy -F da0
 dd if=/dev/zero of=/dev/da0 bs=1m count=128
 ```
 
-create gpt partition
-
-```
-gpart create -s gpt da0
-```
-
-create zfs partition
-
-```
-gpart add -t freebsd-zfs -l zfsbackup da0
-```
-
 create mount point
 
 ```
@@ -52,26 +40,6 @@ list zfs directory structure
 zfs list
 ```
 
-create the same directory structure on the zfs pool on the external drive
-
-```
-zfs create zbackup/bootpool
-zfs create zbackup/zroot
-zfs create zbackup/zroot/ROOT
-zfs create zbackup/zroot/ROOT/default
-zfs create zbackup/zroot/tmp
-zfs create zbackup/zroot/usr
-zfs create zbackup/zroot/usr/home
-zfs create zbackup/zroot/usr/ports
-zfs create zbackup/zroot/usr/src
-zfs create zbackup/zroot/var
-zfs create zbackup/zroot/var/audit
-zfs create zbackup/zroot/var/crash
-zfs create zbackup/zroot/var/log
-zfs create zbackup/zroot/var/mail
-zfs create zbackup/zroot/var/tmp
-```
-
 create snapshots
 
 ```
@@ -79,24 +47,12 @@ zfs snapshot -r bootpool@2017-04-21
 zfs snapshot -r zroot@2017-04-21
 ```
 
-send the snapshots to the corresponding pool on the drive
+send the snapshots to the corresponding pool on the drive  
+use the -R option to create the datasets on the external drive
 
 ```
-zfs send -v bootpool@2017-04-21 | zfs receive -F zbackup/bootpool
-zfs send -v zroot@2017-04-21 | zfs receive -F zbackup/zroot
-zfs send -v zroot/ROOT@2017-04-21 | zfs receive -F zbackup/zroot/ROOT
-zfs send -v zroot/ROOT/default@2017-04-21 | zfs receive -F zbackup/zroot/ROOT/default
-zfs send -v zroot/tmp@2017-04-21 | zfs receive -F zbackup/zroot/tmp
-zfs send -v zroot/usr@2017-04-21 | zfs receive -F zbackup/zroot/usr
-zfs send -v zroot/usr/home@2017-04-21 | zfs receive -F zbackup/zroot/usr/home
-zfs send -v zroot/usr/ports@2017-04-21 | zfs receive -F zbackup/zroot/usr/ports
-zfs send -v zroot/usr/src@2017-04-21 | zfs receive -F zbackup/zroot/usr/src
-zfs send -v zroot/var@2017-04-21 | zfs receive -F zbackup/zroot/var
-zfs send -v zroot/var/audit@2017-04-21 | zfs receive -F zbackup/zroot/var/audit
-zfs send -v zroot/var/crash@2017-04-21 | zfs receive -F zbackup/zroot/var/crash
-zfs send -v zroot/var/log@2017-04-21 | zfs receive -F zbackup/zroot/var/log
-zfs send -v zroot/var/mail@2017-04-21 | zfs receive -F zbackup/zroot/var/mail
-zfs send -v zroot/var/tmp@2017-04-21 | zfs receive -F zbackup/zroot/var/tmp
+zfs send -Rv bootpool@2017-04-21 | zfs recv -F zbackup/bootpool
+zfs send -Rv zroot@2017-04-21 | zfs receive -F zbackup/zroot
 ```
 
 incremental 
