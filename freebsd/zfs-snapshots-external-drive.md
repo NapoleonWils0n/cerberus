@@ -1,4 +1,4 @@
-# zfs snapshot uesb drive
+# zfs snapshot usb drive
 
 list the disks
 
@@ -31,8 +31,6 @@ crete zfs pool on the external drive
 zpool create zbackup /dev/da0
 zfs set mountpoint=/mnt/usb zbackup
 ```
-
-zfs set readonly=on zbackup
 
 list zfs directory structure
 
