@@ -1,18 +1,14 @@
-#!/usr/local/bin/bash
-
-# geli container mount and umount script
-#=======================================
+#!/bin/sh
 
 # script usage
-script_usage=$(printf "%s\n%s\n" \
+script_usage=$(printf "%s\n" \
 "mount: sudo $(basename "$0") mount -f container -k gelikey" \
 "umount: sudo $(basename "$0") umount -f container")
 
 # check to see if script was run as root
-if [[ $UID -ne 0 ]]; then
-  printf "%s\n" "$0 must be run as root using sudo" &&
-  printf "%s\n" "$script_usage"
-  exit 1
+if [ "$(id -u)" != "0" ]; then
+   printf "%s\n" "$0 must be run as root using sudo" "$script_usage"
+   exit 1
 fi
 
 # mount function
@@ -104,21 +100,21 @@ umount () {
 # + 3rd argument should be the path to the file to unmount
 
 # check arguments
-if [[ "$1" =~ ^mount$ && $# -eq 5 ]]; then
+if [ "$1" = mount ] && [ $# -eq 5 ]; then
    # group commands
    {
-   [[ "$2" =~ '-f' ]] && \
-   [[ -f "$3" ]] && \
-   [[ "$4" =~ '-k' ]] && \
-   [[ -f "$5" ]];
+   [ "$2" = '-f' ] && \
+   [ -f "$3" ] && \
+   [ "$4" = '-k' ] && \
+   [ -f "$5" ];
    } || { printf "%s\n" "$script_usage" && exit; }
    # mount function pass conatainer and key to function
    mount "$3" "$5"
-elif [[ "$1" =~ ^umount$ && $# -eq 3 ]]; then
+elif [ "$1" = umount ] && [ $# -eq 3 ]; then
    # group commands
    {
-   [[ "$2" =~ '-f' ]] && \
-   [[ -f "$3" ]];
+   [ "$2" = '-f' ] && \
+   [ -f "$3" ];
    } || { printf "%s\n" "$script_usage" && exit; }
    # umount function pass container to function
    umount "$3"
