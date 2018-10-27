@@ -101,7 +101,22 @@ instal xorg
 
 
 ```
-sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-video-intel xf86-input-synaptics
+sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-input-synaptics \
+libva-intel-driver drm-stable-kmod libva-utils
+```
+
+* use libva-intel-driver and drm-stable-kmod instead of xf86-video-intel for video hardware accleration
+
+we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+```
+sudo vim /etc/rc.conf
+```
+
+then add the code below to /etc/rc.conf
+
+```
+kld_list="/boot/modules/i915kms.ko"
 ```
 
 add freetype to modules, and filepath to dejavu in xorg.conf
