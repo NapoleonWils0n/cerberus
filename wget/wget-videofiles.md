@@ -16,14 +16,14 @@ grep wget-log.txt for video files and save to video-links.txt
 grep -Eio http.+mkv wget-log.txt > video-links.txt
 ```
 
-install m3u8creator script
+install m3ucreator script
 
-[m3u8creator](https://github.com/NapoleonWils0n/toolbox)
+[m3ucreator](https://github.com/NapoleonWils0n/toolbox)
 
-run the m3u8creator script with the video-links.txt file
+run the m3ucreator script with the video-links.txt file
 
 ```
-m3u8creator video-links.txt
+m3ucreator video-links.txt
 ```
 
 this will create a file called playlist.m3u
