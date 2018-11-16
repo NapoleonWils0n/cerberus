@@ -25,13 +25,13 @@ zfs create zroot/jails/basejail
 * download 11.2 base system tarball
 
 ```
-fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz
+fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o /tmp/base.txz
 ```
 
 * Extract base sytem to basejail directory
 
 ```
-# tar -xf /mnt/usr/freebsd-dist/base.txz -C /usr/local/jails/basejail
+# tar -xf /tmp/base.txz -C /usr/local/jails/basejail
 ```
 
 ### copy config files into the jails
@@ -82,7 +82,7 @@ Jails need an IP address in order to communicate with other machines, but Digita
 
 First off we need a new loopback network interface to communicate over, so we should add the following string to /etc/rc.conf:
 
-## rc.conf
+## host rc.conf
 
 ```
 jail_enable="YES"
@@ -94,5 +94,26 @@ ifconfig_lo1_alias0="inet 172.16.1.1 netmask 255.255.255.0"
 # ifconfig_lo1_alias1="inet 172.16.1.2 netmask 255.255.255.0"
 ```
 
+
+### jail.conf
+
+```
+# /etc/jail.conf
+
+# Global settings applied to all jails.
+
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.clean;
+mount.devfs;
+
+# The jail definition for fulljail1
+fulljail1 {
+    host.hostname = "fulljail1.domain.local";
+    path = "/usr/local/jails/fulljail1";
+    interface = "lagg0";
+    ip4.addr = 10.0.0.15;
+}
+```
 
 ### pf firewall
