@@ -60,15 +60,12 @@ freebsd-update -b /usr/local/jails/basejail fetch install
 freebsd-update -b /usr/local/jails/basejail IDS
 ```
 
-<<<<<<< HEAD
 * add hostname to jails rc.conf
 
 ```
 echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
 ```
 
-=======
->>>>>>> 8e69a8dd16bc50bdb9fe7c13fbc5b46ca527d00d
 * Create a zfs snapshot.
 
 ```
