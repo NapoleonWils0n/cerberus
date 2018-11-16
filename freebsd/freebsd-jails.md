@@ -52,6 +52,12 @@ cp /etc/localtime /usr/local/jails/basejail/etc/localtime
 freebsd-update -b /usr/local/jails/basejail fetch install
 ```
 
+* verify the freebsd checksum
+
+```
+freebsd-update -b /usr/local/jails/basejail IDS
+```
+
 * Create a zfs snapshot.
 
 ```
