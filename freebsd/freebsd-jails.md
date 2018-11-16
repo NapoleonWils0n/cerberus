@@ -34,6 +34,8 @@ fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz
 # tar -xf /mnt/usr/freebsd-dist/base.txz -C /usr/local/jails/basejail
 ```
 
+### copy config files into the jails
+
 * Copy resolv.conf into the jail
 
 ```
@@ -58,6 +60,12 @@ freebsd-update -b /usr/local/jails/basejail fetch install
 freebsd-update -b /usr/local/jails/basejail IDS
 ```
 
+* add hostname to jails rc.conf
+
+```
+echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
+```
+
 * Create a zfs snapshot.
 
 ```
@@ -65,6 +73,10 @@ zfs snapshot zroot/jails/basejail@11.2
 ```
 
 You can now clone the snapshot for each new jail you create. If you wanted to create a jail called www, create a new zfs dataset called zroot/jails/www which is cloned from the zroot/jails/basejail@11.0-p10 snapshot.
+
+```
+zfs clone zroot/jails/basejail@11.0-p10 zroot/jails/www
+```
 
 Jails need an IP address in order to communicate with other machines, but DigitalOcean instances are only given one public IPv4 address, so to get around this we can use PF (Packet Filter) to operate as a NAT and place our jails behind the NAT.
 
