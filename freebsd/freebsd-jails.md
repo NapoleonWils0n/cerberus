@@ -84,6 +84,8 @@ First off we need a new loopback network interface to communicate over, so we sh
 
 ## host rc.conf
 
+First off we need a new loopback network interface to communicate over, so we should add the following string to /etc/rc.conf:
+
 ```
 jail_enable="YES"
 cloned_interfaces="lo1"
@@ -94,6 +96,16 @@ ifconfig_lo1_alias0="inet 172.16.1.1 netmask 255.255.255.0"
 # ifconfig_lo1_alias1="inet 172.16.1.2 netmask 255.255.255.0"
 ```
 
+This creates a new network interface named lo1 which is given an IP address of 172.16.1.1.  
+You can give it a different IP address, but make sure that it’s one of the RFC 1918 private IP addresses.
+
+These network settings will have to be loaded after you save your edits to /etc/rc.conf,  
+so you can either restart you machine or run the equivalent ifconfig commands to setup the new interface on a running system.
+
+```
+sudo ifconfig lo1 create
+sudo ifconfig lo1 alias 172.16.1.1 netmask 255.255.255.0
+```
 
 ### jail.conf
 
@@ -107,13 +119,36 @@ exec.stop = "/bin/sh /etc/rc.shutdown";
 exec.clean;
 mount.devfs;
 
-# The jail definition for fulljail1
-fulljail1 {
-    host.hostname = "fulljail1.domain.local";
-    path = "/usr/local/jails/fulljail1";
-    interface = "lagg0";
-    ip4.addr = 10.0.0.15;
+path = "/usr/local/jails/$name";
+
+# Jail definition for www.
+www {
+   host.hostname = "www.opperwall.net";
+   ip4.addr = 172.16.1.1;
 }
 ```
 
 ### pf firewall
+
+```
+# /etc/pf.conf
+
+ext_if = "vtnet0"
+ext_addr = $ext_if:0
+int_if = "lo1"
+jail_net = $int_if:network
+
+nat on $ext_if from $jail_net to any -> $ext_addr port 1024:65535 static-port 
+```
+
+### start the jail
+
+```
+jail -c www
+```
+
+You can open a shell within the jail using
+
+```
+jexec www sh
+```
