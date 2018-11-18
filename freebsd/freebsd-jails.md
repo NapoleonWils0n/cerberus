@@ -1,5 +1,7 @@
 # freebsd jails
 
+work in progress
+
 freebsd jails for services
 
 * switch to root
