@@ -16,6 +16,10 @@ Select root on zfs during install
 * encrypt swap
 * swap size 8gig
 
+freebsd installer partition scheme
+for apple hardware choose gpt (bios+uefi)
+
+
 ## set the root password
 
 * set the root password
@@ -160,7 +164,7 @@ install truetype fonts
 install i3wm
 
 ```
-sudo pkg install -y i3 i3lock i3status dmenu
+sudo pkg install -y i3 i3lock i3status rofi
 ```
 
 copy default xinitrc to ~/.xinitrx
