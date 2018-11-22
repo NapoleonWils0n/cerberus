@@ -36,6 +36,18 @@ fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o
 # tar -xf /tmp/base.txz -C /usr/local/jails/basejail
 ```
 
+* Copy resolv.conf into the jail
+
+```
+cp /etc/resolv.conf /usr/local/jails/basejail/etc
+```
+
+* copy localtime to jail
+
+```
+cp /etc/localtime /usr/local/jails/basejail/etc/localtime
+```
+
 ### update freebsd base install
 
 Run freebsd update on the basejail system.
@@ -50,17 +62,6 @@ env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail fetch insta
 env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail IDS
 ```
 
-* Copy resolv.conf into the jail
-
-```
-cp /etc/resolv.conf /usr/local/jails/basejail/etc
-```
-
-* copy localtime to jail
-
-```
-cp /etc/localtime /usr/local/jails/basejail/etc/localtime
-```
 
 * add hostname to jails rc.conf
 
@@ -72,12 +73,6 @@ echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
 
 ```
 zfs snapshot zroot/jails/basejail@11.2
-```
-
-You can now clone the snapshot for each new jail you create. If you wanted to create a jail called www, create a new zfs dataset called zroot/jails/www which is cloned from the zroot/jails/basejail@11.0-p10 snapshot.
-
-```
-zfs clone zroot/jails/basejail@11.0-p10 zroot/jails/www
 ```
 
 Jails need an IP address in order to communicate with other machines, but DigitalOcean instances are only given one public IPv4 address, so to get around this we can use PF (Packet Filter) to operate as a NAT and place our jails behind the NAT.
