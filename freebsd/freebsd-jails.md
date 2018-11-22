@@ -2,7 +2,7 @@
 
 work in progress
 
-freebsd jails for services
+freebsd thin jails for services
 
 * switch to root
 
@@ -36,7 +36,19 @@ fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o
 # tar -xf /tmp/base.txz -C /usr/local/jails/basejail
 ```
 
-### copy config files into the jails
+### update freebsd base install
+
+Run freebsd update on the basejail system.
+
+```
+env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail fetch install
+```
+
+* verify the freebsd checksum
+
+```
+env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail IDS
+```
 
 * Copy resolv.conf into the jail
 
@@ -48,18 +60,6 @@ cp /etc/resolv.conf /usr/local/jails/basejail/etc
 
 ```
 cp /etc/localtime /usr/local/jails/basejail/etc/localtime
-```
-
-* Run freebsd update on the basejail system.
-
-```
-freebsd-update -b /usr/local/jails/basejail fetch install
-```
-
-* verify the freebsd checksum
-
-```
-freebsd-update -b /usr/local/jails/basejail IDS
 ```
 
 * add hostname to jails rc.conf
