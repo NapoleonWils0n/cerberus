@@ -10,25 +10,30 @@ freebsd thin jails for services
 sudo su
 ```
 
-create zfs dataset for jails
+create a zfs dataset for jails and set the mountpoint
 
 ```
 zfs create -o mountpoint=/usr/local/jails zroot/jails
 ```
 
-We can then create a new dataset named basejail in zroot/jails
+create a dataset for the thinjails and release 
 
 ```
-zfs create zroot/jails/basejail
+zfs create -p zroot/jails/thinjails
+zfs create -p zroot/jails/releases/11.2-RELEASE
 ```
 
 ## download the base system tarball
 
-* download 11.2 base system tarball
+download base system tarball,  
+change the url from 11.2-STABLE to the release version you want
 
 ```
 fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o /tmp/base.txz
 ```
+
+we use the built in fetch command to download the file rather than wget or curl which arent installed by default
+
 
 * Extract base sytem to basejail directory
 
@@ -67,6 +72,12 @@ zfs snapshot zroot/jails/basejail@11.2
 Jails need an IP address in order to communicate with other machines, but DigitalOcean instances are only given one public IPv4 address, so to get around this we can use PF (Packet Filter) to operate as a NAT and place our jails behind the NAT.
 
 First off we need a new loopback network interface to communicate over, so we should add the following string to /etc/rc.conf:
+
+## jail template
+
+```
+zfs create -p zroot/jails/releases/11.2-RELEASE
+```
 
 ## host rc.conf
 
