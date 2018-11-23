@@ -36,16 +36,12 @@ fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o
 # tar -xf /tmp/base.txz -C /usr/local/jails/basejail
 ```
 
-* Copy resolv.conf into the jail
+Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
 
 ```
 cp /etc/resolv.conf /usr/local/jails/basejail/etc
-```
-
-* copy localtime to jail
-
-```
 cp /etc/localtime /usr/local/jails/basejail/etc/localtime
+echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
 ```
 
 ### update freebsd base install
@@ -60,13 +56,6 @@ env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail fetch insta
 
 ```
 env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail IDS
-```
-
-
-* add hostname to jails rc.conf
-
-```
-echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
 ```
 
 * Create a zfs snapshot.
@@ -116,11 +105,18 @@ exec.stop = "/bin/sh /etc/rc.shutdown";
 exec.clean;
 mount.devfs;
 
-path = "/usr/local/jails/$name";
+# The name of each jail. $name is a placeholder.
+host.hostname = "${name}.domain.local";
+
+# path to the jail
+path = "/usr/local/jails/${name}";
+
+# The IP address of the jail.
+ip4.addr = 10.1.1.${ip};
 
 # Jail definition for www.
 www {
-   host.hostname = "www.opperwall.net";
+   host.hostname = "${name}.local";
    ip4.addr = 172.16.1.1;
 }
 ```
