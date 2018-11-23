@@ -16,7 +16,8 @@ create a zfs dataset for jails and set the mountpoint
 zfs create -o mountpoint=/usr/local/jails zroot/jails
 ```
 
-create a dataset for the thinjails and release 
+create a dataset for the thinjails and the name of the release you are going to download
+
 
 ```
 zfs create -p zroot/jails/thinjails
@@ -35,18 +36,18 @@ fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o
 we use the built in fetch command to download the file rather than wget or curl which arent installed by default
 
 
-* Extract base sytem to basejail directory
+* Extract the base sytem to the 11.2-RELEASE directory
 
 ```
-# tar -xf /tmp/base.txz -C /usr/local/jails/basejail
+# tar -xf /tmp/base.txz -C /usr/local/jails/releases/11.2-RELEASE
 ```
 
 Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
 
 ```
-cp /etc/resolv.conf /usr/local/jails/basejail/etc
-cp /etc/localtime /usr/local/jails/basejail/etc/localtime
-echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
+cp /etc/resolv.conf /usr/local/jails/releases/11.2-RELEASE/etc
+cp /etc/localtime /usr/local/jails/releases/11.2-RELEASE/etc/localtime
+echo hostname=\"basejail\" > /usr/local/jails/releases/11.2-RELEASE/etc/rc.conf
 ```
 
 ### update freebsd base install
@@ -54,13 +55,13 @@ echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
 Run freebsd update on the basejail system.
 
 ```
-freebsd-update -b /usr/local/jails/basejail fetch install
+freebsd-update -b /usr/local/jails/releases/11.2-RELEASE fetch install
 ```
 
 * verify the freebsd checksum
 
 ```
-freebsd-update -b /usr/local/jails/basejail IDS
+freebsd-update -b /usr/local/jails/releases/11.2-RELEASE IDS
 ```
 
 * Create a zfs snapshot.
