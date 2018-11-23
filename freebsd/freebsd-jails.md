@@ -21,7 +21,6 @@ create a dataset for the thinjails and the name of the release you are going to 
 
 ```
 zfs create -p zroot/jails/thinjails
-zfs create -p zroot/jails/templates
 zfs create -p zroot/jails/releases/11.2-RELEASE
 ```
 
@@ -74,8 +73,20 @@ freebsd-update -b /usr/local/jails/releases/11.2-RELEASE IDS
 zfs snapshot zroot/jails/releases/11.2-RELEASE@template
 ```
 
+send the 11.2-RELEASE snapshot to a new base jail.  
+This will be the first layer in future jails.
+
 ```
 zfs create -p zroot/jails/releases/11.2-RELEASE
+zfs send -R zroot/jails/releases/11.2-RELEASE@template | zfs recv zroot/jails/templates/base-11.2-RELEASE
+```
+
+Now, some tutorials suggest ZFS cloning (ie. zfs clone). This in itself indeed is the most simple way to clone a basejail to a production jail, however ZFS clones have certain drawbacks which over time completely negate any benefits. A ZFS clone is basically a snapshot, the filesystem is not physically duplicated and it saves all that space (a base 10.3 jail is some 300MB large). At first. Because as you use the jail and update it, more and more of those files are copied to individual jails as they change. Also, you cannot destroy a snapshot which has existing clones. That means you'd have to keep around all the basejail snapshots, or "promote" cloned jails. So why not just send | receive and copy the basejail which is independent from the start. 
+
+* Create a skeleton dataset that will be used for jail-specific files
+
+```
+zfs create -p zroot/jails/templates/skeleton-11.2-RELEASE
 ```
 
 ## host rc.conf
