@@ -21,6 +21,7 @@ create a dataset for the thinjails and the name of the release you are going to 
 
 ```
 zfs create -p zroot/jails/thinjails
+zfs create -p zroot/jails/templates
 zfs create -p zroot/jails/releases/11.2-RELEASE
 ```
 
@@ -64,17 +65,14 @@ freebsd-update -b /usr/local/jails/releases/11.2-RELEASE fetch install
 freebsd-update -b /usr/local/jails/releases/11.2-RELEASE IDS
 ```
 
+## jail template
+
+
 * Create a zfs snapshot.
 
 ```
-zfs snapshot zroot/jails/basejail@11.2
+zfs snapshot zroot/jails/releases/11.2-RELEASE@template
 ```
-
-Jails need an IP address in order to communicate with other machines, but DigitalOcean instances are only given one public IPv4 address, so to get around this we can use PF (Packet Filter) to operate as a NAT and place our jails behind the NAT.
-
-First off we need a new loopback network interface to communicate over, so we should add the following string to /etc/rc.conf:
-
-## jail template
 
 ```
 zfs create -p zroot/jails/releases/11.2-RELEASE
