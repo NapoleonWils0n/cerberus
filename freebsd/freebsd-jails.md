@@ -49,13 +49,13 @@ echo hostname=\"basejail\" > /usr/local/jails/basejail/etc/rc.conf
 Run freebsd update on the basejail system.
 
 ```
-env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail fetch install
+freebsd-update -b /usr/local/jails/basejail fetch install
 ```
 
 * verify the freebsd checksum
 
 ```
-env UNAME_r=11.2-RELEASE freebsd-update -b /usr/local/jails/basejail IDS
+freebsd-update -b /usr/local/jails/basejail IDS
 ```
 
 * Create a zfs snapshot.
@@ -112,12 +112,11 @@ host.hostname = "${name}.domain.local";
 path = "/usr/local/jails/${name}";
 
 # The IP address of the jail.
-ip4.addr = 10.1.1.${ip};
+ip4.addr = 172.16.1.${ip};
 
 # Jail definition for www.
 www {
-   host.hostname = "${name}.local";
-   ip4.addr = 172.16.1.1;
+   $ip = 1;
 }
 ```
 
