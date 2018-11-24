@@ -33,10 +33,11 @@ change the url from 11.2-STABLE to the release version you want
 fetch http://ftp.freebsd.org/pub/FreeBSD/snapshots/amd64/11.2-STABLE/base.txz -o /tmp/base.txz
 ```
 
-we use the built in fetch command to download the file rather than wget or curl which arent installed by default
+use the built in fetch command to download the file rather than wget or curl which arent installed by default  
+save the download file to /tmp
 
 
-* Extract the base sytem to the 11.2-RELEASE directory
+* Extract the base sytem from /tmp to the 11.2-RELEASE directory
 
 ```
 tar -xf /tmp/base.txz -C /usr/local/jails/releases/11.2-RELEASE
@@ -47,7 +48,6 @@ Make sure you jail has the right timezone and dns servers and a hostname in rc.c
 ```
 cp /etc/resolv.conf /usr/local/jails/releases/11.2-RELEASE/etc
 cp /etc/localtime /usr/local/jails/releases/11.2-RELEASE/etc/localtime
-echo hostname=\"basejail\" > /usr/local/jails/releases/11.2-RELEASE/etc/rc.conf
 ```
 
 ### update freebsd base install
@@ -82,6 +82,12 @@ zfs send -R zroot/jails/releases/11.2-RELEASE@template | zfs recv zroot/jails/te
 ```
 
 Now, some tutorials suggest ZFS cloning (ie. zfs clone). This in itself indeed is the most simple way to clone a basejail to a production jail, however ZFS clones have certain drawbacks which over time completely negate any benefits. A ZFS clone is basically a snapshot, the filesystem is not physically duplicated and it saves all that space (a base 10.3 jail is some 300MB large). At first. Because as you use the jail and update it, more and more of those files are copied to individual jails as they change. Also, you cannot destroy a snapshot which has existing clones. That means you'd have to keep around all the basejail snapshots, or "promote" cloned jails. So why not just send | receive and copy the basejail which is independent from the start. 
+
+* Configure the jail hostname.
+
+```
+echo hostname=\"basejail\" > /usr/local/jails/releases/11.2-RELEASE/etc/rc.conf
+```
 
 ### jail skeleton
 
