@@ -18,7 +18,6 @@ zfs create -o mountpoint=/usr/local/jails zroot/jails
 
 create a dataset for the thinjails and the name of the release you are going to download
 
-
 ```
 zfs create -p zroot/jails/thinjails
 zfs create -p zroot/jails/releases/11.2-RELEASE
@@ -43,7 +42,7 @@ save the download file to /tmp
 tar -xf /tmp/base.txz -C /usr/local/jails/releases/11.2-RELEASE
 ```
 
-Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
+Make sure you jail has the right timezone and dns servers
 
 ```
 cp /etc/resolv.conf /usr/local/jails/releases/11.2-RELEASE/etc
@@ -83,11 +82,6 @@ zfs send -R zroot/jails/releases/11.2-RELEASE@template | zfs recv zroot/jails/te
 
 Now, some tutorials suggest ZFS cloning (ie. zfs clone). This in itself indeed is the most simple way to clone a basejail to a production jail, however ZFS clones have certain drawbacks which over time completely negate any benefits. A ZFS clone is basically a snapshot, the filesystem is not physically duplicated and it saves all that space (a base 10.3 jail is some 300MB large). At first. Because as you use the jail and update it, more and more of those files are copied to individual jails as they change. Also, you cannot destroy a snapshot which has existing clones. That means you'd have to keep around all the basejail snapshots, or "promote" cloned jails. So why not just send | receive and copy the basejail which is independent from the start. 
 
-* Configure the jail hostname.
-
-```
-echo hostname=\"basejail\" > /usr/local/jails/releases/11.2-RELEASE/etc/rc.conf
-```
 
 ### jail skeleton
 
@@ -100,7 +94,46 @@ We’re going to copy these directories from the template to the skeleton.
 zfs create -p zroot/jails/templates/skeleton-11.2-RELEASE
 ```
 
-#### move and symlink
+* move and symlink
+
+The skeleton directory is what is going to be copied for each new jail. It is going to be mounted in /skeleton/ inside the jail. So in the read-only base template we need to create symlink from all the expected locations to the appropriate directories inside the /skeleton/ directory. It is very important to cd into your jail directory and create these symlinks with relative paths. That way they will always link to the correct location no matter where the base template ends up mounted.
+
+#### create new thinjail
+
+Configure the jail hostname.  
+the name will be thinjail1
+
+```
+echo hostname=\"thinjail1\" > /usr/local/jails/releases/11.2-RELEASE/etc/rc.conf
+```
+
+Make the jail directory where the base template and skeleton folder will be mounted.
+
+```
+mkdir -p /usr/local/jails/thinjail1
+```
+
+* Create the jail entry in /etc/jail.conf, be sure and include the global jail configs listed in the fulljail example.
+
+```
+# The jail definition for thinjail1
+thinjail1 {
+    host.hostname = "thinjail1.domain.local";
+    path = "/usr/local/jails/thinjail1";
+    interface = "lagg0";
+    ip4.addr = 10.0.0.17;
+    mount.fstab = "/usr/local/jails/thinjail1.fstab";
+}
+```
+
+* Create the jail fstab.
+
+# /usr/local/jails/thinjail1.fstab
+
+```
+/usr/local/jails/templates/base-11.2-RELEASE  /usr/local/jails/thinjail1/ nullfs   ro          0 0
+/usr/local/jails/thinjails/thinjail1     /usr/local/jails/thinjail1/skeleton nullfs  rw  0 0
+```
 
 ## host rc.conf
 
