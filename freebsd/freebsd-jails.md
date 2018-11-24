@@ -181,8 +181,8 @@ path = "/usr/local/jails/${name}";
 # The IP address of the jail.
 ip4.addr = 172.16.1.${ip};
 
-# Jail definition for www.
-www {
+# Jail definition for thinjail1.
+thinjail1 {
    $ip = 1;
 }
 ```
@@ -203,11 +203,11 @@ nat on $ext_if from $jail_net to any -> $ext_addr port 1024:65535 static-port
 ### start the jail
 
 ```
-jail -c www
+jail -c thinjail1
 ```
 
 You can open a shell within the jail using
 
 ```
-jexec www sh
+jexec thinjail1 sh
 ```
