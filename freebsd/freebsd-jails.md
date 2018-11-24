@@ -211,3 +211,48 @@ You can open a shell within the jail using
 ```
 jexec thinjail1 sh
 ```
+
+## creating new jails
+
+For each new jail, just follow the process:
+
+Add config to /etc/jail.conf
+Clone skeleton to /usr/local/jails/thinjails/<jailname>
+Write hostname to /etc/rc.conf in new jail files
+Create folder /usr/local/jails/<jailname> for new jail
+Create fstab /usr/local/jails/<jailname>.fstab and populate with layer information
+Create and start with jail -c jailname
+
+
+### upgrading thinjails
+
+Whenever we want to update all jails at once, shut down the jails
+
+Minor upgrades to a basejail can easily be done via freebsd-update:
+
+```
+freebsd-update -b /path/to/basejail fetch
+freebsd-update -b /path/to/basejail install
+```
+
+Upgrades between major releases are best handled differently: Simply create a new basejail for the new system version and link the new basejail into the existing jail in place of the usual one:
+
+Stop the jail.  
+Change the mount = ... option in jail.conf from the old to the new base jail
+
+Upgrade the existing system configuration files in the jails using mergemaster:
+
+```
+mergemaster -F -t /path/to/actual/jail/var/tmp/temproot -D /path/to/actual/jail
+```
+
+Start the jail
+Upgrade the packages if necessary (pkg-static install -f pkg, pkg upgrade)
+
+Note: Upgrading the base-system often involves changes to files like passwd or group. It is advised to regenerate the databases associated to these files (and mergemaster can actually run those commands at the end of an upgrade), which can be done inside the jail using the following commands:
+
+```
+cap_mkdb /etc/login.conf
+services_mkdb -q -o /var/db/services.db /etc/services
+pwd_mkdb -d /etc -p /etc/master.passwd
+```
