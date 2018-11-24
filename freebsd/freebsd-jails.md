@@ -39,7 +39,7 @@ we use the built in fetch command to download the file rather than wget or curl 
 * Extract the base sytem to the 11.2-RELEASE directory
 
 ```
-# tar -xf /tmp/base.txz -C /usr/local/jails/releases/11.2-RELEASE
+tar -xf /tmp/base.txz -C /usr/local/jails/releases/11.2-RELEASE
 ```
 
 Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
@@ -85,11 +85,16 @@ Now, some tutorials suggest ZFS cloning (ie. zfs clone). This in itself indeed i
 
 ### jail skeleton
 
+In addition to your base template, you need to create a skeleton template which will hold all the directories that are local to your jail.  
+We’re going to copy these directories from the template to the skeleton.
+
 * Create a skeleton dataset that will be used for jail-specific files
 
 ```
 zfs create -p zroot/jails/templates/skeleton-11.2-RELEASE
 ```
+
+#### move and symlink
 
 ## host rc.conf
 
