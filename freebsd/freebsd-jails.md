@@ -128,9 +128,9 @@ thinjail1 {
 
 * Create the jail fstab.
 
+```
 # /usr/local/jails/thinjail1.fstab
 
-```
 /usr/local/jails/templates/base-11.2-RELEASE  /usr/local/jails/thinjail1/ nullfs   ro          0 0
 /usr/local/jails/thinjails/thinjail1     /usr/local/jails/thinjail1/skeleton nullfs  rw  0 0
 ```
