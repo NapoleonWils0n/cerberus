@@ -789,6 +789,69 @@ Switch to root
 sudo su
 ```
 
+* new method for building a custom kernel
+
+Do not make edits to GENERIC. Instead, copy the file to a different name and make edits to the copy. The convention is to use a name with all capital letters. When maintaining multiple FreeBSD machines with different hardware, it is a good idea to name it after the machine's hostname. This example creates a copy, named MYKERNEL, of the GENERIC configuration file for the amd64 architecture:
+
+change into the /usr/src/sys/amd64/conf directory
+```
+cd /usr/src/sys/amd64/conf
+```
+
+* copy the GENERIC file to MYKERENL
+
+```
+cp GENERIC MYKERNEL
+```
+
+* edit the MYKERNEL file with vi
+
+```
+vi MYKERNEL
+```
+
+add the code below to the MYKEREL file,  
+this will include the GENERIC kernel using the include option,  
+and use the ident option to change the identity name to the name of your custom kernel which is the same as the name of the file.
+which in this case is MYKEREL
+
+```
+include GENERIC
+ident MYKERNEL
+```
+
+An include directive is available for use in configuration files. This allows another configuration file to be included in the current one, making it easy to maintain small changes relative to an existing file. If only a small number of additional options or drivers are required, this allows a delta to be maintained with respect to GENERIC, as seen in this example:
+
+Using this method, the local configuration file expresses local differences from a GENERIC kernel. As upgrades are performed, new features added to GENERIC will also be added to the local kernel unless they are specifically prevented using nooptions or nodevice.
+
+* Change to the /usr/src directory
+
+```
+cd /usr/src
+```
+
+* Compile the new kernel by specifying the name of the custom kernel configuration file:
+
+
+```
+make buildkernel KERNCONF=MYKERNEL
+```
+
+Install the new kernel associated with the specified kernel configuration file. This command will copy the new kernel to /boot/kernel/kernel and save the old kernel to /boot/kernel.old/kernel:
+
+```
+make installkernel KERNCONF=MYKERNEL
+```
+
+Shutdown the system and reboot into the new kernel. 
+
+
+* old method for building kernel
+
+```
+sudo su
+```
+
 ```
 cd /usr/src/sys/amd64/conf; config GENERIC; cd ../compile/GENERIC && make cleandepend && make depend && make -j 2 && make install
 ```
