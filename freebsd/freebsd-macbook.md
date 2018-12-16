@@ -235,10 +235,11 @@ freebsd dot files
 
 ## /etc/rc.conf
 
-edit /etc/rc.conf
+edit /etc/rc.conf  
+
+use moused_enable="YES" and moused_port="wsp0" for mac touchpad
 
 ```
-moused_enable="NO"
 clear_tmp_enable="YES"
 syslogd_flags="-ss"
 sendmail_enable="NONE"
@@ -246,24 +247,25 @@ hostname="pollux"
 #ifconfig_bge0="DHCP"
 ifconfig_ue0="DHCP"
 local_unbound_enable="YES"
+moused_port="wsp0"
+moused_enable="YES"
 ntpd_enable="YES"
 ntpd_flags="-g"
+# performance
 powerd_enable="YES"
 powerd_flags="-a hiadaptive -b adaptive"
+performance_cx_lowest="Cmax"
+economy_cx_lowest="Cmax"
 # Set dumpdev to "AUTO" to enable crash dumps, "NO" to disable
 dumpdev="AUTO"
 zfs_enable="YES"
-# pf firewall
 pf_enable="YES"
-pflog_enable="YES"
-# rules to mount filesystem
-devfs_system_ruleset="localrules"
-# nf client
 nfs_client_enable="YES"
-# clone loopback device
-#cloned_interfaces="lo1"
 hald_enable="YES"
 dbus_enable="YES"
+#devfs_system_ruleset="localrules"
+# hardware accleration
+kld_list="/boot/modules/i915kms.ko"
 ```
 
 ## /etc/sysctl.conf
@@ -271,7 +273,7 @@ dbus_enable="YES"
 edit /etc/sysctl.conf
 
 ```
-# $FreeBSD: releng/11.0/etc/sysctl.conf 112200 2003-03-13 18:43:50Z mux $
+# $FreeBSD: releng/12.0/sbin/sysctl/sysctl.conf 337624 2018-08-11 13:28:03Z brd $
 #
 #  This file is read when going to multi-user and its contents piped thru
 #  ``sysctl'' to adjust kernel values.  ``man 5 sysctl.conf'' for details.
@@ -282,26 +284,23 @@ edit /etc/sysctl.conf
 #security.bsd.see_other_uids=0
 security.bsd.see_other_uids=0
 security.bsd.see_other_gids=0
+security.bsd.see_jail_proc=0
 security.bsd.unprivileged_read_msgbuf=0
 security.bsd.unprivileged_proc_debug=0
-security.bsd.stack_guard_page=1
-# enhance shared memory x11 interface
-kern.ipc.shmmax=67108864
-kern.ipc.shmall=32768
-# enhance desktop responsiveness under high cpu use (200/224) 
-kern.sched.preempt_thresh=224
-# bump up max number of open files
-kern.maxfiles=200000
+kern.randompid=1
+vfs.zfs.min_auto_ashift=12
 # disable pc speaker
 hw.syscons.bell=0
-# shared memory for chromium
-kern.ipc.shm_allow_removed=1
 # allow users to mount drives
-vfs.usermount=1
+# vfs.usermount=1
 # automatically use new audio devices
 hw.snd.default_auto=1
 # sleep resume
 hw.acpi.lid_switch_state=s3
+# bit perfect audio
+hw.snd.default_unit=2
+dev.pcm.2.play.vchans=0
+dev.pcm.2.bitperfect=1
 ```
 
 ## /etc/pf.conf
@@ -391,41 +390,35 @@ reload pf firewall
 
 ## /boot/loader.conf
 
-load audio driver at boot
-
 edit /boot/loader.conf
 
 ```
 # vi /boot/loader.conf
 ```
 
-add the following line
+use wsp_load="YES" for mac touchpad  
+add the following code
 
 ```
-snd_hda_load="YES"
-```
-
-```
-geli_ada0p5_keyfile0_load="YES"
-geli_ada0p5_keyfile0_type="ada0p5:geli_keyfile0"
-geli_ada0p5_keyfile0_name="/boot/encryption.key"
 aesni_load="YES"
 geom_eli_load="YES"
-vfs.root.mountfrom="zfs:zroot/ROOT/default"
+security.bsd.allow_destructive_dtrace=0
 kern.geom.label.disk_ident.enable="0"
 kern.geom.label.gptid.enable="0"
-zpool_cache_load="YES"
-zpool_cache_type="/boot/zfs/zpool.cache"
-zpool_cache_name="/boot/zfs/zpool.cache"
-geom_eli_passphrase_prompt="YES"
 zfs_load="YES"
 snd_hda_load="YES"
-fuse_load="YES"
-fusefs_load="YES"
+snd_uaudio_load="YES"
+# fibs
 net.fibs=2
 net.add_addr_allfibs=0
 asmc_load="YES"
 acpi_video_load="YES"
+hint.p4tcc.0.disabled="1"
+hint.acpi_throttle.0.disabled="1"
+# enable CPU temperature monitoring
+coretemp_load="YES"
+# driver for touchpad
+wsp_load="YES"
 ```
 
 
