@@ -1,0 +1,15 @@
+# chromium freebsd
+
+For correct operation, shared memory support has to be enabled
+in Chromium by performing the following command as root:
+
+```
+sudo sysctl kern.ipc.shm_allow_removed=1
+```
+
+To preserve this setting across reboots, append the following
+to /etc/sysctl.conf:
+
+```
+kern.ipc.shm_allow_removed=1
+```
