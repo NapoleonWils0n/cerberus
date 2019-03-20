@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# get m3u links from pastebin
+
+# check number of args passed to script
+[[ $# -eq 1 ]] || exit
+
+# validate input are digits
+input="$1"
+valid="^[0-9]{2}$" # matches: 00
+if ! [[ "$input" =~ $valid ]]; then
+    echo 'input must be 2 digits from 01-99'
+    exit
+fi
+
+# use lynx to dump m3u pastebin links from google
+echo "Saving $input links from pastebin"
+lynx -dump \
+"https://www.google.com/search?q=intext%3A%E2%80%9D%23EXTM3U%E2%80%9D\
++intext%3A%E2%80%9D%23EXTINF%E2%80%9D\
++site%3Apastebin.com&oq=intext%3A%E2%80%9D%23EXTM3U%E2%80%9D\
++intext%3A%E2%80%9D%23EXTINF%E2%80%9D\
++site%3Apastebin.com&num=$input" \
+| awk '{print $2}' \
+| grep -Eoa '(http|https)://[www.]*google.[a-z.]*/url\?q=[a-zA-Z0-9./?=_@%&:+-]*' \
+| grep -Ev '(http|https)://[a-z./]*\?q=(cache|related|intext):[a-zA-Z0-9./:&=+%]*' \
+| sed -e 's/http\?s:\/\/[www.]*google.[a-z]*\/url?q=//g' \
+| grep -Eo '(http|https)://[www.]*pastebin.[a-z]*/[a-zA-Z0-9]*' \
+| sed -e 's#https://pastebin.com/#https://pastebin.com/raw/#g' \
+> pastebin-links-$(date +"%H-%M-%m-%d-%y").txt
