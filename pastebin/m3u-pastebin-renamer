@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[[ $# -eq 0 ]] || exit 
+read -erp "enter a directory path to m3u8 files: " DIR
+[ -d $DIR ] && cd $DIR && \
+find . -type f -regex "./*[a-z.?=]*[a-zA-Z0-9]*" -printf '%P\n' \
+| while read file; do 
+newname=`echo "$file" | sed -e 's/[a-z.?=]*//' | sed  -e 's/[a-zA-Z0-9]*/&.m3u/'`
+mv "$file" "$newname"
+done || echo no directory found
