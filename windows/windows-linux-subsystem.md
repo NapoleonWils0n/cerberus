@@ -46,10 +46,11 @@ source ~/.bashrc
 
 #### install pastebin scripts
 
-install pastebin script
+install pastebin scripts and lynx browser
 download the pastebin scripts, make them executable and source ~/.bashrc
 
 ```
+sudo apt install lynx
 cd ~/bin
 wget https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/pastebin/m3u-pastebin-ripper
 wget https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/pastebin/m3u-pastebin-renamer
