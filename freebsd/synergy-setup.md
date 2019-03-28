@@ -1,0 +1,54 @@
+# synergy
+
+
+install synergy
+
+'''
+pkg install synergy
+'''
+
+create the syngery config
+
+```
+vim /usr/local/etc/synergy.conf
+```
+
+* synergy config 
+
+```
+# sample synergy configuration file
+#
+# comments begin with the # character and continue to the end of
+# line.  comments may appear anywhere the syntax permits.
+
+section: screens
+	# three hosts named:  moe, larry, and curly
+	pollux:
+	macmini.local:
+end
+
+section: links
+	# larry is to the right of moe and curly is above moe
+	pollux:
+		right = macmini.local
+
+	# moe is to the left of larry and curly is above larry.
+	# note that curly is above both moe and larry and moe
+	# and larry have a symmetric connection (they're in
+	# opposite directions of each other).
+	macmini.local:
+		left  = pollux
+end
+
+section: options
+	keystroke(Super+`) = switchInDirection(right)
+end
+```
+
+
+start the synergy server
+
+```
+synergy-core --server --address 192.168.1.3:24800 --config /usr/local/etc/synergy.conf
+```
+
