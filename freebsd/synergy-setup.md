@@ -41,7 +41,8 @@ section: links
 end
 
 section: options
-	keystroke(Super+`) = switchInDirection(right)
+	keystroke(super+`) = switchInDirection(right)
+	keystroke(super+shift+`) = switchInDirection(left)
 end
 ```
 
