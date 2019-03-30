@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# combine video and audio clip
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -v video.mp4 -a audio.m4a")
+
+# video file destination
+videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+record () {
+    video="$1" && \
+    audio="$2" && \
+    printf "%s\n" "+ Combining '$video' and '$audio' into video file" && \
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "$video" \
+    -i "$audio" \
+    -c copy -map 0:0 -map 1:0 \
+    "$videofile" \
+    && printf "%s\n" "+ Created '$videofile'"
+}
+
+
+# check arguments
+if [[ $# -eq 4 ]]; then
+   # group commands
+   {
+   [[ "$1" =~ '-v' ]] && \
+   [[ -f "$2" && "$2" =~ \.mp4$ ]] && \
+   [[ "$3" =~ '-a' ]] && \
+   [[ -f "$4" && "$4" =~ \.m4a$ ]];
+   } || { printf "%s\n" "$script_usage" && exit; }
+   # run record function to combine video and audio into a video file
+   record "$2" "$4"
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
