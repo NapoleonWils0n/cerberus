@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# openvpn script
+
+# check to see if script was run as root
+#[ "$(id -u)" = "0" ] || { printf "%s\n" "$0 must be run as root"; exit 1; }
+
+# check if 0 arguments are passed to the script
+[ $# = 0 ] || exit 1
+
+# openvpn files
+vpnconf="${HOME}/git/openvpn"
+
+# find the openvpn config files in the $ConfigDirectory, and print just the basename
+vpnlist=$(find $vpnconf -maxdepth 1 -type f -name "*.ovpn" | sort;)
+
+# create numbered list of vpn config files
+for i in "$vpnlist"; do
+    printf "%s\n" "$(basename -s .ovpn $i | nl -s - | column)"
+done
+
+# prompt user to enter the number of the vpn to connect to
+read -erp "enter a number between 1 and 50, or press q to quit: " vpn
+
+# check the user entered a number from 1 to 50
+#[ "$vpn" != q ] || exit 1
+#[ "$vpn" -gt 0 -a "$vpn" -lt 51 ] || exit 1
+
+if [ "$vpn" = "q" ]; then
+    printf "%s\n" q
+    #continue
+    exit 1
+fi
+
+printf "%s\n" "next"
+
+# connect to the vpn
+#case "$vpn" in 
+#  q)
+#      printf "%s\n" "quiting"
+#      break
+#      ;;
+#  0)
+#      echo 0
+#      ;;
+#  [0-9]|[0-9][0-9])
+#      echo case
+#      find $vpnconf -maxdepth 1 -type f -name "*.ovpn" | sort | sed -n "${vpn}p";
+#      ;;
+#  *)
+#      printf "%s\n" "Invalid Selection enter a number from 1-50"
+#      ;;
+#esac
+
+#	case $fileName in
+#	Quit )
+#	break
+#	;;
+#	$fileName )
+#	openvpn --auth-nocache --config ${fileName}
+#	break
+#	;;
+#	* )
+#	echo “Invalid Selection, enter a number”
+#	;;
+#	esac
