@@ -1,0 +1,893 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:gx="http://www.google.com/kml/ext/2.2">
+
+<Document>
+<name>clerkenwell trail</name>
+  <open>1</open>
+
+  <!-- style -->
+  <Style id="BalloonStyle">
+    <BalloonStyle>
+      <!-- a background color for the balloon -->
+      <bgColor>fffdfdfd</bgColor>
+      <!-- styling of the balloon text -->
+      <text><![CDATA[
+      <style>
+      body{ margin: 0; }
+      h1{ color: #2f2f2f; }
+      img{ max-width: 480px; border: solid 1px #a9a9a9a; }
+      p{ max-width: 482px; color: #2f2f2f; font-size: 1.2em; }
+      .ballon{ padding: 0px 10px 10px 10px; }
+      </style>
+      <div class="ballon">
+      <h1>$[name]</h1>
+      $[description]
+      </div>
+      ]]></text>
+    </BalloonStyle>
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/red-circle-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+  </Style>
+
+  <gx:Tour>
+    <name>Play me!</name>
+    <gx:Playlist>
+
+      <!-- lookat whole trail -->
+      <gx:FlyTo>
+        <gx:duration>20.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+		<longitude>-0.09814297612247391</longitude>
+		<latitude>51.51337809003394</latitude>
+		<altitude>0</altitude>
+		<heading>2.483025218225651</heading>
+		<tilt>74.86909940381159</tilt>
+		<range>498.7257489668987</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- Smithfield-->
+      <gx:FlyTo>
+        <gx:duration>8.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1010815775548934</longitude>
+	<latitude>51.51920481662355</latitude>
+	<altitude>10.03351548440747</altitude>
+	<heading>-24.7999068810586</heading>
+	<tilt>58.18016632345692</tilt>
+	<range>186.429136412017</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="smithfield">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="smithfield">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- Hicks Hall -->
+      <gx:FlyTo>
+        <gx:duration>6.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1016438739083725</longitude>
+	<latitude>51.52083620007853</latitude>
+	<altitude>0</altitude>
+	<heading>6.586289464252685</heading>
+	<tilt>67.62065852869543</tilt>
+	<range>126.9831579151079</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="hicks_hall">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="hicks_hall">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- st johns gate -->
+      <gx:FlyTo>
+        <gx:duration>6.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1026324012238367</longitude>
+	<latitude>51.52182471226857</latitude>
+	<altitude>13.29679082200187</altitude>
+	<heading>-22.65966674343973</heading>
+	<tilt>49.92430477984911</tilt>
+	<range>111.9112488089251</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="stjohns_gate">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="stjohns_gate">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- St Johns Church -->
+      <gx:FlyTo>
+        <gx:duration>6.0</gx:duration>
+        <gx:flyToMode>smooth</gx:flyToMode>
+	<LookAt>
+		<longitude>-0.103056712550581</longitude>
+		<latitude>51.52274445267074</latitude>
+		<altitude>10.40722511451148</altitude>
+		<heading>104.275866426111</heading>
+		<tilt>45.30283903424676</tilt>
+		<range>160.4349666222768</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+	</LookAt>
+       </gx:FlyTo>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="stjohns_church">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="stjohns_church">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- clerkenwell green -->
+      <gx:FlyTo>
+        <gx:duration>6.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+	<LookAt>
+		<longitude>-0.1056505443593703</longitude>
+		<latitude>51.52321149774982</latitude>
+		<altitude>11.32034765520626</altitude>
+		<heading>-75.66669464624445</heading>
+		<tilt>56.36564847162699</tilt>
+		<range>156.4384166348857</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+	</LookAt>
+       </gx:FlyTo>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="clerkenwell_green">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="clerkenwell_green">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- stjames church -->
+      <gx:FlyTo>
+        <gx:duration>6.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1057101778688307</longitude>
+	<latitude>51.52343952249475</latitude>
+	<altitude>12.40071461234878</altitude>
+	<heading>-32.85651808689973</heading>
+	<tilt>80.61925523661037</tilt>
+	<range>107.6158037350823</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="stjames_church">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="stjames_church">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- house of detention -->
+      <gx:FlyTo>
+        <gx:duration>6.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+	<LookAt>
+	<longitude>-0.1058437625385866</longitude>
+	<latitude>51.52472185566526</latitude>
+	<altitude>3.103258166270434</altitude>
+	<heading>-36.45280091062195</heading>
+	<tilt>55.79091871327678</tilt>
+	<range>119.9501572637693</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+	</LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="house_of_detention">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="house_of_detention">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+	
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- Finsbury health centre -->
+      <gx:FlyTo>
+        <gx:duration>5.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1087267083744148</longitude>
+	<latitude>51.52481020041199</latitude>
+	<altitude>7.050642588716476</altitude>
+	<heading>41.79343443754527</heading>
+	<tilt>60.00081646342059</tilt>
+	<range>104.8818577659606</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="finsbury_health_centre">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="finsbury_health_centre">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- exmouth market -->
+      <gx:FlyTo>
+        <gx:duration>8.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.109378601202863</longitude>
+	<latitude>51.52581079953606</latitude>
+	<altitude>0</altitude>
+	<heading>45.91180730026687</heading>
+	<tilt>63.10879140605039</tilt>
+	<range>116.2019951502996</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="exmouth_market">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="exmouth_market">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- sadlers wells theatre -->
+      <gx:FlyTo>
+        <gx:duration>8.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1060581154577112</longitude>
+	<latitude>51.52917104968208</latitude>
+	<altitude>10.66676221341493</altitude>
+	<heading>21.45496788951389</heading>
+	<tilt>51.20551375537346</tilt>
+	<range>197.0632657152663</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="sadlers_wells">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="sadlers_wells">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- angel -->
+      <gx:FlyTo>
+        <gx:duration>5.0</gx:duration>
+        <gx:flyToMode>bounce</gx:flyToMode>
+        <LookAt>
+	<longitude>-0.1061311548998256</longitude>
+	<latitude>51.53196616387714</latitude>
+	<altitude>0</altitude>
+	<heading>-5.014175825294828</heading>
+	<tilt>62.41583511710306</tilt>
+	<range>127.5148645999486</range>
+	<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </LookAt>
+       </gx:FlyTo>
+
+      <!-- open ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="angel">
+                <gx:balloonVisibility>1</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 10 seconds -->
+        <gx:Wait>
+          <gx:duration>10.0</gx:duration>
+        </gx:Wait>
+
+        <!-- close ballon -->
+        <gx:AnimatedUpdate>
+          <Update>
+            <targetHref/>
+            <Change>
+              <Placemark targetId="angel">
+                <gx:balloonVisibility>0</gx:balloonVisibility>
+              </Placemark>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <!-- wait 2 seconds -->
+        <gx:Wait>
+          <gx:duration>2.0</gx:duration>
+        </gx:Wait>
+
+      <!-- pause for 5 seconds -->
+      <gx:Wait>
+        <gx:duration>5.0</gx:duration>
+      </gx:Wait>
+
+      <!-- end tour animation -->
+    </gx:Playlist>
+  </gx:Tour>
+
+
+      <!-- folder -->
+  <Folder>
+	<name>clerkenwell</name>
+	<open>1</open>
+	<description>clerkenwell trail</description>
+	<gx:balloonVisibility>1</gx:balloonVisibility>
+
+      <!-- smithfield -->
+	<Placemark id="smithfield">
+		<name>Smithfield</name>
+		<description>
+		<![CDATA[
+                <img src="files/smithfield.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+		<longitude>-0.1010815775548934</longitude>
+		<latitude>51.51920481662355</latitude>
+		<altitude>10.03351548440747</altitude>
+		<heading>-24.7999068810586</heading>
+		<tilt>58.18016632345692</tilt>
+		<range>186.429136412017</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.100825366871844,51.51876195403121,0</coordinates>
+	</Point>
+	</Placemark>
+
+      <!-- Hicks Hall -->
+	<Placemark id="hicks_hall">
+		<name>Hicks Hall</name>
+		<description>
+		<![CDATA[
+                <img src="files/hickshall.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+			<longitude>-0.1016438739083725</longitude>
+			<latitude>51.52083620007853</latitude>
+			<altitude>0</altitude>
+			<heading>6.586289464252685</heading>
+			<tilt>67.62065852869543</tilt>
+			<range>126.9831579151079</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1016819668210767,51.5206392446207,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- st johns gate -->
+	<Placemark id="stjohns_gate">
+		<name>St John's Gate</name>
+		<description>
+		<![CDATA[
+                <img src="files/stjohns_gate.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+		<longitude>-0.1026324012238367</longitude>
+		<latitude>51.52182471226857</latitude>
+		<altitude>13.29679082200187</altitude>
+		<heading>-22.65966674343973</heading>
+		<tilt>49.92430477984911</tilt>
+		<range>111.9112488089251</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1026132371689636,51.52180613026274,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- St John's Church-->
+	<Placemark id="stjohns_church">
+		<name>St John's Church</name>
+		<description>
+		<![CDATA[
+                <img src="files/stjohns_church.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+			<longitude>-0.103056712550581</longitude>
+			<latitude>51.52274445267074</latitude>
+			<altitude>10.40722511451148</altitude>
+			<heading>104.275866426111</heading>
+			<tilt>45.30283903424676</tilt>
+			<range>160.4349666222768</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.103315621711062,51.52286460836402,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- clerkenwell green -->
+	<Placemark id="clerkenwell_green">
+		<name>Clerkenwell Green</name>
+		<description>
+		<![CDATA[
+                <img src="files/clerkenwell_green.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+			<longitude>-0.1056505443593703</longitude>
+			<latitude>51.52321149774982</latitude>
+			<altitude>11.32034765520626</altitude>
+			<heading>-75.66669464624445</heading>
+			<tilt>56.36564847162699</tilt>
+			<range>156.4384166348857</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.10526068654376,51.52307431595316,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- St James's Church -->
+	<Placemark id ="stjames_church">
+		<name>St James's Church</name>
+		<description>
+		<![CDATA[
+                <img src="files/stjames.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+		<longitude>-0.1057101778688307</longitude>
+		<latitude>51.52343952249475</latitude>
+		<altitude>12.40071461234878</altitude>
+		<heading>-32.85651808689973</heading>
+		<tilt>80.61925523661037</tilt>
+		<range>107.6158037350823</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1055254363951319,51.52325300393152,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- house of detention -->
+	<Placemark id="house_of_detention">
+		<description>
+		<![CDATA[
+                <img src="files/house_of_detention.png" height="270" width="480">
+                ]]>
+		</description>
+		<name>House of Detention</name>
+		<LookAt>
+		<longitude>-0.1058437625385866</longitude>
+		<latitude>51.52472185566526</latitude>
+		<altitude>3.103258166270434</altitude>
+		<heading>-36.45280091062195</heading>
+		<tilt>55.79091871327678</tilt>
+		<range>119.9501572637693</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1058448327241968,51.52463447885458,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- Finsbury health centre -->
+	<Placemark id="finsbury_health_centre">
+		<name>Finsbury Health Centre</name>
+		<description>
+		<![CDATA[
+                <img src="files/finsbury_healthcentre.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+			<longitude>-0.1087267083744148</longitude>
+			<latitude>51.52481020041199</latitude>
+			<altitude>7.050642588716476</altitude>
+			<heading>41.79343443754527</heading>
+			<tilt>60.00081646342059</tilt>
+			<range>104.8818577659606</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1089645479480905,51.52471193018424,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- exmouth market -->
+	<Placemark id="exmouth_market">
+		<name>Exmouth Market</name>
+		<description>
+		<![CDATA[
+                <img src="files/exmouth_market.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+			<longitude>-0.109378601202863</longitude>
+			<latitude>51.52581079953606</latitude>
+			<altitude>0</altitude>
+			<heading>45.91180730026687</heading>
+			<tilt>63.10879140605039</tilt>
+			<range>116.2019951502996</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.109661040657637,51.52565136381353,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- sadlers wells theatre -->
+	<Placemark id="sadlers_wells">
+		<name>Sadler's Wells Theatre</name>
+		<description>
+		<![CDATA[
+                <img src="files/sadlers.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+			<longitude>-0.1060581154577112</longitude>
+			<latitude>51.52917104968208</latitude>
+			<altitude>10.66676221341493</altitude>
+			<heading>21.45496788951389</heading>
+			<tilt>51.20551375537346</tilt>
+			<range>197.0632657152663</range>
+			<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1063901302970127,51.52900372160261,0</coordinates>
+		</Point>
+	</Placemark>
+
+      <!-- Angel -->
+	<Placemark id="angel">
+		<name>Angel</name>
+		<description>
+		<![CDATA[
+		 <img src="files/angel.png" height="270" width="480">
+                ]]>
+		</description>
+		<LookAt>
+		<longitude>-0.1061311548998256</longitude>
+		<latitude>51.53196616387714</latitude>
+		<altitude>0</altitude>
+		<heading>-5.014175825294828</heading>
+		<tilt>62.41583511710306</tilt>
+		<range>127.5148645999486</range>
+		<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+		</LookAt>
+		<styleUrl>#BalloonStyle</styleUrl>
+		<Point>
+			<gx:drawOrder>1</gx:drawOrder>
+			<coordinates>-0.1062249527855341,51.53179197976867,0</coordinates>
+		</Point>
+	</Placemark>
+  </Folder>
+</Document>
+</kml>
