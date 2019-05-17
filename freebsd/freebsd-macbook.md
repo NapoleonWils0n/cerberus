@@ -755,21 +755,29 @@ sudo vim /usr/src/sys/dev/asmc/asmcvar.h
 add the smc stats we dumped from the mac, you need to add NULL to the end of the array
 
 ```
-#define    ASMC_MBA4_TEMPNAMES { "TB0T", "TB1T", "TB2T", "TC0C", \
-                                "TC0D", "TC0E", "TC0F", "TC0P", \
-                               "TC1C", "TC2C", "TCGC", "TCSA", \
-                               "TH0F", "TH0J", "TH0O", "TH0o", \
-                               "TM0P", "TPCD", "Ta0P", "Th1H", \
-                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
-                                NULL }
+#define	ASMC_MBA4_TEMPS { "TB0T", "TB1T", "TB2T", "TC0C", \
+                	"TC0D", "TC0E", "TC0F", "TC0P", \
+                        "TC1C", "TC2C", "TCGC", "TCSA", \
+                        "TH0F", "TH0J", "TH0O", "TH0o", \
+                        "TM0P", "TPCD", "Ta0P", "Th1H", \
+                        "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                         NULL }
 
-#define    ASMC_MBA4_TEMPDESCS { "TB0T", "TB1T", "TB2T", "TC0C", \
-                                "TC0D", "TC0E", "TC0F", "TC0P", \
-                               "TC1C", "TC2C", "TCGC", "TCSA", \
-                               "TH0F", "TH0J", "TH0O", "TH0o", \
-                               "TM0P", "TPCD", "Ta0P", "Th1H", \
-                               "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
-                                NULL }
+#define	ASMC_MBA4_TEMPNAMES { "TB0T", "TB1T", "TB2T", "TC0C", \
+                       	   "TC0D", "TC0E", "TC0F", "TC0P", \
+                           "TC1C", "TC2C", "TCGC", "TCSA", \
+                           "TH0F", "TH0J", "TH0O", "TH0o", \
+                           "TM0P", "TPCD", "Ta0P", "Th1H", \
+                           "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                            NULL }
+
+#define	ASMC_MBA4_TEMPDESCS { "TB0T", "TB1T", "TB2T", "TC0C", \
+                           "TC0D", "TC0E", "TC0F", "TC0P", \
+                           "TC1C", "TC2C", "TCGC", "TCSA", \
+                           "TH0F", "TH0J", "TH0O", "TH0o", \
+                           "TM0P", "TPCD", "Ta0P", "Th1H", \
+                           "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                            NULL }
 ```
 
 After editing the asmc files we can now build the custom kernel
