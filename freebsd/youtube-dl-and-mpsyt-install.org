@@ -1,0 +1,78 @@
+* youtube-dl mpsyt Freebsd install
+  
+Manually install youtube-dl and mpsyt using pip on Freebsd
+
+** Install python 3.6 and pip
+
+Freebsd install python 3.6 python pip 3.6 ffmpeg rtmpdump mpv  
+
+#+BEGIN_SRC sh
+# pkg install python36 py36-pip ffmpeg rtmpdump mpv
+#+END_SRC
+
+mpv will install the youtube-dl package,
+but we will install a more up to date version using pip
+
+mpv will then use the manually installed version of youtube-dl
+
+*** add the python bin to your shell path
+
+add the following code to your ~/.bashrc if uisng bash,
+or to your ~/.zshrc file if your are using the zsh shell
+
+#+BEGIN_SRC sh
+# home local python bin 
+if [ -d "$HOME/.local/bin" ]; then
+   PATH="$HOME/.local/bin:$PATH"
+fi
+#+END_SRC
+
+source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+or source your ~/.zshrc file in using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+**** youtube-dl and mpsyt install with pip
+
+youtube-dl install
+
+#+BEGIN_SRC sh
+pip-3.6 install --user youtube_dl
+#+END_SRC
+
+youtube-dl upgrade
+
+#+BEGIN_SRC sh
+pip-3.6 install --upgrade --user youtube_dl
+#+END_SRC
+
+youtube-dl uninstall
+
+#+BEGIN_SRC sh
+pip-3.6 uninstall youtube_dl
+#+END_SRC
+
+mpsyt instal
+
+#+BEGIN_SRC sh
+pip-3.6 install --user mps-youtube
+#+END_SRC
+
+mpsyt upgrade
+
+#+BEGIN_SRC sh
+pip-3.6 install --upgrade --user mps-youtube
+#+END_SRC
+
+mpsyt uninstall
+
+#+BEGIN_SRC sh
+pip-3.6 uninstall mpsyt
+#+END_SRC
