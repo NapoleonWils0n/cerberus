@@ -1,3 +1,6 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
 * youtube-dl mpsyt Freebsd install
   
 Manually install youtube-dl and mpsyt using pip on Freebsd
