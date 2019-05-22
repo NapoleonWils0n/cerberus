@@ -1,0 +1,35 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
+* mpsyt save youtube playlist
+  
+Open mpsyt
+
+#+BEGIN_SRC sh
+mpsyt
+#+END_SRC
+
+Add a youtube playlist
+
+#+BEGIN_SRC sh
+pl https://www.youtube.com/playlist?list=PL9-JlwYEj37W_Mx6OMVrGb4TOBCeCQ9de
+#+END_SRC
+
+Add all the items from the youtube playlist to the local playlist
+
+#+BEGIN_SRC sh
+add *
+#+END_SRC
+
+dump the entire youtube playlist to save all items in the playlist
+
+#+BEGIN_SRC sh
+dump
+#+END_SRC
+
+save the playlist,
+replace playlist-name with the name you want to save the playlist as.
+
+#+BEGIN_SRC
+save playlist-name
+#+END_SRC
