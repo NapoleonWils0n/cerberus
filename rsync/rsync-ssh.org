@@ -1,0 +1,17 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
+* rsync ssh
+
+rsync ssh dry run
+
+#+BEGIN_SRC sh
+rsync -avz -e ssh --dry-run --progress find-ffmpeg.org macmini:Desktop/ssh
+
+#+END_SRC
+
+rsync ssh 
+
+#+BEGIN_SRC sh
+rsync -avz -e ssh --delete --progress /home/djwilcox macmini:rsync/freebsd
+#+END_SRC

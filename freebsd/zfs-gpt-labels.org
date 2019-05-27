@@ -1,0 +1,54 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
+* zfs gpt label
+
+list the disks
+
+#+BEGIN_SRC sh
+geom disk list
+#+END_SRC
+
+switch to root using doas or sudo
+all commands should be run as root
+
+use gpart to destroy the drive
+and dd to zero out the drive as well
+
+#+BEGIN_SRC sh
+gpart destroy -F da0
+dd if=/dev/zero of=/dev/da0 bs=1m count=128
+#+END_SRC
+
+use gpart to create a gpt partition on the drive
+and add a label
+
+#+BEGIN_SRC sh
+gpart create -s gpt da0
+gpart add -t freebsd-zfs -l zusb da0
+#+END_SRC
+
+create a new zpool and give it the same name as the gpt label to make things easy to remember
+set the mount point and use chown to change the owner of the mount point,
+replacing username:username with your username
+
+#+BEGIN_SRC sh
+zpool create zusb gpt/zusb
+zfs set mountpoint=/mnt/usb zusb
+chown username:username /mnt/usb
+#+END_SRC
+
+export the pool to unmount the drive
+
+#+BEGIN_SRC sh
+zpool export zusb
+#+END_SRC
+
+** linux
+
+#+BEGIN_SRC sh
+# ls -lh /dev/disk/by-partlabel/
+# zpool import -d /dev/disk/by-partlabel zusb
+#+END_SRC
+
+import as read only

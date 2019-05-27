@@ -19,17 +19,32 @@ gpart destroy -F da0
 dd if=/dev/zero of=/dev/da0 bs=1m count=128
 ```
 
+use gpart to create a gpt partition on the drive
+and add a label
+
+
+```
+gpart create -s gpt da0
+gpart add -t freebsd-zfs -l zbackup da0
+```
+
+
 create mount point
 
 ```
 mkdir -p /mnt/usb
 ```
 
-crete zfs pool on the external drive
+create a new zpool and give it the same name as the gpt label to make things easy to remember
+set the mount point and use chown to change the owner of the mount point,
+replacing username:username with your username
+
+create zfs pool on the external drive
 
 ```
-zpool create zbackup /dev/da0
+zpool create zbackup gpt/zbackup
 zfs set mountpoint=/mnt/usb zbackup
+chown username:username /mnt/usb
 ```
 
 list zfs directory structure
@@ -72,5 +87,6 @@ zfs send -Rv -I zroot@2017-04-18 zroot@2017-04-21 | zfs recv -F zbackup/zroot
 ### zfs unmount drive
 
 ```
-sudo zfs unmount zbackup
+zfs unmount zbackup
+zfs export zbackup
 ```
