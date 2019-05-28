@@ -1,0 +1,9 @@
+#+STARTUP: content
+
+* ffmpeg find extract frame as png
+  
+find all mp4 files and extract the first frame as a png image
+
+#+BEGIN_SRC sh
+find . -name "*.mp4" -exec sh -c 'ffmpeg -i "$1" -ss 00:00:00 -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
+#+END_SRC
