@@ -1,0 +1,165 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* flyover video guide
+
+** convert 360 videos to mp4 files
+   
+convert the 360 videos to mp4 files using the insta360 studio desktop application
+
+each 360 video has 2 video files, one for each lense
+the video filename starts with date and end with 00_ and 10_ and the number of the clip and the file extension
+
+for example
+
+VID_20190427_123303_00_19.insv
+VID_20190427_123303_10_19.insv
+
+you need both files to import into the insta360 desktop program
+
+** extract frame from video
+
+find all mp4 files and extract the first frame as a png image
+
+change directory into the directory containing the mp4 video files,
+and then use find and ffmpeg to extract the first frame of every video and save it as a png image file
+
+#+BEGIN_SRC sh
+find . -name "*.mp4" -exec sh -c 'ffmpeg -i "$1" -ss 00:00:00 -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
+#+END_SRC
+
+**  google earth
+
+*** google earth install
+
+**** mac install
+
++ [[https://www.google.com/earth/download/gep/agree.html][Download Google Earth Pro]]
++ Open "GoogleEarthProMac-Intel.dmg".
++ Open the "Install Google Earth Pro.pkg" file and follow the installation process.
++ To open Google Earth Pro, open your Applications folder and double-click Google Earth Pro.
+
+Note: During the installation process, Mac OS X will ask for an administrator password.
+
+**** linux install
+
+We will be using gdebi to install the Google Earth package on our system.
+
+gdebi ensures that there are no hassles during the installation as it will also automatically fetch all package prerequisites. 
+In case gdebi is not installed yet on your system you can install it by:
+
+#+BEGIN_SRC sh
+sudo apt install gdebi-core wget
+#+END_SRC
+
+Download Google Earth pro with wget 
+
+#+BEGIN_SRC sh
+wget https://dl.google.com/dl/earth/client/current/google-earth-pro-stable_current_amd64.deb
+#+END_SRC
+
+Use the gdebi command to install Google Earth 
+
+#+BEGIN_SRC sh
+sudo gdebi google-earth-pro-stable_current_amd64.deb 
+#+END_SRC
+
+*** google earth settings
+
+**** improve quality
+     
+open preferences 3D View
+change Anisotropic Filtering to high
+
+**** hide controls
+     
+hide the navigation controls in the top right of the map
+
+open preferences Navigation
+under Non-mouse Controller uncheck Enable Controller
+
+Click apply and save
+
+*** saving locations as a kml file
+
+save google earth locations as a kml file    
+
+put google earth in full screen mode
+open the sidebar
+add new location
+close sidebar
+
+reposition the camera view
+right click on location marker
+save view snapshot
+save snapshot as, to save a kml file
+
+*** creating a kml tour
+    
+the kml tour has 2 sections
+fly to
+locations
+
+**** fly to
+
+the fly to section is made up of the location marker code
+which contains the longditude, latitude and camera angle
+
+as well as an extra location we fly from to the first location
+the fly from location should have a time of at least 20 seconds 
+
+when you start playing the tour there is an on screen video control in the bottom left of the screen,
+the conrols will disappear after 10 seconds
+
+having a 20 second delay before the tour start flying to the first location ensures the controller have disappered
+we use ffmpeg later on trim the video clip to remove the start and end of the clip to remove the controllers from the video
+
+the location are seperated by code that determines the flying mode
+which is either bounce or smooth as well as the time it takes to fly between the two locations
+
+**** locations
+
+the locations section is where you add the code from the location marker kml file
+this contains the longditude, latitude and camera angle
+
+the pop up above the locations are also formatted using cdata and html in the location section
+we use the images we extracted from the 360 videos in the location pop ups
+
+** screen recording
+
+*** mac screen recording with ffmpeg
+
+mac screen recording using ffmpeg and avfoundation
+
++ put google earth pro into fullscreen mode
++ hide the menu bar and sidebar
+
+#+BEGIN_SRC sh
+ffmpeg -video_size 1920x1080 -framerate 30 -f avfoundation -i 0 -c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
+#+END_SRC
+
+*** linux screen recording with ffmpeg
+
+linux screen recording using ffmpeg and x11grab
+
++ put google earth pro into fullscreen mode
++ hide the menu bar and sidebar
+
+#+BEGIN_SRC sh
+ffmpeg -video_size 1920x1080 -framerate 30 -f x11grab -i 0 -c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
+#+END_SRC
+
+** trim google earth video
+   
+trim the video clip to remove the start and end couple of seconds,
+this is to remove the playback controls that are visible at the start at end of the video
+
+trimming clips important note
+
+-ss = start time
+-t  = number of seconds after start time
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mkv -ss 00:00:15 -t 00:03:48 -async 1 -c:v copy outfile.mkv
+#+END_SRC
