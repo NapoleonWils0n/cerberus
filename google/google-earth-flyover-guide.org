@@ -163,3 +163,11 @@ trimming clips important note
 #+BEGIN_SRC sh
 ffmpeg -i infile.mkv -ss 00:00:15 -t 00:03:48 -async 1 -c:v copy outfile.mkv
 #+END_SRC
+
+** blender video editor
+
+You can use the "Expand to fit" option which is enabled by hitting G for grab and then you can hit G again to toggle "Expand to fit" permanently or hold down ALT to use toggle it temporarily.
+
+When you have three strips with the new one selected but not yet in your final row:
+Just hit G to grab and then G again and place it "over" the existing strips:
+Confirm with left mouse button (LMB) or Enter and there you have the strip inserted in between the two existing ones:
