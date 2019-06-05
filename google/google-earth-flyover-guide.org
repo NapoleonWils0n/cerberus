@@ -171,3 +171,5 @@ You can use the "Expand to fit" option which is enabled by hitting G for grab an
 When you have three strips with the new one selected but not yet in your final row:
 Just hit G to grab and then G again and place it "over" the existing strips:
 Confirm with left mouse button (LMB) or Enter and there you have the strip inserted in between the two existing ones:
+
+Remove empty space between clips with the delete key
