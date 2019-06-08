@@ -46,3 +46,17 @@ mount -o rw -t nfs 192.168.1.101:/Users/djwilcox/Movies /home/djwilcox/video
 
 the ip address and directory path on the server and the local mount point
 
+** fstab
+   
+edit your fstab
+
+#+BEGIN_SRC sh
+# vim /etc/fstab
+#+END_SRC
+
+add the following code
+
+#+BEGIN_SRC sh
+192.168.1.101:/Users/djwilcox/Music/mpd /home/djwilcox/music nfs rw,noauto,noatime 0 0
+192.168.1.101:/Users/djwilcox/Movies /home/djwilcox/video nfs rw,noauto,noatime 0 0
+#+END_SRC
