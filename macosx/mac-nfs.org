@@ -19,7 +19,7 @@ which contains the path to the directory we are sharing
 copy the exports file to /etc
 
 #+BEGIN_SRC sh
-sudo cp export /etc
+sudo cp exports /etc
 #+END_SRC
 
 click allow terminal access in the pop up
