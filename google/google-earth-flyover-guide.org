@@ -173,3 +173,4 @@ Just hit G to grab and then G again and place it "over" the existing strips:
 Confirm with left mouse button (LMB) or Enter and there you have the strip inserted in between the two existing ones:
 
 Remove empty space between clips with the delete key
+or by selecting clips with b and draging then pressing shift x to ripple delete

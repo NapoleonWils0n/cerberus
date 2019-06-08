@@ -1,0 +1,39 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
+* mac nfs server export
+
+** mac server 
+   
+Create a file called exports and add the nfs export details
+
+which contains the path to the directory we are sharing
+-mapall=djwilcox is the user we are mapping
+192.168.1.3 = the ip address of the client
+
+#+BEGIN_SRC sh
+/Users/djwilcox/Music/mpd -mapall=djwilcox 192.168.1.3
+#+END_SRC
+
+copy the exports file to /etc
+
+#+BEGIN_SRC sh
+sudo cp export /etc
+#+END_SRC
+
+click allow terminal access in the pop up
+
+start the nfsd server
+
+#+BEGIN_SRC sh
+sudo nfsd
+#+END_src
+
+** freebsd client
+
+#+BEGIN_SRC sh
+mount -o rw -t nfs 192.168.1.101:/Users/djwilcox/Music/mpd /home/djwilcox/music
+#+END_SRC
+
+the ip address and directory path on the server and the local mount point
+
