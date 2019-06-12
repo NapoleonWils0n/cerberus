@@ -1,0 +1,22 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
+* ffmpeg concat clips
+  
+create a list of all the mp4s in the current directory  
+
+#+BEGIN_SRC sh
+printf "file '%s'\n" *.mp4 > mylist.txt
+#+END_SRC
+
+use ffmpeg to concat the video file in the text file
+
+#+BEGIN_SRC sh
+ffmpeg -f concat -i mylist.txt -c copy output
+#+END_SRC
+
+use subshell to generate a list of the mp4s in the current directory
+
+#+BEGIN_SRC sh
+ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) output.mp4
+#+END_SRC
