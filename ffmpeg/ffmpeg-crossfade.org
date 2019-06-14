@@ -128,6 +128,7 @@ bc minus 1
 
 bc -l <<< '27.160467-1'
 
+<<<<<<< HEAD
 ffprobe get duration in seconds and use cut to remove microseconds
 
 #+BEGIN_SRC sh
@@ -140,3 +141,6 @@ bc remove 1 second from the vide duration
 offset=$(bc -l <<< "${dur}"-1)
 #+END_SRC
 
+=======
+bc -l <<< $(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 clip1.mp4 | cut -d\. -f1)-1
+>>>>>>> fb1976624bdd61222a12b37bb5c157cee618cfee
