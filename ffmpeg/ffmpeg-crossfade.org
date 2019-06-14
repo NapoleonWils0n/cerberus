@@ -1,7 +1,8 @@
 #+STARTUP: content
 #+OPTIONS: num:nil
 
-* cross fade audio and video 
+* cross fade clips
+** cross fade audio and video 
 
 audio video cross fade between 2 clips after 9 seconds
 
@@ -51,7 +52,7 @@ ffmpeg \
 -map "[output]" -map "[audio]" fadein-video-xfade.mp4
 #+END_SRC
 
-* cross fade audio no overlap
+** cross fade audio no overlap
 
 cross fade audio betwen 2 video clips with no audio overlap
 fade out the first clip and fade in the second clip
@@ -65,7 +66,7 @@ ffmpeg \
 -map "[output]" -map "[audio]" audio-crossfade.mp4
 #+END_SRC
 
-cros fade and fade in
+cross fade audo no overlap and fade in
 
 #+BEGIN_SRC sh
 ffmpeg \
@@ -97,20 +98,11 @@ use subshell to generate a list of the mp4s in the current directory
 ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) output.mp4
 #+END_SRC
 
-* ffprobe duration
+* ffprobe
+** ffprobe duration
 
 #+BEGIN_SRC sh
 ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 infile.mp4
-#+END_SRC
-
-#+BEGIN_SRC sh
-ffprobe -loglevel error -show_entries format=duration -of default=nk=1:nw=1 infile.mp4
-#+END_SRC
-
-hours mins sec format
-
-#+BEGIN_SRC sh
-ffprobe -v error -sexagesimal -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 infile.mp4
 #+END_SRC
 
 
@@ -124,7 +116,7 @@ for f in *.mp4; do
 done
 #+END_SRC
 
-* ffprobe number of frames
+** ffprobe number of frames
 
 #+BEGIN_SRC sh
 ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nokey=1:noprint_wrappers=1 infile.mp4
@@ -135,3 +127,16 @@ ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=
 bc minus 1  
 
 bc -l <<< '27.160467-1'
+
+ffprobe get duration in seconds and use cut to remove microseconds
+
+#+BEGIN_SRC sh
+dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 clip1.mp4 | cut -d\. -f1)
+#+END_SRC
+
+bc remove 1 second from the vide duration
+
+#+BEGIN_SRC sh
+offset=$(bc -l <<< "${dur}"-1)
+#+END_SRC
+
