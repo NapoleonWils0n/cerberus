@@ -105,17 +105,6 @@ ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) output
 ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 infile.mp4
 #+END_SRC
 
-
-#+BEGIN_SRC sh
-#!/bin/bash
-mkdir fade
-for f in *.mp4; do
-  dur=$(ffprobe -loglevel error -show_entries format=duration -of default=nk=1:nw=1 "$f")
-  offset=$(bc -l <<< "$dur"-1)
-  ffmpeg -i "$f" -filter_complex "[0:v]fade=type=in:duration=1,fade=type=out:duration=1:start_time='$offset'[v];[0:a]afade=type=in:duration=1,afade=type=out:duration=1:start_time='$offset'[a]" -map "[v]" -map "[a]" fade/"$f"
-done
-#+END_SRC
-
 ** ffprobe number of frames
 
 #+BEGIN_SRC sh
@@ -136,4 +125,16 @@ bc remove 1 second from the vide duration
 
 #+BEGIN_SRC sh
 offset=$(bc -l <<< "${dur}"-1)
+#+END_SRC
+
+script
+
+#+BEGIN_SRC sh
+#!/bin/bash
+mkdir fade
+for f in *.mp4; do
+  dur=$(ffprobe -loglevel error -show_entries format=duration -of default=nk=1:nw=1 "$f")
+  offset=$(bc -l <<< "$dur"-1)
+  ffmpeg -i "$f" -filter_complex "[0:v]fade=type=in:duration=1,fade=type=out:duration=1:start_time='$offset'[v];[0:a]afade=type=in:duration=1,afade=type=out:duration=1:start_time='$offset'[a]" -map "[v]" -map "[a]" fade/"$f"
+done
 #+END_SRC
