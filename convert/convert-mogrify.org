@@ -1,0 +1,21 @@
+#+STARTUP: content
+
+* image magick scale
+
+rescale a single image to 480x270
+
+#+BEGIN_SRC sh
+convert infile.png -resize 480x270 -background transparent -gravity center -extent 480x270 outfile.png
+#+END_SRC
+
+** mogrify batch scale images
+
+mogrify will overwrite images when it converts them,
+so we need to create a directory called converted for example,
+and then use the -path option and specify the converted directory to output the files to
+
+convert jpg files to png with a transparent background and resize to 480x270
+
+#+BEGIN_SRC sh
+mogrify -format png -resize 480x270 -background transparent -gravity center -extent 480x270 -path converted *.jpg
+#+END_SRC
