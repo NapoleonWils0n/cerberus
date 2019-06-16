@@ -140,7 +140,7 @@ fade-va sh script
 script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.mp4 -i clip-2.mp4")
 
 # video file destination
-videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="$HOME/Desktop/fade-va-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # check arguments passed to script
 if [ $# -eq 4 ]; then
@@ -158,20 +158,14 @@ fi
 clip1="$2"
 clip2="$4"
 
-# print message
-printf "%s\n" "getting clips duration and number of frames"
-
-# clips duration
+# clip durations for fades
 clip1_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip1" | cut -d\. -f1)
 clip2_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip2" | cut -d\. -f1)
 
-# clips number of frames
-clip1_frames=$(ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nokey=1:noprint_wrappers=1 "$clip1")
-clip2_frames=$(ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nokey=1:noprint_wrappers=1 "$clip2")
-
-# use the bc command to remove 1 second from length of clip for fade
+# clip1 use the bc command to remove 1 second from length of clip for cross fade
 clip1_offset=$(printf "%s\n" "${clip1_dur}-1" | bc -l)
 clip2_offset=$(printf "%s\n" "${clip2_dur}-1" | bc -l)
+
 
 # ffmpeg command
 ffmpeg \
@@ -189,8 +183,9 @@ ffmpeg \
     [fadeout]fifo[fadeoutfifo];
     [fadeoutfifo][fadeinfifo]overlay[crossfade];
     [firstclip][crossfade][secondclip]concat=n=3[output];
-    [0:a] afade=t=in:ss=0:d=1 [audiofadein]; \
-    [audiofadein][1:a] acrossfade=d=1 [audio]
+    [0:a] afade=t=in:st=0:d=1 [audiofadein]; \
+    [1:a] afade=t=out:st='$clip2_offset':d=1 [audiofadeout]; \
+    [audiofadein][audiofadeout] acrossfade=d=1 [audio]
 " \
 -map "[output]" -map "[audio]" "$videofile"
 #+END_SRC
