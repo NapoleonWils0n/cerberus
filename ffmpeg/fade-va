@@ -32,7 +32,6 @@ clip2_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_w
 clip1_offset=$(printf "%s\n" "${clip1_dur}-1" | bc -l)
 clip2_offset=$(printf "%s\n" "${clip2_dur}-1" | bc -l)
 
-
 # ffmpeg command
 ffmpeg \
 -i "$clip1" -i "$clip2" \
