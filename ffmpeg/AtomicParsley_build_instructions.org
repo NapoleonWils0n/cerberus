@@ -1,0 +1,32 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* AtomicParsley build instructions
+
+Basic Instructions
+
+If you are building from svn source you will need autoconf & automake (you will definitely need make), otherwise skip to step 2.
+   
++ Create the configure script:
+
+#+BEGIN_SRC sh
+autoconf && autoheader
+#+END_SRC
+
++ Run the configure script:
+
+#+BEGIN_SRC sh
+./configure
+#+END_SRC
+
+You can check the meager options with ./configure -h
+
++ Build the program
+
+#+BEGIN_SRC sh
+make
+#+END_SRC
+
++ Use the program in situ or place it somewhere in your $PATH
+
