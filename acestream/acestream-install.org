@@ -1,0 +1,36 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* acestream install
+
+#+BEGIN_SRC sh
+yaourt -S acestream-engine acestream-player
+#+END_SRC
+
+** acestream start
+
+start the acestream engine and specify a port thats open in yout firewall
+
+#+BEGIN_SRC sh
+acestreamengine --client-console --port 6881
+#+END_SRC
+
+open a acestream link in the browser
+
++ if you paste the link into the acestream player omit the acestream:// prefix
++ or open the acestream player and open a torrent file to stream it
+
+create a alias for acestreamengine in ~/.bashrc 
+
+#+BEGIN_SRC sh
+alias acestreamengine='acestreamengine --client-console --port 6881'
+#+END_SRC
+
++ reload ~/.bashrc
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+use jack audio out in the ace stream player if you use a usb dac the audio isnt working
