@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+
+* convert mkv video to mp4
+
+convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
+the mp4 is also web ready and can be uploaded to youtube
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
+#+END_SRC
