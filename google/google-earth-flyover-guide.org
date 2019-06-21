@@ -164,6 +164,15 @@ trimming clips important note
 ffmpeg -i infile.mkv -ss 00:00:15 -t 00:03:48 -async 1 -c:v copy outfile.mkv
 #+END_SRC
 
+** convert mkv video to mp4
+
+ convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
+ the mp4 is also web ready and can be uploaded to youtube
+
+ #+BEGIN_SRC sh
+ ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
+ #+END_SRC
+
 ** image magick scale
 
 rescale a single image to 480x270
