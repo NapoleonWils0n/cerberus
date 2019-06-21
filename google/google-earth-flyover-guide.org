@@ -150,7 +150,19 @@ linux screen recording using ffmpeg and x11grab
 ffmpeg -video_size 1920x1080 -framerate 30 -f x11grab -i 0 -c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
 #+END_SRC
 
-** trim google earth video
+** convert mkv video to mp4
+
+ convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
+ the mp4 is also web ready and can be uploaded to youtube
+
+ #+BEGIN_SRC sh
+ ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
+ #+END_SRC
+
+** convert mkv video to mp4 and trim
+
+ convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
+ the mp4 is also web ready and can be uploaded to youtube
    
 trim the video clip to remove the start and end couple of seconds,
 this is to remove the playback controls that are visible at the start at end of the video
@@ -161,17 +173,8 @@ trimming clips important note
 -t  = number of seconds after start time
 
 #+BEGIN_SRC sh
-ffmpeg -i infile.mkv -ss 00:00:15 -t 00:03:48 -async 1 -c:v copy outfile.mkv
+ffmpeg -ss 00:00:20 -i infile.mkv -t 00:01:35 -c:v libx264 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
 #+END_SRC
-
-** convert mkv video to mp4
-
- convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
- the mp4 is also web ready and can be uploaded to youtube
-
- #+BEGIN_SRC sh
- ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
- #+END_SRC
 
 ** image magick scale
 
