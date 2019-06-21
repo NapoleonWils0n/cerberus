@@ -152,17 +152,17 @@ ffmpeg -video_size 1920x1080 -framerate 30 -f x11grab -i 0 -c:v libx264 -crf 0 -
 
 ** convert mkv video to mp4
 
- convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
- the mp4 is also web ready and can be uploaded to youtube
+convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
+the mp4 is also web ready and can be uploaded to youtube
 
- #+BEGIN_SRC sh
- ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
- #+END_SRC
+#+BEGIN_SRC sh
+ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
+#+END_SRC
 
 ** convert mkv video to mp4 and trim
 
- convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
- the mp4 is also web ready and can be uploaded to youtube
+convert the mkv video to a mp4 file to import into your video editor like Final Cut Pro
+the mp4 is also web ready and can be uploaded to youtube
    
 trim the video clip to remove the start and end couple of seconds,
 this is to remove the playback controls that are visible at the start at end of the video
