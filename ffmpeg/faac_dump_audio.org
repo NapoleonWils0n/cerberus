@@ -1,39 +1,42 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
- # ===================
- # = faac dump audio =
- # ===================
+* faac dump audio
 
-
+#+BEGIN_SRC sh
 faac -q 100 -P -R 48000 -b 128 2pass.aiff 
+#+END_SRC
 
++ 44100
 
-# 44100
-
-
+#+BEGIN_SRC sh
 faac -q 100 -P -R 44100 -b 128 2pass.aiff 
+#+END_SRC
 
+name output file
 
-# name out put file
-
-
+#+BEGIN_SRC sh
 faac -q 100 -P -R 48000 -b 128 -o test.aac 2pass.aiff 
+#+END_SRC
 
+** create m4a
 
-# create m4a
-
-
+#+BEGIN_SRC sh
 faac -q 100 -P -R 48000 -b 128 -w 2pass.aiff 
+#+END_SRC
 
-
+#+BEGIN_SRC sh
 faac -q 100 -P -R 44100 -b 128 --mpeg-vers 4 -o test.aac 2pass.aiff 
+#+END_SRC
 
-
+#+BEGIN_SRC sh
 faac -m 4 -o LC q 100 -P -R 48000 -b 128 2pass.aiff 
+#+END_SRC
 
-
+#+BEGIN_SRC sh
 faad -a out.aac 2pass.aac
-
+#+END_SRC
 
 
 
