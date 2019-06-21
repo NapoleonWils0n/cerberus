@@ -1,0 +1,17 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* evil twin
+
+respond to probe for an access point and generate respone and beacon frames
+
+#+BEGIN_SRC sh
+airbase-ng -P -C 10 -a AA:AA:AA:AA:AA:AA mon0 -v
+#+END_SRC
+
++ -P = respond to all probes
++ -C 10 = enable beacons every x seconds
++ -a AA:AA:AA:AA:AA:AA = mac address
++ mon0 = monitor mode interface
++ -v = verbose mode
