@@ -1,9 +1,12 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* ffmpeg aac screen recording
 
-# 1st display aac
+** 1st display aac
 
-
+#+BEGIN_SRC sh
 ffmpeg \
 -f alsa -ac 2 -ar 44100 -i hw:0,0 \
 -filter_complex "[0:0] pan=1c|c0=c1" \
@@ -12,11 +15,11 @@ ffmpeg \
 -c:a aac -ac 2 -ar 44100 -b:a 128k -strict -2 \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
 
+*** 1st display aac threads
 
-
-# 1st display aac threads
-
+#+BEGIN_SRC sh
 ffmpeg \
 -f alsa -ac 2 -ar 44100 -thread_queue_size 1024 -i hw:0,0 \
 -filter_complex "[0:0] pan=1c|c0=c1" \
@@ -25,10 +28,11 @@ ffmpeg \
 -c:a aac -ac 2 -ar 44100 -b:a 128k -strict -2 \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
 
+** 2nd display aac
 
-2nd display aac
-
+#+BEGIN_SRC sh
 ffmpeg \
 -f alsa -ac 2 -ar 44100 -i hw:0,0 \
 -filter_complex "[0:0] pan=1c|c0=c1" \
@@ -37,12 +41,11 @@ ffmpeg \
 -c:a aac -ac 2 -ar 44100 -b:a 256k -strict -2 \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
 
+*** 2nd display aac threads
 
-
-2nd display aac threads
-
-
+#+BEGIN_SRC sh
 ffmpeg \
 -f alsa -ac 2 -ar 44100 -thread_queue_size 1024 -i hw:0,0 \
 -filter_complex "[0:0] pan=1c|c0=c1" \
@@ -51,3 +54,4 @@ ffmpeg \
 -c:a aac -ac 2 -ar 44100 -b:a 256k -strict -2 \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
