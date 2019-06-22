@@ -1,0 +1,15 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg linux screen recording
+ 
+#+BEGIN_SRC sh
+ffmpeg -f -x11grab -s 800x600 -r 10 -i :0.0 -s 800x600 -r 10 -sameq out.avi
+#+END_SRC
+
+** make alias for .bashrc
+
+#+BEGIN_SRC sh
+echo "alias srecord='ffmpeg -f -x11grab -s 800x600 -r 10 -i :0.0 -s 800x600 -r 10 -sameq'" >> ~/.bashrc
+#+END_SRC
