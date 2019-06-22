@@ -1,0 +1,15 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd python3 
+
+#+BEGIN_SRC sh
+sudo pkg install python3-3_3
+#+END_SRC
+
+install pip
+
+#+BEGIN_SRC sh
+sudo python3 -m ensurepip
+#+END_SRC
