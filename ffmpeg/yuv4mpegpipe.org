@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Change the frame rate of a video
+
+#+BEGIN_SRC sh
+ffmpeg -i input.flv -f yuv4mpegpipe - | yuvfps -s 25:1 -r 25:1  | ffmpeg -f yuv4mpegpipe -i - -b 28800k -y output25fps.avi
+#+END_SRC
+
+
