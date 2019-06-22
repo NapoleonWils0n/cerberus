@@ -1,0 +1,88 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+
+* tinyproxy install and config
+
+#+BEGIN_SRC sh
+sudo pacman -S tinyproxy
+#+END_SRC
+
+** edit the tinyproxy config file
+
+#+BEGIN_SRC sh
+sudo vim /etc/tinyproxy/tinyproxy.conf
+#+END_SRC
+
+
+*** change the following options in the config file
+
++ change the port to one open in your firewall
+
+Port 6882
+
++ comment out Listen 127.0.0.1 so you can access the proxy on the lan network
+
+#Listen 127.0.0.1
+
++ Allow access for an ip address
+
+Allow 192.168.1.4
+
++ Allow access from the local subnet
+
+Allow 192.168.1.0/24
+AddHeader "X-Forwarded-For" "ip address"
+
+*** starting and stopping tinyproxy 
+
+start tinyproxy
+
+#+BEGIN_SRC sh
+sudo systemctl start tinyproxy
+#+END_SRC
+
+stop tinyproxy
+
+#+BEGIN_SRC sh
+sudo systemctl stop tinyproxy
+#+END_SRC
+
+
+** ffmpeg proxy set up
+
+export http_proxy for ffmpeg
+
+#+BEGIN_SRC sh
+export http_proxy="http://127.0.0.1:6882"
+#+END_SRC
+
+unset the http_proxy
+
+#+BEGIN_SRC sh
+unset http_proxy
+#+END_SRC
+
+check your env
+
+#+BEGIN_SRC sh
+env
+#+END_SRC
+
+*** ffmpeg record hls stream
+
+#+BEGIN_SRC sh
+ffmpeg -i \
+url goes here \
+-c:v copy -bsf:a aac_adtstoasc -loglevel error \
+video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
+
+
+
+
+
+
+
+
