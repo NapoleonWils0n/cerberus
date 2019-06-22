@@ -1,0 +1,29 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* tor freebsd
+
+install tor
+
+#+BEGIN_SRC sh
+sudo pkg install tor
+#+END_SRC
+
+run command before starting tor
+
+#+BEGIN_SRC sh
+sudo sysctl net.inet.ip.random_id=1
+#+END_SRC
+
+** start tor
+
+#+BEGIN_SRC sh
+sudo service tor onestart
+#+END_SRC
+
+** stop tor
+
+#+BEGIN_SRC sh
+sudo service tor onestop
+#+END_SRC
