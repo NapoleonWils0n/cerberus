@@ -1,0 +1,8 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd partition
+
+freebsd installer partition scheme
+for apple hardware choose gpt (bios+uefi)
