@@ -1,41 +1,45 @@
-# import zfs pool on external drive and mount
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* import zfs pool on external drive and mount
 
 import zfs pool on external drive and mount the drive
 
 first we check if the zfs pool is listed when we run zpool status  
 becuase we need to export the pool before we can import it
 
-```
+#+BEGIN_SRC sh
 zpool status
-```
+#+END_SRC
 
 if the pool is listed when we run zpool status we need to export it  
 before we can import it
 
 export the pool
 
-```
+#+BEGIN_SRC sh
 sudo zpool export zbackup
-```
+#+END_SRC
 
-## import the pool and mount it
+** import the pool and mount it
 
 mount the pool and set the mount point
 
-```
+#+BEGIN_SRC sh
 sudo zpool import -o altroot=/mnt -f zbackup
-```
+#+END_SRC
 
 if the zpool was created with a mount point like this
 
-```
+#+BEGIN_SRC sh
 zfs set mountpoint=/mnt/usb zbackup
-```
+#+END_SRC
 
 then we can mount the pool with this command  
 and it will be mounted at the mountpoint set with the zfs set command
 
-```
+#+BEGIN_SRC sh
 sudo zpool import -f zbackup
-```
+#+END_SRC
 
