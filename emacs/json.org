@@ -1,0 +1,21 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emacs json print pretty
+
+#+BEGIN_SRC sh
+mx package-install
+#+END_SRC
+
+install json-mode
+
+#+BEGIN_SRC sh
+json-mode
+#+END_SRC
+
+emacs json print pretty buffer
+
+#+BEGIN_SRC sh
+M-x json-pretty-print-buffer-ordered
+#+END_SRC
