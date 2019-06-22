@@ -1,0 +1,18 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* x264 64 bit install
+
+#+BEGIN_SRC sh
+curl -#LO ftp://ftp.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
+#+END_SRC
+
+untar the archive
+cd into x264
+
+#+BEGIN_SRC sh
+./configure --host=x86_64-darwin
+make 
+sudo make install
+#+END_SRC
