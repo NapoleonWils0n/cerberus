@@ -1,118 +1,121 @@
-# ffmpeg tcpdump and tshark 
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
-## Linux set up
+* ffmpeg tcpdump and tshark 
 
-* install tcpdump
+** Linux set up
+*** install tcpdump
 
-```
+#+BEGIN_SRC sh
 sudo apt install tcpdump
-```
+#+END_SRC
 
-*  install wireshark
+***  install wireshark
 
-```
+#+BEGIN_SRC sh
 sudo apt-get install wireshark
-```
+#+END_SRC
 
-*  configure wireshark to run as non root - answer yes
+***  configure wireshark to run as non root - answer yes
 
-```
+#+BEGIN_SRC sh
 sudo dpkg-reconfigure wireshark-common
-```
+#+END_SRC
 
-* add yourself to the wireshark group
+*** add yourself to the wireshark group
 
-```
+#+BEGIN_SRC sh
 sudo adduser $USER wireshark
-```
+#+END_SRC
 
-*  restart computer
+restart computer
 
 
 ## Freebsd set up
 
-* install tcpdump
+** install tcpdump
 
-```
+#+BEGIN_SRC sh
 sudo pkg install tcpdump
-```
+#+END_SRC
 
-* Freebsd Wireshark set up
+** Freebsd Wireshark set up
 
-```
+#+BEGIN_SRC sh
 sudo pkg install wireshark
-```
+#+END_SRC
 
-* Wireshark freebsd change permission for capture
+*** Wireshark freebsd change permission for capture
 
-```
+#+BEGIN_SRC sh
 sudo chgrp network /dev/bpf*
 sudo chmod g+r /dev/bpf*
 sudo chmod g+w /dev/bpf*
-```
+#+END_SRC
 
-# tcpdump
+** tcpdump
 
-## Find your network interface
+Find your network interface
 
-* ifconfig - show network interface
+*** ifconfig - show network interface
 
-```
+#+BEGIN_SRC sh
 ifconfig -a
-```
+#+END_SRC
 
-* ip a - show network interface
+*** ip a - show network interface
 
-```
+#+BEGIN_SRC sh
 ip a
-```
+#+END_SRC
 
-* tcpdump - show network interface
+*** tcpdump - show network interface
 
-```
+#+BEGIN_SRC sh
 sudo tcpdump -D
-```
+#+END_SRC
 
-## tcpdump capture network traffic
++ tcpdump capture network traffic
 
 Replace wlan0 with the name of your network interface  
 if you use tcpdump -D, you can use the number next to your network interface
 
-```
+#+BEGIN_SRC sh
 sudo tcpdump -s 0 -i wlan0 -w file.pcap
-```
+#+END_SRC
 
-# Wireshark http content type filters
+** Wireshark http content type filters
 
 Wireshark filters for video
 
-```
+#+BEGIN_SRC sh
 http.content_type == "application/x-mpegurl"
-```
+#+END_SRC
 
-```
+#+BEGIN_SRC sh
 http.content_type == "application/vnd.apple.mpegurl"
-```
+#+END_SRC
 
-```
+#+BEGIN_SRC sh
 http.content_type == "video/mpt2"
-```
+#+END_SRC
 
-# tshark 
+** tshark 
 
-## print the full url of get requests
+print the full url of get requests
 
-```
+#+BEGIN_SRC sh
 tshark -r file.pcap -q -T fields -e http.request.full_uri -Y 'http.request.method == "GET"' > links.txt
-```
+#+END_SRC
 
-## tshark export http objects
+*** tshark export http objects
 
 export http objects to folder called pcapdump
 
-```
+#+BEGIN_SRC sh
 tshark -nr file.pcap -q --export-objects http,pcapdump
-```
+#+END_SRC
 
 # ffmpeg concat video files
 
@@ -122,18 +125,18 @@ ffmpeg concat video files like .ts into a single file
 
 Create a file mylist.txt with all the files you want to have concatenated in the following form (lines starting with a # are ignored):
 
-```
+#+BEGIN_SRC sh
 # this is a comment
 file '/path/to/file1'
 file '/path/to/file2'
 file '/path/to/file3'
-```
+#+END_SRC
 
 Note that these can be either relative or absolute paths. Then you can stream copy or re-encode your files:
 
-```
+#+BEGIN_SRC sh
 ffmpeg -f concat -safe 0 -i mylist.txt -c copy output
-```
+#+END_SRC
 
 The -safe 0 above is not required if the paths are relative.
 Automatically generating the input file
@@ -141,36 +144,36 @@ Automatically generating the input file
 It is possible to generate this list file with a bash for loop, or using printf. 
 Either of the following would generate a list file containing every *.wav in the working directory:
 
-* with a bash for loop
+*** with a bash for loop
 
-```
+#+BEGIN_SRC sh
 for f in ./*.ts; do echo "file '$f'" >> mylist.txt; done
-```
+#+END_SRC
 
-* or with printf
+*** printf
 
-```
+#+BEGIN_SRC sh
 printf "file '%s'\n" ./*.ts > mylist.txt
-```
+#+END_SRC
 
 If your shell supports process substitution (like Bash and Zsh), you can avoid explicitly creating a list file and do the whole thing in a single line. This would be impossible with the concat protocol (see below). Make sure to generate absolute paths here, since ffmpeg will resolve paths relative to the list file your shell may create in a directory such as "/proc/self/fd/".
 
-```
+#+BEGIN_SRC sh
 ffmpeg -f concat -safe 0 -i <(for f in ./*.ts; do echo "file '$PWD/$f'"; done) -c copy output.ts
 ffmpeg -f concat -safe 0 -i <(printf "file '$PWD/%s'\n" ./*.ts) -c copy output.ts
 ffmpeg -f concat -safe 0 -i <(find . -name '*.ts -printf "file '$PWD/%p'\n") -c copy output.ts
-```
+#+END_SRC
 
 Copy ts file into new video container with ffmpeg
 
-* copy ts file into mkv file
+*** copy ts file into mkv file
 
-```
+#+BEGIN_SRC sh
 ffmpeg - output.ts -c copy out.mkv
-```
+#+END_SRC
 
-* copy ts file into mp4 file
+*** copy ts file into mp4 file
 
-```
+#+BEGIN_SRC sh
 ffmpeg - output.ts -c copy out.mp4
-```
+#+END_SRC
