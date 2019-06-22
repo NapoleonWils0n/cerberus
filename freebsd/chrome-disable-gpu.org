@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* chrome disable gpu
+
+#+BEGIN_SRC sh
+/usr/local/share/chromium/chrome ${1+"$@"} --force-device-scale-factor=1 --disable-gpu 
+#+END_SRC
