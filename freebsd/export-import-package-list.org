@@ -1,13 +1,17 @@
-# freebsd pkg export pkg list
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd pkg export pkg list
 
 export a list of installed packages from one machine
 
-```
+#+BEGIN_SRC sh
 pkg noauto > pkg-list.txt 
-```
+#+END_SRC
 
 install packages from pkg-list.txt on another machine
 
-```
+#+BEGIN_SRC sh
 sudo pkg install -y `cat list`
-```
+#+END_SRC
