@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* zfs list snapshots by date
+
+list zfs snapshots sorted by creation date
+
+#+BEGIN_SRC sh
+zfs list -t snapshot -o name,creation -s creation
+#+END_SRC
