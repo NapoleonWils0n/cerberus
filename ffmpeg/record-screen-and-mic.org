@@ -1,12 +1,17 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* ffmeg record screen and mic
 
-# ffmeg record screen and mic
-#============================
+** record screen and mic in mono
 
-
-# record screen and mic in mono
+#+BEGIN_SRC sh
 ffmpeg -f x11grab -video_size 1366x768 -i $DISPLAY -f alsa -i hw:0,0 -c:v ffvhuff -c:a flac test.mkv
+#+END_SRC
 
-# record screen and mic in stereo
+** record screen and mic in stereo
+
+#+BEGIN_SRC sh
 ffmpeg -f x11grab -video_size 1366x768 -i $DISPLAY -f alsa -ac 2 -i hw:0,0 -c:v ffvhuff -c:a flac test.mkv
+#+END_SRC
