@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Extract raw audio from video
+
+#+BEGIN_SRC sh
+ffmpeg -i source.mpg -f s16le -acodec pcm_s16le audio.raw
+#+END_SRC
