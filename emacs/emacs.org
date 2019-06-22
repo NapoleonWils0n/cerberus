@@ -1,0 +1,74 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emacs evil 
+
+install emacs
+
+#+BEGIN_SRC sh
+sudo pacman -S emacs
+#+END_SRC
+
+** emacs systemd unit
+
+create emacs systemd unit file
+
+#+BEGIN_SRC sh
+vim ~/.config/systemd/user/emacs.service
+#+END_SRC
+
+** enable emacs
+
+#+BEGIN_SRC sh
+systemctl --user enable emacs
+#+END_SRC
+
+** start emacs
+
+#+BEGIN_SRC sh
+systemctl --user start emacs
+#+END_SRC
+
+** emacs install evil
+
+add to your ~/.emacs
+
+#+BEGIN_SRC sh
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(package-initialize)
+#+END_SRC
+
+#+BEGIN_SRC sh
+M-x list-packages
+C-s evil
+#+END_SRC
+
+Moving cursor over package name
+
+#+BEGIN_SRC sh
+i
+x
+#+END_SRC
+
++ i - mark for installation, x - to execute
+
+**** After install, add to your .emacs:
+
+#+BEGIN_SRC sh
+(require 'evil)
+(evil-mode 1)
+#+END_SRC
+
+** org mode
+
++ add to your ~/.emacs
+
+#+BEGIN_SRC sh
+(require 'org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+#+END_SRC
+

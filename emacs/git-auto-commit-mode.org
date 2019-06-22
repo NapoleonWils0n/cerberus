@@ -1,41 +1,43 @@
-# emacs git auto commit mode
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emacs git auto commit mode
 
 Emacs automatically commit and push to a git repo on save
 
-[git auto commit mode](https://github.com/ryuslash/git-auto-commit-mode)
-
-## Install
+[[git auto commit mode][https://github.com/ryuslash/git-auto-commit-mode]]
 
 git-auto-commit-mode can be found in both [[http://marmalade-repo.org/][Marmalade]] and [[http://melpa.milkbox.net/][MELPA]], so
 if you have either of those set-up installing should be as easy as:
 
-```
+#+BEGIN_SRC sh
 M-x package-install <RET> git-auto-commit-mode <RET>
-```
+#+END_SRC
 
-### emacs config set up
+*** emacs config set up
 
 To automatically push to head after each commit
 Add the code below to your ~/.emacs file
 
-```
+#+BEGIN_SRC sh
 ; git-auto-commit-mode
 (setq-default gac-automatically-push-p t)
-```
+#+END_SRC
 
-#### As a file-local variable
+**** As a file-local variable
 
 If you’re using Emacs 24 or newer you should set an eval file-local variable:
 
-```
+#+BEGIN_SRC sh
 ;; -*- eval: (git-auto-commit-mode 1) -*-
-```
+#+END_SRC
 
-#### As a directory-local variable
+**** As a directory-local variable
 
 Add a .dir-locals.el file at the root of your git repo, 
 and put in it (if you’re using Emacs 24 or newer) the code below
 
-```
+#+BEGIN_SRC sh
 ((nil . ((eval git-auto-commit-mode 1))))
-```
+#+END_SRC

@@ -1,16 +1,20 @@
-# emacs python ide
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emacs python ide
 
 install 3 packages with pip
 
-```
+#+BEGIN_SRC sh
 pip install --user elpy jedi rope
-```
+#+END_SRC
 
 emacs install elpy package
 
+#+BEGIN_SRC 
 M-x package-install elpy
-
 M-x package-list-packages
-
+#+END_SRC
 
 edit ~/.emacs so elpy starts with emacs
