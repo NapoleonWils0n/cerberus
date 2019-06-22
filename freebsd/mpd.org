@@ -1,0 +1,17 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd mpd
+
+start mpd
+
+#+BEGIN_SRC sh
+sudo service musicpd onestart
+#+END_SRC
+
+stop mpd
+
+#+BEGIN_SRC sh
+sudo service musicpd onestop
+#+END_SRC
