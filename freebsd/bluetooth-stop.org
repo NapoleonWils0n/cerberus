@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* blue freebsd stop
+
+#+BEGIN_SRC sh
+sudo service bluetooth onestop ubt0
+#+END_SRC
