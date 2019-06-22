@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd w3m-img
+
+freebsd w3m-img browser with inline image support
+
+#+BEGIN_SRC sh
+sudo pkg install w3m-img
+#+END_SRC
