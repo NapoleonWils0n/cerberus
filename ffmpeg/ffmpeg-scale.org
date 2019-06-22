@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* scale videos with ffmpeg
+
+#+BEGIN_SRC sh
+ffmpeg -i input.mp4 -vf scale=480:-1 output_480.mp4
+#END_SRC
