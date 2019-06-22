@@ -1,0 +1,23 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* geom list
+
+** geom list disks
+
+#+BEGIN_SRC sh
+geom disk list
+#+END_SRC
+
+** geom list partitions
+
+#+BEGIN_SRC sh
+geom part list
+#+END_SRC
+
+** geom list memory disk devices in use
+
+#+BEGIN_SRC sh
+geom md list
+#+END_SRC
