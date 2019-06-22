@@ -26,7 +26,8 @@ change directory into the directory containing the mp4 video files,
 and then use find and ffmpeg to extract the first frame of every video and save it as a png image file
 
 #+BEGIN_SRC sh
-find . -name "*.mp4" -exec sh -c 'ffmpeg -i "$1" -ss 00:00:00 -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
+find . -name "*.mp4" \
+-exec sh -c 'ffmpeg -i "$1" -ss 00:00:00 -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
 #+END_SRC
 
 **  google earth
