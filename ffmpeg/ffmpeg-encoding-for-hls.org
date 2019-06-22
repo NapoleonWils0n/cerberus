@@ -1,18 +1,18 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* create clip
 
-# create clip
-#============
+#+BEGIN_SRC sh
 ffmpeg -i input.avi -ss 00:00:00 -t 00:05:00 -async 1 -vcodec copy -acodec copy out.avi
+#+END_SRC
 
+** 720p = 1280x720
 
-#==========================================================#
-# 720p = 1280x720
-#==========================================================#
++ 1st pass
 
-# 1st pass
-#=========
-
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -profile:v high -level:v 4.0 -preset slow \
 -b:v 4750k -bufsize 1835k \
@@ -20,11 +20,11 @@ ffmpeg -i infile.mp4 \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
 -pass 1 -an \
 -f mp4 720p-high.mp4
+#+END_SRC
 
++ 2nd pass
 
-# 2nd pass
-#=========
-
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -profile:v high -level:v 4.0 -preset slow \
 -b:v 4750k -bufsize 1835k \
@@ -32,14 +32,13 @@ ffmpeg -i infile.mp4 \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
 -pass 2 -c:a libfdk_aac -b:a 192k \
 -f mp4 720p-high.mp4
+#+END_SRC
 
-#==========================================================#
-# 480p = 720x480p
-#==========================================================#
+** 480p = 720x480p
 
-# 1st pass
-#=========
++ 1st pass
 
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -profile:v main -level:v 4.0 -preset slow \
 -b:v 2500k -bufsize 1835k \
@@ -47,11 +46,11 @@ ffmpeg -i infile.mp4 \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
 -pass 1 -an \
 -f mp4 480p-high.mp4
+#+END_SRC
 
++ 2nd pass
 
-# 2nd pass
-#=========
-
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -profile:v main -level:v 4.0 -preset slow \
 -b:v 2500k -bufsize 1835k \
@@ -59,60 +58,60 @@ ffmpeg -i infile.mp4 \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
 -pass 2 -c:a libfdk_aac -b:a 128k \
 -f mp4 480p-high.mp4
+#+END_SRC
 
+** 2 pass baseline
 
-#==========================================================#
-# 2 pass baseline
-#==========================================================#
++ pass 1
 
-# pass 1
-#=======
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -crf 18 -profile:v baseline -bsf:v h264_mp4toannexb -preset slow -b:v 2000k -bufsize 1835k -vf scale=854:480 \
 -threads 0 -pix_fmt yuv420p -flags -global_header -x264opts keyint=100:min-keyint=100 -pass 1 -an -f mp4 out-480p.mp4
+#+END_SRC
 
-# pass 2
-#=======
++ pass 2
+
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -crf 18 -profile:v baseline -bsf:v h264_mp4toannexb -preset slow -b:v 2000k -bufsize 1835k -vf scale=854:480 \
 -threads 0 -pix_fmt yuv420p -flags -global_header -x264opts keyint=100:min-keyint=100 -pass 2 -c:a libfdk_aac -b:a 128k -bsf:a aac_adtstoasc -f mp4 out-480p.mp4
+#+END_SRC
 
+** 2 pass high profile
 
-#==========================================================#
-# 2 pass high profile
-#==========================================================#
++ pass 1
 
-# pass 1
-#=======
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -crf 18 -profile:v high -bsf:v h264_mp4toannexb -preset slow -b:v 2500k -bufsize 1835k -vf scale=854:480 \
 -threads 0 -pix_fmt yuv420p -flags -global_header -x264opts keyint=100:min-keyint=100 -pass 1 -an -f mp4 out-480p.mp4
+#+END_SRC
 
-# pass 2
-#=======
++ pass 2
+
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
 -c:v libx264 -crf 18 -profile:v high -bsf:v h264_mp4toannexb -preset slow -b:v 2500k -bufsize 1835k -vf scale=854:480 \
 -threads 0 -pix_fmt yuv420p -flags -global_header -x264opts keyint=100:min-keyint=100 -pass 2 -c:a libfdk_aac -b:a 128k -bsf:a aac_adtstoasc -f mp4 out-480p.mp4
+#+END_SRC
 
+** segment video for hls
 
-#==========================================================#
-# segment video for hls
-#==========================================================#
+h264_mp4toannexb + aac_adtstoasc
 
-
-#==========================================================#
-# h264_mp4toannexb + aac_adtstoasc
-#==========================================================#
-
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 -vcodec copy -acodec copy -bsf:v h264_mp4toannexb -bsf:a aac_adtstoasc -hls_time 10 -hls_list_size 999999999 output.m3u8
+#+END_SRC
 
-#==========================================================#
-# h264_mp4toannexb
-#==========================================================#
++ h264_mp4toannexb
 
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb -hls_time 10 -hls_list_size 99999 output.m3u8
+#+END_SRC
 
-#==========================================================#
-# none
-#==========================================================#
++  none
+
+#+BEGIN_SRC sh
 ffmpeg -i infile.mp4 -vcodec copy -acodec copy -hls_time 10 -hls_list_size 99999 output.m3u8
+#+END_SRC
