@@ -1,31 +1,30 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* ffmpeg compile linux mint
 
-# ffmpeg compile linux mint
-#==========================
+Get the Dependencies for ffmpeg
 
-
-# Get the Dependencies for ffmpeg
-#================================
-
+#+BEGIN_SRC sh
 sudo apt-get update
-
 sudo apt-get -y install autoconf automake build-essential git libass-dev libgpac-dev \
 libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libx11-dev \
 libxext-dev libxfixes-dev pkg-config texi2html zlib1g-dev
+#+END_SRC
 	
+create a directory for the ffmpeg sources
 
-# create a directory for the ffmpeg sources
-# =========================================
-
+#+BEGIN_SRC sh
 mkdir ~/ffmpeg_sources
-
 cd ~/ffmpeg_sources
+#+END_SRC
 
+** install yasm
 
-# install Yasm an assembler used by x264 and FFmpeg
-# =================================================
++ install Yasm an assembler used by x264 and FFmpeg
 
+#+BEGIN_SRC sh
 wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
 tar xzvf yasm-1.2.0.tar.gz
 cd yasm-1.2.0
@@ -34,11 +33,11 @@ make
 make install
 make distclean
 . ~/.profile
+#+END_SRC
 
+** x264 install
 
-# install x264 the H.264 video encoder
-#=====================================
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources
 git clone --depth 1 git://git.videolan.org/x264.git
 cd x264
@@ -46,10 +45,11 @@ cd x264
 make
 make install
 make distclean
+#+END_SRC
 
-# install fdk-aac, AAC audio encoder
-# ==================================
+** install fdk-aac
 
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources
 git clone --depth 1 git://github.com/mstorsjo/fdk-aac.git
 cd fdk-aac
@@ -58,17 +58,17 @@ autoreconf -fiv
 make
 make install
 make distclean
+#+END_SRC
 
+** install libmp3lame
 
-# install libmp3lame, MP3 audio encoder
-# =====================================
-
+#+BEGIN_SRC sh
 sudo apt-get install libmp3lame-dev
+#+END_SRC
 
+** install libopus
 
-# install libopus, Opus audio decoder and encoder
-# ===============================================
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources
 wget http://downloads.xiph.org/releases/opus/opus-1.0.3.tar.gz
 tar xzvf opus-1.0.3.tar.gz
@@ -77,11 +77,11 @@ cd opus-1.0.3
 make
 make install
 make distclean
+#+END_SRC
 
+** install libvpx
 
-# install libvpx, VP8/VP9 video encoder and decoder.
-# ==================================================
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources
 git clone --depth 1 http://git.chromium.org/webm/libvpx.git
 cd libvpx
@@ -89,11 +89,11 @@ cd libvpx
 make
 make install
 make clean
+#+END_SRC
 
+** install ffmpeg
 
-# install ffmpeg
-# ==============
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources
 git clone --depth 1 git://source.ffmpeg.org/ffmpeg
 cd ffmpeg
@@ -108,97 +108,95 @@ make
 make install
 make distclean
 hash -r
+#+END_SRC
 
-# Important now reinstall x264 and ffmpeg so x264 picks up the ffmpeg headers
-# ===========================================================================
+Important now reinstall x264 and ffmpeg so x264 picks up the ffmpeg headers
+just follow the steps to install x264 and ffmpeg again
 
-# just follow the steps to install x264 and ffmpeg again
-# ======================================================
+check the ffmpeg build
 
+#+BEGIN_SRC sh
+ffmpeg 2>&1 | head -n1
+#+END_SRC
 
-
-# check the ffmpeg build
-# ======================
-
-$ ffmpeg 2>&1 | head -n1
 ffmpeg version git-2013-05-18-5918b7a Copyright (c) 2000-2013 the FFmpeg developers
 
+** Updating FFmpeg
 
-# Updating FFmpeg
-# ===============
+Development of FFmpeg is active and an occasional update can give you new features and bug fixes. 
+First, remove (or move) the old files and then update the dependencies:
 
-# Development of FFmpeg is active and an occasional update can give you new features and bug fixes. 
-# First, remove (or move) the old files and then update the dependencies:
-
+#+BEGIN_SRC sh
 rm -rf ~/ffmpeg_build ~/bin/{ffmpeg,ffprobe,ffserver,vsyasm,x264,yasm,ytasm}
 sudo apt-get update
 sudo apt-get -y install autoconf automake build-essential git libass-dev libgpac-dev \
   libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libx11-dev \
   libxext-dev libxfixes-dev pkg-config texi2html zlib1g-dev
+#+END_SRC
 
+** updating x264
 
-# updating x264
-# =============
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources/x264
 make distclean
 git pull
+#+END_SRC
 
-# now run ./configure, make, make install again, see below
-# ========================================================
+now run ./configure, make, make install again, see below
 
+#+BEGIN_SRC sh
 ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static
 make
 make install
 make distclean
+#+END_SRC
 
+** updating fdk-aac
 
-# updating fdk-aac
-# ================
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources/fdk-aac
 make distclean
 git pull
+#+END_SRC
 
+Now run ./configure, make, and make install again, see below
 
-# Now run ./configure, make, and make install again, see below
-#=============================================================
-
+#+BEGIN_SRC sh
 autoreconf -fiv
 ./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 make
 make install
 make distclean
+#+END_SRC
 
+** updating libvpx
 
-# updating libvpx
-# ===============
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources/libvpx
 make clean
 git pull
+#+END_SRC
 
+Now run ./configure, make, and make install again, see below
 
-# Now run ./configure, make, and make install again, see below
-# ============================================================
-
+#+BEGIN_SRC sh
 ./configure --prefix="$HOME/ffmpeg_build" --disable-examples
 make
 make install
 make clean
+#+END_SRC
 
+** updating ffmpeg
 
-# updating ffmpeg
-# ===============
-
+#+BEGIN_SRC sh
 cd ~/ffmpeg_sources/ffmpeg
 make distclean
 git pull
+#+END_SRC
 
+Now run ./configure, make, and make install again, see below
 
-# Now run ./configure, make, and make install again, see below
-# ============================================================
-
+#+BEGIN_SRC sh
 PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig"
 export PKG_CONFIG_PATH
 ./configure --prefix="$HOME/ffmpeg_build" \
@@ -210,16 +208,16 @@ make
 make install
 make distclean
 hash -r
+#+END_SRC
 
+Reverting Changes
 
-# Reverting Changes
-#==================
+To remove ffmpeg, x264, and dependencies installed
 
-# To remove ffmpeg, x264, and dependencies installed
-#===================================================
-
+#+BEGIN_SRC sh
 rm -rf ~/ffmpeg_build ~/ffmpeg_sources ~/bin/{ffmpeg,ffprobe,ffserver,vsyasm,x264,yasm,ytasm}
 sudo apt-get autoremove autoconf automake build-essential git libass-dev libgpac-dev \
 libmp3lame-dev libopus-dev libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev \
 libvorbis-dev libvpx-dev libx11-dev libxext-dev libxfixes-dev texi2html zlib1g-dev
 hash -r
+#+END_SRC
