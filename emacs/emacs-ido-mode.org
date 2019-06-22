@@ -1,9 +1,13 @@
-# emacs ido mode
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emacs ido mode
 
 Emacs ido mode add to your ~/.emacs file
 
-```
+#+BEGIN_SRC sh
 (setq indo-enable-flex-matching t)
 (set ido-everywhere t)
 (ido-mode 1)
-```
+#+END_SRC
