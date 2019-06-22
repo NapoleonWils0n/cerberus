@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emacs freebsd
+
+install emacs-devel
+
+#+BEGIN_SRC sh
+sudo pkg install emacs-devel
+#+END_SRC
