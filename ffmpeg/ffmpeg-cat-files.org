@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg cat files
+
+join video or audio files with cat on ffmpeg
+
+#+BEGIN_SRC sh
+ffmpeg -f concat -i <( for f in *.m4v; do echo "file '$(pwd)/$f'"; done ) output.m4v
+#+END_SRC
