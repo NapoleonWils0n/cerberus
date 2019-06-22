@@ -1,6 +1,10 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* ffmpeg resize video
 
+#+BEGIN_SRC sh
 ffmpeg -i kodi-macosx.mov \
 -c:v libx264 -profile:v high -level:v 4.0 -preset slow \
 -b:v 4750k -bufsize 1835k \
@@ -8,10 +12,9 @@ ffmpeg -i kodi-macosx.mov \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
 -c:a aac -b:a 192k -strict -2 \
 resize.mkv
+#+END_SRC
 
-
-
-
+#+BEGIN_SRC sh
 ffmpeg -i \
 kodi-macosx.mov \
 -c:v libx264 -profile:v high -level:v 4.0 \
@@ -21,5 +24,6 @@ kodi-macosx.mov \
 -threads 0 -x264opts keyint=250:min-keyint=25 \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
 
 
