@@ -1,12 +1,19 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
-# streaming 1080p h264 to the ipad
+* streaming 1080p h264 to the ipad
 
-# vod style program
+** vod style program
+
+#+BEGIN_SRC sh
 ffmpeg -i infile.mkv -acodec libfaac -ac 2 -ar 48000 -ab 160k -vcodec copy -vbsf h264_mp4toannexb -f mpegts - | mediastreamsegmenter -f /Users/$USER/Sites/video/stream -t 30 -p
+#+END_SRC
 
+*** delete files to save space
 
-# delete files to save space
+#+BEGIN_SRC sh
 ffmpeg -i infile.mkv -acodec libfaac -ac 2 -ar 48000 -ab 160k -vcodec copy -vbsf h264_mp4toannexb -f mpegts - | mediastreamsegmenter -f /Users/$USER/Sites/video/stream -t 30 -s 4 -D
+#+END_SRC
 
 
