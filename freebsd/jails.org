@@ -261,6 +261,6 @@ pwd_mkdb -d /etc -p /etc/master.passwd
 
 *** references
 
-+ [freebsd jails the hard way](https://clinta.github.io/freebsd-jails-the-hard-way/)
-+ [an introduction to jails](https://www.skyforge.at/posts/an-introduction-to-jails-and-jail-networking/)
-+ [freebsd thin jails](https://jacob.ludriks.com/2017/06/07/FreeBSD-Thin-Jails/)
++ [[freebsd jails the hard way][https://clinta.github.io/freebsd-jails-the-hard-way/]]
++ [[an introduction to jails][https://www.skyforge.at/posts/an-introduction-to-jails-and-jail-networking/]]
++ [[freebsd thin jails][https://jacob.ludriks.com/2017/06/07/FreeBSD-Thin-Jails/]]

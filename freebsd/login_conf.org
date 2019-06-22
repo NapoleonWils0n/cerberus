@@ -1,16 +1,20 @@
-# freebsd utf8
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd utf8
 
 create ~/.login_conf
 
-```
+#+BEGIN_SRC sh
 me:\
   :charset=UTF-8:\
   :lang=en_GB.UTF-8:\
   :setenv=LC_COLLATE=C:
-```
+#+END_SRC
 
-```
+#+BEGIN_SRC sh
 cap_mkdB ~/.login_conf
-```
+#+END_SRC
 
 log out and log in again
