@@ -1,24 +1,28 @@
-# poudriere
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* poudriere
 
 poudriere package building environment
 
 switch to root using either sudo or doas
 
-* switch to root using sudo 
++ switch to root using sudo 
 
-```
+#+BEGIN_SRC sh
 sudo su
-```
+#+END_SRC
 
-* or use doas to switch to root
++ or use doas to switch to root
 
-```
+#+BEGIN_SRC sh
 doas su
-```
+#+END_SRC
 
 the hash symbol # before a command indicates that the command needs to be run as root
 
-## Create an SSL Certificate and Key
+** Create an SSL Certificate and Key
 
 When we build packages with poudriere, we want to be able to sign them with a private key. This will ensure all of our machines that the packages created are legitimate and that nobody is intercepting the connection to the build machine to serve malicious packages.
 
@@ -26,53 +30,53 @@ To start off, we will create a directory structure for our key and certificate. 
 
 We will ensure that we have an ssl directory that contains two subdirectories called keys and certs. We can do this in one command by typing:
 
-```
+#+BEGIN_SRC sh
 # mkdir -p /usr/local/etc/ssl/{keys,certs}
-```
+#+END_SRC
 
 Our private key, which must be kept secret, will be placed in the keys directory. This will be used to sign the packages that we will be creating. Keeping this secure is essential to ensuring that our packages are not being tampered with. We can lock down the directory so that users without root or sudo privileges will be unable to interact with the directory or its contents:
 
-```
+#+BEGIN_SRC sh
 # chmod 0600 /usr/local/etc/ssl/keys
-```
+#+END_SRC
 
 The certs directory will contain our publicly available certificate created with the key. As such, we can leave the default permissions on that directory.
 
 Next, we will generate a 4096 bit key called poudriere.key, and place it in our keys directory by typing:
 
-```
+#+BEGIN_SRC sh
 # openssl genrsa -out /usr/local/etc/ssl/keys/poudriere.key 4096
-```
+#+END_SRC
 
 After the key is generated, we can create a public cert from it by typing:
 
-```
+#+BEGIN_SRC sh
 # openssl rsa -in /usr/local/etc/ssl/keys/poudriere.key -pubout -out /usr/local/etc/ssl/certs/poudriere.cert
-```
+#+END_SRC
 
 We now have the SSL components we need to sign packages and verify the signatures. Later on, we will configure our clients to use the generated certificate for package verification.
 
-## poudriere install
+** poudriere install
 
-```
+#+BEGIN_SRC sh
 # pkg install poudriere
-```
+#+END_SRC
 
-* create the distfiles directory
+** create the distfiles directory
 
-```
+#+BEGIN_SRC sh
 # mkdir -p /usr/ports/distfiles
-```
+#+END_SRC
 
 edit the poudriere.conf file
 
-```
+#+BEGIN_SRC sh
 # vi /usr/local/etc/poudriere.conf
-```
+#+END_SRC
 
 change the poudriere.conf so it looks like this
 
-```
+#+BEGIN_SRC sh
 # Poudriere can optionally use ZFS for its ports/jail storage. For
 # ZFS define ZPOOL, otherwise set NO_ZFS=yes
 # 
@@ -386,58 +390,58 @@ PKG_REPO_SIGNING_KEY=/usr/local/etc/ssl/keys/poudriere.key
 # processing of the queue slightly, especially for bulk -a builds.
 # Default: no
 #HTML_TRACK_REMAINING=yes
-```
+#+END_SRC
 
-### Creating the Build Environment
+*** Creating the Build Environment
 
-```
+#+BEGIN_SRC sh
 # poudriere jail -c -j freebsd_12-0x64 -v 12.0-RELEASE
-```
+#+END_SRC
 
 This will take awhile to complete, so be patient.  
 When you are finished, you can see the installed jail by typing:
 
-```
+#+BEGIN_SRC sh
 poudriere jail -l
-```
+#+END_SRC
 
 Once you have a jail created, we will have to install a ports tree. It is possible to maintain multiple ports trees in order to serve different development needs. We will be installing a single ports tree that our jail can utilize.
 
 We can use the -p flag to name our ports tree. We will call our tree "HEAD" as it accurately summarizes the use of this tree (the "head" or most up-to-date point of the tree). We will be updating it regularly to match the most current version of the ports tree available:
 
-```
+#+BEGIN_SRC sh
 # poudriere ports -c -p HEAD
-```
+#+END_SRC
 
 Again, this procedure will take awhile because the entire ports tree must be fetched and extracted. When it is finished, we can view our ports tree by typing:
 
-```
+#+BEGIN_SRC sh
 # poudriere ports -l
-```
+#+END_SRC
 
-### Creating a Port Building List and Setting Port Options
+*** Creating a Port Building List and Setting Port Options
 
 We will be creating a list of ports that we can pass directly to the command.  
 
-```
+#+BEGIN_SRC sh
 # vi /usr/local/etc/poudriere.d/port-list 
-```
+#+END_SRC
 
 The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
 
-```
+#+BEGIN_SRC sh
 net-p2p/rtorrent
-```
+#+END_SRC
 
 If you use specific make.conf options to build your ports, you can create a make.conf file for each jail within your /usr/local/etc/poudriere.d directory. For example, for our jail, we can create a make.conf file with this name:
 
-```
+#+BEGIN_SRC sh
 # vi /usr/local/etc/poudriere.d/freebsd_12-0x64-make.conf
-```
+#+END_SRC
 
-```
+#+BEGIN_SRC sh
 OPTIONS_UNSET+= DOCS NLS X11 EXAMPLES
-```
+#+END_SRC
 
 Afterwards, we can configure each of our ports, which will create files with the options we selected.
 
@@ -445,19 +449,19 @@ You can configure anything which has not been already configured using the optio
 
 Our command will look like this:
 
-```
+#+BEGIN_SRC sh
 # poudriere options -j freebsd_12-0x64 -p HEAD -f /usr/local/etc/poudriere.d/port-list
-```
+#+END_SRC
 
 You will see a dialog for each of the ports on the list and any dependencies that do not have corresponding options set in the -options directory. The specifications in your make.conf file will be preselected in the selection screens. Select all of the options you would like to use.
 
 If you wish to reconfigure the options for your ports in the future, you can re-run the command above with the -c option. This will show you all of the available configuration options, regardless of whether you have made a selection in the past:
 
-```
+#+BEGIN_SRC sh
 # poudriere options -c -j freebsd_12-0x64 -p HEAD -f /usr/local/etc/poudriere.d/port-list
-```
+#+END_SRC
 
-### Building the Ports
+*** Building the Ports
 
 Now, we are finally ready to start building ports.
 
@@ -465,34 +469,32 @@ The last thing we need to do is ensure that both our jail and ports tree are up-
 
 To update your jail, type:
 
-```
+#+BEGIN_SRC sh
 # poudriere jail -u -j freebsd_12-0x64
-```
+#+END_SRC
 
 To update your ports tree, type:
 
-```
+#+BEGIN_SRC sh
 # poudriere ports -u -p HEAD
-```
+#+END_SRC
 
 Once that is complete, we can kick off the bulk build process.
 
-```
+#+BEGIN_SRC sh
 # poudriere bulk -j freebsd_12-0x64 -p HEAD -f /usr/local/etc/poudriere.d/port-list
-```
+#+END_SRC
 
 This will start up a number of workers (depending on your poudriere.conf file or the number of CPUs available) and begin building the ports.
 
 At any time during the build process, you can get information about the progress by holding the CTRL key and hitting t:
 
-```
+#+BEGIN_SRC sh
 CTRL-t
-```
+#+END_SRC
 
-## Configuring pkg Clients to Use a Poudriere Repository
+** Configuring pkg Clients to Use a Poudriere Repository
 	
-	
-
 Now that you have packages built and a repository configured to serve your packages, you can configure your clients to use your the server as the source of their packages.
 Configuring the Build Server to Use Its Own Package Repo
 
@@ -500,21 +502,21 @@ We can begin by configuring the build server to use the packages it has been bui
 
 First, we need to make a directory to hold our repository configuration files:
 
-```
+#+BEGIN_SRC sh
 # mkdir -p /usr/local/etc/pkg/repos
-```
+#+END_SRC
 
 Inside this directory, we can create our repository configuration file. It must end in .conf, so we will call it poudriere.conf to reflect its purpose:
 
-```
+#+BEGIN_SRC sh
 # vi /usr/local/etc/pkg/repos/poudriere.conf
-```
+#+END_SRC
 
 We will define the repository name as poudriere once again. Inside the definition, we will point to the location on disk where our packages are stored. This should be a directory that combines your jail name and port tree name with a dash. Check your filesystem to be certain. We will also set up signature validation of our packages by pointing to the certificate we created.
 
 In the end, your file should look something like this:
 
-```
+#+BEGIN_SRC sh
 Poudriere: {
     url: "file:///usr/local/poudriere/data/packages/freebsd_12-0x64-HEAD"
     mirror_type: "srv",
@@ -523,7 +525,7 @@ Poudriere: {
     enabled: yes,
     priority: 100
 }
-```
+#+END_SRC
 
 At this point, you need to make a decision. If you want to prefer your compiled packages and fall back on the packages provided by the main FreeBSD repositories, you can set a priority here, telling it to prefer packages out of this repository. This will cause our local repository to take priority over the official repositories.
 
@@ -535,6 +537,6 @@ To mix packages, add a priority setting to your repository definition, specifyin
 
 Update the repo info:
 
-```
+#+BEGIN_SRC sh
 # pkg update
-```
+#+END_SRC
