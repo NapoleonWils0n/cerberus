@@ -1,39 +1,41 @@
-# zfs snapshot usb drive
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* zfs snapshot usb drive
 
 list the disks
 
-```
+#+BEGIN_SRC sh
 geom disk list
-```
+#+END_SRC
 
 switch to root
 
-```
+#+BEGIN_SRC sh
 sudo su
-```
+#+END_SRC
 
 destroy drive
 
-```
+#+BEGIN_SRC sh
 gpart destroy -F da0
 dd if=/dev/zero of=/dev/da0 bs=1m count=128
-```
+#+END_SRC
 
 use gpart to create a gpt partition on the drive
 and add a label
 
-
-```
+#+BEGIN_SRC sh
 gpart create -s gpt da0
 gpart add -t freebsd-zfs -l zbackup da0
-```
+#+END_SRC
 
+** create mount point
 
-create mount point
-
-```
+#+BEGIN_SRC sh
 mkdir -p /mnt/usb
-```
+#+END_SRC
 
 create a new zpool and give it the same name as the gpt label to make things easy to remember
 set the mount point and use chown to change the owner of the mount point,
@@ -41,52 +43,51 @@ replacing username:username with your username
 
 create zfs pool on the external drive
 
-```
+#+BEGIN_SRC sh
 zpool create zbackup gpt/zbackup
 zfs set mountpoint=/mnt/usb zbackup
 chown username:username /mnt/usb
-```
+#+END_SRC
 
 list zfs directory structure
 
-```
+#+BEGIN_SRC sh
 zfs list
-```
+#+END_SRC
 
-create snapshots
+** create snapshots
 
-```
+#+BEGIN_SRC sh
 zfs snapshot -r bootpool@2017-04-21
 zfs snapshot -r zroot@2017-04-21
-```
+#+END_SRC
 
 send the snapshots to the corresponding pool on the drive  
 use the -R option to create the datasets on the external drive
 
-```
+#+BEGIN_SRC sh
 zfs send -Rv bootpool@2017-04-21 | zfs recv -F zbackup/bootpool
 zfs send -Rv zroot@2017-04-21 | zfs receive -F zbackup/zroot
-```
+#+END_SRC
 
-incremental - take new snapshots
+*** incremental - take new snapshots
 
-```
+#+BEGIN_SRC sh
 zfs snapshot -r bootpool@2017-04-18
 zfs snapshot -r zroot@2017-04-18
-```
+#+END_SRC
 
 send incremental snapshots  
 use the -R option on the zroot pool to send incremental snapshots of the descendant file system
 
-
-```
+#+BEGIN_SRC sh
 zfs send -v -I bootpool@2017-04-18 bootpool@2017-04-21 | zfs recv -F zbackup/bootpool
 zfs send -Rv -I zroot@2017-04-18 zroot@2017-04-21 | zfs recv -F zbackup/zroot
-```
+#+END_SRC
 
-### zfs unmount drive
+*** zfs unmount drive
 
-```
+#+BEGIN_SRC sh
 zfs unmount zbackup
 zfs export zbackup
-```
+#+END_SRC
