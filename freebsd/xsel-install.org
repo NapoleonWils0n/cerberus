@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Freebsd xsel install
+
+Freebsd xsel-conrad for copying url from w3m
+
+#+BEGIN_SRC sh
+sudo pkg install xsel-conrad
+#+END_SRC
