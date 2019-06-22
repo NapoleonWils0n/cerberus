@@ -1,0 +1,23 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* zfs command
+
++ get zpool status
+
+#+BEGIN_SRC sh
+zpool status zbackup | awk -F\: '/state/ {print $2}'
+#+END_SRC
+
++ get list of datasets
+
+#+BEGIN_SRC sh
+zfs list -H -o name
+#+END_SRC
+
++ zfs snapshot with date
+
+#+BEGIN_SRC sh
+zfs snapshot zroot/var/tmp@$(/bin/date '+%Y-%m-%d-%H')
+#+END_SRC
