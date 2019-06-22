@@ -1,22 +1,23 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
 
-# ffplay and ffmpeg add http user agent
-#======================================
+* ffplay and ffmpeg add http user agent
 
-# example url
+example url
 
+#+BEGIN_SRC sh
 http://192.54.104.104:8080/d/mwhzccskpqosuqhy77kmar5tctikmrscw4fxctbfe2g5a4gzxkb7ebxr/video.mp4|User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko&Referer=http://180upload.com/embed-uaqmgcckhpcl.html
+#+END_SRC
 
+** grep http links
 
-# grep http links
-#=================
+works search for extension
 
-
-# works search for extension
+#+BEGIN_SRC sh
 grep -Eo '(http|https)://[a-zA-Z0-9:0-9./?=_-]*\.(mkv|mp4|m3u8|avi)' url.txt
-
-
+#+END_SRC
 
 grep -E : is the same as egrep
 grep -o : only outputs what has been grepped
@@ -27,30 +28,23 @@ A-Z : is all uper case
 /?: is ?
 *: is repeat the [...] group
 
+*** user agent
 
-
-
-# user agent
-#========================================
-
-
+#+BEGIN_SRC sh
 grep -Eo 'User-Agent=[a-zA-Z]*/[0-9]{1,1}\.[0-9]{1,1}(.[^&]*)' url.txt
+#+END_SRC
 
+*** referer
 
-# referer
-#========================================
-
+#+BEGIN_SRC sh
 grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_-]*(/|\.html)' url.txt
+#+END_SRC
 
-
-
-# cat file test
-#========================================
-
+** cat file test
  
-# ffplay cat url test
-#======================
+ffplay cat url test
 
+#+BEGIN_SRC sh
 cat url.txt | 
 while read url
 do
@@ -59,12 +53,11 @@ USERAGENT=`/usr/bin/echo "$url" | grep -Eo 'User-Agent=[a-zA-Z]*/[0-9]{1,1}\.[0-
 REFERER=`/usr/bin/echo "$url" | grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_-]*(/|\.html)' | sed 's/Referer=//'`
 /usr/bin/echo ffplay -fs -user-agent "$USERAGENT" -headers 'Referer: '"$REFERER"''$'\r\n' "$URL"
 done
+#+END_SRC
 
+*** ffmpeg cat url test
 
-
-# ffmpeg cat url test
-#======================
-
+#+BEGIN_SRC sh
 cat url.txt | 
 while read url
 do
@@ -73,11 +66,11 @@ USERAGENT=`/usr/bin/echo "$url" | grep -Eo 'User-Agent=[a-zA-Z]*/[0-9]{1,1}\.[0-
 REFERER=`/usr/bin/echo "$url" | grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_-]*(/|\.html)' | sed 's/Referer=//'`
 /usr/bin/echo ffmpeg -user-agent "$USERAGENT" -headers 'Referer: '"$REFERER"''$'\r\n' -i "$URL" -c:v copy -c:a copy -loglevel error "$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv"
 done
+#+END_SRC
 
-
-# wget cat url test
-#===================
+** wget cat url test
  
+#+BEGIN_SRC sh
 cat url.txt | 
 while read url
 do
@@ -86,31 +79,32 @@ USERAGENT=`/usr/bin/echo "$url" | grep -Eo 'User-Agent=[a-zA-Z]*/[0-9]{1,1}\.[0-
 REFERER=`/usr/bin/echo "$url" | grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_-]*(/|\.html)' | sed 's/Referer=//'`
 /usr/bin/echo wget -bqc --user-agent="$USERAGENT" --header='Referer: "$REFERER"' "$URL" -O "$HOME/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv"
 done
+#+END_SRC
 
+** ffplay
 
-# ffplay
-#=======
-
+#+BEGIN_SRC sh
 URL='http://192.54.104.104:8080/d/mwhzccskpqosuqhy77kmar5tctikmrscw4fxctbfe2g5a4gzxkb7ebxr/video.mp4'
 USERAGENT='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko'
 REFERER='http://180upload.com/embed-ewktkejbp6k0.html'
+#+END_SRC
 
-
-
+#+BEGIN_SRC sh
 ffplay -fs \
 -user-agent "$USERAGENT" \
 -headers 'Referer: '"$REFERER"''$'\r\n' \
 "$URL"
+#+END_SRC
 
+** ffmpeg
 
-# ffmpeg
-#=======
-
+#+BEGIN_SRC sh
 URL='http://192.54.104.104:8080/d/mwhzccskpqosuqhy77kmar5tctikmrscw4fxctbfe2g5a4gzxkb7ebxr/video.mp4'
 USERAGENT='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko'
 REFERER='http://180upload.com/embed-ewktkejbp6k0.html'
+#+END_SRC
 
-
+#+BEGIN_SRC sh
 ffmpeg \
 -user-agent "$USERAGENT" \
 -headers 'Referer: '"$REFERER"''$'\r\n' \
@@ -118,13 +112,11 @@ ffmpeg \
 "$URL" \
 -c:v copy -c:a copy -loglevel error \
 video-$(date +"%H-%M-%m-%d-%y").mkv
+#+END_SRC
 
+** ffplay useragent referer
 
-
-
-# ffplay useragent referer
-#===================================
-
+#+BEGIN_SRC sh
   <player name="ffplay useragent referer" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/echo</filename>
      <args>export SDL_AUDIODRIVER="alsa"; export AUDIODEV="plughw:1,0"; /usr/bin/echo "{0}" | while read url
@@ -136,11 +128,11 @@ REFERER=`/usr/bin/echo "$url" | grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_
 done</args>
      <hidexbmc>true</hidexbmc>
    </player>
+#+END_SRC
 
+** ffmpeg useragent referer
 
-# ffmpeg useragent referer
-#===================================
-
+#+BEGIN_SRC sh
    <player name="ffmpeg useragent referer" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/echo</filename>
      <args>"{0}" | while read url
@@ -152,13 +144,11 @@ REFERER=`/usr/bin/echo "$url" | grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_
 done</args>
      <hidexbmc>false</hidexbmc>
    </player>
+#+END_SRC
 
+** wget useragent referer
 
-
-# wget useragent referer
-#===================================
-
-
+#+BEGIN_SRC sh
    <player name="wget useragent referer" type="ExternalPlayer" audio="false" video="true">
 		<filename>/usr/bin/echo</filename>
      <args>"{0}" | while read url
@@ -170,3 +160,4 @@ REFERER=`echo "$url" | grep -Eo 'Referer=(http|https)://[a-zA-Z0-9./?=_-]*(/|\.h
 done</args>
      <hidexbmc>false</hidexbmc>
    </player>
+#+END_SRC
