@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd dbus
+
+#+BEGIN_SRC sh
+sudo dbus-uuidgen > /etc/machine-id
+#+END_SRC
