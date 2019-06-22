@@ -1,53 +1,61 @@
-# bless freebsd efi partition
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* bless freebsd efi partition
 
 boot in to mac recovery by pressing option and selecting
 disable sips on the mac so we can use the bless comand on the efi partition for freebsd
 
-```
+#+BEGIN_SRC sh
 sudo csrutil disable
-```
+#+END_SRC
 
 shut the mac
 boot into mac osx ,open the terminal
 
-list the disk with diskutil
+** list the disk with diskutil
 
-```
+#+BEGIN_SRC sh
 diskutil list
-```
+#+END_SRC
 
 switch to root
 
-```
+#+BEGIN_SRC sh
 sudo su
-```
+#+END_SRC
+
+** create a mount point
 
 create a mount point called ESP in /Volumes
 
-```
+#+BEGIN_SRC sh
 mkdir /Volumes/ESP
-```
+#+END_SRC
+
+** mount the efi partition
 
 mount the efi partition you found by running diskutil list, it will have efi next to the drive
 
-```
+#+BEGIN_SRC sh
 mount -t msdos /dev/disk0s1 /Volumes/ESP
-```
+#+END_SRC
 
-bless the freebsd efi file
+** bless the freebsd efi file
 
-```
+#+BEGIN_SRC sh
 bless --mount /Volumes/ESP --setBoot --file /Volumes/ESP/EFI/BOOT/BOOTX64.efi --shortform
-```
+#+END_SRC
 
 unmount the /Volume/ESP and the mounted freebsd efi partition
 
-```
+#+BEGIN_SRC sh
 umount /Volumes/ESP
-```
+#+END_SRC
 
 exit root
 
-```
+#+BEGIN_SRC sh
 exit
-```
+#+END_SRC
