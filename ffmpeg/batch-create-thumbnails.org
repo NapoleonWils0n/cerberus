@@ -1,0 +1,17 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* batch create thumbnails
+
+ffmpeg batch create thumbnails from movies in current working directory
+ 
+#+BEGIN_SRC sh
+for i in *.mov; do ffmpeg -an -ss 00:00:05 -vframes 1 -y -i "$i" -f image2 -s 128x96 "`echo $i |sed 's/.mov$/.jpg/'`" ;done
+#+END_SRC
+
+2nd version
+
+#+BEGIN_SRC sh
+for i in *.mov; do ffmpeg -an -y -t 00:00:10 -i "$i" -f image2 "`echo $i |sed 's/.mov$/.jpg/'`" ;done
+#+END_SRC
