@@ -1,21 +1,24 @@
-# synergy
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* synergy
 
 install synergy
 
-'''
+#+BEGIN_SRC sh
 pkg install synergy
-'''
+#+END_SRC
 
 create the syngery config
 
-```
+#+BEGIN_SRC sh
 vim /usr/local/etc/synergy.conf
-```
+#+END_SRC
 
-* synergy config 
+** synergy config 
 
-```
+#+BEGIN_SRC sh
 # sample synergy configuration file
 #
 # comments begin with the # character and continue to the end of
@@ -44,12 +47,11 @@ section: options
 	keystroke(super+`) = switchInDirection(right)
 	keystroke(super+shift+`) = switchInDirection(left)
 end
-```
+#+END_SRC
 
+*** start the synergy server
 
-start the synergy server
-
-```
+#+BEGIN_SRC sh
 synergy-core --server --address 192.168.1.3:24800 --config /usr/local/etc/synergy.conf
-```
+#+END_SRC
 
