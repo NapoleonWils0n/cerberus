@@ -1,22 +1,24 @@
-# Freebsd gtk dark themes
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Freebsd gtk dark themes
 
 freebsd install dark gtk3 theme
 
-```
+#+BEGIN_SRC sh
 # pkg install gtk-arc-themes
-```
+#+END_SRC
 
 create ~/.config/gtk-3.0/settings.ini
 
-
-```
+#+BEGIN_SRC sh
 vi ~/.config/gtk-3.0/settings.ini
-```
+#+END_SRC
 
 enable Adwaita-dark theme and set gtk apps to prefer the dark theme
 
-```
+#+BEGIN_SRC sh
 [Settings]
-gtk-applications-prefer-dark-theme=0
 gtk-theme-name = Adwaita-dark
-```
+#+END_SRC
