@@ -136,7 +136,9 @@ mac screen recording using ffmpeg and avfoundation
 + hide the menu bar and sidebar
 
 #+BEGIN_SRC sh
-ffmpeg -video_size 1920x1080 -framerate 30 -f avfoundation -i 0 -c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
+ffmpeg -video_size 1920x1080 \
+-framerate 30 -f avfoundation -i 0 \
+-c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
 #+END_SRC
 
 *** linux screen recording with ffmpeg
@@ -147,7 +149,9 @@ linux screen recording using ffmpeg and x11grab
 + hide the menu bar and sidebar
 
 #+BEGIN_SRC sh
-ffmpeg -video_size 1920x1080 -framerate 30 -f x11grab -i 0 -c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
+ffmpeg -video_size 1920x1080 \
+-framerate 30 -f x11grab -i 0 \
+-c:v libx264 -crf 0 -preset ultrafast -pix_fmt yuv420p outfile.mkv
 #+END_SRC
 
 ** convert mkv video to mp4
@@ -156,7 +160,9 @@ convert the mkv video to a mp4 file to import into your video editor like Final 
 the mp4 is also web ready and can be uploaded to youtube
 
 #+BEGIN_SRC sh
-ffmpeg -i infile.mkv -c:v libx264 -crf 18 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
+ffmpeg -i infile.mkv \
+-c:v libx264 -crf 18 -profile:v high \
+-pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
 #+END_SRC
 
 ** convert mkv video to mp4 and trim
@@ -173,7 +179,9 @@ trimming clips important note
 -t  = number of seconds after start time
 
 #+BEGIN_SRC sh
-ffmpeg -ss 00:00:20 -i infile.mkv -t 00:01:35 -c:v libx264 -profile:v high -pix_fmt yuv420p -movflags +faststart -f mp4 outfile.mp4
+ffmpeg -ss 00:00:20 -i infile.mkv -t 00:01:35 \
+-c:v libx264 -profile:v high -pix_fmt yuv420p \
+-movflags +faststart -f mp4 outfile.mp4
 #+END_SRC
 
 ** image magick scale
@@ -181,7 +189,8 @@ ffmpeg -ss 00:00:20 -i infile.mkv -t 00:01:35 -c:v libx264 -profile:v high -pix_
 rescale a single image to 480x270
 
 #+BEGIN_SRC sh
-convert infile.png -resize 480x270 -background transparent -gravity center -extent 480x270 outfile.png
+convert infile.png -resize 480x270 \
+-background transparent -gravity center -extent 480x270 outfile.png
 #+END_SRC
 
 *** mogrify batch scale images
@@ -193,5 +202,7 @@ and then use the -path option and specify the converted directory to output the 
 convert jpg files to png with a transparent background and resize to 480x270
 
 #+BEGIN_SRC sh
-mogrify -format png -resize 480x270 -background transparent -gravity center -extent 480x270 -path converted *.jpg
+mogrify -format png -resize 480x270 \
+-background transparent -gravity center -extent 480x270 \
+-path converted *.jpg
 #+END_SRC
