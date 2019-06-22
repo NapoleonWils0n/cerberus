@@ -1,0 +1,13 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* recording http live streams
+
+#+BEGIN_SRC sh
+ffmpeg -i \
+url-goes-here \
+-c:v copy -c:a copy -loglevel error \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+END_SRC
+
