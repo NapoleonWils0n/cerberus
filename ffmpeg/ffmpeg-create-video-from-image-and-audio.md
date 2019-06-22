@@ -1,8 +1,12 @@
-# ffmpeg create video form audio and image
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg create video form audio and image
 
 Combine image and audio file into a video
 
-```
+#+BEGIN_SRC sh
 ffmpeg \
 -hide_banner \
 -stats -v panic \
@@ -20,27 +24,27 @@ ffmpeg \
 -movflags +faststart -f mp4 \
 -shortest \
 video-$(date +"%Y-%m-%d-%H-%M-%S").mp4
-```
+#+END_SRC
 
-## still-video script
+** still-video script
 
 Script to combine image and audio into a video file
 
 bash shebang for unix
 
-```
+#+BEGIN_SRC sh
 #!/usr/local/bin/bash
-```
+#+END_SRC
 
 if you are using linux or mac osx, change the shebang to:
 
-```
+#+BEGIN_SRC sh
 #!/bin/bash
-```
+#+END_SRC
 
 still-video script
 
-```
+#+BEGIN_SRC sh
 #!/usr/local/bin/bash
 
 # create a video from an jpg image and m4a audio file
@@ -90,4 +94,4 @@ ffmpeg \
 # run record function to combine image and audio into a video
 printf "%s\n" "Combining $image and $audio into video file"
 record && printf "%s\n" "Created $videofile"
-```
+#+END_SRC
