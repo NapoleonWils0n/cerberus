@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Freebsd list disks
+
+Freebsd list connected disks
+
+#+BEGIN_SRC sh
+geom disk list
+#+END_SRC
