@@ -1,0 +1,27 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* firefox fix for freebsd < 11.3
+
+firefox fix for freebsd
+
+** sysctl command
+
+#+BEGIN_SRC sh
+sudo sysctl net.local.stream.recvspace=16383
+#+END_SRC
+
+*** sysctl.conf
+
+edit /etc/sysctl.conf
+
+#+BEGIN_SRC sh
+sudo vim /etc/sysctl.conf
+#+END_SRC
+
+add the code below to /etc/sysctl.conf
+
+#+BEGIN_SRC sh
+net.local.stream.recvspace=16383
+#+END_SRC
