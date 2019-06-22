@@ -1,24 +1,28 @@
-# zfs datasets
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* zfs datasets
 
 zfs list datasets
 
-```
+#+BEGIN_SRC sh
 zfs list
-```
+#+END_SRC
 
 the name of the main pool is called zpool
 
-* switch to root
++ switch to root
 
-```
+#+BEGIN_SRC sh
 sudo su
-```
+#+END_SRC
 
-## create the zfs datasets
+** create the zfs datasets
 
 create the main dataset under zpool
 
-```
+#+BEGIN_SRC sh
 zfs create zroot/data
 zfs create zroot/data/desktop
 zfs create zroot/data/documents
@@ -31,13 +35,13 @@ zfs create zroot/data/local
 zfs create zroot/data/mozilla
 zfs create zroot/data/ossuary
 zfs create zroot/data/weechat
-```
+#+END_SRC
 
-### copy directories to zfs datasets
+*** copy directories to zfs datasets
 
 copy files to the dataset before setting the mount point and mounting the dataset
 
-```
+#+BEGIN_SRC sh
 sudo cp -Rpv /home/djwilcox/Desktop/ /zroot/data/desktop
 sudo cp -Rpv /home/djwilcox/documents/ /zroot/data/documents
 sudo cp -Rpv /home/djwilcox/downloads/ /zroot/data/downloads
@@ -49,7 +53,7 @@ sudo cp -Rpv /home/djwilcox/.local/ /zroot/data/local
 sudo cp -Rpv /home/djwilcox/.mozilla/ /zroot/data/mozilla
 sudo cp -Rpv /home/djwilcox/.ossuary/ /zroot/data/ossuary
 sudo cp -Rpv /home/djwilcox/.weechat/ /zroot/data/weechat
-```
+#+END_SRC
 
 we use the -r option for recursive copy  
 and the -p option to keep the permissions of the files and directorys  
@@ -58,11 +62,11 @@ and the -v option for verbose
 we use ~/documents/ to copy the contents of the documents directory  
 note the slash at the end of the docuemnts path
 
-#### create the mount points in your home directory
+**** create the mount points in your home directory
 
 create the zfs mount points
 
-```
+#+BEGIN_SRC sh
 zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
 zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
 zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
@@ -74,17 +78,17 @@ zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
 zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
 zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
 zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
-```
+#+END_SRC
 
-* change the permission on the mountpoint if needed
++ change the permission on the mountpoint if needed
 
-```
+#+BEGIN_SRC sh
 sudo chown -R djwilcox:djwilcox ~/Desktop
-```
+#+END_SRC
 
-* chmod the permissions to 700
++ chmod the permissions to 700
 
-```
+#+BEGIN_SRC sh
 chmod 700 ~/Desktop
-```
+#+END_SRC
 

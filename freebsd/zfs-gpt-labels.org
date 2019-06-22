@@ -1,5 +1,6 @@
 #+STARTUP: content
 #+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
 * zfs gpt label
 
