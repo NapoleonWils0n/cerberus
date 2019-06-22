@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pkg autoremove
+
+remove unused dependencies
+
+#+BEGIN_SRC sh
+sudo pkg autoremove
+#+END_SRC

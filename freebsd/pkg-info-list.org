@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pkg info list
+
+pkg info list installed files from package
+
+#+BEGIN_SRC sh
+pkg info -l ffmpeg
+#+END_SRC
