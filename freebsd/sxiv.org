@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd sxiv image viewer
+
+install sxiv image viewer
+
+#+BEGIN_SRC sh
+sudo pkg install sxiv
+#+END_SRC
