@@ -1,10 +1,14 @@
-# File Commands for Amazon S3
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* File Commands for Amazon S3
 
 New file commands make it easy to manage your Amazon S3 objects. Using familiar syntax, you can view the contents of your S3 buckets in a directory-based listing.
 
-```
+#+BEGIN_SRC sh
 $ aws s3 ls s3://mybucket
-```
+#+END_SRC
 
         LastWriteTime            Length Name
 
@@ -17,122 +21,126 @@ $ aws s3 ls s3://mybucket
 
 You can perform recursive uploads and downloads of multiple files in a single folder-level command. The AWS CLI will run these transfers in parallel for increased performance.
 
-```
+#+BEGIN_SRC sh
 $ aws s3 cp myfolder s3://mybucket/myfolder --recursive
-```
+#+END_SRC
 
 upload: myfolder/file1.txt to s3://mybucket/myfolder/file1.txt
-
 upload: myfolder/subfolder/file1.txt to s3://mybucket/myfolder/subfolder/file1.txt
 
 A sync command makes it easy to synchronize the contents of a local folder with a copy in an S3 bucket.
 
-```
+#+BEGIN_SRC sh
 $ aws s3 sync myfolder s3://mybucket/myfolder --exclude *.tmp
-```
+#+END_SRC
 
 upload: myfolder/newfile.txt to s3://mybucket/myfolder/newfile.txt
 
-Examples
-
-Copying a local file to S3
+*** Copying a local file to S3
 
 The following cp command copies a single file to a specified bucket and key:
 
-```
+#+BEGIN_SRC sh
 aws s3 cp test.txt s3://mybucket/test2.txt
-```
+#+END_SRC
 
 Output:
-
 upload: test.txt to s3://mybucket/test2.txt
 
-Copying a file from S3 to S3
+**** Copying a file from S3 to S3
 
 The following cp command copies a single s3 object to a specified bucket and key:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/test.txt s3://mybucket/test2.txt
+#+END_SRC
 
 Output:
-
 copy: s3://mybucket/test.txt to s3://mybucket/test2.txt
 
-Copying an S3 object to a local file
+*** Copying an S3 object to a local file
 
 The following cp command copies a single object to a specified file locally:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/test.txt test2.txt
+#+END_SRC
 
 Output:
-
 download: s3://mybucket/test.txt to test2.txt
 
-Copying an S3 object from one bucket to another
+*** Copying an S3 object from one bucket to another
 
 The following cp command copies a single object to a specified bucket while retaining its original name:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/test.txt s3://mybucket2/
+#+END_SRC
 
 Output:
-
 copy: s3://mybucket/test.txt to s3://mybucket2/test.txt
 
-Recursively copying S3 objects to a local directory
+*** Recursively copying S3 objects to a local directory
 
 When passed with the parameter --recursive, the following cp command recursively copies all objects under a specified prefix and bucket to a specified directory. In this example, the bucket mybucket has the objects test1.txt and test2.txt:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket . --recursive
+#+END_SRC
 
 Output:
-
 download: s3://mybucket/test1.txt to test1.txt
 download: s3://mybucket/test2.txt to test2.txt
 
-Recursively copying local files to S3
+*** Recursively copying local files to S3
 
 When passed with the parameter --recursive, the following cp command recursively copies all files under a specified directory to a specified bucket and prefix while excluding some files by using an --exclude parameter. In this example, the directory myDir has the files test1.txt and test2.jpg:
 
+#+BEGIN_SRC sh
 aws s3 cp myDir s3://mybucket/ --recursive --exclude "*.jpg"
+#+END_SRC
 
 Output:
-
 upload: myDir/test1.txt to s3://mybucket/test1.txt
 
-Recursively copying S3 objects to another bucket
+*** Recursively copying S3 objects to another bucket
 
 When passed with the parameter --recursive, the following cp command recursively copies all objects under a specified bucket to another bucket while excluding some objects by using an --exclude parameter. In this example, the bucket mybucket has the objects test1.txt and another/test1.txt:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/ s3://mybucket2/ --recursive --exclude "another/*"
+#+END_SRC
 
 Output:
-
 copy: s3://mybucket/test1.txt to s3://mybucket2/test1.txt
 
 You can combine --exclude and --include options to copy only objects that match a pattern, excluding all others:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/logs/ s3://mybucket2/logs/ --recursive --exclude "*" --include "*.log"
+#+END_SRC
 
 Output:
-
 copy: s3://mybucket/test/test.log to s3://mybucket2/test/test.log
 copy: s3://mybucket/test3.log to s3://mybucket2/test3.log
 
-Setting the Access Control List (ACL) while copying an S3 object
+*** Setting the Access Control List (ACL) while copying an S3 object
 
 The following cp command copies a single object to a specified bucket and key while setting the ACL to public-read-write:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/test.txt s3://mybucket/test2.txt --acl public-read-write
+#+END_SRC
 
 Output:
-
 copy: s3://mybucket/test.txt to s3://mybucket/test2.txt
 
 Note that if you're using the --acl option, ensure that any associated IAM policies include the "s3:PutObjectAcl" action:
-
 aws iam get-user-policy --user-name myuser --policy-name mypolicy
 
 Output:
 
+#+BEGIN_SRC 
 {
     "UserName": "myuser",
     "PolicyName": "mypolicy",
@@ -153,30 +161,36 @@ Output:
         ]
     }
 }
+#+END_SRC
 
-Granting permissions for an S3 object
+*** Granting permissions for an S3 object
 
 The following cp command illustrates the use of the --grants option to grant read access to all users and full control to a specific user identified by their email address:
 
+#+BEGIN_SRC sh
 aws s3 cp file.txt s3://mybucket/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=user@example.com
+#+END_SRC
 
 Output:
-
 upload: file.txt to s3://mybucket/file.txt
 
-Uploading a local file stream to S3
+*** Uploading a local file stream to S3
 
 WARNING:: PowerShell may alter the encoding of or add a CRLF to piped input.
 
 The following cp command uploads a local file stream from standard input to a specified bucket and key:
 
+#+BEGIN_SRC sh
 aws s3 cp - s3://mybucket/stream.txt
+#+END_SRC
 
-Downloading an S3 object as a local file stream
+*** Downloading an S3 object as a local file stream
 
 WARNING:: PowerShell may alter the encoding of or add a CRLF to piped or redirected output.
 
 The following cp command downloads an S3 object locally as a stream to standard output. Downloading as a stream is not currently compatible with the --recursive parameter:
 
+#+BEGIN_SRC sh
 aws s3 cp s3://mybucket/stream.txt -
+#+END_SRC
 
