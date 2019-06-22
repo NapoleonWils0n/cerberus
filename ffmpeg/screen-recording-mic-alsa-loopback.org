@@ -1,9 +1,10 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* screen recording mic and alsa loopback
 
-# ffmpeg - screen recording mic and alsa loopback
-#======================================================
-
-
+#+BEGIN_SRC sh
 ffmpeg \
 -f alsa -ac 2 -ar 44100 -i hw:0,0 \
 -f alsa -ac 2 -ar 44100 -i loopout \
@@ -13,23 +14,21 @@ ffmpeg \
 -c:a libfdk_aac -ac 2 -ar 44100 -b:a 128k \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
+#+ENDSRC
 
+** create alsa loopback
 
-# create alsa loopback
-#======================================================
-
+#+BEGIN_SRC sh
 sudo modprobe snd-aloop pcm_substreams=1
+#+ENDSRC
 
+*** edit ~/.asoundrc 
 
-# edit ~/.asoundrc 
-#======================================================
-
-
+#+BEGIN_SRC sh
 vim ~/.asoundrc
+#+ENDSRC
 
-
-#======================================================
-
+#+BEGIN_SRC sh
 pcm.multi {
     type route;
     slave.pcm {
@@ -82,5 +81,5 @@ pcm.loopout {
 	type plug
 	slave.pcm "hw:Loopback,1,0"
 }
-
+#+ENDSRC
 
