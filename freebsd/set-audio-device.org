@@ -1,0 +1,21 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd set audio device
+
+#+BEGIN_SRC sh
+cat /dev/sndstat
+#+END_SRC
+
++ internal speakers
+
+#+BEGIN_SRC sh
+sysctl hw.snd.default_unit=0
+#+END_SRC
+
++ external usb dac
+
+#+BEGIN_SRC sh
+sysctl hw.snd.default_unit=2
+#+END_SRC
