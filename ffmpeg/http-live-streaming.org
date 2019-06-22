@@ -1,0 +1,33 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg http live streaming
+
+encapsulate an h264 aac video into an mpegts container
+and segment it into chunks and create an m3u8 file for http live streaming
+
+#+BEGIN_SRC sh
+ffmpeg -i eq_1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb -hls_time 10 -hls_list_size 999999999 output.m3u8
+#+END_SRC
+
+** add the mime types for apache
+
+edit the /etc/mime.types file
+
+#+BEGIN_SRC sh
+sudo vim /etc/mime.types
+#+END_SRC
+
+add the following mime types to the end of the /etc/mime.types file
+
+#+BEGIN_SRC sh
+video/MP2T            ts
+application/x-mpegURL m3u8
+#+END_SRC
+
+*** restart apache
+
+#+BEGIN_SRC sh
+sudo apachectl restart
+#+END_SRC
