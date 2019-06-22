@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pinentry curses
+
+freebsd pinentry-curses install
+
+#+BEGIN_SRC sh
+sudo pkg install pinentry-curses
+#+END_SRC
