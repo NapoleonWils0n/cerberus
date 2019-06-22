@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pkg list installed packages
+
+list installed packages on freebsd and save to a text fileo
+
+#+BEGIN_SRC sh
+pkg info > ~/Desktop/pkg-list.txt
+#+END_SRC
