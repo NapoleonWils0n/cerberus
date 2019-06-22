@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd fix mbr
+
+where device is the boot disk
+
+#+BEGIN_SRC sh
+sudo fdisk -B -b /boot/boot0 device
+#+END_SRC
