@@ -1,38 +1,42 @@
-# pef encrypted directory and pam_pefs
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
-## pefs install
+* pef encrypted directory and pam_pefs
 
-```
+pefs install
+
+#+BEGIN_SRC sh
 sudo pkg install pefs-kmod
-```
+#+END_SRC
 
-### pefs load kernel module
+** pefs load kernel module
 
 Once installed, we next need to load the pefs kernel module:
 
-```
+#+BEGIN_SRC sh
 sudo kldload pefs
-```
+#+END_SRC
 
 check the pefs kernel module is loaded with kldstat
 
-```
+#+BEGIN_SRC sh
 kldstat
-```
+#+END_SRC
 
 If we want to keep this module loaded across reboots, add it to /boot/loader.conf:
 
-```
+#+BEGIN_SRC sh
 sudo vim /boot/loader.conf
-```
+#+END_SRC
 
-* then add the following line to /boot/load.conf
++ then add the following line to /boot/load.conf
 
-```
+#+BEGIN_SRC sh
 pefs_load="YES"
-```
+#+END_SRC
 
-## pefs pam set up
+*** pefs pam set up
 
 Please note that your home directory has to be mounted, I mount it in
 /etc/rc.local, but don't add any keys. pam_pefs adds the key. Also note
@@ -48,87 +52,87 @@ should not be encrypted to make it accessible by pam_pefs:
 
 create directory to encrypt
 
-```
+#+BEGIN_SRC sh
 mkdir -p ~/storage
-```
+#+END_SRC
 
 change permissions so only our user can read and write to the directory
 
-```
+#+BEGIN_SRC sh
 chmod 700 ~/storage
-```
+#+END_SRC
 
-mount pefs file system
++ mount pefs file system
 
-```
+#+BEGIN_SRC sh
 pefs mount ~/storage ~/storage
-```
+#+END_SRC
 
-add the pefs key
++ add the pefs key
 
-```
+#+BEGIN_SRC sh
 pefs addkey -a aes256 ~/storage
-```
+#+END_SRC
 
-add the pefs keychain
++ add the pefs keychain
 
-```
+#+BEGIN_SRC sh
 pefs addchain -Z -a aes256 ~/storage
-```
+#+END_SRC
 
 dont encrypt .pefs.db
 move the ~/storage/.pefs.db to /tmp
 
-```
+#+BEGIN_SRC sh
 mv ~/storage/.pefs.db /tmp
-```
+#+END_SRC
 
-umount the pefs directory
++ umount the pefs directory
 
-```
+#+BEGIN_SRC sh
 umount ~/storage
-```
+#+END_SRC
 
-move the /tmp/.pefs.db file back into the pefs encrypted directory
++ move the /tmp/.pefs.db file back into the pefs encrypted directory
 
-```
+#+BEGIN_SRC sh
 mv /tmp/.pefs.db ~/storage
-```
+#+END_SRC
 
-mount the pefs directory
++ mount the pefs directory
 
-```
+#+BEGIN_SRC sh
 pefs mount ~/storage ~/storage
-```
+#+END_SRC
 
 add the pefs key
 Use -c option to verify key is in databas
 
-```
+#+BEGIN_SRC 
 pefs addkey -c -a aes256 ~/storage
-```
+#+END_SRC
 
-### pefs unlock at login 
+*** pefs unlock at login 
 
 Edit /etc/pam.d/system:
 
-```
+#+BEGIN_SRC sh
 sudo vim /etc/pam.d/system
-```
+#+END_SRC
 
 add the following code under the listed sections
 
-```
+#+BEGIN_SRC sh
 # auth
 auth       sufficient  pam_pefs.so     try_first_pass delkeys
 
 # session
 session    optional    pam_pefs.so     delkeys
-```
+#+END_SRC
 
 the complete file should look like this 
 
-```
+#+BEGIN_SRC sh
 #
 # $FreeBSD: releng/11.2/etc/pam.d/system 197769 2009-10-05 09:28:54Z des $
 #
@@ -156,31 +160,27 @@ session		required	pam_lastlog.so		no_fail
 # password
 #password	sufficient	pam_krb5.so		no_warn try_first_pass
 password	required	pam_unix.so		no_warn try_first_pass
+#+END_SRC
 
-```
-
-### pefs fstab
-
+*** pefs fstab
 
 edit fstab to mount the pefs directory
 
-```
+#+BEGIN_SRC sh
 sudo vim /etc/fstab
-```
+#+END_SRC
 
 replace username with your username and storage with the name of your pefs directory  
 late is needed for zfs filesystems to ensure that the pefs directory is correctly mounted
 
-```
+#+BEGIN_SRC sh
 # pefs encrypted directory
 /home/username/storage /home/username/storage pefs rw,late 0 0
-```
+#+END_SRC
 
-#### pefs reference
+**** pefs reference
 
-* [pefs site](http://pefs.io/)
-* [bsd now pefs](http://www.bsdnow.tv/tutorials/pefs)
-* [pefs email message](https://lists.freebsd.org/pipermail/freebsd-current/2010-September/019691.html)
-* [pefs email message](https://lists.freebsd.org/pipermail/freebsd-current/2010-September/019708.html)
-* [pefs set up - in german](https://wiki.bsdforen.de/howto:festplattenverschluesselung_mit_pefs?s[]=pefs)
-
++ [[pefs site][http://pefs.io/]]
++ [[bsd now pefs][http://www.bsdnow.tv/tutorials/pefs]]
++ [[pefs email message][https://lists.freebsd.org/pipermail/freebsd-current/2010-September/019691.html]]
++ [[pefs email message][https://lists.freebsd.org/pipermail/freebsd-current/2010-September/019708.html]]
