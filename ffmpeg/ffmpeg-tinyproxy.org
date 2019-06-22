@@ -15,7 +15,6 @@ sudo pacman -S tinyproxy
 sudo vim /etc/tinyproxy/tinyproxy.conf
 #+END_SRC
 
-
 *** change the following options in the config file
 
 + change the port to one open in your firewall
@@ -48,7 +47,6 @@ stop tinyproxy
 #+BEGIN_SRC sh
 sudo systemctl stop tinyproxy
 #+END_SRC
-
 
 ** ffmpeg proxy set up
 

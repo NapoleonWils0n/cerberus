@@ -1,5 +1,6 @@
-#+STARTUP: content
+#+STARTUP: showall
 #+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
 * convert mkv video to mp4
 
