@@ -1,4 +1,8 @@
-# Suspend/Resume on lid close/open 
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Suspend/Resume on lid close/open 
 
 Screen Dimming Loading ACPI_VIDEO module will automatically brighten screen when AC is plugged in, and automatically dim screen when AC is unplugged. It will also give the ability to suspend on lid close and resume when opening lid.
 
@@ -6,14 +10,16 @@ Fix: load ACPI_VIDEO driver
 
 sudo vim /boot/loader.conf
 
-```
+#+BEGIN_SRC sh
 acpi_video_load="YES"
-```
+#+END_SRC
 
 for suspend/resume
 
+#+BEGIN_SRC sh
 sudo vim /etc/sysctl.conf
+#+END_SRC
 
-```
+#+BEGIN_SRC sh
 hw.acpi.lid_switch_state=S3
-```
+#+END_SRC
