@@ -1,0 +1,17 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd python packages for emacs
+
+pkg python packages
+
+#+BEGIN_SRC sh
+sudo pkg install py36-flake8 py36-jedi
+#+END_SRC
+
+pip python packages
+
+#+BEGIN_SRC sh
+pip3 install --user elpy rope rope_py3k 
+#+END_SRC
