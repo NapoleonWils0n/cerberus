@@ -1,19 +1,20 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* ffmpeg config
 
- # =================
- # = ffmpeg config =
- # =================
+svn checkout
 
+#+BEGIN_SRC sh
 svn checkout svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
+#+END_SRC
 
-./configure --enable-gpl --enable-libx264 --enable-libxvid --enable-libfaac --enable-libmp3lame
-
+#+BEGIN_SRC sh
 ./configure --prefix-/usr/local --enable-gpl --enable-libx264 --enable-libxvid --enable-libmp3lame
+#+END_SRC
 
+#+BEGIN_SRC sh
 ./configure --enable-gpl --enable-libx264 --enable-libxvid --enable-libmp3lame \
 --enable-libfaac --enable-libfaad 
-
-# gnumake
-
-/usr/bin/ld: can't locate file for: -lgpac_static
+#+END_SRC
