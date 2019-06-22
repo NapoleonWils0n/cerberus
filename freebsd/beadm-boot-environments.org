@@ -1,92 +1,96 @@
-# beadm boot environments
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* beadm boot environments
 
 freebsd boot environments
 
-## beadm install
+** beadm install
 
-```
+#+BEGIN_SRC sh
 # pkg install beadm
-```
+#+END_SRC
 
 See which boot environments you have.
 
-```
+#+BEGIN_SRC sh
 # beadm list
-```
+#+END_SRC
 
 The only boot environment is named default. Under active, N means the environment is active now.  
 An R means the environment will be active on reboot.
 
 check the current version of freebsd with uname
 
-```
+#+BEGIN_SRC sh
 uname -s
-```
+#+END_SRC
 
 check for an update
 
-```
+#+BEGIN_SRC sh
 # freebsd-update fetch
-```
+#+END_SRC
 
 The updates have been downloaded but still haven’t been installed.  
 I will prepare a boot environment just in case after installing them something breaks
 
-### create new boot environment
+*** create new boot environment
 
 I need to upgrade this host to the latest version of FreeBSD 12.0, p3.  
 This is where we need a new boot environment. I’ll name it after the release.
 
-```
+#+BEGIN_SRC sh
 # beadm create 12.0-p3
-```
+#+END_SRC
 
 list the boot environments
 
-```
+#+BEGIN_SRC sh
 # beadm list
-```
+#+END_SRC
 
 Activate the new boot environment.
 
-```
+#+BEGIN_SRC sh
 # beadm activate 12.0-p3
-```
+#+END_SRC
 
 list the boot environments
 
-```
+#+BEGIN_SRC sh
 # beadm list
-```
+#+END_SRC
 
 While the default environment has an N, indicating it’s active now,
 the 12.0-p3 environment has an R, so it will be active after a reboot.
 
 Reboot. After the reboot, you’ll see the new environment is running.
 
-#### install updates in new boot environment
+**** install updates in new boot environment
 
 install update in new boot environment
 
-```
+#+BEGIN_SRC sh
 # freebsd-update install
-```
+#+END_SRC
 
 reboot and run freebsd-update install again
 
-```
+#+BEGIN_SRC sh
 # freebsd-update install
-```
+#+END_SRC
 
 check for package updates
 
-```
+#+BEGIN_SRC sh
 # pkg update
 # pkg upgrade
-```
+#+END_SRC
 
 create a zfs snapshot
 
-```
-zfs snapshot -r zroot@12.0-p3
-```
+#+BEGIN_SRC sh
+# zfs snapshot -r zroot@12.0-p3
+#+END_SRC
