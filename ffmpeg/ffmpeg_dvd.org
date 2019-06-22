@@ -1,0 +1,21 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* batch convert to dvd
+
+#+BEGIN_SRC sh
+FILETYPE=*.mov
+EXTENSION=.mov
+NEWEXTENSION=.mpg
+#+END_SRC
+
+put double quotes around the sed command, so we can use bash variables
+
+#+BEGIN_SRC sh
+for file in $FILETYPE
+do ffmpeg -i "$file" -target pal-vcd "`echo $file |sed "s/$EXTENSION$/$NEWEXTENSION/"`"
+done
+#+END_SRC
+
+	
