@@ -1,44 +1,47 @@
-# pf firewall emerging threats
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
-## create /etc/pf.anchors/emerging-threats
+* pf firewall emerging threats
 
-```
+create /etc/pf.anchors/emerging-threats
+
+#+BEGIN_SRC sh
 sudo vim /etc/pf.anchors/emerging-threats
-```
+#+END_SRC
 
 add the follow to the file
 
-```
+#+BEGIN_SRC sh
 table <emerging_threats> persist file "/etc/emerging-Block-IPs.txt"
 block log from <emerging_threats> to any
-```
+#+END_SRC
 
-### edit the /etc/pf.conf file
+** edit the /etc/pf.conf file
 
-```
+#+BEGIN_SRC sh
 sudo vim /etc/pf.conf
-```
+#+END_SRC
 
 add the following code to the file
 
-```
+#+BEGIN_SRC sh
 anchor "emerging-threats"
 load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
-```
+#+END_SRC
 
-### download emerging threats text file
+*** download emerging threats text file
 
-```
+#+BEGIN_SRC sh
 $ curl http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt -o /tmp/emerging-Block-IPs.txt
 $ sudo cp /tmp/emerging-Block-IPs.txt /etc
 $ sudo chmod 644 /etc/emerging-Block-IPs.txt
 $ sudo pfctl -f /etc/pf.conf
-```
+#+END_SRC
 
-### logging
+*** logging
 
-```
-
+#+BEGIN_SRC sh
 $ sudo ifconfig pflog0 create
 $ sudo tcpdump -n -e -ttt -i pflog0
-```
+#+END_SRC
