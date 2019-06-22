@@ -1,8 +1,12 @@
-# broadcom wifi freebsd
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* broadcom wifi freebsd
 
 Build custom WIFI kernel
 
-```
+#+BEGIN_SRC sh
 include GENERIC
 ident WIFI
 
@@ -16,23 +20,22 @@ device gpio
 #device wlan
 #device wlan_amrr
 #device firmware
-```
+#+END_SRC
 
-build and install the kernel
+** build and install the kernel
 
-```
+#+BEGIN_SRC sh
 # make -j 2 buildkernel KERNCONF=WIFI
 # make -j 2 installkernel KERNCONF=WIFI
-```
+#+END_SRC
 
 use poudriere to build the net/bwn-firmware-kmod port
 
-```
+#+BEGIN_SRC sh
 net/bwn-firmware-kmod
-```
+#+END_SRC
 
 To load the driver as a module at boot, add the following lines to loader.conf
-
 
 hw.bwn_pci.preferred="1"
 if_bwn_pci_load="YES
@@ -40,28 +43,28 @@ bwn_v4_ucode_load="YES"
 bwn_v4_n_ucode_load="YES"
 bwn_v4_lp_ucode_load="YES"
 
-```
+
+#+BEGIN_SRC sh
 if_bwn_load="YES"
 bwn_v4_ucode_load="YES"
 bwn_v4_n_ucode_load="YES"
 wlan_wep_load="YES"
 wlan_ccmp_load="YES"
 wlan_tkip_load="YES"
-```
+#+END_SRC
 
 /etc/rc.conf 
 
-
-```
+#+BEGIN_SRC sh
 wlans_bwn0="wlan0"
 ifconfig_wlan0="WPA SYNCDHCP"
-```
+#+END_SRC
 
 /etc/wpa_supplicant.conf
 
-```
+#+BEGIN_SRC sh
 network={
 ssid="Homezonexxxx-xxxxx"
 psk="Komplexxxxx---xxxxx"
 }
-```
+#+END_SRC
