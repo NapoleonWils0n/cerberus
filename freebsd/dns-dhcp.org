@@ -1,19 +1,23 @@
-# freebsd dhclient
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd dhclient
 
 avoid overwriting /etc/resolv.conf
 
-* edit /etc/dhclient-enter-hooks
+** edit /etc/dhclient-enter-hooks
 
-```
+#+BEGIN_SRC sh
 sudo vim /etc/dhclient-enter-hooks
-```
+#+END_SRC
 
 add the following to /etc/dhclient-enter-hooks
 
-```
+#+BEGIN_SRC sh
 add_new_resolv_conf() {
   # We don't want /etc/resolv.conf changed
   # So this is an empty function
   return 0
 }
-```
+#+END_SRC
