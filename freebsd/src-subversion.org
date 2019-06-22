@@ -1,13 +1,17 @@
-# freebsd checkout src with subversion
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd checkout src with subversion
 
 install ca_root_nss for ssl certs and subversion
 
-```
+#+BEGIN_SRC sh
 sudo pkg install ca_root_nss subversion
-```
+#+END_SRC
 
 checkout src to /usr/src
 
-```
+#+BEGIN_SRC sh
 sudo svn checkout https://svn.freebsd.org/base/stable/11/ /usr/src
-```
+#+END_SRC
