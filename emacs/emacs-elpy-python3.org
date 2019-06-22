@@ -1,38 +1,42 @@
-# emac elpy python3 setup
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* emac elpy python3 setup
 
 install python3 pip to install packages
 
-```
+#+BEGIN_SRC sh
 sudo apt install python3-pip
-```
+#+END_SRC
 
-install packages
+** install packages
 
-```
+#+BEGIN_SRC sh
 pip3 install --user elpy jedi rope_py3k flake8
-```
+#+END_SRC
 
-add package archive to ~/.emacs 
+*** add package archive to ~/.emacs 
 
-```
+#+BEGIN_SRC sh
 (add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/"))
-```
+#+END_SRC
 
-refresh package contents
+*** refresh package contents
 
-```
+#+BEGIN_SRC sh
 M-x package-refresh-contents
-```
+#+END_SRC
 
-install elpy
+**** install elpy
 
-```
+#+BEGIN_SRC sh
 M-x package-install elpy
-```
+#+END_SRC
 
-~/.emacs
+edit your ~/.emacs file and add the following code
 
-```
+#+BEGIN_SRC sh
 (elpy-enable)
 ; fixing elpy keybinding
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
@@ -41,4 +45,4 @@ M-x package-install elpy
 (setq elpy-rpc-python-command "python3")
 ;; For interactive shell
 (setq python-shell-interpreter "python3")
-```
+#+END_SRC
