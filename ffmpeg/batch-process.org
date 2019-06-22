@@ -1,0 +1,12 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg batch process
+
+#+BEGIN_SRC sh
+for f in *.flv;
+do
+echo "Processing $f"
+ffmpeg -i "$f" -target ntsc-dvd "${f%.flv}.mpg"
+#+END_SRC
