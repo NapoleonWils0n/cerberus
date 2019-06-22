@@ -1,166 +1,168 @@
-# freebsd geli encrypted container
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd geli encrypted container
 
 freebsd geli encrypted container
 
-## Load geli Support
+** Load geli Support
 
 Support for geli is available as a loadable kernel module. To configure the system to automatically load the module at boot time, add the following line to /boot/loader.conf:
 
-```
+#+BEGIN_SRC sh
 geom_eli_load="YES"
-```
+#+END_SRC
 
-## create virtual container with dd
+** create virtual container with dd
 
 create a 2 gig container with dd on the Desktop called disk.img
 
-* change directory to the Desktop
+** change directory to the Desktop
 
-```
+#+BEGIN_SRC sh
 cd ~/Desktop
-```
+#+END_SRC
 
-* switch to root
+** switch to root
 
-```
+#+BEGIN_SRC sh
 sudo su
-```
+#+END_SRC
 
-* use dd to create a 2 gig disk image
+** use dd to create a 2 gig disk image
 
-```
+#+BEGIN_SRC sh
 dd if=/dev/zero of=disk.img bs=1M count=2048
-```
+#+END_SRC
 
-## mount the image with mdconfig
+** mount the image with mdconfig
 
 use mdconfig to mount the disk image
 
-```
+#+BEGIN_SRC sh
 mdconfig -a -t vnode -f disk.img -u 0
-```
+#+END_SRC
 
 Here, the -a option forces the disk mounting, -t vnode is used for opening a regular file, and the path of this file is specified after -f. The -u 0 option set the virtual disk identifier to use, in this case /dev/md0.
 
-## Generate the Master Key
+** Generate the Master Key
 
 create directory to store geli key
 
-```
+#+BEGIN_SRC sh
 mkdir ~/.ossuary
-```
+#+END_SRC
 
 Now we want to create a key for GELI to encrypt with, and attach it to our disk image device:
 
-```
+#+BEGIN_SRC sh
 dd if=/dev/zero of=/usr/home/djwilcox/.ossuary/ossuary.key bs=256 count=1
 geli init -e aes -l 256 -s 4096 -K /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
 geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
-```
+#+END_SRC
 
 Enter passphrase:
 
-## Create the ZFS File System
+** Create the ZFS File System
 
 Next, format the device with the ZFS file system and mount it on an existing mount point:
 
-* use dd to write random data to geli container before adding file system
++ use dd to write random data to geli container before adding file system
 
-```
+#+BEGIN_SRC sh
 dd if=/dev/random of=/dev/md0.eli bs=1M
-```
+#+END_SRC
 
-* To create a simple, non-redundant pool using a single disk device:
++ To create a simple, non-redundant pool using a single disk device:
 
-```
+#+BEGIN_SRC sh
 zpool create crypt /dev/md0.eli
-```
+#+END_SRC
 
-* add compression and duplication to the zfs pool
++ add compression and duplication to the zfs pool
 
-```
+#+BEGIN_SRC sh
 zfs set compression=lz4 crypt
-```
+#+END_SRC
 
-* zfs set mount point
++ zfs set mount point
 
-```
+#+BEGIN_SRC sh
 zfs set mountpoint=/usr/home/djwilcox/mnt crypt
-```
+#+END_SRC
 
-* change the permission on the container
++ change the permission on the container
 
-```
+#+BEGIN_SRC sh
 sudo chmod -R djwilcox:djwilcox ~/mnt
-```
+#+END_SRC
 
 Finally, when you want to unmount, we also want to detach from GELI and detach from md:
 
++ zfs unmount
 
-* zfs unmount
-
-```
+#+BEGIN_SRC sh
 zfs umount crypt
-```
+#+END_SRC
 
-* geli detach
++ geli detach
 
-```
+#+BEGIN_SRC sh
 geli detach md0.eli
-```
+#+END_SRC
 
-* mdconfig free loop device
++ mdconfig free loop device
 
-```
+#+BEGIN_SRC sh
 mdconfig -d -u 0
-```
+#+END_SRC
 
-## mounting and unmounting
+** mounting and unmounting
 
-* mount
+** mount
 
 use mdconfig to mount the encrypted container to /dev/md0
 
-```
+#+BEGIN_SRC sh
 mdconfig -a -t vnode -f disk.img -u 0
-```
+#+END_SRC
 
-* use geli with the path to the key and device
++ use geli with the path to the key and device
 
-```
+#+BEGIN_SRC sh
 geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
-```
+#+END_SRC
 
-* we need to import the zpool which will also mount the container
++ we need to import the zpool which will also mount the container
 
-```
+#+BEGIN_SRC sh
 zpool import crypt
-```
+#+END_SRC
 
-
-* umount
+** umount
 
 unmount the zfs pool
 
-```
+#+BEGIN_SRC sh
 zfs umount crypt
-```
+#+END_SRC
 
-* we need to export the zfs pool before we use geli detach, otherwise geli thinks the device is busy
++ we need to export the zfs pool before we use geli detach, otherwise geli thinks the device is busy
 
-```
+#+BEGIN_SRC sh
 zpool export crypt
-```
+#+END_SRC
 
-* use geli to detach the encrypted device
++ use geli to detach the encrypted device
 
-```
+#+BEGIN_SRC sh
 geli detach md0.eli
-```
+#+END_SRC
 
-* free the loop device
++ free the loop device
 
-```
+#+BEGIN_SRC sh
 mdconfig -d -u 0
-```
+#+END_SRC
 	
