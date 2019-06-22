@@ -1,10 +1,13 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
-# convert flac to aac for iTunes
-#===============================
+* convert flac to aac for iTunes
 
+#+BEGIN_SRC sh
 for f in *.flac;
 do
 echo "Processing $f"
 ffmpeg -i "$f" -map 0:0 -c:a libfdk_aac -b:a 320k "${f%.flac}.m4a"
 done
+#+END_SRC
