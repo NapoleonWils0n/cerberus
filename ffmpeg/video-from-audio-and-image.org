@@ -1,0 +1,10 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* create video from audio and image
+
+#+BEGIN_SRC sh
+ffmpeg -i audio.m4a -i picture.png -f mov out.mov
+#+END_SRC
+
