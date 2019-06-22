@@ -1,0 +1,10 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg copy video convert audio to pcm
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mkv -c:v copy -c:a pcm_s16le -ar 44.1k -ac 2 out.mkv
+#+END_SRC
+
