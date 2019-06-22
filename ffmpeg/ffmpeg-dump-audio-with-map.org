@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* dump audio stream from a video file
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -map 0:1 -c copy outf‎ile.m4a
+#+END_SRC
