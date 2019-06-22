@@ -1,160 +1,164 @@
-# freebsd pefs encryption
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd pefs encryption
 
 pefs encryption
 
-## pefs install
+** pefs install
 
-```
+#+BEGIN_SRC sh
 sudo pkg install pefs-kmod
-```
+#+END_SRC
 
-### pefs load kernel module
+*** pefs load kernel module
 
 Once installed, we next need to load the pefs kernel module:
 
-```
+#+BEGIN_SRC sh
 sudo kldload pefs
-```
+#+END_SRC
 
 check the pefs kernel module is loaded with kldstat
 
-```
+#+BEGIN_SRC sh
 kldstat
-```
+#+END_SRC
 
 If we want to keep this module loaded across reboots, add it to /boot/loader.conf:
 
-```
+#+BEGIN_SRC sh
 sudo vim /boot/loader.conf
-```
+#+END_SRC
 
-* then add the following line to /boot/load.conf
++ then add the following line to /boot/load.conf
 
-```
+#+BEGIN_SRC sh
 pefs_load="YES"
-```
+#+END_SRC
 
-## pefs encrypted directory
+** pefs encrypted directory
 
 create an encrypted directory
 
 create a storage directory in your home directory
 
-```
+#+BEGIN_SRC sh
 mkdir -p ~/storage
-```
+#+END_SRC
 
 change permissions to make it readable by only our user
 
-```
+#+BEGIN_SRC sh
 chmod 700 ~/storage
-```
+#+END_SRC
 
 create the pefs keychain with aes256 encryption
 
-```
+#+BEGIN_SRC sh
 pefs addchain -fZ -a aes256 ~/storage
-```
+#+END_SRC
 
 At the prompt enter you user login password and then confirm
 
 Enter parent key passphrase:
 Reenter parent key passphrase:
 
-* list the ~/storage directory to make sure the ~/storage/.pefs.db file is created
++ list the ~/storage directory to make sure the ~/storage/.pefs.db file is created
 
-```
+#+BEGIN_SRC sh
 ls -a ~/storage
-```
+#+END_SRC
 
 mount the ~/storage directory
 
-```
+#+BEGIN_SRC sh
 pefs mount ~/storage ~/storage
-```
+#+END_SRC
 
 pefs add aes256 key
 
-```
+#+BEGIN_SRC sh
 pefs addkey -c -a aes256 ~/storage
-```
+#+END_SRC
 
 Enter passphrase:
 
-* create a file with some text to test the encryption
++ create a file with some text to test the encryption
 
-```
+#+BEGIN_SRC sh
 echo 'testing' > ~/storage/test.txt
-```
+#+END_SRC
 
-* check the contents of the file and it should be unencrypted
++ check the contents of the file and it should be unencrypted
 
-```
+#+BEGIN_SRC sh
 less ~/storage/test.txt
-```
+#+END_SRC
 
-### unmount the pefs directory
+*** unmount the pefs directory
 
 unmount the ~/storage directory and the file will become encrypted
 
-```
+#+BEGIN_SRC sh
 pefs umount ~/storage
-```
+#+END_SRC
 
-* list the storage directory and the filename will now be encrypted
++ list the storage directory and the filename will now be encrypted
 
-```
+#+BEGIN_SRC sh
 ls -al ~/storage
-```
+#+END_SRC
 
-* check the contents of the file and it should be encrypted
++ check the contents of the file and it should be encrypted
 
 the filename will be changed from test.txt to an encrypted string
 
-```
+#+BEGIN_SRC sh
 less ~/storage/.CHkOvB7RVpxPAwD3X8AgG0hltd_sQV59
-```
+#+END_SRC
 
-#### remount the pefs ~/storage directory
+**** remount the pefs ~/storage directory
 
 remount the pefs ~/storage directory
 
-```
+#+BEGIN_SRC sh
 pefs mount ~/storage ~/storage
-```
+#+END_SRC
 
 re add the pefs key
 note you dont have to add the keychain, as you have already created the keychain
 you just have to re add the pefs key
 
-```
+#+BEGIN_SRC sh
 pefs addkey -c -a aes256 ~/storage
-```
+#+END_SRC
 
 you will be prompted to enter your password, which is your user login password
 
 Enter passphrase:
 
-* list the contents of the ~/storage directory
++ list the contents of the ~/storage directory
 
-```
+#+BEGIN_SRC sh
 ls -al ~/storage
-```
+#+END_SRC
 
-* check the contents of the file and it should be unencrypted
++ check the contents of the file and it should be unencrypted
 
-```
+#+BEGIN_SRC sh
 less ~/storage/test.txt
-```
+#+END_SRC
 	
-* pefs showchains
+*** pefs showchains
 
 pefs showchains for directory
 show the key added to the keychain
 
-```
+#+BEGIN_SRC sh
 pefs showchains -f ~/storage
-```
+#+END_SRC
 
 this should show the key is encrypted with aes256 encyption
 
