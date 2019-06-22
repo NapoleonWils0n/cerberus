@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd wifi
+
+freebsd start wifi with wpa_supplicant
+
+#+BEGIN_SRC sh
+# wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+#+END_SRC
