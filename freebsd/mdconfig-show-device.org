@@ -1,0 +1,15 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* md show device for file
+
+#+BEGIN_SRC sh
+sudo mdconfig -lf ~/documents/disk.img
+#+END_SRC
+
+show md device for file without md prefix
+
+#+BEGIN_SRC sh
+sudo mdconfig -lnf ~/documents/disk.img
+#+END_SRC
