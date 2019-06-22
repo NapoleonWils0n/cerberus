@@ -1,6 +1,10 @@
-#!/bin/bash
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
-# ffmpeg create clips 
+* ffmpeg create clips 
 
+#+BEGIN_SRC sh
 ffmpeg -i input.avi -vcodec copy -acodec copy -ss 00:00:00 -t 00:30:00 output1.avi \
 -vcodec copy -acodec copy -ss 00:30:00 -t 00:30:00 output2.avi
+#+END_SRC
