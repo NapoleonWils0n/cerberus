@@ -1,23 +1,28 @@
-# freebsd networkmgr
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd networkmgr
 
 install networkmgr
 
-```
+#+BEGIN_SRC sh
 sudo pkg install networkmgr
-```
+#+END_SRC
 
 create the /usr/local/etc/doas.conf file
 
-```
+#+BEGIN_SRC sh
 sudo vim /usr/local/etc/doas.conf file
-```
+#+END_SRC
+
 add the code below to the /usr/local/etc/doas.conf
 
-```
+#+BEGIN_SRC sh
 permit nopass keepenv :wheel cmd netcardmgr                                                                                                       
 permit nopass keepenv :wheel cmd detect-nics                                                                                                      
 permit nopass keepenv :wheel cmd detect-wifi                                                                                                      
 permit nopass keepenv :wheel cmd ifconfig                                                                                                         
 permit nopass keepenv :wheel cmd service                                                                                                          
 permit nopass keepenv :wheel cmd wpa_supplicant 
-```
+#+END_SRC
