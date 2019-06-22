@@ -1,24 +1,23 @@
-#!/bin/bash 
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
+* ffmpeg run in the background
 
-# ffmpeg run in the background
-#======================================
+** ffmpeg - http live streams
 
-
-
-# ffmpeg - http live streams
-#============================
-
+#+BEGIN_SRC sh
 ffmpeg -i \
 url-goes-here \
 -c:v copy -c:a copy -loglevel error \
 -t 00:00:30 \
 ~/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv \
 </dev/null >/dev/null 2>&1 &
+#+END_SRC
 
-# ffmpeg - rtmpe encrypted streams
-#=================================
+*** ffmpeg - rtmpe encrypted streams
 
+#+BEGIN_SRC sh
 ffmpeg -i \
 "url-goes-here" \
 -rtmp_swfverify swf-url-goes-here \
@@ -26,4 +25,4 @@ ffmpeg -i \
 -t 00:00:30 \
 ~/Desktop/video-$(date +"%H-%M-%m-%d-%y").mkv \
 </dev/null >/dev/null 2>&1 &
-
+#+END_SRC
