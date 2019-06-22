@@ -1,4 +1,6 @@
 #+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
 
 * ffmpeg find extract frame as png
   
