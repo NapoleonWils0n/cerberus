@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* show arp table
+
+#+BEGIN_SRC sh
+arp -a
+#+END_SRC
