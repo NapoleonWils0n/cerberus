@@ -1,21 +1,25 @@
-# qt5 dark mode
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* qt5 dark mode
 
 install adwaita-qt5 qt5-style-plugins qt5ct
 
-```
+#+BEGIN_SRC sh
 # pkg install adwaita-qt5 qt5-style-plugins qt5ct
-```
+#+END_SRC
 
 edit you ~/.bashrc or ~/.zshrc or your shell config file and add the following code
 
-```
+#+BEGIN_SRC sh
 export QT_QPA_PLATFORMTHEME=qt5ct
-```
+#+END_SRC
 
 you then need to restart to pick up the changes before you can run qt5ct
 
-* run qt5ct and change the theme to adwaita-dark and click apply and ok
++ run qt5ct and change the theme to adwaita-dark and click apply and ok
 
-```
+#+BEGIN_SRC sh
 qt5ct
-```
+#+END_SRC
