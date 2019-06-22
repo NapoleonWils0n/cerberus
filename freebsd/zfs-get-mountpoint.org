@@ -1,0 +1,12 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* zfs get mount point from pool
+
+get the mountpoint from a zpool  
+replace crypt with your poolname
+
+#+BEGIN_SRC sh
+zfs get -H -o value mountpoint crypt
+#+END_SRC
