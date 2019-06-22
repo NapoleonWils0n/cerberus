@@ -1,0 +1,33 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* freebsd fibs openvpn
+
+add a second routing table with fibs
+
+#+BEGIN_SRC sh
+sudo vim /boot/loader.conf
+#+END_SRC
+
++ add the following code to /boot/loader.conf
+
+#+BEGIN_SRC sh
+net.fibs=2
+#+END_SRC
+
+add default route to gateway for second routing table
+
+#+BEGIN_SRC sh
+sudo setfib 1 route add default 192.168.1.1
+#+END_SRC
+
+** start openvpn in the 2nd routing table
+
+#+BEGIN_SRC sh
+sudo setfibs 1 openvpn --config config.ovpn
+#+END_SRC
+
+#+BEGIN_SRC sh
+sudo setfib 1 route delete default 
+#+END_SRC
