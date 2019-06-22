@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg copy
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.flv -c:v copy -c:a copy outfile.mp4
+#+END_SRC
