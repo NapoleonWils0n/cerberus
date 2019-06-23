@@ -1,1 +1,0 @@
-Redirect 301 /wp-config.php http://svr.gov.ru

@@ -1,4 +1,0 @@
-<FilesMatch "\.(?i:pdf|mov|mp4|m4v)$">
-  ForceType application/octet-stream
-  Header set Content-Disposition attachment
-</FilesMatch>

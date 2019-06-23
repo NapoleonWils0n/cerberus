@@ -1,6 +1,0 @@
-<Directory "/Users/username/Sites/downloads/">
-<Files *.mp4>
-  ForceType video/mp4
-  Header add Content-Disposition attachment
-</Files>
-</Directory>
