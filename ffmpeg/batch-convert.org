@@ -1,0 +1,22 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+*  batch convert videos with ffmpeg
+
+#+BEGIN_SRC sh
+FILETYPE=*.flv
+EXTENSION=.flv
+NEWEXTENSION=.mov
+FORMAT=mov
+#+END_SRC
+
+put double quotes around the sed command, so we can use bash variables
+
+#+BEGIN_SRC sh
+for file in $FILETYPE
+do ffmpeg -i "$file" -vcodec copy -acodec copy -f $FORMAT "`echo $file |sed "s/$EXTENSION$/$NEWEXTENSION/"`"
+done
+#+END_SRC
+
+	

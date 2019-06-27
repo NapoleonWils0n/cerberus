@@ -1,0 +1,12 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* files match force download
+
+#+BEGIN_SRC sh
+<FilesMatch "\.(?i:pdf|mov|mp4|m4v)$">
+  ForceType application/octet-stream
+  Header set Content-Disposition attachment
+</FilesMatch>
+#+END_SRC

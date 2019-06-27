@@ -1,0 +1,19 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Force download on amazon s3 instead of opening in Browser
+
+use s3hub
+control click on file and select headers
+add custom type and paste this in
+
+#+BEGIN_SRC sh
+Name:				 Value:
+
+Content-Disposition  attachment
+#+END_SRC
+
++ set permissions
+
+read world

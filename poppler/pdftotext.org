@@ -1,0 +1,23 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pdftotext install
+
+install poppler-utils on unix
+
+#+BEGIN_SRC sh
+pkg install poppler-utils
+#+END_SRC
+
+install poppler-utils on mac
+
+#+BEGIN_SRC sh
+brew install poppler
+#+END_SRC
+
+** convert pdf to text
+
+#+BEGIN_SRC sh
+pdftotext infile.pdf outfile.txt
+#+END_SRC

@@ -1,0 +1,14 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Apache rewrite to Amazon S3
+
+#+BEGIN_SRC sh
+<Directory "/Users/username/Sites/website/">
+<IfModule mod_rewrite.c>
+    RewriteEngine ON
+    RewriteRule ^(.*) http://somebucket.s3.amazonaws.com/website/$1
+</IfModule> 
+</Directory>
+#+END_SRC

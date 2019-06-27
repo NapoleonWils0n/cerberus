@@ -1,0 +1,14 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Apache force download in directory
+
+#+BEGIN_SRC sh
+<Directory "/Users/username/Sites/downloads/">
+<Files *.mp4>
+  ForceType video/mp4
+  Header add Content-Disposition attachment
+</Files>
+</Directory>
+#+END_SRC

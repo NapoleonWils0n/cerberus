@@ -1,0 +1,11 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* rewrite www
+
+#+BEGIN_SRC sh
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^your-site.com [NC]
+RewriteRule ^(.*)$ http://www.your-site.com/$1 [L,R=301]
+#+END_SRC
