@@ -1,0 +1,67 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Closed captions
+
+Extracting, adding and deleting closed captions from videos
+
+** ffmpeg closed captions
+
+*** convert scc closed captions to srt
+
+convert scc closed captions to srt subtitles,
+and remove text formatting and font tags
+for youtube
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.scc -c:s text outfile.srt
+#+END_SRC
+
+*** ffmpeg add subtitles to video
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 \
+-f srt -i infile.srt \
+-c:a copy -c:v copy -c:s \
+mov_text -metadata:s:s:0 \
+language=eng \
+-movflags +faststart \
+outfile.mp4
+#+END_SRC
+
+*** remove close captions
+
+remove close captions from video without re encode
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 \
+-c copy \
+-bsf:v "filter_units=remove_type=6" \
+-movflags +faststart \
+outfile.mp4
+#+END_SRC
+
+** ccextractor
+
+Closed caption extractor for MPEG and H264 files
+
+Extract closed captions from video and save as a srt file
+
+#+BEGIN_SRC sh
+ccextractor infile.mp4
+#+END_SRC
+
+*** Linux ccextractor install 
+
+#+BEGIN_SRC sh
+sudo apt install ccextractor
+#+END_SRC
+
+*** Freebsd ccextractor install
+
+Freebsd ccextractor install
+
+#+BEGIN_SRC sh
+pkg install ccextractor
+#+END_SRC
