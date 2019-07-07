@@ -46,7 +46,7 @@ You can also edit the /etc/rc.conf as root to enable unbound
 vi /etc/rc.conf
 #+END_SRC
 
-which should look like the following
+which should look like the following for the local_unbound pkg
 
 #+BEGIN_SRC sh
 local_unbound_enable="YES"
@@ -175,6 +175,8 @@ server:
 * dnscrypt-proxy2
 
 ** dnscrypt-proxy2 install
+
+dnscrypt-proxy2 and dns over https 
 
 install dnscrypt-proxy as root
 
