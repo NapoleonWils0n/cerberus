@@ -34,10 +34,15 @@ sysrc local_unbound_enable="YES"
 
 ** unbound config
 
-/etc/unbound/conf.d/custom.conf
-
-dnscrypt needs do-not-query-localhost: no
+dnscrypt needs - do-not-query-localhost: no
 in the custom.conf file in order to work
+
+Create a custom.conf configuration file for unbound
+switch to root and then create custom.conf
+
+#+BEGIN_SRC sh
+vi /etc/unbound/conf.d/custom.conf
+#+END_SRC
 
 #+BEGIN_SRC sh
 server:
