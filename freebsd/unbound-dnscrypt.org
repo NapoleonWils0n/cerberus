@@ -134,6 +134,8 @@ dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
 
 *** resolv.conf
 
+Stop unbound dns server and take down interfaces before editing resolv.conf
+
 #+BEGIN_SRC sh
 doas service local_unbound stop
 doas ifconfig ue0 down
@@ -149,6 +151,24 @@ edit /etc/resolv.conf
 search localdomain
 nameserver 127.0.0.1
 options edns0
+#+END_SRC
+
+avoid overwriting /etc/resolv.conf
+
+edit /etc/dhclient-enter-hooks as root
+
+#+BEGIN_SRC sh
+vi /etc/dhclient-enter-hooks
+#+END_SRC
+
+add the following to /etc/dhclient-enter-hooks
+
+#+BEGIN_SRC sh
+add_new_resolv_conf() {
+  # We don't want /etc/resolv.conf changed
+  # So this is an empty function
+  return 0
+}
 #+END_SRC
 
 ** dnscrypt check
