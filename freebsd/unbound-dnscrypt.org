@@ -196,6 +196,24 @@ You may also want to avoid probing resolvers that are only accessible using IPv6
 ipv6_servers = false
 #+END_SRC
 
++ choose a server
+
+#+BEGIN_SRC sh
+server_names = ['google']
+#+END_SRC
+
++ disable dnscrypt_servers
+
+#+BEGIN_SRC sh
+dnscrypt_servers = false
+#+END_SRC
+
++ require_dnssec
+  
+#+BEGIN_SRC sh
+require_dnssec = true
+#+END_SRC
+
 + dnscrypt-proxy.toml file
   
 The complete dnscrypt-proxy.toml file should look like this
