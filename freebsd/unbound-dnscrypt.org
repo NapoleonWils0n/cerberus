@@ -35,6 +35,7 @@ sysrc local_unbound_enable="YES"
 ** ca_root_nss install
 
 Install the ca_root_nss package which contains the trusted internet root CA servers
+This is used by unbound to create the root.key file which is auto trusted
 
 #+BEGIN_SRC sh
 pkg install ca_root_nss
@@ -175,15 +176,21 @@ In this scenario, dnscrypt-proxy can immediately respond "there are no IPv6 addr
 
 In order to do so, change:
 
+#+BEGIN_SRC sh
 block_ipv6 = false
+#+END_SRC
 
 to:
 
+#+BEGIN_SRC sh
 block_ipv6 = true
+#+END_SRC
 
 You may also want to avoid probing resolvers that are only accessible using IPv6:
 
+#+BEGIN_SRC sh
 ipv6_servers = false
+#+END_SRC
 
 *** rc.conf
 
@@ -228,7 +235,6 @@ options edns0
 #+END_SRC
 
 avoid overwriting /etc/resolv.conf
-
 edit /etc/dhclient-enter-hooks as root
 
 #+BEGIN_SRC sh
