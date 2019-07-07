@@ -69,7 +69,6 @@ server:
 #	control-enable: no
 #+END_SRC
 
-
 *** unbound forward.conf
 
 edit the unbound forward.conf file as root
@@ -236,6 +235,12 @@ add_new_resolv_conf() {
   # So this is an empty function
   return 0
 }
+#+END_SRC
+
+protect your /etc/resolv.conf from being modified by setting the immutable (write-protection) attribute as root
+
+#+BEGIN_SRC sh
+chattr +i /etc/resolv.conf
 #+END_SRC
 
 ** dnscrypt check
