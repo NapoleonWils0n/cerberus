@@ -37,6 +37,8 @@ sysrc local_unbound_enable="YES"
 dnscrypt needs - do-not-query-localhost: no
 in the custom.conf file in order to work
 
+*** unbound custom.conf
+
 Create a custom.conf configuration file for unbound
 switch to root and then create custom.conf
 
@@ -65,11 +67,19 @@ server:
         do-not-query-localhost: no
 # remote-control:
 #	control-enable: no
-
 #+END_SRC
 
 
-/etc/unbound/forward.conf
+*** unbound forward.conf
+
+edit the unbound forward.conf file as root
+
+#+BEGIN_SRC sh
+vi /etc/unbound/forward.conf
+#+END_SRC
+
+replace the contents of the file with the code below
+this will use dnscrypt as the forwarder
 
 #+BEGIN_SRC sh
 forward-zone:
