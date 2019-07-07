@@ -87,6 +87,63 @@ forward-zone:
 	forward-addr: 127.0.0.1@5353
 #+END_SRC
 
+*** unbound adblocking
+
+Convert the Yoyo.org anti-ad server listing
+into an unbound dns spoof redirection list.
+
+#+BEGIN_SRC sh
+wget -q -O- --header\="Accept-Encoding: gzip" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext' | \
+gunzip | \
+awk '/^127\./{
+        print "local-zone: \"" $2 "\" redirect"
+        print "local-data: \"" $2 " A 127.0.0.1\""
+}' > unbound_ad_servers
+#+END_SRC
+
+Copy unbound_ad_servers file to /etc/unbound as root
+
+#+BEGIN_SRC sh
+cp unbound_ad_servers /etc/unbound
+#+END_SRC
+
+chown the unbound_ad_servers file as root
+
+#+BEGIN_SRC sh
+chown root:unbound /etc/unbound/unbound_ad_servers
+#+END_SRC
+
+edit the unbound custom.conf file as root
+
+#+BEGIN_SRC sh
+vi /etc/unbound/conf.d/custom.conf
+#+END_SRC
+
+add an include statement to add the unbound_ad_servers to the config file
+
+#+BEGIN_SRC sh
+server:
+	include: "/var/unbound/unbound_ad_servers"
+# include: "/etc/unbound/unbound_outgoing_interface"
+	verbosity: 1
+	access-control: 0.0.0.0/0 refuse
+	access-control: 127.0.0.0/8 allow
+	access-control: ::0/0 refuse
+	access-control: ::1 allow
+	access-control: ::ffff:127.0.0.1 allow
+	
+	# enable to not answer id.server and hostname.bind queries.
+	hide-identity: yes
+	hide-version: yes
+	harden-glue: yes
+	harden-dnssec-stripped: yes
+	
+        # dont query localhost needed for dnscrypt-proxy
+        do-not-query-localhost: no
+# remote-control:
+#	control-enable: no
+#+END_SRC
+
 * dnscrypt-proxy2
 
 ** dnscrypt-proxy2 install
