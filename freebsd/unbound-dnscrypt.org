@@ -28,8 +28,28 @@ pkg install unbound
 enable unbound to start at boot 
 if you enable unbound during the freebsd the service is called local_unbound
 
+We can use the sysrc command to enable the service in /etc/rc.conf
+
 #+BEGIN_SRC sh
 sysrc local_unbound_enable="YES"
+#+END_SRC
+
+or if you install unbound pkg or port the service with be called unbound
+
+#+BEGIN_SRC sh
+sysrc unbound_enable="YES"
+#+END_SRC
+
+You can also edit the /etc/rc.conf as root to enable unbound
+
+#+BEGIN_SRC sh
+vi /etc/rc.conf
+#+END_SRC
+
+which should look like the following
+
+#+BEGIN_SRC sh
+local_unbound_enable="YES"
 #+END_SRC
 
 ** ca_root_nss install
