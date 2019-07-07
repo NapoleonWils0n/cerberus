@@ -32,6 +32,14 @@ if you enable unbound during the freebsd the service is called local_unbound
 sysrc local_unbound_enable="YES"
 #+END_SRC
 
+** ca_root_nss install
+
+Install the ca_root_nss package which contains the trusted internet root CA servers
+
+#+BEGIN_SRC sh
+pkg install ca_root_nss
+#+END_SRC
+
 ** unbound config
 
 dnscrypt needs - do-not-query-localhost: no
