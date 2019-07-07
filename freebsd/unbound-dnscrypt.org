@@ -166,7 +166,11 @@ pkg install dnscrypt-proxy2
 
 *** dnscrypt-proxy.toml
 
-/usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
+edit the dnscrypt-proxy.toml as root
+
+#+BEGIN_SRC sh
+vi /usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
+#+END_SRC
 
 + iPv6 blocking
 
