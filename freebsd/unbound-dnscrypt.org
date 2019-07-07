@@ -197,6 +197,8 @@ ipv6_servers = false
 #+END_SRC
 
 + dnscrypt-proxy.toml file
+  
+The complete dnscrypt-proxy.toml file should look like this
 
 #+BEGIN_SRC sh
 server_names = ['google']
@@ -312,9 +314,12 @@ chattr +i /etc/resolv.conf
 
 ** dnscrypt check
 
-dnscrypt-proxy -resolve example.com
+check dnscrypt-proxy can resolve a domain
 
+#+BEGIN_SRC sh
+dnscrypt-proxy -resolve google.com
+#+END_SRC
 
-test dnssec
++ website to test dnsec is working
 
-https://dnssec.vs.uni-due.de/
+[[https://dnssec.vs.uni-due.de/][dnsec test]]
