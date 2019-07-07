@@ -1,0 +1,19 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pocketsphinx
+
+pocket transcribe audio to text
+
++ convert audio file to mono 16000 bit rate wav file
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp3 -acodec pcm_s16le -ac 1 -ar 16000 outfile.wav
+#+END_SRC
+
++ use pocketsphinx_continous with the converted wav file and redirect the output to a text file
+
+#+BEGIN_SRC sh
+pocketsphinx_continuous -infile outfile.wav > result.txt
+#+END_SRC

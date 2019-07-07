@@ -1,0 +1,11 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* pkg show package message
+
+show pkg package message
+
+#+BEGIN_SRC sh
+pkg info -D dnsrypt-proxy
+#+END_SRC
