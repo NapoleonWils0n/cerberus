@@ -1,0 +1,114 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Audacity Blue Snowball Mic
+
+Best Audacity settings for Blue Snowball Microphone.
+
+** Record 5+ seconds of silence
+
+First of all: Before you begin to speak or sing, you should always make sure that you record at least 5+ seconds of silence with your Blue Snowball microphone. This “silence” will allow you to generate a profile of the background noise around you.
+
+** Noise reduction
+
+Because it is likely that microphone picked up some background noises, we will need to remove these noises by using the Noise Reduction effect:
+
++ Highlight the silence at the beginning of your recording.
+
++ Go to the Effect menu at the top of Audacity.
+
++ In the Noise Reduction screen, select the Noise Removal / Noise Reduction option.
+
++ Click on Get Noise Profile.
+
++ Highlight your entire track. You can do this by double-clicking the track.
+
++ Go back to the Effect menu and click on the Noise Removal / Noise Reduction option again.
+
++ In the Noise Reduction screen, click on OK.
+
++ Finally, you can delete the silence at the beginning of your track.
+
+** Normalize
+
+After removing our background noises, we will use the Normalize effect:
+
++ Highlight your track.
+
++ Select the Normalize option in the Effect menu.
+
++ In the Normalize screen, set the dB value to -1.0 and make sure that the checkbox beside Remove DC offset is ticked.
+
++ Leave the checkbox beside Normalize stereo channels independently unticked.
+
++ Press OK.
+
+** Compressor
+
+Once you’ve normalized the track, you will need to use the Compressor effect:
+
++ As always, make sure that your Audacity track is completely highlighted.
+
++ Select the Compressor option in the Effect menu.
+
++ Do not change any of Audacity’s default Compressor settings unless you know what you are doing.
+
++ Press OK.
+
+** Equalization
+
+Now, let’s add some bass boost and treble boost to our recording:
+
++ Highlight your track.
+
++ Select the Equalization option in the Effect menu.
+
++ In the Select Curve dropdown menu at the bottom, choose Bass Boost.
+
++ Press OK.
+
++ Make sure that your Audacity track is still highlighted.
+
++ Select the Equalization option in the Effect menu again.
+
++ This time, in the Select Curve dropdown menu, choose Treble Boost.
+
++ Finally, press OK.
+
+** Normalize again
+
+After applying the bass boost and treble boost, you will need to Normalize your track again. 
+To do this, simply follow the exact same directions that were listed in Step 3.
+
++ Highlight your track.
+
++ Select the Normalize option in the Effect menu.
+
++ In the Normalize screen, set the dB value to -1.0 and make sure that the checkbox beside Remove DC offset is ticked.
+
++ Leave the checkbox beside Normalize stereo channels independently unticked.
+
++ Press OK.
+
+** Limiter
+
+Finally, you can use Audacity’s Limiter effect to reduce limits that exceeds a certain threshold:
+
++ Highlight your track.
+
++ Select the Limiter option in the Effect menu. On some versions of Audacity, this effect may be called Hard Limit.
+
++ Choose Hard Limit in the Type dropdown menu at the top.
+
++ Set Input Gain (dB) mono / Left to 0.00
+
++ Likewise, we set Input Gain (dB) Right channel to 0.00 as well.
+
++ Limit to (dB) should be set to -4.00
+
++ Hold (ms) should be set to 10.00
+
++ The dropdown menu for Apply Make-up Gain should be set to No.
+
++ Press OK.
