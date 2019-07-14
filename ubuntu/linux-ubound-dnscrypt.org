@@ -1,0 +1,317 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* unbound and dnscrypt linux
+
+install unbound dns server
+
+#+BEGIN_SRC sh
+sudo apt install unbound unbound-anchor
+#+END_SRC
+
+** unbound config
+
+dnscrypt needs - do-not-query-localhost: no
+in the custom.conf file in order to work
+
+*** unbound custom.conf
+
+Create a custom.conf configuration file for unbound
+switch to root and then create custom.conf
+
+#+BEGIN_SRC sh
+vi /etc/unbound/conf.d/custom.conf
+#+END_SRC
+
+#+BEGIN_SRC sh
+server:
+	include: "/var/unbound/unbound_ad_servers"
+# include: "/etc/unbound/unbound_outgoing_interface"
+	verbosity: 1
+	access-control: 0.0.0.0/0 refuse
+	access-control: 127.0.0.0/8 allow
+	access-control: ::0/0 refuse
+	access-control: ::1 allow
+	access-control: ::ffff:127.0.0.1 allow
+	
+	# enable to not answer id.server and hostname.bind queries.
+	hide-identity: yes
+	hide-version: yes
+	harden-glue: yes
+	harden-dnssec-stripped: yes
+	
+        # dont query localhost needed for dnscrypt-proxy
+        do-not-query-localhost: no
+
+        forward-zone:
+        	name: "."
+        	forward-addr: 127.0.0.1@5353
+# remote-control:
+#	control-enable: no
+#+END_SRC
+
+*** unbound adblocking
+
+Convert the Yoyo.org anti-ad server listing
+into an unbound dns spoof redirection list.
+
+#+BEGIN_SRC sh
+wget -q -O- --header\="Accept-Encoding: gzip" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext' | \
+gunzip | \
+awk '/^127\./{
+        print "local-zone: \"" $2 "\" redirect"
+        print "local-data: \"" $2 " A 127.0.0.1\""
+}' > unbound_ad_servers
+#+END_SRC
+
+Copy unbound_ad_servers file to /etc/unbound as root
+
+#+BEGIN_SRC sh
+cp unbound_ad_servers /etc/unbound
+#+END_SRC
+
+chown the unbound_ad_servers file as root
+
+#+BEGIN_SRC sh
+chown root:root /etc/unbound/unbound_ad_servers
+#+END_SRC
+
+edit the unbound custom.conf file as root
+
+#+BEGIN_SRC sh
+vi /etc/unbound/conf.d/custom.conf
+#+END_SRC
+
+add an include statement to add the unbound_ad_servers to the config file
+
+#+BEGIN_SRC sh
+server:
+	include: "/var/unbound/unbound_ad_servers"
+# include: "/etc/unbound/unbound_outgoing_interface"
+	verbosity: 1
+	access-control: 0.0.0.0/0 refuse
+	access-control: 127.0.0.0/8 allow
+	access-control: ::0/0 refuse
+	access-control: ::1 allow
+	access-control: ::ffff:127.0.0.1 allow
+	
+	# enable to not answer id.server and hostname.bind queries.
+	hide-identity: yes
+	hide-version: yes
+	harden-glue: yes
+	harden-dnssec-stripped: yes
+	
+        # dont query localhost needed for dnscrypt-proxy
+        do-not-query-localhost: no
+# remote-control:
+#	control-enable: no
+#+END_SRC
+
+*** unbound systemd
+
+#+BEGIN_SRC sh
+sudo systemctl enable unbound.service
+#+END_SRC
+
+* dnscrypt-proxy2
+
+** dnscrypt-proxy2 install
+
+dnscrypt-proxy2 and dns over https 
+
+*** ubuntu 18.10 and later
+
+install dnscrypt-proxy as root
+
+#+BEGIN_SRC sh
+sudo apt install dnscrypt-proxy
+#+END_SRC
+
+*** ubuntu 18.04
+
+install dnscrypt-proxy as root
+
+#+BEGIN_SRC sh
+sudo add-apt-repository ppa:shevchuk/dnscrypt-proxy && \
+sudo apt update && \
+sudo apt install dnscrypt-proxy
+#+END_SRC
+
+** dnscrypt config
+
+*** dnscrypt-proxy.toml
+
+edit the dnscrypt-proxy.toml as root
+
+#+BEGIN_SRC sh
+sudo vim /etc/dnscrypt-proxy/dnscrypt-proxy.toml
+#+END_SRC
+
++ iPv6 blocking
+
+If you don't have IPv6 connectivity, most applications will keep sending DNS queries to resolve IPv6 IP addresses no matter what.
+
+In this scenario, dnscrypt-proxy can immediately respond "there are no IPv6 addresses" instead of sending queries to upstream DNS servers, and waiting for useless responses.
+
+In order to do so, change:
+
+#+BEGIN_SRC sh
+block_ipv6 = false
+#+END_SRC
+
+to:
+
+#+BEGIN_SRC sh
+block_ipv6 = true
+#+END_SRC
+
+You may also want to avoid probing resolvers that are only accessible using IPv6:
+
+#+BEGIN_SRC sh
+ipv6_servers = false
+#+END_SRC
+
++ choose a server
+
+#+BEGIN_SRC sh
+server_names = ['google']
+#+END_SRC
+
++ disable dnscrypt_servers
+
+#+BEGIN_SRC sh
+dnscrypt_servers = false
+#+END_SRC
+
++ require_dnssec
+  
+#+BEGIN_SRC sh
+require_dnssec = true
+#+END_SRC
+
++ dnscrypt-proxy.toml file
+  
+The complete dnscrypt-proxy.toml file should look like this
+
+#+BEGIN_SRC sh
+server_names = ['google']
+listen_addresses = []
+max_clients = 250
+ipv4_servers = true
+ipv6_servers = false
+dnscrypt_servers = false
+doh_servers = true
+require_dnssec = true
+require_nolog = true
+require_nofilter = true
+force_tcp = false
+timeout = 2500
+keepalive = 30
+cert_refresh_delay = 240
+fallback_resolver = '9.9.9.9:53'
+ignore_system_dns = false
+netprobe_timeout = 60
+log_files_max_size = 10
+log_files_max_age = 7
+log_files_max_backups = 1
+block_ipv6 = true
+cache = true
+cache_size = 512
+cache_min_ttl = 600
+cache_max_ttl = 86400
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+[query_log]
+  format = 'tsv'
+[nx_log]
+  format = 'tsv'
+[blacklist]
+[ip_blacklist]
+[whitelist]
+[schedules]
+[sources]
+  [sources.'public-resolvers']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v2/public-resolvers.md']
+  cache_file = 'public-resolvers.md'
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  refresh_delay = 72
+  prefix = ''
+[static]
+
+#+END_SRC
+
+*** dnscrypt-proxy systemd
+
+override dnscrypt ports set by systemd
+
+copy dnscrypt-proxy.service and dnscrypt-proxy.socket to /etc/systemd/system
+
+#+BEGIN_SRC sh
+sudo cp /lib/systemd/system/dnscrypt-proxy.{service,socket} /etc/systemd/system
+#+END_SRC
+
+edit /etc/systemd/system/dnscrypt-proxy.socket and change the ports used
+
+#+BEGIN_SRC sh
+sudo /etc/systemd/system/dnscrypt-proxy.socket
+#+END_SRC
+
+change the ports to 127.0.0.1:5353 as shown below
+
+#+BEGIN_SRC sh
+[Unit]
+Description=DNSCrypt-proxy socket
+Documentation=https://github.com/jedisct1/dnscrypt-proxy/wiki
+Before=nss-lookup.target
+Wants=nss-lookup.target
+
+[Socket]
+ListenStream=127.0.0.1:5353
+ListenDatagram=127.0.0.1:5353
+NoDelay=true
+DeferAcceptSec=1
+
+[Install]
+WantedBy=sockets.target
+#+END_SRC
+
+*** resolv.conf
+
+edit /etc/resolv.conf
+
+#+BEGIN_SRC sh
+sudo vim /etc/resolv.conf
+#+END_SRC
+
+#+BEGIN_SRC sh
+# Generated by resolvconf
+search localdomain
+nameserver 127.0.0.1
+options edns0
+#+END_SRC
+
+protect your /etc/resolv.conf from being modified by setting the immutable (write-protection) attribute as root
+
+#+BEGIN_SRC sh
+chattr +i /etc/resolv.conf
+#+END_SRC
+
+*** restart services
+
+#+BEGIN_SRC sh
+sudo systemctl restart unbound.service
+sudo systemctl restart dnscrypt.service
+#+END_SRC
+
+** dnscrypt check
+
+check dnscrypt-proxy can resolve a domain
+
+#+BEGIN_SRC sh
+dnscrypt-proxy -resolve google.com
+#+END_SRC
+
++ website to test dnsec is working
+
+[[https://dnssec.vs.uni-due.de/][dnsec test]]
