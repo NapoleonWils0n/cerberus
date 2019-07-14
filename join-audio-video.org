@@ -1,0 +1,138 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg join clips
+
++ combine audio file and video into new file
+
+#+BEGIN_SRC sh
+ffmpeg \
+-i audio.wav \
+-i video.mov \
+-c:a aac -c:v copy -map 0:0 -map 1:0 \
+-movflags +faststart -f mp4 outfile.mp4
+#+END_SRC
+
++ trim clips and fade audio
+
+#+BEGIN_SRC sh
+printf "%s\n" "$duration" | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 -1}'
+#+END_SRC
+
+#+BEGIN_SRC sh
+ffmpeg \
+-ss 00:00:05 -i audio.wav -t 00:01:05 \
+-ss 00:00:05 -i video.mov -t 00:01:05 \
+-filter_complex \
+"   [0:a] afade=t=in:st=0:d=1; \
+    [0:a] afade=t=out:st='$duration':d=1 
+" \
+-c:a aac -c:v copy -map 0:0 -map 1:0 \
+-movflags +faststart outfile.mp4
+#+END_SRC
+
+* script fade
+
+join audio and video and fade in and out
+
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# ffmpeg join audio and video
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -ss 00:00:00 -i audio.wav -t 00:00:00 -i video.mp4")
+
+# video file destination
+videofile="$HOME/Desktop/joined-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# variables
+ss="$1"
+stime="$2"
+iaudio="$3"
+audio="$4"
+t="$5"
+totime="$6"
+ivideo="$7"
+video="$8"
+
+# check arguments passed to script
+if [ $# -eq 8 ]; then
+    {
+    [ "$ss" = '-ss' ] && \
+    printf "%s\n" "$stime" | grep -Eo '^[0-9]{2}:[0-9]{2}:[0-9]{2}$' && \
+    [ "$iaudio" = '-i' ] && \
+    [ -f "$audio" ] && \
+    [ "$t" = '-t' ] && \
+    printf "%s\n" "$totime" | grep -Eo '^[0-9]{2}:[0-9]{2}:[0-9]{2}$' && \
+    [ "$ivideo" = '-i' ] && \
+    [ -f "$video" ]
+    } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# duration minus one second for fade out
+duration=$(printf "%s\n" "$totime" | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 -1}')
+
+# ffmpeg join audio and video
+ffmpeg \
+"$ss" "$stime" "$iaudio" "$audio" "$t" "$totime" \
+"$ss" "$stime" "$ivideo" "$video" "$t" "$totime" \
+-filter_complex \
+"   [0:a] afade=t=in:st=0:d=1; \
+    [0:a] afade=t=out:st='$duration':d=1 
+" \
+-c:a aac -c:v copy -map 0:0 -map 1:0 \
+-movflags +faststart "$videofile"
+#+END_SRC
+
+* script nofade
+
+join audio and video without fade
+
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# ffmpeg join audio and video
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -ss 00:00:00 -i audio.wav -t 00:00:00 -i video.mp4")
+
+# video file destination
+videofile="$HOME/Desktop/joined-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# variables
+ss="$1"
+stime="$2"
+iaudio="$3"
+audio="$4"
+t="$5"
+totime="$6"
+ivideo="$7"
+video="$8"
+
+# check arguments passed to script
+if [ $# -eq 8 ]; then
+    {
+    [ "$ss" = '-ss' ] && \
+    printf "%s\n" "$stime" | grep -Eo '^[0-9]{2}:[0-9]{2}:[0-9]{2}$' && \
+    [ "$iaudio" = '-i' ] && \
+    [ -f "$audio" ] && \
+    [ "$t" = '-t' ] && \
+    printf "%s\n" "$totime" | grep -Eo '^[0-9]{2}:[0-9]{2}:[0-9]{2}$' && \
+    [ "$ivideo" = '-i' ] && \
+    [ -f "$video" ]
+    } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# ffmpeg join audio and video
+ffmpeg \
+"$ss" "$stime" "$iaudio" "$audio" "$t" "$totime" \
+"$ss" "$stime" "$ivideo" "$video" "$t" "$totime" \
+-c:a aac -c:v copy -map 0:0 -map 1:0 \
+-movflags +faststart "$videofile"
+#+END_SRC
