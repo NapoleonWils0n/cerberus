@@ -1,0 +1,33 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* youtube_dl download subtitles
+
+youtube_dl download subtitles from video
+
+#+BEGIN_SRC sh
+youtube-dl --write-sub --sub-lang en --skip-download 'https://youtu.be/VYuQaSbZ2Ws'
+#+END_SRC
+
+** convert subtitles to srt format
+
+convert the vtt subtitles from youtube to srt format
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.vtt -c:s text outfile.srt
+#+END_SRC
+
+*** ffmpeg add subtitles to video
+
+combine video and subtitles into new vide file
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 \
+-f srt -i infile.srt \
+-c:a copy -c:v copy -c:s \
+mov_text -metadata:s:s:0 \
+language=eng \
+-movflags +faststart \
+outfile.mp4
+#+END_SRC
