@@ -1,0 +1,17 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* sed remove timestamp from subtitles
+
+remove timestamp from subtitles file
+
+#+BEGIN_SRC sh
+sed -i.bak 's/^\([0-9:]\{2\}\)*\([0-9,]\{3\}\)*[[:space:]]-->[[:space:]]\([0-9:]\{2\}\)*\([0-9,]\{3\}\)*//; /^[0-9]*$/d; s/^[ \t]*//' subs.srt
+#+END_SRC
+
+
+
+
+
+
