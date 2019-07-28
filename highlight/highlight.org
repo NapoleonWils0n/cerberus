@@ -1,0 +1,16 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+* highlight
+
+colour code text
+
+#+BEGIN_SRC sh
+brew install hightlight
+#+END_SRC
+
+highlight text and copy to clipboard for keynote
+
+#+BEGIN_SRC sh
+highlight -O rtf myfile.py | pbcopy 
+#+END_SRC
