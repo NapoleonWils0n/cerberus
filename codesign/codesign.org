@@ -1,0 +1,42 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+
+Create your own code signing cert:
+
+In Keychain Access, Keychain Access > Certificate Assistant > Create a certificate. This launches the Certificate Assistant:
+
+Name: Enter some arbitrary string here that you can remember. Avoid spaces otherwise you'll need to escape the cert's name when using codesign from the command line.
+
+Identity type: Self Signed Root
+
+Certificate Type: Code Signing
+
+Check the box "Let me override defaults", this is quite important
+
+Serial number: 1 (OK as long as the cert name/serial no. combination is unique)
+
+Validity Period: 3650 (gives you 10 years)
+
+Email, Name, etc. fill out as you wish.
+
+Key pair info: set to RSA, 2048 bits. Does not really matter IMHO.
+
+From "Key usage extension" up to "Subject Alternate Name Extension": accept the defaults.
+
+Location: login keychain.
+
+Once it is created, set to "Always trust" in the Login keychain: right-click on the certificate, choose "Get Info", and in the "Trust" section, set "When using this certificate" to "Always trust".
+
+Re-signing an app: codesign -f --deep -s <certname> /path/to/app
+
+Verify that it worked: codesign -dvvvv /path/to/app
+
+Enjoy!
+
+#+BEGIN_SRC sh
+$ sudo codesign --force --deep --sign - /Applications/qbittorrent.app
+$ codesign -dvvvv /Applications/qbittorrent.app
+$ codesign --verify -vv  /Applications/qbittorrent.app
+#+END_SRC
