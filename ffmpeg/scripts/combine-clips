@@ -28,7 +28,6 @@ record () {
     -c:v libx264 -preset slow \
     -profile:v high \
     -crf 18 -coder 1 \
-    -maxrate 8M -bufsize 8M \
     -pix_fmt yuv420p \
     -g 2 -bf 2 \
     -map "[fv]" -map "[fa]" \
