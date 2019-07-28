@@ -23,11 +23,11 @@ record () {
     " [1:a] afade=t=in:st=0:d=1,afade=t=out:st='$vid_offset':d=1[fa]; \
       [0:v] fade=t=out:st='$vid_offset':d=1[fv]
     " \
-    -c:a aac -ac 2 \
-    -ar 48000 -b:a 384k -strict -2 \
-    -c:v libx264 -preset slow \
+    -c:a aac \
+    -ar 48000 \
+    -c:v libx264 -preset fast \
     -profile:v high \
-    -crf 18 -coder 1 \
+    -crf 23 -coder 1 \
     -pix_fmt yuv420p \
     -g 2 -bf 2 \
     -map "[fv]" -map "[fa]" \
