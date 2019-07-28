@@ -1,0 +1,11 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* convert wavto m4a
+
+#+BEGIN_SRC sh
+find . -type f -name "**.wav" -exec sh -c 'ffmpeg -i "$0" \
+-map 0:0 -c:a aac -b:a 320k "${0%.*}.m4a"' "{}" \;
+#+END_SRC
+
