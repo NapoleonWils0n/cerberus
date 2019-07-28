@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# combine video and audio clip
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -v video.(mp4|mov|mkv) -a audio.(wav|m4a)")
+
+# video file destination
+videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# ffmpeg record function
+record () {
+    printf "%s\n" "+ Getting video duration" && \
+    video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$video" | cut -d\. -f1)
+    vid_offset=$(printf "%s\n" "${video_dur}-1" | bc -l)
+    printf "%s\n" "+ Combining video and audio" && \
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "$video" \
+    -i "$audio" \
+    -filter_complex \
+    " [1:a] afade=t=in:st=0:d=1,afade=t=out:st='$vid_offset':d=1[fa]; \
+      [0:v] fade=t=out:st='$vid_offset':d=1[fv]
+    " \
+    -c:a aac -ac 2 \
+    -ar 48000 -b:a 384k -strict -2 \
+    -c:v libx264 -preset slow \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -maxrate 8M -bufsize 8M \
+    -pix_fmt yuv420p \
+    -g 2 -bf 2 \
+    -map "[fv]" -map "[fa]" \
+    -movflags +faststart \
+    -f mp4 \
+    "$videofile"
+}
+
+# check arguments
+if [[ $# -eq 4 ]]; then
+   # group commands
+   {
+   [ "$1" = '-v' ] && \
+   [ -f "$2" ] && \
+   printf "%s\n" "$2" | grep -Eo '.(mov|mp4|mkv)$' 1>/dev/null && \
+   [ "$3" = '-a' ] && \
+   [ -f "$4" ] && \
+   printf "%s\n" "$4" | grep -Eo '.(wav|m4a)$' 1>/dev/null
+   } || { printf "%s\n" "$script_usage" && exit; }
+   # run record function to combine video and audio into a video file
+   # set variables
+   video="$2"
+   audio="$4"
+   record "$video" "$audio"
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
