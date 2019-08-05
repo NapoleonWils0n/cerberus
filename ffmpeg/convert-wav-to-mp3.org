@@ -5,7 +5,7 @@
 * convert wavto mp3
 
 #+BEGIN_SRC sh
-find . -type f -name "**.wav" -exec sh -c 'ffmpeg -i "$0" \
+find . -type f -name "*.wav" -exec sh -c 'ffmpeg -i "$0" \
 -map 0:0 -c:a libmp3lame -b:a 320k "${0%.*}.mp3"' "{}" \;
 #+END_SRC
 

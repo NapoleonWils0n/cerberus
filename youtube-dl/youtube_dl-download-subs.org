@@ -24,6 +24,13 @@ convert the vtt subtitles from youtube to srt format
 ffmpeg -i infile.vtt -c:s text outfile.srt
 #+END_SRC
 
+batch convert vtt subtitles to srt format
+
+#+BEGIN_SRC sh
+find . -type f -name "*.vtt" -exec sh -c 'ffmpeg -i "$0" \
+-c:s text "${0%.*}.srt"' "{}" \;
+#+END_SRC
+
 *** ffmpeg add subtitles to video
 
 combine video and subtitles into new vide file
