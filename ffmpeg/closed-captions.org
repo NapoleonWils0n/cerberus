@@ -8,7 +8,21 @@ Extracting, adding and deleting closed captions from videos
 
 ** ffmpeg closed captions
 
-*** convert scc closed captions to srt
+** youtube_dl download subtitles
+
+youtube_dl download subtitles from video
+
+#+BEGIN_SRC sh
+youtube-dl --write-sub --sub-lang en --skip-download 'https://youtu.be/VYuQaSbZ2Ws'
+#+END_SRC
+
+youtube-dl batch download subtitles from a text file with youtube urls
+
+#+BEGIN_SRC sh
+youtube-dl --write-sub --sub-lang en --skip-download -a links.txt
+#+END_SRC
+
+*** convert closed captions to srt
 
 convert scc closed captions to srt subtitles,
 and remove text formatting and font tags
@@ -16,6 +30,19 @@ for youtube
 
 #+BEGIN_SRC sh
 ffmpeg -i infile.scc -c:s text outfile.srt
+#+END_SRC
+
+convert the vtt subtitles from youtube to srt format
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.vtt -c:s text outfile.srt
+#+END_SRC
+
+batch convert vtt subtitles to srt format
+
+#+BEGIN_SRC sh
+find . -type f -name "*.vtt" -exec sh -c 'ffmpeg -i "$0" \
+-c:s text "${0%.*}.srt"' "{}" \;
 #+END_SRC
 
 *** ffmpeg add subtitles to video
