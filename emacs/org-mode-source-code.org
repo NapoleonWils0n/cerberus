@@ -1,0 +1,136 @@
+#+STARTUP: overview
+#+OPTIONS: num:nil author:nil
+
+* org mode source code
+
+org-mode src code blocks
+Type C-c C-c to execute code blocks
+
+** src blocks
+
+org mode source blocks
+
+*** table
+
+output results as a table
+
+#+BEGIN_SRC sh :results table
+ls ~/Desktop
+#+END_SRC
+
+#+RESULTS:
+| combine-clips |
+| fade-clip     |
+| script.org    |
+| tangle.txt    |
+| test.txt      |
+
+*** list
+
+output results as a list
+
+#+BEGIN_SRC sh :results list
+ls ~/Desktop
+#+END_SRC
+
+#+RESULTS:
+- ("combine-clips")
+- ("fade-clip")
+- ("script.org")
+- ("tangle.txt")
+- ("test.txt")
+
+*** dir
+
+the dir parameter sets the directory/folder for where a code block executes:
+
+#+BEGIN_SRC sh :dir ~/Desktop
+ls
+#+END_SRC
+
+#+RESULTS:
+| combine-clips |
+| fade-clip     |
+| script.org    |
+| tangle.txt    |
+| test.txt      |
+
+*** properties
+:PROPERTIES:
+:dir:      ~/Desktop
+:END:
+
+Parameters that should be the same for all source blocks in a section can be placed in a property drawer. Perhaps, you should just run through this on your own by following these steps:
+
+Create a header section in your org file
+- Type: C-c C-x p
+- For Property enter: dir
+- For Value enter: /etc
+- Jump to the :PROPERTIES: drawer, and hit TAB to see the contents, but it should look something like:
+
+#+BEGIN_SRC sh
+ls
+#+END_SRC
+
+#+RESULTS:
+| combine-clips |
+| fade-clip     |
+| script.org    |
+| tangle.txt    |
+| test.txt      |
+
+*** Language-Specific Default Values
+:PROPERTIES:
+:header-args:sh: :dir ~/Desktop
+:END:
+
+You can specify language-specific header arguments. Try the following:
+
+- Type: C-c C-x p
+- For Property enter: header-args:sh
+- For Value enter: :dir /etc
+- Type: C-c C-x p
+- For Property enter: header-args:ruby
+- For Value enter: :dir /
+
+You should have something that looks like:
+
+#+BEGIN_SRC sh
+ls
+#+END_SRC
+
+#+RESULTS:
+| combine-clips |
+| fade-clip     |
+| script.org    |
+| tangle.txt    |
+| test.txt      |
+
+*** raw output
+
+raw output for scripts
+
+#+BEGIN_SRC sh :results verbatim :exports both
+ls ~/Desktop
+#+END_SRC
+
+#+RESULTS:
+: combine-clips
+: fade-clip
+: org-mode-source-code.org
+: tangle.txt
+
+*** file
+
+write the output to a file
+
+#+BEGIN_SRC sh :results output :file file.txt
+ls ~/Desktop
+#+END_SRC
+
+#+RESULTS:
+[[file:file.txt]]
+
+** tangling
+
+The :tangle parameter takes all blocks of the same language, and writes them into the source file specified.
