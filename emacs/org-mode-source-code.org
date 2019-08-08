@@ -134,3 +134,13 @@ ls ~/Desktop
 ** tangling
 
 The :tangle parameter takes all blocks of the same language, and writes them into the source file specified.
+
+Type: C-c C-v t to render
+
+#+BEGIN_SRC sh :tangle list.sh
+#!/bin/sh 
+
+ls ~
+#+END_SRC
+
+
