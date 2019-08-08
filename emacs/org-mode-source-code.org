@@ -143,4 +143,25 @@ Type: C-c C-v t to render
 ls ~
 #+END_SRC
 
+* tangle mkdirp
 
+mkdirp option is the same as mkdir -p
+
+it will create the needed directories if they dont exist
+
+#+BEGIN_SRC sh :mkdirp yes :tangle ~/Desktop/test/list.sh
+#!/bin/sh 
+
+ls ~
+#+END_SRC
+
+* tangle read only
+
+This makes the files read-only, so I can’t edit them by mistake. 
+
+It also creates a commented link at the top of each,
+so I can jump from the dotfile to its Org origin if I open the dotfile by mistake
+
+#+BEGIN_SRC sh
+#+PROPERTY: header-args:conf  :comments link :tangle-mode (identity #o444)
+#+END_SRC
