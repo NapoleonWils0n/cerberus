@@ -1,4 +1,4 @@
-#+STARTUP: overview
+#+STARTUP: content
 #+OPTIONS: num:nil author:nil
 
 * org mode source code
