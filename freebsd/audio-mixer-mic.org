@@ -1,0 +1,37 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* Freebsd audio mixer mic
+
+List attached usb devices
+
+** dmesg
+
+#+BEGIN_SRC sh
+doas dmesg
+#+END_SRC
+
+The mic should be listed as 
+/dev/dsp2
+
+** mixer
+
+Set /dev/mixer2 mic level to 100
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer2 mic 100
+#+END_SRC
+
+** Pulseaudio
+
+*** Start pulseaudio server
+
+#+BEGIN_SRC sh
+pulseaudio --start
+#+END_SRC
+
+*** Stop pulseaudio server
+
+#+BEGIN_SRC sh
+pulseaudio --kill
+#+END_SRC

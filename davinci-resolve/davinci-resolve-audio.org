@@ -1,0 +1,61 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* DaVinci Resolve Audio
+
+** ffmpeg extract audio from video
+
+Extract the audio from a video clip as a wav file
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -f wav outfile.wav
+#+END_SRC
+
+** Import Audio into DaVinci Resolve
+
+Open the media tab in DaVinci Resolve and import the Audio track and drag to the timeline
+
+*** Audio Filters
+
+**** Normailze Audio
+
+Switch to the edit tab
+Right click on the audio track in the timeline and select Normalize Audio
+
+**** EQ
+
+Switch to the Fairlight tab
+
+- Band 1
+- 51
+
+- Band 6
+- 14k
+
+- Band 4
+
+Turn Q Factor up to 10
+then sweep the audio
+and turn the gain down on the frequency with the audio issue
+
+**** Compressor
+
+Select the compressor from the Mixer - Dynamics section
+
+Turn on the compressor 
+Turn the Make up to 4.5
+
+**** Multiband compressor
+
+From the mixer select effects, fairlight, multiband compressor
+
+Turn on the multiband compressor
+
+**** De-esser
+
+From the mixer select effects, fairlight, de-esser
+
+In the presets drop down menu in the de-esser select a voice
+Select the Male ESS option
+Under Frequency range
+Select the first option under the text range
