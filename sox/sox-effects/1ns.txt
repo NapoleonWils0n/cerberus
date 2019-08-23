@@ -1,0 +1,3 @@
+compand .5,1 -inf,-40.1,-inf,-40,-40 0 -90 .1
+highpass 200
+lowpass 3000
