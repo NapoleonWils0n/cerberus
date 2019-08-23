@@ -1,0 +1,144 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg
+
+** ffmpeg trim
+
+#+BEGIN_SRC sh
+ffmpeg -ss 00:00:04 -i input.wav -t 00:00:05 trimmed.wav
+#+END_SRC
+
+** noisegate
+
+*** ffplay compand noise gate
+
+#+BEGIN_SRC sh
+ffplay infile.wav -af "compand=attacks=0:points=-40.1/-90|-32/-32|20/20"
+#+END_SRC
+
+*** ffmpeg compand noise gate
+
+#+BEGIN_SRC sh
+ffmpeg -i mono.wav \
+-filter_complex \
+"compand=attacks=0:points=-40.1/-90|-32/-32|20/20,
+[audio]" \
+-map "[audio]" ffmpeg.wav
+#+END_SRC
+
+** highpass lowpass filters
+
+*** ffplay highpass lowpass
+
+#+BEGIN_SRC sh
+ffplay infile.wav -af \
+"highpass=f=200,
+lowpass=f=3000"
+#+END_SRC
+
+*** ffmpeg highpass lowpass
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.wav \
+-filter_complex \
+"highpass=f=200,
+lowpass=f=3000 [audio]" \
+-map "[audio]" outfile.wav
+#+END_SRC
+
+** loudnorm
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.wav \
+-af loudnorm=I=-14:TP=-3:LRA=11:print_format=json \
+-f null -
+#+END_SRC
+
+ouput 
+
+#+BEGIN_SRC sh
+[Parsed_loudnorm_0 @ 0x7fd4aaf03500] 
+{
+	"input_i" : "-28.64",
+	"input_tp" : "-9.33",
+	"input_lra" : "5.50",
+	"input_thresh" : "-40.76",
+	"output_i" : "-15.90",
+	"output_tp" : "-3.00",
+	"output_lra" : "10.60",
+	"output_thresh" : "-27.88",
+	"normalization_type" : "dynamic",
+	"target_offset" : "1.90"
+}
+#+END_SRC
+
+loud norm measured
+
+#+BEGIN_SRC sh
+ffmpeg \
+-i infile.wav \
+-filter_complex \ "loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-28.64:measured_LRA=5.50:measured_TP=-9.33:measured_thresh=-40.76:offset=1.90:linear=true:print_format=summary" \
+-ar 44.1k outfile.wav
+#+END_SRC
+
+** anequalizer
+
+*** ffplay anequalizer 
+
+#+BEGIN_SRC sh
+ffplay -i infile.wav \
+-af \
+"anequalizer=c0 f=189 w=100 g=-9 t=1,
+anequalizer=c0 f=261 w=100 g=-6 t=1,
+anequalizer=c0 f=829 w=100 g=-4 t=1,
+anequalizer=c0 f=3089 w=100 g=-3 t=1,
+anequalizer=c0 f=500 w=100 g=-3 t=1"
+#+END_SRC
+
+*** ffmpeg anequalizer 
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.wav \
+-filter_complex \
+"anequalizer=c0 f=189 w=100 g=-6 t=1,
+anequalizer=c0 f=261 w=100 g=-4 t=1,
+anequalizer=c0 f=829 w=100 g=-4 t=1,
+anequalizer=c0 f=3089 w=100 g=-3 t=1,
+anequalizer=c0 f=500 w=100 g=-3 t=1 [audio]" \
+-map "[audio]" outfile.wav
+#+END_SRC
+
+** effects combined
+
+*** ffplay effects combined
+
+#+BEGIN_SRC sh
+ffplay infile.wav \
+-af \
+"compand=attacks=0:points=-40.1/-90|-32/-32|20/20
+highpass=f=200,
+lowpass=f=3000,
+anequalizer=c0 f=189 w=100 g=-9 t=1,
+anequalizer=c0 f=261 w=100 g=-6 t=1,
+anequalizer=c0 f=829 w=100 g=-4 t=1,
+anequalizer=c0 f=3089 w=100 g=-3 t=1,
+anequalizer=c0 f=500 w=100 g=-3 t=1"
+#+END_SRC
+
+*** ffmpeg effects combined
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.wav \
+-filter_complex \
+"compand=attacks=0:points=-40.1/-90|-32/-32|20/20
+highpass=f=200,
+lowpass=f=3000,
+afftdn=nt=w,
+anequalizer=c0 f=189 w=100 g=-6 t=1,
+anequalizer=c0 f=261 w=100 g=-4 t=1,
+anequalizer=c0 f=829 w=100 g=-4 t=1,
+anequalizer=c0 f=3089 w=100 g=-3 t=1,
+anequalizer=c0 f=500 w=100 g=-3 t=1 [audio]" \
+-map "[audio]" outfile.wav
+#+END_SRC
