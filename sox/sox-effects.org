@@ -56,7 +56,7 @@ lowpass 3000
 *** Compressor
 
 #+BEGIN_SRC sh
-compand .5,1 6:-70,-20,-10 -3 -90 0.2
+compand .5,1 6:-70,-20,-10 -5 -90 0.2
 #+END_SRC
 
 *** Equalizer
