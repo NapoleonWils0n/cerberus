@@ -101,8 +101,8 @@ anequalizer=c0 f=5000 w=100 g=-3 t=1"
 #+BEGIN_SRC sh
 ffmpeg -i infile.wav \
 -filter_complex \
-"anequalizer=c0 f=189 w=100 g=-6 t=1,
-anequalizer=c0 f=261 w=100 g=-4 t=1,
+"anequalizer=c0 f=189 w=100 g=-9 t=1,
+anequalizer=c0 f=261 w=100 g=-6 t=1,
 anequalizer=c0 f=829 w=100 g=-4 t=1,
 anequalizer=c0 f=3089 w=100 g=-3 t=1,
 anequalizer=c0 f=5000 w=100 g=-3 t=1 [audio]" \
@@ -135,8 +135,8 @@ ffmpeg -i infile.wav \
 highpass=f=200,
 lowpass=f=3000,
 afftdn=nt=w,
-anequalizer=c0 f=189 w=100 g=-6 t=1,
-anequalizer=c0 f=261 w=100 g=-4 t=1,
+anequalizer=c0 f=189 w=100 g=-9 t=1,
+anequalizer=c0 f=261 w=100 g=-6 t=1,
 anequalizer=c0 f=829 w=100 g=-4 t=1,
 anequalizer=c0 f=3089 w=100 g=-3 t=1,
 anequalizer=c0 f=5000 w=100 g=-3 t=1 [audio]" \
