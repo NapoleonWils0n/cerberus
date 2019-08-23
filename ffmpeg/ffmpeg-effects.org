@@ -93,7 +93,7 @@ ffplay -i infile.wav \
 anequalizer=c0 f=261 w=100 g=-6 t=1,
 anequalizer=c0 f=829 w=100 g=-4 t=1,
 anequalizer=c0 f=3089 w=100 g=-3 t=1,
-anequalizer=c0 f=500 w=100 g=-3 t=1"
+anequalizer=c0 f=5000 w=100 g=-3 t=1"
 #+END_SRC
 
 *** ffmpeg anequalizer 
@@ -105,7 +105,7 @@ ffmpeg -i infile.wav \
 anequalizer=c0 f=261 w=100 g=-4 t=1,
 anequalizer=c0 f=829 w=100 g=-4 t=1,
 anequalizer=c0 f=3089 w=100 g=-3 t=1,
-anequalizer=c0 f=500 w=100 g=-3 t=1 [audio]" \
+anequalizer=c0 f=5000 w=100 g=-3 t=1 [audio]" \
 -map "[audio]" outfile.wav
 #+END_SRC
 
@@ -123,7 +123,7 @@ anequalizer=c0 f=189 w=100 g=-9 t=1,
 anequalizer=c0 f=261 w=100 g=-6 t=1,
 anequalizer=c0 f=829 w=100 g=-4 t=1,
 anequalizer=c0 f=3089 w=100 g=-3 t=1,
-anequalizer=c0 f=500 w=100 g=-3 t=1"
+anequalizer=c0 f=5000 w=100 g=-3 t=1"
 #+END_SRC
 
 *** ffmpeg effects combined
@@ -139,6 +139,6 @@ anequalizer=c0 f=189 w=100 g=-6 t=1,
 anequalizer=c0 f=261 w=100 g=-4 t=1,
 anequalizer=c0 f=829 w=100 g=-4 t=1,
 anequalizer=c0 f=3089 w=100 g=-3 t=1,
-anequalizer=c0 f=500 w=100 g=-3 t=1 [audio]" \
+anequalizer=c0 f=5000 w=100 g=-3 t=1 [audio]" \
 -map "[audio]" outfile.wav
 #+END_SRC
