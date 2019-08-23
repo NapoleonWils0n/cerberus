@@ -116,7 +116,7 @@ anequalizer=c0 f=5000 w=100 g=-3 t=1 [audio]" \
 #+BEGIN_SRC sh
 ffplay infile.wav \
 -af \
-"compand=attacks=0:points=-40.1/-90|-32/-32|20/20
+"compand=attacks=0:points=-40.1/-90|-32/-32|20/20,
 highpass=f=200,
 lowpass=f=3000,
 anequalizer=c0 f=189 w=100 g=-9 t=1,
@@ -131,7 +131,7 @@ anequalizer=c0 f=5000 w=100 g=-3 t=1"
 #+BEGIN_SRC sh
 ffmpeg -i infile.wav \
 -filter_complex \
-"compand=attacks=0:points=-40.1/-90|-32/-32|20/20
+"compand=attacks=0:points=-40.1/-90|-32/-32|20/20,
 highpass=f=200,
 lowpass=f=3000,
 afftdn=nt=w,
