@@ -1,0 +1,96 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* sox
+
+** play
+
+play also supports all of the sox command line options
+
+#+BEGIN_SRC sh
+play infile.wav
+
+#+END_SRC
+** sox trim
+
+#+BEGIN_SRC sh
+sox input.wav output.wav trim 00:04 00:05 
+#+END_SRC
+
+** noise profile
+
+#+BEGIN_SRC sh
+sox trimmed.wav -n noiseprof noise.prof                 
+#+END_SRC
+
+#+BEGIN_SRC sh
+sox infile.wav outfile.wav noisered noise.prof 0.21      
+#+END_SRC
+          
+** sox stats      
+
+#+BEGIN_SRC sh
+sox infile.wav -n stat
+#+END_SRC
+
+** normalize audio
+
+#+BEGIN_SRC sh
+sox --norm=-3 infile.wav outfile.wav
+#+END_SRC
+
+** effects-file
+
+#+BEGIN_SRC sh
+sox infile.wav --effects-file=effects.txt
+#+END_SRC
+
+*** Noise gate
+
+#+BEGIN_SRC sh
+compand .5,1 -inf,-40.1,-inf,-40,-40 0 -90 .1
+highpass 200
+lowpass 3000
+#+END_SRC
+
+*** Compressor
+
+#+BEGIN_SRC sh
+compand .5,1 6:-70,-20,-10 -3 -90 0.2
+#+END_SRC
+
+*** Equalizer
+
+#+BEGIN_SRC sh
+equalizer 189 0.7q -5.0
+equalizer 261 0.7q -4.0
+equalizer 829 0.7q -3.0
+equalizer 3089 0.7q -3.0
+equalizer 5000 0.7q -3.0
+#+END_SRC
+
+** sox commands
+
+*** play normalize audio level
+
+#+BEGIN_SRC sh
+play infile.wav vol $(sox infile.wav -n stat -v 2>&1)
+#+END_SRC
+
+*** sex effects play
+
+#+BEGIN_SRC sh
+sox infile.wav -p --effects-file=1ns.txt \
+| sox - -p --effects-file=2cmp.txt \
+| sox - -p --effects-file=3eq.txt \
+| play -
+#+END_SRC
+
+*** sox effects save file
+
+#+BEGIN_SRC sh
+sox infile.wav -p --effects-file=1ns.txt \
+| sox - -p --effects-file=2cmp.txt \
+| sox - outfile.wav --effects-file=3eq.txt
+#+END_SRC
+
