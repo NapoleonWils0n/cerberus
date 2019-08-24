@@ -77,7 +77,7 @@ equalizer 5000 0.7q -3.0
 play infile.wav vol $(sox infile.wav -n stat -v 2>&1)
 #+END_SRC
 
-*** sex effects play
+*** sox effects play
 
 #+BEGIN_SRC sh
 sox infile.wav -p --effects-file=1ns.txt \
