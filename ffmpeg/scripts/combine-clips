@@ -26,7 +26,7 @@ record () {
 #    -g 2 -bf 2 \
 
 # check arguments
-if [[ $# -eq 4 ]]; then
+if [ $# -eq 4 ]; then
    # group commands
    {
    [ "$1" = '-v' ] && \
