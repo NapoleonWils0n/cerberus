@@ -1,48 +1,46 @@
 #!/bin/sh
 
+# normalize audio levels
+
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i audio.wav")
+script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(wav|mp3|m4a)")
 
-# video file destination
-outfile="$HOME/Desktop/outfile-$(date +"%Y-%m-%d-%H-%M-%S").wav"
+# outfile file recording destination
+audio_out="$HOME/Desktop/audio-$(date +"%Y-%m-%d-%H-%M-%S").wav"
 
-# check arguments
+# check arguments passed to script
 if [ $# -eq 2 ]; then
    # group commands
    {
    [ "$1" = '-i' ] && \
-   [ -f "$2" ] && \
-   printf "%s\n" "$2" | grep -Eo '.(wav)$' 1>/dev/null
-   } #|| { printf "%s\n" "$script_usage" && exit; }
-   # run record function to combine video and audio into a video file
-   # set variables
-   infile="$2"
-   #echo "$normalize" "$infile"
+   [ -f "$2" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
 else
    { printf "%s\n" "$script_usage" && exit; }
 fi
 
-# print analyzing file
-printf "%s\n" '+ analyzing file'
+# infile = audio or video file
+infile="$2" 
 
+# print analyzing file
+printf "%s\n" '+ Analyzing file with ffmpeg'
+
+# ffmpeg loudnorm get stats from file
 normalize=$(ffmpeg \
 -hide_banner \
 -i "$infile" \
 -af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=json" \
 -f null - 2>&1 | tail -n 12)
 
+# use awk to extract the stats from the normalize command
 measured_I=$(printf "%s\n" "$normalize" | awk -F'"' '/input_i/ {print $4}')
 measured_TP=$(printf "%s\n" "$normalize" | awk -F'"' '/input_tp/ {print $4}')
 measured_LRA=$(printf "%s\n" "$normalize" | awk -F'"' '/input_lra/ {print $4}')
 measured_thresh=$(printf "%s\n" "$normalize" | awk -F'"' '/input_thresh/ {print $4}')
 offset=$(printf "%s\n" "$normalize" | awk -F'"' '/target_offset/ {print $4}')
 
-printf "%s\n" "- measured_I=${measured_I}"
-printf "%s\n" "- measured_TP=${measured_TP}"
-printf "%s\n" "- measured_LRA=${measured_LRA}"
-printf "%s\n" "- measured_thresh=${measured_thresh}"
-printf "%s\n" "- offset=${offset}"
-
+# audio function
+audio () {
 ffmpeg \
 -hide_banner \
 -i "$infile" \
@@ -58,4 +56,15 @@ offset=${offset}:
 linear=true:
 print_format=summary [audio]" \
 -map "[audio]" \
--ar 44.1k "$outfile"
+-ar 44.1k "$audio_out"
+}
+
+# grep the file extension of the infile to see if its and audio or video file
+filetype=$(printf "%s\n" "$infile" | grep -Eo '.(wav|mp3|m4a|mp4|mov|mkv)$')
+
+# run the audio or video function based on the file extension
+case "$filetype" in
+  .wav|.mp3|.m4a) audio "$infile";;
+  *) printf "%s\n" 'These arent the Droids your looking for';;
+esac
+
