@@ -46,6 +46,7 @@ ffmpeg \
 -i "$infile" \
 -filter_complex \
 "loudnorm=I=-16:
+dual_mono=true:
 TP=-1.5:
 LRA=11:
 measured_I=${measured_I}:
