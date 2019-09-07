@@ -53,10 +53,10 @@ highpass 200
 lowpass 3000
 #+END_SRC
 
-*** Compressor
+*** Gain
 
 #+BEGIN_SRC sh
-compand .5,1 6:-40,-24,-12 -8 -90 0.2
+gain -b -n -3
 #+END_SRC
 
 *** Equalizer
@@ -65,8 +65,14 @@ compand .5,1 6:-40,-24,-12 -8 -90 0.2
 equalizer 189 0.7q -6.0
 equalizer 261 0.7q -5.0
 equalizer 829 0.7q -4.0
-equalizer 3089 0.7q -4.0
-equalizer 5000 0.7q -6.0
+equalizer 3089 0.7q -2.0
+equalizer 5000 0.7q -2.0
+#+END_SRC
+
+*** Compressor
+
+#+BEGIN_SRC sh
+compand .5,1 6:-70,-36,-32,-28,-18,-24,-18,-18,-18,-12,-12 -5 -90 0.2
 #+END_SRC
 
 ** sox commands
