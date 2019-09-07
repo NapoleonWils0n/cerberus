@@ -22,8 +22,7 @@ ffplay infile.wav -af "compand=attacks=0:points=-40.1/-90|-32/-32|20/20"
 #+BEGIN_SRC sh
 ffmpeg -i mono.wav \
 -filter_complex \
-"compand=attacks=0:points=-40.1/-90|-32/-32|20/20,
-[audio]" \
+"compand=attacks=0:points=-40.1/-90|-32/-32|20/20 [audio]" \
 -map "[audio]" ffmpeg.wav
 #+END_SRC
 

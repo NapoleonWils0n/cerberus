@@ -29,15 +29,15 @@ printf "%s\n" '+ Analyzing file with ffmpeg'
 normalize=$(ffmpeg \
 -hide_banner \
 -i "$infile" \
--af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=json" \
+-af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
 -f null - 2>&1 | tail -n 12)
 
 # use awk to extract the stats from the normalize command
-measured_I=$(printf "%s\n" "$normalize" | awk -F'"' '/input_i/ {print $4}')
-measured_TP=$(printf "%s\n" "$normalize" | awk -F'"' '/input_tp/ {print $4}')
-measured_LRA=$(printf "%s\n" "$normalize" | awk -F'"' '/input_lra/ {print $4}')
-measured_thresh=$(printf "%s\n" "$normalize" | awk -F'"' '/input_thresh/ {print $4}')
-offset=$(printf "%s\n" "$normalize" | awk -F'"' '/target_offset/ {print $4}')
+measured_I=$(printf "%s\n" "$normalize" | awk -F' ' '/Input Integrated:/ {print $3}')
+measured_TP=$(printf "%s\n" "$normalize" | awk -F' ' '/Input True Peak:/ {print $4}')
+measured_LRA=$(printf "%s\n" "$normalize" | awk -F' ' '/Input LRA:/ {print $3}')
+measured_thresh=$(printf "%s\n" "$normalize" | awk -F' ' '/Input Threshold:/ {print $3}')
+offset=$(printf "%s\n" "$normalize" | awk -F' ' '/Target Offset:/ {print $3}')
 
 # audio function
 audio () {
