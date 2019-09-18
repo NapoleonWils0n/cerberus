@@ -1,0 +1,51 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* Beamer slides
+
+** convert tex file to pdf
+
+Use pdflatex or xelatex to create a pdf from a latex tex file
+
+*** pdflatex
+
+Convert the latex tex file to a pdf with pdflatex
+
++ pdflatex doesnt let you use custom fonts
+
+#+BEGIN_SRC sh
+pdflatex -shell-escape input.tex
+#+END_SRC
+
+*** xelatex 
+
+Convert the latex tex file to a pdf with xelatex
+
++ xelatex lets you use other custom fonts
+
+#+BEGIN_SRC sh
+xelatex -shell-escape input.tex
+#+END_SRC
+
+** convert pdf to images
+
+use pdftoppm to convert a pdf to image files
+
+*** pdftoppm
+
+pdftoppm can convert a pdf to different image formats
+
+#+BEGIN_SRC sh
+pdftoppm -r 300 -png -scale-to 1920 infile.pdf slide
+#+END_SRC
+
++ -r 300 = dpi 300
+
++ -png = save to png image format
+
++ -scale-to 1920 = scale width to 1920 pixels
+
++ infile.pdf = the pdf to convert to images
+
++ slide = name prefix for saved files
