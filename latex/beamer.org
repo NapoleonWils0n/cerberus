@@ -1,8 +1,35 @@
-#+STARTUP: showall
+#+STARTUP: content
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
 
 * Beamer slides
+
+
+Create latex beamer slides with emacs and org mode
+
+** texlive custom stylesheets
+
+latex sty files need to be installed in a particular location for latex to find them
+
+*** linux unix directory for sty files
+
+Create the following directory structure
+
+#+BEGIN_SRC sh
+mkdir -p ~/texmf/tex/latex/beamer
+#+END_SRC
+
+place sty files in the beamer directory
+
+*** mac osx directory for sty files
+
+Create the following directory structure
+
+#+BEGIN_SRC sh
+mkdir -p ~/Library/texmf/tex/latex/beamer
+#+END_SRC
+
+place sty files in the beamer directory
 
 ** convert tex file to pdf
 
