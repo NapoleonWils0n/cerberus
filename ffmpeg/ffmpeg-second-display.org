@@ -1,0 +1,14 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg record 2nd display
+
+#+BEGIN_SRC sh
+ffmpeg \
+-f x11grab -r 30 -video_size 1920x1080 -i :0.0+1366,0 \
+-c:v libx264 -preset veryfast -crf 18 -profile:v high \
+-pix_fmt yuv420p -movflags +faststart -f mp4 \
+video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
+
