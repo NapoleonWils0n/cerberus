@@ -19,5 +19,5 @@ ffmpeg -f concat -i list.txt -c copy outfile.mp4
 use subshell to generate a list of the mp4s in the current directory
 
 #+BEGIN_SRC sh
-ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) output.mp4
+ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) outfile.mp4
 #+END_SRC
