@@ -64,7 +64,7 @@ use pdftoppm to convert a pdf to image files
 pdftoppm can convert a pdf to different image formats
 
 #+BEGIN_SRC sh
-pdftoppm -r 300 -png -scale-to 1920 infile.pdf slide
+pdftoppm -r 300 -png -scale-to 1920 -H 1080 infile.pdf slide
 #+END_SRC
 
 + -r 300 = dpi 300
@@ -72,6 +72,8 @@ pdftoppm -r 300 -png -scale-to 1920 infile.pdf slide
 + -png = save to png image format
 
 + -scale-to 1920 = scale width to 1920 pixels
+  
++ -H 1080 = set height to 1080
 
 + infile.pdf = the pdf to convert to images
 
