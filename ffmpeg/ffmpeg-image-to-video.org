@@ -1,0 +1,28 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* ffmpeg convert image to video
+
+convert a png image into a 5 seconds video at 60 fps
+
+#+BEGIN_SRC sh
+ffmpeg -framerate 2/10 -i image.png \
+-c:v libx264 -crf 18 -profile:v high \
+-r 60 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+out.mp4
+#+END_SRC
+
+** batch convert png image to mp4 videos
+
+find png files and convert into 5 second mp4 video at 60 fps
+
+#+BEGIN_SRC sh
+find . -type f -name "*.png" -exec sh -c \
+'ffmpeg -framerate 2/10 -i "$0" \
+-c:v libx264 -crf 18 -profile:v high \
+-r 60 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+"${0%.*}.mp4"' "{}" \;
+#+END_SRC
