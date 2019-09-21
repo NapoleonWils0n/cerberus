@@ -1,0 +1,60 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+
+* sox external mic freebsd
+
+Boot up with the external usb mic plugged in
+
+After logging in run dmesg as root to make sure the device is recognised
+
+#+BEGIN_SRC 
+dmesg
+#+END_SRC
+
+Check /dev/dsp* for the device
+
+#+BEGIN_SRC sh
+ls /dev/dsp*
+#+END_SRC
+
+By default the mixer for /dev/dsp2 device is muted so we need to un mute it
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer2 mic 100
+#+END_SRC
+
+** sox ossdsp
+
+Note make sure to disable bitperfect audio on freebsd
+change the sysctl value as root
+
+#+BEGIN_SRC sh
+sysctl dev.pcm.2.bitperfect=0
+#+END_SRC
+
+#+BEGIN_SRC sh
+export AUDIODEV=/dev/dsp2.0
+export AUDIODRIVER=oss
+#+END_SRC
+
++ record
+
+#+BEGIN_SRC sh
+rec -c 1 -r 44.1k -b 16 out.wav 
+#+END_SRC
+
+** sox linux
+
+set audio device
+
+#+BEGIN_SRC sh
+export AUDIODEV=hw:1,0
+export AUDIODRIVER=alsa
+#+END_SRC 
+
++ record
+
+#+BEGIN_SRC sh
+rec -c 1 -r 44.1k -b 16 out.wav 
+#+END_SRC
