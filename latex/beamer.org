@@ -78,3 +78,16 @@ pdftoppm -r 300 -png -scale-to 1920 -H 1080 infile.pdf slide
 + infile.pdf = the pdf to convert to images
 
 + slide = name prefix for saved files
+
+** batch convert png image to mp4 videos
+
+find png files and convert into 5 second mp4 video at 60 fps
+
+#+BEGIN_SRC sh
+find . -type f -name "*.png" -exec sh -c \
+'ffmpeg -framerate 2/10 -i "$0" \
+-c:v libx264 -crf 18 -profile:v high \
+-r 60 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+"${0%.*}.mp4"' "{}" \;
+#+END_SRC
