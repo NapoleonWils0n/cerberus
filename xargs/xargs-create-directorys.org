@@ -1,0 +1,8 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* xargs create driectories from text file
+
+#+BEGIN_SRC sh
+xargs -I {} mkdir -p "{}" < mydirectories.txt
+#+END_SRC
