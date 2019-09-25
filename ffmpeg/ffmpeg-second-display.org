@@ -4,6 +4,8 @@
 
 * ffmpeg record 2nd display
 
+record second display at 1920x1080 at 30 fps
+
 #+BEGIN_SRC sh
 ffmpeg \
 -f x11grab -r 30 -video_size 1920x1080 -i :0.0+1366,0 \
@@ -12,3 +14,12 @@ ffmpeg \
 video-$(date +"%H-%M-%m-%d-%y").mp4
 #+END_SRC
 
+record second display at 1920x1080 at 60 fps
+
+#+BEGIN_SRC sh
+ffmpeg \
+-f x11grab -r 60 -video_size 1920x1080 -i :0.0+1366,0 \
+-c:v libx264 -preset veryfast -crf 18 -profile:v high \
+-pix_fmt yuv420p -movflags +faststart -f mp4 \
+video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
