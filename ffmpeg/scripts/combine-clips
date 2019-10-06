@@ -23,8 +23,6 @@ record () {
     "$videofile"
 }
 
-#    -g 2 -bf 2 \
-
 # check arguments
 if [ $# -eq 4 ]; then
    # group commands
