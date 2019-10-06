@@ -13,8 +13,10 @@ if [ $# -eq 4 ]; then
     {
     [ "$1" = '-i' ] && \
     [ -f "$2" ] && \
+    printf "%s\n" "$2" | grep -Eo '.(mov|mp4|mkv)$' 1>/dev/null && \
     [ "$3" = '-i' ] && \
-    [ -f "$4" ]
+    [ -f "$4" ] && \
+    printf "%s\n" "$2" | grep -Eo '.(mov|mp4|mkv)$' 1>/dev/null
     } || { printf "%s\n" "$script_usage" && exit; }
 else
    { printf "%s\n" "$script_usage" && exit; }
