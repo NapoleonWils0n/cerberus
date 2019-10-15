@@ -1,12 +1,8 @@
 #!/bin/sh
-
 # fade video and audio in and out
 
 # script usage
 script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i video.(mp4|mkv|mov|m4v)")
-
-# video file destination
-videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # check arguments
 if [ $# -eq 2 ]; then
@@ -20,7 +16,11 @@ fi
 
 # variables
 video="$2"
+video_name="${video%.*}"
 video_ext="${video##*.}"
+
+# outfile file recording destination
+videofile="$HOME/Desktop/${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # ffmpeg record function
 record () {
