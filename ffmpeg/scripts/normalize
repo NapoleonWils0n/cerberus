@@ -16,9 +16,10 @@ else
 fi
 
 # infile, infile name and file extension
-infile="$2" 
-infile_name="${infile%.*}"
-infile_ext="${infile##*.}" 
+infile="$2"
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+infile_ext="${infile##*.}"
 
 # outfile file recording destination
 normalized_file="$HOME/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"

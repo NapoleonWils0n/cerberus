@@ -19,6 +19,12 @@ video="$2"
 video_name="${video%.*}"
 video_ext="${video##*.}"
 
+# infile, infile name and file extension
+video="$2"
+video_nopath="${video##*/}"
+video_name="${video_nopath%.*}"
+video_ext="${video##*.}"
+
 # outfile file recording destination
 videofile="$HOME/Desktop/${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
