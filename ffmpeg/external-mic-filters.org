@@ -1,0 +1,41 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg
+
+** freebsd check for dsp audio device
+
+Check /dev/dsp* for the device
+
+#+BEGIN_SRC sh
+ls /dev/dsp*
+#+END_SRC
+
+** mixer set dsp mic volume
+
+By default the mixer for /dev/dsp2 device is muted so we need to un mute it
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer2 mic 100
+#+END_SRC
+
+** freebsd external mic noisegate
+
+freebsd mic with noise gate at -40db
+
+#+BEGIN_SRC sh
+ffmpeg -f oss -i /dev/dsp2.0 \
+-ac 1 -ar 44.1k -c:a aac \
+-filter_complex \
+"compand=attacks=0:points=-40/-90|-24/-12|0/-7|20/-7,
+adeclick,
+afftdn=nt=w,
+deesser,
+loudnorm,
+anequalizer=c0 f=106 w=100 g=-6 t=1,
+anequalizer=c0 f=205 w=100 g=-3 t=1,
+anequalizer=c0 f=509 w=100 g=-2 t=1,
+anequalizer=c0 f=5098 w=100 g=+1 t=1 [audio]" \
+-map "[audio]" outfile.aac
+#+END_SRC
+
