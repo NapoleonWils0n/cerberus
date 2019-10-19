@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+** ffmpeg waveform
+
+create a waveform from a video or audio file
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.wav \
+-filter_complex "aformat=channel_layouts=mono,showwavespic=s=1000x200" -frames:v 1 waveform.png
+#+END_SRC
