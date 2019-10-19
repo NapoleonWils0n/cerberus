@@ -14,11 +14,6 @@ else
    { printf "%s\n" "$script_usage" && exit; }
 fi
 
-# variables
-video="$2"
-video_name="${video%.*}"
-video_ext="${video##*.}"
-
 # infile, infile name and file extension
 video="$2"
 video_nopath="${video##*/}"
