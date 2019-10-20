@@ -24,8 +24,9 @@ mixer -f /dev/mixer2 mic 100
 freebsd mic with noise gate at -40db
 
 #+BEGIN_SRC sh
-ffmpeg -f oss -i /dev/dsp2.0 \
--ac 1 -ar 44.1k -c:a aac \
+ffmpeg \
+-f oss -ac 1 -ar 44.1k \
+-i /dev/dsp2.0 \
 -filter_complex \
 "compand=attacks=0:points=-40/-90|-24/-12|0/-7|20/-7,
 highpass=f=60,
@@ -38,5 +39,6 @@ anequalizer=c0 f=205 w=100 g=-3 t=1,
 anequalizer=c0 f=509 w=100 g=-2 t=1,
 anequalizer=c0 f=5098 w=100 g=+1 t=1,
 loudnorm [audio]" \
+-c:a aac -ac 1 -ar 44.1k \
 -map "[audio]" outfile.aac
 #+END_SRC

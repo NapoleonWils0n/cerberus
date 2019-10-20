@@ -1,6 +1,5 @@
 #+STARTUP: showall
-#+OPTIONS: num:nil
-#+OPTIONS: author:nil
+#+OPTIONS: num:nil author:nil
 
 * ffmpeg record 2nd display
 
@@ -20,6 +19,31 @@ record second display at 1920x1080 at 60 fps
 ffmpeg \
 -f x11grab -r 60 -video_size 1920x1080 -i :0.0+1366,0 \
 -c:v libx264 -preset veryfast -crf 18 -profile:v high \
+-pix_fmt yuv420p -movflags +faststart -f mp4 \
+video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
+
+record second display at 1920x1080 at 60 fps and mic
+
+#+BEGIN_SRC sh
+ffmpeg \
+-f oss -ac 1 -ar 44.1k \
+-i /dev/dsp2.0 \
+-filter_complex \
+"[0:0] compand=attacks=0:points=-40/-90|-24/-12|0/-7|20/-7,
+highpass=f=60,
+lowpass=f=13700,
+afftdn=nt=w,
+adeclick,
+deesser,
+anequalizer=c0 f=106 w=100 g=-6 t=1,
+anequalizer=c0 f=205 w=100 g=-3 t=1,
+anequalizer=c0 f=509 w=100 g=-2 t=1,
+anequalizer=c0 f=5098 w=100 g=+1 t=1,
+loudnorm" \
+-f x11grab -r 60 -video_size 1366x768 -i :0.0 \
+-c:v libx264 -preset veryfast -crf 18 -profile:v high \
+-c:a aac -ac 1 -ar 44.1k \
 -pix_fmt yuv420p -movflags +faststart -f mp4 \
 video-$(date +"%H-%M-%m-%d-%y").mp4
 #+END_SRC
