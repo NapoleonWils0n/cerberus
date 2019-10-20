@@ -28,14 +28,15 @@ ffmpeg -f oss -i /dev/dsp2.0 \
 -ac 1 -ar 44.1k -c:a aac \
 -filter_complex \
 "compand=attacks=0:points=-40/-90|-24/-12|0/-7|20/-7,
-adeclick,
+highpass=f=60,
+lowpass=f=13700,
 afftdn=nt=w,
+adeclick,
 deesser,
-loudnorm,
 anequalizer=c0 f=106 w=100 g=-6 t=1,
 anequalizer=c0 f=205 w=100 g=-3 t=1,
 anequalizer=c0 f=509 w=100 g=-2 t=1,
-anequalizer=c0 f=5098 w=100 g=+1 t=1 [audio]" \
+anequalizer=c0 f=5098 w=100 g=+1 t=1,
+loudnorm [audio]" \
 -map "[audio]" outfile.aac
 #+END_SRC
-
