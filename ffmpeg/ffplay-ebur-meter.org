@@ -1,0 +1,17 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* ffplay ebu meter
+
+Real-time graph using ffplay, with a EBU scale meter +18:
+
+#+BEGIN_SRC sh
+ffplay -f lavfi -i \
+"amovie=infile.mp4,ebur128=video=1:meter=18:dualmono=true:target=-16:size=1280x720 [out0][out1]"
+#+END_SRC
+
++ Run an analysis with ffmpeg:
+
+#+BEGIN_SRC sh
+ffmpeg -nostats -i infile.mp4 -filter_complex ebur128 -f null -
+#+END_SRC
