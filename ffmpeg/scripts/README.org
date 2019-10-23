@@ -1,0 +1,95 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg scripts
+
+A collection of ffmpeg shell scripts
+
++ combine-clips
++ ebu-meter
++ fade-clip
++ xfade-clip
++ loudnorm
++ normalize
++ subtitle-add
++ waveform
+
+** combine-clips
+
+combine video and audio files into new clip
+
++ script usage
+
+#+BEGIN_SRC sh
+combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)
+#+END_SRC
+
+** ebu-meter
+
+ffplay ebu meter
+
++ script usage
+
+#+BEGIN_SRC sh
+ebu-meter -i infile.(mp4|mov|mkv|m4v|m4a|aac|wav|mp3)
+#+END_SRC
+
+** fade-clip
+
+fade video and audio in and out
+
++ script usage
+
+#+BEGIN_SRC sh
+fade-clip -i video.(mp4|mkv|mov|m4v)
+#+END_SRC
+
+** xfade-clip
+
+cross fade clips audio and video between two clips
+
++ script usage
+
+#+BEGIN_SRC sh
+xfade-clip -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
+#+END_SRC
+
+** loudnorm
+
+ffmpeg loudnorm 
+
++ script usage
+
+#+BEGIN_SRC sh
+loudnorm -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)
+#+END_SRC
+
+** normalize
+
+normalize audio levels
+
++ script usage
+
+#+BEGIN_SRC sh
+normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+#+END_SRC
+
+** subtitle-add
+
+add subtitles to a video file
+
++ script usage
+
+#+BEGIN_SRC sh
+subtitle-add -v video.(mp4|mov|mkv|m4v) -s subtitle.srt
+#+END_SRC
+
+** waveform
+
+create a waveform from an audio or video file and save as a png
+
++ script usage
+
+#+BEGIN_SRC sh
+waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3)
+#+END_SRC
