@@ -69,4 +69,8 @@ ffmpeg \
     [1:a] afade=t=out:st='$clip2_offset':d=1 [audiofadeout];
     [audiofadein][audiofadeout] acrossfade=d=1 [audio]
 " \
--map "[output]" -map "[audio]" "$videofile"
+    -map "[output]" -map "[audio]" \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "$videofile"

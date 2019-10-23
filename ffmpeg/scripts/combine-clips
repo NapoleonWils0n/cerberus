@@ -38,6 +38,7 @@ record_copy () {
     -c:a copy \
     -c:v copy \
     -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
     "$videofile"
@@ -53,6 +54,7 @@ record_aac () {
     -c:a aac \
     -c:v copy \
     -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
     "$videofile"

@@ -66,4 +66,7 @@ ffmpeg \
     [fadeoutfifo][fadeinfifo]overlay[crossfade];
     [firstclip][crossfade][secondclip]concat=n=3[output]
 " \
--map "[output]" "$videofile"
+    -map "[output]" \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 "$videofile"

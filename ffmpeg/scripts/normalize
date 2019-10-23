@@ -65,6 +65,9 @@ offset=${offset}:
 linear=true:
 print_format=summary [audio]" \
 -map "[audio]" \
+-pix_fmt yuv420p \
+-movflags +faststart \
+-f mp4 \
 "$normalized_file"
 }
 
@@ -87,6 +90,9 @@ offset=${offset}:
 linear=true:
 print_format=summary [audio]" \
 -map 0:v -map "[audio]" \
+-pix_fmt yuv420p \
+-movflags +faststart \
+-f mp4 \
 "$normalized_file"
 }
 
