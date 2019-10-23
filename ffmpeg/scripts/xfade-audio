@@ -52,7 +52,6 @@ clip2_offset=$(printf "%s\n" "${clip2_dur}-1" | bc -l)
 # ffmpeg command
 ffmpeg \
 -hide_banner \
--stats -v panic \
 -i "$clip1" -i "$clip2" \
 -filter_complex \
 "   [0:v][1:v]concat=n=2[video]; 
