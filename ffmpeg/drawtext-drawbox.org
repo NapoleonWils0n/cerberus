@@ -1,0 +1,55 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* drawtext drawbox video title
+
+draw a lower third box and fade title text in
+
+** ffmpeg drawbox drawtext
+
+#+BEGIN_SRC sh
+#!/bin/sh
+
+DS=2.0 # display start
+DE=10.0 # display end
+FID=1.5 # fade in duration
+FOD=1.5 # fade out duration
+
+TITLE='Video Title'
+
+ffmpeg -i input.mp4 -vf \
+"format=yuv444p, \
+ drawbox=enable='between(t,${DS},${DE})': \
+ y=ih-h/PHI:color=black@0.4:width=iw:height=72:t=fill, \
+ drawtext=fontfile=~/.fonts/SF-Pro-Display-Regular.otf: \
+ text=${TITLE}: \
+ fontcolor=white:fontsize=24: \
+ x=(w-tw)/2:y=(h-th-10): \
+ :fontcolor_expr=fdfdfd%{eif\\\\: clip(255*(1*between(t\\, $DS + $FID\\, $DE - $FOD) + ((t - $DS)/$FID)*between(t\\, $DS\\, $DS + $FID) + (-(t - $DE)/$FOD)*between(t\\, $DE - $FOD\\, $DE) )\\, 0\\, 255) \\\\: x\\\\: 2 }, \
+ format=yuv420p" \
+-c:v libx264 -c:a copy -movflags +faststart output.mp4
+#+END_SRC
+
+
+** ffplay drawbox drawtext
+
+#+BEGIN_SRC sh
+#!/bin/sh
+
+DS=2.0 # display start
+DE=10.0 # display end
+FID=1.5 # fade in duration
+FOD=1.5 # fade out duration
+
+TITLE='Video Title'
+
+ffplay input.mp4 -vf \
+"format=yuv444p, \
+ drawbox=enable='between(t,${DS},${DE})': \
+ y=ih-h/PHI:color=black@0.4:width=iw:height=72:t=fill, \
+ drawtext=fontfile=~/.fonts/SF-Pro-Display-Regular.otf: \
+ text=${TITLE}: \
+ fontcolor=white:fontsize=24: \
+ x=(w-tw)/2:y=(h-th-10): \
+ :fontcolor_expr=fdfdfd%{eif\\\\: clip(255*(1*between(t\\, $DS + $FID\\, $DE - $FOD) + ((t - $DS)/$FID)*between(t\\, $DS\\, $DS + $FID) + (-(t - $DE)/$FOD)*between(t\\, $DE - $FOD\\, $DE) )\\, 0\\, 255) \\\\: x\\\\: 2 }, \
+ format=yuv420p"
+#+END_SRC
