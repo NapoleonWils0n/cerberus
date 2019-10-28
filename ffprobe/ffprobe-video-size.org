@@ -1,0 +1,67 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffprobe get video width and height
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-select_streams v:0 \
+-show_entries \
+stream=width,height \
+-of csv=s=x:p=0 \
+input.mp4
+#+END_SRC
+
++ outputs
+
+1920x1080
+
+** ffprobe get video height
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-select_streams v:0 \
+-show_entries \
+stream=width,height \
+-of csv=s=x:p=0 \
+input.mp4
+#+END_SRC
+
++ outputs
+
+1080
+
+*** alternate syntax
+
+**** video height and width
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-show_entries \
+stream=height \
+-of default=noprint_wrappers=1:nokey=1 \
+input.mp4
+#+END_SRC
+
++ outputs
+
+1920
+1080
+
+**** video height
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-show_entries \
+stream=height \
+-of default=noprint_wrappers=1:nokey=1 \
+input.mp4
+#+END_SRC
+
++ outputs
+
+1080
