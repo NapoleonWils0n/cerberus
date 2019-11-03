@@ -1,9 +1,0 @@
-/* userContent.css - block css on domains*/
-
-/* null-byte.wonderhowto.com - block css effects */
-@-moz-document domain(null-byte.wonderhowto.com) {
-* {
-    transform: none !important;
-    transition: none !important;
-  }
-}
