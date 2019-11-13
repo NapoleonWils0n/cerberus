@@ -1,0 +1,7 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* emacs eval region
+
+You can usually just re-evaluate the changed region. 
+Mark the region of ~/.emacs that you've changed, and then use M-x eval-region RET. 
