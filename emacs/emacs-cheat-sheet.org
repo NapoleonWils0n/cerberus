@@ -1,0 +1,72 @@
+#+TITLE: emacs cheat sheet
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* emacs cheat sheet
+
+** dired
+
+*** rename files
+
+#+BEGIN_SRC emacs
+C-x C-q
+#+END_SRC
+
+** org mode
+** tramp
+
+#+BEGIN_SRC emacs
+C-x C-f /remotehost:filename  RET (or /method:user@remotehost:filename)
+#+END_SRC
+
+#+BEGIN_SRC emacs
+C-x C-f /su::/etc/hosts
+C-x C-f /sudo::/etc/hosts
+#+END_SRC
+** evil
+
+Temporary execution in Emacs state
+
+You may still wish to use a mode’s key bindings, if you decided to remove its keymap from evil-overriding-maps or evil-intercept-maps. Evil defines the \ command to temporarily interpret the subsequent Key Sequence in the Emacs state. If you wish to use Buffer Menu’s b command, you can do so with two key strokes: \b . This is pretty reasonable in most cases, but if you want to have a one letter key binding you can add it specifically with the evil-define-key function.
+
+So the evil-emacs-state function is run when you enter emacs-state (with C-z).
+** bookmarks
+
+Some bookmarking commands to get you started:
+
++ Set a bookmark at the current location (e.g. in a file)
+
+#+BEGIN_SRC emacs
+C-x r m
+#+END_SRC
+
++ jump to a bookmark
+
+#+BEGIN_SRC emacs
+C-x r b
+#+END_SRC
+
++ list your bookmarks
+
+#+BEGIN_SRC emacs
+C-x r l
+#+END_SRC
+
++ delete a bookmark by name
+
+#+BEGIN_SRC emacs
+M-x bookmark-delete
+#+END_SRC
+
+Your personal bookmark file is defined by option ‘bookmark-default-file’, 
+which defaults to `~/.emacs.d/bookmarks` in the most recent Emacs versions and to `~/.emacs.bmk’ in older versions. 
+** elfeed
+
+Running the interactive function elfeed will pop up the *elfeed-search* buffer, which will display feed items.
+
++ g: refresh view of the feed listing
++ G: fetch feed updates from the servers
++ s: update the search filter (see tags)
++ c: clear the search filter
+
+    
