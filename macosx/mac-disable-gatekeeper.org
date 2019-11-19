@@ -1,0 +1,16 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* disable mac gatekeeper
+
+disable mac gatekeeper
+
+#+BEGIN_SRC sh
+sudo spctl --master-disable
+#+END_SRC
+
+enable mac gatekeeper
+
+#+BEGIN_SRC sh
+sudo spctl --master-enable
+#+END_SRC
