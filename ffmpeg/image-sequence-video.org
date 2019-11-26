@@ -1,0 +1,18 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg image sequence
+
+In this example the input images are sequentially named img_001.jpeg, img_002.jpeg, img_003.jpeg, etc. 
+
+#+BEGIN_SRC sh
+ffmpeg -framerate 30 -i image_%03d.jpeg -pix_fmt yuv420p outfile.mp4
+#+END_SRC
+
+** Starting with a specific image
+
+For example if you want to start with image_126.jpeg then use the -start_number option: 
+
+#+BEGIN_SRC sh
+ffmpeg -start_number 126 -i image_%03d.jpeg -pix_fmt yuv420p outfile.mp4
+#+END_SRC
