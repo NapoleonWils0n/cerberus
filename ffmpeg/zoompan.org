@@ -1,0 +1,177 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* ffmpeg zoompan effect
+
+ffmpeg zoompan effect also known as the ken burns effect
+
+** zoom in top left
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:10*ih,zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur},scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+
+**  zoom in center
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:10*ih,zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+** zoom in center top
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:10*ih,zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+** zoom in top right
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:10*ih,zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/zoom-(iw/zoom/2)',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+
+** zoom out center top
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:2*ih,zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+** zoom out top left
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:2*ih,zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur},scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+** zoom out top right
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:2*ih,zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/zoom-(iw/zoom/2)',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+** zoom out bottom left
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:2*ih,zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+y='ih-ih/zoom',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
+
+** zoom out bottom right
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-i infile.png \
+-filter_complex \
+"scale=-2:2*ih,zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw-iw/zoom':\
+y='ih-ih/zoom',scale=-2:${imgheight}" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+outfile.mp4
+#+END_SRC
