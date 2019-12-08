@@ -14,5 +14,5 @@ ffmpeg -framerate 30 -i image_%03d.jpeg -pix_fmt yuv420p outfile.mp4
 For example if you want to start with image_126.jpeg then use the -start_number option: 
 
 #+BEGIN_SRC sh
-ffmpeg -start_number 126 -i image_%03d.jpeg -pix_fmt yuv420p outfile.mp4
+ffmpeg -framerate 30 -start_number 126 -i image_%03d.jpeg -pix_fmt yuv420p outfile.mp4
 #+END_SRC
