@@ -1,0 +1,92 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg white balance and levels
+
+** extract frame from video
+
+#+BEGIN_SRC sh
+ffmpeg \
+-i infile.mp4 \
+-ss 00:00:07 \
+-f image2 -vframes 1 \
+outfile.png
+#+END_SRC
+
+** gimp curves
+
+open the png file you have extracted from the video with gimp
+
+then open the levels from the tools menu
+click the white balance eye dropper and select an area in the image that should be white
+
+click the open in curves button to open curves editor
+then select export setting from the drop down menu to export the curve as a text file
+
+** convert gimp curve to ffmpeg command
+
+#+BEGIN_SRC python
+import re
+
+#make generator
+lower=0
+upper=1
+length=256
+zerotoonestepped256gen = [lower + x*(upper-lower)/length for x in range(length)]
+
+def formatForFFMPEG(values):
+    serializedValues = values.split(' ')
+    list = []
+    for i in range (len(serializedValues)):
+        if not list or zerotoonestepped256gen[i] - float(re.match(r"^[^////]*",list[-1]).group(0)) > 0.01:
+            list.append('%s/%s' % (zerotoonestepped256gen[i], serializedValues[i]))
+    return list
+
+#print instructions
+print('This is a tool to convert a color curves map from GIMP to a curves filter that can be inserted into the -complex_filter. Note that you still need to append the input and output streams onto either side of the command.')
+#get filename
+file = input('Please input the absolute path to the GIMP Color Curve Preset File: ')
+out = input('Please enter the output file (file will be overwritten if it exists): ')
+
+#Open the curves file
+curvesfile = open(file,"r")
+curvesString = curvesfile.read()
+foundValues = re.findall(r'(?<=samples 256) [\d. ]*',curvesString)
+
+masterValues = formatForFFMPEG(foundValues[0][1:])
+redValues = formatForFFMPEG(foundValues[1][1:])
+greenValues = formatForFFMPEG(foundValues[2][1:])
+blueValues = formatForFFMPEG(foundValues[3][1:])
+alphaValues = formatForFFMPEG(foundValues[4][1:])
+
+commandPrelim = 'curves=master="'
+
+command = commandPrelim + ' '.join(masterValues) + '":red="' + ' '.join(redValues) +'":green="' + ' '.join(greenValues) + '":blue="' + ' '.join(blueValues) + '"'
+
+
+with open(out, 'w') as out:
+    out.write("Final Command\n\n" + command + '\n\n')
+    out.write("master\n\n" + ' '.join(masterValues) + '\n\n')
+    out.write("red\n\n" + ' '.join(redValues) + '\n\n')
+    out.write("green\n\n" + ' '.join(greenValues) + '\n\n')
+    out.write("blue\n\n" + ' '.join(blueValues) + '\n\n')
+    out.write("alpha\n\n" + ' '.join(alphaValues) + '\n\n')
+
+#+END_SRC
+
+** curves command 
+
+#+BEGIN_SRC sh
+#!/bin/sh
+
+ffmpeg -i trim.mp4 \
+-vf \
+[curves-code] \
+-c:v libx264 -preset fast \
+-profile:v high \
+-crf 18 \
+-pix_fmt yuv420p \
+-movflags +faststart \
+-f mp4 \
+outfile.mp4
+#+END_SRC
