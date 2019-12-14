@@ -45,4 +45,4 @@ command = commandPrelim + ' '.join(masterValues) + '":red="' + ' '.join(redValue
 
 
 with open(out, 'w') as out:
-    out.write(command)
+    out.write(command + '\n')
