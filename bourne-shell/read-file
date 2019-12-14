@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# read the contents of a text file passed as the first argument to the script
+text_contents="$(while IFS= read -r line; do echo "${line}"; done < "${1}")"
+
+# echo the contents of the text file
+echo "${text_contents}"
