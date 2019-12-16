@@ -1,1 +1,93 @@
-/home/djwilcox/git/firefox-css/chrome/userContent.css
+/* userContent.css - change css on domains*/
+
+
+/* firefox style newtab, blank page and home */
+@-moz-document url(about:blank), url(about:newtab), url(about:home) {  
+    body {
+        background: #002b36 !important;
+    }
+}
+
+/* google.com  */
+@-moz-document domain(google.com) {
+/* body background  */
+body {
+    background:#002b36 !important;
+}
+/* bar under search */
+#hdtbSum {
+ background: #002b36 !important;
+}
+/* app bar */
+#appbar {
+ background: #002b36 !important;
+}
+/* floating search div */
+.minidiv .sfbg {
+ background: #002b36 !important;
+}
+/* unvisted links  */
+a:link,
+.w,
+#prs a:visited,
+#prs a:active,
+.q:active,
+.q:visited,
+.kl:active,
+.tbotu {
+    color:#eee8d5 !important;
+}
+/* visted links  */
+.mblink:visited,
+a:visited {
+    color:#839496 !important;
+}
+/* description under links */
+.a,
+cite,
+cite a:link,
+cite a:visited,
+.cite,
+.cite:link,
+#nygTcd>i,
+.bc a:link {
+ color:#268bd2 !important;
+}
+/* h3 headings */
+h3, .med {
+    color: #93a1a1 !important;
+}
+
+/* box border */
+.kp-blk {
+    border: 1px solid #eee8d5 !important;
+}
+/* result description right side */
+.hb8SAc {
+    color: #545454 !important;
+}
+/* profiles */
+.Ss2Faf {
+    color: #93a1a1 !important;
+}
+/* searches releated to */
+.garHBe {
+    color: #93a1a1 !important;
+}
+/* searches realted to */
+#brs .med {
+ color:#839496 !important;
+}
+/* video ballon color */
+.jBgGLd {
+    color: #93a1a1 !important;
+}
+/* footer */
+#fbar {
+ background:#002b36 !important;
+ border-top:1px solid #e4e4e4;
+}
+#Wprf1b {
+ color:#93a1a1 !important;
+}
+}
