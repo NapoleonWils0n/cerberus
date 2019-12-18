@@ -1,0 +1,26 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* convert youtube subs to transcript
+
+#+BEGIN_SRC sh
+youtube-dl --write-sub --sub-lang en --skip-download 'https://youtu.be/VYuQaSbZ2Ws'
+#+END_SRC
+
+** sed, awk and fmt
+
+*** vtt subs
+
+#+BEGIN_SRC 
+sed '1,3d;s/^\([0-9:.[:space:]>-]\)*//;s/ \{1,\}/ /g;/^$/d' subs.vtt \
+| awk -v RS="." '!/^\n$/ { print $0 "." }' ORS='\n\n' \
+| fmt -sp -w 120 > outfile.txt
+#+END_SRC
+
+*** srt subs
+
+#+BEGIN_SRC 
+sed 's/^\([0-9:.[:space:]>-]\)*//;s/ \{1,\}/ /g;/^$/d' subs.srt \
+| awk -v RS="." '!/^\n$/ { print $0 "." }' ORS='\n\n' \
+| fmt -sp -w 120 > outfile.txt
+#+END_SRC
