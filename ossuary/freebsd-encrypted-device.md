@@ -29,7 +29,7 @@ sudo su
 * use dd to create a 2 gig disk image
 
 ```
-dd if=/dev/zero of=disk.img bs=1M count=2048
+dd if=/dev/randon of=disk.img bs=1M count=2048
 ```
 
 ## mount the image with mdconfig
@@ -53,7 +53,7 @@ mkdir ~/.ossuary
 Now we want to create a key for GELI to encrypt with, and attach it to our disk image device:
 
 ```
-dd if=/dev/zero of=/usr/home/djwilcox/.ossuary/ossuary.key bs=256 count=1
+dd if=/dev/random of=/usr/home/djwilcox/.ossuary/ossuary.key bs=256 count=1
 geli init -e aes -l 256 -s 4096 -K /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
 geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
 ```
