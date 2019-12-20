@@ -29,7 +29,7 @@ sudo su
 * use dd to create a 2 gig disk image
 
 ```
-dd if=/dev/randon of=disk.img bs=1M count=2048
+dd if=/dev/random of=disk.img bs=1M count=2048
 ```
 
 ## mount the image with mdconfig
