@@ -90,8 +90,10 @@ zfs set mountpoint=/usr/home/djwilcox/mnt crypt
 
 * change the permission on the container
 
+switch to root with doas or sudo
+
 ```
-sudo chmod -R djwilcox:djwilcox ~/mnt
+chown -R djwilcox:djwilcox ~/mnt
 ```
 
 Finally, when you want to unmount, we also want to detach from GELI and detach from md:
@@ -101,6 +103,12 @@ Finally, when you want to unmount, we also want to detach from GELI and detach f
 
 ```
 zfs umount crypt
+```
+
+* zpool export
+
+```
+zpool export crypt
 ```
 
 * geli detach
