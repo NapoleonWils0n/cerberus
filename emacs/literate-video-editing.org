@@ -1,0 +1,177 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ob-async
+
+Code execution in Emacs is synchronous by default, meaning that you will be locked out of editing while the code is being run. 
+Fortunately, the fantastic ob-async package allows for asynchronous code execution with the :async arg, meaning that you can still use Emacs while the code snippet is run in the background.
+
+Once the package is installed, simply include :async t to the source code block and run it again: 
+
+install [[https://github.com/astahlman/ob-async][ob-async]] from melpa 
+
+#+BEGIN_SRC emacs
+M-x package install
+ob-async
+#+END_SRC
+
+edit your ~/.emacs file and add the following code
+
+#+BEGIN_SRC emacs
+(require 'ob-async)
+#+END_SRC
+
+* gps from video
+
+extract gps stats from a video
+
+#+NAME: gps
+#+HEADER: :var file="infile.mov"
+#+BEGIN_SRC sh 
+exiftool -n -gpslatitude -gpslongitude -ee "${file}" -csv
+#+END_SRC
+
+#+RESULTS: gps
+| SourceFile | GPSLatitude | GPSLongitude |
+| infile.mov |     51.5236 |      -0.1124 |
+
+* video duration
+
+#+NAME: duration
+#+HEADER: :var file="infile.mov"
+#+BEGIN_SRC sh 
+ffprobe -v error -show_entries format=duration -sexagesimal -of default=noprint_wrappers=1:nokey=1 "${file}"
+#+END_SRC
+
+#+RESULTS: duration
+: 0:05:27.060000
+
+* video stats
+
+#+NAME: vduration
+#+HEADER: :var file="infile.mov"
+#+BEGIN_SRC sh 
+ffprobe -v error \
+-show_entries \
+format=filename,duration,size,bit_rate:\
+format_tags=creation_time,com.apple.quicktime.location.ISO6709:\
+stream=codec_name,codec_type,profile,bit_rate,width,height,sample_rate,channel_layout \
+-pretty \
+-sexagesimal \
+-of csv \
+-i "${file}"
+#+END_SRC
+
+#+RESULTS: vduration
+| stream | h264       | High           | video             | 1920             | 1080                        | 15.364076 Mbit/s           |
+| stream | aac        | LC             | audio             | 44.100000 KHz    | mono                        | 100.796000 Kbit/s          |
+| stream | unknown    | unknown        | data              | 17.525000 Kbit/s |                             |                            |
+| stream | unknown    | unknown        | data              | N/A              |                             |                            |
+| format | infile.mov | 0:05:27.060000 | 603.980409 Mibyte | 15.491209 Mbit/s | 2019-11-19T19:31:51.000000Z | +51.5236-000.1124+015.798/ |
+
+* waveform from video pass block
+:PROPERTIES:
+:header-args: :dir ~/Desktop/test/
+:END:
+
+use properties to set a dir
+list video files in a directory
+
+#+NAME: list
+#+BEGIN_SRC sh
+ls 
+#+END_SRC
+
+#+RESULTS: list
+: infile.mov
+
+extract a waveform from the video
+
+#+NAME: waveform
+#+HEADER: :var file=list
+#+HEADER: :results file :file "waveform.png" :exports results
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-i "${file}" \
+-filter_complex "aformat=channel_layouts=mono,showwavespic=s=1000x200" \
+-frames:v 1 \
+-f apng -
+#+END_SRC
+
+#+RESULTS: waveform
+
+* waveform from video
+
+create a variable as a header argument which contains the name of the file to process
+
+#+NAME: waveform
+#+HEADER: :var file="infile.mov" 
+#+HEADER: :results file :file "waveform.png" :exports results
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-i "${file}" \
+-filter_complex "aformat=channel_layouts=mono,showwavespic=s=1000x200" \
+-frames:v 1 \
+-f apng -
+#+END_SRC
+
+#+RESULTS: waveform
+
+* extract frame
+
+extract a frame from a video
+
+#+NAME: extact
+#+HEADER: :dir /ssh:macmini:~/Desktop
+#+HEADER: :var file="infile.mov" 
+#+HEADER: :var seconds='00:00:00' 
+#+HEADER: :results file :file "frame.png" :exports results
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-ss "${seconds}" \
+-i "${file}" \
+-q:v 2 \
+-vframes 1 \
+-f image2 -
+#+END_SRC
+
+#+RESULTS: extact
+[[file:/ssh:macmini:/Users/djwilcox/Desktop/frame.png]]
+
+* tramp session
+
+#+NAME: connect
+#+HEADER: :dir /ssh:macmini:
+#+BEGIN_SRC sh :session macmini
+ssh macmini
+#+END_SRC
+
+#+RESULTS: connect
+
+#+NAME: tramptest
+#+BEGIN_SRC sh :session macmini
+ls ~/Desktop
+#+END_SRC
+
+#+RESULTS: tramptest
+| Literate-Devops-with-Emacsg.mp4 | siteground-ftp.txt |
+
+* trim video
+:PROPERTIES:
+:header-args: :dir ~/Desktop
+:END:
+
+#+NAME: trim
+#+HEADER: :var file="infile.mov" 
+#+HEADER: :results output
+#+BEGIN_SRC sh :async t
+trim-clip -s 00:00:00 -i "${file}" -t 00:00:10
+#+END_SRC
+
+#+RESULTS: trim
