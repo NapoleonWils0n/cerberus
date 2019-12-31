@@ -163,15 +163,18 @@ ls ~/Desktop
 | Literate-Devops-with-Emacsg.mp4 | siteground-ftp.txt |
 
 * trim video
-:PROPERTIES:
-:header-args: :dir ~/Desktop
-:END:
 
 #+NAME: trim
-#+HEADER: :var file="infile.mov" 
-#+HEADER: :results output
-#+BEGIN_SRC sh :async t
-trim-clip -s 00:00:00 -i "${file}" -t 00:00:10
+#+HEADER: :dir ~/Desktop
+#+HEADER: :var infile="bbb.mp4" 
+#+HEADER: :var outfile="outfile.mp4" 
+#+HEADER: :var start='00:00:00' 
+#+HEADER: :var end='00:00:03' 
+#+HEADER: :results none
+#+BEGIN_SRC sh :aync t
+trim-clip \
+-s "${start}" \
+-i "${infile}" \
+-t "${end}" \
+-o "${outfile}"
 #+END_SRC
-
-#+RESULTS: trim
