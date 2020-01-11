@@ -1,5 +1,52 @@
 #+STARTUP: content
 #+OPTIONS: num:nil author:nil
+#+TAGS: audio(a) video(v) image(i)
+
+* todo and agenda view
+
++ add a todo item
+
+#+BEGIN_EXAMPLE
+C-c C-t
+#+END_EXAMPLE
+
+then press the key for the todo item you want from the menu
+
++ agenda view show todo for the current buffer
+
+#+BEGIN_EXAMPLE
+C-c a
+#+END_EXAMPLE
+
++ restrict the view to the current buffer
+
+#+BEGIN_EXAMPLE
+<
+#+END_EXAMPLE
+
++ show todo 
+
+#+BEGIN_EXAMPLE
+t
+#+END_EXAMPLE
+
+press number follow by r to filter
+
++ toggle follow mode
+
+#+BEGIN_EXAMPLE
+shift-f
+#+END_EXAMPLE
+
+use the arrow keys to navigate
+
+press q to quit agenda mode
+
+* logbook
+
+#+BEGIN_EXAMPLE
+C-c C-z
+#+END_EXAMPLE
 
 * ob-async
 
