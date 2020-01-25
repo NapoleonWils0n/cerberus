@@ -1,0 +1,51 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* image magick scale
+
+rescale images to 1920x1080
+
+** convert images to 1920 x 1080
+
+#+BEGIN_SRC sh
+convert infile.jpg -geometry '1920x1080^' -gravity center -crop 16:9 +repage outfile.png
+#+END_SRC
+
+** mogrify batch scale images
+
+batch convert jpg to pngs
+
+#+BEGIN_SRC sh
+mogrify \
+-format png \
+-geometry '1920x1080^' \
+-gravity center \
+-crop 16:9 +repage \
+*.JPG
+#+END_SRC
+
+*** convert pngs
+
+mogrify will overwrite images when it converts them,
+so we need to create a directory called converted for example,
+and then use the -path option and specify the converted directory to output the files to
+
+create a directory for the converted files
+
+#+BEGIN_SRC sh
+mkdir -p converted
+#+END_SRC
+
+batch convert images
+
+#+BEGIN_SRC sh
+mogrify \
+-format png \
+-geometry '1920x1080^' \
+-gravity center \
+-crop 16:9 +repage \
+-path converted \
+*.JPG
+#+END_SRC
+
+
