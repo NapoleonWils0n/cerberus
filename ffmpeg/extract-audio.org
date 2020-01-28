@@ -1,0 +1,9 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* extract audio with ffmpeg
+
+ffmpeg extract audio
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -vn -c:a copy outfile.m4a
+#+END_SRC
