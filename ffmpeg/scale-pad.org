@@ -1,0 +1,8 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* scale and pad
+
+#+BEGIN_SRC sh
+ffmpeg -i fps.mp4 -vf "scale=-1:1080,pad=1920:ih:(ow-iw)/2" outfile.mp4
+#+END_SRC

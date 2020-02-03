@@ -1,0 +1,8 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* ffmpeg change framerate
+
+#+BEGIN_SRC sh
+ffmpeg -i <input> -filter:v fps=fps=30 <output>
+#+END_SRC
+

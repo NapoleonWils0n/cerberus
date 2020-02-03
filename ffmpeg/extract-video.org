@@ -1,0 +1,7 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* extract video
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -an -c:v copy outfile.mp4
+#+END_SRC
