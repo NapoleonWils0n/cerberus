@@ -1,0 +1,46 @@
+#+STARTUP: overview
+#+OPTIONS: num:nil author:nil
+
+* xfade ffmpeg
+
+requires ffmpeg 4.2.3
+
+#+BEGIN_SRC sh
+ffmpeg -i first.mp4 -i trim.mp4 \
+-filter_complex \
+" xfade=transition=fade:duration=1:offset=5
+" \
+-pix_fmt yuv420p \
+-shortest \
+-movflags +faststart -f mp4 \
+output-$(date +"%Y-%m-%d-%H-%M-%S").mp4
+#+END_SRC
+
++ transitions
+
+‘custom’
+‘fade’
+‘wipeleft’
+‘wiperight’
+‘wipeup’
+‘wipedown’
+‘slideleft’
+‘slideright’
+‘slideup’
+‘slidedown’
+‘circlecrop’
+‘rectcrop’
+‘distance’
+‘fadeblack’
+‘fadewhite’
+‘radial’
+‘smoothleft’
+‘smoothright’
+‘smoothup’
+‘smoothdown’
+‘circleopen’
+‘circleclose’
+‘vertopen’
+‘vertclose’
+‘horzopen’
+‘horzclose’
