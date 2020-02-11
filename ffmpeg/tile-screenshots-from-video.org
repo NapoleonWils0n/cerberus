@@ -1,0 +1,124 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* tile screenshots from video
+
+https://ffmpeg.org/ffmpeg-filters.html#tile
+
+To make multiple screenshots and place them into a single image file (creating tiles), you can use FFmpeg'
+
+#+BEGIN_SRC sh
+ffmpeg -ss 00:00:10 \
+-i movie.avi -frames 1 -vf "select=not(mod(n\,1000)),scale=320:240,tile=2x3" out.png
+#+END_SRC
+
+** ffprobe number of frames
+
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-i infile.mp4 \
+-select_streams v:0 -show_entries "stream=nb_frames" \
+-of default=noprint_wrappers=1:nokey=1
+#+END_SRC
+
+** duration and fps
+
+duration
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-select_streams v:0 \
+-show_entries format=duration \
+-of default=noprint_wrappers=1:nokey=1 \
+infile.mp4 \
+| cut -d\. -f1
+#+END_SRC
+
++ frame rate
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-select_streams v:0 \
+-show_entries stream=avg_frame_rate \
+-of default=noprint_wrappers=1:nokey=1 \
+infile.mp4 \
+| cut -d\/ -f1
+#+END_SRC
+
++ fps and duration
+
+#+BEGIN_SRC sh
+ffprobe \
+-v error \
+-select_streams v:0 \
+-show_entries stream=avg_frame_rate:format=duration \
+-of default=noprint_wrappers=1 \
+infile.mp4
+#+END_SRC
+
++ fps and duration variable
+
+#+BEGIN_SRC sh
+videostats=$(ffprobe \
+-v error \
+-select_streams v:0 \
+-show_entries stream=avg_frame_rate:format=duration \
+-of default=noprint_wrappers=1 \
+infile.mp4)
+#+END_SRC
+
++ frame rate
+
+#+BEGIN_SRC sh
+awk -F'[=//]' '/avg_frame_rate/{print $2}'
+#+END_SRC
+
++ duration
+
+#+BEGIN_SRC sh
+awk -F'[=/.]' '/duration/{print $2}'
+#+END_SRC
+
+** seek 
+
+The following command will seek 5 seconds into the movie, select every 400th frame, 
+scale it to 160x120 pixels and create 4x3 tiles in the output image tile.png:
+
+#+BEGIN_SRC sh
+ffmpeg \
+-ss 00:00:05 \
+-i infile.mp4 \
+-frames 1 -vf "select=not(mod(n\,93)),scale=160:120,tile=4x3:padding=7:margin=2" \
+outfile-$(date +"%y-%m-%d-%h-%m-%s").png
+#+END_SRC
+
++ white padding
+
+#+BEGIN_SRC sh
+ffmpeg \
+-ss 00:00:05 \
+-i infile.mp4 \
+-frames 1 -vf "select=not(mod(n\,400)),scale=160:120,tile=4x3:padding=7:margin=2:color=white" \
+outfile-$(date +"%y-%m-%d-%h-%m-%s").png
+#+END_SRC
+
+** scene change
+
+This will create a mosaic composed of the first scenes
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -vf select='gt(scene\,0.4)',scale=160:120,tile -frames:v 1 outfile.png
+#+END_SRC
+
+padding margin
+scene change 0.1
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 \
+-vf select='gt(scene\,0.1)',scale=160:120,tile=4x3:padding=7:margin=2 \
+-frames:v 1 outfile-$(date +"%y-%m-%d-%h-%m-%s").png
+#+END_SRC
