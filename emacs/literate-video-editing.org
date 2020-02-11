@@ -2,6 +2,27 @@
 #+OPTIONS: num:nil author:nil
 #+TAGS: audio(a) video(v) image(i)
 
+
+* ob-async
+
+Code execution in Emacs is synchronous by default, meaning that you will be locked out of editing while the code is being run. 
+Fortunately, the fantastic ob-async package allows for asynchronous code execution with the :async arg, meaning that you can still use Emacs while the code snippet is run in the background.
+
+Once the package is installed, simply include :async t to the source code block and run it again: 
+
+install [[https://github.com/astahlman/ob-async][ob-async]] from melpa 
+
+#+BEGIN_SRC emacs
+M-x package install
+ob-async
+#+END_SRC
+
+edit your ~/.emacs file and add the following code
+
+#+BEGIN_SRC emacs
+(require 'ob-async)
+#+END_SRC
+
 * todo and agenda view
 
 + add a todo item
@@ -42,32 +63,344 @@ use the arrow keys to navigate
 
 press q to quit agenda mode
 
+* drawer
+
+You can interactively insert a drawer at point by calling org-insert-drawer, 
+which is bound to C-c C-x d
+
+#+BEGIN_EXAMPLE
+C-c C-x d
+#+END_EXAMPLE
+
 * logbook
 
 #+BEGIN_EXAMPLE
 C-c C-z
 #+END_EXAMPLE
 
-* ob-async
+* sox record audio
 
-Code execution in Emacs is synchronous by default, meaning that you will be locked out of editing while the code is being run. 
-Fortunately, the fantastic ob-async package allows for asynchronous code execution with the :async arg, meaning that you can still use Emacs while the code snippet is run in the background.
+** set mixer volume
 
-Once the package is installed, simply include :async t to the source code block and run it again: 
+Boot up with the external usb mic plugged in
 
-install [[https://github.com/astahlman/ob-async][ob-async]] from melpa 
+After logging in run dmesg as root to make sure the device is recognised
 
-#+BEGIN_SRC emacs
-M-x package install
-ob-async
+#+BEGIN_SRC 
+dmesg
 #+END_SRC
 
-edit your ~/.emacs file and add the following code
+Check /dev/dsp* for the device
 
-#+BEGIN_SRC emacs
-(require 'ob-async)
+#+BEGIN_SRC sh
+ls /dev/dsp*
 #+END_SRC
 
+By default the mixer for /dev/dsp2 device is muted so we need to un mute it
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer2 mic 100
+#+END_SRC
+
+** set audio device
+
+Note make sure to disable bitperfect audio on freebsd
+change the sysctl value as root
+
+#+BEGIN_SRC sh
+sysctl dev.pcm.2.bitperfect=0
+#+END_SRC
+
+set the audio device and driver
+
+#+BEGIN_SRC sh
+export AUDIODEV=/dev/dsp2.0
+export AUDIODRIVER=oss
+#+END_SRC
+
+** record mic
+
+record mic
+
+#+BEGIN_SRC sh
+rec -c 1 -r 44.1k -b 16 out.wav 
+#+END_SRC
+
+* sox trim audio
+
+trim the first and last 2 seconds from the audio file
+
+play the audio with the trim effect
+
+#+BEGIN_SRC sh
+play infile.wav trim 2 -2
+#+END_SRC
+
+sox trim audio
+
+#+BEGIN_SRC sh
+sox infile.wav outfile.wav trim 2 -2
+#+END_SRC
+
+* sox effects
+
+sox effects
+
+** noise gate
+
+#+NAME: noisegate
+#+BEGIN_SRC conf :tangle "1ns.txt"
+compand 0.5,1 -inf,-45.1,-inf,-45,-45 0 -90 .1
+highpass 200
+lowpass 3000
+
+#+END_SRC
+
+** gain
+
+#+NAME: gain
+#+BEGIN_SRC conf :tangle "2gain.txt'
+gain -b -n -3
+#+END_SRC
+
+** eq
+
+#+NAME: eq
+#+BEGIN_SRC conf :tangle "3eq.txt"
+equalizer 189 0.7q -6.0
+equalizer 261 0.7q -5.0
+equalizer 829 0.7q -4.0
+equalizer 3089 0.7q -2.0
+equalizer 5000 0.7q -2.0
+#+END_SRC
+
+** compressor
+
+#+NAME: compressor
+#+BEGIN_SRC conf :tangle "4cmp.txt"
+compand .5,1 6:-40,-36,-32,-28,-18,-24,-16,-12,-12 -5 -90 0.2
+#+END_SRC
+
+** fade
+
+#+NAME: fade
+#+BEGIN_SRC conf :tangle "5fade.txt"
+fade 1 0 1
+#+END_SRC
+
+* sox apply effects
+
+#+BEGIN_SRC sh
+sox infile.wav -p --effects-file=1ns.txt \
+| sox - -p --effects-file=2gain.txt \
+| sox - -p --effects-file=3eq.txt \
+| sox - -p --effects-file=4cmp.txt \
+| sox - outfile.wav --effects-file=5fade.txt
+#+END_SRC
+
+* sox batch apply effects
+
+batch apply sox effects to files
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.wav" -exec sh -c \
+'sox "${0}" -p --effects-file=1ns.txt \
+| sox - -p --effects-file=2gain.txt \
+| sox - -p --effects-file=3eq.txt \
+| sox - -p --effects-file=4cmp.txt \
+| sox - "${0%.*}-sox.wav" --effects-file=5fade.txt' \
+"{}" \;
+#+END_SRC
+
+* audio duration
+
+file name and audio duration
+
+#+NAME: duration
+#+HEADER: :dir "intro/audio/original"
+#+HEADER: :var file="1-ffmpeg-github.wav"
+#+BEGIN_SRC sh :async t
+ffprobe -v error \
+-show_entries \
+format=filename,duration \
+-pretty \
+-sexagesimal \
+-of csv=p=0 \
+-i "${file}"
+#+END_SRC
+
+#+RESULTS: duration
+| 1-ffmpeg-github.wav | 0:00:27.120907 |
+
+* audio duration and find
+
+file name and audio duration
+
+use execdir with find to avoid a ./ prefix on the filename results
+csv=p=0 removes the format comlumn
+
+#+NAME: duration-find
+#+HEADER: :dir "intro/audio/original"
+#+BEGIN_SRC sh :async t
+find -s . -type f -name "*.wav" -execdir sh -c \
+'ffprobe -v error \
+-show_entries \
+format=filename,duration \
+-pretty \
+-sexagesimal \
+-of csv=p=0 \
+-i "${0}"' \
+"{}" \;
+#+END_SRC
+
+#+RESULTS: duration-find
+| 01-ffmpeg-github.wav     | 0:00:27.120907 |
+| 02-audio-silence.wav     | 0:00:40.309841 |
+| 03-combine-clips.wav     | 0:00:34.737052 |
+| 04-curve2ffmpeg.wav      | 0:00:25.077551 |
+| 05-correct-clip.wav      | 0:00:26.377868 |
+| 06-ebu-meter.wav         | 0:00:19.876281 |
+| 07-extract-frame.wav     | 0:00:28.606984 |
+| 08-fade-clip.wav         | 0:00:23.034195 |
+| 09-fade-normalize.wav    | 0:00:36.780408 |
+| 10-fade-title.wav        | 0:00:54.056054 |
+| 11-img2video.wav         | 0:00:23.034195 |
+| 12-loudnorm.wav          | 0:00:18.018685 |
+| 13-normalize.wav         | 0:00:19.876281 |
+| 14-overlay-clip.wav      | 0:00:32.136417 |
+| 15-subs2transcript.wav   | 0:00:21.176599 |
+| 16-subtitle-add.wav      | 0:00:24.706032 |
+| 17-trim-clip.wav         | 0:00:33.622494 |
+| 18-waveform.wav          | 0:00:20.805079 |
+| 19-xfade-clips.wav       | 0:00:31.393379 |
+| 20-zoompan.wav           | 0:00:41.610159 |
+| 21-bin-dir.wav           | 0:00:21.548118 |
+| 22-source-shell.wav      | 0:00:29.164263 |
+| 23-git-clone.wav         | 0:00:26.377868 |
+| 24-copy-scipts.wav       | 0:00:13.931973 |
+| 25-xcode-commandline.wav | 0:00:26.006349 |
+| 26-homebrew.wav          | 0:00:14.675011 |
+| 27-ffmpeg-install.wav    | 0:00:30.464580 |
+| eb1.wav                  | 0:00:18.390204 |
+
+* batch combine-clips images
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.png" -exec sh -c \
+'combine-clips -i "${0}" -a "${0%.*}.wav"' \
+"{}" \;
+#+END_SRC
+
+* batch combine-clips video
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'combine-clips -i "${0}" -a "${0%.*}.wav"' \
+"{}" \;
+#+END_SRC
+
+* batch fade clips
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'fade-clip -i "${0}" -d 0.2' \
+"{}" \;
+#+END_SRC
+
+* imagemagick convert images to 16/9
+
+rescale images to 1920x1080
+
+** convert images to 1920 x 1080
+
+#+BEGIN_SRC sh
+convert infile.jpg -geometry '1920x1080^' -gravity center -crop 16:9 +repage outfile.png
+#+END_SRC
+
+** mogrify batch scale images
+
+batch convert jpg to pngs
+
+#+BEGIN_SRC sh
+mogrify \
+-format png \
+-geometry '1920x1080^' \
+-gravity center \
+-crop 16:9 +repage \
+*.JPG
+#+END_SRC
+
+*** convert pngs
+
+mogrify will overwrite images when it converts them,
+so we need to create a directory called converted for example,
+and then use the -path option and specify the converted directory to output the files to
+
+create a directory for the converted files
+
+#+BEGIN_SRC sh
+mkdir -p converted
+#+END_SRC
+
+batch convert images
+
+#+BEGIN_SRC sh
+mogrify \
+-format png \
+-geometry '1920x1080^' \
+-gravity center \
+-crop 16:9 +repage \
+-path converted \
+*.JPG
+#+END_SRC
+
+* batch zoompan images
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.png" -exec sh -c \
+'zoompan -i "${0}" -d 4 -z in -p tc' \
+"{}" \;
+#+END_SRC
+
+* batch audio-silence
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'audio-silence -i "${0}"' \
+"{}" \;
+#+END_SRC
+
+* concat video
+** ffmpeg concat clips
+  
+Create a list of all the mp4s in the current directory  
+
+#+BEGIN_SRC sh
+printf "file '%s'\n" *.mp4 > list.txt
+#+END_SRC
+** ffplay play concat list
+
+play the list with ffplay
+
+#+BEGIN_SRC sh
+ffplay -f concat -i list.txt
+#+END_SRC
+
+** Create a list of files to concat
+
+Use ffmpeg to concat the video file in the text file
+
+#+BEGIN_SRC sh
+ffmpeg -f concat -i list.txt -c copy outfile.mp4
+#+END_SRC
+
+* extract audio with ffmpeg
+
+ffmpeg extract audio
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -vn -c:a copy outfile.m4a
+#+END_SRC
 * gps from video
 
 extract gps stats from a video
@@ -209,19 +542,3 @@ ls ~/Desktop
 #+RESULTS: tramptest
 | Literate-Devops-with-Emacsg.mp4 | siteground-ftp.txt |
 
-* trim video
-
-#+NAME: trim
-#+HEADER: :dir ~/Desktop
-#+HEADER: :var infile="bbb.mp4" 
-#+HEADER: :var outfile="outfile.mp4" 
-#+HEADER: :var start='00:00:00' 
-#+HEADER: :var end='00:00:03' 
-#+HEADER: :results none
-#+BEGIN_SRC sh :aync t
-trim-clip \
--s "${start}" \
--i "${infile}" \
--t "${end}" \
--o "${outfile}"
-#+END_SRC
