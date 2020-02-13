@@ -1,0 +1,10 @@
+#+STARTUP: overview
+#+OPTIONS: num:nil author:nil
+
+* overlay logo over video
+
+overlay a transparent png logo over a video
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -i logo -filter_complex 'overlay=10:main_h-overlay_h-10' output.mp4
+#+END_SRC
