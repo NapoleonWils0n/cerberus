@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* mpv show miliseconds in osd
+
+edit your ~/.config/mpv/mpv.conf file
+and add the following code to show miliseconds in the osd
+
+#+BEGIN_EXAMPLE
+osd-fractions
+#+END_EXAMPLE
