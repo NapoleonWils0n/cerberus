@@ -1,0 +1,8 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* crop and pad
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -filter:v "crop=1440:1080:240:0,hue=s=0,pad=1920:ih:(ow-iw)/2" outfile.mp4
+#+END_SRC

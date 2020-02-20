@@ -1,0 +1,9 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* colour to grayscale
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -vf hue=s=0 outfile.mp4
+#+END_SRC
+
