@@ -24,6 +24,12 @@ mogrify \
 *.JPG
 #+END_SRC
 
+** pad image to 1920 x 1080
+
+#+BEGIN_SRC sh
+convert infile.png -resize 1920x1080 -background black -gravity center -extent 1920x1080 outfile.png
+#+END_SRC
+
 *** convert pngs
 
 mogrify will overwrite images when it converts them,
