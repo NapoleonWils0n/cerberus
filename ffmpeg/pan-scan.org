@@ -1,0 +1,81 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* pan scan ffmpeg
+
+** pan right
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-y -loop 1 \
+-i infile.png -ss 0 -t 8 \
+-filter_complex \
+"scale=w=-2:h=3*1080, \
+crop=w=3*1920/1.05:h=3*1080/1.05:x=(in_w-out_w)-t*(in_w-out_w)/8,  \
+scale=w=1920:h=1080, setsar=1" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+right.mp4
+#+END_SRC
+
+** pan left
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-y -loop 1 \
+-i infile.png -ss 0 -t 8 \
+-filter_complex \
+"scale=w=-2:h=3*1080,crop=w=3*1920/1.05:h=3*1080/1.05:x=t*(in_w-out_w)/8,  \
+scale=w=1920:h=1080,setsar=1" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+left.mp4
+#+END_SRC
+
+** pan down
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-y -loop 1 \
+-i infile.png -ss 0 -t 8 \
+-filter_complex \
+"scale=w=-2:h=3*1080,crop=w=3*1920/1.2:h=3*1080/1.2:y=(in_h-out_h)-t*(in_h-out_h)/8,  \
+scale=w=1920:h=1080,setsar=1" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+down.mp4
+#+END_SRC
+
+** pan up
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-r 30 \
+-y -loop 1 \
+-i infile.png -ss 0 -t 12 \
+-filter_complex \
+"scale=w=-2:h=3*1080,crop=w=3*1920/1.2:h=3*1080/1.2:y=t*(in_h-out_h)/12,  \
+scale=w=1920:h=1080,setsar=1" \
+-y -shortest \
+-c:v libx264 -crf 18 -profile:v high \
+-r 30 -pix_fmt yuv420p \
+-movflags +faststart -f mp4 \
+up1.mp4
+#+END_SRC
