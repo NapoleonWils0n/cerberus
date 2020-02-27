@@ -1,0 +1,22 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* imagemagick create gif
+
+create a thumbs directory
+
+#+BEGIN_SRC sh
+mkdir -p thumbs
+#+END_SRC
+
+batch convert jpgs to gifs and save in the thumbs directory
+
+#+BEGIN_SRC sh
+mogrify  -format gif -path thumbs -thumbnail 320 *.jpg
+#+END_SRC
+
+animate the gifs
+
+#+BEGIN_SRC sh
+convert -delay 400 file1.gif file2.gif file3.gif outfile.gif
+#+END_SRC
