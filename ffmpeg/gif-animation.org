@@ -1,0 +1,54 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg gif animatio
+
+create a animated gif with ffmpeg
+
+[[https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/]]
+
+#+BEGIN_SRC sh
+ffmpeg \
+-ss 0 -t 10 \
+-i infile1.mp4 \
+-filter_complex "[0:v] fps=15,scale=320:-1:flags=lanczos,split [a][b];[a] palettegen [p];[b][p] paletteuse" \
+outfile-$(date +"%Y-%m-%d-%H-%M-%S").gif
+#+END_SRC
+
+* ffmpeg imagemagick animated gif
+
+extract a frame every second and pipe into imagemagick
+
+#+BEGIN_SRC sh
+ffmpeg \
+-i infile.mp4 \
+-vf fps=1,scale=320:-1 \
+-f image2pipe -vcodec pam - \
+| convert -delay 100 - \
+outfile-$(date +"%Y-%m-%d-%H-%M-%S").gif
+#+END_SRC
+
+extract a frame every minute and pipe into imagemagick
+
+#+BEGIN_SRC sh
+ffmpeg \
+-i infile.mp4 \
+-vf fps=1/60,scale=320:-1 \
+-f image2pipe -vcodec pam - \
+| convert -delay 100 - \
+outfile-$(date +"%Y-%m-%d-%H-%M-%S").gif
+#+END_SRC
+
+extract a frame every second and set and start and end time and pipe into imagemagick
+
+#+BEGIN_SRC sh
+ffmpeg \
+-ss 0 -t 10 \
+-i infile.mp4 \
+-vf fps=fps=1,scale=320:-1 \
+-f image2pipe -c:v pam - \
+| convert -delay 100 - \
+outfile-$(date +"%Y-%m-%d-%H-%M-%S").gif
+#+END_SRC
+
+
