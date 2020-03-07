@@ -1,0 +1,39 @@
+#+STARTUP: showall
+* ducky keyboard
+
+swap lctrl and lalt
+
+#+BEGIN_SRC sh
+setxkbmap -option ctrl:swap_lalt_lctl
+#+END_SRC
+
+swap right alt and right win
+
+#+BEGIN_SRC sh
+setxkbmap -option altwin:alt_super_win
+#+END_SRC
+
+full command
+
+#+BEGIN_SRC sh
+setxkbmap -layout gb -variant mac ctrl:swap_lalt_lctl,altwin:alt_super_win
+#+END_SRC
+
+* xorg
+
+#+BEGIN_SRC sh
+Section "InputDevice"
+	Identifier "Keyboard0" 
+	Driver      "kbd"
+EndSection
+
+Section "InputClass"
+	Identifier  "Keyboard0"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "gb"
+        Option "XkbModel" "pc104"
+        Option "XkbVariant" "mac"
+        Option "XkbOptions" "terminate:ctrl_alt_bksp,ctrl:nocaps,ctrl:swap_lalt_lctl,altwin:alt_super_win"
+EndSection
+
+#+END_SRC
