@@ -1,0 +1,98 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* mount linux drives on freebsd
+
+switch to root with doas
+
+#+BEGIN_SRC sh
+doas su
+#+END_SRC
+
+or sudo 
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+** install the fusefs-ext2 package
+
+#+BEGIN_SRC sh
+pkg install fusefs-ext2
+#+END_SRC
+
+** enable the fuse kernel module
+
+To enable loading FUSE kernel module at boot add
+fuse_load=YES line to the /boot/loader.conf file
+
+switch to root and edit the loader.conf file
+
+#+BEGIN_SRC sh
+vi /boot/loader.conf
+#+END_SRC
+
+and add the following code to the loader.conf
+
+#+BEGIN_SRC sh
+fuse_load=YES
+#+END_SRC
+
+You can also load the fuse kernel module on a running system just using the kldload command.
+
+switch to root and run the followign command
+
+#+BEGIN_SRC 
+kldload fuse
+#+END_SRC
+
+** mounting the linux drive
+
+create a mount as root
+
+#+BEGIN_SRC sh
+mkdir -p /mnt/linux
+#+END_SRC
+
+plug in the drive and use dmesg to find the device id
+
+switch to root and then run dmesg
+
+#+BEGIN_SRC sh
+dmesg
+#+END_SRC
+
+find the drives device id which should be something like da0
+
+as root run gpart 
+
+#+BEGIN_SRC sh
+gpart show da0
+#+END_SRC
+
+we want to mount the drives slice
+
+check /dev/da0
+
+
+#+BEGIN_SRC sh
+ls -l /dev/da0*
+#+END_SRC
+
+the slice should be called
+
+#+BEGIN_SRC sh
+/dev/da0s1
+#+END_SRC
+
+mount the ext4 drive to /mnt/linux
+
+#+BEGIN_SRC sh
+fuse-ext2 /dev/da0s1 /mnt/linux
+#+END_SRC
+
+unmount the drive as root
+
+#+BEGIN_SRC sh
+umount /mnt/linux
+#+END_SRC
