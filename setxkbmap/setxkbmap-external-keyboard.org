@@ -1,0 +1,59 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+
+* setxkbmap external keyboard
+
+change the keyboard layout on an external keyboard
+
+find the keyboards device id with xinput
+
+#+begin_src sh
+xinput
+#+end_src
+
+#+begin_src sh
+⎡ Virtual core pointer                    	id=2	[master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]
+⎜   ↳ bcm5974                                 	id=11	[slave  pointer  (2)]
+⎜   ↳ BenQ ZOWIE BenQ ZOWIE Gaming Mouse      	id=13	[slave  pointer  (2)]
+⎜   ↳ Ducky Ducky One2 Mini RGB               	id=15	[slave  pointer  (2)]
+⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]
+    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]
+    ↳ Power Button                            	id=6	[slave  keyboard (3)]
+    ↳ Video Bus                               	id=7	[slave  keyboard (3)]
+    ↳ Power Button                            	id=8	[slave  keyboard (3)]
+    ↳ Sleep Button                            	id=9	[slave  keyboard (3)]
+    ↳ Apple Inc. Apple Internal Keyboard / Trackpad	id=10	[slave  keyboard (3)]
+    ↳ FaceTime Camera (Built-in): Fac         	id=12	[slave  keyboard (3)]
+    ↳ Ducky Ducky One2 Mini RGB               	id=14	[slave  keyboard (3)]
+    ↳ Ducky Ducky One2 Mini RGB               	id=16	[slave  keyboard (3)]
+    ↳ Ducky Ducky One2 Mini RGB               	id=17	[slave  keyboard (3)]
+#+end_src
+
+In this case the id we want is id 14
+Ducky Ducky One2 Mini RGB id=14[slave keyboard (3)]
+
+change the external keyboard layout
+
+#+begin_src sh
+setxkbmap -device 14 -layout gb -variant mac -option ctrl:swap_lalt_lctl,altwin:alt_super_win
+#+end_src
+
+remove the options for the exernal keyboard
+
+#+begin_src sh
+setxkbmap -device 14 -layout gb -variant mac -option
+#+end_src
+
+change layout for built in keyboard and the external keyboard
+
+#+begin_src sh
+setxkbmap -layout gb -variant mac -option ctrl:swap_lalt_lctl,altwin:alt_super_win
+#+end_src
+
+xkbcomp set custom layout
+
+#+begin_src sh
+xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
+#+end_src
+
