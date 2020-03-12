@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# barrier share keyboard and mouse
+usage="usage: $(basename "$0") [ start | stop ]"
+
+# check if 1 argument is passed to the script
+[ $# = 1 ] || { printf "%s\n" "$usage"; exit 1; }
+
+# case statement
+input="$1"
+case "$input" in
+  start)
+        # if server isnt running start it
+        barrier --server --address 192.168.1.3:24800 --config ~/.barrier/barrier.conf
+        break;;
+  stop)
+        # if server is running stop it
+        pkill barrier
+        break;;
+  *)    printf "%s\n" "$usage";;
+esac
