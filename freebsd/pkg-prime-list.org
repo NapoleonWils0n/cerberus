@@ -1,0 +1,16 @@
+#+STARTUP: showall
+#+OPTIONS: num:nil author:nil
+* pkg prime list
+
+Packages installed as dependencies are called automatic packages. 
+Non-automatic packages, i.e the packages that were explicity installed not as a dependency to another package, can be listed using:
+
+#+BEGIN_SRC sh
+pkg prime-list
+#+END_SRC
+
+save to a file
+
+#+BEGIN_SRC sh
+pkg prime-list > pkg-prime-list.txt
+#+END_SRC
