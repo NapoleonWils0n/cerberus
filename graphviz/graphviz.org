@@ -1,0 +1,29 @@
+#+STARTUP: showall
+* graphviz
+
+#+BEGIN_SRC dot :file photos.png :cmdline -Kdot -Tpng
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box];
+edge [style=solid];
+
+// nodes
+camera [label="Take photos"]
+online [label="Online transfer"]
+physical [label="Physical transfer"]
+import [label="Import to computer"]
+gps [label="Extract gps coordinates"]
+gmap [label="Google Map"]
+video [label="Ken Burns Slideshow"]
+
+camera -> {physical online} -> import;
+import -> { video gps };
+gps -> gmap
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:photos.png]]
+
