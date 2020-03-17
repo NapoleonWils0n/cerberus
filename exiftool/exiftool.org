@@ -147,6 +147,19 @@ exiftool -p kml.fmt -r DIR > out.kml
 #[TAIL]</kml>
 #+END_SRC
 
+upload images n the kml-images directory to amazon s3 or an http server
+
+#+BEGIN_SRC sh
+aws s3 cp kml-images s3://bucketname.co.uk/ --recursive
+#+END_SRC
+
+use sed to change the image url to point to the directory on amazon s3 or another server
+prepend the domain to the directoy name
+
+#+BEGIN_SRC sh
+sed -i.bak 's#kml-images#http://bucketname.co.uk/kml-images#' out.kml
+#+END_SRC
+
 ** googlew earth kml video
 
 #+BEGIN_SRC sh
