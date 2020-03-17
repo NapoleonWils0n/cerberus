@@ -215,3 +215,62 @@ exiftool -p video-kml.fmt -r DIR > out.kml
 #[TAIL]</kml>
 
 #+END_SRC
+
+** google earth kmz
+
+*** create the folder structure for the kmz file
+
+#+BEGIN_SRC sh
+mkdir -p map/files
+#+END_SRC
+
+*** mogrify resize images
+
+mogrify will overwrite images when it converts them,
+so we need to create a directory called converted for example,
+and then use the -path option and specify the converted directory to output the files to
+
++ change directory into the images folder
+
+#+BEGIN_SRC sh
+cd images
+#+END_SRC
+
++ create a directory called resized
+
+#+BEGIN_SRC sh
+mkdir -p resized
+#+END_SRC
+
++ resize the jpg to 320x240 files with a transparent background
+
+#+BEGIN_SRC sh
+mogrify -format jpg -resize 320x240 -background transparent -gravity center -extent 480x270 -path resized *.jpg
+#+END_SRC
+
+*** move the images into the map/files directory
+
+#+BEGIN_SRC sh
+mv *.jpg map/files
+#+END_SRC
+
+*** run exiftool on the files directory
+
+run exiftool on the files directory and output the doc.kml into the maps directory
+
+#+BEGIN_SRC sh
+exiftool -p kml.fmt -r map/files > map/doc.kml
+#+END_SRC
+
+*** zip the map directory
+
+#+BEGIN_SRC sh
+zip -r map.zip map
+#+END_SRC
+
+*** rename the map.zip file to map.kmz
+
+#+BEGIN_SRC sh
+mv map.zip map.kmz
+#+END_SRC
+
