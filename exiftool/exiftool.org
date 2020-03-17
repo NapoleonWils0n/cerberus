@@ -245,7 +245,7 @@ mkdir -p resized
 + resize the jpg to 320x240 files with a transparent background
 
 #+BEGIN_SRC sh
-mogrify -format jpg -resize 320x240 -background transparent -gravity center -extent 480x270 -path resized *.jpg
+mogrify -format jpg -resize 320x240 -background white -gravity center -extent 320x240 -path resized *.jpg
 #+END_SRC
 
 *** move the images into the map/files directory
