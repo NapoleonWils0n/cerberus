@@ -160,7 +160,58 @@ prepend the domain to the directoy name
 sed -i.bak 's#kml-images#http://bucketname.co.uk/kml-images#' out.kml
 #+END_SRC
 
-** googlew earth kml video
+** google earth csv
+
+google earth csv
+
+*** mogrify resize images
+
+mogrify will overwrite images when it converts them,
+so we need to create a directory called converted for example,
+and then use the -path option and specify the converted directory to output the files to
+
++ change directory into the images folder
+
+#+BEGIN_SRC sh
+cd images
+#+END_SRC
+
++ create a directory called resized
+
+#+BEGIN_SRC sh
+mkdir -p resized
+#+END_SRC
+
++ resize the jpg to 320x240 files with a transparent background
+
+#+BEGIN_SRC sh
+mogrify -format jpg -resize 320x240 -background white -gravity center -extent 320x240 -path resized *.jpg
+#+END_SRC
+
+*** extract gps from images
+
+replace resized with the name of the directory containing the images
+
+#+BEGIN_SRC sh
+exiftool -n -FileName -gpslatitude -gpslongitude -r resized -csv > oufile.csv
+#+END_SRC
+
+*** upload images to server
+
+upload images directory of images tto amazon s3 or an http server
+
+#+BEGIN_SRC sh
+aws s3 cp resized s3://bucketname.co.uk/ --recursive
+#+END_SRC
+
+use sed to change the image url to point to the directory on amazon s3 or another server
+prepend the domain to the directoy name, and remove the .jpg extension form the file name
+
+#+BEGIN_SRC sh
+sed -i.bak 's#resized#http://servername.co.uk/resized#;s#[a-zA-z_]*.jpg##2' outfile.csv
+#+END_SRC
+
+** google earth kml video
 
 #+BEGIN_SRC sh
 exiftool -p video-kml.fmt -r DIR > out.kml
