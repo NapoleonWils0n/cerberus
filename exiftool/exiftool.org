@@ -30,13 +30,13 @@ exiftool -n -gpslatitude -gpslongitude -ee -r directory -csv > out.csv
 ** gpx track log
 
 #+BEGIN_SRC sh
-exiftool -fileOrder -gpsdatetime -p gpx.fmt input-directory > out.gpx
+exiftool -fileOrder gpsdatetime -p gpx.fmt input-directory > out.gpx
 #+END_SRC
 
 The -if option may be added to ensure that only files containing GPS information are processed. For example, the following command creates "out.gpx" in the current directory from all pictures containing GPSDateTime information in directory "pics" and its sub-directories:
 
 #+BEGIN_SRC sh
-exiftool -r -if '$gpsdatetime' -fileOrder -gpsdatetime -p gpx.fmt pics > out.gpx
+exiftool -r -if '$gpsdatetime' -fileOrder gpsdatetime -p gpx.fmt pics > out.gpx
 #+END_SRC
 
 + gpx.fmt
