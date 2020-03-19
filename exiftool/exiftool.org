@@ -29,6 +29,14 @@ exiftool -n -gpslatitude -gpslongitude -ee -r directory -csv > out.csv
 
 ** gpx track log
 
++ add date time original to gpsdatetime, replace input with image or directory
+
+#+BEGIN_SRC sh
+exiftool "-gpstimestamp<datetimeoriginal" "-gpsdatestamp<datetimeoriginal" input
+#+END_SRC
+
++ create gpx file
+
 #+BEGIN_SRC sh
 exiftool -fileOrder gpsdatetime -p gpx.fmt input-directory > out.gpx
 #+END_SRC
