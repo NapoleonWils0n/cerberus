@@ -1,0 +1,92 @@
+#+STARTUP: overview
+#+OPTIONS: num:nil author:nil
+* zfs datasets home
+
+** create the zfs datasets
+
+zfs list datasets
+
+#+BEGIN_SRC sh
+zfs list
+#+END_SRC
+
+create the main dataset under zpool as root
+
+#+BEGIN_SRC sh
+# zfs create zroot/data
+# zfs create zroot/data/desktop
+# zfs create zroot/data/documents
+# zfs create zroot/data/downloads
+# zfs create zroot/data/git
+# zfs create zroot/data/config
+# zfs create zroot/data/emacsd
+# zfs create zroot/data/local
+# zfs create zroot/data/mozilla
+# zfs create zroot/data/ossuary
+# zfs create zroot/data/weechat
+#+END_SRC
+
+*** create the mount points in your home directory
+
+#+BEGIN_SRC sh
+mkdir -p ~/{Desktop,documents,downloads,git,.config,.emacs.d,.local,.mozzila,.ossuary,.weechat}
+#+END_SRC
+
+*** send zfs datasets
+
+switch to root to execute the following commands
+
+import the backup pool drive
+
+#+BEGIN_SRC sh
+# zpool import
+#+END_SRC
+
+import the pool which has the zfs mount point set to /mnt/usb
+backup pool is name zbackup in this case
+
+#+BEGIN_SRC sh
+# zpool import zbackup
+#+END_SRC
+
+list the zfs datasets 
+
+#+BEGIN_SRC sh 
+zfs list -t snapshot
+#+END_SRC
+
+send incremental snapshots  
+use the -R option on the zroot pool to send incremental snapshots of the descendant file system
+
+#+BEGIN_SRC sh
+# zfs send -Rv zbackup/zroot/data/desktop@transfer | zfs recv -F zroot/data/desktop
+#+END_SRC
+
+*** set the zfs mount points
+
+create the zfs mount points
+
+#+BEGIN_SRC sh
+# zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
+# zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
+# zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
+# zfs set mountpoint=/usr/home/djwilcox/git zroot/data/git
+# zfs set mountpoint=/usr/home/djwilcox/.config zroot/data/config
+# zfs set mountpoint=/usr/home/djwilcox/.emacs.d zroot/data/emacsd
+# zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
+# zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
+# zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
+# zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
+#+END_SRC
+
++ change the permission on the mountpoint if needed
+
+#+BEGIN_SRC sh
+# chown -R djwilcox:djwilcox ~/Desktop
+#+END_SRC
+
++ chmod the permissions to 700
+
+#+BEGIN_SRC sh
+chmod 700 ~/Desktop
+#+END_SRC
