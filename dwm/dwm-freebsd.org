@@ -1,0 +1,401 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* dwm freebsd set up
+** clone the dwm git repository
+
+How to maintain dwm configuration and customization in git
+
+Customizations can be managed directly in git.
+The concept
+
+By recording changes and applied patches as commits in a special branch they can be rebased on top of the master branch when required.
+Cloning the repository
+
+You need to have the Git VCS installed first. Then clone the upstream repository locally
+
+#+BEGIN_SRC sh
+git clone git://git.suckless.org/dwm
+#+END_SRC
+
+*** Recording customizations
+
+Create a special branch where all the customizations will be kept. It doesn't matter what the name is, it just needs to be something different than master.
+
+#+BEGIN_SRC sh
+git branch my_dwm
+#+END_SRC
+
+Now switch to the new branch. This will do nothing at the moment as the branches are the same.
+
+#+BEGIN_SRC sh
+git checkout my_dwm
+#+END_SRC
+
+Now make your changes. If you want to apply one of the contributed patches you can use the git apply command
+
+#+BEGIN_SRC sh
+git apply some_patch.diff
+#+END_SRC
+
+Note that many patches make changes config.def.h instead of config.h. Either move those changes also to config.h, or add rm config.h to the clean target in the Makefile.
+
+Then record the changes as commits
+
+# tell git to add the changes in the given file(s) to be recorded
+
+#+BEGIN_SRC sh
+git add some_file.ext
+#+END_SRC
+
+# git will ask you to provide a message	describing your changes
+
+#+BEGIN_SRC sh
+git commit
+#+END_SRC
+
+Experimenting with different combinations of customizations
+
+If you plan on experimenting with different combinations of customizations it might be easier to record the commits in separate feature branches by first creating and checking out a branch and then recording the changes as commits. Having patches in different branches also helps to keep their dependencies transparent by creating branches based on other patch branches.
+
+Then merge the selected combination of changes into your branch
+
+#+BEGIN_SRC sh
+git merge some_feature_branch
+git merge other_feature_branch
+#+END_SRC
+
+If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
+Updating customizations after new release
+
+When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+git pull
+#+END_SRC
+
+Then rebase your customization branch on top of the master branch
+
+#+BEGIN_SRC sh
+git checkout my_dwm
+git rebase --preserve-merges master
+#+END_SRC
+
+The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
+
+In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
+
+#+BEGIN_SRC sh
+git add resolved_file.ext
+git rebase --continue
+#+END_SRC
+
+If you want to give up, you can always abort the rebase
+
+#+BEGIN_SRC sh
+git rebase --abort
+#+END_SRC
+
+*** dwm config
+
+dwm config file changes
+
+*** config.mk
+
+#+BEGIN_SRC sh
+# dwm version
+VERSION = 6.2
+
+# Customize below to fit your system
+
+# paths
+PREFIX = /usr/local
+MANPREFIX = ${PREFIX}/share/man
+
+X11INC = /usr/local/include
+X11LIB = /usr/local/lib
+
+# Xinerama, comment if you don't want it
+XINERAMALIBS  = -lXinerama
+XINERAMAFLAGS = -DXINERAMA
+
+# freetype
+FREETYPELIBS = -lfontconfig -lXft
+FREETYPEINC = /usr/local/include/freetype2
+# OpenBSD (uncomment)
+#FREETYPEINC = ${X11INC}/freetype2
+
+# includes and libs
+INCS = -I${X11INC} -I${FREETYPEINC}
+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
+
+# flags
+CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+#CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+CFLAGS   = -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
+LDFLAGS  = ${LIBS}
+
+# Solaris
+#CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"
+#LDFLAGS = ${LIBS}
+
+# compiler and linker
+CC = cc
+#+END_SRC
+
+*** config.h
+
+#+BEGIN_SRC sh
+/* See LICENSE file for copyright and license details. */
+
+/* appearance */
+static const unsigned int borderpx  = 0;        /* border pixel of windows */
+static const unsigned int snap      = 32;       /* snap pixel */
+static const int showbar            = 1;        /* 0 means no bar */
+static const int topbar             = 1;        /* 0 means bottom bar */
+static const char *fonts[]          = { "monospace:size=10" };
+static const char dmenufont[]       = "monospace:size=10";
+static const char col_gray1[]       = "#222222";
+static const char col_gray2[]       = "#444444";
+static const char col_gray3[]       = "#bbbbbb";
+static const char col_gray4[]       = "#eeeeee";
+static const char col_cyan[]        = "#005577";
+static const char *colors[][3]      = {
+	/*               fg         bg         border   */
+	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+};
+
+/* tagging */
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+static const Rule rules[] = {
+	/* xprop(1):
+	 *	WM_CLASS(STRING) = instance, class
+	 *	WM_NAME(STRING) = title
+	 */
+	/* class      instance    title       tags mask     isfloating   monitor */
+	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+	{ "Firefox",  NULL,       NULL,       0,            1,           -1 },
+};
+
+/* layout(s) */
+static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const int nmaster     = 1;    /* number of clients in master area */
+static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+
+static const Layout layouts[] = {
+	/* symbol     arrange function */
+	{ "[]=",      tile },    /* first entry is default */
+	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "[M]",      monocle },
+};
+
+/* key definitions */
+#define MODKEY Mod4Mask
+#define TAGKEYS(KEY,TAG) \
+	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+
+/* helper for spawning shell commands in the pre dwm-5.0 fashion */
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
+/* commands */
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *termcmd[]  = { "urxvt", NULL };
+
+static Key keys[] = {
+	/* modifier                     key        function        argument */
+	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY,                       XK_Tab,    view,           {0} },
+	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_space,  setlayout,      {0} },
+	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	TAGKEYS(                        XK_1,                      0)
+	TAGKEYS(                        XK_2,                      1)
+	TAGKEYS(                        XK_3,                      2)
+	TAGKEYS(                        XK_4,                      3)
+	TAGKEYS(                        XK_5,                      4)
+	TAGKEYS(                        XK_6,                      5)
+	TAGKEYS(                        XK_7,                      6)
+	TAGKEYS(                        XK_8,                      7)
+	TAGKEYS(                        XK_9,                      8)
+	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+};
+
+/* button definitions */
+/* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
+static Button buttons[] = {
+	/* click                event mask      button          function        argument */
+	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
+	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
+	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkTagBar,            0,              Button1,        view,           {0} },
+	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
+	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
+	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+};
+
+
+#+END_SRC
+
+** make dwm
+
+change into the dwm directory
+
+#+BEGIN_SRC sh
+cd dwm
+#+END_SRC
+
+make and install dwm
+
+#+BEGIN_SRC sh
+# make clean install
+#+END_SRC
+
+** install dmenu
+
+#+BEGIN_SRC sh
+# pkg install dmenu
+#+END_SRC
+
+** slstatus 
+
+slstatus bar
+
+#+BEGIN_SRC sh
+git clone https://git.suckless.org/slstatus
+#+END_SRC
+
+*** slstatus config
+
+*** config.mk
+
+#+BEGIN_SRC sh
+# slstatus version
+VERSION = 0
+
+# customize below to fit your system
+
+# paths
+PREFIX = /usr/local
+MANPREFIX = ${PREFIX}/share/man
+
+X11INC = /usr/local/include
+X11LIB = /usr/local/lib
+
+# flags
+CPPFLAGS = -I$(X11INC) -D_DEFAULT_SOURCE
+CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Os
+LDFLAGS  = -L$(X11LIB) -s
+LDLIBS   = -lX11
+
+# compiler and linker
+CC = cc
+#+END_SRC
+
+*** config.h
+
+#+BEGIN_SRC sh
+/* See LICENSE file for copyright and license details. */
+
+/* interval between updates (in ms) */
+static const int interval = 1000;
+
+/* text to show if no value can be retrieved */
+static const char unknown_str[] = "n/a";
+
+/* maximum output string length */
+#define MAXLEN 2048
+
+/*
+ * function             description                     argument
+ *
+ * battery_perc         battery percentage              battery name
+ * battery_power        battery power usage             battery name
+ * battery_state        battery charging state          battery name
+ * cpu_perc             cpu usage in percent            NULL
+ * cpu_iowait           cpu iowait in percent           NULL
+ * cpu_freq             cpu frequency in MHz            NULL
+ * datetime             date and time                   format string
+ * disk_free            free disk space in GB           mountpoint path
+ * disk_perc            disk usage in percent           mountpoint path
+ * disk_total           total disk space in GB          mountpoint path
+ * disk_used            used disk space in GB           mountpoint path
+ * entropy              available entropy               NULL
+ * gid                  GID of current user             NULL
+ * hostname             hostname                        NULL
+ * ipv4                 IPv4 address                    interface name
+ * ipv6                 IPv6 address                    interface name
+ * kernel_release       `uname -r`                      NULL
+ * keyboard_indicators  caps/num lock indicators        NULL
+ * load_avg             load average                    format string
+ * num_files            number of files in a directory  path
+ * ram_free             free memory in GB               NULL
+ * ram_perc             memory usage in percent         NULL
+ * ram_total            total memory size in GB         NULL
+ * ram_used             used memory in GB               NULL
+ * run_command          custom shell command            command
+ * swap_free            free swap in GB                 NULL
+ * swap_perc            swap usage in percent           NULL
+ * swap_total           total swap size in GB           NULL
+ * swap_used            used swap in GB                 NULL
+ * temp                 temperature in degree celsius   sensor file
+ * uid                  UID of current user             NULL
+ * uptime               system uptime                   NULL
+ * username             username of current user        NULL
+ * vol_perc             OSS/ALSA volume in percent      "/dev/mixer"
+ * wifi_perc            WiFi signal in percent          interface name
+ * wifi_essid           WiFi ESSID                      interface name
+ */
+static const struct arg args[] = {
+	/* function format          argument */
+	{ datetime, "[ %s ]",       "%F %T" },
+};
+#+END_SRC
+
+** slstatus make install
+
+#+BEGIN_SRC sh
+# make clean install
+#+END_SRC
+
+** start dwm with xinitrc
+
+edit your ~/.xinirc and add the following code
+to use feh to set the wallpaper start the ssh agent and dwm
+
+#+BEGIN_SRC sh
+# feh set wallpaper
+feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/freebsd.png' 
+
+# start ssh-agent and window mamager
+# start slstatus bar
+/usr/local/bin/slstatus &
+exec ssh-agent /usr/local/bin/dwm
+#+END_SRC
