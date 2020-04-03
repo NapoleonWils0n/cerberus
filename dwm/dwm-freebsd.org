@@ -380,6 +380,28 @@ static const struct arg args[] = {
 };
 #+END_SRC
 
+** dwm patch 
+
+[[https://dwm.suckless.org/patches/movestack/][movestack patch]]
+
+download the patch with wget into the dwm directory
+
+#+BEGIN_SRC sh
+wget https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff
+#+END_SRC
+
+patch dwm
+
+#+BEGIN_SRC sh
+patch -p1 < dwm-movestack-6.1.diff
+#+END_SRC
+
+make install
+
+#+BEGIN_SRC sh
+# make install clean
+#+END_SRC
+
 ** slstatus make install
 
 #+BEGIN_SRC sh
