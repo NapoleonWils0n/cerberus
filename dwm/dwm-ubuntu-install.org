@@ -245,6 +245,182 @@ GRUB_CMDLINE_LINUX_DEFAULT="text"
 sudo update-grub
 #+end_src
 
+** slstatus
+
+slstatus bar
+
+#+BEGIN_SRC sh
+git clone https://git.suckless.org/slstatus
+#+END_SRC
+
+*** config.mk
+
+#+begin_src sh
+# slstatus version
+VERSION = 0
+
+# customize below to fit your system
+
+# paths
+PREFIX = /usr/local
+MANPREFIX = $(PREFIX)/share/man
+
+X11INC = /usr/include/X11
+X11LIB = /usr/lib/X11
+
+# flags
+CPPFLAGS = -I$(X11INC) -D_DEFAULT_SOURCE
+CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Os
+LDFLAGS  = -L$(X11LIB) -s
+LDLIBS   = -lX11
+
+# compiler and linker
+CC = cc
+
+#+end_src
+
+*** config.h
+
+#+begin_src sh
+/* See LICENSE file for copyright and license details. */
+
+/* interval between updates (in ms) */
+static const int interval = 1000;
+
+/* text to show if no value can be retrieved */
+static const char unknown_str[] = "n/a";
+
+/* maximum output string length */
+#define MAXLEN 2048
+
+/*
+ * function             description                     argument
+ *
+ * battery_perc         battery percentage              battery name
+ * battery_power        battery power usage             battery name
+ * battery_state        battery charging state          battery name
+ * cpu_perc             cpu usage in percent            NULL
+ * cpu_iowait           cpu iowait in percent           NULL
+ * cpu_freq             cpu frequency in MHz            NULL
+ * datetime             date and time                   format string
+ * disk_free            free disk space in GB           mountpoint path
+ * disk_perc            disk usage in percent           mountpoint path
+ * disk_total           total disk space in GB          mountpoint path
+ * disk_used            used disk space in GB           mountpoint path
+ * entropy              available entropy               NULL
+ * gid                  GID of current user             NULL
+ * hostname             hostname                        NULL
+ * ipv4                 IPv4 address                    interface name
+ * ipv6                 IPv6 address                    interface name
+ * kernel_release       `uname -r`                      NULL
+ * keyboard_indicators  caps/num lock indicators        NULL
+ * load_avg             load average                    format string
+ * num_files            number of files in a directory  path
+ * ram_free             free memory in GB               NULL
+ * ram_perc             memory usage in percent         NULL
+ * ram_total            total memory size in GB         NULL
+ * ram_used             used memory in GB               NULL
+ * run_command          custom shell command            command
+ * swap_free            free swap in GB                 NULL
+ * swap_perc            swap usage in percent           NULL
+ * swap_total           total swap size in GB           NULL
+ * swap_used            used swap in GB                 NULL
+ * temp                 temperature in degree celsius   sensor file
+ * uid                  UID of current user             NULL
+ * uptime               system uptime                   NULL
+ * username             username of current user        NULL
+ * vol_perc             OSS/ALSA volume in percent      "/dev/mixer"
+ * wifi_perc            WiFi signal in percent          interface name
+ * wifi_essid           WiFi ESSID                      interface name
+ */
+static const struct arg args[] = {
+	/* function format          argument */
+	{ datetime, "[ %s ]",       "%F %T" },
+};
+
+#+end_src
+
+*** Makefile
+
+#+begin_src sh 
+# See LICENSE file for copyright and license details
+# slstatus - suckless status monitor
+.POSIX:
+
+include config.mk
+
+REQ = util
+COM =\
+	components/datetime
+#COM =\
+#	components/battery\
+#	components/cpu\
+#	components/datetime\
+#	components/disk\
+#	components/entropy\
+#	components/hostname\
+#	components/ip\
+#	components/kernel_release\
+#	components/keyboard_indicators\
+#	components/keymap\
+#	components/load_avg\
+#	components/netspeeds\
+#	components/num_files\
+#	components/ram\
+#	components/run_command\
+#	components/swap\
+#	components/temperature\
+#	components/uptime\
+#	components/user\
+#	components/volume\
+#	components/wifi
+
+all: slstatus
+
+$(COM:=.o): config.mk $(REQ:=.h)
+slstatus.o: slstatus.c slstatus.h arg.h config.h config.mk $(REQ:=.h)
+
+.c.o:
+	$(CC) -o $@ -c $(CPPFLAGS) $(CFLAGS) $<
+
+config.h:
+	cp config.def.h $@
+
+slstatus: slstatus.o $(COM:=.o) $(REQ:=.o)
+	$(CC) -o $@ $(LDFLAGS) $(COM:=.o) $(REQ:=.o) slstatus.o $(LDLIBS)
+
+clean:
+	rm -f slstatus slstatus.o $(COM:=.o) $(REQ:=.o)
+
+dist:
+	rm -rf "slstatus-$(VERSION)"
+	mkdir -p "slstatus-$(VERSION)/components"
+	cp -R LICENSE Makefile README config.mk config.def.h \
+	      arg.h slstatus.c $(COM:=.c) $(REQ:=.c) $(REQ:=.h) \
+	      slstatus.1 "slstatus-$(VERSION)"
+	tar -cf - "slstatus-$(VERSION)" | gzip -c > "slstatus-$(VERSION).tar.gz"
+	rm -rf "slstatus-$(VERSION)"
+
+install: all
+	mkdir -p "$(DESTDIR)$(PREFIX)/bin"
+	cp -f slstatus "$(DESTDIR)$(PREFIX)/bin"
+	chmod 755 "$(DESTDIR)$(PREFIX)/bin/slstatus"
+	mkdir -p "$(DESTDIR)$(MANPREFIX)/man1"
+	cp -f slstatus.1 "$(DESTDIR)$(MANPREFIX)/man1"
+	chmod 644 "$(DESTDIR)$(MANPREFIX)/man1/slstatus.1"
+
+uninstall:
+	rm -f "$(DESTDIR)$(PREFIX)/bin/slstatus"
+	rm -f "$(DESTDIR)$(MANPREFIX)/man1/slstatus.1"
+
+#+end_src
+
+** slstatus make install
+
+#+BEGIN_SRC sh
+# make clean install
+#+END_SRC
+
 ** ~/.xinitrc
 
 edit your ~/.xinitrc
@@ -260,6 +436,8 @@ add the following code
 feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/linux.png' 
 
 # start ssh-agent and window mamager
+# start slstatus bar
+/usr/local/bin/slstatus &
 exec ssh-agent /usr/local/bin/dwm
 #+end_src
 
