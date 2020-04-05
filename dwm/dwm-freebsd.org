@@ -30,7 +30,7 @@ make edits and commit them one by one
 create a diff between the master branch and the patch branch
 
 #+BEGIN_SRC sh
-git format-patch master --stdout > patch.diff
+git format-patch master --stdout > ~/Desktop/dwm-freebsd-patch.diff
 #+END_SRC
 
 to apply the diff to the freshly checked out git repository
