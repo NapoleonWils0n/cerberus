@@ -310,6 +310,50 @@ patch dwm
 patch -p1 < ~/Desktop/dwm-movestack-6.1.diff
 #+END_SRC
 
+add the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -a
+#+END_SRC
+
+*** copy config.def.h to config.h
+
+copy config.def.h to config.h
+
+#+BEGIN_SRC sh
+cp config.def.h config.h
+#+END_SRC
+
+add config.h with git
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -a
+#+END_SRC
+
+make any changes to config.h and then commit the changes
+
+#+BEGIN_SRC sh
+vi config.h
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -a
+#+END_SRC
+
 *** merge changes into master branch
 
 #+BEGIN_SRC sh
@@ -354,7 +398,27 @@ If you want to give up, you can always abort the rebase
 git rebase --abort
 #+END_SRC
 
-*** apply diff patch
+** make dwm
+
+change into the dwm directory
+
+#+BEGIN_SRC sh
+cd dwm
+#+END_SRC
+
+make and install dwm
+
+#+BEGIN_SRC sh
+# make clean install
+#+END_SRC
+
+** install dmenu
+
+#+BEGIN_SRC sh
+# pkg install dmenu
+#+END_SRC
+
+** apply diff patch
 
 to apply the diff to the freshly checked out git repository
 
@@ -418,26 +482,6 @@ If you want to give up, you can always abort the rebase
 
 #+BEGIN_SRC sh
 git rebase --abort
-#+END_SRC
-
-** make dwm
-
-change into the dwm directory
-
-#+BEGIN_SRC sh
-cd dwm
-#+END_SRC
-
-make and install dwm
-
-#+BEGIN_SRC sh
-# make clean install
-#+END_SRC
-
-** install dmenu
-
-#+BEGIN_SRC sh
-# pkg install dmenu
 #+END_SRC
 
 ** slstatus 
