@@ -1,0 +1,114 @@
+From 3eafcf982bac2cba4a91e038a307294587c5d543 Mon Sep 17 00:00:00 2001
+From: Daniel J Wilcox <danieljwilcox@gmail.com>
+Date: Sun, 5 Apr 2020 19:49:21 +0100
+Subject: [PATCH 1/2] freebsd fix
+
+---
+ config.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/config.mk b/config.mk
+index 3b32b7c..c021e03 100644
+--- a/config.mk
++++ b/config.mk
+@@ -7,8 +7,8 @@ VERSION = 0
+ PREFIX = /usr/local
+ MANPREFIX = $(PREFIX)/share/man
+ 
+-X11INC = /usr/X11R6/include
+-X11LIB = /usr/X11R6/lib
++X11INC = /usr/local/include
++X11LIB = /usr/local/lib
+ 
+ # flags
+ CPPFLAGS = -I$(X11INC) -D_DEFAULT_SOURCE
+-- 
+2.24.1
+
+
+From 86b0d72d396b56d0af09dad151a364f7942c45b1 Mon Sep 17 00:00:00 2001
+From: Daniel J Wilcox <danieljwilcox@gmail.com>
+Date: Sun, 5 Apr 2020 19:50:43 +0100
+Subject: [PATCH 2/2] config
+
+---
+ config.h | 67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 config.h
+
+diff --git a/config.h b/config.h
+new file mode 100644
+index 0000000..e06be66
+--- /dev/null
++++ b/config.h
+@@ -0,0 +1,67 @@
++/* See LICENSE file for copyright and license details. */
++
++/* interval between updates (in ms) */
++const unsigned int interval = 1000;
++
++/* text to show if no value can be retrieved */
++static const char unknown_str[] = "n/a";
++
++/* maximum output string length */
++#define MAXLEN 2048
++
++/*
++ * function            description                     argument (example)
++ *
++ * battery_perc        battery percentage              battery name (BAT0)
++ *                                                     NULL on OpenBSD/FreeBSD
++ * battery_state       battery charging state          battery name (BAT0)
++ *                                                     NULL on OpenBSD/FreeBSD
++ * battery_remaining   battery remaining HH:MM         battery name (BAT0)
++ *                                                     NULL on OpenBSD/FreeBSD
++ * cpu_perc            cpu usage in percent            NULL
++ * cpu_freq            cpu frequency in MHz            NULL
++ * datetime            date and time                   format string (%F %T)
++ * disk_free           free disk space in GB           mountpoint path (/)
++ * disk_perc           disk usage in percent           mountpoint path (/)
++ * disk_total          total disk space in GB          mountpoint path (/")
++ * disk_used           used disk space in GB           mountpoint path (/)
++ * entropy             available entropy               NULL
++ * gid                 GID of current user             NULL
++ * hostname            hostname                        NULL
++ * ipv4                IPv4 address                    interface name (eth0)
++ * ipv6                IPv6 address                    interface name (eth0)
++ * kernel_release      `uname -r`                      NULL
++ * keyboard_indicators caps/num lock indicators        format string (c?n?)
++ *                                                     see keyboard_indicators.c
++ * keymap              layout (variant) of current     NULL
++ *                     keymap
++ * load_avg            load average                    NULL
++ * netspeed_rx         receive network speed           interface name (wlan0)
++ * netspeed_tx         transfer network speed          interface name (wlan0)
++ * num_files           number of files in a directory  path
++ *                                                     (/home/foo/Inbox/cur)
++ * ram_free            free memory in GB               NULL
++ * ram_perc            memory usage in percent         NULL
++ * ram_total           total memory size in GB         NULL
++ * ram_used            used memory in GB               NULL
++ * run_command         custom shell command            command (echo foo)
++ * swap_free           free swap in GB                 NULL
++ * swap_perc           swap usage in percent           NULL
++ * swap_total          total swap size in GB           NULL
++ * swap_used           used swap in GB                 NULL
++ * temp                temperature in degree celsius   sensor file
++ *                                                     (/sys/class/thermal/...)
++ *                                                     NULL on OpenBSD
++ *                                                     thermal zone on FreeBSD
++ *                                                     (tz0, tz1, etc.)
++ * uid                 UID of current user             NULL
++ * uptime              system uptime                   NULL
++ * username            username of current user        NULL
++ * vol_perc            OSS/ALSA volume in percent      mixer file (/dev/mixer)
++ * wifi_perc           WiFi signal in percent          interface name (wlan0)
++ * wifi_essid          WiFi ESSID                      interface name (wlan0)
++ */
++static const struct arg args[] = {
++	/* function format          argument */
++	{ datetime, "%s",           "%F %T" },
++};
+-- 
+2.24.1
+
