@@ -17,6 +17,84 @@ You need to have the Git VCS installed first. Then clone the upstream repository
 git clone git://git.suckless.org/dwm
 #+END_SRC
 
+*** create git patch
+
+create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
+make edits and commit them one by one
+
+create a diff between the master branch and the patch branch
+
+#+BEGIN_SRC sh
+git format-patch master --stdout > patch.diff
+#+END_SRC
+
+to apply the diff to the freshly checked out git repository
+
+checkout the git repository
+
+#+BEGIN_SRC sh
+git clone git://git.suckless.org/dwm
+#+END_SRC
+
+create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
++ apply the diff patch
+
+#+BEGIN_SRC sh
+git apply patch.diff
+#+END_SRC
+
++ you can merge the changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+#+END_SRC
+
+#+BEGIN_SRC sh
+git merge patch
+#+END_SRC
+
+If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
+Updating customizations after new release
+
+When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+git pull
+#+END_SRC
+
+Then rebase your customization branch on top of the master branch
+
+#+BEGIN_SRC sh
+git checkout my_dwm
+git rebase --preserve-merges master
+#+END_SRC
+
+The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
+
+In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
+
+#+BEGIN_SRC sh
+git add resolved_file.ext
+git rebase --continue
+#+END_SRC
+
+If you want to give up, you can always abort the rebase
+
+#+BEGIN_SRC sh
+git rebase --abort
+#+END_SRC
+
 *** Recording customizations
 
 Create a special branch where all the customizations will be kept. It doesn't matter what the name is, it just needs to be something different than master.
