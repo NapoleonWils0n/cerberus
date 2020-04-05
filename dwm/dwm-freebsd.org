@@ -366,6 +366,22 @@ merge the patch branch into the master branch
 git merge patch
 #+END_SRC
 
+*** make dwm
+
+change into the dwm directory
+
+#+BEGIN_SRC sh
+cd dwm
+#+END_SRC
+
+make and install dwm
+
+#+BEGIN_SRC sh
+# make clean install
+#+END_SRC
+
+*** dwm git update
+
 If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
 Updating customizations after new release
 
@@ -396,26 +412,6 @@ If you want to give up, you can always abort the rebase
 
 #+BEGIN_SRC sh
 git rebase --abort
-#+END_SRC
-
-** make dwm
-
-change into the dwm directory
-
-#+BEGIN_SRC sh
-cd dwm
-#+END_SRC
-
-make and install dwm
-
-#+BEGIN_SRC sh
-# make clean install
-#+END_SRC
-
-** install dmenu
-
-#+BEGIN_SRC sh
-# pkg install dmenu
 #+END_SRC
 
 ** apply diff patch
@@ -482,6 +478,12 @@ If you want to give up, you can always abort the rebase
 
 #+BEGIN_SRC sh
 git rebase --abort
+#+END_SRC
+
+** install dmenu
+
+#+BEGIN_SRC sh
+# pkg install dmenu
 #+END_SRC
 
 ** slstatus 
