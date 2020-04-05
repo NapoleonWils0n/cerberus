@@ -17,7 +17,9 @@ You need to have the Git VCS installed first. Then clone the upstream repository
 git clone git://git.suckless.org/dwm
 #+END_SRC
 
-*** create git patch
+*** create git branch for customizations
+
+Create a special branch where all the customizations will be kept. It doesn't matter what the name is, it just needs to be something different than master.
 
 create a new git branch
 
@@ -27,158 +29,42 @@ git checkout -b patch
 
 make edits and commit them one by one
 
-create a diff between the master branch and the patch branch
+*** edit config.mk
+
+
+edit config.mk
 
 #+BEGIN_SRC sh
-git format-patch master --stdout > ~/Desktop/dwm-freebsd-patch.diff
+vi config.mk
 #+END_SRC
 
-to apply the diff to the freshly checked out git repository
-
-checkout the git repository
++ change from
 
 #+BEGIN_SRC sh
-git clone git://git.suckless.org/dwm
+X11INC = /usr/X11R6/include
+X11LIB = /usr/X11R6/lib
 #+END_SRC
 
-create a new git branch
++ to 
 
 #+BEGIN_SRC sh
-git checkout -b patch
+X11INC = /usr/local/include
+X11LIB = /usr/local/lib
 #+END_SRC
 
-+ apply the diff patch
++ change from 
 
 #+BEGIN_SRC sh
-git apply patch.diff
+FREETYPEINC = /usr/include/freetype2
 #+END_SRC
 
-+ you can merge the changes into the master branch
++ to 
 
 #+BEGIN_SRC sh
-git checkout master
+FREETYPEINC = /usr/local/include/freetype2
 #+END_SRC
 
-#+BEGIN_SRC sh
-git merge patch
-#+END_SRC
-
-If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
-Updating customizations after new release
-
-When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
-
-#+BEGIN_SRC sh
-git checkout master
-git pull
-#+END_SRC
-
-Then rebase your customization branch on top of the master branch
-
-#+BEGIN_SRC sh
-git checkout my_dwm
-git rebase --preserve-merges master
-#+END_SRC
-
-The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
-
-In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
-
-#+BEGIN_SRC sh
-git add resolved_file.ext
-git rebase --continue
-#+END_SRC
-
-If you want to give up, you can always abort the rebase
-
-#+BEGIN_SRC sh
-git rebase --abort
-#+END_SRC
-
-*** Recording customizations
-
-Create a special branch where all the customizations will be kept. It doesn't matter what the name is, it just needs to be something different than master.
-
-#+BEGIN_SRC sh
-git branch my_dwm
-#+END_SRC
-
-Now switch to the new branch. This will do nothing at the moment as the branches are the same.
-
-#+BEGIN_SRC sh
-git checkout my_dwm
-#+END_SRC
-
-Now make your changes. If you want to apply one of the contributed patches you can use the git apply command
-
-#+BEGIN_SRC sh
-git apply some_patch.diff
-#+END_SRC
-
-Note that many patches make changes config.def.h instead of config.h. Either move those changes also to config.h, or add rm config.h to the clean target in the Makefile.
-
-Then record the changes as commits
-
-# tell git to add the changes in the given file(s) to be recorded
-
-#+BEGIN_SRC sh
-git add some_file.ext
-#+END_SRC
-
-# git will ask you to provide a message	describing your changes
-
-#+BEGIN_SRC sh
-git commit
-#+END_SRC
-
-Experimenting with different combinations of customizations
-
-If you plan on experimenting with different combinations of customizations it might be easier to record the commits in separate feature branches by first creating and checking out a branch and then recording the changes as commits. Having patches in different branches also helps to keep their dependencies transparent by creating branches based on other patch branches.
-
-Then merge the selected combination of changes into your branch
-
-#+BEGIN_SRC sh
-git merge some_feature_branch
-git merge other_feature_branch
-#+END_SRC
-
-If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
-Updating customizations after new release
-
-When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
-
-#+BEGIN_SRC sh
-git checkout master
-git pull
-#+END_SRC
-
-Then rebase your customization branch on top of the master branch
-
-#+BEGIN_SRC sh
-git checkout my_dwm
-git rebase --preserve-merges master
-#+END_SRC
-
-The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
-
-In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
-
-#+BEGIN_SRC sh
-git add resolved_file.ext
-git rebase --continue
-#+END_SRC
-
-If you want to give up, you can always abort the rebase
-
-#+BEGIN_SRC sh
-git rebase --abort
-#+END_SRC
-
-*** dwm config
-
-dwm config file changes
-
-*** config.mk
+*** config.mk freebsd
 
 #+BEGIN_SRC sh
 # dwm version
@@ -221,6 +107,58 @@ LDFLAGS  = ${LIBS}
 CC = cc
 #+END_SRC
 
+*** edit config.def.h
+
+edit config.def.h
+
+#+BEGIN_SRC sh
+vi config.def.h
+#+END_SRC
+
+*** firefox settings
+
+change from 
+
+#+BEGIN_SRC sh
+	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+#+END_SRC
+
+to 
+
+#+BEGIN_SRC sh
+	{ "Firefox",  NULL,       NULL,       0,            1,           -1 },
+#+END_SRC
+
+*** resizehints for terminal
+
+change from
+
+#+BEGIN_SRC sh
+static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+#+END_SRC
+
+to
+
+#+BEGIN_SRC sh
+static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+#+END_SRC
+
+*** modkey 
+
+change the modkey to super
+
+change from 
+
+#+BEGIN_SRC sh
+#define MODKEY Mod1Mask
+#+END_SRC
+
+to 
+
+#+BEGIN_SRC sh
+#define MODKEY Mod4Mask
+#+END_SRC
+
 *** config.h
 
 #+BEGIN_SRC sh
@@ -255,7 +193,6 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       0,            1,           -1 },
-	{ "mpv",      NULL,       NULL,       0,            1,           -1 },
 };
 
 /* layout(s) */
@@ -343,6 +280,146 @@ static Button buttons[] = {
 
 #+END_SRC
 
+*** create diff patch
+
+create a diff between the master branch and the patch branch
+
+#+BEGIN_SRC sh
+git format-patch master --stdout > ~/Desktop/dwm-freebsd-patch.diff
+#+END_SRC
+
+*** dwm movestack patch 
+
+[[https://dwm.suckless.org/patches/movestack/][movestack patch]]
+
+download the patch with wget
+
+#+BEGIN_SRC sh
+wget https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff
+#+END_SRC
+
+change into the dwm directory
+
+#+BEGIN_SRC sh
+cd dwm
+#+END_SRC
+
+patch dwm
+
+#+BEGIN_SRC sh
+patch -p1 < ~/Desktop/dwm-movestack-6.1.diff
+#+END_SRC
+
+*** merge changes into master branch
+
+#+BEGIN_SRC sh
+git checkout master
+#+END_SRC
+
+merge the patch branch into the master branch
+
+#+BEGIN_SRC sh
+git merge patch
+#+END_SRC
+
+If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
+Updating customizations after new release
+
+When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+git pull
+#+END_SRC
+
+Then rebase your customization branch on top of the master branch
+
+#+BEGIN_SRC sh
+git checkout my_dwm
+git rebase --preserve-merges master
+#+END_SRC
+
+The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
+
+In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
+
+#+BEGIN_SRC sh
+git add resolved_file.ext
+git rebase --continue
+#+END_SRC
+
+If you want to give up, you can always abort the rebase
+
+#+BEGIN_SRC sh
+git rebase --abort
+#+END_SRC
+
+*** apply diff patch
+
+to apply the diff to the freshly checked out git repository
+
+checkout the git repository
+
+#+BEGIN_SRC sh
+git clone git://git.suckless.org/dwm
+#+END_SRC
+
+create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
++ apply the diff patch
+
+#+BEGIN_SRC sh
+git apply ~/Desktop/dwm-freebsd-patch.diff
+#+END_SRC
+
+checkout the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+#+END_SRC
+
+merge the patch branch into the master branch
+
+#+BEGIN_SRC sh
+git merge patch
+#+END_SRC
+
+If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
+Updating customizations after new release
+
+When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+git pull
+#+END_SRC
+
+Then rebase your customization branch on top of the master branch
+
+#+BEGIN_SRC sh
+git checkout my_dwm
+git rebase --preserve-merges master
+#+END_SRC
+
+The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
+
+In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
+
+#+BEGIN_SRC sh
+git add resolved_file.ext
+git rebase --continue
+#+END_SRC
+
+If you want to give up, you can always abort the rebase
+
+#+BEGIN_SRC sh
+git rebase --abort
+#+END_SRC
+
 ** make dwm
 
 change into the dwm directory
@@ -361,28 +438,6 @@ make and install dwm
 
 #+BEGIN_SRC sh
 # pkg install dmenu
-#+END_SRC
-
-** dwm patch 
-
-[[https://dwm.suckless.org/patches/movestack/][movestack patch]]
-
-download the patch with wget into the dwm directory
-
-#+BEGIN_SRC sh
-wget https://dwm.suckless.org/patches/movestack/dwm-movestack-6.1.diff
-#+END_SRC
-
-patch dwm
-
-#+BEGIN_SRC sh
-patch -p1 < dwm-movestack-6.1.diff
-#+END_SRC
-
-make install
-
-#+BEGIN_SRC sh
-# make install clean
 #+END_SRC
 
 ** slstatus 
