@@ -496,6 +496,34 @@ git clone https://git.suckless.org/slstatus
 
 *** slstatus config
 
+*** create git branch for customizations
+
+Create a special branch where all the customizations will be kept. It doesn't matter what the name is, it just needs to be something different than master.
+
+create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
+make edits and commit them one by one
+
+*** edit config.mk
+
+change from
+
+#+BEGIN_SRC sh
+X11INC = /usr/X11R6/include
+X11LIB = /usr/X11R6/lib
+#+END_SRC
+
+to 
+
+#+BEGIN_SRC sh
+X11INC = /usr/local/include
+X11LIB = /usr/local/lib
+#+END_SRC
+
 *** config.mk
 
 #+BEGIN_SRC sh
@@ -519,6 +547,18 @@ LDLIBS   = -lX11
 
 # compiler and linker
 CC = cc
+#+END_SRC
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git commit -a
+#+END_SRC
+
+*** copy config.def.h to config.h
+
+#+BEGIN_SRC sh
+cp config.def.h config.h
 #+END_SRC
 
 *** config.h
@@ -579,6 +619,40 @@ static const struct arg args[] = {
 	/* function format          argument */
 	{ datetime, "[ %s ]",       "%F %T" },
 };
+#+END_SRC
+
+*** git add config.h
+
+git add the config.h file
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the config.h file
+
+#+BEGIN_SRC sh
+git commit -a
+#+END_SRC
+
+*** create diff patch
+
+create a diff between the master branch and the patch branch
+
+#+BEGIN_SRC sh
+git format-patch master --stdout > ~/Desktop/slstatus-freebsd-patch.diff
+#+END_SRC
+
+*** merge changes into master branch
+
+#+BEGIN_SRC sh
+git checkout master
+#+END_SRC
+
+merge the patch branch into the master branch
+
+#+BEGIN_SRC sh
+git merge patch
 #+END_SRC
 
 ** slstatus make install
