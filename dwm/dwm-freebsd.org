@@ -47,26 +47,26 @@ X11LIB = /usr/X11R6/lib
 
 + to 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 X11INC = /usr/local/include
 X11LIB = /usr/local/lib
 #+END_SRC
 
 + change from 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 FREETYPEINC = /usr/include/freetype2
 #+END_SRC
 
 + to 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 FREETYPEINC = /usr/local/include/freetype2
 #+END_SRC
 
 *** config.mk freebsd
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 # dwm version
 VERSION = 6.2
 
@@ -115,17 +115,31 @@ edit config.def.h
 vi config.def.h
 #+END_SRC
 
+*** border size
+
+change boder size from 1 
+
+#+BEGIN_SRC sh
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
+#+END_SRC
+
+to 0
+
+#+BEGIN_SRC sh
+static const unsigned int borderpx  = 0;        /* border pixel of windows */
+#+END_SRC
+
 *** firefox settings
 
 change from 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 #+END_SRC
 
 to 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 	{ "Firefox",  NULL,       NULL,       0,            1,           -1 },
 #+END_SRC
 
@@ -133,13 +147,13 @@ to
 
 change from
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 #+END_SRC
 
 to
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 #+END_SRC
 
@@ -149,19 +163,19 @@ change the modkey to super
 
 change from 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 #define MODKEY Mod1Mask
 #+END_SRC
 
 to 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 #define MODKEY Mod4Mask
 #+END_SRC
 
 *** config.h
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
@@ -512,21 +526,21 @@ make edits and commit them one by one
 
 change from
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 X11INC = /usr/X11R6/include
 X11LIB = /usr/X11R6/lib
 #+END_SRC
 
 to 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 X11INC = /usr/local/include
 X11LIB = /usr/local/lib
 #+END_SRC
 
 *** config.mk
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 # slstatus version
 VERSION = 0
 
@@ -565,7 +579,7 @@ edit COM
 
 change from
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 COM =\
 	components/battery\
 	components/cpu\
@@ -592,7 +606,7 @@ COM =\
 
 to 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 COM =\
 	components/datetime
 #+END_SRC
@@ -658,7 +672,7 @@ cp config.def.h config.h
 
 *** config.h
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 /* See LICENSE file for copyright and license details. */
 
 /* interval between updates (in ms) */
@@ -761,7 +775,7 @@ git merge patch
 edit your ~/.xinirc and add the following code
 to use feh to set the wallpaper start the ssh agent and dwm
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC conf
 # feh set wallpaper
 feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/freebsd.png' 
 
