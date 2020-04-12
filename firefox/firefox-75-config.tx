@@ -1,0 +1,4 @@
+browser.urlbar.openViewOnFocus = false
+browser.urlbar.update1 = false
+browser.urlbar.update1.interventions = false
+browser.urlbar.update1. searchTips = false
