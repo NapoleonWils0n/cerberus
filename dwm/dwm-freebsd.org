@@ -173,6 +173,15 @@ to
 #define MODKEY Mod4Mask
 #+END_SRC
 
+*** font
+
+change the font to inconsolata
+
+#+BEGIN_SRC conf
+static const char *fonts[]          = { "Inconsolata:size=12:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false" };
+static const char dmenufont[]       = "Inconsolata:size=12:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false";
+#+END_SRC
+
 *** config.h
 
 #+BEGIN_SRC conf
