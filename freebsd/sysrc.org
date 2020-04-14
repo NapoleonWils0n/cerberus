@@ -1,0 +1,11 @@
+#+STARTUP: showall
+#+OPTIONS: author:nil num:nil
+* sysrc edit rc.conf
+
+use sysrc to add entries to /etc/rc.conf
+
+enable musicpd
+
+#+BEGIN_SRC sh
+# sysrc musicpd_enable="YES"
+#+END_SRC
