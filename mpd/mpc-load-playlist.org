@@ -1,0 +1,21 @@
+#+STARTUP: showall
+#+OPTIONS: author:nil num:nil
+* mpc load playlist and play
+
+mpc list playlists
+
+#+BEGIN_SRC sh
+mpc lsplaylists
+#+END_SRC
+
+load a playlist
+
+#+BEGIN_SRC sh
+mpc load bbc-1
+#+END_SRC
+
+play the playlist
+
+#+BEGIN_SRC sh
+mpc play
+#+END_SRC
