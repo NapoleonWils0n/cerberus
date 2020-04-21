@@ -9,30 +9,60 @@ Set /dev/mixer2 mic level to 100
 mixer -f /dev/mixer2 mic 100
 #+END_SRC
 
-* ffmpeg screen recording with audio filters
+* laptop ffmpeg screen recording 
 
-record laptop display
+record laptop display where dsp2 is the mic
 
 #+BEGIN_SRC sh
 ffmpeg \
--f x11grab -r 30 -video_size 1366x768 \
+-f x11grab -video_size 1366x768 \
 -i :0.0 \
--c:v libx264 -preset veryfast -crf 18 \
--movflags +faststart -f mp4 \
+-f oss -ac 1 -ar 44.1k \
+-i /dev/dsp2.0 \
+-c:a pcm_s16le \
+-c:v libx264 -crf 0 -preset ultrafast \
+-qp 0 -r 30 \
 -pix_fmt yuv420p \
-video-$(date +"%H-%M-%m-%d-%y").mp4
+video-$(date +"%H-%M-%m-%d-%y").mkv
 #+END_SRC
 
 record second display at 1920x1080 at 30 fps
 
 #+BEGIN_SRC sh
 ffmpeg \
--f x11grab -r 30 -video_size 1920x1080 -i :0.0+1366,0 \
--c:v libx264 -preset veryfast -crf 18 -profile:v high \
--pix_fmt yuv420p -movflags +faststart -f mp4 \
-video-$(date +"%H-%M-%m-%d-%y").mp4
+-f x11grab -video_size 1920x1080 -i :0.0+1366,0 \
+-i :0.0 \
+-f oss -ac 1 -ar 44.1k \
+-i /dev/dsp4.0 \
+-c:a pcm_s16le \
+-c:v libx264 -crf 0 -preset ultrafast \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
 #+END_SRC
 
+* desktop ffmpeg screen recording
+
+set mixer4 mic to 100
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer4 mic 100
+#+END_SRC
+
+record audio device dsp4
+
+#+BEGIN_SRC sh
+ffmpeg \
+-f x11grab -video_size 1920x1080 \
+-i :0.0 \
+-f oss -ac 1 -ar 44.1k \
+-i /dev/dsp4.0 \
+-c:a pcm_s16le \
+-c:v libx264 -crf 0 -preset ultrafast \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+END_SRC
 
 + audio
 
