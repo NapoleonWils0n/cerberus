@@ -115,20 +115,6 @@ edit config.def.h
 vi config.def.h
 #+END_SRC
 
-*** border size
-
-change boder size from 1 
-
-#+BEGIN_SRC sh
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-#+END_SRC
-
-to 0
-
-#+BEGIN_SRC sh
-static const unsigned int borderpx  = 0;        /* border pixel of windows */
-#+END_SRC
-
 *** firefox settings
 
 change from 
