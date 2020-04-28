@@ -5,7 +5,7 @@
 install ncurses needed for the tc command in the Makefile
 
 #+BEGIN_SRC sh 
-# pkg install nurses
+# pkg install ncurses
 #+END_SRC
 
 [[https://st.suckless.org/][st terminal]]
