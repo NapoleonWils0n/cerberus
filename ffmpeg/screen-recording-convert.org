@@ -1,0 +1,15 @@
+#+STARTUP: showall
+#+OPTIONS: author:nil num:nil
+* screen recording convert
+
+convert screen recording to web version
+
+#+BEGIN_SRC sh
+ffmpeg \
+-i infile.mkv \
+-c:v libx264 -preset veryfast -crf 18 -profile:v high \
+-c:a aac -ac 2 -ar 44100 -b:a 128k -strict -2 \
+-pix_fmt yuv420p -movflags +faststart -f mp4 \
+video-$(date +"%H-%M-%m-%d-%y").mp4
+#+END_SRC
+
