@@ -1,0 +1,29 @@
+#+STARTUP: content
+#+OPTIONS: author:nil num:nil
+* xmonad
+
+xmonad install
+
+#+BEGIN_SRC sh
+# pkg install hs-xmonad hs-xmonad-contrib
+#+END_SRC
+
++ xmonad.hs default config
+
+#+BEGIN_SRC sh
+/usr/local/share/examples/cabal/ghc-8.6.5/xmonad-0.15/xmonad.hs
+#+END_SRC
+
+* xmobar
+
+xmobar install
+
+#+BEGIN_SRC sh
+# pkg install hs-xmobar
+#+END_SRC
+
++ xmobar default config
+
+#+BEGIN_SRC sh
+/usr/local/share/examples/xmobar/xmobar.config
+#+END_SRC
