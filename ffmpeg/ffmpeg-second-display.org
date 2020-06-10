@@ -31,7 +31,6 @@ record second display at 1920x1080 at 30 fps
 #+BEGIN_SRC sh
 ffmpeg \
 -f x11grab -video_size 1920x1080 -i :0.0+1366,0 \
--i :0.0 \
 -f oss -ac 1 -ar 44.1k \
 -i /dev/dsp4.0 \
 -c:a pcm_s16le \
