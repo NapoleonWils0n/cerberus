@@ -1,0 +1,26 @@
+#+STARTUP: showall
+
+* ffmpeg screen recording 
+
+record 2nd display and capture at 1080p but record at 720p
+
++ set mixer4 mic to 100
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer4 mic 100
+#+END_SRC
+
++ record screen and mic
+
+#+BEGIN_SRC sh
+ffmpeg \
+-f x11grab -video_size 1920x1080 -i :0.0+1366,0 \
+-f oss -ac 1 -ar 44.1k \
+-i /dev/dsp4.0 \
+-c:a pcm_s16le \
+-s 1280x720 \
+-c:v libx264 -crf 0 -preset ultrafast \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+END_SRC
