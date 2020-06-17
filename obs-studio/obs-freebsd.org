@@ -1,0 +1,87 @@
+#+STARTUP: content
+#+OPTIONS: author:nil num:nil
+* obs studio freebsd
+
+obs studio and pulseaudio set up on freebsd
+
+Boot up with the external usb mic plugged in
+
+** xdg_runtime_directory
+
+set the xdg_runtime_directory directory for pulseaudio
+
++ create a ~/.tmp directory
+
+#+BEGIN_SRC sh
+mkdir -p ~/.tmp
+#+END_SRC
+
+edit your shell config file, 
+replace vi with the text editor of your choice
+
+#+BEGIN_SRC sh
+vi ~/.zshrc
+#+END_SRC
+
++ add the following code and save the file
+
+#+BEGIN_SRC sh
+# XDG_RUNTIME_DIR = ~/.tmp for obs studio and pulseaudio
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR="$HOME/.tmp"
+    if [ ! -d  "$XDG_RUNTIME_DIR" ]; then
+        mkdir "$XDG_RUNTIME_DIR"
+        chmod 0700 "$XDG_RUNTIME_DIR"
+    fi
+fi
+#+END_SRC
+
++ source your shell config file
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+** dmesg
+
+After logging in run dmesg as root to make sure the device is recognised
+
+#+BEGIN_SRC sh
+# dmesg
+#+END_SRC
+
+** check dsp devices
+
+Check /dev/dsp* for the device
+
+#+BEGIN_SRC sh
+ls /dev/dsp*
+#+END_SRC
+
+in my case my mic is listed as /dev/dsp4
+
+** unmute the mic
+
+Un mute the volume for the devices mixer,
+the mixer number for dsp4 will be mixer4
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer4 mic 100
+#+END_SRC
+
+** pulseaudio
+
+obs studio use pulseaudio so we need to start pulseaudio before opening obs studio,
+otherwise the mic wont show up 
+
++ start pulse audio
+
+#+BEGIN_SRC sh
+pulseaudio --start
+#+END_SRC
+
++ stop pulseaudio
+
+#+BEGIN_SRC sh
+pulseaudio --kill
+#+END_SRC
