@@ -6,6 +6,15 @@ obs studio and pulseaudio set up on freebsd
 
 Boot up with the external usb mic plugged in
 
+** obs-studio install
+
+install obs studio on freebsd 
+
+switch to root and then install obs-studio and the obs browser plugin
+
+#+BEGIN_SRC sh
+# pkg install obs-studio-25.0.4 obs-qtwebkit-g2018090201_2
+#+END_SRC
 ** xdg_runtime_directory
 
 set the xdg_runtime_directory directory for pulseaudio
