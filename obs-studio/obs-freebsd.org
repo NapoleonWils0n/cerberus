@@ -17,13 +17,7 @@ switch to root and then install obs-studio and the obs browser plugin
 #+END_SRC
 ** xdg_runtime_directory
 
-set the xdg_runtime_directory directory for pulseaudio
-
-+ create a ~/.tmp directory
-
-#+BEGIN_SRC sh
-mkdir -p ~/.tmp
-#+END_SRC
+set the xdg_runtime_directory directory to /tmp/username for pulseaudio
 
 edit your shell config file, 
 replace vi with the text editor of your choice
@@ -35,9 +29,9 @@ vi ~/.zshrc
 + add the following code and save the file
 
 #+BEGIN_SRC sh
-# XDG_RUNTIME_DIR = ~/.tmp for obs studio and pulseaudio
+# XDG_RUNTIME_DIR = /tmp/${USER} for obs studio and pulseaudio
 if [ -z "$XDG_RUNTIME_DIR" ]; then
-    export XDG_RUNTIME_DIR="$HOME/.tmp"
+    export XDG_RUNTIME_DIR="/tmp/${USER}"
     if [ ! -d  "$XDG_RUNTIME_DIR" ]; then
         mkdir "$XDG_RUNTIME_DIR"
         chmod 0700 "$XDG_RUNTIME_DIR"
