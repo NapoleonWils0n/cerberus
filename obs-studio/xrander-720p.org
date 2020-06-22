@@ -1,0 +1,28 @@
+#+STARTUP: overview
+* xrander set monitor to 720p
+
+#+BEGIN_SRC sh
+xrandr --output eDP-1 --auto --primary --output HDMI-1 --mode 1280x720 --right-of eDP-1 && ~/.fehbg &>/dev/null
+#+END_SRC
+
+** obs video encoder options
+
+custom options for obs
+
+** crf 0 
+
+lossless video recording
+
+crf 0 = bitrate 12000
+
+#+BEGIN_SRC sh
+crf=0 preset=faster -qp=0 -pix_fmt=yuv420p 
+#+END_SRC
+
+** crf 18 
+
+crf 18 = bitrate 3000
+
+#+BEGIN_SRC sh
+crf=18 preset=faster -qp=0 -pix_fmt=yuv420p 
+#+END_SRC
