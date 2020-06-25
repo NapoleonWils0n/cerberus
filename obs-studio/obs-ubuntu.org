@@ -1,0 +1,89 @@
+#+STARTUP: content
+* obs-v4l2sink ubuntu 20.04 install
+
+** install packages
+
+#+begin_src sh
+sudo apt install v4l-utils v4l2loopback-dkms v4l2loopback-utils
+#+end_src
+
+** v4l2sink
+
+install obs-v4l2sink plugiin on ubuntu 20.04
+
+[[https://github.com/CatxFish/obs-v4l2sink]]
+
++ download the deb file from 
+
+[[https://github.com/CatxFish/obs-v4l2sink/releases]]
+
+** install the deb file
+
+#+begin_src sh
+sudo dkpg -i obs-v4l2sink.deb
+#+end_src
+
+install any missing dependencies
+
+#+begin_src sh
+sudo apt install -f
+#+end_src
+
+** create the symlink
+
+create the directory structure for plugin
+
+#+begin_src sh
+mkdir -p ~/.config/obs-studio/plugins/v4l2sink/bin/64bit/
+#+end_src
+
++  create a symlink from the plugin to the directory we created
+
+#+begin_src sh
+ln -s /usr/lib/obs-plugins/v4l2sink.so ~/.config/obs-studio/plugins/v4l2sink/bin/64bit/
+#+end_src
+
+** create the video loopback device
+
+#+begin_src sh
+sudo modprobe v4l2loopback devices=1 card_label="OBS Cam" exclusive_caps=1
+#+end_src
+
+list the video devices
+
+#+begin_src sh
+v4l2-ctl --list-devices
+#+end_src
+
+in my case the video loopback device is listed as:
+
+#+begin_src sh
+/dev/video2
+#+end_src
+
++ you can also list video device directory
+
+#+begin_src sh
+ls -l /dev/video*
+#+end_src
+
+** obs tools menu
+
+choose v4l2sink from the obs tools menu
+
+and then set the device to the location of your virtual camera,
+which we found by running the v4l2-ctl command
+
+in my case it was:
+
+#+begin_src sh
+/dev/video2
+#+end_src
+
+** ffmpeg 
+
+you can also use ffmpeg to send output to the virtual video device outside of obs studio
+
+#+begin_src sh
+ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video2
+#+end_src
