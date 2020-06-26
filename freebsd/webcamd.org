@@ -1,0 +1,96 @@
+#+STARTUP: content
+* freebsd web cam
+
+First, install webcamd
+
+#+BEGIN_SRC sh
+# pkg install webcamd v4l-utils v4l_compat libv4l
+#+END_SRC
+
+
+Load it at boot by adding the following line to /etc/rc.conf: 
+
+#+BEGIN_SRC config
+webcamd_enable="YES"
+webcamd_0_flags="-d ugen0.9"
+#+END_SRC
+
+If you have multiple webcams on your system (e.g. visible light and IR), you'll have to add a line specifying the location of each camera on the USB bus, e.g. webcamd_0_flags="-d ugen0.6" in my case (see man 8 webcamd and man 8 usbconfig). 
+
+You'll also need to load the cuse kernel module, which you can do at boot by adding cuse_load="YES" to /boot/loader.conf.
+
+#+BEGIN_SRC sh
+# vi /boot/loader.conf
+#+END_SRC
+
+add the following code
+
+#+BEGIN_SRC conf
+cuse_load="YES"
+#+END_SRC
+
+To get everything going without rebooting, 
+load the kernel module with 
+
+#+BEGIN_SRC sh
+# kldload cuse 
+#+END_SRC
+
+
+and start webcamd with 
+
+#+BEGIN_SRC sh
+# service webcamd onestart
+#+END_SRC
+
++ start
+
+#+BEGIN_SRC sh
+# service webcamd start
+#+END_SRC
+
++ Please restart devd to start webcamd
+
+#+BEGIN_SRC sh
+# service devd restart
+#+END_SRC
+
++ run webcamd to list the devices
+
+#+BEGIN_SRC conf
+Available device(s):
+webcamd [-d ugen2.1] -N Intel-UHCI-root-HUB -S unknown -M 0
+webcamd [-d ugen3.1] -N Intel-EHCI-root-HUB -S unknown -M 0
+webcamd [-d ugen1.1] -N Intel-EHCI-root-HUB -S unknown -M 1
+webcamd [-d ugen0.1] -N Intel-UHCI-root-HUB -S unknown -M 1
+webcamd [-d ugen1.2] -N vendor-0x0424-product-0x2513 -S unknown -M 0
+webcamd [-d ugen3.2] -N vendor-0x0424-product-0x2513 -S unknown -M 1
+webcamd [-d ugen1.3] -N Apple-Inc--BRCM20702-Hub -S unknown -M 0
+webcamd [-d ugen3.3] -N Generic-4-Port-USB-2-0-Hub -S unknown -M 0
+webcamd [-d ugen3.4] -N Musical-Fidelity-Musical-Fidelity-V-Link-192kHz---24bit -S 0 -M 0
+webcamd [-d ugen3.5] -N Ducky-Ducky-One2-Mini-RGB -S DK-V1-18-190819 -M 0
+webcamd [-d ugen1.6] -N Apple-Inc--Bluetooth-USB-Host-Controller -S unknown -M 0
+webcamd [-d ugen3.6] -N BenQ-ZOWIE-BenQ-ZOWIE-Gaming-Mouse -S unknown -M 0
+webcamd [-d ugen1.7] -N Apple-Inc--Apple-Internal-Keyboard---Trackpad -S unknown -M 0
+webcamd [-d ugen3.7] -N Generic-4-Port-USB-2-0-Hub -S unknown -M 1
+webcamd [-d ugen1.8] -N ASIX-Elec--Corp--AX88x72A -S 10E975 -M 0
+webcamd [-d ugen3.8] -N harman-kardon-SoundSticks -S unknown -M 0
+webcamd [-d ugen1.9] -N Apple-Inc--FaceTime-Camera--Built-in -S CCGB6A0SZ3DL8LFX -M 0
+#+END_SRC
+
+#+BEGIN_SRC sh
+webcamd -d ugen1.9
+#+END_SRC
+
++ Optionally add a user to the "webcamd" group
+
+#+BEGIN_SRC sh
+# pw groupmod webcamd -m <username>
+#+END_SRC
+
+You can test the webcam with vlc
+
+** reboot
+
+reboot for the changes in the config to load
+

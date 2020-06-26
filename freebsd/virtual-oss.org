@@ -1,0 +1,16 @@
+#+STARTUP: content
+
+* virtual oss freebsd
+
+virtual oss notes
+
+#+BEGIN_SRC sh
+# virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 1024 -R /dev/null -P /dev/dsp1.0 -w vdsp -l dsp
+#+END_SRC
+
++ freebsd handbook
+
+#+BEGIN_SRC sh
+# virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 768 -R /dev/null -P /dev/dsp1.0 -d dsp
+#+END_SRC
+
