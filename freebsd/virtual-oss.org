@@ -5,12 +5,26 @@
 virtual oss notes
 
 #+BEGIN_SRC sh
-# virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 1024 -R /dev/null -P /dev/dsp1.0 -w vdsp -l dsp
+virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 1024 -R /dev/null \
+-P /dev/dsp1.0 -w vdsp -l dsp
 #+END_SRC
 
 + freebsd handbook
 
 #+BEGIN_SRC sh
-# virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 768 -R /dev/null -P /dev/dsp1.0 -d dsp
+virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 768 -R /dev/null -P /dev/dsp1.0 -d vdsp
 #+END_SRC
 
+#+BEGIN_SRC sh
+virtual_oss -C 2 -c 2 -r 44100 -b 16 -s 1024 -f /dev/dsp4 -w dsp.wav -d dsp
+#+END_SRC
+
+#+BEGIN_SRC sh
+sudo virtual_oss -S -C 2 -c 2 -r 44100 -b 16 -s 1024 -f /dev/dsp4 \
+-d dsp -w dsp.rec.wav -l dsp.rec -t /dev/vdsp.ctl
+#+END_SRC
+
+
+#+BEGIN_SRC sh
+virtual_oss -S -C 2 -c 2 -r 44100 -b 16 -s 1024 -f /dev/dsp2 -d dsp -w dsp.rec.wav -l dsp.rec
+#+END_SRC
