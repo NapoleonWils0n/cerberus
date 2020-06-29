@@ -1,0 +1,56 @@
+#+STARTUP: content
+* obs udp streaming
+
+** obs ffmpeg udp 
+
+#+BEGIN_SRC sh
+-preset=ultrafast -tune=zerolatency -b=500k -maxrate=500k -bufsize=500k -qp=0 -pix_fmt yuv420p
+#+END_SRC
+
+** ffmpeg stream 
+
+#+begin_src sh
+ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
+-c:v libx264 -preset ultrafast -b 500k \
+-tune zerolatency \
+-maxrate 500k -bufsize 500k \
+-pix_fmt yuv420p \
+-f mpegts 'udp://192.168.1.102:6881?pkt_size=1316'
+#+end_src
+
++ multicast
+
+#+begin_src sh
+ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
+-c:v libx264 -preset ultrafast -b 500k \
+-tune zerolatency \
+-maxrate 500k -bufsize 500k \
+-pix_fmt yuv420p \
+-f mpegts 'udp://239.253.253.4:1234?pkt_size=1316'
+#+end_src
+
+** mpv recieve
+
+#+BEGIN_SRC sh
+mpv udp://127.0.0.1:6881
+#+END_SRC
+
+** freebsd maxsockbuf
+
+default
+
+#+BEGIN_SRC sh
+kern.ipc.maxsockbuf: 2097152 
+#+END_SRC
+
++ set to default
+
+#+BEGIN_SRC sh
+doas sysctl -w kern.ipc.maxsockbuf=2097152
+#+END_SRC
+
++ increase buffer size
+
+#+BEGIN_SRC sh
+doas sysctl -w kern.ipc.maxsockbuf=16777216
+#+END_SRC
