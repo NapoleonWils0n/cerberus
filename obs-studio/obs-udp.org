@@ -40,17 +40,32 @@ mpv udp://127.0.0.1:6881
 default
 
 #+BEGIN_SRC sh
+kern.ipc.nmbclusters: 244404
 kern.ipc.maxsockbuf: 2097152 
+net.inet.udp.maxdgram: 9216
+net.inet.udp.recvspace: 42080
+net.local.stream.recvspace: 65535
+net.local.stream.sendspace: 65535
 #+END_SRC
 
 + set to default
 
 #+BEGIN_SRC sh
-doas sysctl -w kern.ipc.maxsockbuf=2097152
+sysctl -w kern.ipc.nmbclusters=244404
+sysctl -w kern.ipc.maxsockbuf=2097152
+sysctl -w net.inet.udp.maxdgram=9216
+sysctl -w net.inet.udp.recvspace=42080
+sysctl -w net.local.stream.recvspace=65535
+sysctl -w net.local.stream.sendspace=65535
 #+END_SRC
 
 + increase buffer size
 
 #+BEGIN_SRC sh
-doas sysctl -w kern.ipc.maxsockbuf=16777216
+sysctl -w kern.ipc.nmbclusters=488808
+sysctl -w kern.ipc.maxsockbuf=4194304
+sysctl -w net.inet.udp.maxdgram=18432
+sysctl -w net.inet.udp.recvspace=84160
+sysctl -w net.local.stream.recvspace=131070
+sysctl -w net.local.stream.sendspace=131070
 #+END_SRC
