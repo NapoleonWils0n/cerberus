@@ -11,9 +11,9 @@
 
 #+begin_src sh
 ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
--c:v libx264 -preset ultrafast -b 2000k \
+-c:v libx264 -preset ultrafast -crf 18 \
 -tune zerolatency \
--maxrate 2000k -bufsize 500k \
+-maxrate 4000k -bufsize 500k \
 -pix_fmt yuv420p \
 -f mpegts 'udp://192.168.1.102:6881?pkt_size=1316'
 #+end_src
@@ -22,9 +22,9 @@ ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
 
 #+begin_src sh
 ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
--c:v libx264 -preset ultrafast -b 2000k \
+-c:v libx264 -preset ultrafast -crf 18 \
 -tune zerolatency \
--maxrate 2000k -bufsize 500k \
+-maxrate 4000k -bufsize 500k \
 -pix_fmt yuv420p \
 -f mpegts 'udp://239.253.253.4:1234?pkt_size=1316'
 #+end_src
