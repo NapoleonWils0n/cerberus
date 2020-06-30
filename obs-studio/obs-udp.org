@@ -11,9 +11,9 @@
 
 #+begin_src sh
 ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
--c:v libx264 -preset ultrafast -b 500k \
+-c:v libx264 -preset ultrafast -b 2000k \
 -tune zerolatency \
--maxrate 500k -bufsize 500k \
+-maxrate 2000k -bufsize 500k \
 -pix_fmt yuv420p \
 -f mpegts 'udp://192.168.1.102:6881?pkt_size=1316'
 #+end_src
@@ -22,9 +22,9 @@ ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
 
 #+begin_src sh
 ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
--c:v libx264 -preset ultrafast -b 500k \
+-c:v libx264 -preset ultrafast -b 2000k \
 -tune zerolatency \
--maxrate 500k -bufsize 500k \
+-maxrate 2000k -bufsize 500k \
 -pix_fmt yuv420p \
 -f mpegts 'udp://239.253.253.4:1234?pkt_size=1316'
 #+end_src
@@ -35,37 +35,3 @@ ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
 mpv udp://127.0.0.1:6881
 #+END_SRC
 
-** freebsd maxsockbuf
-
-default
-
-#+BEGIN_SRC sh
-kern.ipc.nmbclusters: 244404
-kern.ipc.maxsockbuf: 2097152 
-net.inet.udp.maxdgram: 9216
-net.inet.udp.recvspace: 42080
-net.local.stream.recvspace: 65535
-net.local.stream.sendspace: 65535
-#+END_SRC
-
-+ set to default
-
-#+BEGIN_SRC sh
-sysctl -w kern.ipc.nmbclusters=244404
-sysctl -w kern.ipc.maxsockbuf=2097152
-sysctl -w net.inet.udp.maxdgram=9216
-sysctl -w net.inet.udp.recvspace=42080
-sysctl -w net.local.stream.recvspace=65535
-sysctl -w net.local.stream.sendspace=65535
-#+END_SRC
-
-+ increase buffer size
-
-#+BEGIN_SRC sh
-sysctl -w kern.ipc.nmbclusters=488808
-sysctl -w kern.ipc.maxsockbuf=4194304
-sysctl -w net.inet.udp.maxdgram=18432
-sysctl -w net.inet.udp.recvspace=84160
-sysctl -w net.local.stream.recvspace=131070
-sysctl -w net.local.stream.sendspace=131070
-#+END_SRC
