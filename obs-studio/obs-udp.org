@@ -10,9 +10,10 @@
 ** ffmpeg stream 
 
 #+begin_src sh
-ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
--c:v libx264 -preset ultrafast -crf 18 \
+ffmpeg -f x11grab -s 1366x768 -i :0.0+0,0 \
+-c:v libx264 -preset ultrafast -crf 18 -profile:v high \
 -tune zerolatency \
+-qp 0 -r 30 \
 -maxrate 4000k -bufsize 500k \
 -pix_fmt yuv420p \
 -f mpegts 'udp://192.168.1.102:6881?pkt_size=1316'
@@ -21,13 +22,26 @@ ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
 + multicast
 
 #+begin_src sh
-ffmpeg -f x11grab -r 15 -s 1366x768 -i :0.0+0,0 \
--c:v libx264 -preset ultrafast -crf 18 \
+ffmpeg -f x11grab -s 1366x768 -i :0.0+0,0 \
+-c:v libx264 -preset ultrafast -crf 18 -profile:v high \
 -tune zerolatency \
+-qp 0 -r 30 \
 -maxrate 4000k -bufsize 500k \
 -pix_fmt yuv420p \
 -f mpegts 'udp://239.253.253.4:1234?pkt_size=1316'
 #+end_src
+
++ second display
+
+#+BEGIN_SRC sh
+ffmpeg \
+-f x11grab -video_size 1920x1080 -i :0.0+1366,0 \
+-c:v libx264 -crf 18 -preset ultrafast -profile:v high \
+-qp 0 -r 30 \
+-maxrate 2000k -bufsize 500k \
+-pix_fmt yuv420p \
+-f mpegts 'udp://127.0.0.1:6881?pkt_size=1316'
+#+END_SRC
 
 ** mpv recieve
 
