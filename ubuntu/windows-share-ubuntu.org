@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* windows 10 share to ubuntu
+
+#+begin_src sh
+sudo apt install cifs-utils
+#+end_src
+
+mount share to ~/mnt
+
+#+begin_src sh
+sudo mount.cifs -o username='Daniel J Wilcox',uid=1000,gid=1000 //192.168.1.109/Share /home/djwilcox/mnt
+#+end_src
