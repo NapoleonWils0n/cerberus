@@ -1,0 +1,9 @@
+#+STARTUP: content
+* barrier
+
+barrier port and iptables
+
+#+begin_src sh
+sudo iptables -A INPUT -p tcp --dport 24800 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --dport 24800 -j ACCEPT
+#+end_src
