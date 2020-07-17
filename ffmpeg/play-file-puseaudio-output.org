@@ -1,0 +1,11 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* ffmpeg pulseaudio
+
+** Play a file on default pulseaudio output
+
+Play a file on default device on default server: 
+
+#+begin_src sh
+ffmpeg  -i INPUT -f pulse "stream name"
+#+end_src

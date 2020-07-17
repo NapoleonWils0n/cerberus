@@ -1,0 +1,91 @@
+#+STARTUP: content
+* ffmpeg pulseaudio
+** module-pipe-source
+
+module-pipe-source
+
+#+begin_src sh
+pactl load-module module-pipe-source source_name=virtualmic file=/tmp/virtualmic format=s16le rate=44100 channels=1
+#+end_src
+
+** linux ffmpeg pipe
+
++ stdout with -
+
+#+begin_src sh
+ffmpeg \
+-f alsa -ac 1 -ar 44.1k \
+-i hw:1,0 \
+-f s16le -ar 44100 -ac 1 - > /tmp/virtualmic
+#+end_src
+
++ stdout with pipe:1
+
+#+begin_src sh
+ffmpeg \
+-thread_queue_size 4098 \
+-f alsa -ac 1 -ar 44.1k \
+-i hw:1,0 \
+-f s16le -ar 44100 -ac 1 pipe:1 > /tmp/virtualmic
+#+end_src
+
++ ffmpeg filters
+
+#+begin_src sh
+ffmpeg \
+-f alsa -ac 1 -ar 44.1k \
+-thread_queue_size 8192 \
+-i hw:1,0 \
+-filter_complex \
+"highpass=f=80,
+lowpass=f=13700,
+anequalizer=c0 f=106 w=100 g=-6 t=1,
+anequalizer=c0 f=205 w=100 g=-3 t=1,
+anequalizer=c0 f=509 w=100 g=-2 t=1,
+anequalizer=c0 f=5098 w=100 g=+1 t=1
+[audio]" \
+-map "[audio]" \
+-f s16le -ar 44100 -ac 1 \
+- > /tmp/virtualmic
+#+end_src
+
+** alsa loopback
+
+create the alsa loopback device
+  
+#+begin_src sh
+sudo modprobe snd-aloop
+#+end_src
+
+record the mic and send the output to the alsa loopback device
+
+#+begin_src sh
+ffmpeg \
+-f alsa -thread_queue_size 8192 \
+-i hw:1,0 \
+-f alsa hw:2,0  
+#+end_src
+
+** mac ffmpeg pipe
+
+list audio and video devices
+
+#+begin_src sh
+ffmpeg -f avfoundation -list_devices true -i ""
+#+end_src
+
++ record
+
+#+begin_src sh
+ffmpeg -f avfoundation -i ":1" -t 10 audiocapture.wav
+#+end_src
+
+-f = "force format". In this case we're forcing the use of AVFoundation
+-i = input source. Typically it's a file, but you can use devices.
+"0:1" = Record both audio and video from FaceTime camera and built-in mic
+"0" = Record just video from FaceTime camera
+":1" = Record just audio from built-in mic
+
+#+begin_src sh
+ffmpeg -i INPUT -f alsa hw:2,0
+#+end_src
