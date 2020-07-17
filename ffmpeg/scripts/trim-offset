@@ -26,6 +26,7 @@ ffmpeg \
 -ss "${start}" \
 -i "${infile}" \
 -t "${offset}" \
+-c:a aac \
 -c:v libx264 -profile:v high \
 -pix_fmt yuv420p -movflags +faststart \
 -f mp4 \
