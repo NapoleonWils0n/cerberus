@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# infile
+infile="$1"
+infile_nopath="${infile##*/}"
+
+# infile name minus path and extension
+infile_name="${infile_nopath%.*}"
+
+# video outfile name
+videofile_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# get the video duration
+dur="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${infile}")"
+
+# start trim point
+start='00:00:05'
+
+# get the duration minus the start 5 and end 5 which equals 10
+offset="$(echo "${dur}" -10 | bc -l)"
+
+# trim 5 seconds from the start and end of the video
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-ss "${start}" \
+-i "${infile}" \
+-t "${offset}" \
+-c:v libx264 -profile:v high \
+-pix_fmt yuv420p -movflags +faststart \
+-f mp4 \
+"${videofile_default}"
