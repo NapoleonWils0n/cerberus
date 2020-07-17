@@ -66,7 +66,7 @@ ffmpeg \
 -i "${infile}" \
 -t "${offset}" \
 -c:a aac \
--c:v libx264 -profile:v high \
+-c:v libx264 -crf 18 -profile:v high \
 -pix_fmt yuv420p -movflags +faststart \
 -f mp4 \
 "${videofile_default}"
