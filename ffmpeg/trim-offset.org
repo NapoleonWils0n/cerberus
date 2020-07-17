@@ -1,0 +1,115 @@
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+* trim-offset script
+
+trim the first and last 5 seconds from a video
+
+** create a bin directory
+
+create a bin directory in your home to add the scripts to
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+add the following code to your ~/.bashrc or ~/.zhrc file
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
++ source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
++ source your ~/.zshrc if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+** install the script
+
+download the [[https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/ffmpeg/scripts/trim-offset][trim-offset script]]
+
+#+begin_src sh
+#!/bin/sh
+
+# infile
+infile="$1"
+infile_nopath="${infile##*/}"
+
+# infile name minus path and extension
+infile_name="${infile_nopath%.*}"
+
+# video outfile name
+videofile_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# get the video duration
+dur="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${infile}")"
+
+# start trim point
+start='00:00:05'
+
+# get the duration minus the start 5 and end 5 which equals 10
+offset="$(echo "${dur}" -10 | bc -l)"
+
+# trim 5 seconds from the start and end of the video
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-ss "${start}" \
+-i "${infile}" \
+-t "${offset}" \
+-c:v libx264 -profile:v high \
+-pix_fmt yuv420p -movflags +faststart \
+-f mp4 \
+"${videofile_default}"
+#+end_src
+
++ copy the script to your ~/bin directory
+
++ make the script executable
+
+#+begin_src sh
+chmod +x ~/bin/trim-offset
+#+end_src
+
++ source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
++ source your ~/.zshrc if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+** Batch remove the first and last 5 seconds of some videos
+
+change into the directory containing your video files
+
++ for example
+
+#+begin_src sh
+cd videos
+#+end_src
+
++ then run the find command below which runs the trim-offset script on each video file
+
+#+BEGIN_SRC sh
+find . -type f -name "*.mp4" -exec sh -c \
+'trim-offset "${0}"' \
+"{}" \;
+#+END_SRC
+
+this will create an outfile name based on infile name with -trimmed and the date and time append,
+to create a unique filename
+
+for example the infile video1.mp4 outfile name will be video1-trimmed-2020-07-17-20-25-13.mp4
