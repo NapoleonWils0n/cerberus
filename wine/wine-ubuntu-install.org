@@ -1,0 +1,41 @@
+#+STARTUP: overview
+#+OPTIONS: num:nil author:nil
+* How to install Wine from a standard Ubuntu repository
+
+The recommended approach to install Wine on Ubuntu 20.04 Focal Fossa Linux is to perform the installation from an Ubuntu repository 
+as it will provide you with a stable wine version. 
+
+The WineHQ requires multiarch to be enabled. Therefore the first step is to enable i386 architecture:
+
+#+begin_src sh
+sudo dpkg --add-architecture i386 
+#+end_src
+
+** apt update
+
+#+begin_src sh
+sudo apt update
+#+end_src
+
+*** wine install
+
+Next, to install Wine we need to install both wine64 and wine32 Windows API implementation packages. 
+To do so execute the following command:
+
+#+begin_src sh
+sudo apt install wine64 wine32
+#+end_src
+
++ run winecfg
+
+#+begin_src sh
+winecfg
+#+end_src
+
+select windows 10 from the drop down click apply and save
+
+* reaper plugins install
+
+#+begin_src sh
+wine reaplugs236_x64-install.exe
+#+end_src
