@@ -1,0 +1,53 @@
+#+STARTUP: overview
+#+OPTIONS: num:nil author:nil
+* carla install
+
+#+begin_src sh
+sudo apt install carla carla-bridge-linux32 carla-bridge-linux64 \
+carla-bridge-win32 carla-bridge-win64 carla-bridge-wine32 \
+carla-bridge-wine64 carla-data carla-lv2 \
+carla-vst
+#+end_src
+
+** create ~/.vst directory
+
+create a .vst directory in your home directory
+
+#+begin_src sh
+mkdir -p ~/.vst
+#+end_src
+
+*** copy dll files to ~/.vst
+
+#+begin_src sh
+cp ~/.wine/drive_c/Program\ Files/VSTPlugins/ReaPlug/*.dll ~/.vst
+#+end_src
+
+** carla enable experimental features
+
+enable carla experimental features for jack and windows vstplugins
+
+** obs jack fix
+
+Now a scenario when sound does work:
+
+Same as before
+Add some PulseAudio source
+Add some JACK Input source
+Connect it to some audio source in qjackctl or your connections creating software
+Remove the PulseAudio source
+Record a video => AUDIO IS FINE
+
+* ffmpeg jack output
+
++ Create a JACK writable client with name "ffmpeg".
+
+#+begin_src sh
+ffmpeg -f jack -i ffmpeg -y out.wav
+#+end_src
+
+* ffplay jack output
+
+#+begin_src sh
+ffplay -f jack -i ffplay
+#+end_src
