@@ -1,0 +1,97 @@
+#+STARTUP: showall
+#+OPTIONS: author:nil num:nil
+* vst audio settings
+
+vst audio settings for obs studio
+** slick eq
+
++ mode = eco
++ mono
++ british
++ hp freq = 50khz
+
+*** low
+
++ bell filter
++ freq = 85 khz
++ gain = 7.5 db
+
+*** mid
+
++ freq = 400 khz
++ gain = -4.5 db
+
+*** high
+
++ shelf filter
++ freq = 5.0 khz
++ gain = 9.0 db
+  
+*** outstage
+
+outstage = deep
+calibrate = 9.0 db
+
+*** out gain
+
+out gain = 6.0db
+auto = on
+
+** tdr nova
+
++ eco
++ mono
+  
+2 bands
+
+*** band 1
+
++ bell filter
++ q = 0.50
++ freq = 100 khz
++ threshold = -12 db
++ ratio = 10.0:1
+
+*** band 2
+
++ bell filter
++ q = 1.5
++ threshold = -25 db
++ ratio = 2.5:1
++ attack = 10.0ms
++ release = 150 ms
+
+** kol compresser
+
++ eco
++ mono
+  
+*** low freq relax
+
++ slope = 6db
+ 
+
+*** threshold
+
++ threshold = -25 db
++ peak crest = rms
++ soft knee = 9.0 db
++ ratio = 2.5:1
++ attack = 8.0 ms
++ release = 250 ms
+  
+
+*** outgain
+
+outgain = 3.0 db
+
+** wider
+
+wider = 25 %
+
+** expander
+
++ ratio = 3.0.0:1
++ threshold = -32.00 db
++ attack = 8ms
++ release = 250ms
