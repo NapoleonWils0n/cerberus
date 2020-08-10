@@ -9,7 +9,7 @@ netcat should be installed by default on your linux distro
 
 transfer files with netcat
 
-*** recieving computer
+*** sending computer
 
 replace 6881 with the port of your choice  
 and make sure the port is open in your firewall on the recieving computer
@@ -18,7 +18,7 @@ and make sure the port is open in your firewall on the recieving computer
 nc -lv 6881 < infile.txt
 #+end_src
 
-*** sending sending computer
+*** recieving computer
 
 replace 192.168.1.3 with the ip address of the recieving computer
 
@@ -34,7 +34,7 @@ install pv
 sudo apt install pv
 #+end_src
 
-*** recieving computer
+*** sending computer
 
 replace 6881 with the port of your choice  
 and make sure the port is open in your firewall on the recieving computer
@@ -47,7 +47,7 @@ pv -pbe infile.mov | nc -lv 6881
 + b = bytes
 + e = eta
 
-*** sending sending computer
+*** recieving computer
 
 replace 192.168.1.3 with the ip address of the recieving computer
 
