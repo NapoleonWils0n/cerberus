@@ -28,6 +28,12 @@ nc -w 3 192.168.1.3 6881 > outfile.txt
 
 ** netcat and pv
 
+install pv
+
+#+begin_src sh
+sudo apt install pv
+#+end_src
+
 *** recieving computer
 
 replace 6881 with the port of your choice  
@@ -36,6 +42,10 @@ and make sure the port is open in your firewall on the recieving computer
 #+begin_src sh
 pv -pbe infile.mov | nc -lv 6881
 #+end_src
+
++ p = progress
++ b = bytes
++ e = eta
 
 *** sending sending computer
 
