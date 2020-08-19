@@ -67,6 +67,27 @@ in my case the video loopback device is listed as:
 ls -l /dev/video*
 #+end_src
 
+** audio virtual output device
+
+create a virtual audio output device
+
+#+begin_src sh
+pactl load-module module-null-sink sink_name=OBS
+pactl load-module module-virtual-source source_name=FakeMic master=OBS.monitor
+#+end_src
+
+The first command sets up a “null sink”, i.e. a virtual output device, to collect the audio output from OBS. 
+The second command sets up a “virtual source”, i.e. a fake microphone, and connects it to the monitor channel of the null sink.
+
+** obs audio monitoring device
+
++ Under “Settings -> Audio”: set the Monitoring Device to “Monitor of Null Output”.
+
++ Under “Advanced Audio Properties”, enable the monitor output for all audio sources you want to send to the virtual mic
+  
+In your videoconferencing application, you should now be able to select "OBS Cam" as the video source 
+and “Virtual Source FakeMic” as the audio source.
+
 ** obs tools menu
 
 choose v4l2sink from the obs tools menu
