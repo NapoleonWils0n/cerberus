@@ -1,0 +1,130 @@
+#+STARTUP: showall
+* obs audio settings
+
+#+BEGIN_SRC dot :file audio-settings.png :cmdline -Kdot -Tpng
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+settings [label="Settings"]
+audio [label="Audio"]
+monitordevice [label="Monitoring Device"]
+virtualmic [label="Virtual Cable"]
+mic [label="Microphone"]
+
+// graph
+obs -> settings -> audio -> {mic monitordevice};
+monitordevice -> virtualmic;
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:audio-settings.png]]
+
+* ndi camera microphone
+
+#+BEGIN_SRC dot :file ndi-camera-mic.png :cmdline -Kdot -Tpng
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+camera [label="Web Cam"]
+mic [label="Microphone"]
+ndi [label="NDI Output"]
+    
+virtualinput [label="Virtual Input"]
+	     
+virtualmic [label="Virtual Microphone"]
+virtualcamera [label="Virtual Camera"]
+chat [label="Chat"]
+
+// graph
+obs -> {camera mic} -> ndi -> virtualinput;
+virtualinput -> {virtualmic virtualcamera} -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:ndi-camera-mic.png]]
+
+* ndi camera virtual audio
+
+#+BEGIN_SRC dot :file ndi-camera-virtual-audio.png :cmdline -Kdot -Tpng
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+camera [label="Web Cam"]
+mic [label="Microphone"]
+	
+monitor [label="Monitor and Output"]
+virtualcable [label="Virtual Cable"]
+	     
+ndi [label="NDI Output"]
+virtualinput [label="Virtual Input"]
+virtualcamera [label="Virtual Camera"]
+virtualmic [label="Virtual Microphone"]
+
+chat [label="Chat"]
+
+// graph
+obs -> {camera mic};
+mic -> monitor -> virtualcable;
+camera -> ndi -> virtualinput;
+virtualinput -> virtualcamera -> chat
+virtualcable -> virtualmic -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:ndi-camera-virtual-audio.png]]
+
+* virtual audio and camera
+
+#+BEGIN_SRC dot :file virtual-audio-camera.png :cmdline -Kdot -Tpng
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+chat [label="Chat"]
+      
+camera [label="Web Cam"]
+mic [label="Microphone"]
+
+monitor [label="Monitor and Output"]
+
+virtualcable [label="Virtual Cable"]
+virtualcamera [label="Virtual Camera"]
+virtualmic [label="Virtual Microphone"]
+
+// graph
+obs -> {camera mic};
+mic -> monitor;
+monitor -> virtualcable -> virtualmic -> chat;
+camera -> virtualcamera -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:virtual-audio-camera.svg]]
+
