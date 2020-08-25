@@ -73,11 +73,41 @@ create a virtual audio output device
 
 #+begin_src sh
 pactl load-module module-null-sink sink_name=OBS
-pactl load-module module-virtual-source source_name=FakeMic master=OBS.monitor
+pactl load-module module-virtual-source source_name=VirtualMic master=OBS.monitor
 #+end_src
 
 The first command sets up a “null sink”, i.e. a virtual output device, to collect the audio output from OBS. 
-The second command sets up a “virtual source”, i.e. a fake microphone, and connects it to the monitor channel of the null sink.
+The second command sets up a “virtual source”, i.e. a virtual microphone, and connects it to the monitor channel of the null sink.
+
+** default.pa pulseaudio config
+
+We can automatically load the null sink and virtual source using the default.pa pulseaudio config file
+
+Create the default.pa file 
+
+#+begin_src sh
+touch ~/.config/pulse/default.pa
+#+end_src
+
+Then add the following code to the default.pa file and save it and then reboot
+
+#+begin_src conf
+# include the default.pa pulseaudio config file
+.include /etc/pulse/default.pa
+
+# null sink
+.ifexists module-null-sink.so
+load-module module-null-sink sink_name=OBS
+.endif
+
+# virtual source
+.ifexists module-virtual-source.so
+load-module module-virtual-source source_name=VirtualMic master=OBS.monitor
+.endif
+#+end_src
+
+this will include the /etc/pulse/default.pa
+which is the system default pulseaudio and load the null sink and virtual source
 
 ** obs audio monitoring device
 
@@ -86,7 +116,7 @@ The second command sets up a “virtual source”, i.e. a fake microphone, and c
 + Under “Advanced Audio Properties”, enable the monitor output for all audio sources you want to send to the virtual mic
   
 In your videoconferencing application, you should now be able to select "OBS Cam" as the video source 
-and “Virtual Source FakeMic” as the audio source.
+and “Virtual Source VirtualMic” as the audio source.
 
 ** obs tools menu
 
