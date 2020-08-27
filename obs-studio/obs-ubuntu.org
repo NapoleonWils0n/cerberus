@@ -72,8 +72,8 @@ ls -l /dev/video*
 create a virtual audio output device
 
 #+begin_src sh
-pactl load-module module-null-sink sink_name=OBS
-pactl load-module module-virtual-source source_name=VirtualMic master=OBS.monitor
+pactl load-module module-null-sink sink_name=Source
+pactl load-module module-virtual-source source_name=VirtualMic master=Source.monitor
 #+end_src
 
 The first command sets up a “null sink”, i.e. a virtual output device, to collect the audio output from OBS. 
@@ -97,12 +97,12 @@ Then add the following code to the default.pa file and save it and then reboot
 
 # null sink
 .ifexists module-null-sink.so
-load-module module-null-sink sink_name=OBS
+load-module module-null-sink sink_name=Source
 .endif
 
 # virtual source
 .ifexists module-virtual-source.so
-load-module module-virtual-source source_name=VirtualMic master=OBS.monitor
+load-module module-virtual-source source_name=VirtualMic master=Source.monitor
 .endif
 #+end_src
 
