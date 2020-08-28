@@ -1,0 +1,17 @@
+#+STARTUP: content
+* zsh corrupt history fix
+
++ install binutils for the strings command
+
+#+begin_src sh
+sudo apt install binutils
+#+end_src
+
++ zsh corrupt history fix
+
+#+begin_src sh
+cd ~
+mv .zsh_history .zsh_history_bad
+strings .zsh_history_bad > .zsh_history
+fc -R .zsh_history
+#+end_src

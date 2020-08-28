@@ -1,0 +1,252 @@
+#+STARTUP: showall
+* obs audio settings - windows mac
+
+#+BEGIN_SRC dot :file audio-settings-windows-mac.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+settings [label="Settings"]
+audio [label="Audio"]
+monitordevice [label="Monitoring Device"]
+virtualmic [label="Virtual Cable A"]
+mic [label="Microphone"]
+
+// graph
+obs -> settings -> audio -> {mic monitordevice};
+monitordevice -> virtualmic;
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:audio-settings-windows-mac.svg]]
+
+* obs audio settings - linux
+
+#+BEGIN_SRC dot :file audio-settings-linux.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+settings [label="Settings"]
+audio [label="Audio"]
+monitordevice [label="Monitoring Device"]
+virtualmic [label="Monitor of Null Output"]
+mic [label="Microphone"]
+
+// graph
+obs -> settings -> audio -> {mic monitordevice};
+monitordevice -> virtualmic;
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:audio-settings-linux.svg]]
+
+* ndi camera microphone
+
+#+BEGIN_SRC dot :file ndi-camera-mic.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+camera [label="Web Cam"]
+mic [label="Microphone"]
+ndi [label="NDI Output"]
+    
+virtualinput [label="Virtual Input"]
+	     
+virtualmic [label="Virtual Microphone"]
+virtualcamera [label="Virtual Camera"]
+chat [label="Chat"]
+
+// graph
+obs -> {camera mic} -> ndi -> virtualinput;
+virtualinput -> {virtualmic virtualcamera} -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:ndi-camera-mic.svg]]
+
+* ndi camera virtual audio
+
+#+BEGIN_SRC dot :file ndi-camera-virtual-audio.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+camera [label="Web Cam"]
+mic [label="Microphone"]
+	
+monitor [label="Monitor and Output"]
+virtualcable [label="Virtual Cable A"]
+	     
+ndi [label="NDI Output"]
+virtualinput [label="Virtual Input"]
+virtualcamera [label="Virtual Camera"]
+
+chat [label="Chat"]
+
+// graph
+obs -> {camera mic};
+mic -> monitor -> virtualcable;
+camera -> ndi -> virtualinput;
+virtualinput -> virtualcamera -> chat
+virtualcable -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:ndi-camera-virtual-audio.svg]]
+
+* virtual audio and camera - windows mac
+
+#+BEGIN_SRC dot :file virtual-audio-camera-windows.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+chat [label="Chat"]
+      
+camera [label="Web Cam"]
+mic [label="Microphone"]
+
+monitor [label="Monitor and Output"]
+
+virtualcable [label="Virtual Cable A"]
+virtualcamera [label="Virtual Camera"]
+
+// graph
+obs -> {camera mic};
+mic -> monitor;
+monitor -> virtualcable -> chat;
+camera -> virtualcamera -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:virtual-audio-camera-windows.svg]]
+
+* virtual audio and camera - linux
+
+#+BEGIN_SRC dot :file virtual-audio-camera-linux.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+obs [label="OBS Studio"]
+chat [label="Chat"]
+      
+camera [label="Web Cam"]
+mic [label="Microphone"]
+
+monitor [label="Monitor and Output"]
+
+virtualcable [label="Monitor of Null Output"]
+virtualcamera [label="Virtual Camera"]
+virtualmic [label="Virtual Microphone"]
+
+// graph
+obs -> {camera mic};
+mic -> monitor;
+monitor -> virtualcable -> virtualmic -> chat;
+camera -> virtualcamera -> chat
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:virtual-audio-camera-linux.svg]]
+* skype to obs
+
+#+BEGIN_SRC dot :file skype-to-obs.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+speakers [label="Speakers"]
+headphones [label="Headphones"]
+skype [label="Skype"]
+ndi [label="NDI Output"]
+audio [label="Audio"]
+video [label="Video"]
+
+obs [label="OBS Studio"]
+scene [label="Scene"]
+ndisource [label="NDI Source"]
+      
+// graph
+skype -> speakers -> headphones;
+skype -> ndi -> {audio video} -> obs;
+obs -> scene -> ndisource
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:skype-to-obs.svg]]
+* Zoom to obs
+
+#+BEGIN_SRC dot :file zoom-to-obs.svg :cmdline -Kdot -Tsvg
+digraph {
+// graph from left to right
+rankdir=LR;
+splines=true;
+node [shape=box fontname="Sans serif" fontsize="20"];
+edge [style=solid];
+
+// nodes
+zoom [label="Zoom"]
+speakers [label="Speakers"]
+headphones [label="Headphones"]
+
+windowcapture [label="Window Capture"]
+audiooutput [label="Audio Output Capture"]
+
+desktopaudio [label="Desktop Audio"]
+
+obs [label="OBS Studio"]
+scene [label="Scene"]
+      
+// graph
+zoom -> speakers -> headphones;
+zoom -> obs -> scene;
+scene -> {windowcapture audiooutput};
+audiooutput -> desktopaudio
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:zoom-to-obs.svg]]
