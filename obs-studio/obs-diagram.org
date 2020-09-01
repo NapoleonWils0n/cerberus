@@ -14,7 +14,7 @@ obs [label="OBS Studio"]
 settings [label="Settings"]
 audio [label="Audio"]
 monitordevice [label="Monitoring Device"]
-virtualmic [label="Virtual Cable A"]
+virtualmic [label="Virtual Cable"]
 mic [label="Microphone"]
 
 // graph
@@ -100,7 +100,7 @@ camera [label="Web Cam"]
 mic [label="Microphone"]
 	
 monitor [label="Monitor and Output"]
-virtualcable [label="Virtual Cable A"]
+virtualcable [label="Virtual Cable"]
 	     
 ndi [label="NDI Output"]
 virtualinput [label="Virtual Input"]
@@ -139,7 +139,7 @@ mic [label="Microphone"]
 
 monitor [label="Monitor and Output"]
 
-virtualcable [label="Virtual Cable A"]
+virtualcable [label="Virtual Cable"]
 virtualcamera [label="Virtual Camera"]
 
 // graph
