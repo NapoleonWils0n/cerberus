@@ -10,6 +10,8 @@ $(pacmd list-sources | egrep -m1 '^\s+name:.*\.monitor' | awk -F '[<>]' '{print 
 * sox record desktop audio script
 
 #+begin_src sh
+#!/bin/sh
+
 sox -t pulseaudio \
 $(pacmd list-sources | egrep -m1 '^\s+name:.*\.monitor' | awk -F '[<>]' '{print $2}') \
 -t wav system-audio-$(date +"%Y-%m-%d-%H-%M-%S").wav
