@@ -24,6 +24,6 @@ sox record system audio
 
 ```
 sox -t pulseaudio \
-$(pacmd list-sources | egrep '^\s+name:.*\.monitor' | awk -F '[<>]' '{print $2}') \
+$(pacmd list-sources | egrep -m1 '^\s+name:.*\.monitor' | awk -F '[<>]' '{print $2}') \
 -t wav system-audio.wav
 ```

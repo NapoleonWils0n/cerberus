@@ -1,0 +1,8 @@
+#+STARTUP: content
+* sox record desktop audio
+
+#+begin_src sh
+sox -t pulseaudio \
+$(pacmd list-sources | egrep -m1 '^\s+name:.*\.monitor' | awk -F '[<>]' '{print $2}') \
+-t wav system-audio.wav
+#+end_src
