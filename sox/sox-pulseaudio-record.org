@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: showall
 * sox record desktop audio
 
 #+begin_src sh
