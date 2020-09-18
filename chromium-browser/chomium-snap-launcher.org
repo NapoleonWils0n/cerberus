@@ -1,7 +1,9 @@
 #+STARTUP: content
 * chromium snap desktop launcher
 
-chromium snap desktop launcher
+chromium snap desktop launcher fix
+
+** chromium snap fix
 
 #+begin_src sh
 cp /var/lib/snapd/desktop/applications/chromium_chromium.desktop \
