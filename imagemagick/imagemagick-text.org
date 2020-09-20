@@ -2,7 +2,16 @@
 #+OPTIONS: num:nil author:nil
 * imagemagick create text slide
 
+** black background
+
 #+BEGIN_SRC sh
 convert -background black -fill white  -font SF-Pro-Display-Medium \
+-size 1920x1080 -pointsize 200 -gravity center label:'Base Video' output.png
+#+END_SRC
+
+** transparent background
+
+#+BEGIN_SRC sh
+convert -background transparent -fill white  -font SF-Pro-Display-Medium \
 -size 1920x1080 -pointsize 200 -gravity center label:'Base Video' output.png
 #+END_SRC
