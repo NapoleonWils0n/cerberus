@@ -1,0 +1,16 @@
+#+STARTUP: content
+* convert draw circle
+
+create a circle with convert
+
+** image mask
+
+#+begin_src sh
+convert -size 1280x720 xc:black -fill white -strokewidth 2 -draw 'circle 640,360 320,360' mask.png
+#+end_src
+
+** convert the image to transparent
+
+#+begin_src sh
+convert mask.png -fuzz 10% -transparent white mask.png
+#+end_src

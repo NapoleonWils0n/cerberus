@@ -1,0 +1,53 @@
+#+STARTUP: content
+* ffmpeg alpha channel
+
+** 20% alpha
+
+#+begin_src sh
+ffmpeg \
+-f lavfi \
+-i color=color=red@.2:size=228x228,format=yuva420p \
+-t 20 -c:v vp9 redcanvas20.webm
+#+end_src
+
+** line
+
+#+begin_src sh
+ffmpeg \
+-f lavfi \
+-i "color=color=red:size=228x228,format=yuva420p,\
+geq=lum='p(X,Y)':a='if(eq(X,Y),255,0)'" \
+-t 20 -c:v vp9 redline20.webm
+#+end_src
+
+** lower third
+
+#+begin_src sh
+ffmpeg \
+-f lavfi \
+-i "color=color=red:size=228x228,format=yuva420p,\
+geq=lum='p(X,Y)':a='if(gte(Y,2*H/3),255,0)'" \
+-t 20 -c:v vp9 redlowerthird20.webm
+#+end_src
+
+** circle
+
+#+begin_src sh
+ffmpeg \
+-f lavfi \
+-i "color=color=red:size=228x228,format=yuva420p,\
+geq=lum='p(X,Y)':a='if(lte(hypot(X-(W/2),Y-(H/2)),100),255,0)'" \
+-t 20 -c:v vp9 redcircle20.webm
+#+end_src
+
+** circle map
+
+#+begin_src sh
+ffmpeg \
+-f lavfi \
+-i "color=color=red:size=600x480,format=yuva420p,\
+geq=lum='p(X,Y)':a='if(lte(hypot(X-(W/2),Y-(H/2)),100),255,0)'" \
+-i infile.mkv \
+-filter_complex "[0]alphaextract[a];[1][a]alphamerge" \
+-c:v vp9 maskedmap.webm
+#+end_src
