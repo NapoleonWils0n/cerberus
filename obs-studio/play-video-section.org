@@ -1,0 +1,125 @@
+#+STARTUP: content
+* play video range
+
+play a section of a video with a start and stop point in obs studio
+** vlc source
+*** vlc url
+*** vlc playlist
+**** m3u playlist
+
+extended m3u format
+***** get youtube video url
+
+get the videos url with youtube-dl
+
+#+begin_src sh
+youtube-dl -g 'https://www.youtube.com/watch?v=qcnamz5vSdo' > videourl.txt
+#+end_src
+
+***** local file
+
+m3u playlist with local file
+
++ local.m3u
+
+#+begin_src html
+#EXTM3U
+#EXTINF:0,Local File
+#EXTVLCOPT:start-time=30
+#EXTVLCOPT:stop-time=120
+# play infile.mp4
+infile.mp4
+#+end_src
+
+***** youtube video
+
+m3u playlist with youtube url stored in external text file
+the text file is reference in the m3u file
+
++ youtube.m3u
+
+#+begin_src html
+#EXTM3U
+#EXTINF:0,Youtube
+#EXTVLCOPT:start-time=30
+#EXTVLCOPT:stop-time=120
+# youtube video title
+# https://www.youtube.com/watch?v=qcnamz5vSdo
+# video url stored in video.txt file
+video.txt
+#+end_src
+
+** browser source
+
+we can play a video with the browser source by adding the embed link as the browser source,
+then by right clicking on the browser and selecting interact we get a pop up window where we can interact with the browser source.
+
+this means we can now click on the embedded video to play it
+
+*** youtube embed code with start point
+
+for example we will get the embed code from this video
+
+[[https://www.youtube.com/watch?v=qcnamz5vSdo][https://www.youtube.com/watch?v=qcnamz5vSdo]]
+
+open a youtube video and move the playhead to where you want to start playing thye vide from,
+then click the share button and select embed
+
+enable the checkbox for start video at which should match the video playhead position,
+the format is in seconds
+
+copy the embed code to your clipboard and then paste into a text document and save the file
+
+the embed code will look like this with the start time at 1 minute 29 seconds,
+which is 89 seconds in the embed code
+
+#+begin_src html
+<iframe width="560" height="315" src="https://www.youtube.com/embed/qcnamz5vSdo?start=89" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+#+end_src
+
+*** extract the embed code link
+
+extract the embed link from the src in the embed code
+
+[[https://www.youtube.com/embed/qcnamz5vSdo?start=89][https://www.youtube.com/embed/qcnamz5vSdo?start=89]]
+
+*** append the video end point to the link
+
+the next step is to add the end point to the url to set the videos end point
+this is the url we extracted from the videos embed code
+
+[[https://www.youtube.com/embed/qcnamz5vSdo?start=89][https://www.youtube.com/embed/qcnamz5vSdo?start=89]]
+
+we need to append the end point to the url by adding ampersand end equals and then the time in seconds for the end point
+
+for example to set the end point to 2 minutes we have to convert 2 minutes to seconds,
+which would be 120
+
+so we need to append the follow code to the url
+
+#+begin_src html
+&end=120
+#+end_src
+
+the url with the start point set to 89 seconds or 1 minute 29 seconds,
+and the end point set to 120 seconds or 2 minutes
+
+[[https://www.youtube.com/embed/qcnamz5vSdo?start=89][https://www.youtube.com/embed/qcnamz5vSdo?start=89&end=200]]
+
+*** obs add browser source
+
+add a browser source in obs studio and the youtube url
+
+then set the width and height of browser source to match the size of your canvas in obs
+for example if the size of your canvas in obs is 1920x1080 set the width and height of the browser source to those values
+
+*** interact with the browser
+
+right click on the browser source under sources and select interact,
+or right click on the browser source in the canvas and select interact
+
+this will open a small pop up window with the browser source inside which you can click and scroll in
+
+you can now click the youtube video in the pop up window and video will strart playing in the canvas
+
+the disadvantage of this method is that when the video ends recommend videos are shown in the page
