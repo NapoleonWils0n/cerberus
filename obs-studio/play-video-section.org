@@ -11,9 +11,10 @@ extended m3u format
 ***** get youtube video url
 
 get the videos url with youtube-dl
+we need to use the -f 22 option to get the non dsh version of the video link
 
 #+begin_src sh
-youtube-dl -g 'https://www.youtube.com/watch?v=qcnamz5vSdo' > videourl.txt
+youtube-dl -f 22 -g 'https://www.youtube.com/watch?v=qcnamz5vSdo' > videourl.txt
 #+end_src
 
 ***** local file
