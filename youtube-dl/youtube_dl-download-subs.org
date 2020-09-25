@@ -10,6 +10,12 @@ youtube_dl download subtitles from video
 youtube-dl --write-sub --sub-lang en --skip-download 'https://youtu.be/VYuQaSbZ2Ws'
 #+END_SRC
 
++ download auto subs
+  
+#+BEGIN_SRC sh
+youtube-dl --write-auto-sub --sub-lang en --skip-download 'https://youtu.be/VYuQaSbZ2Ws'
+#+END_SRC
+
 youtube-dl batch download subtitles from a text file with youtube urls
 
 #+BEGIN_SRC sh
