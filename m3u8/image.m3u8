@@ -1,0 +1,5 @@
+#EXTM3U
+
+#EXTINF:0, 01-image
+#EXTVLCOPT:image-duration=5
+output.png
