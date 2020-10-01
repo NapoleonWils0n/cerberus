@@ -1,0 +1,8 @@
+#+STARTUP: content
+* vlc lua script location
+
+create the lua playlist directory in your home directory
+
+#+begin_src sh
+mkdir -p ~/.local/share/vlc/lua/playlist
+#+end_src
