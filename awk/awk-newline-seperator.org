@@ -1,0 +1,39 @@
+#+STARTUP: content
+* awk newline seperator
+
+get youtube url and title
+
+#+begin_src sh
+ytdl=$(youtube-dl -f 22 -e --restrict-filenames -g 'https://www.youtube.com/watch?v=856sT1f3pI')
+#+end_src
+
+outputs the video title and url seperated by a newline
+
+#+begin_example
+obs switch scene when media source ends with the advanced scene switcher
+https://r2---sn-cu-auoe.googlevideo.com/videoplayback?expire=1601696918&ei=NqB3X7y5L4Sk-gaDzrTIDg&ip=81.131.124.142&id=o-AECoaBm-36vcHEDvi5Ch6_iWB_8sihwziuRYBQSbiDO_&itag=22&source=youtube&requiressl=yes&mh=yj&mm=31%2C26&mn=sn-cu-auoe%2Csn-5hne6ns6&ms=au%2Conr&mv=m&mvi=2&pl=25&initcwndbps=1561250&vprv=1&mime=video%2Fmp4&ratebypass=yes&dur=1348.684&lmt=1601394927667922&mt=1601675197&fvip=2&fexp=23915654&c=WEB&txp=6211222&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAKHvwk-yx9ycVJrBMhFzNf0Een_W3nQgzZKTtv5ijBhcAiEAlFE6cvFh81HfwbV-Mkb0X3F_Gq5uQh2gWWq3hNpNG3E%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIgI-aMCTLPFA9gMBL4yZT_Qo29V3Du6nTzsoMXymOhjnQCIQDuYBlc2o1k6gSoQhCerL6ejK6SUBwj6m9-KfzrX8_t_w%3D%3D
+#+end_example
+
+** video title
+
+#+begin_src sh
+infile_name=$(echo "${ytdl}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+#+end_src
+
++ outputs
+
+#+begin_example
+obs switch scene when media source ends with the advanced scene switcher
+#+end_example
+
+** video url
+
+#+begin_src sh
+infile=$(echo "${ytdl}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+#+end_src
+
++ outputs
+
+#+begin_example
+https://r2---sn-cu-auoe.googlevideo.com/videoplayback?expire=1601696918&ei=NqB3X7y5L4Sk-gaDzrTIDg&ip=81.131.124.142&id=o-AECoaBm-36vcHEDvi5Ch6_iWB_8sihwziuRYBQSbiDO_&itag=22&source=youtube&requiressl=yes&mh=yj&mm=31%2C26&mn=sn-cu-auoe%2Csn-5hne6ns6&ms=au%2Conr&mv=m&mvi=2&pl=25&initcwndbps=1561250&vprv=1&mime=video%2Fmp4&ratebypass=yes&dur=1348.684&lmt=1601394927667922&mt=1601675197&fvip=2&fexp=23915654&c=WEB&txp=6211222&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAKHvwk-yx9ycVJrBMhFzNf0Een_W3nQgzZKTtv5ijBhcAiEAlFE6cvFh81HfwbV-Mkb0X3F_Gq5uQh2gWWq3hNpNG3E%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIgI-aMCTLPFA9gMBL4yZT_Qo29V3Du6nTzsoMXymOhjnQCIQDuYBlc2o1k6gSoQhCerL6ejK6SUBwj6m9-KfzrX8_t_w%3D%3D
+#+end_example
