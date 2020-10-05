@@ -73,6 +73,12 @@ cp /usr/local/share/examples/xmonad/xmonad-config.cabal ~/.xmonad/xmonad-config.
 
 *** xmonad-config.cabal
 
+edit ~/.xmonad/xmonad-config.cabal
+
+#+BEGIN_SRC sh
+vi ~/.xmonad/xmonad-config.cabal
+#+END_SRC
+
 add containers to build-depends
 
 #+BEGIN_SRC config
