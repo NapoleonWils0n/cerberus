@@ -1,0 +1,133 @@
+#+STARTUP: content
+* xmonad-contrib freebsd install
+
+manually install xmonad-contrib
+
+** xmonad and packages needed to build xmonad-contrib
+
+#+BEGIN_SRC sh
+doas pkg install hs-xmonad ghc hs-stack hs-cabal-install libXft pkgconf
+#+END_SRC
+
+** Add ~/.cabal/bin to your $PATH 
+
+edit your shell config file and add the following code
+
+#+BEGIN_SRC sh
+# cabal bin for haskell
+if [ -d "$HOME/.cabal/bin" ]; then
+   PATH="$HOME/.cabal/bin:$PATH"
+fi
+#+END_SRC
+
++ then source your shell config file
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+** cabal update
+
+download the package list for hackage.haskell.org
+
+#+BEGIN_SRC sh
+cabal update
+#+END_SRC
+
+** cabal install xmonad-contrib
+
+xmonad-contrib requires you to install libxft C headers
+
+#+BEGIN_SRC sh
+cabal install xmonad-contrib --lib --flags="-use_xft"
+#+END_SRC
+
+** xmonad build config
+
+*** create the ~/.xmonad directory
+
+#+BEGIN_SRC sh
+mkdir -p ~/.xmonad
+#+END_SRC
+
+*** rename xmonad.hs to config.hs
+
+rename your xmonad.hs to config.hs
+
+#+BEGIN_SRC sh
+mv xmonad.hs config.hs
+#+END_SRC
+
+copy the config.hs file to ~/.xmonad/config.hs
+
+#+BEGIN_SRC sh
+mv config.hs ~/.xmonad/
+#+END_SRC
+
+*** copy the build and xmonad-config.cabal to the ~/.xmonad directory
+
+#+BEGIN_SRC sh
+cp /usr/local/share/examples/xmonad/build ~/.xmonad/build
+cp /usr/local/share/examples/xmonad/xmonad-config.cabal ~/.xmonad/xmonad-config.cabal
+#+END_SRC
+
+*** xmonad-config.cabal
+
+add containers to build-depends
+
+#+BEGIN_SRC config
+name:          xmonad-config
+version:       0.0
+synopsis:      XMonad Config File
+homepage:      http://xmonad.org
+license:       BSD2
+license-file:  LICENSE
+author:        Peter Jones <pjones@devalot.com>
+maintainer:    Peter Jones <pjones@devalot.com>
+copyright:     Copyright (c) 2016,2017 Peter J. Jones
+category:      Graphics
+build-type:    Simple
+cabal-version: >=1.8
+
+executable xmonad-config
+  main-is: config.hs
+  build-depends: base, xmonad, xmonad-contrib, containers
+#+END_SRC
+
+*** run cabal new-update
+
+change directory into the ~/.xmonad directory
+
+#+BEGIN_SRC sh
+cd ~/.xmonad
+#+END_SRC
+
++ run cabal new-update
+
+#+BEGIN_SRC sh
+cabal new-update
+#+END_SRC
+
+Make sure your config is named ~/.xmonad/config.hs
+or change corresponding line in the .cabal file. 
+
+Building the config for the first time requires decent amount of time,
+so it is recommended to manually run the build script before the first startup:
+
+*** xmonad build
+
+#+BEGIN_SRC sh
+~/.xmonad/build
+#+END_SRC
+*** xinitrc
+
+#+BEGIN_SRC conf
+# feh set wallpaper
+feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
+
+# set the cursor form xmonad
+xsetroot -cursor_name left_ptr
+
+# start ssh-agent and window mamager
+exec ssh-agent /usr/local/bin/xmonad
+#+END_SRC
