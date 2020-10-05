@@ -6,7 +6,7 @@ manually install xmonad-contrib
 ** xmonad and packages needed to build xmonad-contrib
 
 #+BEGIN_SRC sh
-doas pkg install hs-xmonad ghc hs-stack hs-cabal-install libXft pkgconf
+doas pkg install hs-xmonad ghc hs-stack hs-cabal-install libXft pkgconf tint2 rofi
 #+END_SRC
 
 ** Add ~/.cabal/bin to your $PATH 
