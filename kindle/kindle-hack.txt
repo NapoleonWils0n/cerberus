@@ -1,0 +1,3 @@
+Set kindle to download non drm books
+
+sudo chmod -x /Applications/Kindle.app/Contents/MacOS/renderer-test
