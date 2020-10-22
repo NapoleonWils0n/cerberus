@@ -8,32 +8,38 @@ install ndi runtime on freebsd which is required for the [[https://github.com/Pa
 By default, Linux libraries are not installed and Linux binary compatibility is not enabled.
 Linux libraries can either be installed manually or from the FreeBSD Ports Collection.
 
++ switch to root
+
+#+BEGIN_SRC sh 
+doas su
+#+END_SRC
+
 Before attempting to build the port, load the Linux® kernel module, otherwise the build will fail:
 
 #+begin_src sh
-# kldload linux
+kldload linux
 #+end_src
 
 For 64-bit compatibility:
 
 #+begin_src sh
-# kldload linux64
+kldload linux64
 #+end_src
 
 To verify that the module is loaded:
 
 #+begin_src sh
-% kldstat
+kldstat
       Id Refs Address    Size     Name
       1    2 0xc0100000 16bdb8   kernel
       7    1 0xc24db000 d000     linux.ko
 #+end_src
 
 The emulators/linux_base-c7 package or port is the easiest way to install a base set of Linux® libraries and binaries on a FreeBSD system.
-To install the port:
+To install the port, switch to root
 
 #+begin_src sh
-# pkg install emulators/linux_base-c7
+pkg install emulators/linux_base-c7
 #+end_src
 
 For Linux compatibility to be enabled at boot time, add this line to /etc/rc.conf:
@@ -43,6 +49,40 @@ linux_enable="YES"
 #+end_src
 
 On 64-bit machines, /etc/rc.d/abi will automatically load the module for 64-bit emulation.
+
+*** fstab
+
+Message from linux_base-c7-7.8.2003_1:
+
+Some programs need linprocfs mounted on /compat/linux/proc.  
+Some programs need linsysfs mounted on /compat/linux/sys.  
+Some programs need tmpfs mounted on /compat/linux/dev/shm.
+
++ edit fstab as root
+
+#+BEGIN_SRC sh
+vi /etc/fstab
+#+END_SRC
+
+Add the following line to /etc/fstab:
+
+#+BEGIN_SRC conf
+linprocfs   /compat/linux/proc	linprocfs	rw	0	0
+linsysfs    /compat/linux/sys	linsysfs	rw	0	0
+tmpfs    /compat/linux/dev/shm	tmpfs	rw,mode=1777	0	0
+#+END_SRC
+
+Then run "mount /compat/linux/proc".
+Then run "mount /compat/linux/sys".
+Then run "mount /compat/linux/dev/shm".
+
+switch to root and then mount the directories
+
+#+BEGIN_SRC sh
+mount /compat/linux/proc
+mount /compat/linux/sys
+mount /compat/linux/dev/shm
+#+END_SRC
 
 ** Linux ndi runtime
 
@@ -206,3 +246,37 @@ cp /lib/x86_64-linux-gnu/libgpg-error.so.0 compat/linux/lib/x86_64-linux-gnu
 Copy all the files in the last column of the output from the Linux® system into /compat/linux on the FreeBSD system. Once copied, create symbolic links to the names in the first column.
 
 If a Linux shared library already exists with a matching major revision number to the first column of the ldd output, it does not need to be copied to the file named in the last column, as the existing library should work. It is advisable to copy the shared library if it is a newer version, though. The old one can be removed, as long as the symbolic link points to the new one
+
+** copy linux files into place
+
+switch to root
+
+#+BEGIN_SRC sh
+doas su
+#+END_SRC
+
+copy files into place
+
+#+begin_src sh
+cp compat/linux/usr/bin/ndi-directory-service /compat/linux/usr/bin/
+cp compat/linux/usr/bin/ndi-record /compat/linux/usr/bin/
+cp compat/linux/usr/lib/libndi.so /compat/linux/usr/lib/
+cp compat/linux/usr/lib/libndi.so.4 /compat/linux/usr/lib/
+cp compat/linux/usr/lib/libndi.so.4.5.1 /compat/linux/usr/lib/
+cp compat/linux/lib/x86_64-linux-gnu/libm.so.6 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libpthread.so.0 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libc.so.6 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/usr/lib/x86_64-linux-gnu/libavahi-common.so.3 /compat/linux/usr/lib/x86_64-linux-gnu/
+cp compat/linux/usr/lib/x86_64-linux-gnu/libavahi-client.so.3 /compat/linux/usr/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libdl.so.2 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libm.so.6 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libpthread.so.0 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libc.so.6 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libdbus-1.so.3 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libsystemd.so.0 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/librt.so.1 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/liblzma.so.5 /compat/linux/lib/x86_64-linux-gnu/
+cp compat/linux/usr/lib/x86_64-linux-gnu/liblz4.so.1 /compat/linux/usr/lib/x86_64-linux-gnu/
+cp compat/linux/usr/lib/x86_64-linux-gnu/libgcrypt.so.20 /compat/linux/usr/lib/x86_64-linux-gnu/
+cp compat/linux/lib/x86_64-linux-gnu/libgpg-error.so.0 /compat/linux/lib/x86_64-linux-gnu/
+#+end_src
