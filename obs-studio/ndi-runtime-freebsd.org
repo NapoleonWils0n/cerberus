@@ -91,6 +91,28 @@ drwxr-xr-x root/root         0 2020-05-14 11:35 ./usr/lib/
 -rwxr-xr-x root/root   4663328 2020-05-14 11:35 ./usr/lib/libndi.so.4.5.1
 #+end_src
 
++ create the directory structure and copy the files into the directories
+
+#+begin_src sh
+mkdir -p compat/linux/usr/bin
+mkdir -p compat/linux/usr/lib
+#+end_src
+
++ copy the binaries into the directories
+
+#+begin_src sh
+cp /usr/bin/ndi-directory-service compat/linux/usr/bin
+cp /usr/bin/ndi-record compat/linux/usr/bin
+#+end_src
+
++ copy the .so file into the directories
+
+#+begin_src sh
+cp /usr/lib/libndi.so compat/linux/usr/lib
+cp /usr/lib/libndi.so.4 compat/linux/usr/lib
+cp /usr/lib/libndi.so.4.5.1 compat/linux/usr/lib
+#+end_src
+
 ** ldd can be used to determine which shared libraries the application needs
 
 If a Linux application complains about missing shared libraries after configuring Linux binary compatibility,
@@ -112,6 +134,20 @@ libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fbeaafee000)
 libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fbeaafcb000)
 libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fbeaadd9000)
 /lib64/ld-linux-x86-64.so.2 (0x00007fbeab163000)
+#+end_src
+
++ create directory structure
+
+#+begin_src sh
+mkdir -p compat/linux/lib/x86_64-linux-gnu
+#+end_src
+
++ copy the files into the new directory
+
+#+begin_src sh
+cp /lib/x86_64-linux-gnu/libm.so.6 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libpthread.so.0 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libc.so.6 compat/linux/lib/x86_64-linux-gnu
 #+end_src
 
 *** ndi-record
@@ -138,6 +174,31 @@ liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007f2fbf57a000)
 liblz4.so.1 => /usr/lib/x86_64-linux-gnu/liblz4.so.1 (0x00007f2fbf559000)
 libgcrypt.so.20 => /usr/lib/x86_64-linux-gnu/libgcrypt.so.20 (0x00007f2fbf43b000)
 libgpg-error.so.0 => /lib/x86_64-linux-gnu/libgpg-error.so.0 (0x00007f2fbf416000)
+#+end_src
+
++ create the directory structure  
+
+#+begin_src sh
+mkdir -p compat/linux/usr/lib/x86_64-linux-gnu
+mkdir -p compat/linux/lib/x86_64-linux-gnu
+#+end_src
+
++ copy the files into the directories we created
+
+#+begin_src sh
+cp /usr/lib/x86_64-linux-gnu/libavahi-common.so.3 compat/linux/usr/lib/x86_64-linux-gnu
+cp /usr/lib/x86_64-linux-gnu/libavahi-client.so.3 compat/linux/usr/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libdl.so.2 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libm.so.6 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libpthread.so.0 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libc.so.6 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libdbus-1.so.3 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libsystemd.so.0 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/librt.so.1 compat/linux/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/liblzma.so.5 compat/linux/lib/x86_64-linux-gnu
+cp /usr/lib/x86_64-linux-gnu/liblz4.so.1 compat/linux/usr/lib/x86_64-linux-gnu
+cp /usr/lib/x86_64-linux-gnu/libgcrypt.so.20 compat/linux/usr/lib/x86_64-linux-gnu
+cp /lib/x86_64-linux-gnu/libgpg-error.so.0 compat/linux/lib/x86_64-linux-gnu
 #+end_src
 
 *** Installing Additional Libraries Manually
