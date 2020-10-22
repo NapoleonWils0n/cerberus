@@ -76,7 +76,13 @@ Then run "mount /compat/linux/proc".
 Then run "mount /compat/linux/sys".
 Then run "mount /compat/linux/dev/shm".
 
-switch to root and then mount the directories
+switch to root 
+
+#+BEGIN_SRC sh
+doas su
+#+END_SRC
+
+and then mount the directories
 
 #+BEGIN_SRC sh
 mount /compat/linux/proc
@@ -290,3 +296,4 @@ cp compat/linux/usr/lib/x86_64-linux-gnu/liblz4.so.1 /compat/linux/usr/lib/x86_6
 cp compat/linux/usr/lib/x86_64-linux-gnu/libgcrypt.so.20 /compat/linux/usr/lib/x86_64-linux-gnu/
 cp compat/linux/lib/x86_64-linux-gnu/libgpg-error.so.0 /compat/linux/lib/x86_64-linux-gnu/
 #+end_src
+
