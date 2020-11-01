@@ -1,0 +1,91 @@
+#+STARTUP: overview
+* dell xps 15 ubuntu install
+** windows license
+
+To find your Windows 10 product key using the Command Prompt, you’ll need to open the command line application with administrative privileges. To do this, type “cmd” in the Windows search bar.
+
+Command Prompt will appear in the search results. Right-click it and select “Run As Administrator” from the window that appears.
+If prompted, enter your Windows account password.
+
+Once open, copy and paste the following command and then hit the Enter key:
+
+#+begin_src sh
+wmic path softwarelicensingservice get OA3xOriginalProductKey
+#+end_src
+
+The 25-digit product key will then appear.
+
+** bios
+
+run dell update on windows to update the bios
+
+[[https://medium.com/@voghDev_63848/my-journey-installing-ubuntu-19-10-on-the-dell-xps-15-7590-2020-cfffd912cb2a]]
+
+Switch from RAID to AHCI Mode
+
+This is one of the key steps to a successful Ubuntu 18.04 installation on the Dell XPS 15 7590 that differs from a typical Ubuntu install. Without this step, you would not be able to install Ubuntu 18.04 onto the newly unallocated space, as it would not be able to find your storage drive.
+
++ Type “cmd” into the Windows Search Bar, then click “Run as administrator”.
++ This next step makes your computer boot into safeboot. This is needed for the RAID to AHCI transition. Type this command and press ENTER:
+
+#+begin_src sh
+bcdedit /set safeboot minimal
+#+end_src
+
++ Restart the computer and enter the BIOS Setup. For the Dell XPS 15 7590, this means restarting the laptop and then repeatedly pressing F2 during the restart. This has to be done early and often to work.
++ Under System Configuration, change the SATA Operation mode from RAID to AHCI.
++ Save changes and try to boot into Windows. It will automatically boot to Safe Mode.
++ Type “cmd” into the Windows Search Bar, then click “Run as administrator”.
++ This next step makes your computer not boot into safeboot. Type this command and press ENTER:
+
+#+begin_src sh
+bcdedit /deletevalue safeboot
+#+end_src
+
++ Reboot once more and Windows will automatically start with AHCI drivers enabled.
+
+If this worked, you should be able to search “Device Manager” in the Windows Search Bar, then see IDE ATA/ATAPI Controllers > Intel(R) 300 Series Chipset Family SATA AHCI Controller.
+
+[[https://wiki.archlinux.org/index.php/Dell_XPS_15_9570]]
+
+Before installing it is necessary to modify some UEFI Settings. They can be accessed by pressing the F2 key repeatedly when booting.
+
+Change the SATA Mode from the default "RAID" to "AHCI". This will allow Linux to detect the NVME SSD. If dual booting with an existing Windows installation, Windows will not boot after the change but this can be fixed without a reinstallation.
+Change Fastboot to "Thorough" in "POST Behaviour". This prevents intermittent boot failures.
+Disable secure boot to allow Linux to boot. Alternatively, you can choose to set up Secure Boot so that it works with Linux and you can take advantage of its potential security benefits.
+
+after diasabling secure boot and rebooting you need to enter your windows recovery key
+you have to login to your windows account on the web to find the recovery key
+
+** zfs root encryption
+
+[[https://linsomniac.gitlab.io/post/2020-04-09-ubuntu-2004-encrypted-zfs/]]
+
+Ubuntu 20.04 includes the ability to install with ZFS for the root and boot partitions. However, it does not include an option for encrypting the root volume. Fortunately, it is easy to enable it.
+Overview
+
+The installer does not include password support for ZFS, but the installed system does have everything necessary to prompt for and handle the root volume being encrypted. This uses ZFS Native Encryption.
+
+Boot the Ubuntu 20.04 Desktop installer/live CD.
+Click the “Try Ubuntu” button.
+
++ Open a terminal and edit “/usr/share/ubiquity/zsys-setup”:
++ Search for “zpool create”, and make sure you have found the create command that has “rpool” on the last line.
++ Before the “zpool create” insert: echo MYPASSWORD |
+
+for example
+
+#+begin_src sh
+echo 'my password' | zpool create 
+#+end_src
+
++ Before the last line of the command insert these lines:
+
+#+begin_src sh
+-O recordsize=1M \
+-O encryption=aes-256-gcm \
+-O keylocation=prompt \
+-O keyformat=passphrase \
+#+end_src
+
+Run ubiquity to start the installer and install as normal, selecting “Use entire disk” and the option to use ZFS.
