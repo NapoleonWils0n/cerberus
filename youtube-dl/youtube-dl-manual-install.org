@@ -1,0 +1,47 @@
+#+STARTUP: content
+* youtube-dl manual install
+
+youtube-dl manual install on linux
+
+** curl download
+
+To install it right away for all UNIX users (Linux, OS X, etc.), type:
+
+#+begin_src sh
+curl -L 'https://yt-dl.org/downloads/latest/youtube-dl' -o ~/bin/youtube-dl
+#+end_src
+
++ make the script executable
+
+#+begin_src sh
+chmod +x ~/bin/youtube-dl
+#+end_src
+
+** wget download
+
+If you do not have curl, you can alternatively use a recent wget:
+
+#+begin_src sh
+wget https://yt-dl.org/downloads/latest/youtube-dl -O ~/bin/youtube-dl
+#+end_src
+
++ make the script executable
+
+#+begin_src sh
+chmod +x /usr/local/bin/youtube-dl 
+#+end_src
+
+** ubuntu python symlink fix
+
+youtube-dl shebang points to
+
+#+begin_src config
+#!/usr/bin/env python
+#+end_src
+
+on ubuntu there is no /usr/bin/python file,
+so we need to symlink python3 to python
+
+#+begin_src sh
+sudo ln -s /usr/bin/python3 /usr/bin/python
+#+end_src
