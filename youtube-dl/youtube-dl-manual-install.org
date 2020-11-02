@@ -28,7 +28,7 @@ wget https://yt-dl.org/downloads/latest/youtube-dl -O ~/bin/youtube-dl
 + make the script executable
 
 #+begin_src sh
-chmod +x /usr/local/bin/youtube-dl 
+chmod +x ~/bin/youtube-dl
 #+end_src
 
 ** ubuntu python symlink fix
