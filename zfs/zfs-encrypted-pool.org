@@ -1,0 +1,85 @@
+#+STARTUP: overview
+* zfs encrypted pool
+
+Install ubuntu with zfs on root 
+
+** list the zfs datasets
+
+#+begin_src sh
+zfs list
+#+end_src
+
+on ubuntu the output will look like this
+
+#+begin_src sh
+NAME                                               USED  AVAIL     REFER  MOUNTPOINT
+bpool                                              260M  1.50G       96K  /boot
+bpool/BOOT                                         258M  1.50G       96K  none
+bpool/BOOT/ubuntu_y1bmkm                           258M  1.50G      180M  /boot
+rpool                                             39.1G   875G      192K  /
+rpool/ROOT                                        7.79G   875G      192K  none
+rpool/ROOT/ubuntu_y1bmkm                          7.79G   875G     3.99G  /
+rpool/ROOT/ubuntu_y1bmkm/srv                       272K   875G      192K  /srv
+rpool/ROOT/ubuntu_y1bmkm/usr                      2.51M   875G      192K  /usr
+rpool/ROOT/ubuntu_y1bmkm/usr/local                2.32M   875G      528K  /usr/local
+rpool/ROOT/ubuntu_y1bmkm/var                      2.11G   875G      192K  /var
+rpool/ROOT/ubuntu_y1bmkm/var/games                 192K   875G      192K  /var/games
+rpool/ROOT/ubuntu_y1bmkm/var/lib                  1.86G   875G     1.23G  /var/lib
+rpool/ROOT/ubuntu_y1bmkm/var/lib/AccountsService  1.16M   875G      280K  /var/lib/AccountsService
+rpool/ROOT/ubuntu_y1bmkm/var/lib/NetworkManager   4.50M   875G      356K  /var/lib/NetworkManager
+rpool/ROOT/ubuntu_y1bmkm/var/lib/apt               133M   875G     75.4M  /var/lib/apt
+rpool/ROOT/ubuntu_y1bmkm/var/lib/dpkg              212M   875G     60.6M  /var/lib/dpkg
+rpool/ROOT/ubuntu_y1bmkm/var/log                   250M   875G     63.0M  /var/log
+rpool/ROOT/ubuntu_y1bmkm/var/mail                  192K   875G      192K  /var/mail
+rpool/ROOT/ubuntu_y1bmkm/var/snap                  776K   875G      568K  /var/snap
+rpool/ROOT/ubuntu_y1bmkm/var/spool                1.21M   875G      252K  /var/spool
+rpool/ROOT/ubuntu_y1bmkm/var/www                   192K   875G      192K  /var/www
+rpool/USERDATA                                    31.2G   875G      192K  /
+rpool/USERDATA/djwilcox_7jb26k                    31.2G   875G     14.9G  /home/djwilcox
+rpool/USERDATA/root_7jb26k                        1.86M   875G      660K  /root
+#+end_src
+
+** create the mountpoint
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+** create the encrypted pool and set the mountpoint
+
+we create a dataset at rpool/data and set the mountpoint to ~/mnt
+
+#+begin_src sh
+sudo zfs create -o encryption=on -o keyformat=passphrase -o mountpoint=/home/djwilcox/mnt rpool/data
+#+end_src
+
+you will be prompted to create a password and verify it
+
+** change the permission on the mountpoint
+
+change the permisions on the mountpoint to your user
+replace username with your username
+
+#+BEGIN_SRC sh
+sudo chown -R username:username ~/mnt
+#+END_SRC
+
+chmod the permissions to 700
+
+#+BEGIN_SRC sh
+chmod 700 ~/mnt
+#+END_SRC
+
+** mount and umount the dataset
+
+mount the dataset
+
+#+begin_src sh
+sudo zfs mount rpool/data
+#+end_src
+
+unmount the dataset
+
+#+begin_src sh
+sudo zfs umount rpool/data
+#+end_src
