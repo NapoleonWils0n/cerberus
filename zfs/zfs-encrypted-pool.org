@@ -81,5 +81,5 @@ sudo zfs mount rpool/data
 unmount the dataset
 
 #+begin_src sh
-sudo zfs umount rpool/data
+sudo zfs unmount rpool/data
 #+end_src
