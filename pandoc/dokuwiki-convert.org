@@ -1,0 +1,16 @@
+#+STARTUP: content
+* pandoc dokuwiki
+
+convert a single markdown file to a dokuwiki formatted file
+
+#+begin_src sh
+pandoc -t dokuwiki infile.md -o outfile.txt
+#+end_src
+
+batch convert markdown files to dokuwiki
+
+#+BEGIN_SRC sh
+find . -type f -name "*.md" -exec sh -c 'pandoc -t dokuwiki "${0}" -o "${0%.*}.txt"' "{}" \;
+#+END_SRC
+
+
