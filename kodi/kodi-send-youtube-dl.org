@@ -1,0 +1,69 @@
+#+STARTUP: content
+* kodi-send and youtube-dl
+** install kodi and kodi-send
+
+#+begin_src sh
+sudo apt install kodi kodi-eventclients-kodi-send
+#+end_src
+
+** copy kodi-send to bin directory
+
+copy kodi-send to your home bin directory
+
+#+begin_src sh
+cp /usr/bin/kodi-send ~/bin/
+#+end_src
+
+** fix kodi-send error
+
+open the copy of kodi-send in your ~/bin directory
+
+#+begin_src sh
+vi ~/bin/kodi-send
+#+end_src
+
+go to line 87 in kodi-send
+we need to fix an error to get the script to work
+
++ change line 87 from:
+
+#+begin_src sh
+    if len(actions) is 0:
+        usage()
+        sys.exit(0)
+#+end_src
+
++ to:
+
+#+begin_src sh
+    if len(actions) == 0:
+        usage()
+        sys.exit(0)
+#+end_src
+
+and then save and close the file
+
+** source your shell config file
+
+you need to source your shell config file to pick up the new version of kodi-send in your ~/bin directory
+
++ if you are using the zsh shell source your ~/.zshrc file
+
+#+begin_src sh
+source ~/.zshrc
+#+end_src
+
++ if you are using the bash shell source your ~/.bashrc file
+
+#+begin_src sh
+source ~/.bashrc
+#+end_src
+
+** youtube-dl and kodi-send
+
+send a youtube video to kodi
+note we use the -f option and best to specify a video format kodi can play
+
+#+begin_src sh
+kodi-send --host=127.0.0.1 --port=9777 --action="PlayMedia($(youtube-dl -f best -g 'https://www.youtube.com/watch?v=CKeq79xjJ5k'))"
+#+end_src
