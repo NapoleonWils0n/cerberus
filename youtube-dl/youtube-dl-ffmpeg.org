@@ -1,0 +1,24 @@
+#+STARTUP: content
+* multicast stream
+
+#+begin_src sh
+ffmpeg \
+-i \
+"$(youtube-dl -f best -g 'https://www.youtube.com/watch?v=wnyghAjzu1Q')" \
+-c:v copy \
+-c:a copy \
+-f mpegts 'udp://127.0.0.1:1234?pkt_size=1316'
+#+end_src
+
+#+begin_src sh
+ffprobe "$(youtube-dl -f best -g 'https://www.youtube.com/watch?v=wnyghAjzu1Q')"
+#+end_src
+
+#+begin_src sh
+ffplay "$(youtube-dl -g 'https://www.youtube.com/watch?v=wnyghAjzu1Q')"
+#+end_src
+
+#+begin_src sh
+youtube-dl -f best -g --external-downloader ffmpeg --external-downloader-args "-f rawvideo -pix_fmt yuyv422 -c copy -f mpegts udp://127.0.0.1:1234?pkt_size=1316" 'https://www.youtube.com/watch?v=wnyghAjzu1Q'
+#+end_src
+
