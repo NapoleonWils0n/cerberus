@@ -65,5 +65,5 @@ send a youtube video to kodi
 note we use the -f option and best to specify a video format kodi can play
 
 #+begin_src sh
-kodi-send --host=127.0.0.1 --port=9777 --action="PlayMedia($(youtube-dl -f best -g 'https://www.youtube.com/watch?v=CKeq79xjJ5k'))"
+kodi-send --host=127.0.0.1 --port=9777 --action="PlayMedia($(youtube-dl -f best -g --no-playlist 'https://www.youtube.com/watch?v=CKeq79xjJ5k'))"
 #+end_src
