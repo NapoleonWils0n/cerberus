@@ -1,0 +1,114 @@
+#!/bin/sh
+
+
+#===============================================================================
+# send video links to kodi
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i url
+-i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) or an http link"
+exit 2
+}
+
+#===============================================================================
+# ip address localhost - change to your ip
+#===============================================================================
+
+ip='127.0.0.1'
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# url
+#===============================================================================
+
+# youtube-dl best format
+url=$(youtube-dl -f best -g --no-playlist "${infile}")
+
+# check url with ffprobe for errors and swap stderr and stdout to store error
+url_check=$(ffprobe -hide_banner -v warning -i "${url}" 3>&2 2>&1 1>&3 >/dev/null)
+
+# broken header error regex
+atom_error='.*stream 1, missing mandatory atoms, broken header$'
+error_check=$(expr "${url_check}" : "${atom_error}")
+
+#===============================================================================
+# one stream containing audio and video
+#===============================================================================
+
+one_stream () {
+kodi-send --host="${ip}" --port=9777 --action="PlayMedia(${url},[noresume])" 1>/dev/null
+}
+
+#===============================================================================
+# two streams containing audio and video
+#===============================================================================
+
+two_streams () {
+url=$(youtube-dl -g --no-playlist "${infile}")
+video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+
+# kodi-send
+kodi-send --host="${ip}" --port=9777 --action="PlayMedia(udp://${ip}:1234?pkt_size=1316)" 1>/dev/null
+
+# ffmpeg join audio and video and stream
+ffmpeg \
+-hide_banner \
+-re \
+-i "${video_url}" \
+-i "${audio_url}" \
+-c:a copy -c:v copy \
+-tune zerolatency \
+-map 0:0 -map 1:0 \
+-f mpegts "udp://${ip}:1234?pkt_size=1316"
+}
+
+#===============================================================================
+# case statement check for ffprobe error
+#===============================================================================
+
+case "${error_check}" in
+    0) one_stream;; # no error
+    *) two_streams;; # error
+esac
