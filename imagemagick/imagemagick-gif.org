@@ -3,6 +3,8 @@
 
 * imagemagick create gif
 
+** thumbnails
+
 create a thumbs directory
 
 #+BEGIN_SRC sh
@@ -15,8 +17,14 @@ batch convert jpgs to gifs and save in the thumbs directory
 mogrify  -format gif -path thumbs -thumbnail 320 *.jpg
 #+END_SRC
 
-animate the gifs
+* animated gif
 
 #+BEGIN_SRC sh
-convert -delay 400 file1.gif file2.gif file3.gif outfile.gif
+convert -delay 400 file1.jpg file2.jpg file3.jpg outfile.gif
+#+END_SRC
+
++ resize and animate
+
+#+BEGIN_SRC sh
+convert -delay 400 -resize 480 file1.jpg file2.jpg file3.jpg outfile.gif
 #+END_SRC
