@@ -1,0 +1,168 @@
+#+STARTUP: content
+* retroarch flatpak
+
+https://www.retroarch.com/index.php?page=linux-instructions
+
+#+begin_src sh
+sudo apt install flatpak
+#+end_src
+
+#+begin_src sh
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#+end_src
+
+#+begin_src sh
+flatpak install --user flathub org.libretro.RetroArch
+#+end_src
+
+#+begin_src sh
+flatpak update --user org.libretro.RetroArch
+#+end_src
+* bios
+
+bios files for retroarch on archive.org
+
+https://archive.org/details/retroarchbiospack1.0312020
+
+https://archive.org/download/retroarchbiospack1.0312020/retroarchbiospack1.0312020_archive.torrent
+
+* system bios location
+
+flatpak system bios location
+
+#+begin_src sh
+~/.var/app/org.libretro.RetroArch/config/retroarch/system
+#+end_src
+
+* snesx
+
++ bios
+
+#+begin_src sh
+cp -r BS-X.bin ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r STBIOS.bin ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+#+end_src
+
+* snes higan
+** missing files
+
+#+begin_example
+(!) Missing, Optional: dsp1.data.rom
+(!) Missing, Optional: dsp1.program.rom
+(!) Missing, Optional: dsp1b.data.rom
+(!) Missing, Optional: dsp1b.program.rom
+(!) Missing, Optional: dsp2.data.rom
+(!) Missing, Optional: dsp2.program.rom
+(!) Missing, Optional: dsp3.data.rom
+(!) Missing, Optional: dsp3.program.rom
+(!) Missing, Optional: dsp4.data.rom
+(!) Missing, Optional: dsp4.program.rom
+(!) Missing, Optional: cx4.data.rom
+(!) Missing, Optional: st010.data.rom
+(!) Missing, Optional: st010.program.rom
+(!) Missing, Optional: st011.data.rom
+(!) Missing, Optional: st011.program.rom
+(!) Missing, Optional: st018.data.rom
+(!) Missing, Optional: st018.program.rom
+(!) Missing, Optional: SGB1.sfc/sgb1.boot.rom (SGB Boot BIOS)
+(!) Missing, Optional: SGB1.sfc/program.rom (SGB Boot Image)
+(!) Missing, Optional: SGB2.sfc/sgb2.boot.rom (SGB Boot BIOS)
+(!) Missing, Optional: SGB2.sfc/program.rom (SGB Boot Image)
+#+end_example
+
+** bios setup
+
+#+begin_src sh
+cp -r dsp1.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp1.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp1b.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp1b.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp2.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp2.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp3.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp3.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp4.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp4.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r cx4.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st010.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st010.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st011.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st011.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st018.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st018.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+#+end_src
+
++ create the SGB directories
+
+#+begin_src sh
+mkdir -p ~/.var/app/org.libretro.RetroArch/config/retroarch/system/SGB1.sfc
+mkdir -p ~/.var/app/org.libretro.RetroArch/config/retroarch/system/SGB2.sfc
+#+end_src
+
++ copy the boot.rom to the SGB directories
+
+#+begin_src sh
+cp -r sgb.boot.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system/SGB1.sfc/sgb1.boot.rom
+cp -r sgb.boot.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system/SGB2.sfc/sgb2.boot.rom
+#+end_src
+
+rename a game rom to program.rom
+
+#+begin_src sh
+cp -r program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system/SGB1.sfc/program.rom
+cp -r program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system/SGB2.sfc/program.rom
+#+end_src
+
+* snes bnes
+
+#+begin_src sh
+(!) Missing, Optional: dsp1.data.rom
+(!) Missing, Optional: dsp1.program.rom
+(!) Missing, Optional: dsp1b.data.rom
+(!) Missing, Optional: dsp1b.program.rom
+(!) Missing, Optional: dsp2.data.rom
+(!) Missing, Optional: dsp2.program.rom
+(!) Missing, Optional: dsp3.data.rom
+(!) Missing, Optional: dsp3.program.rom
+(!) Missing, Optional: dsp4.data.rom
+(!) Missing, Optional: dsp4.program.rom
+(!) Missing, Optional: cx4.data.rom
+(!) Missing, Optional: st010.data.rom
+(!) Missing, Optional: st010.program.rom
+(!) Missing, Optional: st011.data.rom
+(!) Missing, Optional: st011.program.rom
+(!) Missing, Optional: st018.data.rom
+(!) Missing, Optional: st018.program.rom
+(!) Missing, Optional: SGB1.sfc (SGB Boot Image)
+(!) Missing, Optional: SGB2.sfc (SGB Boot Image)
+#+end_src
+
++ copy files to system
+
+#+begin_src sh
+cp -r dsp1.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp1.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp1b.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp1b.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp2.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp2.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp3.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp3.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp4.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r dsp4.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r cx4.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st010.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st010.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st011.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st011.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st018.data.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r st018.program.rom ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r SGB1.sfc ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+cp -r SGB2.sfc ~/.var/app/org.libretro.RetroArch/config/retroarch/system
+#+end_src
+
+* roms
+
+https://wowroms.com/en/roms/super-nintendo/
+
+

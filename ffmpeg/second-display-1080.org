@@ -1,0 +1,16 @@
+#+STARTUP: overview
+* ffmpeg record second display at 1080
+
+record second display at 1920x1080 at 30 fps
+
+#+BEGIN_SRC sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-f x11grab \
+-video_size 1920x1080 -i :0.0+1920,0 \
+-c:v libx264 -crf 18 -preset ultrafast \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+END_SRC
