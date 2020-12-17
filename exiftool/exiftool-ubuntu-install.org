@@ -1,0 +1,30 @@
+#+STARTUP: overview
+* exiftool ubuntu install
+
+#+begin_src sh
+sudo apt install libimage-exiftool-perl
+#+end_src
+
+** gps from directory of images
+
+#+BEGIN_SRC sh
+exiftool -n -gpslatitude -gpslongitude -r directory -csv > out.csv
+#+END_SRC
+
+** gps from directory of images output as org results
+
+#+NAME: gps
+#+HEADER: :var dir="images"
+#+BEGIN_SRC sh 
+exiftool -n -gpslatitude -gpslongitude -r "${dir}" -csv
+#+END_SRC
+
+** gps from video
+
+extract gps stats from a video
+
+#+NAME: gps
+#+HEADER: :var file="infile.mov"
+#+BEGIN_SRC sh 
+exiftool -n -gpslatitude -gpslongitude -ee "${file}" -csv
+#+END_SRC
