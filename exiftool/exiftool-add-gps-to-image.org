@@ -1,0 +1,18 @@
+#+STARTUP: content
+* exiftool add gps to image
+
+exiftool add gps to an image
+
+** list gps from an image
+
+#+begin_src sh
+exiftool -l infile.jpg
+#+end_src
+
+** add gps to an image
+
+get the gps location from google maps 
+
+#+begin_src sh
+exiftool -XMP:GPSLatitude=52.74281 -XMP:GPSLongitude=-1.35976 -P infile.jpg
+#+end_src
