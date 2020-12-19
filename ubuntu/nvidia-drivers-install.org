@@ -1,0 +1,58 @@
+#+STARTUP: content
+* nvidia drivers install
+
+ubuntu install nvidia drivers
+
+** check recommended driver
+
+detect the model of your nvidia graphic card and the recommended driver.
+
+#+begin_src sh
+ubuntu-drivers devices
+#+end_src
+
+** driver install
+
+If you agree with the recommendation use the ubuntu-drivers command again to install all recommended drivers: 
+
+#+begin_src sh
+sudo ubuntu-drivers autoinstall
+#+end_src
+
+Alternatively, install desired driver selectively using the apt command.
+
+#+begin_src sh
+sudo apt install nvidia-driver-455
+#+end_src
+
+** blacklist Nouveau nvidia driver
+
+create the blacklist-nvidia-nouveau.conf file
+
+#+begin_src sh
+sudo vi /etc/modprobe.d/blacklist-nvidia-nouveau.conf
+#+end_src
+
+add the following code and save the file
+
+#+begin_src conf
+blacklist nouveau
+options nouveau modeset=0
+#+end_src
+
+** reboot
+
+#+begin_src sh
+sudo reboot
+#+end_src
+
+** switch between nvidia and intel cards
+
+you can switch between using your NVIDIA graphics card (more power) and your Intel card (more power efficient) by running
+(note: a reboot is needed after running the command to take effect):
+
+#+begin_src sh
+sudo prime-select intel   # switch to intel
+sudo prime-select nvidia  # switch to nvidia
+#+end_src
+

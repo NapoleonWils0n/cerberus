@@ -1,0 +1,10 @@
+#+STARTUP: content
+* davinci resolve 
+
+davinci resolve install on ubuntu with nvidia graphics
+
+** opencl install
+
+#+begin_src sh
+sudo apt install ocl-icd-opencl-dev
+#+end_src
