@@ -40,10 +40,34 @@ blacklist nouveau
 options nouveau modeset=0
 #+end_src
 
+** update-initramfs
+
+If you have full disk encryption enabled you have to run the command
+
+#+begin_src sh
+sudo update-initramfs -u
+#+end_src
+
 ** reboot
 
 #+begin_src sh
 sudo reboot
+#+end_src
+
+**  nvidia-smi
+
+use nvidia-smi to see GPU info and process that are using Nvidia GPU
+
+#+begin_src sh
+nvidia-smi
+#+end_src
+
+** nvidia-settings
+
+open nvidia-settings
+
+#+begin_src sh
+sudo nvidia-settings
 #+end_src
 
 ** switch between nvidia and intel cards
