@@ -18,6 +18,13 @@ flatpak install --user flathub org.libretro.RetroArch
 #+begin_src sh
 flatpak update --user org.libretro.RetroArch
 #+end_src
+
+* flatpak update
+
+#+begin_src sh 
+flatpak --user update
+#+end_src
+
 * bios
 
 bios files for retroarch on archive.org
