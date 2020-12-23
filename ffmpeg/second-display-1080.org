@@ -8,7 +8,7 @@ ffmpeg \
 -hide_banner \
 -stats -v panic \
 -f x11grab \
--video_size 1920x1080 -i :0.0+1920,0 \
+-video_size 1920x1080 -i :1.0+1920,0 \
 -c:v libx264 -crf 18 -preset ultrafast \
 -qp 0 -r 30 \
 -pix_fmt yuv420p \
