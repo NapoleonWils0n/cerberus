@@ -1,0 +1,8 @@
+#+STARTUP: content
+* blender cuda nvidia
+
+install the nvidia-cuda-toolkit
+
+#+begin_src sh
+sudo apt install nvidia-cuda-toolkit
+#+end_src
