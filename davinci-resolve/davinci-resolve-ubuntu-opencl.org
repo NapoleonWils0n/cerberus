@@ -1,10 +1,61 @@
 #+STARTUP: content
-* davinci resolve 
+* davinci resolve install
 
-davinci resolve install on ubuntu with nvidia graphics
+da vinci resolve install on ubuntu with nvidia graphics
+
+** Install xorriso and fakeroot
+
+#+begin_src sh
+sudo apt install fakeroot xorriso
+#+end_src
+
+** makeresolvedeb
+
+download the makeresolvedeb script
+
+[[https://www.danieltufvesson.com/makeresolvedeb][makeresolvedeb]]
 
 ** opencl install
 
 #+begin_src sh
-sudo apt install ocl-icd-opencl-dev
+sudo apt install ocl-icd-opencl-dev 
+#+end_src
+
+** libssl1.0.0
+
+#+begin_src sh
+sudo apt install libssl1.0.0
+#+end_src
+
+** nvidia-cuda-toolkit
+
+#+begin_src sh
+sudo apt install nvidia-cuda-toolkit
+#+end_src
+
+** da vinci resolve download
+
+[[https://www.blackmagicdesign.com/products/davinciresolve/][da vinci resolve]]
+
+* converting video for davinci resolve
+
+** Convert mp4 to mov
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vcodec dnxhd -acodec pcm_s16le \
+-s 1920x1080 -r 30000/1001 -b:v 36M -pix_fmt yuv422p -f mov output.mov
+#+end_src
+
+** Convert mkv to mov with Multiple Audio Tracks
+
+#+begin_src sh
+ffmpeg -i input.mkv -map 0:0 -map 0:1 -map 0:2 -vcodec dnxhd \
+-acodec:0 pcm_s16le -acodec:1 pcm_s16le -s 1920x1080 -r 30000/1001 -b:v 36M -pix_fmt yuv422p -f mov output.mov
+#+end_src
+
+** Convert mp4 to mov
+
+#+begin_src sh
+ffmpeg -i input.mov -vf yadif -codec:v libx264 -crf 1 -bf 2 \
+-flags +cgop -pix_fmt yuv420p -codec:a aac -strict -2 -b:a 384k -r:a 48000 -movflags faststart output.mp4
 #+end_src
