@@ -9,12 +9,6 @@ da vinci resolve install on ubuntu with nvidia graphics
 sudo apt install fakeroot xorriso
 #+end_src
 
-** makeresolvedeb
-
-download the makeresolvedeb script
-
-[[https://www.danieltufvesson.com/makeresolvedeb][makeresolvedeb]]
-
 ** opencl install
 
 #+begin_src sh
@@ -35,7 +29,39 @@ sudo apt install nvidia-cuda-toolkit
 
 ** da vinci resolve download
 
++ download da vinci resolve
+
 [[https://www.blackmagicdesign.com/products/davinciresolve/][da vinci resolve]]
+
++ unzip the da-vinci-resolve.zip
+
+#+begin_src sh
+unzip "DaVinci_Resolve_*_Linux.zip"
+#+end_src
+
+** makeresolvedeb
+
++ download the makeresolvedeb script
+
+[[https://www.danieltufvesson.com/makeresolvedeb][makeresolvedeb]]
+
++ extract the makeresolvedeb.tar.gz file
+
+#+begin_src sh
+tar -zxvf "makeresolvedeb_*_multi.sh.tar.gz"
+#+end_src  
+
+*** makeresolvedeb create deb file
+
+#+begin_src sh
+./makeresolvedeb_1.0_multi.sh DaVinci_Resolve_Studio_16.2.7_Linux.run
+#+end_src
+
+*** install the da vinci resolve deb file
+
+#+begin_src sh
+sudo dpkg -i davinci-resolve-studio_16.2.7-mrd1.0_amd64.deb
+#+end_src
 
 * converting video for davinci resolve
 
