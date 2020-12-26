@@ -5,26 +5,18 @@ da vinci resolve install on ubuntu with nvidia graphics
 
 ** Install xorriso and fakeroot
 
++ install fakeroot and xorriso for makeresolvedeb
+
 #+begin_src sh
 sudo apt install fakeroot xorriso
 #+end_src
 
-** opencl install
-
-#+begin_src sh
-sudo apt install ocl-icd-opencl-dev 
-#+end_src
-
-** libssl1.0.0
-
-#+begin_src sh
-sudo apt install libssl1.0.0
-#+end_src
-
 ** nvidia-cuda-toolkit
 
++ install the nvidia-cuda-toolkit and ocl-icd-opencl-dev
+
 #+begin_src sh
-sudo apt install nvidia-cuda-toolkit
+sudo apt install nvidia-cuda-toolkit ocl-icd-opencl-dev
 #+end_src
 
 ** da vinci resolve download
@@ -54,7 +46,7 @@ tar -zxvf "makeresolvedeb_*_multi.sh.tar.gz"
 *** makeresolvedeb create deb file
 
 #+begin_src sh
-./makeresolvedeb_1.0_multi.sh DaVinci_Resolve_Studio_16.2.7_Linux.run
+./makeresolvedeb_1.4.3_multi.sh DaVinci_Resolve_Studio_17.0b6_Linux.run
 #+end_src
 
 *** install the da vinci resolve deb file
