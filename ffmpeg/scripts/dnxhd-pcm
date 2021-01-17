@@ -50,7 +50,7 @@ infile_name="${infile_nopath%.*}"
 infile_ext="${infile##*.}"
 
 # defaults for variables if not defined
-outfile_default="${infile_name}-dnxhd-$(date +"%Y-%m-%d-%H-%M-%S").mov"
+outfile_default="${infile_name}-dnxhd.mov"
 
 # file command check input file mime type
 filetype="$(file --mime-type -b "${infile}")"
