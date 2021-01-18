@@ -61,14 +61,14 @@ sudo dpkg -i davinci-resolve-studio_16.2.7-mrd1.0_amd64.deb
 
 #+begin_src sh
 ffmpeg -i input.mp4 -vcodec dnxhd -acodec pcm_s16le \
--s 1920x1080 -r 30000/1001 -b:v 36M -pix_fmt yuv422p -f mov output.mov
+-s 1920x1080 -r 30000/1001 -b:v 145M -pix_fmt yuv422p -f mov output.mov
 #+end_src
 
 ** Convert mkv to mov with Multiple Audio Tracks
 
 #+begin_src sh
 ffmpeg -i input.mkv -map 0:0 -map 0:1 -map 0:2 -vcodec dnxhd \
--acodec:0 pcm_s16le -acodec:1 pcm_s16le -s 1920x1080 -r 30000/1001 -b:v 36M -pix_fmt yuv422p -f mov output.mov
+-acodec:0 pcm_s16le -acodec:1 pcm_s16le -s 1920x1080 -r 30000/1001 -b:v 145M -pix_fmt yuv422p -f mov output.mov
 #+end_src
 
 ** Convert mp4 to mov
