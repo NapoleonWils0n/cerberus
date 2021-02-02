@@ -1,0 +1,65 @@
+#+STARTUP: content
+* ffplay scopes
+
+ffplay scopes
+
+** histogram & waveform
+
+#+begin_src sh
+ffplay -f lavfi -i mandelbrot -vf "format=gbrp,split=4[a][b][c][d],[d]histogram=display_mode=0:level_height=244[dd],[a]waveform=m=1:d=0:r=0:c=7[aa],[b]waveform=m=0:d=0:r=0:c=7[bb],[c][aa]vstack[V],[bb][dd]vstack[V2],[V][V2]hstack"
+#+end_src
+
+** vectorscope & waveforms
+
+#+begin_src sh
+ffplay -f lavfi -i mandelbrot -vf "format=yuv444p,split=4[a][b][c][d],[a]waveform[aa],[b][aa]vstack[V],[c]waveform=m=0[cc],[d]vectorscope=color4[dd],[cc][dd]vstack[V2],[V][V2]hstack"
+#+end_src
+
+** waveform
+
+#+begin_src sh
+ffplay -i https://archive.org/download/BigBuckBunny/big_buck_bunny_480p_surround-fix.avi  -vf "split[a][b];[a]format=gray,waveform,split[c][d];[b]pad=iw:ih+256[padded];[c]geq=g=1:b=1[red];[d]geq=r=1:b=1,crop=in_w:220:0:16[mid];[red][mid]overlay=0:16[wave];[padded][wave]overlay=0:H-h"
+#+end_src
+
+** waveform with envelope
+
+#+begin_src sh
+ffplay ~/matrixbench_mpeg2.mpg -vf "split[a][b];[a]waveform=e=3,split=3[c][d][e];[e]crop=in_w:20:0:235,lutyuv=v=180[low];[c]crop=in_w:16:0:0,lutyuv=y=val:v=180[high];[d]crop=in_w:220:0:16,lutyuv=v=110[mid] ; [b][high][mid][low]vstack=4"
+#+end_src
+
+** YCbCr parade
+
+#+begin_src sh
+ffplay video -vf waveform=filter=lowpass:scale=ire:graticule=green:flags=numbers+dots:components=7:display=parade
+#+end_src
+
+** RGB parade
+
+#+begin_src sh
+ffplay video -vf format=gbrp,waveform=filter=lowpass:components=7:display=parade
+#+end_src
+
+** RGB overlay
+
+#+begin_src sh
+ffplay video -vf format=gbrp,waveform=filter=lowpass:components=7:display=overlay
+#+end_src
+
+** Waveform overlaid on top of video
+
+#+begin_src sh
+ffplay video -vf "split=2[a][b],[b]waveform=g=green:s=ire:fl=numbers+dots:i=.1:f=chroma:bgopacity=.5,format=yuva444p[bb],[a][bb]overlay"
+#+end_src
+
+** vector scope overlay
+
+#+begin_src sh
+ffplay video -vf "format=yuva444p9,split=2[m][v],[v]vectorscope=b=0.7:m=color3:g=green[v],[m][v]overlay=x=W-w:y=H-h"
+#+end_src
+
+** Histogram overlaid on top of video
+
+#+begin_src sh
+ffplay video -vf "split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay"
+#+end_src
+
