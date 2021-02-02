@@ -1,0 +1,29 @@
+#+STARTUP: content
+* ffmpeg crop detect
+
+ffmpeg crop detect
+
+** cropdetect
+
+#+begin_src sh
+ffmpeg -ss 90 -i input.mp4 -vframes 10 -vf cropdetect -f null -
+#+end_src
+
++ result
+
+#+begin_src sh
+crop=640:480:0:0
+#+end_src
+
+** ffplay play with crop
+
+#+begin_src sh
+ffplay -vf crop=640:480:0:0
+#+end_src
+
+** ffmpeg crop video
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vf crop=640:480:0:0 -c:a copy output.mov
+#+end_src
+

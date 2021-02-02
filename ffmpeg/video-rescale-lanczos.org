@@ -1,0 +1,20 @@
+#+STARTUP: content
+* video rescale lanczos
+
+rescale video to 1080
+
+** rescale 1080
+
+lanczos
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -vf "scale=1080:-1:flags=lanczos" outfile.mkv
+#+END_SRC
+
+** batch process rescale
+
+#+BEGIN_SRC sh
+find . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -vf "scale=1080:-1:flags=lanczos" "${0%.*}-1080.mkv"' \
+"{}" \;
+#+END_SRC
