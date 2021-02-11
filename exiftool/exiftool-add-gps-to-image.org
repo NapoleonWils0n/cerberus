@@ -14,5 +14,77 @@ exiftool -l infile.jpg
 get the gps location from google maps 
 
 #+begin_src sh
+exiftool -GPSLatitudeRef=N -GPSLatitude=52.7339069 -GPSLongitudeRef=W -GPSLongitude=-1.3717147 infile.jpg
+#+end_src
+
+** add gps to an image xmp exif
+
+get the gps location from google maps 
+
+#+begin_src sh
 exiftool -XMP:GPSLatitude=52.74281 -XMP:GPSLongitude=-1.35976 -P infile.jpg
+#+end_src
+
+** Adding a GPS Date Stamp
+
+The following command copies the modified date of the photo into the GPS Date Stamp
+
+#+begin_src sh
+exiftool infile.jpg "-GPSDateStamp<ModifyDate" -globalTimeShift
+#+end_src
+
+** Shifting all EXIF Dates
+
+In case all EXIF dates (except for the GPS Date Stamp) are behind by one year, they can all be adjusted via
+
+#+begin_src sh
+exiftool "-AllDates+=1:00:00 00:00:00" infile.jpg
+#+end_src
+
+Here, the general input format for AllDates is [Y]{1,4}:mm:dd HH:MM:SS
+
+** Copying EXIF Information Between Photos
+
+If the above steps are too much hassle then you can also copy all EXIF tags from source.jpg to target.jpg via
+
+#+begin_src sh
+exiftool -TagsFromFile source.jpg target.jpg
+#+end_src
+
+Note that this operation merely copies the metadata. It does not adjust it.
+This means that metadata such as aperture, resolution, and size do not get updated in the process.
+Hence, this is most useful when working with identical photos.
+
+** Deleting all GPS Tags
+
+delete all exif tags in infile.jpg
+
+#+begin_src sh
+exiftool -all= infile.jpg
+#+end_src
+
+** overwrite_original
+
+ExifTool plays it safe by default and keeps a copy of each original file around.
+This is why after updating infile.jpg, a new file called infile.jpg_original suddenly appears.
+This can be suppressed by enabling in place updates via flag
+
+#+begin_src sh
+-overwrite_original
+#+end_src
+
+** progress
+
+show progress
+
+#+begin_src sh
+-progress
+#+end_src
+
+** verbosity
+
+the verbosity of exiftool can be increased via flag
+
+#+begin_src sh
+-verbose
 #+end_src
