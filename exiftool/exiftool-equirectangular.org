@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* exiftool equirectangular
+
+Add Projection Type metadata tag to an image to display as a 360 image
+
+#+begin_src sh
+exiftool -ProjectionType="equirectangular" infile.jpg
+#+end_src
