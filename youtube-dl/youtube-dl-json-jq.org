@@ -1,0 +1,125 @@
+#+STARTUP: content
+#+STARTUP: hideblocks
+* youtube-dl json and jq
+
+youtube-dl json output and jq
+
+** webpage url and title
+
+use youtube-dl to dump the json output of a single video with no-playlist
+and pipe into jq and save the output as an org link
+
+#+NAME: webpage-url-title
+#+HEADER: :var url="https://www.youtube.com/watch?v=NLINCQeiPGQ"
+#+BEGIN_SRC sh :async t :results output raw 
+youtube-dl -j --no-playlist "${url}" \
+| jq -rj '"[[\(.webpage_url)][\(.title)]]\n"'
+#+end_src
+
+#+RESULTS: webpage-url-title
+[[https://www.youtube.com/watch?v=NLINCQeiPGQ][Donald Trump in "Sorry, Wrong Number"]]
+
+** id and title
+
+use youtube-dl to dump the json output of a single video with no-playlist
+and pipe into jq and save the output as an org link, alternate syntax
+
+#+NAME: id-title
+#+HEADER: :var url="https://www.youtube.com/watch?v=NLINCQeiPGQ"
+#+BEGIN_SRC sh :async t :results output raw
+youtube-dl -j --no-playlist "${url}" \
+| jq -rj '"[[https://youtu.be/\(.id)][\(.title)]]\n"'
+#+end_src
+
+#+RESULTS: id-title
+[[https://youtu.be/NLINCQeiPGQ][Donald Trump in "Sorry, Wrong Number"]]
+
+** thumbnails
+
+use youtube-dl to dump the json output of a single video with no-playlist
+and pipe into jq and extract the thumbnails url
+
+#+NAME: thumbnail
+#+HEADER: :var url="https://www.youtube.com/watch?v=NLINCQeiPGQ"
+#+BEGIN_SRC sh :async t :results output raw 
+youtube-dl -j --no-playlist "${url}" \
+| jq -rj '"\(.thumbnails[3].url)\n"'
+#+end_src
+
+** description
+
+use youtube-dl to dump the json output of a single video with no-playlist
+and pipe into jq and extract the description
+
+#+NAME: description
+#+HEADER: :var url="https://www.youtube.com/watch?v=NLINCQeiPGQ"
+#+BEGIN_SRC sh :async t :results output raw replace
+youtube-dl -j --no-playlist "${url}" \
+| jq -rj '"\(.description)\n"'
+#+end_src
+
+#+RESULTS: description
+Helpless ... alone ... she heard a murder being planned on the telephone!
+
+** title description
+
+use youtube-dl to dump the json output of a single video with no-playlist
+and pipe into jq and extract the webpage url, title and description
+
+#+NAME: title-description
+#+HEADER: :var url="https://www.youtube.com/watch?v=NLINCQeiPGQ"
+#+BEGIN_SRC sh :async t :results output raw replace
+youtube-dl -j --no-playlist "${url}" \
+| jq -rj '"** [[\(.webpage_url)][\(.title)]]\n\(.description)\n"'
+#+end_src
+
+** channel title and description
+
+use youtube-dl to dump the json output of a single video with no-playlist
+and pipe into jq and extract the webpage url, title and description and save as org headers
+
+#+NAME: channel
+#+HEADER: :var url="https://www.youtube.com/watch?v=NLINCQeiPGQ"
+#+BEGIN_SRC sh :async t :results output raw replace
+youtube-dl -j --no-playlist "${url}" \
+| jq -rj '"* [[\(.channel_url)][\(.uploader)]]\n** [[\(.webpage_url)][\(.title)]]\n\(.description)\n"'
+#+end_src
+
+** noweb title and description
+* noweb code block
+
+use youtube-dl to dump the json output of a playlist
+and pipe into jq and extract the title and url and save as org link
+
+#+NAME: noweb-block
+#+begin_src sh 
+youtube-dl -j --flat-playlist "${url}" \
+| jq -rj '"[[https://youtu.be/\(.id)][\(.title)]]\n"'
+#+end_src
+
+#+RESULTS: noweb-block
+
+* [[https://www.youtube.com/channel/UCriRR_CzOny-akXyk1R-oDQ][NapoleonWils0n xmonad playlist]]
+#+NAME: Napoleonwils0n-xmonad
+#+HEADER: :var url="https://www.youtube.com/playlist?list=PL7hhhG5qUoXmd5_elMnmOQazLaNOnAV9s"
+#+BEGIN_SRC sh :async t :results output raw :noweb yes :cache yes :wrap
+<<noweb-block>>
+#+end_src
+
+#+RESULTS[e157ce336f89f297b2b4a3f03a03f1ca283622d0]: Napoleonwils0n-xmonad
+#+begin_results
+[[https://youtu.be/oxLMBWTzxe4][xmonad and xmobar set up from scratch]]
+[[https://youtu.be/akWJv4t8Cow][xmonad - dwm style window tagging]]
+[[https://youtu.be/CptKBPTxcsA][xmonad and rofi as a application launcher and window switcher with icons]]
+[[https://youtu.be/zOPCuzVs6bY][xmonad - Firefox Picture in Picture video as a floating window]]
+[[https://youtu.be/zOPCuzVs6bY][xmonad - Firefox Picture in Picture video as a floating window]]
+[[https://youtu.be/8T10exKhy2c][xmonad - layout hints for correct video size and setting the terminals window title]]
+[[https://youtu.be/8T10exKhy2c][xmonad - layout hints for correct video size and setting the terminals window title]]
+[[https://youtu.be/lQ5NQy_cUdw][xmonad - emacs scratch pad]]
+[[https://youtu.be/oUDFajqhz3U][dmenu show only desktop apps and xmonad WindowBringer dmenu style window switcher]]
+[[https://youtu.be/iIPaZb5YmIk][xmonad multiple monitors and desktop notifications, and using the xdg specification]]
+[[https://youtu.be/iIPaZb5YmIk][xmonad multiple monitors and desktop notifications, and using the xdg specification]]
+[[https://youtu.be/SeqXynnr5_s][Replace xmobar with the tint2 panel to add a system tray for xmonad]]
+[[https://youtu.be/SeqXynnr5_s][Replace xmobar with the tint2 panel to add a system tray for xmonad]]
+[[https://youtu.be/Z1stHEidohw][Freebsd xmonad-contrib install with cabal]]
+#+end_results
