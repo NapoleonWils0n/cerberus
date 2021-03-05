@@ -103,7 +103,7 @@ use the -d option and the path to the disk image is stored,
 and the name of the pool to import
 
 #+begin_src sh
-sudo zpool import -d /home/djwilcox/Documents/disks/ crypt
+sudo zpool import -d /home/djwilcox/Documents/disks/disk.img crypt
 #+end_src
 
 ** mount and umount the dataset
