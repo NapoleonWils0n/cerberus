@@ -97,12 +97,21 @@ chmod the permissions to 700
 chmod 700 ~/mnt
 #+END_SRC
 
-** mount and umount the dataset
+** import zfs dataset
 
-mount the dataset
+use the -d option and the path to the directory where the disk image is stored,
+and the name of the pool to import
 
 #+begin_src sh
-sudo zfs mount crypt/data
+sudo zpool import -d /home/djwilcox/Documents/disks/ crypt
+#+end_src
+
+** mount and umount the dataset
+
+mount the dataset with the -l option to prompt for the encryption passphrase
+
+#+begin_src sh
+sudo zfs mount -l crypt/data
 #+end_src
 
 unmount the dataset
@@ -110,3 +119,4 @@ unmount the dataset
 #+begin_src sh
 sudo zfs unmount crypt/data
 #+end_src
+
