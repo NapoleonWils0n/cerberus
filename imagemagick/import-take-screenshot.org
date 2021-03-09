@@ -1,0 +1,20 @@
+#+STARTUP: content
+* imagemagick import take screenshot
+
+take a screenshot using the imagemagick import command
+
+** main display screenshot
+
+screenshot main display at 1920x1080
+
+#+begin_src sh
+import -window root -crop 1920x1080+0+0 main-display.png
+#+end_src
+
+** second display screenshot
+
+screenshot second display at 1920x1080 with an offset of 1920
+
+#+begin_src sh
+import -window root -crop 1920x1080+1920+0 second-display.png
+#+end_src
