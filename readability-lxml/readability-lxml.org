@@ -1,0 +1,33 @@
+#+STARTUP: content
+* python readability-lxml
+
+[[https://github.com/buriy/python-readability][python-readability]] on github
+
+** readability-lxml install
+
+#+begin_src sh
+pip3 install --user readability-lxml
+#+end_src
+
+** command line usage
+
+send standard error to dev null and redirect standard out to a file
+
+#+begin_src sh
+python3 \
+-m readability.readability -u \
+'https://www.servethehome.com/amd-psb-vendor-locks-epyc-cpus-for-enhanced-security-at-a-cost/' \
+2> /dev/null \
+1> output.html
+#+end_src
+
+** w3m keymap
+
+keymap to run the readability-lxml script
+send standard error to dev null and redirect standard out to a file
+use the READ_SHELL command to load the file without prompting to click ok
+
+#+begin_src sh
+keymap  ,-.    COMMAND "READ_SHELL 'python3 -m readability.readability -u $W3M_URL 2> /dev/null 1> /tmp/readability.html' ; LOAD /tmp/readability.html"
+#+end_src
+
