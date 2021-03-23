@@ -23,9 +23,9 @@ python3 \
 
 ** w3m keymap
 
-keymap to run the readability-lxml script
-send standard error to dev null and redirect standard out to a file
-use the READ_SHELL command to load the file without prompting to click ok
+keymap to run the readability-lxml script  
+send standard error to dev null and redirect standard out to a file  
+use the READ_SHELL command to load the file without prompting to click ok  
 
 add the following code to your ~/.w3m/keymap file
 
