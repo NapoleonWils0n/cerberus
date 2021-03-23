@@ -8,6 +8,12 @@ clone the st terminal git repository
 git clone https://git.suckless.org/st
 #+END_SRC
 
+** create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
 ** config.mk
 
 edit config.mk
@@ -55,7 +61,7 @@ whereis zsh
 outputs
 
 #+BEGIN_SRC config
-/usr/local/bin/zsh
+/usr/bin/zsh
 #+END_SRC
 
 so we need to change this line
@@ -67,7 +73,7 @@ static char *shell = "/bin/sh";
 to this to change the shell from sh to zsh
 
 #+BEGIN_SRC sh
-static char *shell = "/usr/local/bin/zsh";
+static char *shell = "/usr/bin/zsh";
 #+END_SRC
 
 ** mouse pointer
