@@ -1,0 +1,4 @@
+#+STARTUP: content
+* st terminal increase font size
+
+the default keybinding to increase font size is Ctrl+Shift+PageUp
