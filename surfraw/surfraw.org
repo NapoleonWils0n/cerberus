@@ -1,0 +1,9 @@
+#+STARTUP: overview
+* surfraw install
+
+install surfraw without a load of dependencies
+
+#+begin_src sh
+sudo apt install --no-install-recommends surfraw
+#+end_src
+
