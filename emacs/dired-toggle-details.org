@@ -1,0 +1,4 @@
+#+STARTUP: showall
+* dired toggle details
+
+toggle dired details view by pressing shift + 9
