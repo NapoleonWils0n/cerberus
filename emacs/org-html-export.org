@@ -1,0 +1,16 @@
+#+STARTUP: content
+* org mode html export
+** html exported
+
+suppress html preamble and postamble with default html export
+
+#+begin_example
+#+OPTIONS: html-postamble:nil html-preamble:nil
+#+OPTIONS: html-style:nil
+#+end_example
+
+** pandoc self contained export
+
+#+begin_example
+#+PANDOC_OPTIONS: self-contained:t
+#+end_example
