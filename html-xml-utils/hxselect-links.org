@@ -1,0 +1,14 @@
+#+STARTUP: content
+* hxselect youtube links
+
+#+begin_src sh
+hxnormalize -x out.html| hxselect -s '\n' -c 'div.ezO2md' | hxprune -c 'zIuEJc' | hxprune -c 'fYyStc' > dev.html
+hxnormalize -x out.html| hxselect -s '\n' 'a.fuLhoc' | hxprune -c 'dXDvrc' > rip.html
+#+end_src
+
+#+begin_src sh
+hxnormalize -x out.html| hxselect -s '\n' 'a.fuLhoc' | grep -oP '(?=https://www.youtube.com)[^&]*(?=&)' | sed 's/%3Fv%3D/?v=/'
+hxnormalize -x out.html| hxselect -s '\n' -c 'a.fuLhoc>span.CVA68e' | hxunent -f
+hxnormalize -x out.html| hxselect -c 'a.fuLhoc>span.CVA68e' | hxunent -f
+#+end_src
+

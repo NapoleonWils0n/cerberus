@@ -1,0 +1,41 @@
+#+STARTUP: content
+* python lxml
+
+cat webpage into python
+
+*** all links that contain youtube
+
+#+begin_src sh
+python -c "from lxml.html import parse; from sys import stdin; print('\n'.join(parse(stdin).xpath('//a[(contains(., \'youtube.com\'))]/@href')))"
+#+end_src
+
++ 2 paths not working
+
+#+begin_src sh
+python -c "from lxml.html import parse; from sys import stdin; print(''.join(parse(stdin).xpath('//a[(contains(., \'youtube.com\'))]/@href and //a[(contains(., \'youtube.com\'))]/span[@class]/text()')))"
+#+end_src
+
+**** with sed and grep
+
+#+begin_src sh
+python -c "from lxml.html import parse; from sys import stdin; print('\n'.join(parse(stdin).xpath('//a[(contains(., \'youtube.com\'))]/@href')))" | grep -oP '(?=https://www.youtube.com)[^&]*(?=&)' | sed 's/%3Fv%3D/?v=/'
+#+end_src
+
+*** span tags child of a tag with href of youtube.com
+
+#+begin_src sh
+python -c "from lxml.html import parse; from sys import stdin; print('\n'.join(parse(stdin).xpath('//a[(contains(., \'youtube.com\'))]/span[@class]/text()')))"
+#+end_src
+
+**** span tags child of a tag with href of youtube.com with sed 
+
+#+begin_src sh
+python -c "from lxml.html import parse; from sys import stdin; print('\n'.join(parse(stdin).xpath('//a[(contains(., \'youtube.com\'))]/span[@class]/text()')))" | sed '/^[[:space:]]*$/d'
+#+end_src
+
+*** span tags child of a tag with href of not youtube.com
+  
+#+begin_src sh
+python -c "from lxml.html import parse; from sys import stdin; print('\n'.join(parse(stdin).xpath('//a[not(contains(., \'youtube.com\'))]/span[@class]/text()')))" | sed '/^[[:space:]]*$/d'
+#+end_src
+

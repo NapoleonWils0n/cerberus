@@ -1,0 +1,10 @@
+#+STARTUP: content
+* fzf
+
+echo in url and link
+
+#+begin_src sh
+echo -e 'url title' | fzf --delimiter=' ' --with-nth=2 | cut -d" " -f1
+#+end_src
+  
+

@@ -1,0 +1,10 @@
+#+STARTUP: content
+* w3m dump source 
+
+w3m dump webpage
+
+#+begin_src sh
+w3m -dump_source \
+'https://www.google.com/search?num=30&safe=off&ucbcb=1&ie=ISO-8859-1&tbm=vid&oq=&aqs=&q=w3m' \
+-o accept_encoding='*;q=0' > out.html
+#+end_src
