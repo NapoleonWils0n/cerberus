@@ -1,0 +1,50 @@
+#+STARTUP: content
+* csvjson convert csv to geojson
+
+convert csv to geojson
+
+** csvkit install
+
++ linux install 
+
+#+begin_src sh
+sudo apt install csvkit
+#+end_src
+
++ mac install
+
+#+begin_src sh
+brew install csvkit
+#+end_src
+
+** csvcut list columns
+
+#+begin_src sh
+csvcut -n infile.csv
+#+end_src
+
++ output
+
+#+begin_example
+1: Name
+2: Clerkenwell 101
+3: Map
+4: Story page
+5: Lat
+6: long
+7: 101 image
+8: Now and then
+9: 360 photo
+10: People
+11: Status
+12: Stories
+#+end_example
+
+** csvjson code
+
+use the --lat option and the name of the column containing the latitude
+use the --lon option and the name of the column containing the longditude
+
+#+begin_src sh
+csvjson --lat lat --long long infile.csv > geojson.json
+#+end_src
