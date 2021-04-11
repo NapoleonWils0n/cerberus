@@ -1,0 +1,17 @@
+#+STARTUP: content
+* remove bom from csv file
+** dos2unix
+
+dos2unix will remove BOM and also take care of other idiosyncrasies from other SOs:
+
+#+begin_src sh
+sudo apt install dos2unix
+dos2unix test.xml
+#+end_src
+
+It's also possible to remove BOM only (-r, --remove-bom):
+
+#+begin_src sh
+dos2unix -r test.xml
+#+end_src
+
