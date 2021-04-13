@@ -46,5 +46,5 @@ use the --lat option and the name of the column containing the latitude
 use the --lon option and the name of the column containing the longditude
 
 #+begin_src sh
-csvjson --lat lat --long long infile.csv > geojson.json
+csvjson --lat Lat --lon long infile.csv > geojson.json
 #+end_src
