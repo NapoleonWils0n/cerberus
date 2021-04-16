@@ -31,6 +31,6 @@ keymap to run the readability-lxml script
 add the following code to your ~/.w3m/keymap file
 
 #+begin_src sh
-keymap  ,-.    COMMAND "READ_SHELL 'python3 -m readability.readability -u $W3M_URL 2> /dev/null 1> /tmp/readability.html' ; LOAD /tmp/readability.html"
+keymap ,-. COMMAND "READ_SHELL 'python3 -m readability.readability -u $W3M_URL 2> /dev/null' ; VIEW ; DELETE_PREVBUF"
 #+end_src
 
