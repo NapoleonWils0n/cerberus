@@ -1,0 +1,8 @@
+#+STARTUP: content
+* w3m show variables
+
+run the following command inside w3m to show variables
+
+#+begin_src sh
+!env | sort
+#+end_src

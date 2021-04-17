@@ -1,0 +1,8 @@
+#+STARTUP: content
+* python decode url
+
+one liner to decode a url piped in
+
+#+begin_src sh
+decoded=$(echo "${url}" | python3 -c "import sys; from urllib.parse import unquote; print(unquote(sys.stdin.read()));")
+#+end_src
