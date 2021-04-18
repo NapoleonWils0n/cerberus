@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* mpv ytdl
+
+play a youtube video using its id by prefix the link with ytdl://
+
+#+begin_src sh
+mpv ytdl://qYhNJ3itqWw
+#+end_src
