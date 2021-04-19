@@ -1,0 +1,18 @@
+#+STARTUP: content
+* gpsbabel 
+** gpsbabel install
+
+#+begin_src sh
+sudo apt install gpsbabel
+#+end_src
+** convert csv to kml
+
+#+begin_src sh
+gpsbabel -i csv -f infile.csv -o kml -F outfile.kml
+#+end_src
+
+** convert kml to csv
+
+#+begin_src sh
+gpsbabel -i kml -f infile.kml -o csv -F outfile.csv
+#+end_src
