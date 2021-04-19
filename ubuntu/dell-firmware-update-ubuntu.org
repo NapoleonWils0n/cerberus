@@ -1,0 +1,11 @@
+#+STARTUP: showall
+* Dell Firmware update on Ubuntu
+
+Before any Dell Firmware update on Ubuntu, run 
+
+#+begin_src sh
+sudo apt install raidcfg dtk-scripts syscfg smbios-utils sfcb cim-schema dcism
+#+end_src
+
+After install [[https://linux.dell.com/repo/community/openmanage/]] (Complete, all),
+install these packages or you will get segfaults on update and it will fail. 
