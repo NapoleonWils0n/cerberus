@@ -1,0 +1,9 @@
+#+STARTUP: content
+* stdin redirect into variable
+
+#+begin_src sh
+#!/bin/sh
+
+input=$(less <&0)
+printf "%s\n" "${input}" | fzf --delimiter='\n' --info=inline --layout=reverse
+#+end_src
