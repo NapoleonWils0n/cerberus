@@ -1,4 +1,5 @@
 #+STARTUP: content
+#+STARTUP: hideblocks
 * ytfzf and taskspooler
 
 ytfzf and taskspooler
@@ -18,18 +19,21 @@ add the sauron script to your ~/bin directory
 #+begin_src sh
 #!/bin/sh
 
+# external video player script for ytfzf
+
 # input set to args passed to script
 input=$(printf "%s\n" "$@")
 
-# audio and video functions
+# mpd and taskspooler
 audio() {
     printf "%s\n" "${input}" | \
     while read line
     do
-      pinch -i "${line}" 1>/dev/null
+      tsp pinch -i "${line}" 1>/dev/null 
     done
 }
 
+# mpv and taskspooler
 video() {
     printf "%s\n" "${input}" | \
     while read line
@@ -38,6 +42,7 @@ video() {
     done
 }
 
+# mpv second display and taskspooler
 queue() {
     printf "%s\n" "${input}" | \
     while read line
@@ -46,17 +51,19 @@ queue() {
     done
 }
 
-# fzf prompt
-menu=$(printf "%s\n" 'audio' 'video' 'queue' | fzf --delimiter='\n' --prompt="Search: " --info=inline --layout=reverse --no-multi)
+# fzf prompt to specify function to run on links from ytfzf
+audio_tsp='audio - mpd queue audio'
+video_tsp='video - mpv queue video'
+queue_tsp='queue - mpv queue video and play fullscreen on second display'
+menu=$(printf "%s\n" "${audio_tsp}" "${video_tsp}" "${queue_tsp}" | fzf --delimiter='\n' --prompt='Open with: ' --info=inline --layout=reverse --no-multi)
 
-# case statement
+# case statement to run function based on fzf prompt output
 case "${menu}" in
-   audio) audio;;
-   video) video;;
-   queue) queue;;
-   *) exit;;
+   audio*) audio;;
+   video*) video;;
+   queue*) queue;;
+   ,*) exit;;
 esac
-
 #+end_src
 
 ** ytfzf alias
