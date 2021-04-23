@@ -1,0 +1,69 @@
+#+STARTUP: content
+* ytfzf and taskspooler
+
+ytfzf and taskspooler
+
+** config.sh
+
+edit your ~/.config/ytfzf/conf.sh
+
+#+begin_src conf
+video_player="sauron"
+#+end_src
+
+** sauron
+
+add the sauron script to your ~/bin directory
+
+#+begin_src sh
+#!/bin/sh
+
+# input set to args passed to script
+input=$(printf "%s\n" "$@")
+
+# audio and video functions
+audio() {
+    printf "%s\n" "${input}" | \
+    while read line
+    do
+      pinch -i "${line}" 1>/dev/null
+    done
+}
+
+video() {
+    printf "%s\n" "${input}" | \
+    while read line
+    do
+      tsp mpv --no-terminal "${line}" 1>/dev/null
+    done
+}
+
+queue() {
+    printf "%s\n" "${input}" | \
+    while read line
+    do
+      tsp mpv --fs --screen=1 "${line}" 1>/dev/null 
+    done
+}
+
+# fzf prompt
+menu=$(printf "%s\n" 'audio' 'video' 'queue' | fzf --delimiter='\n' --prompt="Search: " --info=inline --layout=reverse --no-multi)
+
+# case statement
+case "${menu}" in
+   audio) audio;;
+   video) video;;
+   queue) queue;;
+   *) exit;;
+esac
+
+#+end_src
+
+** ytfzf alias
+
+create an alias in your ~/.zshrc or ~/.bashrc file,
+this will suppress stdout from ytfzf for example now playing
+
+#+begin_src conf
+alias ytfzf='ytfzf "$@" 1>/dev/null'
+#+end_src
