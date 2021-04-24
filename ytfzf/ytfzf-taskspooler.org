@@ -22,12 +22,16 @@ video_player="sauron"
 
 ** sauron
 
-add the sauron script to your ~/bin directory
+add the [[https://github.com/NapoleonWils0n/ubuntu-bin/blob/master/sauron][sauron]] script to your ~/bin directory
+and make executable with chmod +x
 
 #+begin_src sh
 #!/bin/sh
 
-# external video player script for ytfzf
+# sauron - external video player script for ytfzf
+
+# if script is run without arguments exit
+[ $# -gt 0 ] || exit
 
 # input set to args passed to script
 input=$(printf "%s\n" "$@")
@@ -83,13 +87,4 @@ case "${menu}" in
    video*) video;;
    ,*) exit;;
 esac
-#+end_src
-
-** ytfzf alias
-
-create an alias in your ~/.zshrc or ~/.bashrc file,
-this will suppress stdout from ytfzf for example now playing
-
-#+begin_src conf
-alias ytfzf='ytfzf "$@" 1>/dev/null'
 #+end_src
