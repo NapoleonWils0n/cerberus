@@ -73,7 +73,7 @@ audio_tsp='audio      - mpd play audio'
 download_tsp='download   - youtube-dl download links'
 fullscreen_tsp='fullscreen - mpv play fullscreen on second display'
 video_tsp='video      - mpv play video on current display'
-menu=$(printf "%s\n" "${audio_tsp}" "${download_tsp}" "${fullscreen_tsp}" "${video_tsp}" | fzf --delimiter='\n' --prompt='Open with: ' --info=inline --layout=reverse --no-multi)
+menu=$(printf "%s\n" "${audio_tsp}" "${download_tsp}" "${fullscreen_tsp}" "${video_tsp}" | fzf --delimiter='\n' --prompt='Pipe links to: ' --info=inline --layout=reverse --no-multi)
 
 # case statement to run function based on fzf prompt output
 case "${menu}" in
