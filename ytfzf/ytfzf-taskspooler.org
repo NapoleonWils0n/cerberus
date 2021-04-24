@@ -4,6 +4,14 @@
 
 ytfzf and taskspooler
 
+** taskspooler
+
+install taskspooler
+
+#+begin_src sh
+sudo apt install task-spooler
+#+end_src
+
 ** config.sh
 
 edit your ~/.config/ytfzf/conf.sh
@@ -33,6 +41,24 @@ audio() {
     done
 }
 
+# youtube-dl and taskspooler
+download() {
+    printf "%s\n" "${input}" | \
+    while read line
+    do
+      tsp youtube-dl --ignore-config "${line}" 1>/dev/null 
+    done
+}
+
+# mpv fullscreen on second display and taskspooler
+fullscreen() {
+    printf "%s\n" "${input}" | \
+    while read line
+    do
+      tsp mpv --fs --screen=1 "${line}" 1>/dev/null 
+    done
+}
+
 # mpv and taskspooler
 video() {
     printf "%s\n" "${input}" | \
@@ -42,26 +68,19 @@ video() {
     done
 }
 
-# mpv second display and taskspooler
-queue() {
-    printf "%s\n" "${input}" | \
-    while read line
-    do
-      tsp mpv --fs --screen=1 "${line}" 1>/dev/null 
-    done
-}
-
 # fzf prompt to specify function to run on links from ytfzf
 audio_tsp='audio - mpd queue audio'
+download_tsp='download - youtube-dl download links'
+fullscreen_tsp='fullscreen - mpv queue video and play fullscreen on second display'
 video_tsp='video - mpv queue video'
-queue_tsp='queue - mpv queue video and play fullscreen on second display'
-menu=$(printf "%s\n" "${audio_tsp}" "${video_tsp}" "${queue_tsp}" | fzf --delimiter='\n' --prompt='Open with: ' --info=inline --layout=reverse --no-multi)
+menu=$(printf "%s\n" "${audio_tsp}" "${download_tsp}" "${fullscreen_tsp}" "${video_tsp}" | fzf --delimiter='\n' --prompt='Open with: ' --info=inline --layout=reverse --no-multi)
 
 # case statement to run function based on fzf prompt output
 case "${menu}" in
    audio*) audio;;
+   download*) download;;
+   fullscreen*) fullscreen;;
    video*) video;;
-   queue*) queue;;
    ,*) exit;;
 esac
 #+end_src
