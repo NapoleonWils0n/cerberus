@@ -72,11 +72,13 @@ video() {
     done
 }
 
-# fzf prompt to specify function to run on links from ytfzf
+# fzf prompt variables spaces to line up menu options
 audio_tsp='audio      - mpd play audio'
 download_tsp='download   - youtube-dl download links'
 fullscreen_tsp='fullscreen - mpv play fullscreen on second display'
 video_tsp='video      - mpv play video on current display'
+
+# fzf prompt to specify function to run on links from ytfzf
 menu=$(printf "%s\n" "${audio_tsp}" "${download_tsp}" "${fullscreen_tsp}" "${video_tsp}" | fzf --delimiter='\n' --prompt='Pipe links to: ' --info=inline --layout=reverse --no-multi)
 
 # case statement to run function based on fzf prompt output
