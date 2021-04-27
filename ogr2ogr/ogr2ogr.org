@@ -1,0 +1,12 @@
+#+STARTUP: content
+* ogr2ogr install
+
+#+begin_src sh
+sudo apt install gdal-bin
+#+end_src
+
+** convert csv to kml
+
+#+begin_src sh
+ogr2ogr -f "KML" outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude
+#+end_src
