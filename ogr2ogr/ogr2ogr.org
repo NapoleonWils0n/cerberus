@@ -14,5 +14,5 @@ ogr2ogr -f KML outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSI
 ** convert kml to csv
 
 #+begin_src sh
-ogr2ogr -f CSV oufile.csv infile.kml
+ogr2ogr -f CSV outfile.csv infile.kml
 #+end_src
