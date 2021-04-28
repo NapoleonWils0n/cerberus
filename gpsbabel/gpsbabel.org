@@ -14,5 +14,5 @@ gpsbabel -i csv -f infile.csv -o kml -F outfile.kml
 ** convert kml to csv
 
 #+begin_src sh
-gpsbabel -i kml -f infile.kml -o csv -F outfile.csv
+gpsbabel -i kml -f infile.kml -o unicsv -F outfile.csv
 #+end_src
