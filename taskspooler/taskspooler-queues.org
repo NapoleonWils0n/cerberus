@@ -1,0 +1,21 @@
+#+STARTUP: content
+* taskspooler queues
+
+taskspooler install
+
+#+begin_src sh
+sudo apt install task-spooler
+#+end_src
+
+create multiply queue sockets for taskspooler
+
+you have to prefix the tsp command with TS_SOCKET=/tmp/queue1
+where queue1 is the name of the queue 
+
+#+begin_src sh
+TS_SOCKET=/tmp/queue1 tsp echo 1
+#+end_src
+
+#+begin_src sh
+TS_SOCKET=/tmp/queue2 tsp echo 2
+#+end_src
