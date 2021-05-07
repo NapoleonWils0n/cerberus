@@ -21,6 +21,14 @@ where longitude and latitude are the column names in the csv
 ogr2ogr -f LIBKML outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude
 #+end_src
 
+** convert csv to geojson
+
+where longitude and latitude are the column names in the csv
+
+#+begin_src sh
+ogr2ogr -f GEOJSON outfile.json infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude
+#+end_src
+
 ** convert kml to csv
 
 the csv driver doesnt support writing gps data,
