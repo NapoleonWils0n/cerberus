@@ -1,0 +1,68 @@
+#+STARTUP: content
+* w3m remove google redirect
+
+remove the google redirect from search result with a cgi script
+
+** w3m conf
+
+edit your ~/.w3m/config file and add the path to the siteconf file which we will create in the next step
+
+#+begin_src conf
+siteconf_file /home/username/.w3m/siteconf
+#+end_src
+
+replace username with your username
+
+** siteconf
+
+create the ~/.w3m/siteconf file
+
+#+begin_src sh
+touch ~/.w3m/siteconf
+#+end_src
+
+edit the ~/.w3m/siteconf file and add the following code
+
+#+begin_src conf
+# remove google redirect from search links
+url "http://www.google.com/url?" exact
+substitute_url "file:///usr/lib/w3m/cgi-bin/google-redirector.cgi?"
+#+end_src
+
+** google-redirector.cgi
+
+create a file called google-redirector.cgi with the following code
+
+#+begin_src conf
+#!/bin/sh
+
+# current link under cursor in w3m
+url="${W3M_CURRENT_LINK}"   
+
+# if the current link contains a url pipe it into grep,
+# remove the google redirect and decode the url
+#if the current link is empty set the url to the page url
+if [ ! -z "${url}" ]; then
+   result=$(echo "${url}" | \
+            grep -oP '(?<=google.com\/url\?q=)[^&]*(?=&)' \
+            | python3 -c "import sys; from urllib.parse import unquote; print(unquote(sys.stdin.read()));")
+   [ ! -z "${result}" ] && url="${result}" || url="${url}"
+else
+    url="${W3M_URL}"
+fi
+
+# W3m-control GOTO url without google redirect
+printf "%s\r\n" "W3m-control: GOTO ${url}";
+#+end_src
+
+copy the google-redirector.cgi script to the /usr/lib/w3m/cgi-bin directory
+
+#+begin_src sh
+sudo cp google-redirector.cgi /usr/lib/w3m/cgi-bin
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+sudo chmod +x /usr/lib/w3m/cgi-bin/google-redirector.cgi
+#+end_src
