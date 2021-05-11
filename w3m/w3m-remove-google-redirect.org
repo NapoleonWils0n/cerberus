@@ -25,7 +25,7 @@ edit the ~/.w3m/siteconf file and add the following code
 
 #+begin_src conf
 # remove google redirect from search links
-url "https://www.google.com/url?" exact
+url "http://www.google.com/url?" exact
 substitute_url "file:///usr/lib/w3m/cgi-bin/google-redirector.cgi?"
 #+end_src
 
