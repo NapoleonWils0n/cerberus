@@ -75,3 +75,86 @@ From here, you should be able to update ~/.config/transmission-daemon/settings.j
 #+begin_src sh
 sudo systemctl start transmission-daemon
 #+end_src
+
+** web ui password
+
+*** stop the transmission-daemon
+
+#+begin_src sh
+sudo systemctl stop transmission-daemon
+#+end_src
+
+*** download the [[https://github.com/tomwijnroks/transmission-pwgen][transmission-pwgen]] script 
+
+#+begin_src sh
+curl -so transmission-pwgen.sh https://raw.githubusercontent.com/tomwijnroks/transmission-pwgen/master/transmission-pwgen.sh
+#+end_src
+
+*** make the script executable
+
+#+begin_src sh
+chmod +x transmission-pwgen.sh
+#+end_src
+
+*** edit the script and set options
+
+change the shebang to sh
+set the PASSWORD_LENGTH=64
+remove the .sh file extension
+
+#+begin_src sh
+#!/bin/sh
+#
+# https://github.com/tomwijnroks/transmission-pwgen
+
+# Define the password length.
+PASSWORD_LENGTH=64
+
+# Generate a random password (alphanumeric).
+PASS=$(cat /dev/urandom | tr -dc '[:alnum:]' | fold -w ${PASSWORD_LENGTH} | head -n1)
+
+# Generate a random salt (alphanumeric + two special characters).
+# Source: https://github.com/transmission/transmission/blob/master/libtransmission/crypto-utils.c#L132-L136
+SALT=$(cat /dev/urandom | tr -dc '[:alnum:]./' | fold -w 8 | head -n1)
+
+# Combine password + salt and use sha1sum to create the hash.
+HASH=$(echo -n ${PASS}${SALT} | sha1sum | awk '{print $1}')
+
+# Print the plain text password.
+echo "plain_text_password = ${PASS}"
+
+# Print the rpc-password string: hash + salt prepended with a curly bracket.
+# Source: https://github.com/transmission/transmission/blob/master/libtransmission/crypto-utils.c#L153
+echo "rpc_password_string = {${HASH}${SALT}"
+
+#+end_src
+
+*** run the script
+
+copy the transmission-pwgen to your ~/bin directory
+
+#+begin_src sh
+cp transmission-pwgen ~/bin
+#+end_src
+
+Execute transmission-pwgen to generate a password and rpc-password string.
+
+#+begin_src sh
+transmission-pwgen
+#+end_src
+
+this will output your password and the sha1 hash
+
++ edit the ~/.config/transmission-daemon/settings.json file
+
++ change rpc-authentication-required to true
+
++ edit the rpc-password and the rpc_password_string
+
++ restart the transmission-daemon
+
+#+begin_src sh
+sudo systemctl start transmission-daemon
+#+end_src
+
+
