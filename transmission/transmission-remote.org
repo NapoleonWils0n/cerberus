@@ -24,64 +24,28 @@ stop the transmission-daemon
 pkill -3 transmission-daemon
 #+end_src
 
-** transmission run as user
+** transmission dont use systemd
 
-*** stop transmission
+stop the transmission-daemon.service
 
 #+begin_src sh
 sudo systemctl stop transmission-daemon
 #+end_src
 
-*** override the provided service file
+disable transmission-daemon.service
 
 #+begin_src sh
-sudo mkdir -p /etc/systemd/system/transmission.service.d/
-#+end_src
-
-*** create the username.conf file
-
-#+begin_src sh
-sudo touch /etc/systemd/system/transmission.service.d/username.conf
-#+end_src
-
-*** edit the username.conf file
-
-edit the username.conf file and replace your_username with your username
-
-#+begin_src conf
-[Service]
-User=your_username
-#+end_src
-
-*** reload the systemd units
-
-#+begin_src sh
-sudo systemctl daemon-reload
-#+end_src
-
-*** stop transmission
-
-Next, you'll want to start and then stop transmission
-to make it create the ~/.config/transmission-daemon/ directory for your new user.
-
-#+begin_src sh
-sudo systemctl start transmission-daemon; sudo systemctl stop transmission-daemon
-#+end_src
-
-From here, you should be able to update ~/.config/transmission-daemon/settings.json normally.
-
-*** start transmission
-
-#+begin_src sh
-sudo systemctl start transmission-daemon
+sudo systemctl disable transmission-daemon
 #+end_src
 
 ** web ui password
 
+web ui password
+
 *** stop the transmission-daemon
 
 #+begin_src sh
-sudo systemctl stop transmission-daemon
+pkill -3 transmission-daemon
 #+end_src
 
 *** download the [[https://github.com/tomwijnroks/transmission-pwgen][transmission-pwgen]] script 
@@ -126,7 +90,6 @@ echo "plain_text_password = ${PASS}"
 # Print the rpc-password string: hash + salt prepended with a curly bracket.
 # Source: https://github.com/transmission/transmission/blob/master/libtransmission/crypto-utils.c#L153
 echo "rpc_password_string = {${HASH}${SALT}"
-
 #+end_src
 
 *** run the script
@@ -147,14 +110,12 @@ this will output your password and the sha1 hash
 
 + edit the ~/.config/transmission-daemon/settings.json file
 
-+ change rpc-authentication-required to true
-
 + edit the rpc-password and the rpc_password_string
 
 + restart the transmission-daemon
 
 #+begin_src sh
-sudo systemctl start transmission-daemon
+transmission-daemon &
 #+end_src
 
 
