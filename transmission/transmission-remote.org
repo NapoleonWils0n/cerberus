@@ -1,0 +1,77 @@
+#+STARTUP: content
+* transmission remote
+
+transmission remote set up
+
+** transmission install
+
+#+begin_src sh
+sudo apt install transmission-cli transmission-daemon transmission-common
+#+end_src
+
+** transmission-daemon start
+
+start the transmission-daemon
+to create the config file at ~/.config/transmission-daemon/settings.json
+
+#+begin_src sh
+transmission-daemon &
+#+end_src
+
+stop the transmission-daemon
+
+#+begin_src sh
+pkill -3 transmission-daemon
+#+end_src
+
+** transmission run as user
+
+*** stop transmission
+
+#+begin_src sh
+sudo systemctl stop transmission-daemon
+#+end_src
+
+*** override the provided service file
+
+#+begin_src sh
+sudo mkdir -p /etc/systemd/system/transmission.service.d/
+#+end_src
+
+*** create the username.conf file
+
+#+begin_src sh
+sudo touch /etc/systemd/system/transmission.service.d/username.conf
+#+end_src
+
+*** edit the username.conf file
+
+edit the username.conf file and replace your_username with your username
+
+#+begin_src conf
+[Service]
+User=your_username
+#+end_src
+
+*** reload the systemd units
+
+#+begin_src sh
+sudo systemctl daemon-reload
+#+end_src
+
+*** stop transmission
+
+Next, you'll want to start and then stop transmission
+to make it create the ~/.config/transmission-daemon/ directory for your new user.
+
+#+begin_src sh
+sudo systemctl start transmission-daemon; sudo systemctl stop transmission-daemon
+#+end_src
+
+From here, you should be able to update ~/.config/transmission-daemon/settings.json normally.
+
+*** start transmission
+
+#+begin_src sh
+sudo systemctl start transmission-daemon
+#+end_src
