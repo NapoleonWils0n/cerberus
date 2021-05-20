@@ -4,5 +4,19 @@
 file='/usr/share/doc/w3m/README.func'
 selection=$(awk '{ print $0 }' "${file}" | fzf --delimiter='\n' --prompt='Run w3m function: ' --info=inline --layout=reverse --no-multi | awk '{ print $1 }')
 
-# copy selection to clipboard
+# default function
+default() {
 echo "${selection}" | xsel -ipsb
+}
+
+# open links with browser
+extern() {
+EXTERN='EXTERN /usr/bin/firefox'
+echo "${EXTERN}" | xsel -ipsb
+}
+
+# case statement match selection and run function
+case "${selection}" in
+   EXTERN*) extern;;
+   *) default;;
+esac
