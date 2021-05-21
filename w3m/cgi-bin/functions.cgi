@@ -15,8 +15,15 @@ EXTERN='EXTERN /usr/bin/firefox'
 echo "${EXTERN}" | xsel -ipsb
 }
 
+# open links with browser
+extern_link() {
+EXTERN='EXTERN_LINK /usr/bin/firefox'
+echo "${EXTERN_LINK}" | xsel -ipsb
+}
+
 # case statement match selection and run function
 case "${selection}" in
-   EXTERN*) extern;;
+   EXTERN) extern;;
+   EXTERN_LINK) extern_link;;
    *) default;;
 esac
