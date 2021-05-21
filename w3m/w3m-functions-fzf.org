@@ -1,0 +1,101 @@
+#+STARTUP: content
+* w3m functions fzf
+** keymap
+
+edit your keymap file
+
+#+begin_src sh
+vi ~/.w3m/keymap
+#+end_src
+
+add the following code
+
+#+begin_src config
+# surfraw prompt
+keymap xs COMMAND  "READ_SHELL ~/.w3m/cgi-bin/fzf_surfraw.cgi ; GOTO /usr/lib/w3m/cgi-bin/goto_clipboard_primary.cgi"
+
+# sauron-w3m prompt
+keymap ,-. COMMAND "READ_SHELL ~/.w3m/cgi-bin/sauron-w3m.cgi; BACK"
+
+# readability mode
+keymap ,-/ COMMAND "READ_SHELL 'python3 -m readability.readability -u $W3M_URL 2> /dev/null' ; VIEW ; DELETE_PREVBUF"
+
+# toggle borders
+keymap ,-t COMMAND "SET_OPTION display_borders=toggle ; RESHAPE"
+
+# toggle line numbers
+keymap ,-l COMMAND "SET_OPTION display_link_number=toggle ; RESHAPE"
+
+# w3m function prompt
+keymap .-, COMMAND "READ_SHELL ~/.w3m/cgi-bin/functions.cgi ; BACK ; GOTO /usr/lib/w3m/cgi-bin/run_command.cgi ; BACK"
+#+end_src
+
+** functions.cgi
+
+create the functions.cgi file
+
+#+begin_src sh
+vi ~/.w3m/cgi-bin/functions.cgi
+#+end_src
+
+add the following code
+
+#+begin_src config
+#!/bin/sh
+
+# fzf prompt to specify function to run from readme.func
+file='/usr/share/doc/w3m/README.func'
+selection=$(awk '{ print $0 }' "${file}" | fzf --delimiter='\n' --prompt='Run w3m function: ' --info=inline --layout=reverse --no-multi | awk '{ print $1 }')
+
+# default function
+default() {
+echo "${selection}" | xsel -ipsb
+}
+
+# open links with browser
+extern() {
+EXTERN='EXTERN /usr/bin/firefox'
+echo "${EXTERN}" | xsel -ipsb
+}
+
+# open links with browser
+extern_link() {
+EXTERN='EXTERN_LINK /usr/bin/firefox'
+echo "${EXTERN_LINK}" | xsel -ipsb
+}
+
+# case statement match selection and run function
+case "${selection}" in
+   EXTERN) extern;;
+   EXTERN_LINK) extern_link;;
+   *) default;;
+esac
+
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+chmod +x ~/.w3m/cgi-bin/functions.cgi
+#+end_src
+
+** run_command.cgi
+
+create the run_command.cgi file
+
+#+begin_src sh
+sudo vi /usr/lib/w3m/cgi-bin/run_command.cgi
+#+end_src
+
+#+begin_src conf
+#!/bin/sh
+
+# run w3m command from clipboard
+printf "%s\r\n" "W3m-control: COMMAND $(xsel -opsb)";
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+sudo chmod +x /usr/lib/w3m/cgi-bin/run_command.cgi
+#+end_src
