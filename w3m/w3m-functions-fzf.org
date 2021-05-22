@@ -12,7 +12,7 @@ add the following code
 
 #+begin_src config
 # surfraw prompt
-keymap xs COMMAND  "READ_SHELL ~/.w3m/cgi-bin/fzf_surfraw.cgi ; GOTO /usr/lib/w3m/cgi-bin/goto_clipboard_primary.cgi"
+keymap xs COMMAND  "READ_SHELL ~/.w3m/cgi-bin/fzf_surfraw.cgi ; GOTO file:/cgi-bin/goto_clipboard_primary.cgi"
 
 # sauron-w3m prompt
 keymap ,-. COMMAND "READ_SHELL ~/.w3m/cgi-bin/sauron-w3m.cgi; BACK"
@@ -27,7 +27,33 @@ keymap ,-t COMMAND "SET_OPTION display_borders=toggle ; RESHAPE"
 keymap ,-l COMMAND "SET_OPTION display_link_number=toggle ; RESHAPE"
 
 # w3m function prompt
-keymap .-, COMMAND "READ_SHELL ~/.w3m/cgi-bin/functions.cgi ; BACK ; GOTO /usr/lib/w3m/cgi-bin/run_command.cgi ; BACK"
+keymap .-, COMMAND "READ_SHELL ~/.w3m/cgi-bin/functions.cgi ; BACK ; GOTO file:/cgi-bin/run_command.cgi ; BACK"
+#+end_src
+
+** cgi-bin setup
+
+create a cgi-bin directory in your home w3m directory if it doesnt exist
+
+#+begin_src sh
+mkdir -p ~/.w3m/cgi-bin
+#+end_src
+
+edit your w3m config file and set up the cgi-bin directory
+
+#+begin_src sh
+vi ~/.w3m/config
+#+end_src
+
+change the cgi-bin line and add the path the cgi-bin directories on your system
+
+#+begin_src conf
+cgi_bin ~/.w3m/cgi-bin:/usr/lib/w3m/cgi-bin
+#+end_src
+
+alternativaly you can use sed to edit the ~/.w3m/config file
+
+#+begin_src sh
+sed -i 's@cgi_bin.*@cgi_bin ~/.w3m/cgi-bin:/usr/lib/w3m/cgi-bin:/usr/local/libexec/w3m/cgi-bin@g' ~/.w3m/config
 #+end_src
 
 ** functions.cgi
@@ -70,7 +96,6 @@ case "${selection}" in
    EXTERN_LINK) extern_link;;
    *) default;;
 esac
-
 #+end_src
 
 make the script executable
@@ -84,7 +109,7 @@ chmod +x ~/.w3m/cgi-bin/functions.cgi
 create the run_command.cgi file
 
 #+begin_src sh
-sudo vi /usr/lib/w3m/cgi-bin/run_command.cgi
+sudo vi ~/cgi-bin/run_command.cgi
 #+end_src
 
 #+begin_src conf
@@ -97,5 +122,5 @@ printf "%s\r\n" "W3m-control: COMMAND $(xsel -opsb)";
 make the script executable
 
 #+begin_src sh
-sudo chmod +x /usr/lib/w3m/cgi-bin/run_command.cgi
+sudo chmod +x ~/cgi-bin/run_command.cgi
 #+end_src

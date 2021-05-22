@@ -13,6 +13,32 @@ siteconf_file /home/username/.w3m/siteconf
 
 replace username with your username
 
+** cgi-bin setup
+
+create a cgi-bin directory in your home w3m directory if it doesnt exist
+
+#+begin_src sh
+mkdir -p ~/.w3m/cgi-bin
+#+end_src
+
+edit your w3m config file and set up the cgi-bin directory
+
+#+begin_src sh
+vi ~/.w3m/config
+#+end_src
+
+change the cgi-bin line and add the path the cgi-bin directories on your system
+
+#+begin_src conf
+cgi_bin ~/.w3m/cgi-bin:/usr/lib/w3m/cgi-bin
+#+end_src
+
+alternativaly you can use sed to edit the ~/.w3m/config file
+
+#+begin_src sh
+sed -i 's@cgi_bin.*@cgi_bin ~/.w3m/cgi-bin:/usr/lib/w3m/cgi-bin:/usr/local/libexec/w3m/cgi-bin@g' ~/.w3m/config
+#+end_src
+
 ** siteconf
 
 create the ~/.w3m/siteconf file
@@ -26,7 +52,7 @@ edit the ~/.w3m/siteconf file and add the following code
 #+begin_src conf
 # remove google redirect from search links
 url "http://www.google.com/url?" exact
-substitute_url "file:///usr/lib/w3m/cgi-bin/google-redirector.cgi?"
+substitute_url "file:/cgi-bin/google-redirector.cgi?"
 #+end_src
 
 ** google-redirector.cgi
@@ -58,14 +84,14 @@ printf "%s\r\n" "W3m-control: GOTO ${url}";
 printf "%s\r\n" "W3m-control: DELETE_PREVBUF";
 #+end_src
 
-copy the google-redirector.cgi script to the /usr/lib/w3m/cgi-bin directory
+copy the google-redirector.cgi script to the ~/.w3m/cgi-bin directory
 
 #+begin_src sh
-sudo cp google-redirector.cgi /usr/lib/w3m/cgi-bin
+cp google-redirector.cgi ~/.w3m/cgi-bin
 #+end_src
 
 make the script executable
 
 #+begin_src sh
-sudo chmod +x /usr/lib/w3m/cgi-bin/google-redirector.cgi
+sudo chmod +x ~/.w3m/cgi-bin/google-redirector.cgi
 #+end_src
