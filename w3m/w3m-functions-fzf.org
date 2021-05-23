@@ -118,7 +118,7 @@ chmod +x ~/.w3m/cgi-bin/functions.cgi
 create the run_command.cgi file
 
 #+begin_src sh
-sudo vi ~/cgi-bin/run_command.cgi
+sudo vi ~/.w3m/cgi-bin/run_command.cgi
 #+end_src
 
 #+begin_src conf
@@ -131,5 +131,5 @@ printf "%s\r\n" "W3m-control: $(xsel -opsb)";
 make the script executable
 
 #+begin_src sh
-sudo chmod +x ~/cgi-bin/run_command.cgi
+sudo chmod +x ~/.w3m/cgi-bin/run_command.cgi
 #+end_src
