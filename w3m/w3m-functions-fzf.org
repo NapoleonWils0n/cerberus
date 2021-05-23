@@ -71,7 +71,7 @@ add the following code
 
 # fzf prompt to specify function to run from readme.func
 file='/usr/share/doc/w3m/README.func'
-selection=$(awk '{ print $0 }' "${file}" | fzf --delimiter='\n' --prompt='Run w3m function: ' --info=inline --layout=reverse --no-multi | awk '{ print $1 }')
+selection=$(awk '{ print $0 }' "${file}" | fzf-tmux -d 30% --delimiter='\n' --prompt='Run w3m function: ' --info=inline --layout=reverse --no-multi | awk '{ print $1 }')
 
 # variables
 browser='/usr/bin/firefox'
@@ -125,7 +125,7 @@ sudo vi ~/cgi-bin/run_command.cgi
 #!/bin/sh
 
 # run w3m command from clipboard
-printf "%s\r\n" "W3m-control: COMMAND $(xsel -opsb)";
+printf "%s\r\n" "W3m-control: $(xsel -opsb)";
 #+end_src
 
 make the script executable
