@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* mpv video player install
+
+#+begin_src sh
+sudo apt install mpv
+#+end_src

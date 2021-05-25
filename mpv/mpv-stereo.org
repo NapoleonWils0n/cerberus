@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* mpv downmix to stereo
+
+mpv downmix audio
+
+#+begin_src sh
+mpv --audio-channels=stereo file.mkv
+#+end_src
