@@ -1,32 +1,40 @@
+#+STARTUP: content
+* unbound ubuntu
 
-
+#+begin_src sh
 sudo nano /etc/dhcp/dhclient.conf
+#+end_src
 
+#+begin_src conf
 nohook resolv.conf
+#+end_src
 
-#=================================
-
+#+begin_src sh
 sudo nano /etc/resolv.conf.head
+#+end_src
 
+#+begin_src conf
 nameserver 127.0.0.1
+#+end_src
 
-
-
+#+begin_src sh
 sudo chattr +i /etc/resolv.conf
+#+end_src
 
+* start unbound dns server
 
-# start unbound dns server
-#===================================================================
+** start unbound
 
-
-# start unbound
-
+#+begin_src sh
 sudo systemctl start unbound.service
+#+end_src
 
+** enable unbound to start automatically
 
-# enable unbound to start automatically
-
+#+begin_src sh
 sudo systemctl enable unbound.service
+#+end_src
 
-
+#+begin_src sh
 sudo systemd-sysv-install enable unbound
+#+end_src

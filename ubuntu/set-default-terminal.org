@@ -1,7 +1,8 @@
-# Set default Terminal
+#+STARTUP: showall
+* Set default Terminal
 
-```
+#+begin_src sh
 sudo update-alternatives --config x-terminal-emulator
-```
+#+end_src
 
 Just type in the number of the selection and hit enter.
