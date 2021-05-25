@@ -1,10 +1,10 @@
-#!/bin/bash
+#+STARTUP: showall
+* diff compare files over ssh
 
- # ===============================
- # = diff compare files over ssh =
- # ===============================
-
-
+#+begin_src sh
 diff <(find /Users/$USER/code) <(ssh -n 192.168.1.9 find /Users/$USER/code) > out.txt
+#+end_src
 
+#+begin_src sh
 diff -y <(find /Users/$USER/code) <(ssh -n 192.168.1.9 find /Users/$USER/code) > out.txt
+#+end_src

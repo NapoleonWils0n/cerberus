@@ -1,3 +1,6 @@
-#!/bin/bash
+#+STARTUP: showall
+* diff tips
 
+#+begin_src sh
 diff -qr directory1 directory2 | grep -v -e 'DS_Store' | sort > diff.txt
+#+end_src
