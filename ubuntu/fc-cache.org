@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* fc-cache 
+
+#+begin_src sh
+sudo fc-cache -f -v
+#+end_src
