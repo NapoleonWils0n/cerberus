@@ -1,0 +1,605 @@
+#+STARTUP: content
+* create a live linux mint usb installer on an external usb drive
+
+Convert the .iso file to .img using the convert option of hdiutil 
+
+#+begin_src sh
+hdiutil convert -format UDRW -o ~/Desktop/mint.img ~/Desktop/mint.iso
+#+end_src
+
+check the list of devices
+
+#+begin_src sh
+df -h
+#+end_src
+
+unmount the drive
+
+#+begin_src sh
+diskutil unmountDisk /dev/disk2
+#+end_src
+
+copy the img to the usb drive
+
+#+begin_src sh
+sudo dd if=~/Desktop/mint.img of=/dev/rdisk2 bs=1m
+#+end_src
+
+After the dd command finishes, eject the drive:
+
+#+begin_src sh
+diskutil eject /dev/rdisk2
+#+end_src
+
+* format the usb stick you are going to intsall mint on to
+
+we are going to install linux mint on a usb stick which needs to be formatted first
+plug in the usb stick and wait for it to mount on the desktop 
+
+open disk utility and select the usb stick in the left sidebar
+you need to select the top level of the drive and not the second level
+
+select the partition tab, change the format to FAT
+
+then select the options button and make sure GUID Partition Table is selected
+then click apply to format the drive
+
+the drive needs to have the GUID Partition Table so the mac will boot up from the drive
+
+* install xubuntu on 11 inch Mac airs ssd
+
+clone the macs internal drive to an external usb drive
+
+shutdown your mac 
+
+turn your mac on and boot into recovery mode by holding r while the mac boots up
+
+on the recovery mode screen select disk utility
+
+select the top level of your macs internal drive in the left sidebar
+
+then select the recovery tab
+
+you should see a source and destination filefield where you can select drives
+
+the source should be filled with the internal drive of your mac,
+if you have filevault encryption turned on you need to go to the file menu and select unlock drivename
+and then enter your recovery password to decrypt the drive before you clone it
+
+now plug in a usb drive the same size or bigger than your macs internal drive
+
+you should see the usb drive appear in the left sidebar of the disk utilty window
+
+select the top level of your external usb drive in the left sidebar and drag it into the destintion filefield
+
+you should now have your macs internal hard drive in the source filefield and the external usb drive in the destintion filefield
+
+double check and then click ok to start cloning the macs internal drive to the external usb drive
+
+when disk utility has finished cloning you can quit to return to main recovery mode screen
+
+then quit the recovery mode screen and it will ask you to select a start up disk
+
+select the external usb you just created to boot up from to make sure it works
+
+* erase and format the mac internal drive and partition
+
+
+make sure you have backup everything from your macs internal drive
+
+boot up into external usb clone of your macs internal drive
+
+open disk utility 
+
+the external usb drive should be listed at the top and have a coloured icon
+
+you should also see your macs internal drive in the lefthand sidebar which doesnt have a cloured icon
+
+select your macs internal drive
+
+then click the erase button to erase the macs internal hard drive, this wont erase the bootloader which is on a seperate partition
+but it will erase the recovery partition
+
+after you have erased the macs internal drive you need to format it as Fat so linux mint can right to it during the install
+
+double check you have the internal drive partition that is under the main drive and slightly indented to the right selected
+
+then in the erase tab select mos dos fat from the format menu and erase the drive to format it as fat
+
+after you have erased the macs internal drive quit disk utility
+
+and then shut down the mac and unplug the external usb drive that you have boot up from
+
+* boot up from the linux mint live usb drive
+
+now plug in the linux mint live usb drive and boot up from it
+
+now you can either install linux mint to either an external usb drive or the macs internal ssd
+
+reboot the mac insert the usb drive and press option and then boot into linux
+
+Boot your system using the Linux Mint live CD or USB stick
+
+
+IMPORTANT
+
+change your keyboard layout to Macintosh UK staight away
+
+then check your keyboard layout by typing out the passwords you are going to use in a text file
+because when you run the ubiquity installer you cant see the passwords you are typing in
+
+connect to wifi network
+
+* installer
+
+select guided install full disk encryption
+
+select the drive to install to
+
+then enter the password for full disk encryption
+
+change your keyboard layout to Macintosh UK, 
+or the same keyboard layout you chose when you booted into the live usb drive
+
+because you cant see the passwords when are typing them in so you need to make sure you have the right keyboard layout
+
+create the user account
+
+then enter your user name and password
+
+* update the system after boot up
+
+after you log in for the first time update the system
+open the update manager, and then select all update and click apply
+
+* set keyboard layout for mac
+
+set the layout to mac
+
+* setxkbmap to swap control with cmd
+
+#+begin_src sh
+setxkbmap -option altwin:ctrl_win
+#+end_src
+
+* run setxkbmap at startup
+
+open session and startups
+open the application autostart tab
+click the add button, and fill in the following fields
+
+name: setxkbmap ctrl
+description: swap ctrl with cmd
+command: /usr/bin/setxkbmap -option altwin:ctrl_win -option terminate:ctrl_alt_bks
+
+* change whisker menu to use right cmd
+
+edit the whisker menu under menu settings and change the key to reight command
+
+* applications to install
+
+#+begin_src sh
+sudo apt-get install mplayer mencoder git-core vim \
+mpd mpc ncmpc nmap ngrep curl lynx gparted \
+keepassx chromium-browser chromium-codecs-ffmpeg-extra \
+imagemagick openvpn rtmpdump get-iplayer \
+seahorse fonts-inconsolata laptop-mode-tools \
+powertop mutt urlview abook python-bs4 html-xml-utils \
+nautilus-dropbox oathtool meld tree pommed \
+texmaker sox traceroute rtorrent tmux htop \
+gnome-system-monitor gnome-disk-utility \
+usb-creator-gtk baobab
+#+end_src
+
+* rtorrent create sessions directory
+
+#+begin_src sh
+mkdir -p ~/.session
+#+end_src
+
+enviornment to compile c programs
+
+#+begin_src sh
+sudo apt-get install glibc-doc manpages-dev libc6-dev gcc build-essential
+#+end_src
+
+* install python-pip
+
+#+begin_src sh
+sudo apt-get install python-pip
+#+end_src
+
+install goobook
+
+#+begin_src sh
+pip install goobook
+#+end_src
+
+* mpd set up
+
+First stop the daemon and disable from starting on boot
+
+#+begin_src sh
+sudo service mpd stop
+sudo update-rc.d mpd disable
+#+end_src
+
+Create a directory for the mpd files and the playlists
+
+#+begin_src sh
+mkdir -p ~/.mpd/playlists
+#+end_src
+
+copy the mpd to the home directory
+
+#+begin_src sh
+gunzip -c /usr/share/doc/mpd/examples/mpd.conf.gz > ~/.mpd/mpd.conf
+#+end_src
+
+create the mpd files
+
+#+begin_src sh
+touch ~/.mpd/{mpd.db,mpd.log,mpd.pid,mpdstate}
+#+end_src
+
+edit the mpd.conf in your home directory
+
+#+begin_src sh
+vim ~/.mpd/mpd.conf
+#+end_src
+
+check if mpd is running
+
+#+begin_src sh
+ps aux|grep mpd
+#+end_src
+
+ncmpc
+
+#+begin_src sh
+ncmpc -h mpd@horus.local update
+#+end_src
+
+* vim powerline and fugitive plugin install
+
+install powerline
+
+#+begin_src sh
+pip install --user git+git://github.com/Lokaltog/powerline
+#+end_src
+
+#+begin_src sh
+cd ~/Desktop
+#+end_src
+
+#+begin_src sh
+wget https://github.com/Lokaltog/powerline/raw/develop/font/PowerlineSymbols.otf 
+wget https://github.com/Lokaltog/powerline/raw/develop/font/10-powerline-symbols.conf
+#+end_src
+
+#+begin_src sh
+mkdir -p ~/.fonts/ && mv PowerlineSymbols.otf ~/.fonts/
+fc-cache -vf ~/.fonts
+mkdir -p ~/.config/fontconfig/conf.d/ && mv 10-powerline-symbols.conf ~/.config/fontconfig/conf.d/
+#+end_src
+
+add the following to your ~/.vimrc
+
+#+begin_src sh
+set rtp+=$HOME/.local/lib/python2.7/site-packages/powerline/bindings/vim/
+
+" Always show statusline
+set laststatus=2
+
+" Use 256 colours (Use this setting only if your terminal supports 256 colours)
+set t_Co=256
+#+end_src
+
+copy theme to ~/.config/powerline
+
+#+begin_src sh
+mkdir -p ~/.config/powerline
+cp -R ~/.local/lib/python2.7/site-packages/powerline/config_files/* ~/.config/powerline
+#+end_src
+
+
+edit the ~/.config/powerline/config.json file 
+
+#+begin_src json
+# change the vim colour scheme to solarized
+# "vim": {
+# "colorscheme": "solarized",
+# }
+#+end_src
+
+
+download the vim.fugitive plugin
+
+#+begin_src sh
+cd Desktop
+git clone git://github.com/tpope/vim-fugitive.git
+#+end_src
+
+
+move the files into place
+
+#+begin_src sh
+mv ~/Desktop/vim-fugitive/plugin/fugitive.vim ~/.vim/plugin
+mv ~/Desktop/vim-fugitive/doc/fugitive.txt ~/.vim/doc
+#+end_src
+
+unistall powerline
+
+#+begin_src sh
+pip uninstall powerline
+#+end_src
+
+* shairport install
+
+#+begin_src sh
+sudo apt-get install git libao-dev libssl-dev libcrypt-openssl-rsa-perl libio-socket-inet6-perl libwww-perl avahi-utils libmodule-build-perl
+#+end_src
+
+Let this process run for a little while. When it's complete, we need to install an update so Shairport will work with iOS 6 (you can skip this step if you're not on or plan to upgrade iOS 6):
+
+#+begin_src sh
+git clone https://github.com/njh/perl-net-sdp.git perl-net-sdp
+cd perl-net-sdp
+perl Build.PL
+sudo ./Build
+sudo ./Build test
+sudo ./Build install
+cd ..
+#+end_src
+
+Once the iOS 6 module is installed (give it a little while), it's finally time to get Shairport installed. from your home directory type:
+
+#+begin_src sh
+git clone https://github.com/hendrikw82/shairport.git
+cd shairport
+sudo make install
+#+end_src
+
+Now, let's run Shairport:
+
+#+begin_src sh
+./shairport.pl -a AirPi
+#+end_src
+
+This command starts Shairport with your Raspberry Pi named "AirPi" (you can change it to whatever you want). Grab your iOS device, pick the music app of your choice, and tap the AirPlay button. You should see "AirPi" listed as an output device. Tap that, and the music should start streaming out of your USB sound card within a couple seconds.
+
+But we're not done yet. Shairport doesn't automatically load when you start your Raspberry Pi, and since we want to make our AirPlay device work without any peripherals we need to do one more step. From your home directory, type:
+
+#+begin_src sh
+cd shairport
+sudo make install
+sudo cp shairport.init.sample /etc/init.d/shairport
+cd /etc/init.d
+sudo chmod a+x shairport
+#+end_src
+
+if you want to automatically start shairport run the command below.
+
+#+begin_src sh
+sudo update-rc.d shairport defaults
+#+end_src
+
+otherwise you can start shairport manually
+
+#+begin_src sh
+sudo service shairport start
+#+end_src
+
+Finally, we need to add Shairport as a launch item. Type:
+
+#+begin_src sh
+sudo nano /etc/init.d/shairport
+#+end_src
+
+This loads up Shairport file we need to edit. Look through the file for the # "DAEMON_ARGS" line, and change it so it looks like this:
+
+#+begin_src conf
+DAEMON_ARGS="-w $PIDFILE -a airplay -ao_devicename=plughw:1,0"
+#+end_src
+
+plughw:1,0 is your usb dac
+
+* iptables (firewall)
+
+iptables for rtorrent
+
+#+begin_src sh
+sudo iptables -L
+sudo iptables -F
+sudo iptables -X
+sudo iptables -A INPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-ip-options --log-tcp-options
+sudo iptables -A INPUT -m state --state INVALID -j DROP
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 6881 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 6882 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p tcp -m tcp --dport 5353 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p tcp -m tcp --dport 5000:5005 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A INPUT -p udp -m udp --dport 6000:6005 -s 192.168.1.0/24 -j ACCEPT
+sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-ip-options --log-tcp-options
+sudo iptables -A OUTPUT -m state --state INVALID -j DROP
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+#+end_src
+
+* save iptables rules
+
+save the ip tables, switch to root first
+
+#+begin_src sh
+sudo su
+#+end_src
+
+#+begin_src sh
+iptables-save > /etc/iptables.rules
+#+end_src
+
+resote iptables, switch to root first
+
+#+begin_src sh
+sudo su
+#+end_src
+
+#+begin_src sh
+iptables-restore < /etc/iptables.rules
+#+end_src
+
+* edit /etc/network/interfaces
+
+add pre-up iptables-restore < /etc/iptables.rules 
+
+Edit the /etc/network/interfaces file to look like this:
+
+#+begin_src conf
+auto lo
+iface lo inet loopback
+pre-up iptables-restore < /etc/iptables.rules
+#+end_src
+
+* change home directory file permissions
+
+change the file permissions to remove read and write access for other users
+
+#+begin_src sh
+chmod 700 Desktop
+chmod 700 Documents
+chmod 700 Downloads
+chmod 700 Music
+chmod 700 Pictures
+chmod 700 Templates
+chmod 700 Videos
+#+end_src
+
+change permissons on the home directory
+
+#+begin_src sh
+chmod 700 /home/username/
+#+end_src
+
+* gnome-keyring setup
+
+Check if seahorse deamon loads on startup in system > preferences > startup apps.
+There should be an entry "Certificate and Key Storage" and one for "Secret Storage Service"
+
+add to ~/.bashrc
+
+#+begin_src conf
+# add gnome-keyring-daemon to env
+export `gnome-keyring-daemon --start`
+#+end_src
+
+enable gnome services to unlock ssh keys on login
+goto Settings-Session and Startup-Advanced and select Launch GNOME services on startup and it saved the identity to the keyring.
+
+* create a list of installed packages
+
+create a list of installed packages
+
+#+begin_src sh
+sudo dpkg --get-selections > installed-packages-backup.txt
+#+end_src
+
+switch to second computer and reinstall the packages
+
+#+begin_src sh
+sudo apt-get install aptitude 
+sudo dpkg --clear-selections 
+sudo dpkg --set-selections < installed-packages-backup.txt 
+sudo aptitude install
+#+end_src
+
+* sabnzbd usenet client install
+
+#+begin_src sh
+sudo apt-get install sabnzbdplus par2
+#+end_src
+
+* sickbeard linux install
+
+download sickbeard
+
+#+begin_src sh
+git clone git://github.com/midgetspy/Sick-Beard.git sickbeard
+#+end_src
+
+move sickbeard to ~/.sickbeard
+
+#+begin_src sh
+mv sickbeard ~/.sickbeard
+#+end_src
+
+move the startup script into place
+
+#+begin_src sh
+sudo mv ~/.sickbeard/init.ubuntu /etc/init.d/sickbeard
+#+end_src
+
+edit the startup script and set some options
+
+#+begin_src sh
+sudo vim /etc/init.d/sickbeard
+#+end_src
+
+Edit the APP_PATH to point to /home/user/.sickbeard, 
+where "user" is your username and set RUN_AS to your username,
+your file should then look something like this:
+
+#+begin_src conf
+# replace "username" with your username
+RUN_AS=${SB_USER-username}
+
+# replace "username" with your username
+APP_PATH=/home/username/.sickbeard
+
+#+end_src
+
+edit /etc/defaults/sickbeard
+
+#+begin_src sh
+sudo vim /etc/defaults/sickbeard
+#+end_src
+
+#+begin_src conf
+# add SB_USER=username to /etc/default/sickbeard
+# replace "username" with your username
+SB_USER=username
+#+end_src
+
+if you want sickbeard to run on boot run the following command
+
+#+begin_src sh
+sudo update-rc.d sickbeard defaults
+#+end_src
+
+start sickbeard
+
+#+begin_src sh
+sudo service sickbeard start
+#+end_src
+
+if you get an error that sickbeard cant write the pid file
+you need to delete the /var/run/sickbeard directory and start sickbeard again
+
+#+begin_src sh
+sudo rmdir /var/run/sickbeard
+#+end_src
+
+stop sickbeard
+
+#+begin_src sh
+sudo service sickbeard stop
+#+end_src
+
+rename file
+
+#+begin_src sh
+mv ~/.sickbeard/autoProcessTV.cfg.sample ~/.sickbeard/autoProcessTV.cfg
+#+end_src
+
+add path to sickbeard autoProcessTV to sabnzbd
+replace "username" with your username
+/home/username/.sickbeard/autoProcessTV
