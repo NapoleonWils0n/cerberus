@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* get to know what web server a site used
+
+#+begin_src sh
+curl -I www.google.com
+#+end_src

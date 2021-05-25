@@ -1,0 +1,11 @@
+#+STARTUP: showall
+* Two quick and dirty ways to ID a web server.
+
+#+begin_src sh
+curl -I www.hak5.org
+#+end_src
+
+#+begin_src sh
+telnet www.hak5.org 80
+HEAD / HTTP/1.0
+#+end_src

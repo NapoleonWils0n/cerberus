@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* curl time to first byte
+
+#+begin_src sh
+curl -o /dev/null -w "Connect: %{time_connect} TTFB: %{time_starttransfer} Total time: %{time_total} \n" http://inserturl.here
+#+end_src

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* curl download with pause
+
+#+begin_src sh
+curl -C - -O http://somedomain.com/file.pdf
+#+end_src

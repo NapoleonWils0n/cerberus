@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find external ip address
+
+#+begin_src sh
+curl ip.appspot.com
+#+end_src
