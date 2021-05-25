@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* debian backports
+
+To access the backports repository,
+add this line to /etc/apt/sources.list:
+
+#+begin_src conf
+deb http://ftp.uk.debian.org/debian jessie-backports main
+#+end_src
