@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* grep files for links to .jpg files
+
+#+begin_src sh
+grep --exclude-dir=./.git -Hrni ".jpg)" gollum | tee ~/Desktop/jpg-results.txt
+#+end_src

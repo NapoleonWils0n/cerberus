@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* grep files for links to .doc files
+
+#+begin_src sh
+grep --exclude-dir=./.git -Hrni ".doc)" gollum | tee ~/Desktop/grep-results.txt
+#+end_src
+
+* grep for link to file
+
+#+begin_src sh
+grep --exclude-dir=./.git -Hrni "Curiositinst.doc" gollum | tee ~/Desktop/grep-file-results.txt
+#+end_src

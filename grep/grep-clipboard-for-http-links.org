@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* pipe in clipboard and grep for http links
+
+#+begin_src sh
+pbpaste | grep -o 'http://[^"]*'
+#+end_src

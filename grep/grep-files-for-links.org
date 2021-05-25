@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* grep files for directory in link
+
+grep for link to file
+
+#+begin_src sh
+grep --exclude-dir=./.git -Hrni "/CS/" gollum | tee ~/Desktop/cs-results.txt
+#+end_src

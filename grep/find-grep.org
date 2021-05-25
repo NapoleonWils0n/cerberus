@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find and grep
+
+#+begin_src sh
+find . -name "*.txt" -exec grep -il "lorem" {} \;
+#+end_src
