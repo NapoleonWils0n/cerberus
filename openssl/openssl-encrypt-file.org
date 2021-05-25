@@ -1,0 +1,29 @@
+#+STARTUP: content
+* openssl encrypt file
+** Generate private and public keys with password.
+
+#+begin_src sh
+openssl req -x509 -days 100000 -newkey rsa:2048 -keyout privatekey.pem -out publickey.pem -subj "/"
+#+end_src
+
+** Generate private and public keys without password. (add -nodes to the command)
+
+#+begin_src sh
+openssl req -x509 -nodes -days 100000 -newkey rsa:2048 -keyout privatekey.pem -out publickey.pem -subj "/"
+#+end_src
+
+** Encrypt seemingly endless amount of data.
+
+#+begin_src sh
+openssl smime -encrypt -aes256 -in LargeFile.zip -binary -outform DEM -out LargeFile_encrypted.zip publickey.pem
+#+end_src
+
+** Decrypt 
+
+#+begin_src sh
+openssl smime -decrypt -in LargeFile_encrypted.zip -binary -inform DEM -inkey privatekey.pem -out LargeFile.zip
+#+end_src
+
+
+
+

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* oathtool install for google 2 factor codes
+
+#+begin_src sh
+sudo apt-get install oathtool
+#+end_src
