@@ -1,0 +1,50 @@
+#+STARTUP: content
+* dante server install
+
+#+begin_src sh
+sudo apt-get install dante-server
+#+end_src
+
+** create a route table named tunnel
+
+#+begin_src sh
+sudo su
+echo 200 tunnel >> /etc/iproute2/rt_tables
+#+end_src
+
+Convert the Yoyo.org anti-ad server listing into an unbound dns spoof redirection list.
+
+#+begin_src sh
+wget -q -O- --header\="Accept-Encoding: gzip" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext' | \
+gunzip | \
+awk '/^127\./{
+        print "local-zone: \"" $2 "\" redirect"
+        print "local-data: \"" $2 " A 127.0.0.1\""
+}' > unbound_ad_servers
+#+end_src
+
+** copy unbound_ad_servers to /var/unbound/etc
+
+#+begin_src sh
+sudo cp unbound_ad_servers /var/unbound/etc
+#+end_src
+
+** change owner to root:_unbound on /var/unbound/etc/unbound_ad_servers
+
+#+begin_src sh
+sudo chown root:_unbound /var/unbound/etc/unbound_ad_servers
+#+end_src
+
+** start dante socks5 server
+
+#+begin_src sh
+sudo /lib/systemd/systemd-sysv-install enable danted
+sudo systemctl start danted
+sudo systemctl stop danted
+#+end_src
+
+** vpn script
+
+edit sudoers add user
+
+copy ~/git/bin/vpn-split-route.sh to /usr/bin/local
