@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* wget check for 404s
+
+#+begin_src sh
+wget get --spider -nd -r <URL>
+#+end_src

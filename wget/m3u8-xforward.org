@@ -1,19 +1,15 @@
+#+STARTUP: content
+* curl record m3u8 videos with x-forward http header
 
-# curl record m3u8 videos with x-forward http header
-#===================================================
+example url
 
+[[http://example.com/hls/live/182235/nbddx/4k296/prog.m3u8|X-Forwarded-For=22.111.222.111]]
 
-# example url
+** grep for lines ending in .ts
 
-# http://example.com/hls/live/182235/nbddx/4k296/prog.m3u8|X-Forwarded-For=22.111.222.111
-
-
-
-# grep for lines ending in .ts
-#===============================
-
+#+begin_src sh
 grep -Eo '[a-zA-Z0-9/]*/segment_[0-9]*\.ts$'
-
+#+end_src
 
 grep -E : is the same as egrep
 grep -o : only outputs what has been grepped
@@ -22,17 +18,25 @@ A-Z : is all upper case
 *: is repeat the [...] group
 \.ts$ is search for lines ending in .ts
 
+** delete prog.m3u8 from url to get the directory
 
-# delete prog.m3u8 from url to get the directory
+#+begin_src sh
 sed 's/[a-zA-Z]*\.m3u8$//' 
+#+end_src
 
-# grep for line ending in .ts
+** grep for line ending in .ts
+
+#+begin_src sh
 grep -Eo '[a-zA-Z0-9/]*/segment_[0-9]*\.ts$'
+#+end_src
 
-# sed prepend domain to ts links
+** sed prepend domain to ts links
+
+#+begin_src sh
 sed 's#^#http://example.com/hls/live/182235/nbddx/4k296/#'
+#+end_src
 
-
+#+begin_src conf
 #!/bin/bash
 
 # wget record m3u8 videos with x-forward http header
@@ -64,3 +68,4 @@ wget -c -U 'Mozilla/5.0' --header="X-Forwarded-For: $XFORWARD" "$VIDEOURL" -O- |
 done
 
 fi		
+#+end_src

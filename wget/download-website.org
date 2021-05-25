@@ -1,16 +1,17 @@
-#!/bin/bash
-
- # =========================
- # = wget download website =
- # =========================
-
+* wget download website
+** mozilla
+#+begin_src sh
 wget --wait=20 --limit-rate=20K -r -p -U Mozilla http://www.somesite.com/
+#+end_src
 
+** Safari 5 
 
-# Safari 5 
+#+begin_src sh
 wget --wait=20 --limit-rate=20K -r -p -U Mozilla/5.0 http://developer.apple.com/safaridemos/showcase/transitions/
+#+end_src
 
+** quick and dirty
 
-
-# quick and dirty
+#+begin_src sh
 wget -r -p -U Mozilla http://somesite.com/
+#+end_src

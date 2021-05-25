@@ -1,36 +1,36 @@
-# wget spider site for video links
+#+STARTUP: content
+* wget spider site for video links
 
-google for a victim
+** google for a victim
 
 intitle:index.of "Parent Directory"
 
 wget spider site for video links and save to wget-log.txt file
 
-```
+#+begin_src sh
 wget -r --spider -A mkv -o wget-log.txt http://example.com/videos
-```
+#+end_src
 
 grep wget-log.txt for video files and save to video-links.txt
 
-```
+#+begin_src sh
 grep -Eio http.+mkv wget-log.txt > video-links.txt
-```
+#+end_src
 
-install m3ucreator script
+** install m3ucreator script
 
-[m3ucreator](https://github.com/NapoleonWils0n/toolbox)
+[[https://github.com/NapoleonWils0n/toolbox]]
 
 run the m3ucreator script with the video-links.txt file
 
-```
+#+begin_src sh
 m3ucreator video-links.txt
-```
+#+end_src
 
 this will create a file called playlist.m3u
 
 remove blank lines in the playlist if needed
 
-```
+#+begin_src sh
 sed -i.bak '/^$/d' playlist.m3u
-```
-
+#+end_src

@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* wget download single page 
+
+#+begin_src sh
+wget -p -k http://example.com/index.html
+#+end_src
+

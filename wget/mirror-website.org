@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* wget mirror website
+
+#+begin_src sh
+wget -m http://textfiles.com/hacking/INTERNET/
+#+end_src

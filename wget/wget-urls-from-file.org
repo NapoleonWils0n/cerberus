@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* download a list of urls from a text file with wget
+
+#+begin_src sh
+wget -i ~/Desktop/urls.txt
+#+end_src

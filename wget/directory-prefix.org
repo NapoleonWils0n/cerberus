@@ -1,0 +1,11 @@
+#+STARTUP: showall
+* wget directory prefix
+example
+
+#+begin_src sh
+wget --directory-prefix=Downloads http://example.com/video.mov
+#+end_src
+
+#+begin_src sh
+wget --directory-prefix=Downloads
+#+end_src

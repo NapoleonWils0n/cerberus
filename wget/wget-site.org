@@ -1,8 +1,9 @@
-# wget download site
+#+STARTUP: showall
+* wget download site
 
 wget download website
 
-```
+#+begin_src sh
 wget --wait=2 --limit-rate=20K -npc -e robots=off \
 -mkp -U Mozilla https://partnerships.typepad.com/mtnw/
-```
+#+end_src
