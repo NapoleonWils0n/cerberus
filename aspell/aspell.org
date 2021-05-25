@@ -1,0 +1,42 @@
+#+STARTUP: content
+* aspell - spell checking
+
+** aspell install
+
+#+begin_src sh
+sudo apt install aspell
+#+end_src
+
+** install english dictoniary
+
+#+begin_src sh
+sudo apt install aspell-en
+#+end_src
+
+** spell check latex files
+
+#+begin_src sh
+aspell --lang=en_GB -t -c filename.tex
+#+end_src
+
+The minus t switch instructs aspell to use tex mode, 
+thus ignoring all the tex / LaTeX commands.
+
+** spell check a single file
+
+#+begin_src sh
+aspell -c filename.md
+#+end_src
+
+spell check a single file, 
+-b dont create a .bak file
+
+#+begin_src sh
+aspell -b -c filename.md
+#+end_src
+
+** aspell find latex file and spell check
+
+#+begin_src sh
+find ch*.tex -exec aspell --lang=en_GB -t -c {} \
+#+end_src

@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* at
+
+#+begin_src sh
+sudo apt install at
+#+end_src
+
+start atd before using the at command
+
+#+begin_src sh
+sudo systemctl start atd
+#+end_src
