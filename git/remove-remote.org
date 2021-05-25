@@ -1,0 +1,20 @@
+#+STARTUP: content
+* remove a remote from your local git repo
+
+** view current remotes
+
+#+begin_src sh
+git remote -v
+#+end_src
+
+** git remove remote
+
+#+begin_src sh
+git remote rm destination
+#+end_src
+
+**  view remote
+
+#+begin_src sh
+git remote -v
+#+end_src

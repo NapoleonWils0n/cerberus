@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* git add multiple files by bracketing
+
+#+begin_src sh
+git add image[123456].jpg 
+#+end_src

@@ -1,0 +1,22 @@
+#+STARTUP: content
+* rename remote git repo
+
+** view remote
+
+#+begin_src sh
+git remote -v
+#+end_src
+
+** rename remote
+
+Change remote name from 'origin' to 'destination'
+
+#+begin_src sh
+git remote rename origin destination
+#+end_src
+
+** view remote
+
+#+begin_src sh
+git remote -v
+#+end_src

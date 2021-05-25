@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* git diff meld
+
+#+begin_src sh
+meld "$2" "$5" > /dev/null 2>&1
+#+end_src

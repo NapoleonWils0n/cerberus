@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* git remove all
+
+#+begin_src sh
+git rm -r --cached *.*
+#+end_src

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* enable git color
+
+#+begin_src sh
+git config --global color.ui true
+#+end_src

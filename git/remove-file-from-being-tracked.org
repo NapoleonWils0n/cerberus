@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* remove file from being tracked by git , but dont delete it
+
+#+begin_src sh
+git rm --cached filename
+#+end_src

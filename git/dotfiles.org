@@ -1,0 +1,44 @@
+#+STARTUP: showall
+* put ~ .dotfiles under git
+
+#+begin_src sh
+git init
+#+end_src
+
+cd .git/info
+edit the exludes file and add the following code
+
+#+begin_src conf
+/*
+!/.bash_profile
+!/.bash_aliases
+!/.git-completion.bash
+!/.git-prompt.sh
+!/.gitconfig
+!/.gitignore-global
+!/.inputrc
+!/.mplayer
+!/.tm_properties
+!/.vimrc
+!/.vim
+#+end_src
+
+* do a git status
+
+#+begin_src sh
+git add .
+git commit -m "dot files added"
+git status
+#+end_src
+
+* mount the git.dmg and clone into it
+
+#+begin_src sh
+git clone --bare ~ /Volumes/git/home.git
+#+end_src
+
+* add remote origin
+
+#+begin_src sh
+git remote add origin /Volumes/git/home.git
+#+end_src

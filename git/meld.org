@@ -1,0 +1,40 @@
+#+STARTUP: content
+* script to use meld as an external diff view for git
+
+** change directory to your user bin directory
+
+#+begin_src sh
+cd ~/bin
+#+end_src
+
+** create the git-diff script for meld
+
+#+begin_src sh
+vim git-diff
+#+end_src
+
+add the following code to the script
+
+#+begin_src conf
+#!/bin/sh
+meld "$2" "$5" > /dev/null 2>&1
+#+end_src
+
+* make the script executable
+
+#+begin_src sh
+chmod +x git-diff.sh
+#+end_src
+
+** add to your ~/.gitconfig
+
+#+begin_src conf
+[diff]
+        external = /usr/local/bin/git-diff.sh
+#+end_src
+
+** meld will now open as the external diff viewer
+
+#+begin_src sh
+git diff Head somefile &
+#+end_src

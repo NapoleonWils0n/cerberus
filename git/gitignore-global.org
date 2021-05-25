@@ -1,0 +1,19 @@
+#+STARTUP: content
+* gitignore global
+** create the gitignore_global file
+
+#+begin_src sh
+vim ~/.gitignore_global
+#+end_src
+
+#+begin_src conf
+.SyncID
+.SyncIgnore
+#+end_src
+
+** add gitignore_global to all git repos
+
+#+begin_src sh
+git config --global core.excludesfile ~/.gitignore_global
+#+end_src
+

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* basic git gui
+
+#+begin_src sh
+gitk
+#+end_src

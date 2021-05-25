@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* git discard changes 
+
+discard changes in working directory
+
+#+begin_src sh
+git checkout -- .
+#+end_src

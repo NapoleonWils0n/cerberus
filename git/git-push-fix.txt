@@ -1,8 +1,0 @@
-git pull
-Merge conflicts resolving:
-
-git push
-If you confirm that your new code is all fine you can use:
-
-git push -f origin master.
-Where -f stands for "force commit".

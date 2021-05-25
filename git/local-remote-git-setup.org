@@ -1,0 +1,98 @@
+#+STARTUP: content
+* Git local and remote set up 
+
+install git
+
+** set up your dtails for commits
+
+#+begin_src sh
+git config --global user.name "John Doe"
+git config --global user.email johndoe@gmail.com
+#+end_src
+
+** cd into project
+
+#+begin_src sh
+git init
+git add .
+git commit -m "project added"
+git status
+#+end_src
+
+** Add username and email for commits
+
+#+begin_src sh
+git config --global user.name "John Doe" 
+git config --global user.email "johndoe@gmail.com"
+#+end_src
+
+** ignore ds_store files
+
+#+begin_src sh
+echo .DS_Store >> ~/.gitignore
+git config --global core.excludesfile /Users/johndoe/.gitignore
+#+end_src
+
+** show git config
+
+#+begin_src sh
+git config -l
+#+end_src
+
+** create a dmg for git repo and store in dropbox
+
+clone git working copy to remote location
+
+#+begin_src sh
+git clone --bare ~/Gitrepo /Volumes/git/Gitrepo.git
+#+end_src
+
+** add remote location to local git working copy
+
+#+begin_src sh
+git remote add origin /Volumes/git/Gitrepo.git
+#+end_src
+
+** push local copy your remote
+
+#+begin_src sh
+git push origin master
+#+end_src
+
+** clone remote 
+
+#+begin_src sh
+git clone /Volumes/git/Gitrepo.git
+#+end_src
+
+** pull changes from master to working copy
+
+#+begin_src sh
+git pull
+#+end_src
+
+* git on ssh server
+
+** clone git working copy to remote location
+
+#+begin_src sh
+git clone --bare ~ ~/Desktop/home.git
+#+end_src
+
+** add remote location to local git working copy
+
+#+begin_src sh
+git remote add ssh johndoe@sshserver:/home/johndoe/git/home.git
+#+end_src
+
+** scp git to sshserver
+
+#+begin_src sh
+scp -r ~/Desktop/home.git johndoe@sshserver:/home/johndoe/git/home.git
+#+end_src
+
+** push local copy your remote
+
+#+begin_src sh
+git push -u ssh master
+#+end_src

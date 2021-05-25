@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* git log
+
+#+begin_src sh
+git log --pretty="%h, %cn, %cr"
+#+end_src

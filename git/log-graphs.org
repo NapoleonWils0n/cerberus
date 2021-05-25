@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* git log graph
+
+#+begin_src sh
+git log --oneline --all --graph --decorate
+#+end_src

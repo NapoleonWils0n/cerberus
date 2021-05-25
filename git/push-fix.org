@@ -1,0 +1,20 @@
+#+STARTUP: showall
+* git push fix
+
+#+begin_src sh
+git pull
+#+end_src
+
+Merge conflicts resolving:
+
+#+begin_src sh
+git push
+#+end_src
+
+If you confirm that your new code is all fine you can use:
+
+#+begin_src sh
+git push -f origin master.
+#+end_src
+
+Where -f stands for "force commit".
