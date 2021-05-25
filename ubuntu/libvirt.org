@@ -1,9 +1,8 @@
-#!/bin/bash
+#+STARTUP: showall
+* libvirt
 
+#+begin_src sh
 sudo apt-get install qemu-kvm libvirt-bin bridge-utils virt-manager
-
-
 mkdir -p libvirtd/images
-
 sudo chown -R djwilcox:kvm libvirtd/
-
+#+end_src
