@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* sed strip html tags - edit original and make backup
+
+#+begin_src sh
+sed -i.bak 's/<[a-zA-Z\/][^>]*>//g' 
+#+end_src
+

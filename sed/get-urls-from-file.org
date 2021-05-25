@@ -1,0 +1,21 @@
+#+STARTUP: showall
+* sed get image urls from html file
+
+#+begin_src sh
+sed -n 's/.*<img src="\([^"]*\)".*/\1/Ip' index.html > links.html
+#+end_src
+
+** sed get image urls from html file and change src to png
+
+#+begin_src sh
+cat ideas.htm  | sed -n 's/.*<img src="\([^"]*\)".*/\1/I;s/jpe\?g/png/p'
+#+end_src
+
+** quick and dirty search for .jpeg, .jpg, .gif
+
+#+begin_src sh
+sed -i 's/\.\(jpe\?g\|gif\)/\.png/I'
+#+end_src
+
+
+

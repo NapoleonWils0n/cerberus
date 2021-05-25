@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* sed find all local links that dont start with http and add html extension
+
+#+begin_src sh
+sed -i "/http\?s:\/\/\|\.[a-z]/! { /href/ s/.*href=['\"]\([^'\"]*\)/&.html/g }" index.html 
+#+end_src
+

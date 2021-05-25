@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* remove first four characters from file name
+
+#+begin_src sh
+for file in *.avi
+do
+newname=`echo $file | sed 's/^..//g'`
+mv "$file" "$newname"
+done
+#+end_src

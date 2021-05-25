@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* remove text big
+
+#+begin_src sh
+sed -e 's/b[^g]*g//g' big.txt
+#+end_src
+
+* remove html tags
+
+#+begin_src sh
+sed -e 's/<[^>]*>//g' test.html
+#+end_src

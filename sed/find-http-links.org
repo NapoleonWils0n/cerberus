@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* sed find all http links 
+
+#+begin_src sh
+sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp" file.html
+#+end_src

@@ -1,15 +1,14 @@
-#!/bin/bash
+#+STARTUP: showall
+* sed remove http://socialbysocial.net/profiles/blogs/
 
-
-# sed remove http://socialbysocial.net/profiles/blogs/
-#=====================================================
-
-
+#+begin_src sh
 sed -i 's#http://socialbysocial.net/profiles/blogs/##g' file.html
+#+end_src
 
-
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" \
 -exec sed -i 's#http://socialbysocial.net/profiles/blogs/##g' '{}' \;
+#+end_src
 
 
 

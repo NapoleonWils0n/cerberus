@@ -1,9 +1,14 @@
-#!/bin/bash
+#+STARTUP: showall
+* sed grep links
 
-
+#+begin_src sh
 grep -oP '(?<=href=")[^"]*(?=")'
+#+end_src
 
+#+begin_src sh
 sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp"
+#+end_src
 
-
+#+begin_src sh
 cat links.html | grep -o '<a .*href=.*>' | sed -e 's/<a /\n<a /g' | sed -e 's/<a .*href=['"'"'"]//' -e 's/["'"'"'].*$//' -e '/^$/ d' > new.html
+#+end_src

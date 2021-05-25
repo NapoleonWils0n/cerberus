@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* sed remove http://mediablends.org.uk/ domain from local links in markdown
+
+#+begin_src sh
+find . -type f -regex ".*\.md$" \
+-exec sed -i 's#\(http://mediablends.org.uk/\)##g' '{}' \;
+#+end_src

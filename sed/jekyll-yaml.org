@@ -1,13 +1,14 @@
-# sed insert yaml header
+#+STARTUP: showall
+* sed insert yaml header
 
 sed insert empty yaml header at top of file for jekyll
 
-```
+#+begin_src sh
 sed -i '1i ---\n---\n' foo.md 
-```
+#+end_src
 
 * find markdown files and use sed to insert yaml header
 
-```
+#+begin_src sh
 find . -type f -regex ".*\.md$" -exec sed -i '1i ---\n---\n' '{}' \;
-```
+#+end_src

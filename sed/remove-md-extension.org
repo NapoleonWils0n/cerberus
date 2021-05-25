@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* sed remove .md file extension from links for gollum wiki
+
+#+begin_src sh
+find . -type f -regex ".*\.\(md\)$" -exec sed -i 's/\.\(md\)//g' '{}' \;
+#+end_src
+

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* sed find all local links that dont start with http or end with .domain or .extension
+
+#+begin_src sh
+sed -n "/http\?s:\/\/\|http:\/\/\|\.[a-z]/! { /href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp }" file.html
+#+end_src

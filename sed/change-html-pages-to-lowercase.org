@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* sed - change html tag names only to lowercase
+
+change html tag names only to lowercase
+
+#+begin_src sh
+:%s/<\/\?\zs\(\a\+\)\ze[ >]/\L\1/g
+#+end_src
+
+change tag attributes to lowercase
+
+#+begin_src sh
+:%s/\(<[^>]*\)\@<=\<\(\a*\)\ze=['"]/\L\2/g
+#+end_src
+

@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* sed remove all html tags from file
+
+sed remove all html tags from file and save to new file
+
+#+begin_src sh
+sed -e 's/<[^>]*>//g' original.html > newfile.html
+#+end_src
+
+sed remove all html tags from file and save to original file
+
+#+begin_src sh
+sed -i -e 's/<[^>]*>//g' filename.html
+#+end_src

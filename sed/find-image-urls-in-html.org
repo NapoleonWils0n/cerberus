@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* sed get image urls from html file
+
+#+begin_src sh
+sed -n 's/.*<img src="\([^"]*\)".*/\1/Ip' index.html
+#+end_src
+

@@ -1,7 +1,8 @@
-# sed prepend domain to file
+#+STARTUP: showall
+* sed prepend domain to file
 
 sed prepend domain to text file
 
-```
+#+begin_src sh
 sed -i.bak 's#^#http://example.com#' file.txt
-```
+#+end_src
