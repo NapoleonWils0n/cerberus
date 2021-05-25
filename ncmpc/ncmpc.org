@@ -1,14 +1,16 @@
-#!/bin/bash
+#+STARTUP: showall
+* NCurses Music Player Client
 
-# NCurses Music Player Client
-#============================
-
-# install
+#+begin_src sh
 sudo apt-get install ncmpc
+#+end_src
 
-# create the ncmpc config
+create the ncmpc config
+
+#+begin_src sh
 mkdir -p ~/.ncmpc
 cp /usr/share/doc/ncmpc/examples/config.sample.gz ~/.ncmpc/
 cd ~/.ncmpc
 gzip -d config.sample.gz
 mv config.sample config
+#+end_src
