@@ -1,6 +1,11 @@
-#!/bin/bash
+#+STARTUP: showall
+* kodi ppa
 
+kodi ppa set up
+
+#+begin_src sh
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:team-xbmc/ppa
 sudo apt-get update
 sudo apt-get install kodi
+#+end_src
