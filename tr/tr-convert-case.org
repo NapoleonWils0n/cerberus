@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* tr convert case
+
+#+begin_src sh
+tr 'A-Z' 'a-z' <before.txt >after.txt
+#+end_src

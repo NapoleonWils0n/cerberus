@@ -1,0 +1,13 @@
+#+STARTUP: showall
+
+download the youtube-del script
+
+#+begin_src sh
+wget http://youtube-dl.org/downloads/2013.08.17/youtube-dl -O ~/bin/youtube-dl
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+chmod +x ~/bin/youtube-dl
+#+end_src

@@ -1,20 +1,20 @@
-# youtube-dl download options
+#+STARTUP: showall
+* youtube-dl download options
 
+download users channel as numbered list
 
-## download users channel as numbered list
-
-```
+#+begin_src sh
 youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4' \
 --yes-playlist --restrict-filenames \
 -o '%(playlist)s/%(playlist_index)s_%(title)s.%(ext)s' \
 'https://www.youtube.com/user/socialreporter'
-```
+#+end_src
 
-## download users playlists
+download users playlists
 
-```
+#+begin_src sh
 youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4' \
 --yes-playlist --restrict-filenames \
 'https://www.youtube.com/user/socialreporter/playlists' \
 -o '%(playlist)s/%(playlist_index)s_%(title)s.%(ext)s' 
-```
+#+end_src

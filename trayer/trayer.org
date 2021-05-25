@@ -1,6 +1,12 @@
-#!/bin/bash
+#+STARTUP: showall
+* trayer install
 
-sudo pacman -S trayer
+#+begin_src sh
+sudo apt install trayer
+#+end_src
 
-# start trayer
+** start trayer
+
+#+begin_src sh
 trayer --widthtype request --expand true  --monitor primary --height 18  --alpha 235 --edge bottom --align right --distance 30 --SetDockType true &
+#+end_src

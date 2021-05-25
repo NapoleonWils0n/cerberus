@@ -1,7 +1,8 @@
-# youtube-dl download subtitles
+#+STARTUP: showall
+* youtube-dl download subtitles
 
 youtube-dl download youtube subtitles
 
-```
+#+begin_src sh
 youtube-dl --write-auto-sub https://www.youtube.com/watch?v=HLQw_jkCfeo
-```
+#+end_src

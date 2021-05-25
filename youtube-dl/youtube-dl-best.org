@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* youtube-dl best setting download
+
+youtube-dl download best quality at 1920 x 1080
+
+#+begin_src sh
+youtube-dl -f 'best[width<=1920,height<=1080]' url-goes-here
+#+end_src

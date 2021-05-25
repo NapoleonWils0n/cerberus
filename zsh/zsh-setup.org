@@ -1,0 +1,8 @@
+#+STARTUP: content
+* zsh setup
+
+install zsh and zsh-syntaxt-highlighting
+
+#+begin_src sh
+sudo apt install install zsh zsh-syntax-highlighting
+#+end_src

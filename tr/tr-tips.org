@@ -1,0 +1,44 @@
+#+STARTUP: content
+* tr tips
+
+** Translate braces into parenthesis
+
+#+begin_src sh
+tr '{}' '()' < inputfile > outputfile
+#+end_src
+
+** Translate white-space to tabs
+
+#+begin_src sh
+echo "This is for testing" | tr [:space:] '\t'
+#+end_src
+
+** Squeeze repetition of characters using -s
+
+#+begin_src sh
+echo "This   is   for    testing" | tr -s [:space:]
+#+end_src
+
+** Delete specified characters using -d option
+
+#+begin_src sh
+echo "the geek stuff" | tr -d 't'
+#+end_src
+
+** Complement the sets using -c option
+
+#+begin_src sh
+echo "my username is 432234" | tr -cd [:digit:]
+#+end_src
+
+** Remove all non-printable character from a file
+
+#+begin_src sh
+tr -cd [:print:] < file.txt
+#+end_src
+
+** Join all the lines in a file into a single line
+
+#+begin_src sh
+tr -s '\n' ' ' < file.txt
+#+end_src
