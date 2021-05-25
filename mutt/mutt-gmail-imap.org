@@ -1,54 +1,54 @@
-#!/bin/bash
+#+STARTUP: showall
+* mutt gmail imap set up
 
-
-# mutt gmail imap set up
-#=====================================================================
-
+#+begin_src sh
 sudo apt-get install mutt urlview
+#+end_src
+
+** google create application passwords
+
+google create application passwords for 
+
+imap
+smtp
+goobook
 
 
-# google create application passwords
-#=====================================================================
+** gpg generate keys to encrypt passwords
 
-# google create application passwords for 
-
-# imap
-# smtp
-# goobook
-
-
-# gpg generate keys to encrypt passwords
-#=====================================================================
-
+#+begin_src sh
 gpg --gen-key
+#+end_src
 
-# list keys
-#==========
+** list keys
+
+#+begin_src sh
 gpg --list-keys
+#+end_src
 
-# create revoke certificatre
-#===========================
+** create revoke certificatre
 
-# replace 12345678 with your gpg key id
+replace 12345678 with your gpg key id
+
+#+begin_src sh
 gpg --output revoke.asc --gen-revoke 12345678
+#+end_src
 
+** create mutt files and directories
 
-
-
-# create mutt files and directories
-#=====================================================================
-
+#+begin_src sh
 mkdir -p ~/.mutt/cache/headers
 mkdir ~/.mutt/cache/bodies
 touch ~/.mutt/certificates
 touch ~/.mutt/muttrc
 touch ~/.mutt/mailcap
+#+end_src
 
+** gpg encrypt mutt passwords so they arent stored in plain text
 
-# gpg encrypt mutt passwords so they arent stored in plain text
-#=====================================================================
+store password in an encrypted gpg file not plain text
 
-# store password in an encrypted gpg file not plain text
+#+begin_src sh
 vim ~/.mutt/passwords
 set imap_pass="google-application-password"
 set smtp_pass="google-application-password"
@@ -59,19 +59,23 @@ cache  certificates  mailcap  muttrc  passwords  mutt-passwords.gpg
 
 shred ~/.mutt/passwords
 rm ~/.mutt/passwords
+#+end_src
 
+** goobook gmail contacts
 
-# goobook gmail contacts
-#=====================================================================
-
+#+begin_src sh
 sudo pip install goobook
+#+end_src
 
-# googbook config
+googbook config
+
+#+begin_src sh
 vim ~/.goobookrc
+#+end_src
 
-# add the following code to ~/.goobookrc
+** add the following code to ~/.goobookrc
 
-
+#+begin_src conf
 # "#" or ";" at the start of a line makes it a comment.
 [DEFAULT]
 # If not given here, email and password is taken from .netrc using
@@ -81,57 +85,76 @@ passwordeval: gpg --no-tty --use-agent -q -d ~/.mutt/goobookrc.gpg
 ;max_results: 9999
 cache_filename: /home/djwilcox/.goobook_cache
 ;cache_expiry_hours:
+#+end_src
 
 
-# set up encrypted goobookrcpass file
-#=====================================================================
+** set up encrypted goobookrcpass file
+
+#+begin_src sh
 vim ~/.goobookrcpass
+#+end_src
 
-# paste in the following replace 
+** paste in the following replace 
+
+#+begin_src sh
 password: google-application-password
+#+end_src
 
-# encrypt the file
+** encrypt the file
+
+#+begin_src sh
 gpg -r danieljwilcox@gmail.com -e ~/.goobookrcpass
 mv ~/.goobookrcpass.gpg ~/.goobookrc.gpg
 
 shred ~/.goobookrcpass
 rm ~/.goobookrcpass
+#+end_src
 
+** create  ~/.gpg/gpg.conf
 
-# create  ~/.gpg/gpg.conf
-#=======================================================================
+add gpg.conf to ~/.gpg with use-agent uncommented to use gpg use-agent
 
-# add gpg.conf to ~/.gpg with use-agent uncommented to use gpg use-agent
-
+#+begin_src sh
 vim ~/.gpg/gpg.conf
+#+end_src
 
-# add the following code to ~/.gpg/gpg.conf
+add the following code to ~/.gpg/gpg.conf
+
+#+begin_src conf
 use-agent
+#+end_src
 
+** urlview open urls with chromium-browser
 
-# urlview open urls with chromium-browser
-#=======================================================================
+open urls in chromium
 
-# open urls in chromium
+#+begin_src sh
 vim ~/.urlview
+#+end_src
 
-# add the following code to ~/.urlview
+** add the following code to ~/.urlview
 
+#+begin_src conf
 REGEXP (((https?|ftp|gopher)://|(mailto|file|news):)[^’ <>"]+|(www|web|w3).[-a-z0-9.]+)[^’ .,;<>":]
 COMMAND chromium-browser --no-referrers %s
+#+end_src
 
+** create the muttrc config file ~/.muttrc
 
-# create the muttrc config file ~/.muttrc
-#=====================================================================
+copy gpg default settings to the desktop
+then copy the contents to your ~/.muttrc file
 
-# copy gpg default settings to the desktop
-# then copy the contents to your ~/.muttrc file
+#+begin_src sh
 cp /usr/share/doc/mutt/examples/gpg.rc ~/Desktop/gpg.rc
+#+end_src
 
+#+begin_src sh
 vim ~/.muttrc
+#+end_src
 
-# paste in the code below
++ paste in the code below
 
+#+begin_src conf
 set from = "danieljwilcox@gmail.com"
 set realname = "Daniel J Wilcox"
 
@@ -242,14 +265,15 @@ set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
 # daniel j wilcox pgp
 set pgp_use_gpg_agent="yes"
 set my_pgp_id="4090C806"
+#+end_src
 
+** mailcap
 
-
-# mailcap
-#=====================================================================
-
+#+begin_src sh
 vim ~/.mutt/mailcap
+#+end_src
 
+#+begin_src conf
 # view html attachments with lynx
 text/html; lynx %s
 
@@ -261,10 +285,8 @@ image/gif; ristretto %s
 
 # pdfs open with evince
 application/pdf; evince %s
+#+end_src
 
-#=====================================================================
-
-
-# start mutt and you should be prompted to save the password in the keyring and unlock at login
+start mutt and you should be prompted to save the password in the keyring and unlock at login
 
   
