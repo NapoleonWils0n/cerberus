@@ -1,5 +1,7 @@
-# iptables for rtorrent
+#+STARTUP: content
+* iptables for rtorrent
 
+#+begin_src sh
 sudo iptables -L
 
 # flush existing rules and set chain policy setting to DROP
@@ -46,49 +48,55 @@ sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVAL
 sudo iptables -A OUTPUT -m state --state INVALID -j DROP
 sudo iptables -A OUTPUT -o lo -j ACCEPT
 
+#+end_src
 
-# save iptables rules
-#====================
+* save iptables rules
 
+save the ip tables, switch to root first
 
-# save the ip tables, switch to root first
+#+begin_src sh
 sudo su
+#+end_src
 
+#+begin_src sh
 iptables-save > /etc/iptables/iptables.rules
+#+end_src
 
+**  resote iptables, switch to root first
 
-# resote iptables, switch to root first
+#+begin_src sh
 sudo su
+#+end_src
 
+#+begin_src sh
 iptables-restore < /etc/iptables/iptables.rules
+#+end_src
 
+** edit iptables.service
 
-
-
-# edit iptables.service
-#=============================
+#+begin_src sh
 sudo nano /usr/lib/systemd/system/iptables.service
+#+end_src
 
+#+begin_src conf
+[Unit]
+Description=Packet Filtering Framework
 
-    [Unit]
-    Description=Packet Filtering Framework
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/iptables-restore /etc/iptables/iptables.rules
+ExecStop=/usr/lib/systemd/scripts/iptables-flush
 
-    [Service]
-    Type=oneshot
-    RemainAfterExit=yes
-    ExecStart=/usr/sbin/iptables-restore /etc/iptables/iptables.rules
-    ExecStop=/usr/lib/systemd/scripts/iptables-flush
+[Install]
+WantedBy=multi-user.target
+#+end_src
 
-    [Install]
-    WantedBy=multi-user.target
+** enable iptables service
 
-
-# enable iptables service
-#=============================
-
-
-# systemctl enable iptables
-# systemctl start iptables
-
-# systemctl reload iptables
+#+begin_src sh
+sudo systemctl enable iptables
+sudo systemctl start iptables
+sudo systemctl reload iptables
+#+end_src
 
