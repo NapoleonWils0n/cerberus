@@ -1,29 +1,32 @@
-#!/bin/bash
+#+STARTUP: content
+* rsync ssh sync local calibre library to cops ebook server
 
-# rsync ssh sync local calibre library to cops ebook server
-#===========================================================
+copy your ssh keys to the server
 
+set up ssh config for the server 
 
-# copy your ssh keys to the server
-
-
-# set up ssh config for the server 
+#+begin_src sh
 vim ~/.ssh/config
+#+end_src
 
-
+#+begin_src conf
 # cops server example ssh config
 Host cops
 User root
 Port 22
 HostName 10.100.8.90
+#+end_src
 
+** rsync ssh dry run
 
-
-# rsync ssh dry run
+#+begin_src sh
 rsync -avz -e ssh --dry-run --progress --delete /home/username/Documents/calibre/ cops:/var/www/html/calibre/
+#+end_src
 
+** rsync ssh 
 
-# rsync ssh 
+#+begin_src sh
 rsync -avz -e ssh --progress --delete /home/username/Documents/calibre/ cops:/var/www/html/calibre/
+#+end_src
 
 

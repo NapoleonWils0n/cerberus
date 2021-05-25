@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # rsync system backup to external usb drive
 #==========================================
