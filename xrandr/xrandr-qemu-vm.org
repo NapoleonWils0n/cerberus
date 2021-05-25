@@ -1,102 +1,102 @@
-# xrandr set display
+#+STARTUP: content
+* xrandr set display
 
 xrandr set display size, also works for qemu vm
-
 use cvt and width and height to get modeline code
 
-```
+#+begin_src sh
 cvt 1366 768
-```
+#+end_src
 
 The output from the cvt command should look like this
 
-```
+#+begin_src sh
 Modeline "1368x768_60.00" 85.25 1368 1440 1576 1784 768 771 781 798 -hsync +vsync
-```
+#+end_src
 
 Copy the modeline code and create the following commands to run in the terminal to change the screen size
 
-```
+#+begin_src sh
 xrandr --newmode "1368x768_60.00" 85.25 1368 1440 1576 1784 768 771 781 798 -hsync +vsync
 xrandr --addmode Virtual-0 1368x768_60.00
 xrandr --output Virtual-0 --mode 1368x768_60.00
-```
+#+end_src
 
 You may need to change the name used if the above doesnt work
 
-```
+#+begin_src sh
 xrandr --newmode "laptop" 85.25 1368 1440 1576 1784 768 771 781 798 -hsync +vsync
 xrandr --addmode Virtual-0 laptop
 xrandr --output Virtual-0 --mode laptop
-```
+#+end_src
 
-## xprofile
+** xprofile
 
 create ~/.xprofile file
 
-```
+#+begin_src sh
 vim ~/.xprofile
-```
+#+end_src
 
 Add the xrandr code to the ~/.xprofile file and save
 
-```
+#+begin_src sh
 xrandr --newmode "laptop" 85.25 1368 1440 1576 1784 768 771 781 798 -hsync +vsync
 xrandr --addmode Virtual-0 laptop
 xrandr --output Virtual-0 --mode laptop
-```
+#+end_src
 
-### gnome script
+** gnome script
 
 if you are using gnome you need to add the code to a script,
 create a bin directory, add bin directory to bash path,
 make the script executable and then source your bashrc
 
-* create bin directory in home
+create bin directory in home
 
-```
+#+begin_src sh
 mkdir -p ~/bin
-```
+#+end_src
 
-* edit bashrc and add path to bin directory
+edit bashrc and add path to bin directory
 
-```
+#+begin_src sh
 vim ~/.bashrc
-```
+#+end_src
 
-* add the code below to your ~/.bashrc
+add the code below to your ~/.bashrc
 
-```
+#+begin_src sh
 # home bin 
 if [ -d "$HOME/bin" ]; then
    PATH="$HOME/bin:$PATH"
 fi
-```
+#+end_src
 
-* create the xrandr script
+** create the xrandr script
 
-```
+#+begin_src sh
 vim ~/bin/laptop-display
-```
+#+end_src
 
-* add the code below to your script
+add the code below to your script
 
-```
+#+begin_src sh
 #!/bin/sh
 
 xrandr --newmode "laptop" 85.25 1368 1440 1576 1784 768 771 781 798 -hsync +vsync
 xrandr --addmode Virtual-0 laptop
 xrandr --output Virtual-0 --mode laptop
-```
+#+end_src
 
-* make the script executable
+make the script executable
 
-```
+#+begin_src sh
 chmod +x ~/bin/laptop-display
-```
+#+end_src
 
-* source your ~/.bashrc to pick up the new script
+source your ~/.bashrc to pick up the new script
 
-```
+#+begin_src sh
 source ~/.bashrc
-```
+#+end_src

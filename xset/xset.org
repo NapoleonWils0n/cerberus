@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* xset screen power saving 
+
+set display to blank after 1 hour
+
+#+begin_src sh
+xset s 3600 3600
+#+end_src
