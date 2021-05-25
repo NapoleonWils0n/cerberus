@@ -1,0 +1,35 @@
+#+STARTUP: showall
+* install pv 
+
+#+begin_src sh
+sudo apt install pv
+#+end_src
+
+** backup sdcard to image
+
+#+begin_src sh
+df -h
+#+end_src
+
+#+begin_src sh
+sudo su
+#+end_src
+
+#+begin_src sh
+dd bs=4M if=/dev/sdb | pv -trab | dd bs=4M  of=/home/djwilcox/Desktop/raspberry_pi-$(date +"%H-%M-%m-%d-%y").img
+#+end_src
+
+** restore image to sdcard
+
+#+begin_src sh
+df -h
+#+end_src
+
+#+begin_src sh
+sudo su
+#+end_src
+
+#+begin_src sh
+dd bs=4M if=raspberry_pi-14-34-01-24-15.img | pv -trab | dd bs=4M of=/dev/sdb 
+#+end_src
+

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* show hard drive size
+
+#+begin_src sh
+df -h
+#+end_src

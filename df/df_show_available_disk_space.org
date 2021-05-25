@@ -1,0 +1,18 @@
+#+STARTUP: showall
+* df -h show available disk space
+
+#+begin_src sh
+df -h
+#+end_src
+
+** df -H humand readable output
+
+#+begin_src sh
+df -H 
+#+end_src
+
+** df -m show 1mb blocks
+
+#+begin_src sh
+df -m
+#+end_src

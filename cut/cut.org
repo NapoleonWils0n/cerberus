@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* cut
+
+display the third column delimited by a blank space
+
+#+begin_src sh
+ls -l | cut -d" " -f3
+#+end_src

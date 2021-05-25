@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* date - year month day
+
+date with year month day
+
+#+begin_src sh
+$(date +"%Y-%m-%d")
+#+end_src
