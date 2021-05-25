@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* set write permissions on mounted drive for current user
+
+#+begin_src sh
+cd /media/username/drivename
+#+end_src
+
+#+begin_src sh
+sudo chown -R $USER .
+#+end_src
