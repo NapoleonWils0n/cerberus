@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* find and remove synology @eaDir
+
+find and echo the files first, before deleting
+
+#+begin_src sh
+find . -name "@eaDir" -type d -print |while read FILENAME; do echo "${FILENAME}"; done
+#+end_src
+
+find and delete synology @eaDir
+
+#+begin_src sh
+find . -name "@eaDir" -type d -print |while read FILENAME; do rm -rf "${FILENAME}"; done
+#+end_src

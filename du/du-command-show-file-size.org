@@ -1,0 +1,32 @@
+#+STARTUP: content
+* du command show file size
+** show file size of file
+
+#+begin_src sh
+du file
+#+end_src
+
+** show file size of all files in a directory
+
+#+begin_src sh
+du directory
+#+end_src
+
+** show file size of directory
+
+#+begin_src sh
+du -s directory
+#+end_src
+
+** seperate totals for directories and files
+
+#+begin_src sh
+du -s * .[^.]*
+#+end_src
+
+** human readable output
+
+#+begin_src sh
+du -sh directory
+#+end_src
+

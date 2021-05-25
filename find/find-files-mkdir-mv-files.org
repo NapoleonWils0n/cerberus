@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find files make directory move files into directory
+
+#+begin_src sh
+find . -type f -print0 | xargs -0 -l sh -c 'mkdir "${1%.*}" && mv "$1" "${1%.*}"' sh
+#+end_src

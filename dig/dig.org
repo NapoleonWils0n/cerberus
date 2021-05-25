@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* dig
+
+#+begin_src sh
+dig mx hak5.org
+#+end_src
+
+** zone transfer
+
+#+begin_src sh
+dig -t AXFR hak6.org @ns1.zoneedit.com
+#+end_src

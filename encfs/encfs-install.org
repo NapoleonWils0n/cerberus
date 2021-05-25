@@ -1,0 +1,57 @@
+#+STARTUP: content
+* install encfs
+
+#+begin_src sh
+sudo apt-get install encfs
+#+end_src
+
+** install gnome-encfs-manager 
+
+Add the following line to your /etc/apt/sources.list:
+
+#+begin_src conf
+deb http://ppa.launchpad.net/gencfsm/ppa/ubuntu precise main
+#+end_src
+
+#+begin_src sh
+sudo apt-get update && sudo apt-get install gnome-encfs-manager
+#+end_src
+
+** create the encrypted directory
+
+#+begin_src sh
+encfs ~/Dropbox/.encrypted ~/Private
+#+end_src
+
+press p for paranoid mode
+then enter your password
+
+press y to create the ~/Dropbox/.encrypted directory
+press y to create the ~/Private directory
+
+
+open the Gnome Encfs Manager application
+click import stash, select the ~/Dropbox/.encrypted directory as the stash
+select the ~/Private directory as the mount point
+
+** back up the ~/Dropbox/.encrypted/.encfs6.xml file
+
+#+begin_src sh
+cp ~/Dropbox/.encrypted/.encfs6.xml ~/Documents/.encfs6.xml
+#+end_src
+
+dropbox exclude the EncFS key .encfs6.xml file
+this will delete the .encfs6.xml file from the dropbox directory
+
+#+begin_src sh
+dropbox exclude add ~/Dropbox/.encrypted/.encfs6.xml
+#+end_src
+
+** copy the .encfs6.xml back to ~/Dropbox/.encrypted/.encfs6.xml
+
+#+begin_src sh
+cp ~/Documents/.encfs6.xml ~/Dropbox/.encrypted/.encfs6.xml
+#+end_src
+
+Open the Dropbox site and delete the .encrypted/.encfs6.xml file
+

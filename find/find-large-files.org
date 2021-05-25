@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find files larger than 100mb
+
+#+begin_src sh
+find . -type f -size +100M
+#+end_src

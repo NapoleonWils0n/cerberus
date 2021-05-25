@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* find doc files and echo to screen and save as a file with tee
+
+#+begin_src sh
+find . -type f -regex ".*\.\(doc\|DOC\)$" -exec echo '{}' \; | tee ~/Desktop/results.txt
+#+end_src
+
+** delete .doc files
+
+#+begin_src sh
+find . -type f -regex ".*\.doc$" -exec rm '{}' \;
+#+end_src
+

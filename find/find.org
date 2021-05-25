@@ -1,0 +1,31 @@
+#+STARTUP: content
+* find tips
+** The find utility can locate all of those files and then execute a command to move them where you want.
+
+#+begin_src sh
+find . -name '*.mp3' -print -exec mv '{}' ~/songs \;
+#+end_src
+
+** find with odd characters
+
+#+begin_src sh
+find . -name '*.mp3' -print0 | xargs -i -0 mv '{}' ~/songs
+#+end_src
+
+** find change permissions
+
+#+begin_src sh
+find some_directory -type f -print0 | xargs -0 chmod 0644
+#+end_src
+
+** find follow symbolic links
+
+#+begin_src sh
+find . -follow -name '*.mp3' -print0 | xargs -i -0 mv '{}' ~/songs
+#+end_src
+
+** find files modified in the last 7 days
+
+#+begin_src sh
+find . -name '*.jpg' -mtime +7 -print
+#+end_src

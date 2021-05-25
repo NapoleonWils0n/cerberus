@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find and zip file
+
+#+begin_src sh
+find directory -name 'index.html' | zip -@ index.html.zip
+#+end_src

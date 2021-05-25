@@ -1,7 +1,8 @@
-# find symlinks in home directory
+#+STARTUP: showall
+* find symlinks in home directory
 
 find symlinks in your home directory and where they point to
 
-```
+#+begin_src sh
 find $HOME -type l -ls | awk '{print $NF}'
-```
+#+end_src

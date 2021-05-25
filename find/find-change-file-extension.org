@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* change flv file extension to mp4
+
+#+begin_src sh
+find . -name "*.flv" -exec rename s/.flv/.mp4/ {} \;
+#+end_src

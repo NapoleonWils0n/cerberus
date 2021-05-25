@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* dos2unix - convert line ending to unix
+
+#+begin_src sh
+find . -type f -regex ".*\.\(htm\|html\)$" \
+-exec dos2unix '{}' \;
+#+end_src

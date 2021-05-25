@@ -1,13 +1,15 @@
-#!/bin/bash
+#+STARTUP: showall
+* find multiple image files with regex and then convert to png
 
-# find multiple image files with regex and then convert to png
-#=============================================================
-
+#+begin_src sh
 find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" \
 -exec convert '{}' -set filename:fname '%t' +adjoin '%[filename:fname].png' \;
+#+end_src
 
+** delete the original images files
 
-# delete the original images files
+#+begin_src sh
 find . -type f -regex ".*\.\(gif\|jpg\|jpeg\)$" -exec rm -f '{}' \;
+#+end_src
 
 

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* get dns server
+
+#+begin_src sh
+networksetup -getdnsservers Wi-Fi
+#+end_src

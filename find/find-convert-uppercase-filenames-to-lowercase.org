@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* convert uppercase filnames to lowercase
+
+#+begin_src sh
+find . -type f | while read file; 
+do mv "$file" `echo "$file" | tr 'A-Z' 'a-z'`
+done
+#+end_src

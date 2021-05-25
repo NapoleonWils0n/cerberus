@@ -1,21 +1,20 @@
-#!/bin/bash
+#+STARTUP: showall
+* convert spaces to - in directory names
 
-
-# convert spaces to - in directory names
-#=======================================
-
+#+begin_src sh
 find . -type d | while read file; do
 if [[ "$file" = *[[:space:]]* ]]; then
 mv "$file" `echo "$file" | tr ' ' '-'`
 fi;
 done
+#+end_src
 
+** convert spaces to - in filenames
 
-# convert spaces to - in filenames
-#=================================
-
+#+begin_src sh
 find . -type f | while read file; do
 if [[ "$file" = *[[:space:]]* ]]; then
 mv "$file" `echo "$file" | tr ' ' '-'`
 fi;
 done
+#+end_src

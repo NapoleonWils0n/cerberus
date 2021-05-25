@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find separates lines with ASCII null characters
+
+#+begin_src sh
+find . -print0 | xargs -0 grep -l myxomatosis
+#+end_src

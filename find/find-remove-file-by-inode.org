@@ -1,18 +1,21 @@
-# remove file by its inode number
+#+STARTUP: showall
+* remove file by its inode number
 
 remove a file by its inode number
 
 use ls with the -i option to list files and their inode number  
 and -l for long format
 
-```
+#+begin_src sh
 ls -il
-```
+#+end_src
 
+#+begin_src conf
 125657 -rw-r--r--  1 username  username  0 Sep 24 20:24 bar
+#+end_src
 
 Then use find with the -inum option and the inode number to delete the file
 
-```
+#+begin_src sh
 find . -inum 125657 -exec rm {} \;
-```
+#+end_src

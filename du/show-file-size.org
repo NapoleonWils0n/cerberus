@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* show file size
+
+#+begin_src sh
+du -sh somedirectory
+#+end_src

@@ -1,6 +1,10 @@
-#!/bin/bash 
+#+STARTUP: showall
+* find and basename
 
-# find and basename
+#+begin_src sh
 find . -maxdepth 1 -type f -name "*.ovpn" -exec basename {} \;
+#+end_src
 
+#+begin_src sh
 find www/*.html -type f -exec basename {} \;
+#+end_src

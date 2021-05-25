@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* find file and cat contents of another file into it
+
+#+begin_src sh
+find . -type f |
+while read file
+do
+cat ~/Desktop/index.html > "$file"
+done
+#+end_src

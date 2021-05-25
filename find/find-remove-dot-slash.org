@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* find remove from ./ from file names
+
+#+begin_src sh
+find . -type f -regex ".*\.md$" -printf '%P\n'
+#+end_src
