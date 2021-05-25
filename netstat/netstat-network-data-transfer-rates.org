@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* network data transfer rates
+
+#+begin_src sh
+netstat -w 1
+#+end_src

@@ -1,16 +1,16 @@
-# newboat and podboat
-
-## Create symlinks for xdg
+#+STARTUP: showall
+* newboat and podboat
+** Create symlinks for xdg
 
 xdg set up  
 create symlink from ~/.newsboat to ~/.config/newboat
 
-```
+#+begin_src sh
 ln -s ~/.newsboat ~/.config/newsboat
-```
+#+end_src
 
 create symlink from ~/.newsboat to ~/.local/share/newboat
 
-```
+#+begin_src sh
 ln -s ~/.newsboat ~/.local/share/newboat
-```
+#+end_src

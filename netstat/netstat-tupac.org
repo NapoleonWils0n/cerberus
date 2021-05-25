@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* netstat
+
+#+begin_src sh
+netstat -tupac
+#+end_src

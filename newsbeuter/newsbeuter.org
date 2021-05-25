@@ -1,0 +1,59 @@
+#+STARTUP: content
+* newsbeuter rss ncurses rss reader
+** install newsbeuter
+
+#+begin_src sh
+sudo apt install newsbeuter
+#+end_src
+
+** create the directory ~/.newsbeuter/
+
+#+begin_src sh
+mkdir -p ~/.newsbeuter
+#+end_src
+
+** create the file ~/.newsbeuter/urls
+
+#+begin_src sh
+touch ~/.newsbeuter/urls
+#+end_src
+
+** create the file ~/.newsbeuter/config
+
+#+begin_src sh
+touch ~/.newsbeuter/config
+#+end_src
+
+edit ~/.newsbeuter/config
+
+set the browser
+if you subscribe to a youtube channel and you would like to open the video with mpv, 
+add the macro, to use a macro, you must first press the , key, 
+followed by the keybind. In the example above, you would type , + y
+
+#+begin_src sh
+vim  ~/.newsbeuter/config
+#+end_src
+
+#+begin_src conf
+auto-reload yes
+browser "/usr/bin/chromium %u"
+macro y set browser "/usr/bin/mpv %u"; open-in-browser ; set browser "/usr/bin/chromium %u"
+#+end_src
+
+you have to add one feed before starting up newsbeuter, either in  ~/.newsbeuter/urls
+or by starting newsbeuter with -i and then the url, for example
+newsbeuter -i http://example.com/feed.rss
+
+** start newsbeuter
+
+#+begin_src sh
+newsbeuter 
+#+end_src
+
+** clean cache
+
+#+begin_src sh
+newsbeuter -X
+#+end_src
+
