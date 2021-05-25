@@ -1,4 +1,6 @@
-#!/bin/bash
+#+STARTUP: showall
+* use imagemagik to resize and pad images
 
-# use imagemagik to resize and pad images
+#+begin_src sh
 convert poster.png -resize 320x180 -background black -gravity center -extent 320x180 out.poster
+#+end_src

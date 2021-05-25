@@ -1,16 +1,16 @@
-#!/bin/bash
+#+STARTUP: showall
+* lynx browser install
 
-# lynx browser install
-#=====================
-
+#+begin_src sh
 sudo apt-get install lynx
+#+end_src
 
-# lynx config file:
-# ~/.lynx.cfg
+lynx config file: ~/.lynx.cfg
 
-
+#+begin_src conf
 SET_COOKIES:FALSE
 ACCEPT_ALL_COOKIES:FALSE
 PERSISTENT_COOKIES:FALSE
 SSL_CERT_FILE:/etc/ssl/certs/ca-certificates.crt
 #COOKIE_FILE:~/.lynx_cookies
+#+end_src

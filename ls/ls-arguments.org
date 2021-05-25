@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* ls arguments
+
+#+begin_src sh
+ls -l $(which cp)
+#+end_src
+
+* old school
+
+#+begin_src sh
+ls -l `which cp`
+#+end_src

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* show ip address
+
+#+begin_src sh
+ip a
+#+end_src

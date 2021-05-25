@@ -1,8 +1,13 @@
-#!/bin/bash
+#+STARTUP: showall
+* convert from latin to utf-8
 
-# convert from latin to utf-8
+#+begin_src sh
 iconv -f iso-8859-1 -t utf-8 infile.htm -o outfile.htm
+#+end_src
 
-# find and convert
+* find and convert
+
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" \
 -exec iconv -f iso-8859-1 -t utf-8 '{}' -o '{}' \;
+#+end_src

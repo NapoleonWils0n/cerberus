@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* use ls and wc to count files in a directory
+
+#+begin_src sh
+ls /usr/bin/ | sort | uniq | wc -l
+#+end_src

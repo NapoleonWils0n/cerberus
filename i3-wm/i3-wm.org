@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* i3 window manager
+
+#+begin_src sh
+sudo apt install i3-wm i3status i3lock
+#+end_src

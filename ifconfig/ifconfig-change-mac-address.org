@@ -1,0 +1,34 @@
+#+STARTUP: content
+* ifconfig change mac address
+** find the names of your network interfaces
+
+#+begin_src sh
+ifconfig
+#+end_src
+
+the name of my wireless network interface is ath0
+replace ath0 with the name of your network interface in the commands below
+
+** bring the network interface down
+
+#+begin_src sh
+sudo ifconfig ath0 down
+#+end_src
+
+** change the mac address of your network interface
+
+#+begin_src sh
+sudo ifconfig ath0 hw ether de:ad:be:ef:c0:fe
+#+end_src
+
+** bring the network interface back up
+
+#+begin_src sh
+sudo ifconfig ath0 up
+#+end_src
+
+** check your mac address has changed
+
+#+begin_src sh
+ifconfig ath0
+#+end_src

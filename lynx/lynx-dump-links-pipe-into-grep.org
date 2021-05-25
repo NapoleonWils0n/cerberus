@@ -1,0 +1,7 @@
+#+STARTUP: content
+* lynx dump links
+
+#+begin_src sh
+lynx -dump -listonly -nonumbers -hiddenlinks=ignore 'https://www.google.com/search?num=30&safe=off&ucbcb=1&ie=ISO-8859-1&tbm=vid&oq=&aqs=&q=w3m' | grep -oP '(?=https://www.youtube.com)[^&]*(?=&)'
+#+end_src
+

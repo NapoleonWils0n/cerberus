@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* mkdir create multiple directories
+
+#+begin_src sh
+mkdir -p playground/dir-{00{1..9},0{10..99},100}
+#+end_src
+
+** touch create multiple files
+
+#+begin_src sh
+touch playground/dir-{00{1..9},0{10..99},100}/file-{A..Z}
+#+end_src

@@ -1,0 +1,20 @@
+#+STARTUP: showall
+* ifconfig set ip adddress
+** switch to root
+
+#+begin_src sh
+sudo su
+#+end_src
+
+** use ifconfig to change ip address
+
+#+begin_src sh
+ifconfig wlan0 192.168.1.5 netmask 255.255.255.0 up
+#+end_src
+
+** use dhclient 
+
+#+begin_src sh
+dhclient
+#+end_src
+
