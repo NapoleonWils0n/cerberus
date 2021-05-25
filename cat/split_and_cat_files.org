@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* split files into chunk and rejoin with cat
+
+zip the file up first then split it, then rejoin it as a zip with cat
+that way when you unzip the file it keeps the original file name
+
+#+begin_src sh
+split -b 80m somefile.zip file_
+#+end_src
+
+** rejoin files with cat
+
+#+begin_src showall
+cat file_* > file.zip
+#+end_src

@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* cat redirection
+
+#+begin_src sh
+cat << EOF > file
+line one
+line two
+EOF
+#+end_src

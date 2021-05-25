@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* base64 encode inmage
+
+#+begin_src sh
+base64 image-in.jpg > image-out.b64
+#+end_src
+

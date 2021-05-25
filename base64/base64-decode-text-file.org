@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* decode base64 encoded text file
+
+#+begin_src sh
+base64 -di textfile.txt > decoded.txt
+#+end_src
