@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* make bash file executable
+
+#+begin_src sh
+chmod +x file.sh 
+#+end_src

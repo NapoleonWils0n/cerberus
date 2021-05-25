@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* cd into last directory created in history
+
+#+begin_src sh
+mkdir foo
+#+end_src
+
+#+begin_src sh
+cd !$
+#+end_src

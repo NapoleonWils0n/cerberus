@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* chmod - change file permissions of a file to be similar of another
+
+#+begin_src sh
+chmod --reference=file1 file2
+#+end_src

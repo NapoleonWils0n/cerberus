@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* remove write permission for group and other recurcivly
+
+#+begin_src sh
+chmod -R go-w filename
+#+end_src

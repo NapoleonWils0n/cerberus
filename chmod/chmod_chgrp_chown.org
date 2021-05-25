@@ -1,0 +1,74 @@
+#+STARTUP: content
+* chmod - chgrp chown - Modifying Permissions
+
+'chmod' changes file permissions (change modes) by specifying permissions for the user owner, the group owner, and all others.
+A single letter mnemonic is used to represent each class of user, and each class of permission.
+
+'u' is for user owner, 'g' is for group owner, 'o' is for others.
+'r' is for read permission, 'w' is for write permission, and 'x' is for execute permission.
+
+** To set permissions to read, write, and execute (rwx) for the user owner (u) use:
+
+#+begin_src sh
+chmod u=rwx file-name
+#+end_src
+
+** To set permissions to read and execute (rx) for the group owner (g) use:
+
+#+begin_src sh
+chmod g=rx file-name
+#+end_src
+
+** And finally, to set permissions to read (r) for others (o) use:
+
+#+begin_src sh
+chmod o=r file-name
+#+end_src
+
+* These can be set all at once by separating the permission sets by commas.
+
+#+begin_src sh
+chmod u=rwx,g=rx,o=r file-name
+#+end_src
+
+#+begin_src sh
+ls -l file-name
+#+end_src
+
+One may add or remove permissions by replacing the equals with a plus sign to add, or a minus sign to remove.
+Permissions that are not mentioned are left untouched.
+
+** Take away read permission for others:
+
+#+begin_src sh
+chmod o-r file-name
+#+end_src
+
+** Add write permission for the group:
+
+#+begin_src sh
+chmod g+w file-name
+#+end_src
+
+** Changing Owners
+
+'chown' changes the user owner and/or group owner of a file.
+Note that only user 'root' is allowed to change the owner of a file, so the command must be run using sudo.
+
+To change the owners of a file, give the new user owner and group owner separated by a colon:
+
+For example, change the group owner keeping the user owner the same:
+
+#+begin_src sh
+chown admin file-name
+#+end_src
+
+#+begin_src sh
+ls -l file-name
+#+end_src
+
+** To change both the user owner and the group owner:
+
+#+begin_src sh
+sudo chown janice:staff file-name
+#+end_src

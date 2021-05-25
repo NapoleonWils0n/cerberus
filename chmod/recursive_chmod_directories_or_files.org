@@ -1,0 +1,18 @@
+#+STARTUP: showall
+* This will recursively search your directory tree (starting at dir 'dot') and chmod 755 all directories only.
+
+#+begin_src sh
+find . -type d -exec chmod 755 {} \;
+#+end_src
+
+Similarly, the following will chmod all files only (and ignore the directories):
+
+#+begin_src sh
+find . -type f -exec chmod 644 {} \;
+#+end_src
+
+Change files of only a specific type/extension (pdf in this case):
+
+#+begin_src sh
+find ./ -name *.pdf -exec chmod 755 {} \;
+#+end_src

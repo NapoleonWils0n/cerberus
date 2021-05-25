@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* cd to previous directory
+
+#+begin_src sh
+cd -
+#+end_src
