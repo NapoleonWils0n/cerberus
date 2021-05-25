@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* xkill, kill windowed applications by touching the window
+
+run sudo xkill then use the cursor to touch a window and kill it
+
+#+begin_src sh
+sudo xkill
+#+end_src
+
+

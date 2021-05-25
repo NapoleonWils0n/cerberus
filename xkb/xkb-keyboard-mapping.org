@@ -1,29 +1,29 @@
-# custom xkb symbols file 
-
-## localectl
+#+STARTUP: showall
+* custom xkb symbols file 
+** localectl
 
 set the keyboard layout with localectl
 
-```
+#+begin_src sh
 localectl --no-convert set-x11-keymap gb pc104 mac
-```
+#+end_src
 
 use the --no-convert option,
 so we dont set a keymap in the console
 
 check that /etc/vconsole.conf is empty
 
-```
+#+begin_src sh
 less /etc/vconsole.conf
-```
+#+end_src
 
-### X configuration files
+** X configuration files
 
 running the above localectl command will create a file at this location
 
 /etc/X11/xorg.conf.d/00-keyboard.conf
 
-```
+#+begin_src conf
 # Read and parsed by systemd-localed. It's probably wise not to edit this file
 # manually too freely.
 Section "InputClass"
@@ -33,37 +33,38 @@ Section "InputClass"
         Option "XkbModel" "pc104"
         Option "XkbVariant" "mac"
 EndSection
-```
+#+end_src
 
-##### map ctrl to alt, alt to win, win to ctrl
+** map ctrl to alt, alt to win, win to ctrl
 
 create the ~/.xkb/keymap/ directory
 
-```
+#+begin_src sh
 mkdir -p ~/.xkb/keymap
-```
-export the current keymap with xkbcomp
+#+end_src
 
-```
+*** export the current keymap with xkbcomp
+
+#+begin_src sh
 xkbcomp $DISPLAY ~/.xkb/keymap/keymap.xkb
-```
+#+end_src
 
-create the ~/.xkb/symbols directory
+*** create the ~/.xkb/symbols directory
 
-```
+#+begin_src sh
 mkdir -p ~/.xkb/symbols
-```
+#+end_src
 
-create the ~/.xkb/symbols/custom file
+*** create the ~/.xkb/symbols/custom file
 
-```
+#+begin_src sh
 vim ~/.xkb/symbols/custom
-```
+#+end_src
 
 add the code below to ~/.xkb/symbols/custom  
 to map ctrl to alt, alt to win, win to ctrl
 
-```
+#+begin_src sh
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
 partial modifier_keys
 xkb_symbols "alt_win_ctrl" {
@@ -74,20 +75,20 @@ xkb_symbols "alt_win_ctrl" {
     modifier_map Mod1 { <LALT>, <RALT>, Meta_L };
     modifier_map Mod4 { <LWIN>, <RWIN> };
 };
-```
+#+end_src
 
 the symbols file is called custom   
 and the xkb_symbols is called alt_win_ctrl
 
-load the local keymap and symbols
+*** load the local keymap and symbols
 
-```
+#+begin_src sh
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
-```
+#+end_src
 
-add xkbcomp to your ~/xinitrc
+*** add xkbcomp to your ~/xinitrc
 
-```
+#+begin_src sh
 vim ~/.xinitrc
-```
+#+end_src
 
