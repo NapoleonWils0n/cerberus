@@ -1,4 +1,6 @@
-#!/bin/bash
+#+STARTUP: showall
+* netcat google
 
-# netcat google
+#+begin_src sh
 (echo "GET / HTTP/1.0";echo "Host: www.google.com"; echo) | nc www.google.com 80
+#+end_src

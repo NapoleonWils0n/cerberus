@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* grabbing web server banners with netcat
+
+#+begin_src sh
+nc -v example.org 80
+#+end_src
+
+then enter the code below and press enter twice
+
+#+begin_src sh
+HEAD / HTTP/1.0
+#+end_src

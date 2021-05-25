@@ -1,0 +1,22 @@
+#+STARTUP: showall
+* netcat transfer files
+
+#+begin_src sh
+nc -l 3333 < backup.iso
+#+end_src
+
+#+begin_src sh
+nc 192.168.1.5 3333 > backup.iso
+#+end_src
+
+** client listen to recieve file
+
+#+begin_src sh
+nc -v -w 30 6881 -l > wireshark.pdf
+#+end_src
+
+** server sending file
+
+#+begin_src sh
+nc -v -w 2 192.168.1.3 6881 > wireshark.pdf
+#+end_src

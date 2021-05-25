@@ -1,15 +1,21 @@
-#!/bin/bash
+#+STARTUP: showall
+* netcat alsa
 
 On source computer:
 
+#+begin_src sh
 sudo modprobe snd-aloop
 arecord -f cd -D hw:Loopback,2,0 | netcat dest 1234
 mplayer -ao alsa:device=hw=Loopback.0.0 something.mp3
+#+end_src
 
 On destination computer:
+
+#+begin_src sh
 netcat -k -l -p 1234 | aplay
+#+end_src
 
-
+#+begin_src sh
 snd-aloop index=2 pcm_substreams=2
-
 arecord -D hw:2,0 out.wav
+#+end_src

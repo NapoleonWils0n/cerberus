@@ -1,0 +1,28 @@
+#+STARTUP: content
+* netcat chat server
+
+** server
+
+#+begin_src sh
+nc -l 6881
+#+end_src
+
+** client
+
+#+begin_src sh
+nc 192.168.1.5 6881
+#+end_src
+
+**  chat zero conf
+
++ server
+
+#+begin_src sh
+nc -l 6881
+#+end_src
+
++ client
+
+#+begin_src sh
+nc horus.local 6881
+#+end_src

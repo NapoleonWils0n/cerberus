@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* netcat udp server
+** udp server
+
+#+begin_src sh
+nc -l -u -p 1234
+#+end_src
+
+will setup a UDP server. And you can talk to it with
+
+#+begin_src sh
+nc -u localhost 1234
+#+end_src
+
