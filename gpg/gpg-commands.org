@@ -1,0 +1,81 @@
+#+STARTUP: content
+* gpg commands
+** generate keys
+
+#+begin_src sh
+gpg --gen-key
+#+end_src
+
+** list keys
+
+#+begin_src sh
+gpg --list-keys
+#+end_src
+
+** create revoke certificatre
+
+#+begin_src sh
+gpg --output revoke.asc --gen-revoke 12345678
+#+end_src
+
+** encrypt file
+
+#+begin_src sh
+gpg -esr "Username" --armor unencrypted.txt
+#+end_src
+
+** decrypt file
+
+#+begin_src sh
+gpg -d unencrypted.txt.asc | tee > decrypted.txt
+#+end_src
+
+** export public key
+
+#+begin_src sh
+gpg --list-keys
+#+end_src
+
+** replace KEY-ID with your key from the list keys command
+
+#+begin_src sh
+gpg --export -a KEY-ID > mykey.asc
+#+end_src
+
+** import public key
+
+#+begin_src sh
+gpg --import publickey.asc
+#+end_src
+
+** trust the public key
+
+#+begin_src sh
+gpg --edit-key username@gmail.com
+#+end_src
+
++ sign the key
++ sign
++ check
++ yes
++ save
+
+** encrypt a file with an other user public key
+
+create an encrypted binary file
+
+#+begin_src sh
+gpg --recipient bob --encrypt filename
+#+end_src
+
+** create a ASCII-encrypted-file
+
+#+begin_src sh
+gpg --recipient bob --armor --encrypt filename
+#+end_src
+
+** decrypt a file
+
+#+begin_src sh
+gpg --decrypt test-file.asc > file.txt
+#+end_src

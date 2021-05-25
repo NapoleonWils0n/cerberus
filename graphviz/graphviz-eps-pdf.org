@@ -1,0 +1,20 @@
+#+STARTUP: content
+* graphviz convert to eps and svg
+
+** convert graphviz gv file to svg 
+
+#+begin_src sh
+dot -Tsvg graph.gv -o graph.svg
+#+end_src
+
+** convert graphviz gv file to eps
+
+#+begin_src sh
+dot -Teps graph.gv -o graph.eps
+#+end_src
+
+** use epstopdf to convert eps file to pdf
+
+#+begin_src sh
+epstopdf graph.eps
+#+end_src
