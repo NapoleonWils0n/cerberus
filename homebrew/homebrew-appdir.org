@@ -1,7 +1,8 @@
-# homebrew cask appdir
+#+STARTUP: showall
+* homebrew cask appdir
 
 homebrew install gui apps in ~/Application
 
-```
+#+begin_src sh
 brew cask install --appdir="~/Applications" retroarch-metal
-```
+#+end_src

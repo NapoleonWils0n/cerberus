@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* mount smb share (password saved in gnome keyring)
+
+#+begin_src sh
+gvfs-mount smb://nas/music
+#+end_src

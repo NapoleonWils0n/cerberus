@@ -1,0 +1,19 @@
+#+STARTUP: showall
+* i2p install via ppa
+i2p ppa
+
+#+begin_src sh
+sudo apt-add-repository ppa:i2p-maintainers/i2p
+#+end_src
+
+apt-get update
+
+#+begin_src sh
+sudo apt-get update
+#+end_src
+
+install i2p
+
+#+begin_src sh
+sudo apt-get install i2p
+#+end_src

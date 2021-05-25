@@ -1,0 +1,33 @@
+#+STARTUP: showall
+* install httrack for downloading websites
+
+#+begin_src sh
+sudo apt-get install httrack
+#+end_src
+
+create a directory for the downloaded site
+
+#+begin_src sh
+mkdir -p ~/Desktop/websites
+#+end_src
+
+change directory into the new directory
+
+#+begin_src sh
+cd !$
+#+end_src
+
+run httrack
+
+#+begin_src sh
+httrack
+#+end_src
+
+name the project
+
+enter a base to the directory you created
+/home/$USER/Desktop/websites
+
+enter the website url to download
+choose an option to download ( choose option 2 download with wizard )
+

@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* avoid stoing passwords in bash history
+
+dont save commands to bash history that have a space before them
+
+#+begin_src sh
+export HISTORYCONTROL=ignorespace
+#+end_src
+
+dont save certain commands or phrases to bash history
+
+#+begin_src sh
+export HISIGNORE="pass:password:wget"
+#+end_src

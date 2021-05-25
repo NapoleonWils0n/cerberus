@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* head show first 10 lines of file by default
+
++ head -number to show number of lines
+
+#+begin_src sh
+head -2 file.txt
+#+end_src
+
++ show first 3 lines from top of a file
+
+#+begin_src sh
+head -3 file.txt
+#+end_src

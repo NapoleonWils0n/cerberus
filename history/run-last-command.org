@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* run last command in bash history
+
+#+begin_src sh
+!!
+#+end_src

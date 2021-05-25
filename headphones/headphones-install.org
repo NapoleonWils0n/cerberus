@@ -1,0 +1,42 @@
+#+STARTUP: content
+* headphones - Automatic music downloader for SABnzbd
+** clone headphones repo with git
+
+#+begin_src sh
+git clone https://github.com/rembo10/headphones.git headphones
+#+end_src
+
+** move headphones into your home directory
+
+#+begin_src sh
+mv headphones ~/.headphones
+#+end_src
+
+** move the startup script into place
+
+#+begin_src sh
+sudo mv ~/.headphones/init.ubuntu /etc/init.d/headphones
+#+end_src
+
+** make the script executable
+
+#+begin_src sh
+sudo chmod +x /etc/init.d/headphones
+#+end_src
+
+** edit the startup script and set some options
+
+#+begin_src sh
+sudo vim /etc/init.d/headphones
+#+end_src
+
+Change APP_PATH to /home/user/.headphones, where user is your username,
+and change RUN_AS to your username
+
+** start headphones
+
+#+begin_src sh
+sudo service headphones start
+#+end_src
+
+browse to the headphones webpage [[http://localhost:8181]]

@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* install handbrake from ppa
+
+#+begin_src sh
+sudo add-apt-repository ppa:stebbins/handbrake-releases
+sudo apt-get update
+sudo apt-get install handbrake-cli handbrake-gtk
+#+end_src

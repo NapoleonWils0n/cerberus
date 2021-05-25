@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* history save last command as a script
+
+#+begin_src sh
+echo !! > script.sh 
+#+end_src

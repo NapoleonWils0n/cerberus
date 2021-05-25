@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* clear terminal history
+
+#+begin_src sh
+history -c
+#+end_src
