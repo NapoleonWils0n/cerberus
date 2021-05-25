@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* libvirt start default network
+
+list network
+
+#+begin_src sh
+sudo virsh net-list --all
+#+end_src
+
+start default network
+
+#+begin_src sh
+sudo virsh net-start default 
+#+end_src
