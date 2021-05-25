@@ -1,18 +1,19 @@
-# firefox dns disable 
+#+STARTUP: showall
+* firefox dns disable 
 
 disable firefox dns settings
 
 in the location bar enter
 
-```
+#+begin_src conf
 about:config
-```
+#+end_src
 
 then search for 
 
-```
+#+begin_src conf
 network.trr.mode
-```
+#+end_src
 
 and set the value to 0  
 to disable firefox dns settings and use system default

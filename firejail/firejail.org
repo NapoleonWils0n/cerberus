@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* firejail
+** firejail install
+
+#+begin_src sh
+sudo apt install firejail
+#+end_src
+
+** run firejail with --seccomp to sandbox firefox
+
+#+begin_src sh
+firejail --seccomp firefox
+#+end_src

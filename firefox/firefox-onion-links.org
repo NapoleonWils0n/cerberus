@@ -1,7 +1,7 @@
-# firefox open onion links
+#+STARTUP: showall
+* firefox open onion links
 
 enable tor onion links in firefox
-
 Got to "about:config" in firefox.
 
 Search for "network.dns.blockDotOnion"  and set it to false.

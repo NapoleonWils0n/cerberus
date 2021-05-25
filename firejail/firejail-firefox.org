@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* firejail
+
+#+begin_src sh
+firejail --caps.drop=all --seccomp firefox
+#+end_src
