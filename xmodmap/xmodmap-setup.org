@@ -1,24 +1,33 @@
-# xmodmap swap ctrl cmd
+#+STARTUP: content
+* xmodmap swap ctrl cmd
 
-current layout
++ current layout
 
 ctrl - alt - super
 
-desired layout
++ desired layout
 
 alt - super - ctrl
 
+#+begin_src sh
 xev
+#+end_src
 
+#+begin_src conf
 37 - 64 - 133
+#+end_src
 
-
+#+begin_src sh
 xmodmap -pke > ~/Desktop/Xmodmap-default
+#+end_src
 
-# create ~/.Xmodmap
+** create ~/.Xmodmap
 
+#+begin_src sh
 vim ~/.Xmodmap
+#+end_src
 
+#+begin_src conf
 clear control
 clear mod1
 clear mod4
@@ -28,22 +37,30 @@ keycode 133 = Control_L
 add mod1    = Alt_L Alt_R Meta_L
 add mod4    = Super_L Super_R
 add control = Control_L Control_R
+#+end_src
 
-# edit ~/.xinitrc
+** edit ~/.xinitrc
 
+#+begin_src sh
 vim ~/.xinitrc
+#+end_src
 
+#+begin_src conf
 if [ -s ~/.Xmodmap ]; then
     xmodmap ~/.Xmodmap
 fi
+#+end_src
 
+** i3 change modkey to use super
 
-# i3 change modkey to use super
+edit ~/.config/i3/config
 
-# edit ~/.config/i3/config
-
+#+begin_src sh
 vim ~/.config/i3/config
+#+end_src
 
-# change Mod1 to Mod4
+change Mod1 to Mod4
 
+#+begin_src conf
 set $mod Mod4
+#+end_src

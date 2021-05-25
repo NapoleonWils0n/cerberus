@@ -1,51 +1,49 @@
-# xpath tips
-
-## Firefox
+#+STARTUP: content
+* xpath tips
+** Firefox
 
 Right click on the page and select inspect element to open the web inspector
 Open the console tab
 
 Type the xpath like so
 
-```
+#+begin_src sh
 $x("path")
-```
+#+end_src
 
 Where path is you xpath query
 
-
-```
+#+begin_src sh
 $x("//title")
-```
+#+end_src
 
-### xpath queries
+*** xpath queries
 
-* a href
+a href
 
 find all links on the page and return the link
 
-```
+#+begin_src sh
 $x("//a/@href")
-```
+#+end_src
 
 find all links on the page that contain a string of text and return the link
 where some string is the string to search for 
 
-```
+#+begin_src sh
 $x("//a[contains(@href, 'somestring')]/@href")
-```
+#+end_src
 
 find all links on the page and return the link text
 
-
-```
+#+begin_src sh
 $x("//a/text()")
-```
+#+end_src
 
-* Images
+*** Images
 
 find all the images on the page and return the src attribute
 
-```
+#+begin_src sh
 $x("//img/@src")
-```
+#+end_src
