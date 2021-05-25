@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* awk extract text inside brackets
+
+#+begin_src sh
+awk -F'[][]' -v RS=" " '/http/ {print $2}'
+#+end_src

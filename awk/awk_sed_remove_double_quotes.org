@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* print 1st field with awk pipe to sed and remove double quotes
+
+#+begin_src sh
+VBoxManage list vms | awk '{print $1}' | sed 's/\"//g'
+#+end_src
+
+
+
+
+
+

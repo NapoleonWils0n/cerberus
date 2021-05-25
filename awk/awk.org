@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* print the first word of every line of input
+
+#+begin_src sh
+awk '{print $1}' input.txt
+#+end_src
+
+* print the last line
+
+#+begin_src sh
+ls -l | awk '{print $1, $NF}
+#+end_src

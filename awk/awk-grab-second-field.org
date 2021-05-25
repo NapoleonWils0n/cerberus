@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* awk grab second field
+
+#+begin_src sh
+awk '{print $2}' file.txt | sort | uniq > uniq.txt
+#+end_src

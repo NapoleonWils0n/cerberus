@@ -1,36 +1,37 @@
-# awk extract link
+#+STARTUP: content
+* awk extract link
 
-wget awk
+** wget awk
 
-```
+#+begin_src sh
 wget -q https://www.liveonlinetv247.info/embed/comedycentral.php --no-check-certificate -O - \
 | awk  -F'"' '/source src=/ || /video src=/ {print $2}'
-```
+#+end_src
 
-wget awk redirect url to file
+** wget awk redirect url to file
 
-```
+#+begin_src sh
 wget -q https://www.liveonlinetv247.info/embed/comedycentral.php --no-check-certificate -O - \
 | awk  -F'"' '/source src=/ || /video src=/ {print $2}' > ~/Desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt
-```
+#+end_src
 
-wget awk vlc
+** wget awk vlc
 
-```
+#+begin_src sh
 wget -q https://www.liveonlinetv247.info/embed/comedycentral.php --no-check-certificate -O - \
 | awk  -F'"' '/source src=/ || /video src=/ {print $2}' | vlc -q - &
-```
+#+end_src
 
-wget awk mpv
+** wget awk mpv
 
-```
+#+begin_src sh
 mpv $(wget -q https://www.liveonlinetv247.info/embed/comedycentral.php --no-check-certificate -O - \
 | awk  -F'"' '/source src=/ || /video src=/ {print $2}')
-```
+#+end_src
 
-wget awk pilfer
+** wget awk pilfer
 
-```
+#+begin_src sh
 pilfer -i $(wget -q https://www.liveonlinetv247.info/embed/comedycentral.php --no-check-certificate -O - \
 | awk  -F'"' '/source src=/ || /video src=/ {print $2}')
-```
+#+end_src
