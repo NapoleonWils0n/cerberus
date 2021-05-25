@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* mpd server hhtp streaming
+
+open port 8000 for http streaming on the server runnning mpd
+
+#+begin_src sh
+sudo iptables -A INPUT -p tcp --dport 8000 -s 192.168.1.0/24 -j ACCEPT
+#+end_src
+
+ncmpc load 2nd config file on the client
+
+#+begin_src sh
+ncmpc -f ~/.ncmpc/rpi-config
+#+end_src
+

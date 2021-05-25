@@ -1,0 +1,44 @@
+#+STARTUP: content
+* mpd and mpc install
+
+#+begin_src sh
+sudo apt-get install mpd mpc
+#+end_src
+
+** First stop the daemon and disable from starting on boot
+
+#+begin_src sh
+sudo service mpd stop
+sudo update-rc.d mpd disable
+#+end_src
+
+** Create a directory for the mpd files and the playlists
+
+#+begin_src sh
+mkdir -p ~/.mpd/playlists
+#+end_src
+
+** copy the mpd to the home directory
+
+#+begin_src sh
+gunzip -c /usr/share/doc/mpd/examples/mpd.conf.gz > ~/.mpd/mpd.conf
+#+end_src
+
+** create the mpd files
+
+#+begin_src sh
+touch ~/.mpd/{mpd.db,mpd.log,mpd.pid,mpdstate}
+#+end_src
+
+** edit the mpd.conf in your home directory
+
+#+begin_src sh
+vim ~/.mpd/mpd.conf
+#+end_src
+
+** check if mpd is running
+
+#+begin_src sh
+ps aux|grep mpd
+#+end_src
+

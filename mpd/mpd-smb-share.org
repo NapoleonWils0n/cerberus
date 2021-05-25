@@ -1,4 +1,6 @@
-#!/bin/bash
+#+STARTUP: showall
+* nas symlink for mpd
 
-# nas symlink for mpd
+#+begin_src sh
 ln -s /run/user/djwilcox/gvfs/smb-share:server=nas,share=music/flac/ ~/Music/nas
+#+end_src
