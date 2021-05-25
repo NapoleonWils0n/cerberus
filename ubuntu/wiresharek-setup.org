@@ -1,0 +1,18 @@
+#+STARTUP: showall
+* wireshark setup
+
+#+begin_src sh
+sudo apt-get install wireshark
+#+end_src
+
+#+begin_src sh
+sudo dpkg-reconfigure wireshark-common
+#+end_src
+
+This will ask you if you want to allow non-root user to be able to sniff. 
+That's what we're aiming for, so select Yes and hit return.
+
+#+begin_src sh
+sudo adduser $USER wireshark
+sudo apt-get install tshark
+#+end_src
