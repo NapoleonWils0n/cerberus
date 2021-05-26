@@ -1,4 +1,0 @@
-Hide Shortcuts in Side Pane
-There is a hidden menu to hide Shortcuts in the Side Pane.
-Right click in the Side Pane where there are no shortcuts, like on the DEVICES section label. Then you will get a pop-up menu where you can 
-uncheck items you do not want displayed.

@@ -1,8 +1,0 @@
-sudo pacman -S kodi
-
-# airplay support
-sudo pacman -S shairplay
-
- sudo pacman -S avahi shairplay #(on Arch)
- sudo systemctl enable avahi-daemon
- sudo systemctl start avahi-daemon

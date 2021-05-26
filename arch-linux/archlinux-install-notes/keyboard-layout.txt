@@ -1,7 +1,0 @@
-localectl set-x11-keymap gb pc104 mac altwin:ctrl_win
-
-localectl --no-convert set-x11-keymap gb pc104 mac altwin:ctrl_win
-
-make sure vconsole.conf is empty
-
-cat /etc/vconsole.conf

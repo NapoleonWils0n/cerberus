@@ -1,2 +1,0 @@
-# image viewer
-sudo pacman -S ristretto

@@ -1,3 +1,0 @@
-sudo pacman -S ttf-inconsolata
-
-sudo pacman -S ttf-dejavu ttf-droid noto-fonts

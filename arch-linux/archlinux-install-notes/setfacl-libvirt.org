@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* set acl for libvirt
+
+#+begin_src sh
+setfacl -m "u:nobody:--x" /home/djwilcox
+getfacl /home/djwilcox
+chmod o-rx /home/djwilcox
+#+end_src

@@ -1,5 +1,0 @@
-sudo pacman -S rtorrent
-
-mkdir -p ~/.session
-
-symlink ~/.rtorrent.rc

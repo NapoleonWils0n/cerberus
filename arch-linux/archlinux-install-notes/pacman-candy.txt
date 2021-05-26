@@ -1,6 +1,0 @@
-# i love candy
-#===========================================#
-
-sudo nano /etc/pacman.conf
-
-ILoveCandy

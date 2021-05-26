@@ -1,6 +1,0 @@
-sudo pacman -S udisks2
-
-sudo pacman -S udiskie
-
-sudo pacman -S gvfs
-

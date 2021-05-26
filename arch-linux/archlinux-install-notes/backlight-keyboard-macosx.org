@@ -1,0 +1,24 @@
+#+STARTUP: showall
+* turn on macosx backlit keyboard
+
+switch to root
+
+#+begin_src sh
+sudo su
+#+end_src
+
+echo 255 into the brightness file for full backlighting
+
+#+begin_src sh
+sudo echo 255 > /sys/class/leds/smc::kbd_backlight/brightness
+#+end_src
+
+echo 0 into the brightness file to turn off backlighting
+
+#+begin_src sh
+echo 0 > /sys/class/leds/smc::kbd_backlight/brightness
+#+end_src
+
+
+
+

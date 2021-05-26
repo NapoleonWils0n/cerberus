@@ -1,8 +1,8 @@
-http://pckr.co.uk/arch-grub-mkconfig-lvmetad-failures-inside-chroot-install/
+#+STARTUP: content
+* arch chroot fix
 
+[[http://pckr.co.uk/arch-grub-mkconfig-lvmetad-failures-inside-chroot-install/]]
 
-Arch Grub-mkconfig Lvmetad Warnings Inside Chroot Install
-05 SEPTEMBER 2015 on Linux, arch
 When I am installing Arch to logical volumes and attempt to use grub-mkconfig and grub-install from within my chroot environment, I encounter the warning messages:
 
 /run/lvm/lvmetad.socket: connect failed: No such file or directory
@@ -14,27 +14,21 @@ So to resolve this problem we can make /run available from the host to the chroo
 
 Drop out of your chroot environment:
 
-
 exit (or control & D) 
 
+#+begin_src sh
 mkdir /mnt/hostrun 
-
 mount --bind /run /mnt/hostrun 
-
 arch-chroot /mnt /bin/bash 
-
 mkdir /run/lvm 
-
 mount --bind /hostrun/lvm /run/lvm
+#+end_src
 
 Alternatively you can disable lvmetad from /etc/lvm/lvm.conf and set use_lvmetad = 0
-
 Then continue with your grub-mkconfig and grub-install commands.
 
-Thanks to http://unix.stackexchange.com/questions/105389/arch-grub-asking-for-run-lvm-lvmetad-socket-on-a-non-lvm-disk
+umount /run/lvm before exiting the chroot.
 
-
-
-When done, remember to umount /run/lvm before exiting the chroot.
-
-RP
+#+begin_src sh
+sudo umount /run/lvm
+#+end_src

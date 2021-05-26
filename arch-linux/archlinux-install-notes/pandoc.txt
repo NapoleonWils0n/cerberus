@@ -1,3 +1,0 @@
-sudo pacman -S pandoc pandoc-citeproc texlive-core
-
-

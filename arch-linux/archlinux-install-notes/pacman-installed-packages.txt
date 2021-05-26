@@ -1,8 +1,0 @@
-# create back
-pacman -Qqen > pkglist.txt
-
-# restore back up
-sudo su
-pacman -S $(< pkglist.txt)
-
-
