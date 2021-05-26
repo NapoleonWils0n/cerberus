@@ -1,0 +1,61 @@
+#+STARTUP: content
+* debian macbook install
+
+download the debian amd xfce desktop torrent
+
+[[http://cdimage.debian.org/debian-cd/current-live/amd64/bt-hybrid/debian-live-7.4-amd64-xfce-desktop.iso.torrent]]
+
+dd the iso to a usb stick to create a live installer
+find the usb drive, df -h
+
+#+begin_src sh
+sudo dd of=~/Downloads/debian-live-7.4-amd64-xfce-desktop.iso if=/dev/sdb bs=1M
+#+end_src
+
+** download the firmware for the railink wifi driver and copy via usb to the desktop of the live usb install
+
+[[http://ftp.acc.umu.se/cdimage/unofficial/non-free/firmware/wheezy/current/firmware.tar.gz]]
+
+#+begin_src sh
+sudo dpkg -i firmware-ralink_0.36+wheezy.1_all.deb
+#+end_src
+
+** set the keyboard layout
+
+#+begin_src conf
+layout: macbook
+uk english macbook
+#+end_src
+
+** edit the source list and non free 
+
+#+begin_src sh
+sudo nano /etc/apt/sources.list
+#+end_src
+
+add the following
+
+#+begin_src conf
+deb http://http.debian.net/debian/ wheezy main contrib non-free
+#+end_src
+
+** update
+
+#+begin_src sh
+sudo apt-get update
+#+end_src
+
+** Install the relevant linux-headers and broadcom-sta-dkms packages:  
+
+#+begin_src sh
+sudo apt-get install linux-headers-$(uname -r|sed 's,[^-]*-[^-]*-,,') broadcom-sta-dkms
+#+end_src
+
+** load the module
+
+#+begin_src sh
+sudo modprobe wl
+#+end_src
+
+
+
