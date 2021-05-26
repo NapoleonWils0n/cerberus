@@ -1,0 +1,1160 @@
+#+STARTUP: content
+* Arch Linux Lvm on Luks
+
+Install Arch linux lvm on luks with uefi
+
+** Linux create bootable usb 
+
+Download the latest arch iso 
+
+Find out the name of your USB drive with lsblk. Make sure that it is not mounted.  
+
+Run the following command, replacing /dev/sdx with your drive, e.g. /dev/sdb.  
+(do not append a partition number, so do not use something like /dev/sdb1):
+
+#+begin_src sh
+sudo dd bs=4M if=/path/to/archlinux.iso of=/dev/sdx status=progress && sync
+#+end_src
+
+** Mac osx create bootable usb
+
+plug in a usb drive to your mac
+
++ find out where its mounted
+
+#+begin_src sh
+sudo diskutil list
+#+end_src
+
++ it should be something like disk2
++ check by unmounting the drive
+
+#+begin_src sh
+sudo diskutil unmountDisk /dev/disk2
+#+end_src
+
++ if the drive is ejected you know you have the right drive number
++ unplug the drive and plug it back in again so it mounts
+
+*** Download the latest arch iso 
+
+Convert the .iso file to .img using the convert option of hdiutil 
+
+#+begin_src sh
+hdiutil convert -format UDRW -o ~/Desktop/arch.img ~/Desktop/archlinux-2014.06.01-dual.iso
+#+end_src
+
++  remove the .dmg extension from the file
+
+#+begin_src sh
+mv arch.img.dmg arch.img
+#+end_src
+
++ copy the img to the usb drive
+
+#+begin_src sh
+sudo dd if=~/Desktop/arch.img of=/dev/rdisk2 bs=1m
+#+end_src
+
++ After the dd command finishes, eject the drive:
+
+#+begin_src sh
+diskutil eject /dev/rdisk2
+#+end_src
+
+*** Mac files to back up
+
+If you are not going to have OS X installed, make backups of these files:
+
+#+begin_src conf
+/System/Library/Extensions/IOUSBFamily.kext/Contents/PlugIns/AppleUSBVideoSupport.kext/Contents/MacOS/AppleUSBVideoSupport
+#+end_src
+
+You will need this file later for iSight functionality.
+
+#+begin_src conf
+/Library/ColorSync/Profiles/Displays/<FILES HERE>
+#+end_src
+
+*** Erase and format the drive
+
++ boot up into external usb clone of your macs internal drive
++ open disk utility 
++ you should also see your macs internal drive in the left hand sidebar which doesnt have a coloured icon
++ select the top level of your macs internal drive, not the drive underneath and slightly indented to the right
++ now select the erase tab, and make sure Mac Osx extended (Journaled) is selected, then click erase
++ this will erase the whole drive and create a GUID_partition_scheme on disk0
++ it will also create a 200 MB EFI partition at disk0s1
++ it will also create a hfs partition at disk0s2
++ select the drive underneath and slightly indented to the right of the drive you just formatted 
++ click on the erase tab and from the drop down select MS-DOS (FAT), then click erase
++ this will erase disk0s2 and format it as FAT, it wont erase the GUID_partition_scheme or the EFI partition on disk0s1
+
+Show the disk layout
+
+#+begin_src sh
+diskutil list
+#+end_src
+
+#+begin_src conf
+# /dev/disk0
+#   #:                       TYPE NAME                    SIZE       IDENTIFIER
+#   0:      GUID_partition_scheme                        *121.3 GB   disk0
+#   1:                        EFI EFI                     209.7 MB   disk0s1
+#   2:       Microsoft Basic Data LINUX                   121.0 GB   disk0s2
+#+end_src
+
++ after you have erased the macs internal drive quit disk utility
++ and then shut down the mac and unplug the external usb drive that you have boot up from
+
+** Boot in EFI mode
+
++ plug in your usb to ethernet adaptor and connect it to your router
++ shutdown you mac, plug in your usb stick and press the power button and then the alt key
++ select the drive marked windows and press return
+
+Check you have booted the usb stick in efi mode
+
+#+begin_src sh
+efivar -l
+#+end_src
+
+** Partition the drive
+
+*** list the drives
+
+#+begin_src sh
+lsblk -f
+#+end_src
+
+*** use cgdisk to create the partitions
+
+#+begin_src sh
+cgdisk
+#+end_src
+
++ select /dev/sda
++ partition /dev/sda2 into 2 new partitions, 
++ one for the linux boot directory and the other for the luks encrypted partition
+
+
+#+begin_src conf
+/dev/sda1 efi
+/dev/sda2 256 MB boot ext2
+/dev/sda3 ext4 for the luks lvm 
+#+end_src
+
+*** format the /dev/sda2 boot partition as ext2
+
+#+begin_src sh
+mkfs.ext2 /dev/sda2
+#+end_src
+
+*** use fsprobe to inform the kernal about the partition changes
+
+#+begin_src sh
+partprobe -s /dev/sda
+#+end_src
+
+** Luks LVM container
+
+*** list drive partitions
+
+#+begin_src sh
+lsblk
+#+end_src
+
+*** Load the kernel module for encryption
+
+#+begin_src sh
+modprobe dm-crypt
+#+end_src
+
+*** Encrypt the big partition (sda3)
+
+#+begin_src sh
+cryptsetup --cipher aes-xts-plain64 --hash sha512 --verify-passphrase --key-size 512 luksFormat /dev/sda3
+#+end_src
+
+*** check our lvm
+
+#+begin_src sh
+cryptsetup luksDump /dev/sda3
+#+end_src
+
+*** And open it, so it will be in /dev/mapper/lvm:
+
+#+begin_src sh
+cryptsetup luksOpen /dev/sda3 lvm
+#+end_src
+
+** Physical volume, Volume group, Logical volumes 
+
+*** create a physical volume
+
+#+begin_src sh
+pvcreate /dev/mapper/lvm
+#+end_src
+
+*** use pvdisplay to check the physical volume
+
+#+begin_src sh
+pvdisplay
+#+end_src
+
+*** create a volume group
+
+#+begin_src sh
+vgcreate main /dev/mapper/lvm
+#+end_src
+
+*** use vgdisplay to check the volume group
+
+#+begin_src sh
+vgdisplay
+#+end_src
+
+*** create the logical volumes
+
+#+begin_src sh
+lvcreate -L 30GB -n root main
+lvcreate -L 4GB -n swap main
+lvcreate -l 100%FREE -n home main
+#+end_src
+
+*** use lvdisplay to check the lvm
+
+#+begin_src sh
+lvdisplay
+#+end_src
+
+** Create a ext4 file system on /root and /home
+
+#+begin_src sh
+mkfs.ext4 /dev/mapper/main-root
+mkfs.ext4 /dev/mapper/main-home
+#+end_src
+
+*** Get 5% space from /home partition
+
+#+begin_src sh
+tune2fs -m 0 /dev/mapper/main-home
+#+end_src
+
+*** Swap file
+
+Create the swap file with mkswap and enable swap with swapon
+
+#+begin_src sh
+mkswap /dev/mapper/main-swap
+swapon /dev/mapper/main-swap
+#+end_src
+
+*** Mount volumes
+
++ Mount the volumes into the running livesystem:
++ mount the root file system to /mnt
+
+#+begin_src sh
+mount /dev/mapper/main-root /mnt
+mkdir /mnt/boot
+mount /dev/sda2 /mnt/boot
+mkdir /mnt/home
+mount /dev/mapper/main-home /mnt/home
+#+end_src
+
++ start lvmetad before chroot into system
++ Use the following command to activate the the lvm service for systemd:
+
+#+begin_src sh
+systemctl start lvm2-lvmetad
+#+end_src
+
+** Choose mirror for Pacman
+
+#+begin_src sh
+nano /etc/pacman.d/mirrorlist
+#+end_src
+
+#+begin_src conf
+# Scroll down to your preferred mirror (the closer to your location the better), 
+# press Alt+6 to copy the line, then scroll back up and press Ctrl+U to paste that line at the top of the list. 
+# US users should already have a good server at the top of the list. 
+# When you're done, press Ctrl+X to exit, and save with Y and Enter if you made any changes.
+#+end_src
+
+*** update repositories
+
+#+begin_src sh
+pacman -Sy
+#+end_src
+
+*** Install Base system
+
+#+begin_src sh
+pacstrap -i /mnt base base-devel
+#+end_src
+
+** Generate fstab:
+
+#+begin_src sh
+genfstab -p -U /mnt > /mnt/etc/fstab
+#+end_src
+
+** Chroot and configure the base system
+
+#+begin_src sh
+arch-chroot /mnt /bin/bash 
+#+end_src
+
+*** install the dosfstools package, so you can manipulate your EFI System Partition after installation:
+
+#+begin_src sh
+pacman -S dosfstools efibootmgr
+#+end_src
+
+** Configuring the boot loader
+
++ Boot init order
+
+#+begin_src sh
+nano /etc/mkinitcpio.conf
+#+end_src
+
++ Put “keymap”, “encrypt” and “lvm2″ (in that order!) before “filesystems” in the HOOKS array.
+
+#+begin_src conf
+HOOKS="... keymap encrypt lvm2 ... filesystems ..."
+#+end_src
+
++ Find MODULES 
++ uncomment « MODULES= » and add « dm_mod ext4″
++ The keymap hook is only necessary if you changed the keyboard layout prior to the creation of the encrypted partition. 
++ The encrypt hook has to be loaded before the lvm2 hook! After that we can create the new ramdisk with
+
+After that we can create the new ramdisk with
+
+#+begin_src sh
+mkinitcpio -p linux
+#+end_src
+
+
++ ignore these errors
+
+#+begin_src conf
+# ==> WARNING: Possibly missing firmware for module: aic94xx
+# ==> WARNING: Possibly missing firmware for module: bfa
+#+end_src
+
+** Install grub
+
+#+begin_src sh
+pacman -S grub-efi-x86_64
+#+end_src
+
++ edit grub
+
+#+begin_src sh
+nano /etc/default/grub
+#+end_src
+
++ Then, before installing grub you have to change the file /etc/default/grub at two points:
+
+Add "cryptdevice=/dev/sda2:vgroup" between "root=..." and "ro" in the paragraphs "Arch Linux" and "Arch Linux Fallback
+
++ find the GRUB_CMDLINE_LINUX_DEFAULT variable line, and change it to look like this:
+
+#+begin_src conf
+GRUB_CMDLINE_LINUX_DEFAULT="quiet cryptdevice=/dev/sda3:main rootflags=data=writeback"
+#+end_src
+
++ also change the Arch Linux Fallback lines as well
+
+** EFI set up
+
++ Make a directory named efi in /boot
++ Mount the already-existing EFI partition on your Mac to this /boot/efi directory
++ Install GRUB to this directory
++ Make a directory named locale in /boot/grub
++ Copy grub.mo from /usr/share/locale/en\@quot/LC_MESSAGES/ to /boot/grub/locale
+
+** Generate a configuration for Grub
+
+#+begin_src sh
+sudo mkdir -p /boot/efi
+#+end_src
+
++ Where X is your boot hard disk and Y is the efi partition you created earlier.
+
+#+begin_src sh
+mount -t vfat /dev/sdXY /boot/efi
+#+end_src
+
++ for example
+
+#+begin_src sh
+mount -t vfat /dev/sda1 /boot/efi
+#+end_src
+
+Install GRUB UEFI application to and its modules to /boot/grub/x86_64-efi
+
+#+begin_src sh
+modprobe dm-mod
+#+end_src
+
+*** grub-install
+
+#+begin_src sh
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck --debug
+#+end_src
+
+*** grub locale
+
+#+begin_src sh
+mkdir -p /boot/grub/locale
+#+end_src
+
+#+begin_src sh
+cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo
+#+end_src
+
+*** grub-mkconfig create grub.cfg
+
+#+begin_src sh
+grub-mkconfig -o /boot/grub/grub.cfg
+#+end_src
+
+*** Set up the grubx64.efi file
+
+#+begin_src sh
+cp /boot/efi/EFI/arch_grub/grubx64.efi /boot/efi/EFI/boot/grubx64.efi
+#+end_src
+
+** lvmetad grub fix
+
+If you get an lvmetad error while installing grub heres the fix
+
+#+begin_src conf
+WARNING: Failed to connect to lvmetad. Falling back to internal scanning.
+#+end_src
+
++ to resolve this problem we can make /run available from the host to the chroot environment.
++ Drop out of your chroot environment:
+
+#+begin_src sh
+exit (or control & D) 
+#+end_src
+
+*** create /mnt/hostrun
+
+#+begin_src sh
+mkdir /mnt/hostrun 
+#+end_src
+
+*** bind /run to /mnt/hostrun
+
+#+begin_src sh
+mount --bind /run /mnt/hostrun 
+#+end_src
+
+*** chroot into /mnt
+
+#+begin_src sh
+arch-chroot /mnt /bin/bash 
+#+end_src
+
+*** create /run/lvm
+
+#+begin_src sh
+mkdir /run/lvm 
+#+end_src
+
+*** bind /hostrun/lvm to /run/lvm
+
+#+begin_src sh
+mount --bind /hostrun/lvm /run/lvm
+#+end_src
+
++ Then continue with your grub-mkconfig and grub-install commands.
++ Remember to umount /run/lvm before exiting the chroot.
+
+** Configure the network
+
++ identify the network interfaces
+
+#+begin_src sh
+ip link
+#+end_src
+
+** enable dhcp
+
+#+begin_src sh
+systemctl enable dhcpcd.service
+systemctl start dhcpcd.service
+systemctl enable dhcpcd@interface_name.service
+systemctl enable dhcpcd@eth0.service
+#+end_src
+
+** bring up the eth0 network interface
+
+#+begin_src sh
+ip link set eth0 up
+#+end_src
+
+** use dhcp to get an ip address
+
+#+begin_src sh
+dhcpcd eth0
+#+end_src
+
+** check if your ethernet connection works, change interface to wlan0 if using wifi
+
+#+begin_src sh
+ping -I eth0 -c 3 www.google.com
+#+end_src
+
+** Set up locale
+
++ edit /etc/locale.gen
+
+#+begin_src sh
+nano /etc/locale.gen
+#+end_src
+
++ delete the # in front of your language of choice 
+
+#+begin_src conf
+en_US.UTF-8 UTF-8
+#+end_src
+
+*** generate the locale
+
+#+begin_src sh
+locale-gen
+#+end_src
+
+Create the /etc/locale.conf file substituting your chosen locale:
+
+#+begin_src sh
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+#+end_src
+
+*** Export substituting your chosen locale:
+
+#+begin_src sh
+export LANG=en_US.UTF-8
+#+end_src
+
+** Set up the Timezone
+
++ set the timezone
+
+#+begin_src sh
+ls /usr/share/zoneinfo/
+#+end_src
+
+*** create a symbolic link to your time zone 
+
+#+begin_src sh
+ln -s /usr/share/zoneinfo/<Zone>/<SubZone> /etc/localtime
+#+end_src
+
+*** set the timezone change to london uk
+
+#+begin_src sh
+ln -s /usr/share/zoneinfo/US/Pacific /etc/localtime
+#+end_src
+
+***  set the clock according to your chosen zone 
+
+#+begin_src sh
+hwclock --systohc --utc
+#+end_src
+
+** Define your hostname
+
++ echo hostname > /etc/hostname
+
+#+begin_src sh
+echo your-hostname > /etc/hostname
+#+end_src
+
++ Add the same hostname to /etc/hosts:
++ replace myhostname with your hostname
+
+#+begin_src sh
+nano /etc/hosts
+#+end_src
+
+#+begin_src conf
+#
+# /etc/hosts: static lookup table for host names
+#
+
+#<ip-address>	<hostname.domain.org>	<hostname>
+127.0.0.1	localhost.localdomain	localhost	myhostname
+::1		localhost.localdomain	localhost
+
+# End of file
+#+end_src
+
+** Set the root password 
+
+#+begin_src sh
+passwd
+#+end_src
+
+** Add the new user
+
+*** add user
+
+#+begin_src sh
+useradd -m -g users -G wheel,storage,power -s /bin/bash djwilcox
+#+end_src
+
+**** set the user password
+
+#+begin_src sh
+passwd your-username
+#+end_src
+
++ enter password and verify
+
+** Install sudo 
+
+#+begin_src sh
+sudo pacman -S sudo
+#+end_src
+
+*** set nano as the editor for visudo
+
+#+begin_src sh
+EDITOR=nano visudo
+#+end_src
+
++ add your user to the /etc/sudoers file
++ replace username with your username
+
+#+begin_src conf
+username ALL=(ALL) ALL
+#+end_src
+
+** Exit the chroot
+
+#+begin_src sh
+exit
+#+end_src
+
+*** unmount the drives
+
+#+begin_src sh
+umount -R /mnt
+#+end_src
+
+*** reboot
+
+#+begin_src sh
+reboot
+#+end_src
+
+** Xorg
+
++ To see which graphics card you have type:
+
+#+begin_src sh
+lspci | grep VGA
+#+end_src
+
+*** Install xorg driver
+
+#+begin_src sh
+sudo pacman -S xorg-server xorg-xinit xorg-server-utils xf86-video-intel xf86-input-synaptics ttf-dejavu
+#+end_src
+
+*** i3wm window manager
+
+install i3-wm window manager
+
+#+begin_src sh
+sudo pacman -S i3-wm i3status i3lock
+#+end_src
+
+*** xinitrc
+
++ copy default xinitrc to home
+
+#+begin_src sh
+cp /etc/X11/xinit/xinitrc ~/.xinitrc
+#+end_src
+
+*** edit ~/.xinitrc
+
+#+begin_src sh
+vim ~/.xinitrc
+#+end_src
+
++ append code below to bottom of ~/.xinitrc
++ xkbcomp for custom keymaps
++ exec 13 to start i3-wm window manager
+
+#+begin_src sh
+# remap ctrl to alt, alt to super, super to ctrl
+xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
+
+# start i3
+exec i3
+#+end_src
+
+*** startx
+
+#+begin_src sh
+startx
+#+end_src
+
+** urxvt terminal
+
++ urxvt terminal install
+
+#+begin_src sh
+sudo pacman -S rxvt-unicode urxvt-perls
+#+end_src
+	
+** Wifi
+
+#+begin_src sh
+sudo pacman -S wireless_tools wpa_supplicant wpa_actiond dialog
+#+end_src
+
+*** connect to your wifi network
+
+#+begin_src sh
+wifi-menu
+#+end_src
+
+** Networkmanager
+
++ install network manager
++ Now we’re going to disable the normal dhcpcd service and install probably the easiest to use Network Manager.
+
+#+begin_src sh
+pacman -S networkmanager network-manager-applet gnome-keyring seahorse
+#+end_src
+
+#+begin_src sh
+sudo systemctl stop dhcpcd@wlan0
+sudo systemctl stop dhcpcd@eth0
+sudo systemctl disable dhcpcd@wlan0
+sudo systemctl disable dhcpcd@eth0
+#+end_src
+
+*** Bring both your ip links down and back up with:
+
+#+begin_src sh
+sudo ip link set eth0 down
+sudo ip link set wlan0 down
+sudo ip link set eth0 up
+sudo ip link set wlan0 up
+#+end_src
+
+*** Now you just need to enable NetworkManager dameons and start the nm-applet
+
+#+begin_src sh
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
+#+end_src
+
+#+begin_src sh
+nm-applet
+#+end_src
+
+** Keyboard xkb mapping
+
+set the keyboard layout with localectl
+
+#+begin_src sh
+sudo localectl --no-convert set-x11-keymap gb pc104 mac
+#+end_src
+
+use the --no-convert option,
+so we dont set a keymap in the console
+
+check that /etc/vconsole.conf is empty
+
+#+begin_src sh
+less /etc/vconsole.conf
+#+end_src
+
+** X configuration files
+
+running the above localectl command will create a file at this location
+
+/etc/X11/xorg.conf.d/00-keyboard.conf
+
+#+begin_src conf
+# Read and parsed by systemd-localed. It's probably wise not to edit this file
+# manually too freely.
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "gb"
+        Option "XkbModel" "pc104"
+        Option "XkbVariant" "mac"
+EndSection
+#+end_src
+
+*** map ctrl to alt, alt to win, win to ctrl
+
+**** create the ~/.xkb/keymap/ directory
+
+#+begin_src sh
+mkdir -p ~/.xkb/keymap
+#+end_src
+
+**** export the current keymap with xkbcomp
+
+#+begin_src sh
+xkbcomp $DISPLAY ~/.xkb/keymap/keymap.xkb
+#+end_src
+
+**** create the ~/.xkb/symbols directory
+
+#+begin_src sh
+mkdir -p ~/.xkb/symbols
+#+end_src
+
+**** create the ~/.xkb/symbols/custom file
+
+#+begin_src sh
+vim ~/.xkb/symbols/custom
+#+end_src
+
+add the code below to ~/.xkb/symbols/custom  
+to map ctrl to alt, alt to win, win to ctrl
+
+#+begin_src conf
+// Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
+partial modifier_keys
+xkb_symbols "alt_win_ctrl" {
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+    modifier_map Control { <LCTL>, <RCTL> };
+    modifier_map Mod1 { <LALT>, <RALT>, Meta_L };
+    modifier_map Mod4 { <LWIN>, <RWIN> };
+};
+#+end_src
+
+the symbols file is called custom   
+and the xkb_symbols is called alt_win_ctrl
+
+**** load the local keymap and symbols
+
+#+begin_src sh
+xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
+#+end_src
+
+**** add xkbcomp to your ~/xinitrc
+
+#+begin_src sh
+vim ~/.xinitrc
+#+end_src
+
+** iptables
+
+#+begin_src sh
+sudo iptables -L
+#+end_src
+
++ flush existing rules and set chain policy setting to DROP
+
+#+begin_src sh
+sudo iptables -F
+sudo iptables -X
+# INPUT chain
+sudo iptables -A INPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-ip-options --log-tcp-options
+sudo iptables -A INPUT -m state --state INVALID -j DROP
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+# ACCEPT rules
+sudo iptables -A INPUT -i lo -j ACCEPT
+# rtorrent
+sudo iptables -A INPUT -p tcp --dport 6881 -j ACCEPT
+sudo iptables -A INPUT -p udp --dport 6882 -j ACCEPT
+# iptables for opennntp
+sudo iptables -I INPUT -p udp --dport 123 -j ACCEPT
+sudo iptables -I OUTPUT -p udp --sport 123 -j ACCEPT
+# syncthing
+sudo iptables -A INPUT -p tcp -m tcp --dport 22000 -j ACCEPT
+sudo iptables -A INPUT -p udp -m udp --dport 21025 -j ACCEPT
+# OUTPUT chain
+sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-ip-options --log-tcp-options
+sudo iptables -A OUTPUT -m state --state INVALID -j DROP
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+#+end_src
+
+*** save the ip tables, switch to root first
+
+#+begin_src sh
+sudo su
+iptables-save > /etc/iptables/iptables.rules
+#+end_src
+
+*** restore iptables, switch to root first
+
+#+begin_src sh
+sudo su
+iptables-restore < /etc/iptables/iptables.rules
+#+end_src
+
+*** edit iptables.service
+
+#+begin_src sh
+sudo vim /usr/lib/systemd/system/iptables.service
+#+end_src
+
+#+begin_src conf
+[Unit]
+Description=Packet Filtering Framework
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/iptables-restore /etc/iptables/iptables.rules
+ExecStop=/usr/lib/systemd/scripts/iptables-flush
+
+[Install]
+WantedBy=multi-user.target
+#+end_src
+
+*** enable iptables service
+
+#+begin_src sh
+sudo systemctl enable iptables
+sudo systemctl start iptables
+sudo systemctl reload iptables
+#+end_src
+
+** Sound
+
+#+begin_src sh
+sudo pacman -S alsa-utils
+#+end_src
+
++ log in as your account not root and then run alsamixer
++ unmute the volume
+
+#+begin_src sh
+alsamixer
+#+end_src
+
+*** set the volume keys
+
+#+begin_src sh
+xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/XF86AudioRaiseVolume -n -t string -s "amixer set Master 5%+ 
+unmute"
+
+xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/XF86AudioLowerVolume -n -t string -s "amixer set Master 5%- 
+unmute"
+
+xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/XF86AudioMute -n -t string -s "amixer set Master toggle"
+#+end_src
+
+If your sound card order changes on boot, you can specify their order in any file ending with .conf in /etc/modprobe.d  
+(/etc/modprobe.d/alsa-base.conf is suggested). For example, if you want your mia sound card to be #0:
+
+#+begin_src sh
+sudo vim /etc/modprobe.d/alsa-base.conf
+#+end_src
+
+#+begin_src conf
+options snd_mia index=0
+options snd_hda_intel index=1
+#+end_src
+
+** mpd
+
++ install mpd mpc ncmpc
+
+#+begin_src sh
+sudo pacman -S mpd mpc ncmpc
+#+end_src
+
+*** Create a directory for the mpd files and the playlists
+
+#+begin_src sh
+mkdir -p ~/.mpd/playlists
+#+end_src
+
+*** copy the mpd to the home directory
+
+#+begin_src sh
+gunzip -c /usr/share/doc/mpd/examples/mpd.conf.gz > ~/.mpd/mpd.conf
+#+end_src
+
+*** create the mpd files
+
+#+begin_src sh
+touch ~/.mpd/{mpd.db,mpd.log,mpd.pid,mpdstate}
+#+end_src
+
+*** edit the mpd.conf in your home directory
+
+#+begin_src sh
+vim ~/.mpd/mpd.conf
+#+end_src
+
+*** create the ~/.config/systemd/user/ directory
+
+#+begin_src sh
+mkdir -p ~/.config/systemd/user/
+#+end_src
+
+*** copy the mpd.service to your home directory
+
+#+begin_src sh
+cp /usr/lib/systemd/user/mpd.service ~/.config/systemd/user/
+#+end_src
+
+edit the mpd.service and add the path to the /home/username/.mpd/mpd.conf file
+
+#+begin_src sh
+vim ~/.config/systemd/user/mpd.service
+#+end_src
+
++ ~/.config/systemd/user/mpd.service
++ replace username with your username
+
+#+begin_src conf
+[Unit]
+Description=Music Player Daemon
+After=network.target sound.target
+
+[Service]
+ExecStart=/usr/bin/mpd --no-daemon /home/username/.mpd/mpd.conf
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+*** reload the daemon
+
+#+begin_src sh
+systemctl --user daemon-reload
+#+end_src
+
+*** enable mpd
+
+#+begin_src sh
+systemctl --user enable mpd
+#+end_src
+
+*** start mpd 
+
+#+begin_src sh
+systemctl --user start mpd
+#+end_src
+
+** Pacman i love candy
+
++ pacman progress bar
++ edit /etc/pacman.conf
+
+#+begin_src sh
+sudo vim /etc/pacman.conf
+#+end_src
+
++ add the code below into /etc/pacman.conf
+
+#+begin_src conf
+ILoveCandy
+#+end_src
+
+** rankmirrors
+
+rankmirrors for pacman
+
+*** Back up the existing /etc/pacman.d/mirrorlist:
+
+#+begin_src sh
+sudo cp /etc/pacman.d/mirrorlist{,.bak}
+#+end_src
+
+*** run the following sed line to uncomment every mirror in the new mirrorlist
+
+#+begin_src sh
+sudo sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.pacnew
+#+end_src
+
+*** Finally, rank the mirrors. Operand -n 6 means only output the 6 fastest mirrors
+
+#+begin_src sh
+sudo rankmirrors -n 6 /etc/pacman.d/mirrorlist.pacnew > /etc/pacman.d/mirrorlist
+#+end_src
+
+*** reload the mirrors
+
+#+begin_src sh
+sudo pacman -Syy
+#+end_src
+
+** Software
+*** bin folder for scripts
+
++ set PATH so it includes user's private bin if it exists
++ edit ~/.bashrc with vim
+
+#+begin_src sh
+vim ~/.bashrc
+#+end_src
+
++ add the code below to your ~/.bashrc
+
+#+begin_src sh
+if [ -d "$HOME/bin" ] ; then
+	PATH="$HOME/bin:$PATH"
+fi
+#+end_src
+
+*** Bash completion
+
+#+begin_src sh
+sudo pacman -S bash-completion
+#+end_src
+
+*** xfce4 terminal
+
+#+begin_src sh
+sudo pacman -S xfce4-terminal
+#+end_src
+
+*** sg3_utils for apple super drive
+
++ install xfburn and sg3_utils
+
+#+begin_src sh
+sudo pacman -S sg3_utils xfburn
+#+end_src
+
+**** list devices
+
+#+begin_src sh
+ls /dev
+#+end_src
+
++ the drive should be listed as sr0 or sr1
++ send the magic packet replace sr0 with your drive
+
+#+begin_src sh
+sudo sg_raw /dev/sr0 EA 00 00 00 00 00 01
+#+end_src
+
+**** custom udev rule send magic packet when drive is plugged in
+
+#+begin_src sh
+sudo vim /etc/udev/rules.d/99-local.rules
+#+end_src
+
+**** add the code below to /etc/udev/rules.d/99-local.rules
+
+#+begin_src conf
+ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="/usr/bin/sg_raw /dev/$kernel EA 00 00 00 00 00 01"
+#+end_src
