@@ -1,0 +1,89 @@
+#+STARTUP: content
+* sabnzbd arch setup
+** install sabnzbd from the aur
+
+#+begin_src sh
+yaourt -S sabnzbd
+#+end_src
+
+** install optinal dependencies for sabnzbd
+
+#+begin_src sh
+sudo pacman -S python2-feedparser python2-pyopenssl
+#+end_src
+
+** create the sabnzbd user directory
+
+#+begin_src sh
+mkdir -p ~/.sabnzbd.ini
+#+end_src
+
+** create the sabnzbd config file
+
+#+begin_src sh
+touch ~/.sabnzbd.ini/sabnzbd.ini
+#+end_src
+
+If you want to associate .nzb-files with SABnzbd, run the following command
+
+#+begin_src sh
+xdg-mime default sabnzbd.desktop applications/x-nzb
+#+end_src
+
+** add this line in /etc/conf.d/sabnzbd_systemd 
+
+#+begin_src sh
+sudo vim /etc/conf.d/sabnzbd_systemd
+#+end_src
+
+#+begin_src conf
+SABNZBD_ARGS=-f ${HOME}/.sabnzbd.ini -s ${SABNZBD_IP}:${SABNZBD_PORT} -d
+#+end_src
+
+** create ~/.config/systemd/user/ directory
+
+#+begin_src sh
+mkdir -p ~/.config/systemd/user/
+#+end_src
+
+** the sabnzbd.service file
+
+#+begin_src sh
+vim ~/.config/systemd/user/sabnzbd.service 
+#+end_src
+
+paste in the code below
+
+#+begin_src conf
+[Unit]
+Description = SABnzbd binary newsreader
+
+[Service]
+EnvironmentFile = /etc/conf.d/sabnzbd_systemd
+ExecStart = /bin/sh/ -c "python2 /opt/sabnzbd/SABnzbd.py ${SABNZBD_ARGS} --pid /tmp"
+ExecStop = /usr/bin/curl -f "${SABNZBD_PROTOCOL}://${SABNZBD_USPW}${SABNZBD_IP}:${SABNZBD_PORT}/sabnzbd/api?mode=shutdown&apikey=${SABNZBD_KEY}"
+Type = forking
+PIDFile = /tmp/sabnzbd-8080.pid
+
+[Install]
+WantedBy = default.target
+#+end_src
+
+** reload the user daemon
+
+#+begin_src sh
+systemctl --user daemon-reload
+#+end_src
+
+** start sabnzbd as a user systemctl service
+
+#+begin_src sh
+systemctl --user start sabnzbd
+#+end_src
+
+** show sabnzbd systemctl status
+
+#+begin_src sh
+systemctl --user status sabnzbd
+#+end_src
+
