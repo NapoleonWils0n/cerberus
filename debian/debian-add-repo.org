@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* add-apt-repository set up
+
+#+begin_src sh
+sudo apt install software-properties-common
+#+end_src
+
