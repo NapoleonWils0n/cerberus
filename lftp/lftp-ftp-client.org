@@ -1,0 +1,20 @@
+#+STARTUP: content
+* lftp ftp client
+** Create ~/.lftp directory
+
+#+begin_src sh
+mkdir -p ~/.lftp
+#+end_src
+
+** Create the ~/.lftp/rc file
+
+#+begin_src sh
+vim ~/.lftp/rc
+#+end_src
+
+** add the following code to the ~/.lftp/rc file
+
+#+begin_src sh
+set ssl:check-hostname false;
+#+end_src
+
