@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* unset a function, like unaliasing an alias
+
+#+begin_src sh
+unset -f my_function
+#+end_src
+
+

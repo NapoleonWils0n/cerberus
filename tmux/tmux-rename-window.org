@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* tmux rename window
+
+#+begin_example
+tmux rename-window (prefix + ,)
+cmd a ,
+#+end_example
+

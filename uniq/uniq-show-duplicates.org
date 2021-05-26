@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* show duplicates with uniq -d
+
+#+begin_src sh
+uniq -d
+#+end_src

@@ -1,6 +1,0 @@
-# tmux rename window
-
-tmux rename-window (prefix + ,)
-
-cmd a ,
-
