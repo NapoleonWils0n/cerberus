@@ -1,0 +1,334 @@
+#+STARTUP: content
+* qemu install
+
+#+begin_src sh
+sudo pacman -Ss qemu-kvm libvirt-daemon-system bridge-utils netcat-openbsd virt-manager 
+#+end_src
+
+** check hardware support
+
+#+begin_src sh
+lscpu
+#+end_src
+
+** check if kvm modules are loaded
+
+#+begin_src sh
+zgrep CONFIG_KVM /proc/config.gz
+#+end_src
+
+** check if virtio modules are loaded
+
+#+begin_src sh
+zgrep CONFIG_VIRTIO /proc/config.gz
+#+end_src
+
+Loading kernel modules
+First, check if the kernel modules are automatically loaded
+
+#+begin_src sh
+lsmod | grep kvm
+lsmod | grep virtio
+#+end_src
+
+In case the above commands return nothing, you need to load kernel modules
+
+** Create PolicyKit authorization file for kvm group
+
+create /etc/polkit-1/rules.d/49-org.libvirt.unix.manager.rules
+
+#+begin_src sh
+sudo vim /etc/polkit-1/rules.d/49-org.libvirt.unix.manager.rules
+#+end_src
+
+
+#+begin_src conf
+/* Allow users in kvm group to manage the libvirt
+daemon without authentication */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.libvirt.unix.manage" &&
+        subject.isInGroup("kvm")) {
+            return polkit.Result.YES;
+    }
+});
+#+end_src
+
+** restart polkit service
+
+#+begin_src sh
+sudo systemctl restart polkit.service
+#+end_src
+
+** create the kvm group and add your user to it
+
+replace username with your username
+
+#+begin_src sh
+sudo groupadd kvm
+sudo gpasswd -a username kvm
+#+end_src
+
+** set up networking
+
+#+begin_src sh
+sudo pacman -S ebtables
+#+end_src
+
+** check ethernet device name
+
+#+begin_src sh
+ip a
+#+end_src
+
+the ethernet device is usually called eth0
+my ethernet device is called ens9
+
+if your ethernet is called eth0, 
+replace ens9 with eth0 in the commands below
+
+** set ethernet device down 
+
+#+begin_src sh
+sudo ip link set dev ens9 down
+#+end_src
+
+** create the bridge
+
+#+begin_src sh
+sudo brctl addbr br0
+#+end_src
+
+** Add a device to a bridge
+
+#+begin_src sh
+sudo brctl addif br0 ens9
+#+end_src
+
+** show bridges
+
+#+begin_src sh
+brctl show
+#+end_src
+
+** set ethernet device up 
+
+#+begin_src sh
+sudo ip link set up dev ens9
+#+end_src
+
+** Set the bridge device up:
+
+#+begin_src sh
+sudo ip link set up dev br0
+#+end_src
+
+Delete a bridge, you need to first set it to down:
+
+#+begin_src sh
+sudo ip link set dev br0 down
+sudo brctl delbr br0
+#+end_src
+
+* Allow qemu to access to the bridge br0
+
+copy the bridge.conf.sample and rename to bridge.conf
+
+#+begin_src sh
+sudo cp /etc/qemu/bridge.conf.sample /etc/qemu/bridge.conf
+#+end_src
+
+** Enable IPv4 forwarding:
+
+#+begin_src sh
+sudo sysctl net.ipv4.ip_forward=1
+#+end_src
+
+** start / enable libvirtd at boot
+*** start libvirtd 
+
+#+begin_src sh
+sudo systemctl start libvirtd
+#+end_src
+
+*** enable libvirtd at boot
+
+#+begin_src sh
+sudo systemctl enable libvirtd
+#+end_src
+
+
+*** start libvirt socket
+
+#+begin_src sh
+sudo systemctl start virtlogd.socket
+#+end_src
+
+*** Test if libvirt is working properly 
+
+**** To test if the daemon is working properly on a system level:
+
+#+begin_src sh
+virsh -c qemu:///system
+#+end_src
+
+**** the virsh prompt looks like this:
+
+#+begin_example
+virsh #
+#+end_example
+
+**** To test if libvirt is working properly for a user-session: 
+
+#+begin_src sh
+virsh -c qemu:///session
+#+end_src
+
+** create a storage pool file directory in your home directory
+
+create a directory for the libvirt storage pool
+replace username with your username
+
+#+begin_src sh
+mkdir -p /home/username/libvirt/images
+#+end_src
+
+chown the libvirt directory to allow both your user and the kvm group access
+replace username with your username
+
+#+begin_src sh
+sudo chown -R username:kvm /home/username/libvirt
+#+end_src
+
+** home directory file permissions
+
+#+begin_src sh
+chmod o+x /home/username
+#+end_src
+
+** change libvirt default storage pool directory
+*** list pools
+
+#+begin_src sh
+sudo virsh pool-list --all
+#+end_src
+
+*** stop default pool
+
+#+begin_src sh
+sudo virsh pool-destroy default
+#+end_src
+
+*** remove default pool
+
+#+begin_src sh
+sudo virsh pool-undefine default
+#+end_src
+
+*** create new pool
+
+#+begin_src sh
+sudo virsh pool-define-as --name default --type dir --target /home/username/libvirt/images 
+#+end_src
+
+*** start the new pool
+
+#+begin_src sh
+sudo virsh pool-start default
+#+end_src
+
+*** autostart the new pool
+
+#+begin_src sh
+sudo virsh pool-autostart default
+#+end_src
+
+** libvirt commands
+*** list pools
+
+#+begin_src sh
+sudo virsh pool-list --all
+#+end_src
+
+** virsh pool-dumpxml
+
+#+begin_src sh
+sudo virsh pool-dumpxml default 
+#+end_src
+
+** Stopping a Pool
+
+#+begin_src sh
+sudo virsh pool-destroy poolname
+#+end_src
+
+** Remove the storage pools definition
+
+#+begin_src sh
+sudo virsh pool-undefine poolname
+#+end_src
+
+** Starting a Pool
+
+#+begin_src sh
+sudo virsh pool-start poolname
+#+end_src
+
+** Enable Autostarting a Pool
+
+#+begin_src sh
+sudo virsh pool-autostart poolname
+#+end_src
+
+** Verify that the storage pool was created correctly and is running
+
+#+begin_src sh
+sudo virsh pool-info poolname
+#+end_src
+
+** qemu install openbsd
+*** live cd
+
+#+begin_src sh
+qemu-system-x86_64 -cdrom cd56.iso -m 256
+#+end_src
+
+#+begin_src sh
+qemu-system-x86_64 -net nic -net bridge,br=br0 -cdrom cd56.iso -m 256
+#+end_src
+
+*** install openbsd to img file
+
+cd into the storage pool directory
+
+#+begin_src sh
+cd ~/libvrt/images
+#+end_src
+
+*** create a 10 gig image file to use as a hard drive
+
+#+begin_src sh
+qemu-img create openbsd.img 10G
+#+end_src
+
+*** run qemu with a network bridge, hard drive and cdrom
+
+#+begin_src sh
+qemu-system-x86_64 \
+-net nic -net bridge,br=br0 \
+-hda openbsd.img \
+-cdrom cd56.iso \
+-boot d \
+-m 1024
+#+end_src
+
+*** run qemu without cd rom
+
+#+begin_src sh
+qemu-system-x86_64 \
+-net nic -net bridge,br=br0 \
+-hda openbsd.img \
+-m 1024
+#+end_src
+
+
+
