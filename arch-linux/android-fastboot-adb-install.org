@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* android fastboot and adb install
+
+#+begin_src sh
+yaourt -S android-sdk-platform-tools android-udev
+#+end_src
