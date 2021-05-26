@@ -1,0 +1,13 @@
+#+STARTUP: content
+* ssh scp copy files
+** scp file
+
+#+begin_src sh
+scp ~/Desktop/filename.mysql username@192.168.1.18:/home/username/filename.mysql
+#+end_src
+
+** recursive scp
+
+#+begin_src sh
+scp -r ~/Desktop/filename.mysql username@192.168.1.18:/home/username/filename.mysql
+#+end_src
