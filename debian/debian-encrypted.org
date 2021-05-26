@@ -1,40 +1,35 @@
-# debian efi i3-wm
-
+#+STARTUP: content
+* debian efi i3-wm
 
 burn the net iso to a disk
-
 insert the disk and hold down the alt key on a mac
-
 select the efi boot disc icon and not windows
-
 select advanced options
-
 select expert install
-
 select debian sid
-
 select guided install encrypted and lvm
-
 select seperate home partition
-
 install grub to main drive
-
 dont select install efi boot to media
-
 install packages
-
 deselect debian desktop and print by pressing space
-
 make sure only standard system utilities are selected
 
-## upgrade to sid
+** upgrade to sid
 
-Type nano /etc/apt/sources.list and press enter.
+#+begin_src sh
+sudo nano /etc/apt/sources.list
+#+end_src
+
 Comment out (place a # in the beginning of each line) all lines.
-Save the file.
-Run the following commands: apt-get update. apt-get upgrade. apt-get dist-upgrade.
 
-```
+#+begin_src sh
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+#+end_src
+
+#+begin_src sh
 sudo apt-get install --no-install-recommends \ 
 xorg \
 xinit \
@@ -52,90 +47,121 @@ gdb \
 firmware-linux-nonfree \
 seahorse \ 
 gnome-keyring \
+broadcom-sta-dkms
+#+end_src
 
-# wifi
+** luks change password
 
-sudo apt install broadcom-sta-dkms
-```
-
-# kodi
-depends on init-system-helpers
-
-## luks change password
-
+#+begin_src sh
 sudo cryptsetup -y luksAddKey ENCRYPTED_PARTITION
 sudo cryptsetup luksRemoveKey ENCRYPTED_PARTITION
+#+end_src
 
-# find the luks partition
+** find the luks partition
+
+#+begin_src sh
 less /etc/crypttab
+#+end_src
 
-# add new key
+** add new key
+
+#+begin_src sh
 sudo cryptsetup -y luksAddKey /dev/sda3
+#+end_src
 
-# remove old key
+** remove old key
+
+#+begin_src sh
 sudo cryptsetup luksRemoveKey /dev/sda3
+#+end_src
 
-## debian i3-wm set up
+** debian i3-wm set up
 
-```
+#+begin_src sh
 sudo apt install i3-wm i3lock i3status suckless-tools
-```
+#+end_src
 
+** ~/.xinitrc
 
-## ~/.xinitrc
-
+#+begin_src sh
 vim ~/.xinitrc
+#+end_src
 
+#+begin_src conf
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 exec i3
+#+end_src
 
+** rxvt set up
 
-# rxvt set up
-
+#+begin_src sh
 sudo apt install rxvt-unicode-256color
-
 sudo apt install fonts-inconsolata
+#+end_src
 
+#+begin_src sh
 xrdb ~/.Xresources
-
 exec i3
+#+end_src
 
-# ranger
+** ranger
 
+#+begin_src sh
 sudo apt install ranger atool highlight mediainfo
+#+end_src
 
 Configuration
 
-After startup, ranger creates a directory ~/.config/ranger. To copy the default configuration to this directory issue the following command:
+After startup, ranger creates a directory ~/.config/ranger.
+To copy the default configuration to this directory issue the following command:
+
+#+begin_src sh
 ranger --copy-config=all
+#+end_src
 
-# git 
+** git 
 
+#+begin_src sh
 sudo apt install git-core
+#+end_src
 
-# oathtool for 2 factorauth
+** oathtool for 2 factorauth
 
+#+begin_src sh
 sudo apt install oathtool
+#+end_src
 
+** wireshark stable
 
-# wireshark stable
-
+#+begin_src sh
 sudo apt install wireshark
+#+end_src
 
-# emacs
+** emacs
 
-sudo apt install emacs24
+#+begin_src sh
+sudo apt install emacs
+#+end_src
 
-# iptables
+** iptables
 
+#+begin_src sh
 sudo apt-get install iptables-persistent
+#+end_src
 
-# debian keyboard
+** debian keyboard
 
+#+begin_src sh
 sudo dpkg-reconfigure keyboard-configuration
-How to set keyboard layout in initramfs
+#+end_src
 
+** How to set keyboard layout in initramfs
+
+#+begin_src sh
 sudo vim /etc/initramfs-tools/initramfs.conf
+#+end_src
+
+#+begin_src conf
 #
 # KEYMAP: [ y | n ]
 #
@@ -144,48 +170,68 @@ sudo vim /etc/initramfs-tools/initramfs.conf
 
 KEYMAP=y
 apply changes
+#+end_src
 
+#+begin_src sh
 sudo update-initramfs -u
+#+end_src
 
+** keyboard
 
-# keyboard
-
+#+begin_src sh
 localectl set-x11-keymap gb pc104 mac
+#+end_src
 
-# change keyboard settings in gui
+** change keyboard settings in gui
 
-edit /etc/vconsole.conf
+#+begin_src sh
+vi /etc/vconsole.conf
+#+end_src
+
 remove 
 
+#+begin_src conf
 keymap=uk
+#+end_src
 
+** unbound dns server
 
-# unbound dns server
-
+#+begin_src sh
 sudo apt install unbound dnssec-trigger
+#+end_src
 
-# thunar smb
-install gvfs-backends and gvfs-fuse
+** thunar smb
 
-# themes 
+#+begin_src sh
+sudo apt install gvfs-backends gvfs-fuse
+#+end_src
 
+** themes 
+
+#+begin_src sh
 vim ~/.gtkrc-2.0
+#+end_src
 
+#+begin_src conf
 gtk-icon-theme-name = "deepin"
 gtk-theme-name = "deepin"
 gtk-font-name = "Noto Sans Regular 11"
+#+end_src
 
+#+begin_src sh
 mkdir ~/.local/share/themes
 mkdir ~/.icons
+#+end_src
 
 Optional: run gtk-update-icon-cache -f -t ~/.icons/<theme_name> to create an icon cache 
 
+** xkbcomp
 
-# xkbcomp
-
+#+begin_src sh
 vim ~/.xinitrc
+#+end_src
 
-```
+#+begin_src conf
 #!/bin/sh
 
 userresources=$HOME/.Xresources
@@ -225,21 +271,24 @@ xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
 # start i3
 exec i3
-```
-
+#+end_src
 
 Since several people asked me how to get such a setup and it’s poorly documented (as in: I found it in the GRUB sources) I decided to blog about this. When using GRUB >=2.00-22 (as of February 2014 available in Debian/jessie and Debian/unstable) it’s possible to boot from a full-crypto setup (this doesn’t mean it’s recommended, but it worked fine in my test setups so far). This means not even an unencrypted /boot partition is needed.
 
 Before executing the grub-install commands execute those steps (inside the system/chroot of course, adjust GRUB_PRELOAD_MODULES for your setup as needed, I’ve used it in a setup with SW-RAID/LVM):
 
-# echo GRUB_CRYPTODISK_ENABLE=y >> /etc/default/grub
-# echo 'GRUB_PRELOAD_MODULES="lvm cryptodisk mdraid1x"' >> /etc/default/grub
+#+begin_src sh
+sudo echo GRUB_CRYPTODISK_ENABLE=y >> /etc/default/grub
+sudo echo 'GRUB_PRELOAD_MODULES="lvm cryptodisk mdraid1x"' >> /etc/default/grub
+#+end_src
 
-# ranger
+** ranger
+
 to stop ranger loading both the default and your custom rc.conf,
 set the environmen variable: RANGER_LOAD_DEFAULT_RC to FALSE
 
-# chromium extensions
+**  chromium extensions
+
 The newest Chromium in Debian sid disables remote extension loading by default. This has the effect of disabling extensions en masse. I'm not sure what the reasoning is, but it's damn inconvenient.
 
 It's claimed that one way to get the old behavior back is to add
@@ -248,36 +297,51 @@ It's claimed that one way to get the old behavior back is to add
 
 to the list of flags in /etc/chromium.d/default-flags. This will affect all users on the system, and the file could be overwritten by an upgrade. In addition, until I know better what's behind the change, I'd really like to apply the change only to my account, not to all users.
 
-I did this by adding: 
-# fix latest Debian Chromium disabling remote extensions
+fix latest Debian Chromium disabling remote extensions
 
-```
+#+begin_src conf
 export CHROMIUM_FLAGS=$CHROMIUM_FLAGS" --enable-remote-extensions"
-```
+#+end_src
 
 to my ~/.profile. Be sure to log out and back in to experience the change.
 
-# syncthing
+** syncthing
 
+#+begin_src sh
 sudo apt-get install apt-transport-https
+#+end_src
 
-# Add the release PGP keys:
+** Add the release PGP keys:
+
+#+begin_src sh
 curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+#+end_src
 
-# Add the "stable" channel to your APT sources:
+** Add the "stable" channel to your APT sources:
+
+#+begin_src sh
 echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
+#+end_src
 
-# Update and install syncthing:
+** Update and install syncthing:
+
+#+begin_src sh
 sudo apt-get update
 sudo apt-get install syncthing
+#+end_src
 
-# systemd user service
-By default, users cannot set user services to run at boot time. The admin must enable this on an individual basis for each user.
+** systemd user service
 
+By default, users cannot set user services to run at boot time.
+The admin must enable this on an individual basis for each user.
+
+#+begin_src sh
 sudo loginctl enable-linger <username>
+#+end_src
 
-# mpd
+** mpd
 
+#+begin_src sh
 sudo systemctl disable mpd
-
 systemctl --user start mpd
+#+end_src
