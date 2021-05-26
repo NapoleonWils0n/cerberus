@@ -1,0 +1,36 @@
+* apple super drive magic packet
+** install xfburn
+
+#+begin_src sh
+sudo apt install xfburn
+#+end_src
+
+** ls devices
+
+#+begin_src sh
+ls /dev
+#+end_src
+
+the drive should be listed as sr0 or sr1
+
+** send the magic packet replace sr0 with your drive
+
+#+begin_src sh
+sg_raw /dev/sr0 EA 00 00 00 00 00 01
+#+end_src
+
+** custom udev rule send magic packet when drive is plugged in
+
+#+begin_src sh
+sudo vi /etc/udev/rules.d/99-local.rules
+#+end_src
+
+** add the code below to /etc/udev/rules.d/99-local.rules
+
+#+begin_src sh
+sudo vi /etc/udev/rules.d/99-local.rules
+#+end_src
+
+#+begin_src conf
+ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="/usr/bin/sg_raw /dev/$kernel EA 00 00 00 00 00 01"
+#+end_src
