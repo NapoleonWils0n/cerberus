@@ -1,13 +1,9 @@
-debian vlc fix
+#+STARTUP: showall
+* debian vlc fix
 
 open preferences
-
 go to video tab
-
 from output select
-
 opengl glx video output (xcb)
-
 go to the input codecs tab
-
 under codecs change hardware-accelarated decodeing to va-api video decoder via x11
