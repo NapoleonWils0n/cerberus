@@ -1,0 +1,60 @@
+#+STARTUP: content
+* virtualbox arch linux install
+** install virtualbox
+
+#+begin_src sh
+sudo pacman -S virtualbox
+#+end_src
+
+** modprobe
+
+#+begin_src sh
+sudo modprobe vboxdrv
+#+end_src
+
+** load the module at boot
+
+#+begin_src sh
+sudo vim /etc/modules-load.d/virtualbox.conf
+#+end_src
+
+** add vboxdrv to the /etc/modules-load/virtualbox.conf file
+
+#+begin_src conf
+vboxdrv
+vboxnetadp
+vboxnetflt
+#+end_src
+
+** add our user to the virtualbox group
+
+#+begin_src sh
+sudo gpasswd -a $USER vboxusers
+#+end_src
+
+** install virtualbox guest utils
+
+#+begin_src sh
+sudo pacman -S virtualbox-guest-utils
+#+end_src
+
+** install guest iso
+
+#+begin_src sh
+sudo pacman -S virtualbox-guest-iso
+#+end_src
+
+** install virtualbox extension pack
+
+#+begin_src sh
+yaourt -S virtualbox-ext-oracle
+#+end_src
+
+** manually load modules
+
+#+begin_src sh
+sudo su
+modprobe -a vboxdrv vboxnetadp vboxnetflt 
+#+end_src
+
+reboot your machine

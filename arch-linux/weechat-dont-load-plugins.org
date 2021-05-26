@@ -1,0 +1,19 @@
+#+STARTUP: showall
+* weechat dont load optional dependencies plugins
+
+#+begin_src sh
+/set weechat.plugin.autoload "*,!tcl,!ruby,!python2,!lua,!aspell"
+#+end_src
+
++ Optional dependencies for weechat
+
+#+begin_src conf
+perl [installed]
+python2
+lua
+tcl
+ruby
+aspell
+guile [installed]
+#+end_src
+
