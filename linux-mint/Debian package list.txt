@@ -1,6 +1,0 @@
-Debian package list
-
-Debian-based distributions have an easy way to list all installed packages on your system and write that list into a simple text file. This list can then be used on your new Linux installation to mark all packages that need to be installed again. To create the list, you’ll need to run the command sudo dpkg --get-selections > /home/[your user name]/packagelist.txt, while replacing [your user name] with the appropriate entry. To mark packages for reinstallation on the new system, copy the text file over to that system and run the command sudo dpkg --set-selections < /home/[your user name]/packagelist.txt.
-
-
-This will mark all packages that you want back, but it won’t actually install them until you run the command sudo apt-get -u dselect-upgrade. This should install all packages from the official repos which you had on your old system, so a lot of familiar software should reappear after some time to download and install. Don’t forget to also restore your backed up data to the appropriate folders, and ta-da! Your system should now be back to the way it was!

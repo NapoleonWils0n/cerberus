@@ -1,9 +1,0 @@
-In Macs, instead of <Control>+c to copy and <Control>+c to paste, it's <Super>+c and <Super+v>, etc. 
-
-1.) In your menu(mintMenu if you use Mint), select Keyboard. This will bring up the keyboard preferences.
-2.) Go to the Layouts tab and click the Options button. This will now bring up a window with a list of options.
-3.) Click on 'Alt/Win key behavior' and select 'Control is mapped to Win keys (and the usual Ctrl keys)'.
-4.) Close that window, and in the Keyboard Preferences window, click 'Apply System-Wide'. Once you have done that, you can close Keyboard Preferences.
-
-
-Now the Mac/Win(Super) key should act like the Control key, meaning that you can now copy/paste text using <Super>+c and <Super>+v, among any other hotkeys that use the Control key. The control key also still holds the same functionality as it did before

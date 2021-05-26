@@ -1,7 +1,0 @@
-Show location bar in nemo file browser
-
-Preferences->Cinnamon Settings->Themes->Other Settings tab
-
-Check: Always Location Entry in Nemo
-
-Restart Nemo
