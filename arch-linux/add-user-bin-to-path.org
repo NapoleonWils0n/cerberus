@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* set PATH so it includes user's private bin if it exists
+
+edit ~/.zshrc or ~/.bashrc
+
+#+begin_src sh
+vi ~/.bashrc
+#+end_src
+
+#+begin_src conf
+if [ -d "$HOME/bin" ] ; then
+	PATH="$HOME/bin:$PATH"
+fi
+#+end_src
+
