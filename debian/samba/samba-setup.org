@@ -1,0 +1,29 @@
+#+STARTUP: content
+* samba set up ubuntu
+** install samba
+
+#+begin_src sh
+sudo apt-get install samba
+#+end_src
+
+** configure samba and add users
+
+#+begin_src sh
+sudo smbpasswd -a username
+#+end_src
+
+New SMB password:
+Retype new SMB password:
+Added user username.
+
+#+begin_src sh
+sudo smbpasswd -e username
+#+end_src
+
+Enabled user username.
+
+** reload samba
+
+#+begin_src sh
+sudo smbd reload
+#+end_src
