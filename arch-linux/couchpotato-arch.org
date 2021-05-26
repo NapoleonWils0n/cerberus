@@ -1,19 +1,20 @@
-#!/bin/bash
+#+STARTUP: content
+* couchpotato arch install
 
-# couchpotato arch install
-#=========================
-
+#+begin_src sh
 yaourt -S couchpotato-git
+#+end_src
 
+** couchpoato service
 
-
-# couchpoato service
+#+begin_src sh
 sudo vim  /etc/systemd/system/couchpoato.service
+#+end_src
 
-# replace User=username with your username
-# replace /home/username/ with your username
-#==================================
+replace User=username with your username
+replace /home/username/ with your username
 
+#+begin_src conf
 [Unit]
 Description=An automatic NZB and torrent movie downloader
 
@@ -26,3 +27,4 @@ Group=wheel
 
 [Install]
 WantedBy=multi-user.target
+#+end_src
