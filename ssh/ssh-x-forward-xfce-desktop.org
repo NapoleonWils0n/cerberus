@@ -1,0 +1,25 @@
+#+STARTUP: content
+* ssh x forward xfce desktop
+# on client machine ( linux laptop )
+
+#+begin_src sh
+sudo vim /etc/X11/Xwrapper.config
+#+end_src
+
+** change from 
+
+#+begin_src conf
+allowed_users=console
+#+end_src
+
+** to 
+
+#+begin_src conf
+allowed_users=anybody
+#+end_src
+
+** start ssh tunnel to forward the raspberry pi desktop to your desktop
+
+#+begin_src sh
+xinit /usr/bin/ssh -Y pi@pi.local lxsession -- :1
+#+end_src

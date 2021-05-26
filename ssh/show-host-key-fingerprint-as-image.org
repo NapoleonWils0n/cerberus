@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* show Host key fingerprint as image
+
+#+begin_src sh
+ssh -o VisualHostKey=yes user@host
+#+end_src

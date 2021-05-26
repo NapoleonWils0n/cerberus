@@ -1,0 +1,39 @@
+#+STARTUP: content
+* ssh tun tap
+
+#+begin_src sh
+ssh -o Tunnel=point-to-point -w 0:0 remote
+#+end_src
+
+** server
+
+#+begin_src sh
+ifconfig tun5 10.0.1.1 10.0.1.2 
+route add 192.168.51.0/24 10.0.1.2
+#+end_src
+
+** client
+
+#+begin_src sh
+ifconfig tun5 10.0.1.1 10.0.1.2 
+ifconfig tun5 10.0.1.2 10.0.1.1
+route add 192.168.16.0/24 10.0.1.2
+#+end_src
+
+** enable ip forwarding mac osx
+
+#+begin_src sh
+sysctl -w net.inet.ip.forwarding=1
+#+end_src
+
+** disble ip forwarding mac osx
+
+#+begin_src sh
+sysctl -w net.inet.ip.forwarding=0
+#+end_src
+
+** ping the tunnel
+
+#+begin_src sh
+ping -c 4 10.0.0.2
+#+end_src

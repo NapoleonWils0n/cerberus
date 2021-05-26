@@ -1,0 +1,25 @@
+#+STARTUP: content
+* vnc over ssh tunnel
+** Local ssh tunnel
+
+#+begin_src sh
+ssh -f -q -L 5900:localhost:5900 192.168.1.9 sleep 10 && open vnc://127.0.0.1
+#+end_src
+
+** Remote ssh tunnel
+
+#+begin_src sh
+ssh -f -q -L 5900:localhost:5900 10.20.30.100 sleep 10 && open vnc://127.0.0.1
+#+end_src
+
+** Check for running ssh process
+
+#+begin_src sh
+ps ax | grep ssh | grep -v grep
+#+end_src
+
+** Kill running ssh process
+
+#+begin_src sh
+kill process_id
+#+end_src

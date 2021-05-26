@@ -1,0 +1,60 @@
+#+STARTUP: content
+* x forwarding over ssh with conky
+** server set up
+
+#+begin_src sh
+sudo apt-get install conky
+#+end_src
+
+** create the conky config file in your home directory
+
+#+begin_src sh
+touch .conkyrc
+#+end_src
+
+then paste in your conky config ( see conkyrc.txt )
+
+** install xauth so you can forward x over ssh
+
+#+begin_src sh
+sudo apt-get install xauth
+#+end_src
+
+** enable x forwarding
+
+#+begin_src sh
+ssh -X -p 30000 user@192.160.200.128 'conky'
+#+end_src
+
+
+the -X forwards the display 'conky'  launches the conky program on the server
+
+** create the script
+
+#+begin_src conf
+#!/bin/sh
+
+ssh -X -p 30000 user@192.160.200.128 'conky'
+#+end_src
+
+save in ~/bin
+
+** make it executable
+
+#+begin_src sh
+chmod +x conky-script
+#+end_src
+
+** reload source
+
+#+begin_src sh
+source .bash_profile
+#+end_src
+
+
+
+
+
+
+
+

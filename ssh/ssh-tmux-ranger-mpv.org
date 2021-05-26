@@ -1,35 +1,36 @@
-# ssh tmux ranger and mpv
+#+STARTUP: content
+* ssh tmux ranger and mpv
 
 ssh into server
 
-## Export the Display
+** Export the Display
 
 we need to export the display so the video displays on the external monitor
 
-```
+#+begin_src sh
 export DISPLAY=:0
-```
+#+end_src
 
-### Tmux
+** Tmux
 
 open a tmux windows
 
-```
+#+begin_src sh
 tmux
-```
+#+end_src
 
-### Ranger
+** Ranger
 
 open ranger
 
-```
+#+begin_src sh
 ranger
-```
+#+end_src
 
 we need to use :open_with mpv with ranger so we can control mpv
 
-```
+#+begin_src sh
 :open_with_mpv video.mkv
-```
+#+end_src
 
 Issuing a <ctrl> + a + d will detach the tmux session and disconnect the SSH connection

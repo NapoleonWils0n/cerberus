@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* tar over ssh
+
+#+begin_src sh
+tar cvpzf -/ | ssh user@host ""cat > /backup.tar.gz""
+#+end_src
