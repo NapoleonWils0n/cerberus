@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* alsa audio arch linux
+
+#+begin_src sh
+sudo pacman -S alsa-lib alsa-utils alsa-plugins
+#+end_src
