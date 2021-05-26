@@ -1,0 +1,18 @@
+#+STARTUP: content
+* record terminal sessions
+
+#+begin_src sh
+sudo apt-get install ttyrec 
+#+end_src
+
+** record terminal sessions
+
+#+begin_src sh
+ttyrec
+#+end_src
+
+* play back the recording 
+
+#+begin_src sh
+ttyplay path/to/file
+#+end_src
