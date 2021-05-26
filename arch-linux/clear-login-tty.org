@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* clear login tty
+
+#+begin_src sh
+sudo clear >> /etc/issue
+#+end_src
