@@ -1,64 +1,66 @@
-# dnscrypt proxy
+#+STARTUP: content
+* dnscrypt proxy
 
-```
+#+begin_src sh
 sudo pacman dnscrypt-proxy
-```
+#+end_src
 
-### Run as unprivileged user
+** Run as unprivileged user
 
-```
+#+begin_src sh
 sudo useradd -r -d /var/dnscrypt -m -k /var/empty -s /bin/nologin dnscrypt
-```
+#+end_src
 
-### Modify the resolv.conf file and replace the current set of resolver addresses with localhost:
+** Modify the resolv.conf file and replace the current set of resolver addresses with localhost:
 
-```
+#+begin_src sh
 sudo vim /etc/resolv.conf
+#+end_src
 
+#+begin_src conf
 nameserver 127.0.0.1
-```
+#+end_src
 
-### DNSCrypt as a forwarder for local DNS cache
+** DNSCrypt as a forwarder for local DNS cache
 
 It is recommended to run DNSCrypt as a forwarder for a local DNS cache, otherwise every single query will make a round-trip to the upstream resolver. Any local DNS caching program should work, examples below show configuration for Unbound, dnsmasq, and pdnsd.
 First configure dnscrypt-proxy to listen on a port different from the default 53, since the DNS cache needs to listen on 53 and query dnscrypt-proxy on a different port. Port number 40 is used as an example in this section:
 
-### Edit dnscrypt-proxy.service, pointing --user to the new user:
+** Edit dnscrypt-proxy.service, pointing --user to the new user:
 
-```
+#+begin_src sh
 sudo systemctl edit dnscrypt-proxy.socket
-```
+#+end_src
 
-```
+#+begin_src conf
 [Socket]
 ListenStream=
 ListenDatagram=
 ListenStream=127.0.0.1:40
 ListenDatagram=127.0.0.1:40
-```
+#+end_src
 
-```
+#+begin_src sh
 sudo systemctl edit dnscrypt-proxy.service
-```
+#+end_src
 
-```
+#+begin_src conf
 ExecStart=/usr/bin/dnscrypt-proxy -R dnscrypt.eu-nl --user=dnscrypt
-```
+#+end_src
 
-# Example: configuration for Unbound
+** Example: configuration for Unbound
 
-```
+#+begin_src sh
 sudo vim /etc/unbound/unbound.conf
-```
+#+end_src
 
-```
+#+begin_src conf
 do-not-query-localhost: no
 forward-zone:
   name: "."
   forward-addr: 127.0.0.1@40
-```
+#+end_src
 
-
-```
-systemctl daemon-reload
-```
+#+begin_src sh
+sudo systemctl daemon-reload
+#+end_src
