@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* ffmpeg show streams, show video info icluding bitrate
+
+#+begin_src sh
+ffprobe -show_streams -i video.mp4
+#+end_src
