@@ -1,0 +1,32 @@
+#+STARTUP: showall
+* create mount point on the host
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+** chown so the kvm group can access the mount
+
+#+begin_src sh
+chown djwilcox:kvm ~/mnt
+#+end_src
+
+** virt manager
+
+info, add hardware
+file system
+mode squash
+source path: ~/mnt
+target path: mnt
+
+** create the mount point on the guest
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+** run in the terminal on the guest
+
+#+begin_src sh
+sudo mount -t 9p -o trans=virtio,version=9p2000.L mnt ~/mnt
+#+end_src

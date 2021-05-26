@@ -1,1 +1,0 @@
-localectl set-x11-keymap gb pc104 mac altwin:ctrl_win
