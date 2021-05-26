@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* dnssec-trigger
+
+#+begin_src sh
+sudo apt install unbound dnssec-trigger
+#+end_src
