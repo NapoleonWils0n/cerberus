@@ -1,38 +1,38 @@
-# debian dhcp set up
+* debian dhcp set up
 
-remove network manager resolv.conf
+** remove network manager resolv.conf
 
-```
+#+begin_src sh
 rm /var/run/NetworkManager/resolv.conf  
-```
+#+end_src
 
-edit resolv.conf
+** edit resolv.conf
 
-```
+#+begin_src sh
 sudo vim /etc/resolv.conf
-```
+#+end_src
 
 make sure nameserver is set to 127.0.0.1
 if not change and add nameserver 127.0.0.1
 
-```
+#+begin_src conf
 nameserver 127.0.0.1
-```
+#+end_src
 
-remove write access with chattr
+** remove write access with chattr
 
-```
+#+begin_src sh
 sudo chattr -V +i /etc/resolv.conf
-```
+#+end_src
 
-edit dhclient.conf
+** edit dhclient.conf
 
-```
+#+begin_src sh
 sudo vim /etc/dhcp/dhclient.conf
-```
+#+end_src
 
 add nohook resolv.conf to dhclient.conf
 
-```
+#+begin_src conf
 nohook resolv.conf
-```
+#+end_src
