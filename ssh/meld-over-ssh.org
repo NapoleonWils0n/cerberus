@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* Using meld to compare directories over ssh
+
+Set up a ssh public private key and copy to your server
+
+#+begin_src sh
+meld <(ssh 192.168.1.2 ls Desktop) <(ls Desktop)
+#+end_src
