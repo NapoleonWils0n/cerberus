@@ -1,0 +1,67 @@
+#+STARTUP: content
+* dnsmasq arch set up
+** install dnsmasq
+
+#+begin_src sh
+sudo pacman -S dnsmasq
+#+end_src
+
+** edit /etc/dnsmasq.conf
+
+#+begin_src sh
+sudo vim /etc/dnsmasq.conf
+#+end_src
+
+#+begin_src conf
+server=8.8.8.8
+server=8.8.4.4
+
+listen-address=127.0.0.1
+no-dhcp-interface=
+
+no-hosts
+addn-hosts=/etc/dnsmasq.hosts
+#+end_src
+
+*** create /etc/resolv.conf.head and add nameserver
+
+#+begin_src sh
+sudo vim /etc/resolv.conf.head
+#+end_src
+
+#+begin_src conf
+nameserver 127.0.0.1
+#+end_src
+
+*** download ad blocking list
+
+#+begin_src sh
+curl "http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&mimetype=plaintext" > ~/Desktop/dnsmasq.hosts
+#+end_src
+
+*** prepend 127.0.0.1 to dnsmasq.hosts
+
+#+begin_src sh
+sed -i.bak 's/^/127.0.0.1 /' dnsmasq.hosts
+#+end_src
+
+*** create /etc/dnsmasq.hosts - add domains to block
+
+#+begin_src sh
+sudo cp ~/Desktop/dnsmasq.hosts /etc/dnsmasq.hosts
+#+end_src
+
+** NetworkManager
+
+NetworkManager has the ability to start dnsmasq from its configuration file. 
+Add the option dns=dnsmasq to NetworkManager.conf in the [main] section then disable the dnsmasq.service from being loaded by systemd: 
+
+#+begin_src sh
+sudo vim /etc/NetworkManager/NetworkManager.conf
+#+end_src
+
+#+begin_src conf
+[main]
+plugins=keyfile
+dns=dnsmasq
+#+end_src

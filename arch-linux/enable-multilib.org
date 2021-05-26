@@ -1,0 +1,19 @@
+#+STARTUP: showall
+* enable multilb for 32 bit applications
+
+#+begin_src sh
+sudo vim /etc/pacman.conf
+#+end_src
+
++ uncomment the multilib section
+
+#+begin_src conf
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+#+end_src
+
+update the package list and upgrade
+
+#+begin_src sh
+sudo pacman -Syu
+#+end_src

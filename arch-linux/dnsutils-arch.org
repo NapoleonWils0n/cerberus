@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* install nslookup host dig
+
+#+begin_src sh
+sudo pacman -S dnsutils
+#+end_src
