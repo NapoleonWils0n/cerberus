@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* paccache clear package cache
+
+delete all the cached versions of each package except for the most recent 3
+
+#+begin_src sh
+paccache -r
+#+end_src
+
+remove all the cached versions of uninstalled packages,
+you will have to run it a second time with:
+
+#+begin_src sh
+paccache -ruk0
+#+end_src
+

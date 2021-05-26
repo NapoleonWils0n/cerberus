@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* pacman back up intsalled packages
+
+#+begin_src sh
+pacman -Qqen > pkglist.txt
+#+end_src
+
+* restore packages
+
+#+begin_src sh
+sudo pacman -S $(< pkglist.txt)
+#+end_src
