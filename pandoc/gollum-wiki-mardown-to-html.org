@@ -1,42 +1,40 @@
-#!/bin/bash
+#+STARTUP: content
+* convert gollum wiki markdown to html5
 
-# convert gollum wiki markdown to html5
-#======================================
-
-
+#+begin_src sh
 find . -type f -regex ".*\.\(md\)$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.html/g'`
 pandoc -s -f markdown -t html5 -o "$filebasename" "$file"
 done
+#+end_src
 
+** remove markdown files
+*** echo files before deleting
 
-# remove markdown files
-#========================================================
-
-
-# echo files before deleting
+#+begin_src sh
 find . -type f -regex ".*\.\(md\)$" -exec echo '{}' \;
+#+end_src
 
+*** delete .md files
 
-# delete .md files
+#+begin_src sh
 find . -type f -regex ".*\.\(md\)$" -exec rm '{}' \;
+#+end_src
 
+** sed remove http://mediablends.org.uk/ domain from local links
 
-
-# sed remove http://mediablends.org.uk/ domain from local links
-#==============================================================
-
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" \
 -exec sed -i 's#http://mediablends.org.uk/##g' '{}' \;
+#+end_src
 
+** sed find all local links that dont start with http and add html extension
 
-
-# sed find all local links that dont start with http and add html extension
-#==========================================================================
-
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" \
 -exec sed -i "/http\?s:\/\/\|\.[a-z]/! { /href/ s/.*href=['\"]\([^'\"]*\)/&.html/g }" '{}' \;
+#+end_src
 
 

@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* markdown to pdf with metadata yaml file
+
+#+begin_src sh
+pandoc --self-contained -s -S --normalize --toc metadata.yaml -o outfile.pdf infile.md 
+#+end_src

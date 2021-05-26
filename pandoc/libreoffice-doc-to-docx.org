@@ -1,38 +1,35 @@
-#!/bin/bash
+#+STARTUP: content
+* libre office convert doc to docx 
+** libreoffice convert doc to docx
 
-
-# libre office convert doc to docx 
-# pandoc convert docx to markdown
-#=============================================#
-
-
-
-# libreoffice convert doc to docx
-
+#+begin_src sh
 libreoffice --convert-to docx --headless infile.doc
+#+end_src
 
+** pandoc convert docx to markdown
 
-# pandoc convert docx to markdown
-
+#+begin_src sh
 pandoc -f docx -t markdown -o outfile.md infile.docx
+#+end_src
 
+** libreoffice batch convert doc to docx
 
-
-# libreoffice batch convert doc to docx
-
+#+begin_src sh
 find . -type f -regex ".*\.\(doc\|DOC\)$" |
 while read file
 do
 libreoffice --convert-to docx --headless "$file" 2>/dev/null
 done
+#+end_src
 
+** pandoc batch convert docx to markdown
 
-# pandoc batch convert docx to markdown
-
+#+begin_src sh
 find . -type f -regex ".*\.\docx$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\docx/.md/g'`
 pandoc -f docx -t markdown -o "$filebasename" "$file"
 done
+#+end_src
 

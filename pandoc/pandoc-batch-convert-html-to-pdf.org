@@ -1,0 +1,36 @@
+#+STARTUP: content
+* pandoc create pdf
+
+#+begin_src sh
+find . -name '*.html' -exec pandoc -f html {} --toc -o {}.pdf \;
+#+end_src
+
+** convert to odt
+
+#+begin_src sh
+find . -name '*.htm' -exec pandoc {} --toc --self-contained -o {}.odt \;
+#+end_src
+
+** libre office convert odt to pdf
+
+#+begin_src sh
+libreoffice --headless --convert-to pdf *.odt
+#+end_src
+
+** make pdfs directory
+
+#+begin_src sh
+mkdir pdfs
+#+end_src
+
+** move pdfs in to pdfs directory
+
+#+begin_src sh
+find . -name '*.pdf' -exec mv {} pdfs/ \;
+#+end_src
+
+** pandoc create epub
+
+#+begin_src sh
+find . -name '*.html' -exec pandoc -f html -t epub {} --toc -o {}.epub \;
+#+end_src

@@ -1,24 +1,27 @@
-#!/bin/bash
+#+STARTUP: content
+* pandoc cat text file for files to process
+** pandoc cat file list for pdf
 
-# pandoc cat text file for files to process
-#==========================================
-
-
-# pandoc cat file list for pdf
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ~/Desktop/metadata.yaml \
 -o outfile.pdf \
 $(cat ~/Desktop/file.txt)
+#+end_src
 
+** pandoc cat file list for epub
 
-# pandoc cat file list for epub
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ~/Desktop/metadata.yaml \
 -o outfile.epub \
 $(cat ~/Desktop/file.txt)
+#+end_src
 
+~/Desktop/file.txt
 
-# ~/Desktop/file.txt
+#+begin_src conf
 file1.md \
 file2.md \
 file3.md
+#+end_src

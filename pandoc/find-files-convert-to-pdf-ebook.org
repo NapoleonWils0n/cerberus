@@ -1,27 +1,27 @@
-#!/bin/bash
+#+STARTUP: content
+* pandoc find markdown files and convert into latex
 
-# pandoc find markdown files and convert into latex
-#==================================================
-
-
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ../metadata.yaml \
 -o outfile.tex  \
 $(find . -type f -regex ".*\.md$" -print)
+#+end_src
 
-# pandoc find markdown files and convert into 1 pdf
-#==================================================
+** pandoc find markdown files and convert into 1 pdf
 
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ../metadata.yaml \
 -o outfile.pdf \
 $(find . -type f -regex ".*\.md$" -print)
+#+end_src
 
+** pandoc find markdown files and convert into 1 epub
 
-# pandoc find markdown files and convert into 1 epub
-#===================================================
-
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ../metadata.yaml \
 -o outfile.epub \
 $(find . -type f -regex ".*\.md$" -print)
+#+end_src

@@ -1,12 +1,12 @@
-#!/bin/bash
+#+STARTUP: showall
+* convert markdown to html5
 
-# convert markdown to html5
-#==========================
-
+#+begin_src sh
 find . -type f -regex ".*\.\(md\)$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.html/g'`
 pandoc -s -f markdown -t html5 -o "$filebasename" "$file"
 done
+#+end_src
 

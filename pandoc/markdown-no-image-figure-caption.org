@@ -1,11 +1,12 @@
-#!/bin/bash
+#+STARTUP: showall
+* markdown to epub no image figure caption
 
-
-# markdown to epub no image figure caption
-
+#+begin_src sh
 pandoc -f markdown-implicit_figures --self-contained -s -S --normalize --toc metadata.yaml -o outfile.epub infile.md 
+#+end_src
 
+* markdown to pdf no image figure caption
 
-# markdown to pdf no image figure caption
-
+#+begin_src sh
 pandoc -f markdown-implicit_figures --self-contained -s -S --normalize --toc metadata.yaml -o outfile.pdf infile.md 
+#+end_src

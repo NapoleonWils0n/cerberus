@@ -1,5 +1,6 @@
-#!/bin/bash
+#+STARTUP: showall
+* pandoc parse raw html - dont strip html elements
 
-
-# pandoc parse raw html - dont strip html elements
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" -exec pandoc -f html -t markdown --parse-raw -o '{}' '{}' \;
+#+end_src

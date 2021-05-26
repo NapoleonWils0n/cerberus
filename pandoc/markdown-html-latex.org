@@ -1,128 +1,124 @@
-#!/bin/bash
+#+STARTUP: content
+* convert markdown to html5
 
-# convert markdown to html5
-#===========================
-
+#+begin_src sh
 find . -type f -regex ".*\.\(md\)$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.html/g'`
 pandoc -s -f markdown -t html5 -o "$filebasename" "$file"
 done
+#+end_src
 
+** remove original markdown files
+*** echo files before deleting
 
-# remove original markdown files
-#========================================================
-
-
-# echo files before deleting
+#+begin_src sh
 find . -type f -regex ".*\.md$" -exec echo '{}' \;
+#+end_src
 
-# delete jpg, gifs
+*** delete jpg, gifs
+
+#+begin_src sh
 find . -type f -regex ".*\.md$" -exec rm '{}' \;
+#+end_src
 
+** sed find all local links that dont start with http and add html extension
+*** append .html extension
 
-
-# sed find all local links that dont start with http and add html extension
-#==========================================================================
-
-
-# append .html extension
-
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" \
 -exec sed -i "/http\?s:\/\/\|\.[a-z]/! { /href/ s/.*href=['\"]\([^'\"]*\)/&.html/g }" '{}' \;
+#+end_src
 
+*** prepend domain name
 
-# prepend domain name
-
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" \
 -exec sed -i "/http\?s:\/\/\|\.[a-z]/! { /href/ s/.*href=['\"]/&http:\/\/mediablends.org.uk/g }" '{}' \;
+#+end_src
 
+** convert html to markdown
 
-
-# convert html to markdown
-#========================================
-
+#+begin_src sh
 find . -type f -regex ".*\.\(htm\|html\)$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\html/.md/g'`
 pandoc -f html -t markdown --atx-headers -o "$filebasename" "$file"
 done
+#+end_src
 
+** remove html5 files
+*** echo files before deleting
 
-# remove html5 files
-#========================================================
-
-
-# echo files before deleting
+#+begin_src sh
 find . -type f -regex ".*\.html$" -exec echo '{}' \;
+#+end_src
 
-# delete jpg, gifs
+*** delete jpg, gifs
+
+#+begin_src sh
 find . -type f -regex ".*\.html$" -exec rm '{}' \;
+#+end_src
 
+** convert markdown to pdf
 
-# convert markdown to pdf
-#=============================================================
-
+#+begin_src sh
 find . -type f -regex ".*\.md$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.pdf/g'`
 pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
 done
+#+end_src
 
+** convert markdown to epub
 
-# convert markdown to epub
-#=============================================================
-
+#+begin_src sh
 find . -type f -regex ".*\.md$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.epub/g'`
 pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
 done
+#+end_src
 
+** convert markdown to latex
 
-# convert markdown to latex
-#========================================
-
+#+begin_src sh
 find . -type f -regex ".*\.md$" |
 while read file
 do
 filebasename=`echo $file | sed 's/\.\md/.tex/g'`
 pandoc --self-contained -s -S -N --normalize --toc -o "$filebasename" "$file"
 done
+#+end_src
 
+** pandoc find markdown files and convert into 1 latex file
 
-
-
-# pandoc find markdown files and convert into 1 latex file
-#=========================================================
-
-
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ../metadata.yaml \
 -o outfile.tex  \
 $(find . -type f -regex ".*\.md$" -print)
+#+end_src
 
+** pandoc find markdown files and convert into 1 pdf
 
-
-# pandoc find markdown files and convert into 1 pdf
-#==================================================
-
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ../metadata.yaml \
 -o outfile.pdf \
 $(find . -type f -regex ".*\.md$" -print)
+#+end_src
 
+** pandoc find markdown files and convert into 1 epub
 
-
-# pandoc find markdown files and convert into 1 epub
-#===================================================
-
+#+begin_src sh
 pandoc --self-contained -s -S --normalize --toc \
 ../metadata.yaml \
 -o outfile.epub \
 $(find . -type f -regex ".*\.md$" -print)
+#+end_src
 

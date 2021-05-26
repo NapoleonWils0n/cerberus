@@ -1,0 +1,30 @@
+#+STARTUP: content
+* install haskell-platform to install pandoc
+
+#+begin_src sh
+sudo apt-get install haskell-platform
+#+end_src
+
+** update cabal
+
+#+begin_src sh
+cabal update
+#+end_src
+
+add to ~/.bashrc
+
+#+begin_src conf
+export PATH=$HOME/.cabal/bin:$PATH
+#+end_src
+
+** cabal install pandoc
+
+#+begin_src sh
+cabal install pandoc
+#+end_src
+ 
+** textlive install for latex support
+
+#+begin_src sh
+sudo apt-get install texlive
+#+end_src

@@ -1,4 +1,6 @@
-#!/bin/bash
+#+STARTUP: showall
+* pandoc markdown strip html
 
-# pandoc markdown strip html
+#+begin_src sh
 pandoc -f html -t markdown-raw_html -S --normalize --atx-headers -o infile.html outfile.md
+#+end_src

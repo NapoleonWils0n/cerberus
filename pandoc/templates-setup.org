@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* copy pandoc templates to home directory
+
+#+begin_src sh
+cp -R /usr/share/pandoc-1.10.1/data ~/.pandoc
+#+end_src
+
