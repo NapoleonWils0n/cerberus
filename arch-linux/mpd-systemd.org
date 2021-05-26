@@ -1,0 +1,75 @@
+#+STARTUP: content
+* mpd mpc ncmpc systemctl setup
+** install mpd mpc ncmpc
+
+#+begin_src sh
+sudo apt install mpd mpc ncmpc
+#+end_src
+
+* Create a directory for the mpd files and the playlists
+
+#+begin_src sh
+mkdir -p ~/.mpd/playlists
+#+end_src
+
+** copy the mpd to the home directory
+
+#+begin_src sh
+gunzip -c /usr/share/doc/mpd/examples/mpd.conf.gz > ~/.mpd/mpd.conf
+#+end_src
+
+** create the mpd files
+
+#+begin_src sh
+touch ~/.mpd/{mpd.db,mpd.log,mpd.pid,mpdstate}
+#+end_src
+
+** edit the mpd.conf in your home directory
+
+#+begin_src sh
+vim ~/.mpd/mpd.conf
+#+end_src
+
+** create the ~/.config/systemd/user/ directory
+
+#+begin_src sh
+mkdir -p ~/.config/systemd/user/
+#+end_src
+
+** copy the mpd.service to your home directory 
+
+#+begin_src sh
+cp /usr/lib/systemd/user/mpd.service ~/.config/systemd/user/
+#+end_src
+
+edit the mpd.service and add the path
+to the /home/username/.mpd/mpd.conf file
+replace username with your username
+
+#+begin_src sh
+vim ~/.config/systemd/user/mpd.service
+#+end_src
+
+#+begin_src conf
+[Unit]
+Description=Music Player Daemon
+After=network.target sound.target
+
+[Service]
+ExecStart=/usr/bin/mpd --no-daemon /home/username/.mpd/mpd.conf
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+** reload the daemon
+
+#+begin_src sh
+systemctl --user daemon-reload
+#+end_src
+
+** start mpd 
+
+#+begin_src sh
+systemctl --user start mpd
+#+end_src
