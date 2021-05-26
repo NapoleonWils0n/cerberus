@@ -1,15 +1,10 @@
-ffplay on dual display
+#+STARTUP: showall
+* ffplay on dual display
 
 move ffplay to second display
-
 right click on menu bar in panel and selct: ALways on Visible workspace
-
 press alt F11 to go fullscreen
 
-
 toggle fullscreen
-
-
 press space alt
-
 then press f to go fullscreen

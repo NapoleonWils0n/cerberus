@@ -1,0 +1,29 @@
+#+STARTUP: content
+* export audio driver and device for ffplay
+
+note we need to use plughw not hw
+
+** export
+
+#+begin_src sh
+export SDL_AUDIODRIVER="alsa"
+export AUDIODEV="plughw:1,0"
+#+end_src
+
+** unset 
+
+#+begin_src sh
+unset SDL_AUDIODRIVER
+unset AUDIODEV
+#+end_src
+
+** set SDL_AUDIODRIVER and AUDIODEV in your ~/.bashrc
+
+#+begin_src sh
+vim ~/.bashrc
+#+end_src
+
+#+begin_src conf
+export SDL_AUDIODRIVER="alsa"
+export AUDIODEV="plughw:1,0"
+#+end_src
