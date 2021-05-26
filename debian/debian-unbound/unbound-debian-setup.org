@@ -1,97 +1,97 @@
-# debian unbound dns server
-
-## install packages
+#+STARTUP: content
+* debian unbound dns server
+** install packages
 
 install unbound and dnssec-trigger
 
-```
+#+begin_src sh
 sudo apt install unbound dnssec-trigger
-```
-### unbound set up
+#+end_src
+
+*** unbound set up
 
 change directory to the unbound.conf.d directory
 
-```
+#+begin_src sh
 cd /etc/ubound.conf.d/
-```
+#+end_src
 
 you should see a custom.conf file
 we will back up the custom.conf file and replace it with a new version
 
 back up the custom.conf file
 
-```
+#+begin_src sh
 sudo mv custom.conf custom.conf.bak
-```
+#+end_src
 
-* copy new custom.conf file into place
+*** copy new custom.conf file into place
 
 change directory into the /etc/unbound/unbound.conf.d directory in this git repo
 
-```
+#+begin_src sh
 cd etc/unbound/unbound.conf.d/
-```
+#+end_src
 
-* copy the custom.conf file to /etc/unbound/unbound.conf.d
+*** copy the custom.conf file to /etc/unbound/unbound.conf.d
 
-```
+#+begin_src sh
 sudo cp custom.conf /etc/unbound/unbound.conf.d/
-```
+#+end_src
 
-
-### dns adblocking
+*** dns adblocking
 
 change directory into the /etc/unbound/ directory in this git repo
 
-```
+#+begin_src sh
 cd etc/unbound/
-```
+#+end_src
 
-* copy the unbound_ad_servers to /etc/unbound/
+*** copy the unbound_ad_servers to /etc/unbound/
 
-```
+#+begin_src sh
 sudo cp unbound_ad_servers /etc/unbound/
-```
+#+end_src
 
-#### resolv.conf
+*** resolv.conf
 
 we need to edit /etc/resolv.conf and add some code
 
-```
+#+begin_src sh
 sudo nano /etc/resolv.conf
-```
+#+end_src
 
-* add the code below to the resolv.conf file
+*** add the code below to the resolv.conf file
 
-```
+#+begin_src sh
 nameserver 127.0.0.1
-```
+#+end_src
 
 the /etc/resolv.conf should only contain the code above
 
-* next we need to write protect the file so it cant be overwritten by the network manager
+*** next we need to write protect the file so it cant be overwritten by the network manager
 
-```
+#+begin_src sh
 sudo chattr +i /etc/resolv.conf
-```
+#+end_src
 
-#### dhclient.conf
+*** dhclient.conf
 
 we need to edit the /etc/dhcp/dhclient.conf file
 
-```
+#+begin_src sh
 sudo nano /etc/dhcp/dhclient.conf
-```
+#+end_src
 
 we need to add the code below at the top of the file just below the comment
 
-```
+#+begin_src sh
 nohook resolv.conf;
-```
+#+end_src
 
-* the file should look like this
+*** the file should look like this
 
-```
+#+begin_src conf
 # Configuration file for /sbin/dhclient.
 #
 # This is a sample configuration file for dhclient. See dhclient.conf's
@@ -105,59 +105,58 @@ nohook resolv.conf;
 #
 
 nohook resolv.conf;
-```
+#+end_src
 
-##### start unbound
+*** start unbound
 
-* start unbound dns server
+start unbound dns server
 
-```
+#+begin_src sh
 sudo systemctl start unbound.service
-```
+#+end_src
 
-* enable unbound dns server to start at boot
+*** enable unbound dns server to start at boot
 
-```
+#+begin_src sh
 sudo systemctl enable unbound.service
-```
+#+end_src
 
-#### install dnsutils
+*** install dnsutils
 
 we need to install dnsutils which will install nslookup
 so we can test the local unbound server is being used to lookup domains
 
-* install dnsutils
-
-```
+#+begin_src sh
 sudo apt install dnsutils
-```
-* now we use nslookup to look up the dns for google.com using our local dns server
+#+end_src
 
-```
+*** now we use nslookup to look up the dns for google.com using our local dns server
+
+#+begin_src sh
 nslookup google.com
-```
+#+end_src
 
-* this should output something like the following
+*** this should output something like the following
 
-```
+#+begin_src conf
 Server:		127.0.0.1
 Address:	127.0.0.1#53
 
 Non-authoritative answer:
 Name:	google.com
 Address: 216.58.210.46
-```
+#+end_src
 
-* you can see the server is 127.0.0.1 which means our unbound dns server is working
+you can see the server is 127.0.0.1 which means our unbound dns server is working
 
-#### checking for dns leaks
+*** checking for dns leaks
 
 we want to check our dns server is the only server being used for dns lookups,
 so we will a website to check for dnsleaks
 
 go to this website in your browser
 
-[dnsleaktest.com](https://dnsleaktest.com)
+[[https://dnsleaktest.com]]
 
 click the extended test button
 you should see only one dns server listed
