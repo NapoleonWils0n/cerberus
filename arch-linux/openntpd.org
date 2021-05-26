@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* install openntpd
+
+#+begin_src sh
+sudo apt install openntpd networkmanager-dispatcher
+#+end_src
+
+** resync clock
+
+#+begin_src sh
+sudo ntpd -s -d
+#+end_src
