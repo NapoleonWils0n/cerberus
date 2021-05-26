@@ -1,0 +1,20 @@
+#+STARTUP: content
+* Set the default sound card
+** find the loaded sound modules and their order
+
+#+begin_src sh
+cat /proc/asound/modules
+#+end_src
+
+** create a alsa-base.conf file in /etc/modprobe.d/
+
+#+begin_src sh
+sudo vim /etc/modprobe.d/alsa-base.conf
+#+end_src
+
+#+begin_src conf
+options snd_hda_intel index=0
+options snd_usb_audio index=1
+#+end_src
+
+reboot
