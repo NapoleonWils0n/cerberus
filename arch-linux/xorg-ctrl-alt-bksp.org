@@ -1,0 +1,14 @@
+#+STARTUP: content
+* set up ctrl_alt_bksp
+** edit 00-keyboard.conf 
+
+#+begin_src sh
+sudo vim /etc/X11/xorg.conf.d/00-keyboard.conf
+#+end_src
+
+add Option "XkbOptions" "terminate:ctrl_alt_bksp" 
+to /etc/X11/xorg.conf.d/00-keyboard.conf
+
+#+begin_src conf
+Option "XkbOptions" "terminate:ctrl_alt_bksp"
+#+end_src
