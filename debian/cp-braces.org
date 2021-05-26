@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* back up files with braces
+
+#+begin_src sh
+sudo cp /etc/fstab{,.backup}
+#+end_src
