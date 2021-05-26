@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* compress a folder with tar to create a .tar.gz archive
+
+#+begin_src sh
+tar zcvf filename.tar.gz filename
+#+end_src

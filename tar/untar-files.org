@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* untar file
+
+#+begin_src sh
+tar -zxvf file.tgz
+#+end_src
