@@ -1,0 +1,7 @@
+* iptables-persistent
+
+iptables-persistent
+
+#+begin_src sh
+sudo apt-get install iptables-persistent
+#+end_src
