@@ -1,5 +1,0 @@
-pacman gpg fix
-
-uncomment ~/.gnupg-personal/gpg.conf
-
-#keyserver-options auto-key-retrieve

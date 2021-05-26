@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* pacman gpg fix
+
+uncomment ~/.gnupg-personal/gpg.conf
+
+#+begin_src conf
+#keyserver-options auto-key-retrieve
+#+end_src

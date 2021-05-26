@@ -1,0 +1,34 @@
+#+STARTUP: content
+* jack audio
+** add yourself to the audio group
+
+switch to root
+
+#+begin_src sh
+sudo su
+#+end_src
+
+** add your user to the audio group
+
+add your user to the audio group, replace username with your username
+
+#+begin_src sh
+sudo gpasswd -a username audio
+#+end_src
+
+eboot for change to take effect
+
+** install qjackctl
+
+#+begin_src sh
+sudo apt install qjackctl
+#+end_src
+
+when you run qjackctl it will create a .jackdrc file in your home directory
+~/.jackdrc
+
+you can then run the command from the command line without launching qjackctl
+
+#+begin_src sh
+/usr/bin/jackd -R -P89 -dalsa -dhw:M192kHz -r48000 -p4096 -n3 -P
+#+end_src

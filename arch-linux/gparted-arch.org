@@ -1,10 +1,9 @@
-#!/bin/bash
+#+STARTUP: showall
+* gparted install
 
-# gparted install
-#================
-
-
+#+begin_src sh
 sudo pacman -S gparted exfat-utils ntfs-3g gpart mtools f2fs-tools
+#+end_src
 
 
 

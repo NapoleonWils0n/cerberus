@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* mount android device with the file manager
+
+#+begin_src sh
+sudo pacman -S gvfs-mtp
+#+end_src
+
+reboot your computer and then connect your android device,
+and it should be mounted automatically
