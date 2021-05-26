@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* oath-toolkit oathtool install
+
+#+begin_src sh
+sudo apt install oathtool
+#+end_src
