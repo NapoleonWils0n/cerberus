@@ -1,0 +1,19 @@
+#+STARTUP: content
+* List packages installed from the AUR.
+
+#+begin_src sh
+pacman -Qqm
+#+end_src
+
+** List ophaned packages from the AUR.
+
+#+begin_src sh
+pacman -Qqmtd
+#+end_src
+
+** Removing orphaned packages
+
+#+begin_src sh
+pacman -Rns $(pacman -Qtdq)
+#+end_src
+

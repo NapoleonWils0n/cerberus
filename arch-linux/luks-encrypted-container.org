@@ -1,0 +1,139 @@
+#+STARTUP: content
+* luks encrypted container
+** create a 2 gig container wth dd on the desktop called crypt
+
+#+begin_src sh
+cd ~/Desktop
+dd if=/dev/urandom of=crypt bs=1M count=2048
+#+end_src
+
+** rename the file and give it a file extension to disguise it
+
+#+begin_src sh
+mv crypt friday-the-13th.iso 
+#+end_src
+
+** find a free loop device to mount the file
+
+#+begin_src sh
+sudo losetup -f
+#+end_src
+
+the free loop device is /dev/loop0 in this case
+if you have a different free loop device use that number
+
+** use the block device and the path to the file you just created
+
+#+begin_src sh
+sudo losetup /dev/loop0 /home/$USER/Desktop/friday-the-13th.iso
+#+end_src
+
+create the luks container inside the file
+you will be prompted to enter a password for the new luks container
+
+#+begin_src sh
+sudo cryptsetup luksFormat /dev/loop0
+#+end_src
+
+** check the file is now an encrypted luks container
+
+#+begin_src sh
+file /home/$USER/Desktop/friday-the-13th.iso
+#+end_src
+
+map the luks container to the loop device
+and give it a luks alias in this case luks
+
+#+begin_src sh
+sudo cryptsetup luksOpen /dev/loop0 luks
+#+end_src
+
+** format the container as ext4
+
+#+begin_src sh
+sudo mkfs.ext4 /dev/mapper/luks
+#+end_src
+
+** mount the file
+
+#+begin_src sh
+sudo mkdir -p /mnt/luks
+sudo mount /dev/mapper/luks /mnt/luks
+#+end_src
+
+** change ownership on container to the current user
+
+#+begin_src sh
+cd /mnt/luks
+sudo chown -R $USER:$USER .
+#+end_src
+
+** umount the file
+
+#+begin_src sh
+sudo umount /mnt/luks
+#+end_src
+
+** close the luks container
+
+#+begin_src sh
+sudo cryptsetup luksClose luks
+#+end_src
+
+** free the loop device
+
+#+begin_src sh
+sudo losetup -d /dev/loop0
+#+end_src
+
+** open luks encrypted container
+
+#+begin_src sh
+sudo losetup -f
+sudo losetup /dev/loop0 /path/to/crypt_file
+sudo cryptsetup luksOpen /dev/loop0 luks
+sudo mkdir -p /mnt/luks
+sudo mount /dev/mapper/luks /mnt/luks
+#+end_src
+
+** umount luks encrypted container
+
+#+begin_src sh
+sudo umount /mnt/luks
+sudo cryptsetup luksClose luks
+sudo losetup -d /dev/loop0
+#+end_src
+
+** resize the container
+
+#+begin_src sh
+dd if=/dev/urandom bs=1M count=128 | cat - >> /path/to/crypt_file
+sudo losetup /dev/loop0 /path/to/crypt_file
+sudo cryptsetup luksOpen /dev/loop0 luks
+#+end_src
+
+*** resize the encrypted container
+
+#+begin_src sh
+sudo cryptsetup resize luks
+#+end_src
+
+*** resize the filesystem
+
+#+begin_src sh
+sudo e2fsck -f /dev/mapper/luks
+sudo resize2fs /dev/mapper/luks
+#+end_src
+
+*** mount the container
+
+#+begin_src sh
+sudo mount /dev/mapper/luks /mnt/luks
+#+end_src
+
+*** back up luks header
+
+#+begin_src sh
+sudo cryptsetup luksHeaderBackup --header-backup-file /homevol_luksheader /dev/loop0
+#+end_src
+
