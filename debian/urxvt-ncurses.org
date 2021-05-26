@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* rxvt ncurces
+
+#+begin_src sh
+sudo apt install rxvt-unicode-256color ncurses-term
+#+end_src
