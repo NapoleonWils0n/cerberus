@@ -1,0 +1,25 @@
+#+STARTUP: showall
+* create a shared folder in VirtualBox settings
+** create a mount point
+
+#+begin_src sh
+mkdir ~/mnt
+#+end_src
+
+** switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+** mount the shared folder
+
+#+begin_src sh
+mount -t vboxsf Desktop /home/$USER/mnt
+#+end_src
+
+** unmount the shared folder
+
+#+begin_src sh
+umount -t vboxsf Desktop /home/$USER/mnt
+#+end_src

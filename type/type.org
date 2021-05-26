@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* display command location
+
+#+begin_src sh
+type -p vim
+#+end_src
