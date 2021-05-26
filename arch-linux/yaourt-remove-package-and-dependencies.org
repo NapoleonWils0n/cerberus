@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* yaourt remove package and dependencies
+
+#+begin_src sh
+yaourt -Rsn package-name
+#+end_src

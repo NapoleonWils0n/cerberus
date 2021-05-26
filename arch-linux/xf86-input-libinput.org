@@ -1,0 +1,18 @@
+#+STARTUP: showall
+* xf86 libinput
+** unistall xf86-input-synaptics
+
+#+begin_src sh
+sudo pacman -Rsn xf86-input-synaptics
+#+end_src
+
+move any config files from /etc/X11/xorg.conf.d to your desktop
+
+** install xf86-input-libinput
+
+#+begin_src sh
+sudo pacman -S xf86-input-libinput
+#+end_src
+
+move config files from your desktop to /etc/X11/xorg.conf.d
+log out and back in again

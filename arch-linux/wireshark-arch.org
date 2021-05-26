@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* wireshark
+** install wireshark
+
+#+begin_src sh
+sudo pacman -S wireshark-gtk
+#+end_src
+
+** add user to wireshark group
+
+#+begin_src sh
+sudo gpasswd -a username wireshark
+#+end_src

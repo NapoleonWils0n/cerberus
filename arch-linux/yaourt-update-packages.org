@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* yaourt update packages
+
+#+begin_src sh
+yaourt -Syua
+#+end_src
