@@ -1,0 +1,18 @@
+#+STARTUP: showall
+* convert qcow2 to img
+
+#+begin_src sh
+qemu-img convert -f qcow2 -O raw windows.qcow2 windows.img
+#+end_src
+
+** convert img and install on external hard drive
+
+#+begin_src sh
+qemu-img convert -f qcow2 -O raw my-qcow2.img /dev/sdb
+#+end_src
+
+** in one step
+
+#+begin_src sh
+qemu-img convert windows.qcow2 -O raw /dev/sdb
+#+end_src

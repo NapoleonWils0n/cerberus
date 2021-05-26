@@ -1,13 +1,16 @@
-#!/bin/bash
+#+STARTUP: showall
+* iptables for digital ocean
 
-# iptables for digital ocean
-#===========================
-
+#+begin_src sh
 sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 sudo iptables -I INPUT 1 -i lo -j ACCEPT
 sudo iptables -A INPUT -j DROP
+#+end_src
 
-# save the iptables setup
+* save the iptables setup
+
+#+begin_src sh
 sudo apt-get install iptables-persistent
+#+end_src

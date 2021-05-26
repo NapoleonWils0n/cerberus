@@ -1,7 +1,7 @@
-#-----------------------------------------------#
+#+STARTUP: showall
+* iptables
 
-# iptables
-
+#+begin_src sh
 sudo iptables -F
 sudo iptables -X
 sudo iptables -A INPUT -i lo -j ACCEPT
@@ -44,5 +44,6 @@ sudo iptables -A FORWARD -d 10.0.0.1 -i usb0 -p tcp --dport -j ACCEPT
 
 # nat forwarding
 sudo iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE
+#+end_src
 
 
