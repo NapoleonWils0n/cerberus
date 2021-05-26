@@ -1,7 +1,12 @@
-#!/bin/bash
+#+STARTUP: showall
+* luks backup header
 
-# where <device> is the partition containing the LUKS volume.
+where <device> is the partition containing the LUKS volume.
 
+#+begin_src sh
 sudo cryptsetup luksHeaderBackup /dev/<device> --header-backup-file /mnt/<backup>/<file>.img
+#+end_src
 
+#+begin_src sh
 sudo cryptsetup luksHeaderBackup /dev/sda3 --header-backup-file /home/djwilcox/Desktop/luks-header.img
+#+end_src
