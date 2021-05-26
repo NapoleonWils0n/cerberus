@@ -1,0 +1,45 @@
+#+STARTUP: content
+* sshfs
+** install sshfs
+
+#+begin_src sh
+sudo apt-get install sshfs
+#+end_src
+
+** Then add the user pi to the FUSE users group:
+
+#+begin_src sh
+sudo gpasswd -a pi fuse
+#+end_src
+
+** create the mount point
+
+#+begin_src sh
+mkdir ~/mount
+#+end_src
+
+connect and mount via sshfs
+The idmap=user option ensures that files owned by the remote user are owned by the local user.
+
+#+begin_src sh
+sshfs -p 55724 -o idmap=user username@92.40.255.60:/storage/emulated/legacy/Download /home/pi/mount 
+#+end_src
+
+** defaults,idmap=user,noauto,user 0 0
+
+#+begin_src sh
+sshfs user@80.0.0.0:/home/username /Users/username/mnt -o idmap=user,auto_cache,reconnect,volname=sshfs
+#+end_src
+
+** unmount sshfs on linux
+
+#+begin_src sh
+fusermount -u ~/mount
+#+end_src
+
+** unmount sshfs on mac osx
+
+#+begin_src sh
+umount ~/mnt
+#+end_src
+

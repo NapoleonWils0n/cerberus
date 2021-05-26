@@ -1,0 +1,39 @@
+#+STARTUP: content
+* ssh copy id
+
+#+begin_src sh
+ssh-copy-id pi@volumio.local
+#+end_src
+
+** you should now be able to ssh into the pi using ssh keys
+
+#+begin_src sh
+ssh pi@volumio.local
+#+end_src
+
+** secure ssh to only allow ssh keys 
+
+no root log in via ssh, no password logins only ssh keys
+
+#+begin_src sh
+sudo nano /etc/ssh/sshd_config
+#+end_src
+
+#+begin_src conf
+PermitRootLogin no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+UsePAM no
+#+end_src
+
+** ssh tunnel
+
+#+begin_src sh
+ssh -L 6601:localhost:6600 pi@volumio.local 
+#+end_src
+
+* ncmpc over ssh tunnel
+
+#+begin_src sh
+ncmpc -h localhost -p 6601 -f ~/.ncmpc/rpi-config 
+#+end_src

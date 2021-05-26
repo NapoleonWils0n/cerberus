@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* REGENERATE A PUBLIC SSH-KEY USING PRIVATE SSH-KEY
+
+#+begin_src sh
+ssh-keygen -y -f id_rsa > id_rsa.pub
+#+end_src
