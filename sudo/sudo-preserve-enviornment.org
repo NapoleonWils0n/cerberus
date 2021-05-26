@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* switch to sudo and preserve user enviornment
+
+#+begin_src sh
+su -
+#+end_src

@@ -1,0 +1,19 @@
+#+STARTUP: content
+* install self signed cert and trust it
+** create ca-certificates if it doesnt exist
+
+#+begin_src sh
+sudo mkdir -p /usr/local/share/ca-certificates/
+#+end_src
+
+** copy apache.crt file to /usr/local/share/ca-certificates/
+
+#+begin_src sh
+sudo cp apache.crt /usr/local/share/ca-certificates/
+#+end_src
+
+** update certtificates
+
+#+begin_src sh
+sudo update-ca-certificates
+#+end_src

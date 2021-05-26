@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* split flac audio file into clips
+
+replace file.cue and file.flac with your file names
+
+#+begin_src sh
+shnsplit -f file.cue -t "%n %t" -o flac file.flac 
+#+end_src

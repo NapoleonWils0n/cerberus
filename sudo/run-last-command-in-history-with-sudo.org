@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* run last command in history with sudo 
+
+#+begin_src sh
+sudo !!
+#+end_src

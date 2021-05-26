@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* preserve user environment
+
+#+begin_src sh
+su -lm
+#+end_src

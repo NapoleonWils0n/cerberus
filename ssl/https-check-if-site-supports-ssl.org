@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* https check if site supports ssl
+
+#+begin_src sh
+openssl s_client -connect www.somesite:443
+#+end_src
