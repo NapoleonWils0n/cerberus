@@ -1,16 +1,17 @@
-# debian keyboard
+#+STARTUP: content
+* debian keyboard
 
-```
+#+begin_src sh
 sudo dpkg-reconfigure keyboard-configuration
-```
+#+end_src
 
-## How to set keyboard layout in initramfs
+** How to set keyboard layout in initramfs
 
-```
+#+begin_src sh
 sudo vim /etc/initramfs-tools/initramfs.conf
-```
+#+end_src
 
-```
+#+begin_src conf
 #
 # KEYMAP: [ y | n ]
 #
@@ -18,10 +19,10 @@ sudo vim /etc/initramfs-tools/initramfs.conf
 #
 
 KEYMAP=y
-```
+#+end_src
 
-### apply changes
+** apply changes
 
-```
+#+begin_src sh
 sudo update-initramfs -u
-```
+#+end_src
