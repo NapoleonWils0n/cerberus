@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* pacman update packages
+
+#+begin_src sh
+sudo pacman -Syu
+#+end_src

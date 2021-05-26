@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* refresh pgp keys for packages
+
+#+begin_src sh
+sudo pacman-key --refresh-keys
+#+end_src

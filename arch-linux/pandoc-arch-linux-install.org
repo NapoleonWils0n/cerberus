@@ -1,0 +1,34 @@
+#+STARTUP: content
+* pandoc arch linux install
+** edit pacman.conf
+
+#+begin_src sh
+sudo vim /etc/pacman.conf
+#+end_src
+
+** Add haskell-core was above extra in /etc/pacman.conf:
+
+#+begin_src conf
+[haskell-core]
+Server = http://xsounds.org/~haskell/core/$arch
+#+end_src
+
+** add keys for pacman
+
+#+begin_src sh
+sudo pacman-key -r 4209170B
+sudo pacman-key --lsign-key 4209170B
+#+end_src
+
+** sync pacman
+
+#+begin_src sh
+sudo pacman -Syy
+#+end_src
+
+** install pandoc
+
+#+begin_src sh
+sudo pacman -S haskell-pandoc haskell-pandoc-citeproc haskell-pandoc-types
+sudo pacman -S texlive-core 
+#+end_src

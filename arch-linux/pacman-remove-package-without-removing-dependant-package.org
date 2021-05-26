@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* To remove a package, which is required by another package, without removing the dependent package: 
+
+#+begin_src sh
+sudo pacman -Rdd package-name
+#+end_src
+
+#+begin_src sh
+sudo pacman -Rdd utvideo-git
+#+end_src

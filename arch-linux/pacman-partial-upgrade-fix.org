@@ -1,7 +1,5 @@
-# pacman partial upgrade fix
-#===========================
-
-
+#+STARTUP: showall
+* pacman partial upgrade fix
 
 Arch Linux is a rolling release, and new library versions will be pushed to the repositories. The developers and Trusted Users will rebuild all the packages in the repositories that need to be rebuilt against the libraries. If the system has locally installed packages (such as AUR packages), users will need to rebuild them when their dependencies receive a soname bump.
 
@@ -11,9 +9,9 @@ If a partial upgrade scenario has been created, and binaries are broken because 
 
 The bash script checkupdates, included with the pacman package, provides a safe way to check for upgrades to installed packages without running a system update at the same time. 
 
++ eg to fix mpd
 
-# eg to fix mpd
-
+#+begin_src sh
 sudo pacman -Sy mpd
-
 sudo pacman -S mpd
+#+end_src
