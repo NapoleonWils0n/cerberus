@@ -1,0 +1,13 @@
+#+STARTUP: content
+* list network devices
+** ip link 
+
+#+begin_src sh
+ip link
+#+end_src
+
+** ls sys
+
+#+begin_src sh
+ls /sys/class/net
+#+end_src

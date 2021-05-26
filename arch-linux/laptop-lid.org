@@ -1,0 +1,18 @@
+#+STARTUP: content
+* check of laptop lid is open or closed
+
+#+begin_src sh
+less /proc/acpi/button/lid/LID0/state
+#+end_src
+
+** check if power cord is plugged in
+
+#+begin_src sh
+less /sys/class/power_supply/ADP1/online
+#+end_src
+
+** put the laptop to sleep
+
+#+begin_src sh
+pm-suspend
+#+end_src

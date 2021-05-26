@@ -1,8 +1,0 @@
-# mkdir -p /etc/systemd/system/libvirtd.service.d
-# $EDITOR /etc/systemd/system/libvirtd.service.d/service_type.conf
-The content of the service_type.conf file should be:
-[Service]
-Type=simple
-Then you just reload systemd configuration files and restart the daemon.
-# systemctl daemon-reload
-# systemctl restart libvirtd
