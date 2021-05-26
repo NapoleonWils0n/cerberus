@@ -1,0 +1,21 @@
+#+STARTUP: content
+* ntp network time
+** install ntp
+
+#+begin_src sh
+sudo apt install ntp
+#+end_src
+
+** iptables for ntp
+
+#+begin_src sh
+sudo iptables -I INPUT -p udp --dport 123 -j ACCEPT
+sudo iptables -I OUTPUT -p udp --sport 123 -j ACCEPT
+#+end_src
+
+*** start ntp
+
+#+begin_src sh
+sudo systemctl enable ntpdate
+sudo systemctl start ntpdate
+#+end_src
