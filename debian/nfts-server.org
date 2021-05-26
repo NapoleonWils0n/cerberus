@@ -1,0 +1,6 @@
+#+STARTUP: content
+* nfs client
+
+#+begin_src sh
+sudo apt-get install nfs-common
+#+end_src
