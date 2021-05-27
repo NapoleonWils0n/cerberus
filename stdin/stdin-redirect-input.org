@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: showall
 * stdin redirect into variable
 
 #+begin_src sh
