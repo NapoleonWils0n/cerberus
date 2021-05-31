@@ -3,7 +3,7 @@
 # install python pip
 #===================
 
-sudo pkg_add -i py-pip
+doas pkg_add -i py-pip
 
 
 # create symlik for pip
