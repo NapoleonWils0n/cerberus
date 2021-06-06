@@ -1,0 +1,76 @@
+#+STARTUP: content
+* gpxinfo
+** linux install
+
+#+begin_src sh
+sudo apt install gpxinfo
+#+end_src
+
+** python install 
+
+#+begin_src sh
+pip3 install --user gpx-cmd-tools
+#+end_src
+
+*** add python bin to your shell path
+
+**** linux
+
+add the python bin to your shell path.
+for example if you are using the zsh shell edit your ~/.zshrc file,
+or if you are using the bash shell edit your ~/.bashrc file
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+edit your shell config file and add the following code
+
+#+begin_src sh
+# set PATH so it includes user local bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+#+end_src
+
+**** mac 
+
+add the python bin to your shell path.
+for example if you are using the zsh shell edit your ~/.zshrc file,
+or if you are using the bash shell edit your ~/.bashrc file
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+edit your shell config file and add the following code
+
+#+begin_src sh
+# set PATH so it includes user local bin if it exists
+if [ -d "$HOME/Library/Python/3.9/bin" ] ; then
+        PATH="$HOME/Library/Python/3.9/bin:$PATH"
+fi
+#+end_src
+
+**** source your shell config file
+
+for example if you are using the zsh shell source your ~/.zshrc file,
+or if you are using the bash shell source your ~/.bashrc file
+
+#+begin_src sh 
+source ~/.zshrc
+#+end_src
+
+** gpxinfo usage
+
+show distance in kilometers
+
+#+begin_src sh
+gpxinfo infile.gpx
+#+end_src
+
+show distance in miles and feet
+
+#+begin_src sh
+gpxinfo -m infile.gpx
+#+end_src
