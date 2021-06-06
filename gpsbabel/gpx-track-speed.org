@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* gpx track speed
+
+add speed to a gpx track
+
+#+begin_src sh
+gpsbabel -t -i gpx -f input.gpx -x track,speed -o gpx,gpxver=1.0 -F output.gpx
+#+end_src
+

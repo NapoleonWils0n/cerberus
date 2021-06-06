@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* gpsbabel convert a gpx file to a srt subtile file
+
+convert a gpx track to a srt subtitle file
+
+#+begin_src sh
+gpsbabel -i gpx -f input.gpx -x track,speed -o subrip -F video.srt
+#+end_src
