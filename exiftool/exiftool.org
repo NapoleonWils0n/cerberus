@@ -15,6 +15,12 @@ exiftool -n -gpslatitude -gpslongitude infile.jpg -csv > out.csv
 exiftool -n -gpslatitude -gpslongitude -r directory -csv > out.csv
 #+END_SRC
 
++ with date and time
+
+#+BEGIN_SRC sh
+exiftool -n -gpslatitude -gpslongitude -gpsdatetime -r directory -csv > out.csv
+#+END_SRC
+
 ** gps from video
 
 #+BEGIN_SRC sh
@@ -25,6 +31,12 @@ exiftool -n -gpslatitude -gpslongitude -ee infile.mp4 -csv > out.csv
 
 #+BEGIN_SRC sh
 exiftool -n -gpslatitude -gpslongitude -ee -r directory -csv > out.csv
+#+END_SRC
+
++ with date and time
+
+#+BEGIN_SRC sh
+exiftool -n -gpslatitude -gpslongitude -gpsdatetime -ee -r directory -csv > out.csv
 #+END_SRC
 
 ** gpx track log
