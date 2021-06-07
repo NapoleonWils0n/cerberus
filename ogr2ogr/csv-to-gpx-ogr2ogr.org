@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* ogr2ogr csv to gpx
+
+Replace GPSLongitude and GPSLatitude with the latitude and logitude column names from the csv file
+
+#+begin_src sh
+ogr2ogr -f GPX -dsco GPX_USE_EXTENSIONS=YES -oo X_POSSIBLE_NAMES=GPSLongitude -oo Y_POSSIBLE_NAMES=GPSLatitude output.gpx input.csv 
+#+end_src

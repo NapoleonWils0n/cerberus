@@ -1,0 +1,25 @@
+#+STARTUP: content
+* gpsbabel gpx
+
+** convert a csv file to a gpx file
+
+#+begin_src sh
+gpsbabel -w -i csv -f input.csv -o gpx,gpxver=1.0 -F output.gpx
+#+end_src
+
+** convert a kml file to a gpx file
+
+convert a kml file to gpx route and remove the waypoints
+
+#+begin_src sh
+gpsbabel -i kml -f input.kml -x transform,trk=wpt,del -o gpx,gpxver=1.0 -F output.gpx
+#+end_src
+
+** convert a kml file to a gpx file - nuke waypoints
+
+convert a kml file to gpx route and remove the waypoints
+
+#+begin_src sh
+gpsbabel -i kml -f input.kml -x transform,trk=wpt -x nuketypes,waypoints -o gpx,gpxver=1.0 -F output.gpx
+#+end_src
+
