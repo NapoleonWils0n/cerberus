@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* convert geojson to kml
+
+ogr2ogr convert geojson to kml
+
+#+begin_src sh
+ogr2ogr -f KML output.kml input.geojson
+#+end_src
