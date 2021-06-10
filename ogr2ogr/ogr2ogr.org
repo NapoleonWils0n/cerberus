@@ -26,7 +26,7 @@ ogr2ogr -f LIBKML outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_PO
 where longitude and latitude are the column names in the csv
 
 #+begin_src sh
-ogr2ogr -f GEOJSON outfile.json infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude
+ogr2ogr -f GEOJSON outfile.json infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
 #+end_src
 
 ** convert kml to csv
