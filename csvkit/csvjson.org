@@ -30,8 +30,8 @@ csvcut -n infile.csv
 2: Clerkenwell 101
 3: Map
 4: Story page
-5: Lat
-6: long
+5: Latitude
+6: Longitude
 7: 101 image
 8: Now and then
 9: 360 photo
@@ -43,8 +43,8 @@ csvcut -n infile.csv
 ** csvjson code
 
 use the --lat option and the name of the column containing the latitude
-use the --lon option and the name of the column containing the longditude
+use the --lon option and the name of the column containing the longitude
 
 #+begin_src sh
-csvjson --lat Lat --lon long infile.csv > geojson.json
+csvjson --lat Latitude --lon Longitude infile.csv > geojson.json
 #+end_src
