@@ -10,7 +10,7 @@ sudo apt install gdal-bin
 where longitude and latitude are the column names in the csv
 
 #+begin_src sh
-ogr2ogr -f KML outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
+ogr2ogr -f KML output.kml input.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
 #+end_src
 
 ** convert csv to libkml
@@ -19,7 +19,7 @@ where longitude and latitude are the column names in the csv
 works for converting csv files to kml for maphub
 
 #+begin_src sh
-ogr2ogr -f LIBKML outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
+ogr2ogr -f LIBKML output.kml input.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
 #+end_src
 
 ** convert csv to geojson
@@ -27,7 +27,7 @@ ogr2ogr -f LIBKML outfile.kml infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_PO
 where longitude and latitude are the column names in the csv
 
 #+begin_src sh
-ogr2ogr -f GEOJSON outfile.json infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
+ogr2ogr -f GEOJSON output.json input.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO
 #+end_src
 
 ** convert kml to csv
