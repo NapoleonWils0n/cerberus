@@ -31,9 +31,13 @@ ogr2ogr -f GEOJSON outfile.json infile.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_
 
 ** convert kml to csv
 
-the csv driver doesnt support writing gps data,
-so converting from kml to csv wont include the gps coordinates
+GEOMETRY: By default, the geometry of a feature written to a .csv file is discarded.
+
+It is possible to export the geometry in its WKT representation by specifying GEOMETRY=AS_WKT. It is also possible to export point geometries into their X,Y,Z components (different columns in the csv file) by specifying GEOMETRY=AS_XYZ, GEOMETRY=AS_XY or GEOMETRY=AS_YX. The geometry column(s) will be prepended to the columns with the attributes values.
+
+this will create x and y colums in the csv file,
+where x is longitude and y is longitude
 
 #+begin_src sh
-ogr2ogr -f CSV outfile.csv infile.kml
+ogr2ogr -f CSV output.csv input.kml -lco GEOMETRY=AS_XY
 #+end_src
