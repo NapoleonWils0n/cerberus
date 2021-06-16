@@ -1,0 +1,48 @@
+#+STARTUP: content
+* qgis ubuntu install
+
+qgis install latest version on ubuntu
+
+** tools install
+
+First install some tools you will need for this instructions:
+
+#+begin_src sh
+sudo apt install gnupg software-properties-common
+#+end_src
+
+** install the QGIS Signing Key
+
+Now install the QGIS Signing Key, so QGIS software from the QGIS repo will be trusted and installed:
+
+#+begin_src sh
+wget -qO - https://qgis.org/downloads/qgis-2020.gpg.key | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/qgis-archive.gpg --import
+#+end_src
+
+#+begin_src sh
+sudo chmod a+r /etc/apt/trusted.gpg.d/qgis-archive.gpg
+#+end_src
+
+** Add the QGIS repo
+
+Add the QGIS repo for the latest stable QGIS (3.18.x Zürich).
+Note: “lsb_release -c -s” in those lines will return your distro name:
+
+#+begin_src sh
+sudo add-apt-repository "deb https://qgis.org/ubuntu $(lsb_release -c -s) main"
+#+end_src
+
+** Update your repository
+
+Update your repository information to reflect also the just added QGIS one:
+
+#+begin_src sh
+sudo apt update
+#+end_src
+
+** Install QGIS:
+
+#+begin_src sh
+sudo apt install qgis qgis-plugin-grass
+#+end_src
+
