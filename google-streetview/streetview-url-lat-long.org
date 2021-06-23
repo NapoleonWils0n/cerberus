@@ -24,7 +24,7 @@ https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=
 prefix latitude and longitude with the google streetview url
 
 #+begin_src sh
-sed -i.bak 's#^#https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=#' input.csv
+sed -i.bak 's#^#https://www.google.com/maps/@?api=1\&map_action=pano\&viewpoint=#' input.csv
 #+end_src
 
 *** all options
