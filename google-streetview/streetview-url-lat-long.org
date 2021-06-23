@@ -1,0 +1,88 @@
+#+STARTUP: content
+* Streetview url
+** csv file with latitude and longitude
+
+create a csv file with latitude and longitude
+but dont add a column name as we will do that later
+
+#+begin_example
+51.525213000000001,-0.106725000000000
+#+end_example
+
+** prepend streetview url
+
+we want to create a streetview url that looks like this
+
+[[https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.525213000000001,-0.106725000000000]]
+
+by prefixing the latitude and longitude with
+
+#+begin_example
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=
+#+end_example
+
+prefix latitude and longitude with the google streetview url
+
+#+begin_src sh
+sed -i.bak 's#^#https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=#' input.csv
+#+end_src
+
+*** all options
+
+you can also append heading, pitch and fov to the end of the url
+
+[[https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.525213000000001,-0.106725000000000&heading=-45&pitch=38&fov=80]]
+
+#+begin_example
+&heading=-45&pitch=38&fov=80
+#+end_example
+
+*** heading
+
+the heading in degrees
+
+#+begin_example
+&heading=-45
+#+end_example
+
+*** pitch
+
+the pitch
+
+#+begin_example
+&pitch=38
+#+end_example
+
+*** fov
+
+field of view
+
+#+begin_example
+&fov=80
+#+end_example
+
+** sed add double quotes around string
+
+add double quotes to the start and end of the text
+
+#+begin_src sh
+sed -i.bak 's/^/"/;s/$/"/' input.csv
+#+end_src
+
+** add column header to csv file
+
+add the column header to the csv file after you have created the streetview url
+we add the header after creating the url otherwise it would have the streetview url and double quotes to the string
+
+#+begin_example
+Streetview
+"https://www.google.com/maps/@?api=1map_action=panoviewpoint=51.525213000000001,-0.106725000000000"
+#+end_example
+
+** csvjoin
+
+join 2 csv files
+
+#+begin_src sh
+csvjoin input-1.csv input-2.csv > output.csv
+#+end_src
