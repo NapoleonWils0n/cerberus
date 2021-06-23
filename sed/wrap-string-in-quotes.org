@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* sed add double quotes around string
+
+add double quotes to the start and end of the text
+
+#+begin_src sh
+sed -i.bak 's/^/"/;s/$/"/' input.csv
+#+end_src

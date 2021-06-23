@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* csvjoin
+
+join 2 csv files
+
+#+begin_src sh
+csvjoin input-1.csv input-2.csv > output.csv
+#+end_src
