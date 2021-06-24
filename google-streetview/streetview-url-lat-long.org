@@ -1,5 +1,8 @@
 #+STARTUP: content
 * Streetview url
+
+[[https://developers.google.com/maps/documentation/urls/get-started]]
+
 ** csv file with latitude and longitude
 
 create a csv file with latitude and longitude
