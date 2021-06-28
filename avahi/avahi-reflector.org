@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* avahi reflector
+
+configure Avahi to proxy all the mDNS queries to all the available network interfaces!
+This feature is called “reflector”, and is a enabled by a one-line change in /etc/avahi/avahi-daemon.conf:
+
+#+begin_src sh
+[reflector]
+enable-reflector=yes
+#+end_src
+
+use avahi-discover-standalone to view the result
