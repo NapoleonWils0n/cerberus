@@ -1,0 +1,248 @@
+#+STARTUP: content
+* linux network namespaces
+
+https://coldfix.eu/2017/01/29/vpn-box/
+
+https://qasimk.io/2018/single-application-vpn/
+
+** vpn-netns
+
+#+begin_src sh
+#!/bin/sh
+
+# openvpn split route
+#====================
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -c infile.ovpn -a auth.txt"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+ROOT_ERR="$(basename "$0") must be run as root"
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+NOTFILE_ERR='not a file'
+
+
+#===============================================================================
+# check if script is run as root
+#===============================================================================
+
+[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':c:a:h' opt
+do
+  case ${opt} in
+     c) config="${OPTARG}"
+     [ -f "${config}" ] || usage "${config} ${NOTFILE_ERR}";;
+     a) auth="${OPTARG}"
+     [ -f "${auth}" ] || usage "${auth} ${NOTFILE_ERR}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# openvpn code
+#===============================================================================
+
+openvpn \
+--auth-nocache --script-security 2 --route-nopull --redirect-gateway \
+--ifconfig-noexec --route-noexec \
+--up /usr/local/bin/netns-vpn --down /usr/local/bin/netns-vpn \
+--config "${config}" \
+--auth-user-pass "${auth}"
+#+end_src
+
+make executable
+
+#+begin_src sh
+chmod +x vpn-netns
+#+end_src
+
+copy script to /usr/local/bin
+
+#+begin_src sh
+sudo cp vpn-netns /usr/local/bin
+#+end_src
+
+** netns-vpn
+
+#+begin_src sh
+#!/bin/sh
+
+# openvpn split route with namespace
+#===================================
+
+# openvpn up script
+up() {
+    # create network namespace
+    ip netns add vpn || true
+
+    # bring up loop device
+    ip netns exec vpn ip link set dev lo up
+
+    # move VPN tunnel to netns
+    ip link set dev "$1" up netns vpn mtu "$2"
+
+    # configure tunnel in netns
+    ip netns exec vpn ip addr add dev "$1" \
+            "$4/${ifconfig_netmask:-30}" \
+            ${ifconfig_broadcast:+broadcast "$ifconfig_broadcast"}
+    if [ -n "$ifconfig_ipv6_local" ]; then
+            ip netns exec vpn ip addr add dev "$1" \
+                    "$ifconfig_ipv6_local"/112
+    fi
+
+    # set route in netns
+    ip netns exec vpn ip route add default via "$route_vpn_gateway"
+
+    # create vpn namespace directory
+    mkdir -p /etc/netns/vpn
+
+    # create resolv.conf with 
+    echo 'nameserver 127.0.0.1' > /etc/netns/vpn/resolv.conf 
+
+    # stop unbound dns server
+    systemctl stop unbound.service
+
+    # sleep for 1 second
+    sleep 1
+
+    # start unbound dns server in vpn namespace
+    systemctl start unbound-netns.service
+}
+
+# openvpn down script
+down() {
+    # remove namespace and delete resolv.conf
+    rm -rf /etc/netns/vpn
+    ip netns delete vpn
+
+    # restart unbound dns server
+    systemctl stop unbound-netns.service
+
+    # sleep for 1 second
+    sleep 1
+
+    # start unbound dns server
+    systemctl start unbound.service
+
+    true
+}
+
+"$script_type" "$@"
+#+end_src
+
+make executable
+
+#+begin_src sh
+chmod +x netns-vpn
+#+end_src
+
+copy script to /usr/local/bin
+
+#+begin_src sh
+sudo cp netns-vpn /usr/local/bin
+#+end_src
+
+** unbound systemd namespace
+*** unbound-netns.service
+
+#+begin_src sh
+[Unit]
+Description=Unbound DNS server
+Documentation=man:unbound(8)
+After=network.target
+Before=nss-lookup.target
+Wants=nss-lookup.target
+
+[Service]
+Type=notify
+Restart=on-failure
+EnvironmentFile=-/etc/default/unbound
+ExecStartPre=-/usr/lib/unbound/package-helper chroot_setup
+ExecStartPre=-/usr/lib/unbound/package-helper root_trust_anchor_update
+ExecStart=/usr/bin/ip netns exec vpn /usr/sbin/unbound -d $DAEMON_OPTS
+ExecReload=/usr/bin/ip netns exec vpn /usr/sbin/unbound-control reload
+PIDFile=/run/unbound-netns.pid
+
+[Install]
+WantedBy=multi-user.target
+#+end_src
+
+*** copy unbound-netns.service
+
+#+begin_src sh
+sudo cp unbound-netns.service /etc/systemd/system/
+#+end_src
+
+*** systemctl daemon-reload
+
+#+begin_src sh
+sudo systemctl daemon-reload
+#+end_src
+
+** run command in namespace
+
+create a script called namespace
+
+#+begin_src sh
+#!/bin/sh
+
+# check if script is run as root
+[ "$(id -u)" -eq 0 ] || exit
+
+# check number of aruments passed to script
+[ $# -gt 0 ] || exit
+
+ip netns exec vpn sudo -u $(whoami) -- "$@"
+#+end_src
+
+make executable
+
+#+begin_src sh
+chmod +x namespace
+#+end_src
+
+copy script to /usr/local/bin
+
+#+begin_src sh
+sudo cp namespace /usr/local/bin
+#+end_src
+
+add to ~/.zshrc
+
+#+begin_src sh
+compdef _precommand namespace
+#+end_src
+
