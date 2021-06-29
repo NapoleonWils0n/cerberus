@@ -1,0 +1,44 @@
+#+STARTUP: content
+* opendoas ubuntu install
+
+[[https://github.com/Duncaen/OpenDoas]]
+
+** install required packages
+
+[[https://axebase.net/blog/2020/10/28/doas-das-kleine-sudo/]]
+
+#+begin_src sh
+sudo apt install build-essential checkinstall git byacc
+#+end_src
+
+** clone git repository
+
+#+begin_src sh
+git clone git://github.com/Duncaen/OpenDoas --depth 1
+#+end_src
+
+** change directory into the OpenDoas directory
+
+#+begin_src sh
+cd OpenDoas
+#+end_src
+
+** configure 
+
+#+begin_src sh
+./configure
+make -j2
+sudo checkinstall -D --install=no --backup=no --maintainer=user --pkgname=opendoas
+#+end_src
+
+** install OpenDoas.deb
+
+#+begin_src sh
+sudo dpkg -i opendoas*.deb
+#+end_src
+
+** doas.conf
+
+#+begin_src sh
+echo "permit keepenv :$USER" | sudo tee /etc/doas.conf
+#+end_src
