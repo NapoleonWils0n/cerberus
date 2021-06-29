@@ -221,13 +221,7 @@ create a script called namespace
 #+begin_src sh
 #!/bin/sh
 
-# check if script is run as root
-[ "$(id -u)" -eq 0 ] || exit
-
-# check number of aruments passed to script
-[ $# -gt 0 ] || exit
-
-ip netns exec vpn sudo -u $(whoami) -- "$@"
+sudo ip netns exec vpn sudo -u $(whoami) -- "$@"
 #+end_src
 
 make executable
