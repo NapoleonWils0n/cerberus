@@ -522,3 +522,36 @@ copy namespace-firefox.desktop to ~/.local/share/applications
 #+begin_src sh
 cp namespace-firefox.desktop ~/.local/share/applications
 #+end_src
+
+** transmission torrent client 
+
+create a script called torrents with the following code
+
+#+begin_src sh
+#!/bin/sh
+
+# start transmission-daemon in vpn namespace
+transmission-daemon
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+chmod +x torrents
+#+end_src
+
+move the torrents script to /usr/local/bin
+
+#+begin_src sh
+sudo mv torrents /usr/local/bin
+#+end_src
+
+start the transmission-daemon in the vpn namespace
+
+#+begin_src sh
+namespace torrents
+#+end_src
+
+check your ip address with [[https://www.whatsmyip.org][whatsmyip.org]]
+
+check your [[https://torguard.net/checkmytorrentipaddress.php][torrent ip address]]
