@@ -216,6 +216,8 @@ sudo systemctl daemon-reload
 
 create a script called namespace
 
++ sudo
+
 #+begin_src sh
 #!/bin/sh
 
