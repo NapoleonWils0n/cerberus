@@ -1,0 +1,58 @@
+#+STARTUP: content
+* apparmor
+
+install apparmor profiles and utils
+
+#+begin_src sh
+sudo apt install apparmor-profiles apparmor-utils
+#+end_src
+
+** firefox
+
+*** Enable the Firefox profile by removing the symbolic link.
+
+#+begin_src sh
+sudo rm /etc/apparmor.d/disable/usr.bin.firefox
+#+end_src
+
+*** reload apparmor profiles
+
+If you remove the symbolic link you then need to have AppArmor reload the listing of Profiles.
+
+#+begin_src sh
+sudo apparmor_parser -a /etc/apparmor.d/usr.bin.firefox
+#+end_src
+
+The ‘-a’ causes the program to add the specified Profile.
+
+*** apparmor status
+
+If you check the status you should see that it is now set in ‘enforce’ mode.
+
+#+begin_src sh
+sudo aa-status
+#+end_src
+
+*** change profile to complain mode
+
+We now have a Profile in enforce mode and we can change it to complain mode.
+
+#+begin_src sh
+sudo aa-complain usr.bin.firefox
+#+end_src
+
+*** Disable a Profile
+
+To disable a Profile we need to recreate the symbolic link in the ‘/etc/apparmor.d/disable’ folder.
+
+#+begin_src sh
+sudo ln -s /etc/apparmor.d/usr.bin.firefox /etc/apparmor.d/disable/
+#+end_src
+
+*** remove profile listing
+
+Now that the link is made the AppArmor Service needs to remove the listing from its database.
+
+#+begin_src sh
+sudo apparmor_parser -R /etc/apparmor.d/usr.bin.firefox
+#+end_src
