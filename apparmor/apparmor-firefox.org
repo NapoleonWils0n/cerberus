@@ -25,6 +25,12 @@ sudo apparmor_parser -a /etc/apparmor.d/usr.bin.firefox
 
 The ‘-a’ causes the program to add the specified Profile.
 
+*** aa-enforce
+
+#+begin_src sh
+sudo aa-enforce /etc/apparmor.d/usr.bin.firefox
+#+end_src
+
 *** apparmor status
 
 If you check the status you should see that it is now set in ‘enforce’ mode.
@@ -55,4 +61,25 @@ Now that the link is made the AppArmor Service needs to remove the listing from 
 
 #+begin_src sh
 sudo apparmor_parser -R /etc/apparmor.d/usr.bin.firefox
+#+end_src
+
+*** Forced loading of a profile into a namespace
+
+The apparmor_parser can be used to force a profile or profiles into
+a specified namespace at load time.
+
+#+begin_src sh
+sudo apparmor_parser -n name-of-namespace -r /path/to/profile
+#+end_src
+
+firefox vpn namespace
+
+#+begin_src sh
+sudo apparmor_parser -n vpn -a /etc/apparmor.d/usr.bin.firefox
+#+end_src
+
+remove profile from database
+
+#+begin_src sh
+sudo apparmor_parser -n vpn -R /etc/apparmor.d/usr.bin.firefox
 #+end_src
