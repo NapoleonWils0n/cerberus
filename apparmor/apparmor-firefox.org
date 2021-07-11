@@ -44,7 +44,7 @@ sudo aa-status
 We now have a Profile in enforce mode and we can change it to complain mode.
 
 #+begin_src sh
-sudo aa-complain usr.bin.firefox
+sudo aa-complain /etc/apparmor.d/usr.bin.firefox
 #+end_src
 
 *** Disable a Profile
