@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* find remove files in subdirectories
+
+echo all mkv files in subdirectories before deleting them
+
+#+begin_src sh
+find . -maxdepth 2 -type f -regex ".*\.mkv$" -exec echo '{}' \;
+#+end_src
+
+remove all mkv files in subdirectories
+
+#+begin_src sh
+find . -maxdepth 2 -type f -regex ".*\.mkv$" -exec rm '{}' \;
+#+end_src
