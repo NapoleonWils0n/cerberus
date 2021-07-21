@@ -37,7 +37,7 @@ GEOMETRY: By default, the geometry of a feature written to a .csv file is discar
 It is possible to export the geometry in its WKT representation by specifying GEOMETRY=AS_WKT. It is also possible to export point geometries into their X,Y,Z components (different columns in the csv file) by specifying GEOMETRY=AS_XYZ, GEOMETRY=AS_XY or GEOMETRY=AS_YX. The geometry column(s) will be prepended to the columns with the attributes values.
 
 this will create x and y colums in the csv file,
-where x is longitude and y is longitude
+where x is longitude and y is latitude
 
 #+begin_src sh
 ogr2ogr -f CSV output.csv input.kml -lco GEOMETRY=AS_XY
@@ -50,7 +50,7 @@ GEOMETRY: By default, the geometry of a feature written to a .csv file is discar
 It is possible to export the geometry in its WKT representation by specifying GEOMETRY=AS_WKT. It is also possible to export point geometries into their X,Y,Z components (different columns in the csv file) by specifying GEOMETRY=AS_XYZ, GEOMETRY=AS_XY or GEOMETRY=AS_YX. The geometry column(s) will be prepended to the columns with the attributes values.
 
 this will create x and y colums in the csv file,
-where x is longitude and y is longitude
+where x is longitude and y is latitude
 
 #+begin_src sh
 ogr2ogr -f geojson output.csv input.json -lco GEOMETRY=AS_XY
