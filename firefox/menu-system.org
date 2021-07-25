@@ -33,6 +33,10 @@ into the address bar and pressing Enter/Return to load it.
 #context-inspect-a11y, /* accessability */
 #context-savepage, /* save page */
 #context-selectall, /* select all */
-#context-viewsource /* view source */
+#context-viewsource, /* view source */
+#context-back, /* back */
+#context-forward, /* forward */
+#context-reload, /* reload */
+#context-bookmarkpage /* edit this bookmark */
 {display: none !important;}
 #+end_src

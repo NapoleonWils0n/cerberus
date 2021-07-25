@@ -1,0 +1,54 @@
+/* userChrome.css */
+
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); /* only needed once */
+
+/* hide close, minimize window buttons */
+.titlebar-min {display:none!important;}
+.titlebar-max {display:none!important;}
+.titlebar-restore {display:none!important;}
+.titlebar-close {display:none!important;}
+
+/*** Proton Tabs Tweaks ***/
+
+/* Adjust tab corner shape, optionally remove space below tabs */
+
+#tabbrowser-tabs {
+    --user-tab-rounding: 6px;
+}
+
+@media (-moz-proton) {
+    .tab-background {
+        border-radius: var(--user-tab-rounding) var(--user-tab-rounding) 0px 0px !important;
+        margin-block: 1px 0 !important;
+    }
+    #scrollbutton-up, #scrollbutton-down { /* 6/10/2021 */
+        border-top-width: 1px !important;
+        border-bottom-width: 0 !important;
+    }
+    /* Container color bar visibility */
+    .tabbrowser-tab[usercontextid] > .tab-stack > .tab-background > .tab-context-line {
+        margin: 0px max(calc(var(--user-tab-rounding) - 3px), 0px) !important;
+    }
+}
+
+/* Remove items from Firefox menu */
+
+#context-sendimage, /* email */
+#context-bookmarklink, /* bookmark link */
+#context-savelink, /* save link */
+#context-copyimage-contents, /* copy image */
+#context-take-screenshot, /* take screenshot */
+#context-openlinkintab, /* open link in tab */
+#context-openlink, /* open link in new window */
+#context-openlinkprivate, /* open link in private window */
+#context-searchselect, /* search for */
+#context-searchselect-private, /* search for private */
+#context-inspect-a11y, /* accessability */
+#context-savepage, /* save page */
+#context-selectall, /* select all */
+#context-viewsource, /* view source */
+#context-back, /* back */
+#context-forward, /* forward */
+#context-reload, /* reload */
+#context-bookmarkpage /* edit this bookmark */
+{display: none !important;}
