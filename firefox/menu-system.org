@@ -13,7 +13,6 @@ view-source:chrome://browser/content/browser.xhtml
 
 into the address bar and pressing Enter/Return to load it. 
 
-
 ** userChrome.css
 
 #+begin_src css
