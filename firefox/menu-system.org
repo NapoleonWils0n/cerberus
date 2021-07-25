@@ -5,13 +5,12 @@
 
 ** browser.xhtml
 
-You can find the skeleton of the menu system by pasting
+You can find the skeleton of the menu system by pasting [[view-source:chrome://browser/content/browser.xhtml]]
+into the address bar and pressing Enter/Return to load it. 
 
 #+begin_example
 view-source:chrome://browser/content/browser.xhtml
 #+end_example
-
-into the address bar and pressing Enter/Return to load it. 
 
 ** userChrome.css
 
