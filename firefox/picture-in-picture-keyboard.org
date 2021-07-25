@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* firefox picture in picture keyboard shortcut
+
+toggle picture in picture
+
+#+begin_example
+Ctrl+Shift+]
+#+end_example
