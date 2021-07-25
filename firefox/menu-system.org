@@ -37,6 +37,19 @@ into the address bar and pressing Enter/Return to load it.
 #context-back, /* back */
 #context-forward, /* forward */
 #context-reload, /* reload */
-#context-bookmarkpage /* edit this bookmark */
+#context-bookmarkpage,/* edit this bookmark */
+#context-media-playbackrate, /* speed in video menu */
+#context-media-loop, /* loop video */ 
+#context-sendvideo, /* email video */
+#context-sendaudio, /* email audio */
+#context-sendimage, /* email image */
+#context-undo, /* undo */
+#context-redo, /* redo */
+#context-cut, /* cut */
+#context-copy, /* copy */
+#context-paste, /* paste */
+#context-delete, /* delete */
+#context-keywordfield, /* add a keyword for this search */
+#context-selectall /* select all */
 {display: none !important;}
 #+end_src
