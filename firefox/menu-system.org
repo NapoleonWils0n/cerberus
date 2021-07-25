@@ -1,0 +1,33 @@
+#+STARTUP: content
+* firefox menu system 
+
+[[https://www.userchrome.org]]
+
+** browser.xhtml
+
+You can find the skeleton of the menu system by pasting
+
+#+begin_example
+view-source:chrome://browser/content/browser.xhtml
+#+end_example
+
+into the address bar and pressing Enter/Return to load it. 
+
+** userChrome.css
+
+#+begin_src css
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); /* only needed once */
+
+/* Remove items from Firefox menu */
+
+#context-sendimage, /* email */
+#context-bookmarklink, /* bookmark link */
+#context-savelink, /* save link */
+#context-copyimage-contents, /* copy image */
+#context-take-screenshot, /* copy image */
+#context-openlinkprivate, /* open link in private window */
+#context-searchselect, /* search for */
+#context-searchselect-private, /* search for private */
+#context-inspect-a11y /* accessability */
+{display: none !important;}
+#+end_src
