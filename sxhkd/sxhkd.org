@@ -2,7 +2,6 @@
 #+STARTUP: overview hideblocks
 #+OPTIONS: num:nil author:nil
 * sxhkd multimedia keys
-
 ** install
 
 #+begin_src sh
