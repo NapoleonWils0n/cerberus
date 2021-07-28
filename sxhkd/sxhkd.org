@@ -1,0 +1,90 @@
+#+STARTUP: content
+#+STARTUP: overview hideblocks
+#+OPTIONS: num:nil author:nil
+* sxhkd multimedia keys
+
+** install
+
+#+begin_src sh
+sudo apt install sxhkd
+#+end_src
+
+** config file
+
+create the sxhkd directory
+
+#+begin_src sh
+mkdir -p ~/.config/sxhkd
+#+end_src
+
+create the sxhkdrc config file
+
+#+begin_src sh
+touch ~/.config/sxhkd/sxhkdrc
+#+end_src
+
+add the following code to the sxhkdrc file
+
+#+begin_src sh
+# sxhkdrc - multimedia keys
+
+# Increase volume
+XF86AudioRaiseVolume
+    amixer set Master 10%+ 1>/dev/null
+
+# Decrease volume
+XF86AudioLowerVolume
+    amixer set Master 10%- 1>/dev/null
+
+# Mute Audio
+XF86AudioMute
+    amixer -D pulse set Master 1+ toggle 1>/dev/null
+
+# Play
+XF86AudioPlay
+    playerctl play-pause
+
+# Next
+XF86AudioNext
+    playerctl next
+
+# Previous
+XF86AudioPrev
+    playerctl previous
+
+# Stop
+XF86AudioStop
+    playerctl stop
+
+
+# ducky one 2 mini keyboard
+#==========================
+
+# mute = function + m
+# decrease volume = function + ,
+# increase volume = function + .
+
+# Play - ducky keyboard pause, function + o
+Pause
+    playerctl play-pause
+
+# Next - ducky keyboard next, function + ;
+Next
+    playerctl next
+
+# Previous - ducky keyboard prior, function + p
+Prior
+    playerctl previous
+#+end_src
+
+** start sxhkd 
+
+you can run sxhkd in the background by running the following command
+
+#+begin_src sh
+sxhkd &
+#+end_src
+
+there are ways to start sxhkd listed on the arch linux wiki 
+
+[[https://wiki.archlinux.org/title/Sxhkd]]
