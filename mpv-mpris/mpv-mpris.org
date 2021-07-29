@@ -1,0 +1,50 @@
+#+STARTUP: content
+* mpv-mpris
+
+mpv-mpris is a plugin for mpv which allows control of the player using standard media keys.
+
+[[https://github.com/hoyon/mpv-mpris]]
+
+** install mpv-mpris
+
++ download the latest release from this page
+
+[[https://github.com/hoyon/mpv-mpris/releases]]
+
++ you need to download the mpris.so file
+
+[[https://github.com/hoyon/mpv-mpris/releases/download/0.5/mpris.so]]
+
++ download the mpris.so file with wget
+
+#+begin_src sh
+wget https://github.com/hoyon/mpv-mpris/releases/download/0.5/mpris.so
+#+end_src
+
+** create the mpv scripts directory
+
+create the mpv scripts directory for the mpris.so file
+
+#+begin_src sh
+mkdir -p ~/.config/mpv/scripts
+#+end_src
+
+** move the mpris.so file to the scripts directory
+
+#+begin_src sh
+mv mpris.so ~/.config/mpv/scripts
+#+end_src
+
+** playerctl and mpv
+
+play a video with mpv and then in the terminal run playerctl -l
+
+#+begin_src sh
+playerctl -l
+#+end_src
+
+playerctl should output mpv in the terminal meaning you change now control mpv with playerctl
+
+#+begin_src example
+mpv
+#+end_src
