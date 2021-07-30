@@ -46,6 +46,12 @@ ignore nodbus
 
 [[https://github.com/altdesktop/playerctl/blob/master/data/playerctl.zsh]]
 
++ download the file with wget
+
+#+begin_src sh
+wget https://github.com/altdesktop/playerctl/blob/master/data/playerctl.zsh
+#+end_src
+
 + playerctl.zsh completion
 
 #+begin_src sh
