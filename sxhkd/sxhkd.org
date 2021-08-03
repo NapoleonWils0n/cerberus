@@ -24,7 +24,13 @@ touch ~/.config/sxhkd/sxhkdrc
 add the following code to the sxhkdrc file
 
 #+begin_src sh
-# sxhkdrc - multimedia keys
+# sxhkdrc 
+
+# sxhkd reload config
+super + Escape
+	pkill -USR1 -x sxhkd
+
+# multimedia keys
 
 # Increase volume
 XF86AudioRaiseVolume
