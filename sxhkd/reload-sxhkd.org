@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* sxhkd reload
+
+If sxhkd receives a SIGUSR1 (resp. SIGUSR2) signal, it will reload its configuration file 
+
+#+begin_src sh
+pkill -usr1 -x sxhkd
+#+end_src
