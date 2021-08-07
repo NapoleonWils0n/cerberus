@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* awk truncate text
+
+truncate text to 40 charcters and add ellipse
+
+#+begin_src sh
+awk 'length > 40{$0=substr($0,0,41)"..."}1')
+#+end_src
+
++ example
+
+#+begin_src sh
+echo 'truncate text to 40 charcters and add ellipse' | awk 'length > 40{$0=substr($0,0,41)"..."}1'
+#+end_src
