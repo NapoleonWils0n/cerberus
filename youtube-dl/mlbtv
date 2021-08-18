@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# mlbtv
+
+# script usage
+#==================================================================
+
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# combine an image or video file with an audio clip
+
+$(basename "$0") -i url -o outfile.mp4
+-i url
+-o outfile.mp4 :optional agument # if option not provided defaults to mlbtv-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}"
+	[ -f "${input}" ] || usage "${input} ${NOTFILE_ERR}";;
+     o) output="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# variables
+#==================================================================
+
+# file
+input_contents="$(awk '{ print $0 }' ${input})"
+
+# useragent
+useragent="$(echo "${input_contents}" | grep -oP '(?=User-Agent=)[^&]*(?=&)' | sed "s/User-Agent=//;s/^/'/;s/$/'/")"
+
+# m3u8
+m3u8="$(echo "${input_contents}" | grep -oP '(?=https://)[^|]*(?=|)')"
+
+# authorization key
+key="$(echo "${input_contents}" | grep -oP '(?=Authorization=)[^&]*(?=&)' | sed "s/Authorization=/authorization:/")"
+
+# output file
+output_default="mlbtv-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+
+# youtube-dl
+#==================================================================
+
+youtube-dl \
+--ignore-config \
+--no-part \
+--user-agent "${useragent}" \
+--add-header "${key}" \
+"${m3u8}" -o "${output:=${output_default}}"
