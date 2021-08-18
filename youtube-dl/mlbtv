@@ -11,7 +11,7 @@ usage ()
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-# combine an image or video file with an audio clip
+# mlbtv
 
 $(basename "$0") -i url -o outfile.mp4
 -i url
