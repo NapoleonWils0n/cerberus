@@ -1,0 +1,57 @@
+#+STARTUP: showall
+* v4l2loopback
+
+[[https://github.com/umlaeute/v4l2loopback]]
+
+** install
+
+#+begin_src sh
+sudo apt install v4l2loopback-dkms v4l2loopback-utils
+#+end_src
+
+** create the video loopback device
+
+#+begin_src sh
+sudo modprobe v4l2loopback devices=1 max_buffers=2 card_label="Virtual Camera" exclusive_caps=1
+#+end_src
+
+list the video devices
+
+#+begin_src sh
+v4l2-ctl --list-devices
+#+end_src
+
+in my case the video loopback device is listed as:
+
+#+begin_src sh
+/dev/video2
+#+end_src
+
++ you can also list video device directory
+
+#+begin_src sh
+ls -l /dev/video*
+#+end_src
+
+** ffmpeg v4l2loopback
+
+replace video0 with the card number of your virtual camera from the previous step
+and replace input with your input
+
+*** receive the stream and write it into the /dev/video0 device:
+
+#+begin_src sh
+ffmpeg -f h264 -i input -f v4l2 -pix_fmt yuv420p /dev/video0
+#+end_src
+
+*** offload h264 graphics decoding to your graphics card via VDPAU
+
+#+begin_src sh
+ffmpeg -f h264 -hwaccel vdpau -i input -f v4l2 -pix_fmt yuv420p /dev/video0
+#+end_src
+
+*** you can also use ffmpeg to send output to the virtual video device
+
+#+begin_src sh
+ffmpeg -f x11grab -r 30 -s 1920+1080 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0
+#+end_src
