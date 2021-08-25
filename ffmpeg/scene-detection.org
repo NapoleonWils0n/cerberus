@@ -1,0 +1,61 @@
+#+STARTUP: content
+* ffmpeg scene detection
+** time text and images
+
+scene detection and create images
+
+#+begin_src sh
+ffmpeg -hide_banner -i input.mp4 -filter_complex "select='gt(scene,0.3)',metadata=print:file=time.txt" -vsync vfr img%03d.png
+#+end_src
+
+** ffmpeg time text
+
+ffmpeg scene detection
+
+#+begin_src sh
+ffmpeg -hide_banner -i input.mp4 -filter_complex "select='gt(scene,0.3)',metadata=print:file=time.txt" -f null -
+#+end_src
+
+
+ffmpeg scene detection with key
+
+#+begin_src sh
+ffmpeg -hide_banner -i input.mp4 -filter_complex "select='gt(scene,0.3)',metadata=print:key=lavfi.scene_score:file=time.txt" -f null -
+#+end_src
+
+*** sed extract time
+
+sed delete everything except pts_time value
+
+#+begin_src sh
+sed -i -n 's/.*pts_time:\([0-9\.]*\)$/\1/Ip' time.txt
+#+end_src
+
+** ffprobe
+
+video duration
+
+#+begin_src sh
+ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 input.mp4
+#+end_src
+
+ffprobe scene detection
+
+#+begin_src sh
+ffprobe -hide_banner -v panic -show_entries packet=pts_time -of default=noprint_wrappers=1:nokey=1 -f lavfi "movie=input.mp4,select='gt(scene,0.3)'" > output
+#+end_src
+
+** ffprobe sexagesimal
+
+video duration sexagesimal format
+
+#+begin_src sh
+ffprobe -v error -sexagesimal -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 input.mp4
+#+end_src
+
+ffprobe scene detection sexagesimal format
+
+#+begin_src sh
+ffprobe -hide_banner -v panic -sexagesimal -show_entries packet=pts_time -of default=noprint_wrappers=1:nokey=1 -f lavfi "movie=input.mp4,select='gt(scene,0.3)'" > output
+#+end_src
+
