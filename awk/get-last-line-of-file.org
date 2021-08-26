@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* awk get the last line of a line
+
+#+begin_src sh
+awk 'END { printf("%f\n", $NF) }' input
+#+end_src
