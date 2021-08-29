@@ -1,0 +1,22 @@
+#+STARTUP: showall
+* awk match regex
+
+#+begin_src sh
+#!/bin/sh
+
+input="$1"
+
+awk 'BEGIN {
+    regex="^[0-9:.]+$";
+}
+{
+    if (match($0,regex)) {
+#           RSTART is where the pattern starts
+#           RLENGTH is the length of the pattern
+            before = substr($0,1,RSTART-1);
+            pattern = substr($0,RSTART,RLENGTH);
+            after = substr($0,RSTART+RLENGTH);
+            printf("%s<%s>%s\n", before, pattern, after);
+    }
+}' "${input}"
+#+end_src
