@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* awk print first and second lines
+
+#+begin_src sh
+awk 'NR > 1 {print prev, "-", $0}; {prev = $0}' < input
+#+end_src
