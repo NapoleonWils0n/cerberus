@@ -1,0 +1,148 @@
+#+STARTUP: showall
+* qrencode
+
+create qr codes
+
+** qrencode install
+
+#+begin_src sh
+sudo apt install qrencode
+#+end_src
+
+** text qrcode
+
+The following command then creates a QR code containing the text “Hello World!” 
+
+#+begin_src sh
+qrencode -s 6 -l H -o "text.png" "This type of QR holds plain text"
+#+end_src
+
+** border width
+
+If desirable, you can increase or decrease the edge with the -m parameter
+in the following example the border width would be 10 code pixels:
+
+#+begin_src sh
+qrencode -m 10 -s 6 -l H -o border.png 'Hello World!'
+#+end_src
+
+** web site url
+
+create a qrcode for a web site
+
+#+begin_src sh
+qrencode -s 6 -l H -o "url.png" "https://cloudsavvyit.com"
+#+end_src
+
+** location gps
+
+#+begin_src sh
+qrencode -s 6 -l H -o "geo.png" "geo:51.185013,-1.859105"
+#+end_src
+
+-s 6: This sets the size of the blocks in the QR checkered pattern. The number you provide sets the size in pixels for the length of one side of a block.
+
+-l H: This sets the level of error-correction. The options we can use are “L” for low, “M” for medium, “Q” for quite high, and “H” for high or highest. The different levels of error-correction can cope with different amounts of damage or illegibility when the QR code is scanned. “Low” allows the code to be successfully scanned if up to seven percent of the code is obscured or damaged. “Medium” raises this to 15 percent. “Quite high” can cope with up to 25 percent of the code being damaged. The “High” level can cope with a whopping 30 percent of damage or illegibility when the QR code is scanned. The more error correction you use, the larger the overall QR code will be. This is because it needs to store redundant information which means there are more blocks in the pattern.
+
+-o “text.png”: The output option allows you to set the name of the generated image. By default, this is a Portable Network Graphics (PNG) image. If you use the -t (type) option you can change the output to a variety of formats including Encapsulated Postcript (EPS), Scalable Vector Graphics (SVG), and many different flavors of American National Standard Institute (ANSI) character-based output.
+
+** phone numbers
+
+#+begin_src sh
+qrencode -s 6 -l H -o "phone.png" "tel:5555555555"
+#+end_src
+
+To store a phone number inside a QR code use the tel keyword, a colon “:“, and the phone number, with no spaces.
+It’s best not to use hyphens and other punctuation in the number because some scanning apps get confused. Instead of “(123) 456–7890” use “1234567890.”
+
+** email
+
+#+begin_src sh
+qrencode -s 6 -l H -o "email.png" "mailto:contact@cloudsavvyit.com?subject=Linux&body=Linux articles are cool."
+#+end_src
+
+The keyword to use is mailto, with a colon ” : ” separating it from the email address.
+Use “?subject=” to identify the subject line. Don’t put spaces before or after the “?subject=” flag.
+Use “&body=” to identify the email message contents. Don’t put spaces before or after the “&body=” flag.
+
+** colour
+
+#+begin_src sh
+qrencode -s 6 -l H --foregound="3599FE" --background="FFFFFF" -o "blue.png" "This QR code will be blue and white."
+#+end_src
+
+The --foreground and --background options let you set colors for the QR code pattern and background.
+You can specify the color in the RGB color model six hexadecimal digit notation or the RGBA color model eight hexadecimal digit notation.
+
+** sms
+
+#+begin_src sh
+qrencode -s 6 -l H -o "SMS.png" "smsto:5555555555,This is the text of the SMS message."
+#+end_src
+
+The formats to send a Short Message Service (SMS) or a Multimedia Messaging Service (MMS) message are identical.
+Use the keyword smsto keyword, a colon ” : “, the phone number, a comma “,” with no spaces, then the body of the message.
+
+** connect to a wifi network
+
+#+begin_src sh
+qrencode -s 6 -l H -o "wifi.png" "WIFI:T:WPA;S:<SSID>;P:<PSWD>;;"
+#+end_src
+
+
+The keyword is WIFI, followed by a colon ” : ” and several other parameters.
+
+T: The type of security. This can be WEP, WPA, or WPA2. Note there is a colon between the “T” and the security value, and there is a semicolon ” ; ” after the security setting.
+
+S: The Service Set ID (SSID) of the Wi-Fi network. Note there is a colon between the “S” and the SSID, and there is a semicolon ” ; ” after the SSID.
+
+P: The password or security key of the Wi-Fi network. Note there is a colon between the “P” and the security key, and are two semicolons ” ;; ” after the security key.
+
+** Adding a Contact With a QR Code
+
+Contact details in the vCard format can be added to a QR code and scanned into the user’s address book.
+This removes the risk of mistyping something. There’s a lot of information that can be stored, so it is best to add the details to a file and to redirect that file into qrencode.
+
+This text was added to a file called “contact.txt.”
+
+#+begin_example
+BEGIN:VCARD
+VERSION:2.1
+N:McKay,D
+FN:Dave McKay
+TEL;TYPE=voice,cell,pref:5555555555
+TITLE:Journalist
+ORG:CloudSavvyIT
+EMAIL:dave@madeupdomain.com
+URL:www.cloudsavvyit.com
+END:VCARD
+#+end_example
+
+We can redirect this file into qrencode like this:
+
+#+begin_src sh
+qrencode -s 6 -l H -o "contact.png" < contact.txt
+#+end_src
+
+** Adding a Calendar Event With a QR Code
+
+Adding an event to a calendar is very similar to adding a contact.
+The data is best added to a file which is redirected into qrencode.
+
+This text was added to a file called “event.txt.”
+
+#+begin_example
+BEGIN:VEVENT
+SUMMARY:Works Picnic
+DESCRIPTION:Fun, food, and games in the sun
+LOCATION:Eastwood Park
+DTSTART:20210710T103000
+DTEND:20210710T154500
+END:VEVENT
+#+end_example
+
+This was redirected into qrencode like this:
+
+#+begin_src sh
+qrencode -s 6 -l H -o "event.png" < event.txt
+#+end_src
