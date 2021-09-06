@@ -1,4 +1,4 @@
-#+STARTUP: showall
+#+STARTUP: content
 * qrencode
 
 create qr codes
