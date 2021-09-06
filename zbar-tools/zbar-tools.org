@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* zbar-tools
+
+qr code reader
+
+** zbar-tools install
+
+#+begin_src sh
+sudo apt-get install zbar-tools
+#+end_src
+
+** read qr code in the terminal
+
+#+begin_src sh
+zbarimg input.png
+#+end_src
