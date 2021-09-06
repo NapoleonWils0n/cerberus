@@ -14,7 +14,7 @@ sudo apt install qrencode
 The following command then creates a QR code containing the text “Hello World!” 
 
 #+begin_src sh
-qrencode -s 6 -l H -o "text.png" "This type of QR holds plain text"
+qrencode -s 6 -l H -o text.png 'This type of QR holds plain text'
 #+end_src
 
 ** border width
@@ -31,13 +31,13 @@ qrencode -m 10 -s 6 -l H -o border.png 'Hello World!'
 create a qrcode for a web site
 
 #+begin_src sh
-qrencode -s 6 -l H -o "url.png" "https://cloudsavvyit.com"
+qrencode -s 6 -l H -o url.png 'https://cloudsavvyit.com'
 #+end_src
 
 ** location gps
 
 #+begin_src sh
-qrencode -s 6 -l H -o "geo.png" "geo:51.185013,-1.859105"
+qrencode -s 6 -l H -o geo.png 'geo:51.185013,-1.859105'
 #+end_src
 
 -s 6: This sets the size of the blocks in the QR checkered pattern. The number you provide sets the size in pixels for the length of one side of a block.
@@ -49,7 +49,7 @@ qrencode -s 6 -l H -o "geo.png" "geo:51.185013,-1.859105"
 ** phone numbers
 
 #+begin_src sh
-qrencode -s 6 -l H -o "phone.png" "tel:5555555555"
+qrencode -s 6 -l H -o phone.png 'tel:5555555555'
 #+end_src
 
 To store a phone number inside a QR code use the tel keyword, a colon “:“, and the phone number, with no spaces.
@@ -58,7 +58,7 @@ It’s best not to use hyphens and other punctuation in the number because some 
 ** email
 
 #+begin_src sh
-qrencode -s 6 -l H -o "email.png" "mailto:contact@cloudsavvyit.com?subject=Linux&body=Linux articles are cool."
+qrencode -s 6 -l H -o email.png 'mailto:contact@cloudsavvyit.com?subject=Linux&body=Linux articles are cool.'
 #+end_src
 
 The keyword to use is mailto, with a colon ” : ” separating it from the email address.
@@ -68,7 +68,7 @@ Use “&body=” to identify the email message contents. Don’t put spaces befo
 ** colour
 
 #+begin_src sh
-qrencode -s 6 -l H --foregound="3599FE" --background="FFFFFF" -o "blue.png" "This QR code will be blue and white."
+qrencode -s 6 -l H --foregound='3599FE' --background='FFFFFF' -o blue.png 'This QR code will be blue and white.'
 #+end_src
 
 The --foreground and --background options let you set colors for the QR code pattern and background.
@@ -77,7 +77,7 @@ You can specify the color in the RGB color model six hexadecimal digit notation 
 ** sms
 
 #+begin_src sh
-qrencode -s 6 -l H -o "SMS.png" "smsto:5555555555,This is the text of the SMS message."
+qrencode -s 6 -l H -o sms.png 'smsto:5555555555,This is the text of the SMS message.'
 #+end_src
 
 The formats to send a Short Message Service (SMS) or a Multimedia Messaging Service (MMS) message are identical.
@@ -86,7 +86,7 @@ Use the keyword smsto keyword, a colon ” : “, the phone number, a comma “,
 ** connect to a wifi network
 
 #+begin_src sh
-qrencode -s 6 -l H -o "wifi.png" "WIFI:T:WPA;S:<SSID>;P:<PSWD>;;"
+qrencode -s 6 -l H -o wifi.png 'WIFI:T:WPA;S:<SSID>;P:<PSWD>;;'
 #+end_src
 
 
@@ -121,7 +121,7 @@ END:VCARD
 We can redirect this file into qrencode like this:
 
 #+begin_src sh
-qrencode -s 6 -l H -o "contact.png" < contact.txt
+qrencode -s 6 -l H -o contact.png -r contact.txt
 #+end_src
 
 ** Adding a Calendar Event With a QR Code
@@ -144,5 +144,5 @@ END:VEVENT
 This was redirected into qrencode like this:
 
 #+begin_src sh
-qrencode -s 6 -l H -o "event.png" < event.txt
+qrencode -s 6 -l H -o event.png -r event.txt
 #+end_src
