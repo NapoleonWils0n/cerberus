@@ -1,0 +1,76 @@
+#+STARTUP: content
+* awk tips
+
+a collection of awk tips
+
+** dont panic
+
+#+begin_src awk
+awk "BEGIN { print \"Don't Panic\" }"
+#+end_src
+
+use octal code 47 for single quote
+
+#+begin_src awk
+awk 'BEGIN { print "Don\47t Panic" }'
+#+end_src
+
+** single quote
+
+#+begin_src awk
+awk 'BEGIN { print "single quote <'\''>" }'
+#+end_src
+
+#+begin_src awk
+awk "BEGIN { print \"single quote <'>\" }"
+#+end_src
+
+use octal code 47 for single quote
+
+#+begin_src awk
+awk 'BEGIN { print "single quote <\47>" }'
+#+end_src
+
+use a variable for a single quote
+
+#+begin_src awk
+awk -v sq="'" 'BEGIN { print "single quote <" sq ">" }'
+#+end_src
+
+** double quote
+
+#+begin_src awk
+awk 'BEGIN { print "double quote <\42>" }'
+#+end_src
+
+** print every line longer than 80 characters
+
+#+begin_src awk
+awk 'length $(0) > 80' input
+#+end_src
+
+** print the longest line of input
+
+#+begin_src awk
+awk '{ if (length ($) > max) max = length ($0) }
+    END { print max }' input
+#+end_src
+
+** print the length of the longest line of input
+
+#+begin_src awk
+expand input | awk ’{ if (x < length($0)) x = length($0) }
+END { print "maximum line length is " x }’
+#+end_src
+
+** print every line that has one field
+
+#+begin_src awk
+awk 'NF > 0' input
+#+end_src
+
+** count the number of lines in a file
+
+#+begin_src awk
+awk 'END { print NR }' input
+#+end_src
