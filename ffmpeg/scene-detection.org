@@ -23,6 +23,12 @@ ffmpeg scene detection with key
 ffmpeg -hide_banner -i input.mp4 -filter_complex "select='gt(scene,0.3)',metadata=print:key=lavfi.scene_score:file=time.txt" -f null -
 #+end_src
 
+ffmpeg scene detection with key send to stdout
+
+#+begin_src sh
+ffmpeg -hide_banner -i input.mp4 -filter_complex "select='gt(scene,0.3)',metadata=print:key=lavfi.scene_score:file=-" -f null -
+#+end_src
+
 *** sed extract time
 
 sed delete everything except pts_time value
