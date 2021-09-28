@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* gpsbabel gpx route
+
+#+begin_src sh
+gpsbabel -i unicsv -f input.csv -o gpx -F output.gpx
+#+end_src
