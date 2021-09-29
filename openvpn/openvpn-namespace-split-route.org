@@ -284,18 +284,47 @@ djwilcox ALL=(ALL:ALL) NOPASSWD: /usr/bin/ip netns exec vpn sudo -u djwilcox -- 
 
 Note the final -- is important to prevent the user from passing other options to sudo.
 
+** firefox-namespace-audio
+
+by default pulseaudio wont work in a linux namespace,
+so we need to create a script to set some variables for pulse audio to get it to work
+
++ firefox-namespace-audio script
+
+create a script called firefox-namespace-audio with the code below
+
+#+begin_src sh
+#!/bin/sh
+
+sh -c "HOME=${HOME} PULSE_SERVER=/run/user/$(id -u "${USER}")/pulse/native PULSE_COOKIE=/home/${USER}/.config/pulse/cookie firefox"
+#+end_src
+
+then make it executable
+
+#+begin_src sh 
+chmod +x firefox-namespace-audio
+#+end_src
+
+and move it to /usr/local/bin
+
+#+begin_src sh
+sudo mv firefox-namespace-audio /usr/local/bin
+#+end_src
+
+the script will be used in the firefox-vpn.desktop file
+
 ** Firefox desktop entry
 
 #+begin_src sh
-cp /usr/share/applications/firefox.desktop ~/Desktop/namespace-firefox.desktop
+cp /usr/share/applications/firefox.desktop ~/Desktop/firefox-vpn.desktop
 #+end_src
 
-contents of namespace-firefox.desktop
+contents of firefox-vpn.desktop
 
 #+begin_example
 [Desktop Entry]
 Version=1.0
-Name=namespace-firefox
+Name=Firefox vpn
 Name[ar]=متصفح الويب فَيَرفُكْس
 Name[ast]=Restolador web Firefox
 Name[bn]=ফায়ারফক্স ওয়েব ব্রাউজার
@@ -445,7 +474,7 @@ Keywords[uk]=Internet;WWW;Browser;Web;Explorer;Інтернет;мережа;п�
 Keywords[vi]=Internet;WWW;Browser;Web;Explorer;Trình duyệt;Trang web
 Keywords[zh_CN]=Internet;WWW;Browser;Web;Explorer;网页;浏览;上网;火狐;Firefox;ff;互联网;网站;
 Keywords[zh_TW]=Internet;WWW;Browser;Web;Explorer;網際網路;網路;瀏覽器;上網;網頁;火狐
-Exec=/usr/local/bin/namespace firefox %u
+Exec=/usr/local/bin/namespace firefox-namespace-audio %u
 Terminal=false
 X-MultipleArgs=false
 Type=Application
@@ -492,7 +521,7 @@ Name[uk]=Відкрити нове вікно
 Name[vi]=Mở cửa sổ mới
 Name[zh_CN]=新建窗口
 Name[zh_TW]=開啟新視窗
-Exec=/usr/local/bin/namespace firefox -new-window
+Exec=/usr/local/bin/namespace firefox-namespace-audio -new-window
 
 [Desktop Action new-private-window]
 Name=Open a New Private Window
@@ -514,13 +543,13 @@ Name[sv]=Öppna ett nytt privat fönster
 Name[tr]=Yeni gizli pencere aç
 Name[uk]=Відкрити нове вікно у потайливому режимі
 Name[zh_TW]=開啟新隱私瀏覽視窗
-Exec=/usr/local/bin/namespace firefox -private-window
+Exec=/usr/local/bin/namespace firefox-namespace-audio -private-window
 #+end_example
 
-copy namespace-firefox.desktop to ~/.local/share/applications
+copy firefox-vpn.desktop to ~/.local/share/applications
 
 #+begin_src sh
-cp namespace-firefox.desktop ~/.local/share/applications
+cp firefox-vpn.desktop ~/.local/share/applications
 #+end_src
 
 ** transmission torrent client 
