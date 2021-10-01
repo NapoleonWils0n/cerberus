@@ -474,7 +474,7 @@ Keywords[uk]=Internet;WWW;Browser;Web;Explorer;Інтернет;мережа;п�
 Keywords[vi]=Internet;WWW;Browser;Web;Explorer;Trình duyệt;Trang web
 Keywords[zh_CN]=Internet;WWW;Browser;Web;Explorer;网页;浏览;上网;火狐;Firefox;ff;互联网;网站;
 Keywords[zh_TW]=Internet;WWW;Browser;Web;Explorer;網際網路;網路;瀏覽器;上網;網頁;火狐
-Exec=/usr/local/bin/namespace firefox-namespace-audio %u
+Exec=/usr/local/bin/namespace /usr/local/bin/firefox-namespace-audio %u
 Terminal=false
 X-MultipleArgs=false
 Type=Application
@@ -521,7 +521,7 @@ Name[uk]=Відкрити нове вікно
 Name[vi]=Mở cửa sổ mới
 Name[zh_CN]=新建窗口
 Name[zh_TW]=開啟新視窗
-Exec=/usr/local/bin/namespace firefox-namespace-audio -new-window
+Exec=/usr/local/bin/namespace /usr/local/bin/firefox-namespace-audio -new-window
 
 [Desktop Action new-private-window]
 Name=Open a New Private Window
@@ -543,7 +543,7 @@ Name[sv]=Öppna ett nytt privat fönster
 Name[tr]=Yeni gizli pencere aç
 Name[uk]=Відкрити нове вікно у потайливому режимі
 Name[zh_TW]=開啟新隱私瀏覽視窗
-Exec=/usr/local/bin/namespace firefox-namespace-audio -private-window
+Exec=/usr/local/bin/namespace /usr/local/bin/firefox-namespace-audio -private-window
 #+end_example
 
 copy firefox-vpn.desktop to ~/.local/share/applications
