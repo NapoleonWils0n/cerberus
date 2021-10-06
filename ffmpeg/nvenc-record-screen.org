@@ -1,0 +1,64 @@
+#+STARTUP: content
+* ffmpeg screen recording
+
+[[https://trac.ffmpeg.org/wiki/Capture/Desktop][ffmpeg wiki - Screen Recording]]
+
+** libx264 record second display
+
+#+begin_src sh
+ffmpeg \
+-f x11grab -video_size 1920x1080 -i :1.0+1920,0 \
+-c:v libx264 -crf 18 -preset ultrafast \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+end_src
+
+** libx264 record second display crop 20px from top
+
+#+begin_src sh
+ffmpeg \
+-f x11grab -video_size 1920x1060 -i :1.0+1920,20 \
+-c:v libx264 -crf 18 -preset ultrafast \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+end_src
+
+** h264_nvenc
+
+[[https://trac.ffmpeg.org/wiki/HWAccelIntro][Hardware Encoding]]
+
+show h264_nvenc options
+
+#+begin_src sh
+ffmpeg -h encoder=h264_nvenc
+#+end_src
+
+** h264_nvenc record second display
+
+#+begin_src sh
+ffmpeg \
+-f x11grab -video_size 1920x1080 -i :1.0+1920,0 \
+-c:v h264_nvenc \
+-rc:v constqp \
+-cq:v 20 -preset fast \
+-profile:v high \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+end_src
+
+** h264_nvenc record second display crop 20px from top
+
+#+begin_src sh
+ffmpeg \
+-f x11grab -video_size 1920x1060 -i :1.0+1920,20 \
+-c:v h264_nvenc \
+-rc:v constqp \
+-cq:v 20 -preset fast \
+-profile:v high \
+-qp 0 -r 30 \
+-pix_fmt yuv420p \
+video-$(date +"%H-%M-%m-%d-%y").mkv
+#+end_src
