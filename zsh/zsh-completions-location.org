@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* zsh completions location
+
+zsh completions location
+
+#+begin_src sh
+/usr/share/zsh/vendor-completions
+#+end_src
