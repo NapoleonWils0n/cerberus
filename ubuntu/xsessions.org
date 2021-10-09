@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* xsessions directory
+
+xession directory for session files
+
+#+begin_src sh
+/usr/share/xsessions
+#+end_src
