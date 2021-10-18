@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+ xmlns:gx="http://www.google.com/kml/ext/2.2">
+
+<gx:Tour>
+  <name>gx:SoundCue Example</name>
+  <gx:Playlist>
+
+    <gx:SoundCue>
+      <href>http://dev.keyhole.com/codesite/AJsBlues.mp3</href>
+      <!-- 23 second background track -->
+    </gx:SoundCue>
+
+    <gx:FlyTo>
+      <gx:duration>5</gx:duration>
+      <gx:flyToMode>bounce</gx:flyToMode>
+      <LookAt>
+        <longitude>-79.387</longitude>
+        <latitude>43.643</latitude>
+        <altitude>0</altitude>
+        <heading>-172.3</heading>
+        <tilt>10</tilt>
+        <range>1200</range>
+        <altitudeMode>relativeToGround</altitudeMode>
+      </LookAt>
+    </gx:FlyTo>
+
+    <gx:SoundCue>
+      <href>http://dev.keyhole.com/codesite/cntowerfacts.mp3</href>
+      <!-- 10 second audio clip -->
+    </gx:SoundCue>
+
+    <gx:Wait>
+      <gx:duration>10</gx:duration>    <!-- continues the tour for 10 seconds -->
+    </gx:Wait>                         <!-- while audio clip plays. -->
+                                       <!-- Background track is truncated -->
+  </gx:Playlist>
+</gx:Tour>
+</kml>

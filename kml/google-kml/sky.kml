@@ -1,0 +1,37 @@
+<kml xmlns="http://www.opengis.net/kml/2.2" hint="target=sky">
+<Document>
+  <Style id="CrabNebula">
+    <BalloonStyle>
+      <text><center><b>$[name]</b></center><br/>$[description]</text>
+    </BalloonStyle>
+  </Style>
+  <Placemark>
+    <name>Crab Nebula</name>
+    <description>
+      <![CDATA[
+        This is the Crab Nebula.  It is the remnant of a supernovae that was
+        observed on Earth in 1054 CE.  You can find out more about the Crab
+        Nebula by looking at the information in the default layers, specifically:
+        <ul>
+          <li> <b>Backyard Astronomy</b>
+          <li> <b>Hubble Showcase</b>
+          <li> <b>Life of a Star</b>
+        </ul>
+        Enjoy exploring Sky!
+      ]]>
+    </description>
+    <LookAt>
+      <longitude>-96.366783</longitude>
+      <latitude>22.014467</latitude>
+      <altitude>0</altitude>
+      <range>10000</range>
+      <tilt>0</tilt>
+      <heading>0</heading>
+    </LookAt>
+    <styleUrl>#CrabNebula</styleUrl>
+    <Point>
+      <coordinates>-96.366783,22.014467,0</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml> 

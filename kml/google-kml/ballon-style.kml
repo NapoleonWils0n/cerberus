@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Entity-Replacement</name>
+    <Style id="displayName-value">
+      <BalloonStyle>
+        <text>
+          <![CDATA[
+          This is $[name]<br/>
+          $[holeNumber/displayName] $[holeNumber]<br/>
+          $[holePar/displayName] $[holePar]<br/>
+          $[holeYardage/displayName] $[holeYardage]
+            ]]>
+        </text>
+      </BalloonStyle>
+    </Style>
+    <!-- Shared style sample
+      Two Placemarks use the same balloon template
+    -->
+    <Placemark>
+      <name>Club house</name>
+      <styleUrl>#displayName-value</styleUrl>
+      <ExtendedData>
+        <Data name="holeNumber">
+          <displayName><![CDATA[
+            <b>This is hole </b>
+          ]]></displayName>
+          <value>1</value>
+        </Data>
+        <Data name="holePar">
+          <displayName><![CDATA[
+            <i>The par for this hole is </i>
+          ]]></displayName>
+          <value>4</value>
+        </Data>
+        <Data name="holeYardage">
+          <displayName><![CDATA[
+            <b><i>The yardage is </i></b>
+          ]]></displayName>
+          <value>234</value>
+        </Data>
+      </ExtendedData>
+      <Point>
+        <coordinates>-111.956,33.5043</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>By the lake</name>
+      <styleUrl>#Entity-Replacement</styleUrl>
+      <ExtendedData>
+        <Data name="holeNumber">
+          <displayName><![CDATA[
+            <b>This is hole </b>
+          ]]></displayName>
+          <value>5</value>
+        </Data>
+        <Data name="holePar">
+          <displayName><![CDATA[
+            <i>The par for this hole is </i>
+          ]]></displayName>
+          <value>5</value>
+        </Data>
+        <Data name="holeYardage">
+          <displayName><![CDATA[
+            <b><i>The yardage is </i></b>
+          ]]></displayName>
+          <value>523</value>
+        </Data>
+      </ExtendedData>
+      <Point>
+        <coordinates>-111.95,33.5024</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Document>
+  <name>Views with Time</name>
+  <open>1</open>
+  <description>In Google Earth, enable historical imagery and sunlight,
+    then click on each placemark to fly to that point in time.</description>
+ 
+
+  <Placemark>
+    <name>Sutro Baths in 1946</name>
+    <Camera>
+      <gx:TimeStamp>
+        <when>1946-07-29T05:00:00-08:00</when>
+      </gx:TimeStamp>
+      <longitude>-122.518172</longitude>
+      <latitude>37.778036</latitude>
+      <altitude>221.0</altitude>
+      <heading>70.0</heading>
+      <tilt>75.0</tilt>
+    </Camera>
+  </Placemark>
+
+  <Placemark>
+    <name>Palace of Fine Arts in 2002</name>
+    <Camera>
+      <gx:TimeStamp>
+        <when>2002-07-09T19:00:00-08:00</when>
+      </gx:TimeStamp>
+      <longitude>-122.444633</longitude>
+      <latitude>37.801899</latitude>
+      <altitude>139.629438</altitude>
+      <heading>-70.0</heading>
+      <tilt>75</tilt>
+    </Camera>
+  </Placemark>
+
+</Document>
+</kml>

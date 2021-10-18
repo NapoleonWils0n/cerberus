@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<!-- TimeSpan is recommended for GroundOverlays -->
+  <Folder>
+    <name>BMNG-12months</name>
+    <GroundOverlay>
+      <name>Blue Marble - Jan</name>
+      <TimeSpan>
+        <begin>2004-01</begin>
+        <end>2004-02</end>
+      </TimeSpan>
+      <Icon>
+        <href>http://mw1.google.com/mw-earth-vectordb/kml-samples/bmng12/files/BMNG-Jan.jpg</href>
+      </Icon>
+      <LatLonBox>
+        <north>90</north>
+        <south>-90</south>
+        <east>180</east>
+        <west>-180</west>
+      </LatLonBox>
+    </GroundOverlay>
+    <GroundOverlay>
+      <name>Blue Marble - Feb</name>
+      <TimeSpan>
+        <begin>2004-02</begin>
+        <end>2004-03</end>
+      </TimeSpan>
+      <Icon>
+        <href>http://mw1.google.com/mw-earth-vectordb/kml-samples/bmng12/files/BMNG-Feb.jpg</href>
+      </Icon>
+      <LatLonBox>
+        <north>90</north>
+        <south>-90</south>
+        <east>180</east>
+        <west>-180</west>
+      </LatLonBox>
+    </GroundOverlay>
+    <GroundOverlay>
+      <name>Blue Marble - Mar</name>
+      <TimeSpan>
+        <begin>2004-03</begin>
+        <end>2004-04</end>
+      </TimeSpan>
+      <Icon>
+        <href>http://mw1.google.com/mw-earth-vectordb/kml-samples/bmng12/files/BMNG-Mar.jpg</href>
+      </Icon>
+      <LatLonBox>
+        <north>90</north>
+        <south>-90</south>
+        <east>180</east>
+        <west>-180</west>
+      </LatLonBox>
+    </GroundOverlay>
+.
+.
+.
+  </Folder>
+</kml>

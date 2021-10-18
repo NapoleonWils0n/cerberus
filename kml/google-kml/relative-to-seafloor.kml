@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?> <kml xmlns="http://www.opengis.net/kml/2.2"
+ xmlns:gx="http://www.google.com/kml/ext/2.2">   <!-- required when using gx-prefixed elements -->
+
+<Placemark>
+  <name>relativeToSeaFloor Example</name>
+  <LineString>
+    <extrude>1</extrude>
+    <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+    <coordinates>
+      146.825,12.233,400
+      146.820,12.222,400
+      146.812,12.212,400
+      146.796,12.209,400
+      146.788,12.205,400
+    </coordinates>
+  </LineString>
+</Placemark>
+
+</kml>

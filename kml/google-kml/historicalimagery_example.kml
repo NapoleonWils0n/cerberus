@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:gx="http://www.google.com/kml/ext/2.2">
+  
+  <gx:Tour>
+    <name>Small town over time</name>
+    <gx:Playlist>
+      <gx:FlyTo>
+        <gx:duration>5.0</gx:duration>
+        <Camera>
+          <gx:TimeStamp>
+            <when>1990-08-04</when>
+          </gx:TimeStamp>
+          <longitude>-121.991</longitude>
+          <latitude>47.857</latitude>
+          <altitude>7000</altitude>
+          <altitudeMode>absolute</altitudeMode>
+        </Camera>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>3.0</gx:duration>
+        <gx:flyToMode>smooth</gx:flyToMode>
+        <Camera>
+          <gx:TimeStamp>
+            <when>2009</when>
+          </gx:TimeStamp>
+          <longitude>-121.991</longitude>
+          <latitude>47.857</latitude>
+          <altitude>7000</altitude>
+          <altitudeMode>absolute</altitudeMode>
+        </Camera>
+      </gx:FlyTo>
+      
+    </gx:Playlist>
+  </gx:Tour>
+</kml>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+ 
+<Placemark>
+  <name>relativeToGround Example</name>
+  <LineString>
+    <extrude>1</extrude>
+    <altitudeMode>relativeToGround</altitudeMode>
+    <coordinates>
+      -121.835,48.754,700
+      -121.828,48.764,700
+      -121.818,48.776,700
+      -121.794,48.787,700
+      -121.778,48.781,700
+      -121.766,48.771,700
+      -121.768,48.757,700
+      -121.773,48.747,700
+    </coordinates>
+  </LineString>
+</Placemark>
+ 
+</kml>

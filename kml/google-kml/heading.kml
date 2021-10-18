@@ -1,0 +1,17 @@
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <Placemark>
+    <name>100m looking east</name>
+    <Camera>
+      <longitude>-122.4783</longitude>
+      <latitude>37.8120</latitude>
+      <altitude>100</altitude>
+      <heading>90</heading>
+      <!-- east -->
+      <tilt>90</tilt>
+      <!-- level -->
+      <altitudeMode>absolute</altitudeMode>
+    </Camera>
+  </Placemark>
+</Document>
+</kml>

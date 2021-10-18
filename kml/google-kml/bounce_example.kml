@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:gx="http://www.google.com/kml/ext/2.2">
+  
+  <gx:Tour>
+    <name>Bounce tour example</name>
+    
+    <gx:Playlist>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <!-- bounce is the default flyToMode -->
+        <LookAt>
+          <longitude>-121.3031793108949</longitude>
+          <latitude>45.9930405421711</latitude>
+          <altitude>0</altitude>
+          <heading>-27.92338743600616</heading>
+          <tilt>71.60007457352123</tilt>
+          <range>22570.5468007044</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <LookAt>
+          <longitude>-121.4753872325743</longitude>
+          <latitude>46.22191074811307</latitude>
+          <altitude>0</altitude>
+          <heading>-71.95152128859215</heading>
+          <tilt>68.69127809807833</tilt>
+          <range>14448.99871318129</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <LookAt>
+          <longitude>-122.0396687743454</longitude>
+          <latitude>47.15063667946745</latitude>
+          <altitude>0</altitude>
+          <heading>-42.69564320911428</heading>
+          <tilt>70.73017767143205</tilt>
+          <range>70732.55834090718</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <LookAt>
+          <longitude>-121.8491071017169</longitude>
+          <latitude>46.98629555290179</latitude>
+          <altitude>0</altitude>
+          <heading>149.8648098763414</heading>
+          <tilt>58.69652655366424</tilt>
+          <range>9562.267238041992</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+    </gx:Playlist>
+  </gx:Tour>
+</kml>
+
+

@@ -1,0 +1,22 @@
+<kml xmlns="http://www.opengis.net/kml/2.2"
+ xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <Placemark>
+      <name>Roll left</name>
+      <Camera>
+        <gx:TimeStamp><
+          when>2009-01-01T15:29:27Z</when>
+        </gx:TimeStamp>
+        <longitude>-122.4783</longitude>
+        <latitude>37.8120</latitude>
+        <altitude>100</altitude>
+        <heading>90</heading>
+        <!-- east -->
+        <tilt>90</tilt>
+        <!-- level -->
+        <roll>45</roll>
+        <altitudeMode>absolute</altitudeMode>
+      </Camera>
+    </Placemark>
+  </Document>
+</kml>

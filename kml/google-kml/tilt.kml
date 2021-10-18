@@ -1,0 +1,21 @@
+<kml xmlns="http://www.opengis.net/kml/2.2"
+ xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <Placemark>
+      <name>At ground level</name>
+      <Camera>
+        <gx:TimeStamp><
+          when>2009-01-01T15:29:27Z</when>
+        </gx:TimeStamp>
+        <longitude>-122.4783</longitude>
+        <latitude>37.8120</latitude> 
+        <!-- altitude default is 0 (default altitudeMode is clampToGround) -->   
+        <!-- heading default is 0 (north) -->    
+        <tilt>90</tilt>   
+        <!-- level -->   
+        <!-- roll default is 0 -->    
+        <!-- altitudeMode default is clampToGround -->  
+      </Camera>
+    </Placemark>
+  </Document>
+</kml>

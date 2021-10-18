@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:gx="http://www.google.com/kml/ext/2.2">
+  
+  <gx:Tour>
+    <name>Smooth tour example</name>
+    
+    <gx:Playlist>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <gx:flyToMode>smooth</gx:flyToMode>
+        <LookAt>
+          <longitude>-121.303179</longitude>
+          <latitude>45.993041</latitude>
+          <altitude>0</altitude>
+          <heading>-27.923387</heading>
+          <tilt>71.600075</tilt>
+          <range>22570.546801</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <gx:flyToMode>smooth</gx:flyToMode>
+        <LookAt>
+          <longitude>-121.475387</longitude>
+          <latitude>46.221911</latitude>
+          <altitude>0</altitude>
+          <heading>-71.951521</heading>
+          <tilt>68.691278</tilt>
+          <range>14448.998713</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <gx:flyToMode>smooth</gx:flyToMode>
+        <LookAt>
+          <longitude>-122.039669</longitude>
+          <latitude>47.150637</latitude>
+          <altitude>0</altitude>
+          <heading>-42.695643</heading>
+          <tilt>70.730178</tilt>
+          <range>70732.558341</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+      <gx:FlyTo>
+        <gx:duration>4.0</gx:duration>
+        <gx:flyToMode>smooth</gx:flyToMode>
+        <LookAt>
+          <longitude>-121.849107</longitude>
+          <latitude>46.986296</latitude>
+          <altitude>0</altitude>
+          <heading>149.864810</heading>
+          <tilt>58.696527</tilt>
+          <range>9562.267238</range>
+          <altitudeMode>relativeToGround</altitudeMode>
+        </LookAt>
+      </gx:FlyTo>
+      
+    </gx:Playlist>
+  </gx:Tour>
+</kml>
+

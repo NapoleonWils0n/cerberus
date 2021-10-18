@@ -1,0 +1,17 @@
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>ExtendedData Test</name>
+  <Placemark>
+    <name>CampsiteData</name>
+    <!-- Imported schema requires use of namespace prefix -->
+    <ExtendedData xmlns:camp="http://campsites.com">
+      <camp:number>14</camp:number>
+      <camp:parkingSpaces>2</camp:parkingSpaces>
+      <camp:tentSites>4</camp:tentSites>
+    </ExtendedData>
+    <Point>
+      <coordinates>-114.041,53.7199</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>

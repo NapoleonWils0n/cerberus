@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:gx="http://www.google.com/kml/ext/2.2">
+
+  <Document>
+    <name>gx:AnimatedUpdate example</name>
+    <open>1</open>
+
+    <Style id="style0">
+      <IconStyle id="iconstyle1">
+        <scale>1.0</scale>
+      </IconStyle>
+    </Style>
+
+    <Placemark id="mountainpin1">
+      <name>New Zealand's Southern Alps</name>
+      <styleUrl>#style0</styleUrl>
+      <Point>
+        <coordinates>170.144,-43.605,0</coordinates>
+      </Point>
+    </Placemark>
+
+    <gx:Tour>
+      <name>Play me!</name>
+      <gx:Playlist>
+
+        <!-- The order and duration of TourPrimitives is important;
+             in this example, the AnimatedUpdate needs
+             6.5 seconds to complete. The FlyTo provides 4.1,
+             and the Wait 2.4, giving the update time to
+             complete before the Tour ends. AnimatedUpdates
+             don't hold Tours open, but FlyTos and Waits do.
+
+             For more information, refer to:
+             http://code.google.com/apis/kml/documentation/touring.html#tourtimelines
+        -->
+
+        <gx:AnimatedUpdate>
+          <gx:duration>6.5</gx:duration>
+          <Update>
+            <targetHref></targetHref>
+            <Change>
+                <IconStyle targetId="iconstyle1">
+                  <scale>10.0</scale>
+                </IconStyle>
+            </Change>
+          </Update>
+        </gx:AnimatedUpdate>
+
+        <gx:FlyTo>
+          <gx:duration>4.1</gx:duration>
+          <Camera>
+            <longitude>170.157</longitude>
+            <latitude>-43.671</latitude>
+            <altitude>9700</altitude>
+            <heading>-6.333</heading>
+            <tilt>33.5</tilt>
+            <roll>0</roll>
+          </Camera>
+        </gx:FlyTo>
+
+        <gx:Wait>
+          <gx:duration>2.4</gx:duration>  <!-- waiting for the AnimatedUpdate to complete -->
+        </gx:Wait>
+
+      </gx:Playlist>
+    </gx:Tour>
+  </Document>
+</kml>
