@@ -584,7 +584,7 @@ create a directory for the libvirt storage pool
 replace username with your username
 
 #+begin_src sh
-mkdir -p /home/username/libvirt/images
+mkdir -p ~/libvirt/images
 #+end_src
 
 chown the libvirt directory to allow both your user and the kvm group access
@@ -597,7 +597,7 @@ sudo chown -R username:kvm /home/username/libvirt
 ** home directory file permissions
 
 #+begin_src sh
-chmod o+x /home/username
+chmod o+x ~
 #+end_src
 
 ** change libvirt default storage pool directory
