@@ -1063,3 +1063,40 @@ Check the status of windows11 machine.
 If it is in shut off state, you may power them on with the below command.
 virsh start windows-11
 
+*** windows 11 spice download
+
+after booting into windows 11 you need to install the spice tools
+
+[[https://www.spice-space.org/download.html]]
+
+under the Windows binaries / Windows guest tools section download the exe
+
+[[https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe]]
+
+run the spice-guest-tools-latest.exe and allow software from redhat
+
+reboot windows and go to setting display and change the display to 1920 x 1080
+
+*** Chocolatey
+
+The first step is to open PowerShell on your Windows 11 computer, and that too with administrator privileges. Opening PowerShell with administrator privileges is important, as you will be unable to install Chocolatey without that.
+
+Now type in the following command to know the execution policy status of PowerShell.
+
+#+begin_example
+Get-ExecutionPolicy
+#+end_example
+
+If it says ‘Restricted’ as shown in the below screenshot, type in the following screenshot, type in the following command as shown below, all on the PowerShell with administrator privileges.
+
+#+begin_example
+Set-ExecutionPolicy AllSigned
+#+end_example
+
+You will have to type ‘Y’ and hit the enter key when you will be asked for a confirmation.
+
+Now run the following command:
+
+#+begin_example
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+#+end_example
