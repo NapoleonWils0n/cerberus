@@ -604,19 +604,19 @@ chmod o+x ~
 *** list pools
 
 #+begin_src sh
-sudo virsh pool-list --all
+virsh pool-list --all
 #+end_src
 
 *** stop default pool
 
 #+begin_src sh
-sudo virsh pool-destroy default
+virsh pool-destroy default
 #+end_src
 
 *** remove default pool
 
 #+begin_src sh
-sudo virsh pool-undefine default
+virsh pool-undefine default
 #+end_src
 
 *** create new pool
@@ -624,62 +624,62 @@ sudo virsh pool-undefine default
 replace username with your username
 
 #+begin_src sh
-sudo virsh pool-define-as --name default --type dir --target /home/username/libvirt/images 
+virsh pool-define-as --name default --type dir --target /home/username/libvirt/images 
 #+end_src
 
 *** start the new pool
 
 #+begin_src sh
-sudo virsh pool-start default
+virsh pool-start default
 #+end_src
 
 *** autostart the new pool
 
 #+begin_src sh
-sudo virsh pool-autostart default
+virsh pool-autostart default
 #+end_src
 
 ** libvirt commands
 *** list pools
 
 #+begin_src sh
-sudo virsh pool-list --all
+virsh pool-list --all
 #+end_src
 
 ** virsh pool-dumpxml
 
 #+begin_src sh
-sudo virsh pool-dumpxml default 
+virsh pool-dumpxml default 
 #+end_src
 
 ** Stopping a Pool
 
 #+begin_src sh
-sudo virsh pool-destroy poolname
+virsh pool-destroy poolname
 #+end_src
 
 ** Remove the storage pools definition
 
 #+begin_src sh
-sudo virsh pool-undefine poolname
+virsh pool-undefine poolname
 #+end_src
 
 ** Starting a Pool
 
 #+begin_src sh
-sudo virsh pool-start poolname
+virsh pool-start poolname
 #+end_src
 
 ** Enable Autostarting a Pool
 
 #+begin_src sh
-sudo virsh pool-autostart poolname
+virsh pool-autostart poolname
 #+end_src
 
 ** Verify that the storage pool was created correctly and is running
 
 #+begin_src sh
-sudo virsh pool-info poolname
+virsh pool-info poolname
 #+end_src
 
 ** windows 11 install
@@ -692,10 +692,13 @@ download the latest virtio-win.iso
 
 *** ubuntu tpm ppa
 
+[[https://github.com/stefanberger/swtpm][swtpm-tools]]
+[[https://github.com/stefanberger/swtpm/wiki][swtpm-tools wiki]]
+
++ useful articles
+
 [[https://getlabsdone.com/how-to-install-windows-11-on-kvm/]]
-
 [[https://getlabsdone.com/how-to-enable-tpm-and-secure-boot-on-kvm/]]
-
 
 To emulate the TPM, we are going to install a software called swtpm-tools. And it works great with the KVM.
 
