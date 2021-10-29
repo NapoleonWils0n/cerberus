@@ -263,3 +263,8 @@ Run the installer
 
 boot up the mac kvm and press escape to boot into the bios
 where you can set the display
+
+*** change the vga driver to virtio
+
+open the mac kvm setting in virt manager and change the vga driver to virtio,
+and dont enable 3d accleration
