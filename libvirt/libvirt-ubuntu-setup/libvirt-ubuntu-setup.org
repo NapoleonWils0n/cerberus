@@ -1066,6 +1066,11 @@ Check the status of windows11 machine.
 If it is in shut off state, you may power them on with the below command.
 virsh start windows-11
 
+*** set the video to virtio
+
+change the video model from qxl to virtio
+boot into windows and go to the settings app / display and change the display to 1920x1080
+
 *** windows 11 spice download
 
 after booting into windows 11 you need to install the spice tools
