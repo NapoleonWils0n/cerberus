@@ -9,6 +9,12 @@ In this example the input images are sequentially named img_001.jpeg, img_002.jp
 ffmpeg -r 30 -i image_%03d.jpeg -pix_fmt yuv420p outfile.mp4
 #+END_SRC
 
+replace input with the filename, %04d mathes 4 digits, eg input_0001.jpg
+
+#+BEGIN_SRC sh
+ffmpeg -r 30 -i input_%04d.jpeg -c:v libx264 -crf 18 -profile:v high -r 30 -pix_fmt yuv420p -movflags +faststart -f mp4 output.mp4
+#+END_SRC
+
 ** Starting with a specific image
 
 For example if you want to start with image_126.jpeg then use the -start_number option: 
