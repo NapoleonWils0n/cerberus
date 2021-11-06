@@ -1,0 +1,43 @@
+#+STARTUP: content
+* sudo insults
+
+enable sudo insults
+
+** set the editor for visudo
+
+Traditionally, visudo opens the /etc/sudoers file with the vi text editor.
+Ubuntu, however, has configured visudo to use the nano text editor instead.
+
+#+begin_src sh
+sudo update-alternatives --config editor
+#+end_src
+
+youll see nano selected by default,
+press 4 and then enter to change the editor to vim.tiny
+
+#+begin_example
+  Selection    Path               Priority   Status
+------------------------------------------------------------
+0            /bin/nano           40        auto mode
+1            /bin/ed            -100       manual mode
+2            /bin/nano           40        manual mode
+3            /usr/bin/emacs      0         manual mode
+4            /usr/bin/vim.tiny   15        manual mode
+Press <enter> to keep the current choice[*], or type selection number: 4
+#+end_example
+
+#+begin_example
+update-alternatives: using /usr/bin/vim.tiny to provide /usr/bin/editor (editor) in manual mode
+#+end_example
+
+** edit the sudoers file
+
+#+begin_src sh
+sudo visudo
+#+end_src
+
+edit the sudoers file add the following line and save the file
+
+#+begin_src sh
+Defaults        insults
+#+end_src
