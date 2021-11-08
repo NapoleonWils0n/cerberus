@@ -923,6 +923,9 @@ Thread as 2.
 Note: If you would like to change the CPU to just two, you may change the allocation to 2, and the core as 1, and the thread as 1. If the CPU doesn’t support threading, you can choose the core as 2 and click on Apply.
 configure windows 11 cpu in KVM.
 
+Note to install the windows subsystem for linux you need to uncheck Copy host CPU configuration
+and under the model drop down edit the text so it says host-passthrough
+
 **** 6. Enable the TPM.
 
 In the installation wizard, click on Add hardware.
