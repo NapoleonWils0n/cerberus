@@ -182,6 +182,30 @@ Exec=xmonad
 Type=XSession
 #+end_src
 
+*** uninstalling xmonad installed with apt
+
+if you already have xmonad installed with apt
+then switch to another desktop like gnome which is installed by default on ubuntu,
+or if you dont have another desktop installed, install something like dwm
+
+after you have switched to another desktop like gnome then you can uninstall xmonad installed with apt
+
+#+begin_src sh
+sudo apt remove xmonad libghc-xmonad-contrib-dev
+#+end_src
+
+*** create a symbolic to /usr/bin/xmonad
+
+you also need to from ~/.local/bin/xmonad
+to /usr/bin/xmonad
+
+if you dont create a symbolic link to /usr/bin/xmonad
+your graphical login manager wont boot into xmonad and will just return to the login screen
+
+#+begin_src sh
+sudo ln -s ~/.local/bin/xmonad /usr/bin
+#+end_src
+
 *** xinitrc
 
 #+BEGIN_SRC conf
