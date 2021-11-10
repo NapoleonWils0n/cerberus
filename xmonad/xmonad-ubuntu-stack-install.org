@@ -1,0 +1,237 @@
+#+STARTUP: content
+* xmonad ubuntu stack install
+
+manually install xmonad with haskell-stack
+
+[[https://xmonad.org/INSTALL.html][xmonad install]]
+
+** Dependencies
+
+install the dependencies for xmonad
+
+#+BEGIN_SRC sh
+sudo apt install git libx11-dev libxft-dev libxinerama-dev libxrandr-dev libxss-dev
+#+END_SRC
+
+*** create the ~/.config/xmonad directory
+
+We’ll use the XDG directory specifications here, meaning our configuration will reside within $XDG_CONFIG_HOME, which is ~/.config on most systems. Let’s create this directory and move to it:
+
+#+BEGIN_SRC sh
+mkdir -p ~/.config/xmonad && cd ~/.config/xmonad
+#+END_SRC
+
+If you already have an xmonad.hs configuration, you can copy it over now.
+If not, you can use the defaults: create a file called xmonad.hs with the following content:
+
+#+begin_src haskell
+import XMonad
+
+main :: IO ()
+main = xmonad def
+#+end_src
+
+*** Download XMonad sources
+
+Still in ~/.config/xmonad, clone xmonad and xmonad-contrib repositories using git:
+
+#+begin_src sh
+git clone https://github.com/xmonad/xmonad
+git clone https://github.com/xmonad/xmonad-contrib
+#+end_src
+
+This will give you the latest HEAD; if you want you can also check out a tagged release, e.g.:
+
+#+begin_src sh
+git clone --branch v0.15 https://github.com/xmonad/xmonad
+git clone --branch v0.16 https://github.com/xmonad/xmonad-contrib
+#+end_src
+
+(Sources and binaries don’t usually go into ~/.config. In our case, however, it avoids complexities related to Haskell build tools and lets us focus on the important bits of XMonad installation.)
+
+*** Add ~/.local/bin to your $PATH 
+
+edit your shell config file 
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+and add the following code
+
+#+begin_src sh
+# set PATH so it includes user local bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+#+end_src
+
++ then source your shell config file
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+** Build xmonad using Stack
+
+install stack
+
+#+begin_src sh
+sudo apt install haskell-stack 
+#+end_src
+
+If you install stack via this method, it is advisable that you run stack upgrade after installation.
+This will make sure that you are on the most recent version of the program, regardless of which version your distribution actually packages.
+
+#+begin_src sh
+stack upgrade
+#+end_src
+
+*** Create a New Project
+
+Let’s create a stack project. Since we’re already in the correct directory (~/.config/xmonad) with xmonad and xmonad-contrib subdirectories, starting a new stack project is as simple as running stack init.
+
+Stack should now inform you that it will use the relevant stack and cabal files from xmonad and xmonad-contrib to generate its stack.yaml file. At the time of writing, this looks a little bit like this:
+
++ make sure you are in the ~/.config/xmonad
+
+#+begin_src sh
+cd ~/.config/xmonad
+#+end_src
+
++ run stack init
+
+#+begin_src sh
+stack init
+#+end_src
+
++ output
+  
+Looking for .cabal or package.yaml files to use to init the project.
+Using cabal packages:
+- xmonad-contrib/
+- xmonad/
+
+Selecting the best among 19 snapshots...
+
+Matches https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/9.yaml
+
+Selected resolver: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/9.yaml
+Initialising configuration using resolver: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/9.yaml
+Total number of user packages considered: 2
+Writing configuration to file: stack.yaml
+All done.
+
+If you look into your current directory now, you should see a freshly generated stack.yaml file:
+
+#+begin_src sh
+ls
+#+end_src
+
++ output
+
+#+begin_src sh
+xmonad  xmonad-contrib  stack.yaml  xmonad.hs
+#+end_src
+
+The meat of that file (comments start with #, we’ve omitted them here) will look a little bit like
+
+#+begin_src yaml
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/9.yaml
+
+packages:
+- xmonad
+- xmonad-contrib
+#+end_src
+
+With stack.yaml alongside xmonad.hs, xmonad now knows that it needs to use stack ghc instead of just ghc when (re)compiling its configuration. If you want to keep xmonad sources and the stack project elsewhere, but still use xmonad --recompile, symlink your real stack.yaml into the xmonad configuration directory, or use a custom build script.
+
+** Install Everything
+
+Installing things is as easy as typing stack install. This will install the correct version of GHC, as well as build all of the required packages (stack build) and then copy the relevant executables (xmonad, in our case) to ~/.local/bin. Make sure to add that directory to your $PATH!
+
+If you’re getting build failures while building the X11 package it may be that you don’t have the required C libraries installed. See above.
+
+#+begin_src sh
+stack install
+#+end_src
+
+*** Make XMonad your window manager
+
+This step varies depending on your distribution and X display manager (if any).
+
+Debian, Ubuntu
+
+/etc/X11/xinit/xinitrc runs /etc/X11/Xsession which runs ~/.xsession,
+so you probably want to put exec xmonad there (don’t forget the shebang and chmod).
+
+(Tested with startx, xdm, lightdm.)
+
+By using ~/.xsession, the distro takes care of stuff like dbus, ssh-agent, X resources, etc.
+If you want a completely manual X session, use ~/.xinitrc instead. Or invoke startx/xinit with an explicit path.
+
+Some newer display managers require an entry in /usr/share/xsessions. To use your custom ~/.xsession,
+put these lines to /usr/share/xsessions/default.desktop:
+
+#+begin_src config
+[Desktop Entry]
+Name=Default X session
+Type=Application
+Exec=default
+#+end_src
+
+*** xinitrc
+
+#+BEGIN_SRC conf
+# feh set wallpaper
+feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
+
+# set the cursor form xmonad
+xsetroot -cursor_name left_ptr
+
+# start ssh-agent and window mamager
+exec ssh-agent /usr/local/bin/xmonad
+#+END_SRC
+
+** Custom Build Script
+
+If you need to customize what happens during xmonad --recompile (bound to M-q by default), perhaps because your xmonad configuration is a whole separate Haskell package, you need to create a so-called build file. This is quite literally just a shell script called build in your xmonad directory (which is ~/.config/xmonad for us) that tells xmonad how it should build its executable.
+
+A good starting point (this is essentially what xmonad would do without a build file, with the exception that we are invoking stack ghc instead of plain ghc) would be
+
+#+begin_src sh
+#!/bin/sh
+
+exec stack ghc --  \
+  --make xmonad.hs \
+  -i               \
+  -ilib            \
+  -fforce-recomp   \
+  -main-is main    \
+  -v0              \
+  -o "$1"
+#+end_src
+
+make the build script executable
+
+#+begin_src sh
+chmod +x build
+#+end_src
+
+*** Don’t Recompile on Every Startup
+
+By default, xmonad always recompiles itself when a build script is used (because the build script could contain arbitrary code, so a simple check whether the xmonad.hs file changed is not enough). If you find that too annoying, then you can use the xmonad-ARCH executable that xmonad --recompile generates instead of xmonad in your startup. For example, instead of writing
+
+#+begin_src sh
+exec xmonad
+#+end_src
+
+in your ~/.xinitrc, you would write
+
+#+begin_src sh
+exec $HOME/.cache/xmonad/xmonad-x86_64-linux
+#+end_src
+
+The ~/.cache prefix is the $XDG_CACHE_HOME directory.
+Note that if your xmonad configuration resides within ~/.xmonad, then the executable will also be within that directory and not in $XDG_CACHE_HOME.
