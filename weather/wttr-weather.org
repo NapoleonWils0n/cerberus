@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* wttr weather
+
+show the weather in the terminal
+
+#+begin_src sh
+curl wttr.in/london
+#+end_src
