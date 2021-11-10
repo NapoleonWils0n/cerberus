@@ -172,13 +172,14 @@ By using ~/.xsession, the distro takes care of stuff like dbus, ssh-agent, X res
 If you want a completely manual X session, use ~/.xinitrc instead. Or invoke startx/xinit with an explicit path.
 
 Some newer display managers require an entry in /usr/share/xsessions. To use your custom ~/.xsession,
-put these lines to /usr/share/xsessions/default.desktop:
+put these lines to /usr/share/xsessions/xmonad.desktop
 
 #+begin_src config
 [Desktop Entry]
-Name=Default X session
-Type=Application
-Exec=default
+Name=XMonad
+Comment=Lightweight tiling window manager
+Exec=xmonad
+Type=XSession
 #+end_src
 
 *** xinitrc
