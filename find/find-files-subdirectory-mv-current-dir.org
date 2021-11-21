@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* find files in subdirectories and move to current directory
+
+find all mkv files in subdirectories and move to current directory
+
+#+begin_src sh
+find . -maxdepth 2 -type f -regex ".*\.mp4" -print0 | xargs -0 -l -I {} sh -c "mv {} ."
+#+end_src
