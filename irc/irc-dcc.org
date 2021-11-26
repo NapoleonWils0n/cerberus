@@ -1,0 +1,117 @@
+#+STARTUP: content
+* irc download files
+
+Download files from irc chat
+
+** weechat color
+
+#+begin_src sh
+/set buflist.format.buffer_current "${color:,22}${format_buffer}"
+/set weechat.bar.title.color_bg 22
+/set weechat.bar.status.color_bg 22
+/set weechat.color.seperator 22
+/set weechat.look.prefix_align_max 15
+/set weechat.look.prefix_align none
+/set weechat.look.buffer_time_format [%H:%M]
+/set weechat.color.chat_time_delimiters 2
+/set irc.look.server_buffer independent
+/set logger.file.auto_log off
+#+end_src
+
+** add server
+
+configure weechat
+
+add abjects irc server port 9999 for ssl
+
+#+begin_src sh
+/server add abjects irc.abjects.net/9999 -ssl
+#+end_src
+
++ accept invalid ssl cert for abjects
+
+#+begin_src sh
+/set irc.server.abjects.ssl_verify off
+#+end_src
+
++ set download path
+
+#+begin_src sh
+/set xfer.file.download_path ~/downloads
+#+end_src
+
+** channels
+
+#moviegods room
+#beast-xdcc room
+
+*** join moviegods
+
+#+begin_src sh
+/join #moviegods
+#+end_src
+
+**** hide MG spam using ignore list
+
+ignore in channel
+
+#+begin_src sh
+*[MG]*
+#+end_src
+
+**** join channel to download
+
+#+begin_src sh
+/join #mg-chat
+#+end_src
+
+**** search for files
+
+#+begin_src sh
+!s filename
+#+end_src
+
+copy msg download link and paste into weechat and start the download in the transfer list
+
+*** join beast-xdcc
+
+#+begin_src sh
+/j #beast-xdcc
+#+end_src
+
+**** hide MG spam using ignore list
+
+ignore in channel
+
+#+begin_src sh
+*[MG]*
+#+end_src
+
+**** join channel to download
+
+#+begin_src sh
+/j #beast-chat
+#+end_src
+
+**** search for files
+
+#+begin_src sh
+!s filename
+#+end_src
+
+copy msg download link and paste into weechat and start the download in the transfer list
+
+** auto join channels
+
+edit your weechat config
+
+#+begin_src sh
+vi ~/.weechat/irc.conf
+#+end_src
+
+#+begin_src sh
+abjects.autoconnect = on
+abjects.autojoin = "#moviegods,#beast-xdcc,#mg-chat,#beast-chat"
+#+end_src
+
+to autojoin list the channels on the left and then the chat on the right
