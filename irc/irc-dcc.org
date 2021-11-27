@@ -34,6 +34,12 @@ add abjects irc server port 9999 for ssl
 /set irc.server.abjects.ssl_verify off
 #+end_src
 
++ connect
+
+#+begin_src sh
+/connect abjects
+#+end_src
+
 + set download path
 
 #+begin_src sh
@@ -122,6 +128,12 @@ add abandoned irc server port 6669 for ssl
 
 #+begin_src sh
 /set irc.server.abandoned.ssl_verify off
+#+end_src
+
++ connect
+
+#+begin_src sh
+/connect abandoned
 #+end_src
 
 + join #Zombie-Warez
