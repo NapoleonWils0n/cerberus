@@ -45,7 +45,9 @@ add abjects irc server port 9999 for ssl
 #moviegods room
 #beast-xdcc room
 
-*** join moviegods
+*** moviegods
+
+join moviegods
 
 #+begin_src sh
 /join #moviegods
@@ -73,7 +75,9 @@ ignore in channel
 
 copy msg download link and paste into weechat and start the download in the transfer list
 
-*** join beast-xdcc
+*** beast-xdcc
+
+join beast-xdcc
 
 #+begin_src sh
 /j #beast-xdcc
@@ -100,6 +104,37 @@ ignore in channel
 #+end_src
 
 copy msg download link and paste into weechat and start the download in the transfer list
+
+*** Abandoned-IRC
+
+[[https://www.abandoned-irc.net/]]
+
+You can connect to the Abandoned-IRC network via
+irc.abandoned-irc.net on ports 6660-6669 or +6697 (SSL)
+
+add abandoned irc server port 6669 for ssl
+
+#+begin_src sh
+/server add abandoned irc.abandoned-irc.net/6669 -ssl
+#+end_src
+
++ accept invalid ssl cert for abandoned
+
+#+begin_src sh
+/set irc.server.abandoned.ssl_verify off
+#+end_src
+
++ join #Zombie-Warez
+
+#+begin_src sh
+/j #Zombie-Warez
+#+end_src
+
++ join #ZW-CHAT
+
+#+begin_src sh
+/j #ZW-CHAT
+#+end_src
 
 ** auto join channels
 
