@@ -1,4 +1,12 @@
 #+STARTUP: showall
-* weechat bare display
+* weechat keyboard shortcuts
+** weechat bare display
 
 press alt l to show bare display in weechat
+
+** jump to buffer
+
+jump to buffer 11 (or higher number)?
+
+The key is Alt+j and then 2 digits,
+for example Alt+j, 1, 1 to jump to buffer 11.
