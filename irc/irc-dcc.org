@@ -156,9 +156,18 @@ edit your weechat config
 vi ~/.weechat/irc.conf
 #+end_src
 
++ auto join abjects
+
 #+begin_src sh
 abjects.autoconnect = on
 abjects.autojoin = "#moviegods,#beast-xdcc,#mg-chat,#beast-chat"
+#+end_src
+
++ auto join abandoned
+
+#+begin_src sh
+abandoned.autoconnect = on
+abandoned.autojoin = "#Zombie-Warez,#ZW-CHAT"
 #+end_src
 
 to autojoin list the channels on the left and then the chat on the right
