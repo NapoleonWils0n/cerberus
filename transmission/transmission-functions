@@ -37,7 +37,12 @@ trd-list() { transmission-remote --list ;}
 trd-watch() { viddy transmission-remote --list ;}
 
 # clear completed torrents
-trd-clearcompleted() { transmission-remote -l | grep '100%\|Done' | awk '{print $1}' | xargs -n 1 -I % transmission-remote -t % -r ;}
+trd-clearcompleted() {
+    transmission-remote -l \
+    | grep '100%\|Done' \
+    | awk '{print $1}' \
+    | xargs -n 1 -I % transmission-remote -t % -r ;
+    }
 
 # remove torrent and leaves data alone
 trd-remove() { transmission-remote -t"$1" --remove ;}
