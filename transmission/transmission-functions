@@ -1,0 +1,64 @@
+# transmission functions for your ~/.zshrc or ~/.bashrc
+
+# daemon start
+trd-daemon() { transmission-daemon ;}
+
+# add torrent
+trd-add() { transmission-remote --add "$1" ;}
+
+# adding via hash info
+trd-hash() { transmission-remote --add "magnet:?xt=urn:btih:$1" ;}
+
+# start torrent <id> or all
+trd-start() { transmission-remote -t"${1-all}" --start ;} 
+
+# pause torrent <id> or all
+trd-pause() { transmission-remote -t"${1-all}" --stop ;}
+
+# show torrent info <id>
+trd-info() { transmission-remote -t"${1}" --info ;}
+
+# show torrent files <id>
+trd-files() { transmission-remote -t"${1}" --info-files ;}
+
+# get torrent files in list
+trd-get() { transmission-remote -t"${1}" -g"${2}" ;}
+
+# dont get torrent files in list
+trd-noget() { transmission-remote -t"${1}" -G"${2}" ;}
+
+# grep for torrent in download list
+trd-grep() { transmission-remote --list | grep -i "$1" ;}
+
+# list torrents
+trd-list() { transmission-remote --list ;}
+
+# watch torrent list with viddy
+trd-watch() { viddy transmission-remote --list ;}
+
+# clear completed torrents
+trd-clearcompleted() { transmission-remote -l | grep '100%\|Done' | awk '{print $1}' | xargs -n 1 -I % transmission-remote -t % -r ;}
+
+# remove torrent and leaves data alone
+trd-remove() { transmission-remote -t"$1" --remove ;}
+
+# remove torrent and delete data
+trd-purge() { transmission-remote -t"$1" --remove-and-delete ;} 
+
+# download default to 900K, else enter your own
+trd-altdownloadspeed() { transmission-remote --downlimit "${@:-900}" ;} 
+
+# alt download speed unlimited
+trd-altdownloadspeedunlimited() { transmission-remote --no-downlimit ;}
+
+# upload default to 10kpbs, else enter your own
+trd-limitupload() { transmission-remote --uplimit "${@:-10}" ;} 
+
+# no upload limit
+trd-limituploadunlimited() { transmission-remote --no-uplimit ;}
+
+# ask for for peers
+trd-askmorepeers() { transmission-remote -t"$1" --reannounce ;}
+
+# daemon stop
+trd-quit() { killall transmission-daemon ;}
