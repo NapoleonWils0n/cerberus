@@ -170,22 +170,43 @@ so you probably want to put exec xmonad there (don’t forget the shebang and ch
 
 By using ~/.xsession, the distro takes care of stuff like dbus, ssh-agent, X resources, etc.
 If you want a completely manual X session, use ~/.xinitrc instead. Or invoke startx/xinit with an explicit path.
+create a symbolic to /usr/bin/xmonad
 
 Some newer display managers require an entry in /usr/share/xsessions. To use your custom ~/.xsession,
 put these lines to /usr/share/xsessions/xmonad.desktop
 
-+ and replace username with your username
+*** option 1 create a symlink for xmonad
+
+you can create a symlink from ~/.local/bin/xmonad to /usr/bin/xmonad
+
+if you dont create a symbolic link to /usr/bin/xmonad your graphical login manager wont boot into xmonad and will just return to the login screen
+
+#+begin_src sh
+sudo ln -s ~/.local/bin/xmonad /usr/bin
+#+end_src
+
+you can then create a desktop file like this
 
 #+begin_src config
 [Desktop Entry]
 Name=XMonad
 Comment=Lightweight tiling window manager
-Exec=/home/username/.local/share/xmonad
+Exec=xmonad
 Type=XSession
 #+end_src
 
+and then copy the xmonad.desktop file to /usr/share/xsessions
+
+#+begin_src sh
+sudo cp xmonad.desktop /usr/share/xsessions
+#+end_src
+
+*** option 2 link to the xmonad-ARCH executable
+
 you can also use the xmonad-ARCH executable that xmonad --recompile generates instead of xmonad in your startup
 see notes at the end of document for more info
+
+in which case you dont need to create a symlink
 
 + and replace username with your username
 
@@ -195,6 +216,12 @@ Name=XMonad
 Comment=Lightweight tiling window manager
 Exec=/home/username/.cache/xmonad/xmonad-x86_64-linux
 Type=XSession
+#+end_src
+
+and then copy the xmonad.desktop file to /usr/share/xsessions
+
+#+begin_src sh
+sudo cp xmonad.desktop /usr/share/xsessions
 #+end_src
 
 *** uninstalling xmonad installed with apt
