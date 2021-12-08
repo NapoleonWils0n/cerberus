@@ -174,11 +174,26 @@ If you want a completely manual X session, use ~/.xinitrc instead. Or invoke sta
 Some newer display managers require an entry in /usr/share/xsessions. To use your custom ~/.xsession,
 put these lines to /usr/share/xsessions/xmonad.desktop
 
++ and replace username with your username
+
 #+begin_src config
 [Desktop Entry]
 Name=XMonad
 Comment=Lightweight tiling window manager
-Exec=xmonad
+Exec=/home/username/.local/share/xmonad
+Type=XSession
+#+end_src
+
+you can also use the xmonad-ARCH executable that xmonad --recompile generates instead of xmonad in your startup
+see notes at the end of document for more info
+
++ and replace username with your username
+
+#+begin_src config
+[Desktop Entry]
+Name=XMonad
+Comment=Lightweight tiling window manager
+Exec=/home/username/.cache/xmonad/xmonad-x86_64-linux
 Type=XSession
 #+end_src
 
@@ -194,18 +209,6 @@ after you have switched to another desktop like gnome then you can uninstall xmo
 sudo apt remove xmonad libghc-xmonad-contrib-dev
 #+end_src
 
-*** create a symbolic to /usr/bin/xmonad
-
-you also need to from ~/.local/bin/xmonad
-to /usr/bin/xmonad
-
-if you dont create a symbolic link to /usr/bin/xmonad
-your graphical login manager wont boot into xmonad and will just return to the login screen
-
-#+begin_src sh
-sudo ln -s ~/.local/bin/xmonad /usr/bin
-#+end_src
-
 *** xinitrc
 
 #+BEGIN_SRC conf
@@ -216,7 +219,7 @@ feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpape
 xsetroot -cursor_name left_ptr
 
 # start ssh-agent and window mamager
-exec ssh-agent /usr/local/bin/xmonad
+exec ssh-agent /home/djwilcox/.cache/xmonad/xmonad-x86_64-linux
 #+END_SRC
 
 ** Custom Build Script
@@ -255,8 +258,10 @@ exec xmonad
 in your ~/.xinitrc, you would write
 
 #+begin_src sh
-exec $HOME/.cache/xmonad/xmonad-x86_64-linux
+exec /home/username/.cache/xmonad/xmonad-x86_64-linux
 #+end_src
+
+replacing username with your username
 
 The ~/.cache prefix is the $XDG_CACHE_HOME directory.
 Note that if your xmonad configuration resides within ~/.xmonad, then the executable will also be within that directory and not in $XDG_CACHE_HOME.
