@@ -1,0 +1,53 @@
+#+STARTUP: content
+* homebrew linux
+
+[[https://brew.sh/][homebrew]] the missing package manager
+
+** homebrew install
+
+open a terminal and run the following command
+press ctrl + d at the prompt to install to ~/.linuxbrew
+
+#+begin_src sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#+end_src
+
+** add homebrew to your shell path
+
+edit your ~/.zshenv file
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+add the following code to add homebrew to your shell path
+
+#+begin_src sh
+eval "$(/home/djwilcox/.linuxbrew/bin/brew shellenv)"
+#+end_src
+
+source your shell config to pick up the changes
+
+#+begin_src sh
+source ~/.zshrc
+#+end_src
+
+** brew doctor
+
+run brew doctor to check the install
+
+#+begin_src sh 
+brew doctor
+#+end_src
+
+** Install Homebrew's dependencies if you have sudo access:
+
+#+begin_src sh
+sudo apt-get install build-essential
+#+end_src
+
+** We recommend that you install GCC with brew
+
+#+begin_src sh
+brew install gcc
+#+end_src
