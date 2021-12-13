@@ -20,7 +20,7 @@ edit your ~/.zshenv file
 vi ~/.zshenv
 #+end_src
 
-add the following code to add homebrew to your shell path
+add the following code to add homebrew to your shell path, replace djwilcox with your username
 
 #+begin_src sh
 eval "$(/home/djwilcox/.linuxbrew/bin/brew shellenv)"
