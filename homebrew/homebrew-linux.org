@@ -51,3 +51,27 @@ sudo apt-get install build-essential
 #+begin_src sh
 brew install gcc
 #+end_src
+
+** homebrew uninstall
+
+to uninstall homebrew run the following command in the terminal
+
+#+begin_src sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
+#+end_src
+
+you will also need to remove the .linuxbrew directory in your home
+
+change directory to your home
+
+#+begin_src sh
+cd ~
+#+end_src
+
+then remove the .linuxbrew directory
+
+#+begin_src sh
+rm -rI .linuxbrew
+#+end_src
+
+
