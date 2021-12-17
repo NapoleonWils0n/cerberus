@@ -1,0 +1,228 @@
+#+STARTUP: content
+* nixos package manager
+** nixos install
+*** single user install
+
+**** create the /nix directory
+
+#+begin_src sh
+sudo mkdir -p /nix
+#+end_src
+
+**** chown the directory
+
+replace djwilcox with your user name
+
+#+begin_src sh
+sudo chown djwilcox /nix
+#+end_src
+
+**** nixpkgs single user install script
+
+#+begin_src sh
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+#+end_src
+
+**** run the following command after the install
+
+replace djwilcox with your user name
+
+#+begin_src sh
+. /home/djwilcox/.nix-profile/etc/profile.d/nix.sh
+#+end_src
+
+** list packages
+
+#+begin_src sh
+nix-env -qaP
+#+end_src
+
+** installing stuff
+
+#+begin_src sh
+nix-env -iA nixpkgs.ripgrep
+#+end_src
+
+** desktop files
+
+add the following code to your shell config file like your ~/.zshrc
+
+#+begin_src sh
+export XDG_DATA_DIRS="/home/djwilcox/.nix-profile/share:$XDG_DATA_DIRS"
+#+end_src
+
+** nixpkgs config
+
+A user’s nixpkgs configuration is stored in a user-specific configuration file located at ~/.config/nixpkgs/config.nix.
+
+#+begin_src sh
+~/.config/nixpkgs/config.nix
+#+end_src
+
+create the ~/.config/nixpkgs/ directory
+
+#+begin_src sh
+mkdir -p ~/.config/nixpkgs
+#+end_src
+
+create the ~/.config/nixpkgs/config.nix file
+
+#+begin_src sh
+touch ~/.config/nixpkgs/config.nix
+#+end_src
+
+** package overrides
+
+Using packageOverrides, it is possible to manage packages declaratively. This means that we can list all of our desired packages within a declarative Nix expression. 
+
+To install it into our environment, you can just run nix-env -iA nixpkgs.myPackages
+If you want to load the packages to be built from a working copy of nixpkgs you just run nix-env -f. -iA myPackages
+To explore what’s been installed, just look through ~/.nix-profile/.
+
+You can see that a lot of stuff has been installed.
+Some of this stuff is useful some of it isn’t. Let’s tell Nixpkgs to only link the stuff that we want: 
+
+edit the nixpkgs config.nix
+
+#+begin_src sh
+vi ~/.config/nixpkgs/config.nix
+#+end_src
+
+add the following code
+
+#+begin_src sh
+{
+  packageOverrides = pkgs: with pkgs; rec {
+    myProfile = writeText "my-profile" ''
+      export PATH=$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/sbin:/bin:/usr/sbin:/usr/bin
+      export MANPATH=$HOME/.nix-profile/share/man:/nix/var/nix/profiles/default/share/man:/usr/share/man
+      export INFOPATH=$HOME/.nix-profile/share/info:/nix/var/nix/profiles/default/share/info:/usr/share/info
+    '';
+    myPackages = pkgs.buildEnv {
+      name = "my-packages";
+      paths = [
+        (runCommand "profile" {} ''
+          mkdir -p $out/etc/profile.d
+          cp ${myProfile} $out/etc/profile.d/my-profile.sh
+        '')
+        abook
+        apg
+        aria
+        awscli
+        bat
+        csvkit
+        dunst
+        emacs
+        exiftool
+        feh
+        fzf
+        gdal
+        gimp
+        gpsbabel
+        graphviz
+        handbrake
+        html-xml-utils
+        imagemagick
+        jq
+        lynx
+        mediainfo
+        meld
+        mpc_cli
+        mpd
+        mutt
+        nnn
+        ncdu
+        ncmpc
+        networkmanagerapplet
+        newsboat
+        oathToolkit
+        pandoc
+        playerctl
+        ripgrep
+        scrot
+        sox
+        shellcheck
+        sxhkd
+        sxiv
+        tig
+        tint2
+        tmux
+        tree
+        urlscan
+        urlview
+        ytfzf
+        yt-dlp
+        w3m
+        zathura
+      ];
+      pathsToLink = [ "/share/man" "/share/doc" "/share/info" "/share/applications" "/share/icons" "/bin" "/etc" ];
+      extraOutputsToInstall = [ "man" "doc" "info" "applications" "icons" ];
+      postBuild = ''
+        if [ -x $out/bin/install-info -a -w $out/share/info ]; then
+          shopt -s nullglob
+          for i in $out/share/info/*.info $out/share/info/*.info.gz; do
+              $out/bin/install-info $i $out/share/info/dir
+          done
+        fi
+      '';
+    };
+  };
+}
+#+end_src
+
+** upgrading packages
+
+You can also upgrade all packages for which there are newer versions:
+
+#+begin_src sh
+nix-env -u
+#+end_src
+
+Sometimes it’s useful to be able to ask what nix-env would do, without actually doing it.
+For instance, to find out what packages would be upgraded by nix-env -u, you can do
+
+#+begin_src sh
+nix-env -u --dry-run
+#+end_src
+
+** upgrading nixos
+
+#+begin_src sh
+nix-channel --update; nix-env -iA nixpkgs.nix nixpkgs.cacert
+#+end_src
+** uninstall package
+
+remove a package,
+where package-name is the package to remove
+
+#+begin_src sh
+nix-env -e package-name
+#+end_src
+
+** yt-dlp fix
+
+#+begin_src sh
+which yt-dlp
+#+end_src
+
+#+begin_example
+/home/djwilcox/.nix-profile/bin/yt-dlp
+#+end_example
+
+#+begin_src sh
+ln -s /home/djwilcox/.nix-profile/bin/yt-dlp ~/bin/youtube-dl
+#+end_src
+
+** uninstall nixos
+
+Uninstalling nix:
+
+Delete the files Nix added to your system:
+replace djwilcox with your user name
+
+#+begin_src sh
+sudo rm -rI /nix
+rm -rI /home/djwilcox/.nix-profile
+rm -rI /home/djwilcox/.nix-defexpr
+rm -rI /home/djwilcox/.nix-channels
+#+end_src
