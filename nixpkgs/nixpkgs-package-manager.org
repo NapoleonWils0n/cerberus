@@ -48,7 +48,7 @@ nix-env -iA nixpkgs.ripgrep
 add the following code to your shell config file like your ~/.zshrc
 
 #+begin_src sh
-export XDG_DATA_DIRS="/home/djwilcox/.nix-profile/share:$XDG_DATA_DIRS"
+export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
 #+end_src
 
 ** nixpkgs config
@@ -73,10 +73,10 @@ touch ~/.config/nixpkgs/config.nix
 
 ** package overrides
 
-Using packageOverrides, it is possible to manage packages declaratively. This means that we can list all of our desired packages within a declarative Nix expression. 
+Using packageOverrides, it is possible to manage packages declaratively.
+This means that we can list all of our desired packages within a declarative Nix expression. 
 
 To install it into our environment, you can just run nix-env -iA nixpkgs.myPackages
-If you want to load the packages to be built from a working copy of nixpkgs you just run nix-env -f. -iA myPackages
 To explore what’s been installed, just look through ~/.nix-profile/.
 
 You can see that a lot of stuff has been installed.
@@ -168,6 +168,12 @@ add the following code
     };
   };
 }
+#+end_src
+
+*** install packages from myPackages
+
+#+begin_src sh
+nix-env -iA nixpkgs.myPackages
 #+end_src
 
 ** upgrading packages
