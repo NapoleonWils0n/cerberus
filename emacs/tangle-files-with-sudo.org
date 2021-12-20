@@ -1,0 +1,28 @@
+#+STARTUP: content
+* tangle files with sudo
+
+tangle files to a directory that requires sudo 
+
+#+NAME: test
+#+BEGIN_SRC conf :tangle "/sudo::/usr/local/bin/test"
+#!/bin/sh
+echo test
+#+END_SRC
+
+* tangle dotfiles
+** tangle document
+
+C-c C-v t
+
+** tangle only one code block
+
+C-u C-c C-v t
+
+** tangle from the command line
+
+tangle file from the command line
+where ~/git/ubuntu-dotfiles/ubuntu-dotfiles.org is the path of the file to tangle
+
+#+begin_src sh
+emacs --batch -l org --eval '(org-babel-tangle-file "~/git/ubuntu-dotfiles/ubuntu-dotfiles.org")'
+#+end_src
