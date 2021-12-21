@@ -42,3 +42,9 @@ sudo dpkg -i opendoas*.deb
 #+begin_src sh
 echo "permit keepenv :$USER" | sudo tee /etc/doas.conf
 #+end_src
+
+** set permissions
+
+#+begin_src sh
+sudo chown -c root:root /etc/doas.conf
+#+end_src
