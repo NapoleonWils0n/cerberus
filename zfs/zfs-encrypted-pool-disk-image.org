@@ -120,3 +120,8 @@ unmount the dataset
 sudo zfs unmount crypt/data
 #+end_src
 
+export the pool
+
+#+begin_src sh
+sudo zfs export crypt
+#+end_src
