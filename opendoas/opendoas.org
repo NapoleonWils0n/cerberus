@@ -25,9 +25,21 @@ cd OpenDoas
 
 ** configure 
 
+configure doas
+
 #+begin_src sh
 ./configure
+#+end_src
+
+make doas
+
+#+begin_src sh
 make -j2
+#+end_src
+
+create package
+
+#+begin_src sh
 sudo checkinstall -D --install=no --backup=no --maintainer=user --pkgname=opendoas
 #+end_src
 
