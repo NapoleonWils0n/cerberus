@@ -43,8 +43,10 @@ sudo dpkg -i opendoas*.deb
 echo "permit keepenv :$USER" | sudo tee /etc/doas.conf
 #+end_src
 
-** set permissions
+** uninstall opendoas
+
+to uninstall opendoas install with apt or manually by building opendoas run the following command
 
 #+begin_src sh
-sudo chown -c root:root /etc/doas.conf
+sudo apt remove opendoas
 #+end_src
