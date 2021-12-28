@@ -64,34 +64,6 @@ if [ -e /home/djwilcox/.nix-profile/etc/profile.d/nix.sh ]; then . /home/djwilco
 
 #+end_src
 
-** tmux
-
-create the ~/.config/tmux directory
-
-#+begin_src sh
-mkdir -p ~/.config/tmux
-#+end_src
-
-move ~/.tmux.conf to ~/.config/tmux/tmux.conf
-
-#+begin_src sh
-mv ~/.tmux.conf ~/.config/tmux/tmux.conf
-#+end_src
-
-** weechat
-
-create ~/.config/weechat directory
-
-#+begin_src sh
-mkdir -p ~/.config/weechat
-#+end_src
-
-move ~/.weechat to ~/.config/weechat
-
-#+begin_src sh
-mv ~/.weechat ~/.config/weechat
-#+end_src
-
 ** emacs
 
 move ~/.emacs.d to ~/.config/emacs
@@ -107,42 +79,6 @@ mv ~/.emacs ~/.config/emacs/init.el
 #+end_src
 
 run byte-recompile-directory on ~/.config/emacs/elpa
-
-** awscli
-
-move ~/.aws to ~/.config/aws
-
-#+begin_src sh
-mv ~/.aws ~/.config/aws
-#+end_src
-
-** dvdcss
-
-move ~/.dvdcss to ~/.config/dvdcss
-
-#+begin_src sh
-mv ~/.dvdcss ~/.config/dvdcss
-#+end_src
-
-** wget
-
-move ~/.wget-hsts to ~/.cache/wget-hsts
-
-#+begin_src sh
-mv ~/.wget-hsts ~/.cache/wget-hsts
-#+end_src
-
-edit your ~/.zshenv
-
-#+begin_src sh
-vi ~/.zshenv
-#+end_src
-
-add the following code to your ~/.zshenv
-
-#+begin_src sh
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
-#+end_src
 
 ** fonts
 
@@ -179,6 +115,70 @@ gtk-update-icon-cache -f -t ~/.local/share/icons/Papirus
 gtk-update-icon-cache -f -t ~/.local/share/icons/Papirus-Dark
 #+end_src
 
+** tmux
+
+create the ~/.config/tmux directory
+
+#+begin_src sh
+mkdir -p ~/.config/tmux
+#+end_src
+
+move ~/.tmux.conf to ~/.config/tmux/tmux.conf
+
+#+begin_src sh
+mv ~/.tmux.conf ~/.config/tmux/tmux.conf
+#+end_src
+
+** weechat
+
+create ~/.config/weechat directory
+
+#+begin_src sh
+mkdir -p ~/.config/weechat
+#+end_src
+
+move ~/.weechat to ~/.config/weechat
+
+#+begin_src sh
+mv ~/.weechat ~/.config/weechat
+#+end_src
+
+** dvdcss
+
+move ~/.dvdcss to ~/.config/dvdcss
+
+#+begin_src sh
+mv ~/.dvdcss ~/.config/dvdcss
+#+end_src
+
+** awscli
+
+move ~/.aws to ~/.config/aws
+
+#+begin_src sh
+mv ~/.aws ~/.config/aws
+#+end_src
+
+** wget
+
+move ~/.wget-hsts to ~/.cache/wget-hsts
+
+#+begin_src sh
+mv ~/.wget-hsts ~/.cache/wget-hsts
+#+end_src
+
+edit your ~/.zshenv
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+add the following code to your ~/.zshenv
+
+#+begin_src sh
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+#+end_src
+
 ** abook
 
 create the ~/.config/abook directory
@@ -213,12 +213,6 @@ move all the bash files to ~/Desktop/ubuntu-bash
 
 #+begin_src sh
 mv ~/.bashrc ~/.bash_history ~/.bash_logout ~/.profile ~/Desktop/ubuntu-bash
-#+end_src
-
-you can also remove ~/.sudo_as_admin_successful which is used with bash
-
-#+begin_src sh
-rm ~/.sudo_as_admin_successful
 #+end_src
 
 ** xprofile
