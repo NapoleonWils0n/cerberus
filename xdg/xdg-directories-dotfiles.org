@@ -220,3 +220,24 @@ you can also remove ~/.sudo_as_admin_successful which is used with bash
 #+begin_src sh
 rm ~/.sudo_as_admin_successful
 #+end_src
+
+** xprofile
+
+the gdm login manager requires a file called .profile or .xprofile to work
+it wont pick up a .zprofile file
+
+create a file called ~/.xprofile
+
+in the example below i set the path to include my ~/.local/bin directory
+
+#+begin_src sh
+# xprofile for gdm login manager
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+# added by Nix installer
+if [ -e /home/djwilcox/.nix-profile/etc/profile.d/nix.sh ]; then . /home/djwilcox/.nix-profile/etc/profile.d/nix.sh; fi
+#+end_src
