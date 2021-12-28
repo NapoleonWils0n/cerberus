@@ -1,0 +1,222 @@
+#+STARTUP: content
+* xdg directories
+** zshenv
+
+#+begin_src sh
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "$HOME/.local/bin" "$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# ssh-add
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# less
+export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
+export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
+
+# wget
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+
+# libdvdcss
+export DVDCSS_CACHE="${XDG_DATA_HOME}/dvdcss"
+
+# awscli
+export AWS_SHARED_CREDENTIALS_FILE="${XDG_CONFIG_HOME}/aws/credentials"
+export AWS_CONFIG_FILE="${XDG_CONFIG_HOME}/aws/config"
+
+# set emacsclient as editor
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -a emacs"
+export VISUAL="emacsclient -c -a emacs"
+
+# tell ls to be colourfull
+export LSCOLORS=ExFxCxDxBxegedabagacad
+export CLICOLOR=1
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# vi mode
+export KEYTIMEOUT=1
+
+# mpd host variable for mpc
+export MPD_HOST="/home/djwilcox/.config/mpd/socket"
+
+# git pager bat with colour
+export GIT_PAGER="bat --color=always -l rs"
+
+# export fix for nixpkgs
+export LC_ALL=C
+
+# nix os xdg directories
+export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
+
+# nixpkgs
+if [ -e /home/djwilcox/.nix-profile/etc/profile.d/nix.sh ]; then . /home/djwilcox/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+#+end_src
+
+** tmux
+
+create the ~/.config/tmux directory
+
+#+begin_src sh
+mkdir -p ~/.config/tmux
+#+end_src
+
+move ~/.tmux.conf to ~/.config/tmux/tmux.conf
+
+#+begin_src sh
+mv ~/.tmux.conf ~/.config/tmux/tmux.conf
+#+end_src
+
+** weechat
+
+create ~/.config/weechat directory
+
+#+begin_src sh
+mkdir -p ~/.config/weechat
+#+end_src
+
+move ~/.weechat to ~/.config/weechat
+
+#+begin_src sh
+mv ~/.weechat ~/.config/weechat
+#+end_src
+
+** emacs
+
+move ~/.emacs.d to ~/.config/emacs
+
+#+begin_src sh
+mv ~/.emacs.d ~/.config/emacs/
+#+end_src
+
+move ~/.emacs to ~/.config/emacs/init.el
+
+#+begin_src sh
+mv ~/.emacs ~/.config/emacs/init.el
+#+end_src
+
+run byte-recompile-directory on ~/.config/emacs/elpa
+
+** awscli
+
+move ~/.aws to ~/.config/aws
+
+#+begin_src sh
+mv ~/.aws ~/.config/aws
+#+end_src
+
+** dvdcss
+
+move ~/.dvdcss to ~/.config/dvdcss
+
+#+begin_src sh
+mv ~/.dvdcss ~/.config/dvdcss
+#+end_src
+
+** wget
+
+move ~/.wget-hsts to ~/.cache/wget-hsts
+
+#+begin_src sh
+mv ~/.wget-hsts ~/.cache/wget-hsts
+#+end_src
+
+edit your ~/.zshenv
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+add the following code to your ~/.zshenv
+
+#+begin_src sh
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+#+end_src
+
+** fonts
+
+move ~/.fonts to ~/.local/share/fonts
+
+#+begin_src sh
+mv ~/.fonts ~/.local/share/fonts
+#+end_src
+
+remove the ~/.fontconfig file
+
+#+begin_src sh
+rm -rI ~/.fontconfig
+#+end_src
+
+create the font cache
+
+#+begin_src sh
+sudo fc-cache -f -v
+#+end_src
+
+** icons
+
+move icons to ~/.local/share/icons
+
+#+begin_src sh
+mv ~/.icons/* ~/.local/share/icons/
+#+end_src
+
+update the icon cache
+
+#+begin_src sh
+gtk-update-icon-cache -f -t ~/.local/share/icons/Papirus
+gtk-update-icon-cache -f -t ~/.local/share/icons/Papirus-Dark
+#+end_src
+
+** abook
+
+create the ~/.config/abook directory
+
+#+begin_src sh
+mkdir -p ~/.config/abook
+#+end_src
+
+edit your ~/.zshrc
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+add an alias for abook
+
+#+begin_src sh
+alias abook='abook --datafile "${XDG_CONFIG_HOME}/abook/addressbook"'
+#+end_src
+
+** remove bash files
+
+if you have switched to zsh you can remove all the bash files
+
+create a directory called ubuntu-bash on your desktop
+
+#+begin_src sh
+mkdir -p ~/Desktop/ubuntu-bash
+#+end_src
+
+move all the bash files to ~/Desktop/ubuntu-bash
+
+#+begin_src sh
+mv ~/.bashrc ~/.bash_history ~/.bash_logout ~/.profile ~/Desktop/ubuntu-bash
+#+end_src
+
+you can also remove ~/.sudo_as_admin_successful which is used with bash
+
+#+begin_src sh
+rm ~/.sudo_as_admin_successful
+#+end_src
