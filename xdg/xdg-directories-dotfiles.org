@@ -131,12 +131,6 @@ mv ~/.tmux.conf ~/.config/tmux/tmux.conf
 
 ** weechat
 
-create ~/.config/weechat directory
-
-#+begin_src sh
-mkdir -p ~/.config/weechat
-#+end_src
-
 move ~/.weechat to ~/.config/weechat
 
 #+begin_src sh
