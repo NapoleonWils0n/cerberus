@@ -3,8 +3,18 @@
 
 tangle files to a directory that requires sudo 
 
-#+NAME: test
+#+NAME: test-sudo
 #+BEGIN_SRC conf :tangle "/sudo::/usr/local/bin/test"
+#!/bin/sh
+echo test
+#+END_SRC
+
+* tangle files with doas
+
+tangle files to a directory that requires doas 
+
+#+NAME: test-doas
+#+BEGIN_SRC conf :tangle "/doas::/usr/local/bin/test"
 #!/bin/sh
 echo test
 #+END_SRC
