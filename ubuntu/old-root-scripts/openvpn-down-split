@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# openvpn-down.sh
+#=================
+
+# delete vpn route
+ip rule delete from "$ifconfig_local" table tunnel
+ip route flush table tunnel
+
+# clear unbound_outgoing_interface
+echo > /etc/unbound/unbound_outgoing_interface
+
+# comment out include
+sed -i '/include: "\/etc\/unbound\/unbound_outgoing_interface"/s/^/#/' /etc/unbound/unbound.conf.d/custom.conf
+
+# sleep for 1 second
+sleep 1
+
+# start dante socks5 server
+service danted stop
+
+# sleep for 1 second
+sleep 1
+
+# restart unbound dns server
+systemctl restart unbound.service

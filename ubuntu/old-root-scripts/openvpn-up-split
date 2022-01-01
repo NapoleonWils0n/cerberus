@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# openvpn-up.sh
+#==============
+
+# create vpn route
+ip rule add from "$ifconfig_local" table tunnel
+ip route add table tunnel default via "$ifconfig_remote" 
+ip route add table tunnel "$ifconfig_remote" via "$ifconfig_local" dev "$dev"
+
+# echo tun0 ip address to unbound_outgoing_interface
+echo "outgoing-interface: $(ip a list tun0 \
+| grep inet | head -1 | awk '{print $2}' | cut -d'/' -f1)" > /etc/unbound/unbound_outgoing_interface
+
+# uncomment include
+sed -i '/include: "\/etc\/unbound\/unbound_outgoing_interface"/s/#//' /etc/unbound/unbound.conf.d/custom.conf
+
+# sleep for 1 second
+sleep 1
+
+# start dante socks5 server
+service danted start
+
+# sleep for 1 second
+sleep 1
+
+# restart unbound dns server
+systemctl restart unbound.service
