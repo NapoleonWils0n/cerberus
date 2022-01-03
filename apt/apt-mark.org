@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* show user installed packages
+
+#+begin_src sh
+apt-mark showmanual
+#+end_src
