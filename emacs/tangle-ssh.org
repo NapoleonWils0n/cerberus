@@ -1,0 +1,65 @@
+#+TITLE: tangle ssh 
+#+STARTUP: content
+#+STARTUP: overview hideblocks
+#+OPTIONS: num:nil author:nil
+#+PROPERTY: header-args :mkdirp yes
+* tangle dotfiles
+** tangle document
+
+C-c C-v t
+
+** tangle only one code block
+
+C-u C-c C-v t
+
+** tangle from the command line
+
+tangle file from the command line
+where ~/git/ubuntu-dotfiles/ubuntu-dotfiles.org is the path of the file to tangle
+
+#+begin_src sh
+emacs --batch -l org --eval '(org-babel-tangle-file "~/git/ubuntu-dotfiles/ubuntu-dotfiles.org")'
+#+end_src
+* ssh config
+
+tangle files over ssh with emacs
+edit you ~/.ssh/config and add the following code
+
+#+NAME: ssh
+#+begin_src conf
+# emacs tramp ssh key
+Host *
+IdentityFile ~/.ssh/id_rsa.pub
+ServerAliveInterval 5
+#+end_src
+
+* tangle over ssh
+** example script
+*** example script config
+
+#+NAME: example-script
+#+BEGIN_SRC sh
+#!/bin/sh
+
+echo 'example script'
+#+END_SRC
+
+*** example file tangle
+:PROPERTIES:
+:ORDERED:  t
+:END:
+
+the syntax is ssh:server:/file-path
+
+#+begin_src emacs-lisp
+/ssh:server:/file
+#+end_src
+
++ tangle file over ssh
+
+#+NAME: example-script-ssh
+#+BEGIN_SRC sh :noweb yes :tangle "/ssh:macmini:/Users/djwilcox/Desktop/example-script" :tangle-mode (identity #o755)
+<<example-script>>
+#+END_SRC
+  
+
