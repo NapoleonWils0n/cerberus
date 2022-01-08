@@ -42,7 +42,6 @@ ServerAliveInterval 5
 #!/bin/sh
 
 echo 'example script'
-echo 'this is a super amazing script that does something useful'
 #+END_SRC
 
 *** example file tangle
