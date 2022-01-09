@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* magit view file at commit
+
+#+begin_example
+C-xvl to view the file's history.
+n and p to move between commits.
+f to visit the file as of the commit at point.
+#+end_example
