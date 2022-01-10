@@ -111,6 +111,8 @@ curl 'https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/ubuntu/ub
 curl 'https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/ubuntu/ubuntu-nixpkgs-wsl/.config/yt-dlp/config' -o ~/.config/yt-dlp/config
 #+end_src
 
+restart ubuntu so it picks up the new scripts
+
 ** install packages from myPackages
 
 run the following command to install all the packages in the config.nix file
