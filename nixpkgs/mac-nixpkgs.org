@@ -1,0 +1,8 @@
+#+STARTUP: content
+* mac nixpkgs install
+
+#+begin_src sh
+sh <(curl -L https://nixos.org/nix/install) \
+--darwin-use-unencrypted-nix-store-volume \
+--daemon
+#+end_src
