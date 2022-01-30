@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# pipe command into at and set the display for gui apps
+# at now +1 minutes -f input
+
+export DISPLAY=:1
+mpv 'https://www.youtube.com/watch?v=aqz-KE-bpKQ'
