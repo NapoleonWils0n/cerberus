@@ -1,6 +1,8 @@
 #!/bin/sh
 
 # pipe command into at and set the display for gui apps
+# find your display number
+# echo "$DISPLAY" 
 # at now +1 minutes -f input
 
 export DISPLAY=:1
