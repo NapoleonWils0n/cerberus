@@ -32,21 +32,9 @@ replace username with your user name
 . /home/username/.nix-profile/etc/profile.d/nix.sh
 #+end_src
 
-** list packages
-
-#+begin_src sh
-nix-env -qaP
-#+end_src
-
-** installing stuff
-
-#+begin_src sh
-nix-env -iA nixpkgs.ripgrep
-#+end_src
-
 ** desktop files
 
-add the following code to your shell config file like your ~/.zshrc
+add the following code to your shell config file like your ~/.zshenv file
 
 #+begin_src sh
 export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
@@ -111,16 +99,24 @@ add the following code
         aria
         awscli
         bat
+        bc
+        curl
         csvkit
+        dos2unix
         dunst
         emacs
         exiftool
+        exa
         feh
+        ffmpeg_5
         fzf
         gdal
         gimp
+        git
+        gnuplot
         gpsbabel
         graphviz
+        gparted
         handbrake
         html-xml-utils
         imagemagick
@@ -139,22 +135,28 @@ add the following code
         oathToolkit
         pandoc
         playerctl
+        p7zip
         ripgrep
         scrot
         sox
         shellcheck
+        surfraw
         sxhkd
         sxiv
         tig
         tint2
         tmux
         tree
+        unzip
+        viddy
         urlscan
         urlview
         ytfzf
         yt-dlp
+        weechat
         w3m
         zathura
+        zip
       ];
       pathsToLink = [ "/share/man" "/share/doc" "/share/info" "/share/applications" "/share/icons" "/bin" "/etc" ];
       extraOutputsToInstall = [ "man" "doc" "info" "applications" "icons" ];
