@@ -1,0 +1,94 @@
+#+STARTUP: content
+* delogo ffmpeg filter
+
+[[https://ffmpeg.org/ffmpeg-filters.html#delogo]]
+
+Suppress a TV station logo by a simple interpolation of the surrounding pixels.
+Just set a rectangle covering the logo and watch it disappear (and sometimes something even uglier appear - your mileage may vary).
+
+It accepts the following parameters:
+
+x
+y
+
+
+Specify the top left corner coordinates of the logo. They must be specified.
+
+w
+h
+
+Specify the width and height of the logo to clear. They must be specified.
+
+show
+
+When set to 1, a green rectangle is drawn on the screen to simplify finding the right x, y, w, and h parameters. The default value is 0.
+
+The rectangle is drawn on the outermost pixels which will be (partly) replaced with interpolated values. The values of the next pixels immediately outside this rectangle in each direction will be used to compute the interpolated pixel values inside the rectangle.
+
+* ffplay delogo filter
+
+you can play a video with ffplay and apply the delogo filter to preview the effect before you record with ffmpeg
+
+** delogo top left
+
+Set a rectangle covering the area with top left corner coordinates 10,10 and size 200x200:
+
++ with green rectangle
+
+#+begin_src sh
+ffplay input.mp4 -vf "delogo=x=10:y=10:w=200:h=200:show=1"
+#+end_src
+
++ without green rectangle
+
+#+begin_src sh
+ffplay input.mp4 -vf "delogo=x=10:y=10:w=200:h=200"
+#+end_src
+
+** delogo top right
+
+Set a rectangle covering the area with top left corner coordinates 1400,20 and size 500x480:
+
++ with green rectangle
+
+#+begin_src sh
+ffplay input.mp4 -vf "delogo=x=1400:y=20:w=500:h=480:show=1"
+#+end_src
+
++ without green rectangle
+
+#+begin_src sh
+ffplay input.mp4 -vf "delogo=x=1400:y=20:w=500:h=480"
+#+end_src
+
+** delogo top left and top right
+
+Apply delogo to multiple areas
+
+#+begin_src sh
+ffplay input.mp4 -vf "delogo=x=10:y=10:w=200:h=200:show=0,delogo=x=1400:y=20:w=500:h=480"
+#+end_src
+
+** Apply delogo filter between 0-10 seconds
+
+apply the delogo filter between 0 and 10 seconds
+
+#+begin_src sh
+ffplay input.mp4 -vf "delogo=x=10:y=10:w=200:h=200:show=0:enable='between(t,0,10)',delogo=x=1400:y=20:w=500:h=480:show=0:enable='between(t,0,10)'"
+#+end_src
+
+* ffmpeg delogo
+
+apply the delogo filter and record the output with ffmpeg
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vf "delogo=x=10:y=10:w=200:h=200,delogo=x=1400:y=20:w=500:h=480" \
+-pix_fmt yuv420p -movflags +faststart -f mp4 "delogo-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+#+end_src
+
+apply the delogo filter between 0 and 10 seconds and record the output with ffmpeg
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vf "delogo=x=10:y=10:w=200:h=200:enable='between(t,0,10)',delogo=x=1400:y=20:w=500:h=480:enable='between(t,0,10)'" \
+-pix_fmt yuv420p -movflags +faststart -f mp4 "delogo-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+#+end_src
