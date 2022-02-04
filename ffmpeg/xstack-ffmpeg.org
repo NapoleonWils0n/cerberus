@@ -1,0 +1,51 @@
+#+STARTUP: content
+* xstack ffmpeg filter
+
+[[https://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos%20using%20xstack][ffmpeg xstack filter]]
+
+** display 9 inputs into 3x3 grid. 
+
+xstack and amix filters
+
+create a mosiac of multiple video files using the xstack filter,
+and mix the audio together with the amix filter
+
+you need to output to mkv and then remux to mp4
+
+#+begin_src sh
+ffmpeg \
+   -i input1.mkv \
+   -i input2.mp4 \
+   -i input3.mkv \
+   -i input4.mkv \
+   -i input5.mp4 \
+   -i input6.mp4 \
+   -i input7.mp4 \
+   -i input8.mp4 \
+   -i input9.mkv \
+  -filter_complex " \
+      [0:v] setpts=PTS-STARTPTS, scale=qvga [a0]; \
+      [1:v] setpts=PTS-STARTPTS, scale=qvga [a1]; \
+      [2:v] setpts=PTS-STARTPTS, scale=qvga [a2]; \
+      [3:v] setpts=PTS-STARTPTS, scale=qvga [a3]; \
+      [4:v] setpts=PTS-STARTPTS, scale=qvga [a4]; \
+      [5:v] setpts=PTS-STARTPTS, scale=qvga [a5]; \
+      [6:v] setpts=PTS-STARTPTS, scale=qvga [a6]; \
+      [7:v] setpts=PTS-STARTPTS, scale=qvga [a7]; \
+      [8:v] setpts=PTS-STARTPTS, scale=qvga [a8]; \
+      [a0][a1][a2][a3][a4][a5][a6][a7][a8]xstack=inputs=9:layout=0_0|w0_0|w0+w1_0|0_h0|w0_h0|w0+w1_h0|0_h0+h1|w0_h0+h1|w0+w1_h0+h1[outv]; \
+      amix=inputs=9
+      " \
+      -map "[outv]" -c:v libx264 -c:a aac -t '35' -f matroska output.mkv
+#+end_src
+
+** remux mkv to mp4
+
+remux the mkv file to mp4
+
+#+begin_src sh
+ffmpeg -i output.mkv -c:v copy -c:a copy -pix_fmt yuv420p -movflags +faststart -f mp4 output.mp4
+#+end_src
+
+
+
