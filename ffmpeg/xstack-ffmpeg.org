@@ -1,7 +1,8 @@
 #+STARTUP: content
 * xstack ffmpeg filter
 
-[[https://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos%20using%20xstack][ffmpeg xstack filter]]
+[[https://ffmpeg.org/ffmpeg-filters.html#xstack][ffmpeg xstack filter]]
+[[https://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos%20using%20xstack][ffmpeg wiki xstack filter]]
 
 ** display 9 inputs into 3x3 grid. 
 
