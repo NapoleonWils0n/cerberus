@@ -7,9 +7,10 @@ enter ispell mode
 M-x ispell
 #+end_example
 
-** spell check a single word
+** spell check a single word or a region
 
 wth your cursor over a single word press meta and $
+or select a region and then spell check all the words in the selected region
 
 #+begin_example
 M $
