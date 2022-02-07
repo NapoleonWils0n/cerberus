@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* narrowing and widening org mode
+
+narrowing and widening in org mode
+
+** narrowing
+
+#+begin_example
+C-x n s
+#+end_example
+
+** widening
+
+#+begin_example
+C-x n s
+#+end_example
