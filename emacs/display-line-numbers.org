@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* display line numbers in emacs
+
+press meta x and then type display-line-numbers-mode
+
+#+begin_example
+M-x display-line-numbers-mode
+#+end_example
