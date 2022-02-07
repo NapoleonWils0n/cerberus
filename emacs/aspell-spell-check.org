@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* aspell spell check emacs
+
+enter ispell mode
+
+#+begin_example
+M-x ispell
+#+end_example
+
+** spell check a single word
+
+wth your cursor over a single word press meta and $
+
+#+begin_example
+M $
+#+end_example
