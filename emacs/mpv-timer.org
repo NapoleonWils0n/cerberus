@@ -1,0 +1,195 @@
+#+STARTUP: content
+* mpv and emacs
+** mpv.el
+
+default code
+
+#+begin_src emacs-lisp
+;;;###autoload
+(defun mpv-insert-playback-position (&optional arg)
+  "Insert the current playback position at point.
+
+When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
+  (interactive "P")
+  (let ((time (mpv-get-playback-position)))
+    (funcall
+     (if arg #'mpv--position-insert-as-org-item #'insert)
+     (org-timer-secs-to-hms (round time)))))
+
+
+;; seek to position
+(defun mpv-seek-to-position-at-point ()
+  "Jump to playback position as inserted by `mpv-insert-playback-position'.
+
+This can be used with the `org-open-at-point-functions' hook."
+  (interactive)
+  (save-excursion
+    (skip-chars-backward ":[:digit:]" (point-at-bol))
+    (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}")
+      (let ((secs (org-timer-hms-to-secs (match-string 0))))
+        (when (>= secs 0)
+          (mpv-seek secs))))))
+#+end_src
+
+** timer.el
+
+default code
+
+#+begin_src emacs-lisp
+;; org-timer convery hms to seconds milliseconds
+(defun org-timer-hms-to-secs (hms)
+  "Convert h:mm:ss string to an integer time.
+If the string starts with a minus sign, the integer will be negative."
+  (if (not (string-match
+	    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)"
+	    hms))
+      0
+    (let* ((h (string-to-number (match-string 1 hms)))
+	   (m (string-to-number (match-string 2 hms)))
+	   (s (string-to-number (match-string 3 hms)))
+	   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+      (setq h (abs h))
+      (* (if sign -1 1) (+ s (* 60 (+ m (* 60 h))))))))
+
+(defun org-timer-secs-to-hms (s)
+  "Convert integer S into h:mm:ss.
+If the integer is negative, the string will start with \"-\"."
+  (let (sign m h)
+    (setq sign (if (< s 0) "-" "")
+	  s (abs s)
+	  m (/ s 60) s (- s (* 60 m))
+	  h (/ m 60) m (- m (* 60 h)))
+    (format "%s%d:%02d:%02d" sign h m s)))
+#+end_src
+
+** init.el
+
+init.el
+
+#+begin_src emacs-lisp
+;; mpv --------------------------------------------------------------------------------------------------
+
+;; mpv insert playback position
+(defun mpv-insert-playback-position (&optional arg)
+  "Insert the current playback position at point.
+
+When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
+  (interactive "P")
+  (let ((time (mpv-get-playback-position)))
+    (funcall
+     (if arg #'mpv--position-insert-as-org-item #'insert)
+     (my/org-timer-secs-to-hmsm (float time)))))
+
+
+;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
+(defun my/org-timer-secs-to-hmsm (s)
+  "Convert integer S into hh:mm:ss.m
+If the integer is negative, the string will start with \"-\"."
+  (let (sign m h)
+    (setq x (number-to-string s)
+          seconds (car (split-string x "[.]"))
+          milliseconds (cadr (split-string x "[.]"))
+          sec (string-to-number seconds)
+          ms (string-to-number milliseconds))
+    (setq sign (if (< sec 0) "-" "")
+	  sec (abs sec)
+	  m (/ sec 60) sec (- sec (* 60 m))
+	  h (/ m 60) m (- m (* 60 h)))
+    (format "%s%02d:%02d:%02d.%02d" sign h m sec ms)))
+
+
+;; mpv code to  -----------------------------------------------------------------------------------
+
+;; org-timer convery hms to seconds milliseconds
+(defun org-timer-hms-to-secs (hms)
+  "Convert h:mm:ss string to an integer time.
+If the string starts with a minus sign, the integer will be negative."
+  (if (not (string-match
+	    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)"
+	    hms))
+      0
+    (let* ((h (string-to-number (match-string 1 hms)))
+	   (m (string-to-number (match-string 2 hms)))
+	   (s (string-to-number (match-string 3 hms)))
+	   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+      (setq h (abs h))
+      (* (if sign -1 1) (+ s (* 60 (+ m (* 60 h))))))))
+
+
+;; seek to position
+(defun mpv-seek-to-position-at-point ()
+  "Jump to playback position as inserted by `mpv-insert-playback-position'.
+
+This can be used with the `org-open-at-point-functions' hook."
+  (interactive)
+  (save-excursion
+    (skip-chars-backward ":[:digit:]" (point-at-bol))
+    (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}")
+      (let ((secs (org-timer-hms-to-secs (match-string 0))))
+        (when (>= secs 0)
+          (mpv-seek secs))))))
+#+end_src
+
+** code to do
+#+begin_src emacs-lisp
+(defun my/org-timer-hms-to-secs (hmsm)
+  "Convert h:mm:ss string to an integer time.
+If the string starts with a minus sign, the integer will be negative."
+  (if (not (string-match
+	    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)"
+	    hmsm))
+      0
+    (setq x (number-to-string hmsm)
+          seconds (car (split-string x "[.]"))
+          milliseconds (cadr (split-string x "[.]"))
+          hms (string-to-number seconds)
+          ms (string-to-number milliseconds))
+    (let* ((h (string-to-number (match-string 1 hms)))
+	   (m (string-to-number (match-string 2 hms)))
+	   (s (string-to-number (match-string 3 hms)))
+	   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+      (setq h (abs h))
+      (* (if sign -1 1) (+ s (* 60 (+ m (* 60 h (+ ms)))))))))
+
+
+;; seek to position
+(defun mpv-seek-to-position-at-point ()
+  "Jump to playback position as inserted by `mpv-insert-playback-position'.
+
+This can be used with the `org-open-at-point-functions' hook."
+  (interactive)
+  (save-excursion
+    (skip-chars-backward ":[:digit:]" (point-at-bol))
+    (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}")
+      (let ((secs (my/org-timer-hms-to-secs (match-string 0))))
+        (when (>= secs 0)
+          (mpv-seek secs))))))
+#+end_src
+
++ working code secs to hmsm
+
+#+begin_src emacs-lisp
+;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
+(defun my/org-timer-secs-to-hmsm (s)
+  "Convert integer S into hh:mm:ss.m
+If the integer is negative, the string will start with \"-\"."
+  (let (sign m h)
+    (setq x (number-to-string s)
+          seconds (car (split-string x "[.]"))
+          milliseconds (cadr (split-string x "[.]"))
+          sec (string-to-number seconds)
+          ms (string-to-number milliseconds))
+    (setq sign (if (< sec 0) "-" "")
+	  sec (abs sec)
+	  m (/ sec 60) sec (- sec (* 60 m))
+	  h (/ m 60) m (- m (* 60 h)))
+    (format "%s%02d:%02d:%02d.%02d" sign h m sec ms)))
+#+end_src
+
+** mpv test
+
+00:00:12.923
+0:00:13
+0:00:12
+00:00:01.256
+00:00:23.981
