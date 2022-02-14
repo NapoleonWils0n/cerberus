@@ -1,111 +1,132 @@
 #+STARTUP: content
 * mpv and emacs
-** mpv.el
 
-default code
+mpv.el and org-timers modified to work with milliseconds
+
+** mpv.el install
+
+[[https://github.com/kljohann/mpv.el][mpv.el]]
+
+#+begin_example
+M-x package-install mpv
+#+end_example
+
+** hydra install
+
+This is a package for GNU Emacs that can be used to tie related commands,
+into a family of short bindings with a common prefix 
+
+[[https://github.com/abo-abo/hydra][hydra]]
+
+#+begin_example
+M-x package-install hydra
+#+end_example
+
+** mpv and org timers code
 
 #+begin_src emacs-lisp
-;;;###autoload
-(defun mpv-insert-playback-position (&optional arg)
-  "Insert the current playback position at point.
+;; mpv.el --------------------------------------------------------------------------------------------------
 
-When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
-  (interactive "P")
-  (let ((time (mpv-get-playback-position)))
-    (funcall
-     (if arg #'mpv--position-insert-as-org-item #'insert)
-     (org-timer-secs-to-hms (round time)))))
+(org-link-set-parameters "mpv" :follow #'mpv-play)
+(defun org-mpv-complete-link (&optional arg)
+  (replace-regexp-in-string
+   "file:" "mpv:"
+   (org-link-complete-file arg)
+   t t))
+
+;; M-RET will insert a new item with the timestamp of the current playback position
+(defun my:mpv/org-metareturn-insert-playback-position ()
+  (when-let ((item-beg (org-in-item-p)))
+    (when (and (not org-timer-start-time)
+               (mpv-live-p)
+               (save-excursion
+                 (goto-char item-beg)
+                 (and (not (org-invisible-p)) (org-at-item-timer-p))))
+      (mpv-insert-playback-position t))))
+(add-hook 'org-metareturn-hook #'my:mpv/org-metareturn-insert-playback-position)
+
+;; mpv milliseconds --------------------------------------------------------------------------------------------
+
+;; mpv insert playback position
+(with-eval-after-load 'mpv
+  (defun mpv-insert-playback-position (&optional arg)
+    "Insert the current playback position at point.
+  
+  When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
+    (interactive "P")
+    (let ((time (mpv-get-playback-position)))
+      (funcall
+       (if arg #'mpv--position-insert-as-org-item #'insert)
+       (org-timer-secs-to-hms (float time))))))
 
 
 ;; seek to position
-(defun mpv-seek-to-position-at-point ()
-  "Jump to playback position as inserted by `mpv-insert-playback-position'.
-
-This can be used with the `org-open-at-point-functions' hook."
-  (interactive)
-  (save-excursion
-    (skip-chars-backward ":[:digit:]" (point-at-bol))
-    (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}")
-      (let ((secs (org-timer-hms-to-secs (match-string 0))))
-        (when (>= secs 0)
-          (mpv-seek secs))))))
-#+end_src
-
-** timer.el
-
-default code
-
-#+begin_src emacs-lisp
-;; org-timer convery hms to seconds milliseconds
-(defun org-timer-hms-to-secs (hms)
-  "Convert h:mm:ss string to an integer time.
-If the string starts with a minus sign, the integer will be negative."
-  (if (not (string-match
-	    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)"
-	    hms))
-      0
-    (let* ((h (string-to-number (match-string 1 hms)))
-	   (m (string-to-number (match-string 2 hms)))
-	   (s (string-to-number (match-string 3 hms)))
-	   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
-      (setq h (abs h))
-      (* (if sign -1 1) (+ s (* 60 (+ m (* 60 h))))))))
-
-(defun org-timer-secs-to-hms (s)
-  "Convert integer S into h:mm:ss.
-If the integer is negative, the string will start with \"-\"."
-  (let (sign m h)
-    (setq sign (if (< s 0) "-" "")
-	  s (abs s)
-	  m (/ s 60) s (- s (* 60 m))
-	  h (/ m 60) m (- m (* 60 h)))
-    (format "%s%d:%02d:%02d" sign h m s)))
-#+end_src
-
-** lisp test
-*** regex
+(with-eval-after-load 'mpv
+  (defun mpv-seek-to-position-at-point ()
+    "Jump to playback position as inserted by `mpv-insert-playback-position'.
   
-#+begin_src emacs-lisp
-(setq input "00:00:00.123")
-(save-match-data ; is usually a good idea
-  (and (string-match "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\([.]?[0-9]\\{0,3\\}\\)" input)
-       (setq user (match-string 4 input))))
+  This can be used with the `org-open-at-point-functions' hook."
+    (interactive)
+    (save-excursion
+      (skip-chars-backward ":[:digit:]" (point-at-bol))
+      (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}\\([.]?[0-9]\\{0,3\\}\\)"))
+        (let ((secs (org-timer-hms-to-secs (match-string 0))))
+          (when (>= secs 0)
+            (mpv-seek secs))))))
+
+;; mpv seek to position at point
+(define-key global-map (kbd "C-x ,") 'mpv-seek-to-position-at-point)
+
+;; org-timer milliseconds for mpv ----------------------------------------------------------
+
+;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun org-timer-secs-to-hms (s)
+    "Convert integer S into hh:mm:ss.m
+  If the integer is negative, the string will start with \"-\"."
+    (let (sign m h)
+      (setq x (number-to-string s)
+            seconds (car (split-string x "[.]"))
+            milliseconds (cadr (split-string x "[.]"))
+            sec (string-to-number seconds)
+            ms (string-to-number milliseconds))
+      (setq sign (if (< sec 0) "-" "")
+  	  sec (abs sec)
+  	  m (/ sec 60) sec (- sec (* 60 m))
+  	  h (/ m 60) m (- m (* 60 h)))
+      (format "%s%02d:%02d:%02d.%02d" sign h m sec ms))))
+
+;; org-timer covert hours, minutes, seconds, milliseconds to seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun org-timer-hms-to-secs (hms)
+    "Convert h:mm:ss string to an integer time.
+  If the string starts with a minus sign, the integer will be negative."
+    (if (not (string-match
+  	    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\([.]?[0-9]\\{0,3\\}\\)"
+  	    hms))
+        0
+      (let* ((h (string-to-number (match-string 1 hms)))
+  	   (m (string-to-number (match-string 2 hms)))
+  	   (s (string-to-number (match-string 3 hms)))
+  	   (ms (string-to-number (match-string 4 hms)))
+  	   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+        (setq h (abs h))
+        (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))))
+
+;; hydra --------------------------------------------------------------------------------------------------
+
+;; hydra control mpv
+(defhydra hydra-mpv (global-map "<f2>")
+  "mpv"
+  ("h" mpv-seek-backward "-5")
+  ("j" mpv-seek-backward "-60")
+  ("k" mpv-seek-forward "60")
+  ("l" mpv-seek-forward "5")
+  ("SPC" mpv-pause)
+  ("i" mpv-insert-playback-position)
+  ("q" mpv-kill))
+
+
+;;  ("," mpv-run-command frame-back-step)
+;;  ("." mpv-run-command frame-step)
 #+end_src
-
-*** seconds 
-
-#+begin_src emacs-lisp
-(setq hms "00:00:10")
-(if (not (string-match
-    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)"
-    hms))
-    0
-  (let* ((h (string-to-number (match-string 1 hms)))
-   (m (string-to-number (match-string 2 hms)))
-   (s (string-to-number (match-string 3 hms)))
-   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
-    (setq h (abs h))
-    (* (if sign -1 1) (+ s (* 60 (+ m (* 60 h)))))))
-#+end_src
-
-*** milliseconds
-
-#+begin_src emacs-lisp
-(setq hms "00:00:10.123")
-  (if (not (string-match
-	    "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\([.]?[0-9]\\{0,3\\}\\)"
-	    hms))
-      0
-    (let* ((h (string-to-number (match-string 1 hms)))
-	   (m (string-to-number (match-string 2 hms)))
-	   (s (string-to-number (match-string 3 hms)))
-	   (ms (string-to-number (match-string 4 hms)))
-	   (sign (equal (substring (match-string 1 hms) 0 1) "-")))
-      (setq h (abs h))
-      (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))
-#+end_src
-
-** mpv timer
-
-
-
