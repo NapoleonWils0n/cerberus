@@ -113,6 +113,19 @@ M-x package-install hydra
         (setq h (abs h))
         (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))))
 
+;; mpv step forwards and backwards -----------------------------------------------------------------------
+
+;; pinched from sacha chua's waveform.el
+(defun mpv-frame-step ()
+  "Step one frame forward."
+  (interactive)
+  (mpv--enqueue '("frame-step") #'ignore))
+
+(defun mpv-frame-back-step ()
+  "Step one frame backward."
+  (interactive)
+  (mpv--enqueue '("frame-back-step") #'ignore))
+
 ;; hydra --------------------------------------------------------------------------------------------------
 
 ;; hydra control mpv
@@ -124,9 +137,7 @@ M-x package-install hydra
   ("l" mpv-seek-forward "5")
   ("SPC" mpv-pause)
   ("i" mpv-insert-playback-position)
+  ("," mpv-frame-back-step)
+  ("." mpv-frame-step)
   ("q" mpv-kill))
-
-
-;;  ("," mpv-run-command frame-back-step)
-;;  ("." mpv-run-command frame-step)
 #+end_src
