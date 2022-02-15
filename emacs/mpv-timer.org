@@ -22,6 +22,17 @@ into a family of short bindings with a common prefix
 M-x package-install hydra
 #+end_example
 
+** mpv show miliseconds in osd
+
+edit your ~/.config/mpv/mpv.conf file
+and add the following code to show miliseconds in the osd
+
+#+BEGIN_EXAMPLE
+osd-fractions
+#+END_EXAMPLE
+
+then press capital O in mpv to show the time
+
 ** mpv and org timers code
 
 #+begin_src emacs-lisp
