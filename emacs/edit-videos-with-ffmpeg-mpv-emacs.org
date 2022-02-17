@@ -1,6 +1,6 @@
 #+STARTUP: content
 #+STARTUP: hideblocks
-* timestamp block and awk
+* edit videos with ffmpeg, mpv and emacs
 ** video timestamps
 
 start and end point timestamps to create clips
