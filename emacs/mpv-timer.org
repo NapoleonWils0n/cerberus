@@ -125,10 +125,9 @@ then press capital O in mpv to show the time
         (setq h (abs h))
         (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))))
 
-;; mpv step forwards and backwards -----------------------------------------------------------------------
+;; mpv commands -----------------------------------------------------------------------------------------
 
-;; pinched from sacha chua's waveform.el
-
+;; frame step forward
 (with-eval-after-load 'mpv
   (defun mpv-frame-step ()
     "Step one frame forward."
@@ -136,6 +135,7 @@ then press capital O in mpv to show the time
     (mpv--enqueue '("frame-step") #'ignore)))
 
 
+;; frame step backward
 (with-eval-after-load 'mpv
   (defun mpv-frame-back-step ()
     "Step one frame backward."
@@ -143,22 +143,30 @@ then press capital O in mpv to show the time
     (mpv--enqueue '("frame-back-step") #'ignore)))
 
 
+;; mpv take a screenshot
 (with-eval-after-load 'mpv
   (defun mpv-screenshot ()
     "Take a screenshot"
     (interactive)
     (mpv--enqueue '("screenshot") #'ignore)))
 
+;; add a newline in the current document
+(defun end-of-line-and-indented-new-line ()
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+
 ;; hydra --------------------------------------------------------------------------------------------------
 
 (defhydra hydra-mpv (global-map "<f2>")
   "
-  ^Seek^                    ^Step^                   ^Actions^
+  ^Seek^                    ^Actions^                ^General^
   ^^^^^^^^---------------------------------------------------------------------------
-  _h_: seek back -5         _,_: back frame          _SPC_: pause
-  _j_: seek back -60        _._: forward frame       _q_: quit mpv
-  _k_: seek forward 60      ^^                       _i_: insert playback position
-  _l_: seek forward 5       ^^                       _s_: take a screenshot
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position
+  _j_: seek back -60        _._: forward frame       _n_: insert a newline
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot
+  _l_: seek forward 5       _q_: quit mpv            ^^ 
   ^
   "
   ("h" mpv-seek-backward "-5")
@@ -167,8 +175,9 @@ then press capital O in mpv to show the time
   ("l" mpv-seek-forward "5")
   ("," mpv-frame-back-step "back")
   ("." mpv-frame-step "forward")
-  ("i" mpv-insert-playback-position "insert")
   ("SPC" mpv-pause "pause")
+  ("q" mpv-kill "quit")
   ("s" mpv-screenshot "screenshot")
-  ("q" mpv-kill "quit"))
+  ("i" mpv-insert-playback-position "insert position")
+  ("n" end-of-line-and-indented-new-line "insert newline"))
 #+end_src
