@@ -1,0 +1,77 @@
+#+STARTUP: content
+#+STARTUP: hideblocks
+* timestamp block and awk
+** video timestamps
+
+start and end point timestamps to create clips
+
+#+NAME: timestamps
+#+begin_example
+00:00:00
+00:03:53.428333
+00:04:01.228333
+00:04:39.593
+#+end_example
+
+*** export timestamps
+
+export the timestamps block as a text file
+
+#+NAME: export
+#+HEADER: :results file :file "timestamps.txt"
+#+begin_src sh :stdin timestamps
+awk '{ print $0 }'
+#+end_src
+
+#+RESULTS: export
+[[file:timestamps.txt]]
+
+** create timestamps for clips
+
+convert the list of timestamps into start and duration timestamps
+
+#+NAME: minutes
+#+HEADER: :results raw drawer
+#+begin_src sh :stdin timestamps
+awk -F: 'NF==3 { printf("%s\n"), ($1 * 3600) + ($2 * 60) + $3 } NF==2 { print ($1 * 60) + $2 } NF==1 { printf("$s\n"), 0 + $1 }' \
+| awk 'NR > 1 {printf("%s%s%s\n"), prev, "\n", $0-prev}; {prev = $0}; NR--' \
+| awk -F. 'NF==1 { printf("%02d:%02d:%02d\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60) }\
+NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }' \
+| awk '{ORS = NR%2 ? "," : "\n"} 1'
+#+end_src
+
+** ffmpeg
+
+take the input from the timestamps block and use it to create video clips
+
+#+NAME: ffmpeg
+#+HEADER: :var input="input.mp4" 
+#+HEADER: :results raw drawer
+#+begin_src sh :stdin timestamps
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+trim_video () {
+    output="${input_name}-${count}.mp4" 
+    ffmpeg \
+    -nostdin \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -i "${input}" \
+    -t "${duration}" \
+    -c:a aac \
+    -c:v libx264 -profile:v high \
+    -pix_fmt yuv420p -movflags +faststart \
+    -f mp4 \
+    "${output}"
+}
+
+count=1
+while IFS=, read -r start duration; do
+  trim_video
+  count="$(expr ${count} + 1)"
+done 
+#+end_src
+
+
