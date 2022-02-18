@@ -41,7 +41,7 @@ take the input from the timestamps block and use it to create video clips
 #+NAME: ffmpeg
 #+HEADER: :var input="input.mp4" 
 #+HEADER: :results raw drawer
-#+begin_src sh :stdin timestamps
+#+begin_src sh :stdin minutes
 input_nopath="${input##*/}"
 input_name="${input_nopath%.*}"
 
