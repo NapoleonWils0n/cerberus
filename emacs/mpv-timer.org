@@ -54,14 +54,12 @@ then press capital O in mpv to show the time
                (save-excursion
                  (goto-char item-beg)
                  (and (not (org-invisible-p)) (org-at-item-timer-p))))
-      (mpv-insert-playback-position t))))
+      (my/mpv-insert-playback-position t))))
 (add-hook 'org-metareturn-hook #'my:mpv/org-metareturn-insert-playback-position)
-
-;; mpv milliseconds --------------------------------------------------------------------------------------------
 
 ;; mpv insert playback position
 (with-eval-after-load 'mpv
-  (defun mpv-insert-playback-position (&optional arg)
+  (defun my/mpv-insert-playback-position (&optional arg)
     "Insert the current playback position at point.
   
   When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
@@ -69,12 +67,12 @@ then press capital O in mpv to show the time
     (let ((time (mpv-get-playback-position)))
       (funcall
        (if arg #'mpv--position-insert-as-org-item #'insert)
-       (org-timer-secs-to-hms (float time))))))
+       (my/org-timer-secs-to-hms (float time))))))
 
 
 ;; seek to position
 (with-eval-after-load 'mpv
-  (defun mpv-seek-to-position-at-point ()
+  (defun my/mpv-seek-to-position-at-point ()
     "Jump to playback position as inserted by `mpv-insert-playback-position'.
   
   This can be used with the `org-open-at-point-functions' hook."
@@ -82,18 +80,18 @@ then press capital O in mpv to show the time
     (save-excursion
       (skip-chars-backward ":[:digit:]" (point-at-bol))
       (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}\\([.]?[0-9]\\{0,3\\}\\)"))
-        (let ((secs (org-timer-hms-to-secs (match-string 0))))
+        (let ((secs (my/org-timer-hms-to-secs (match-string 0))))
           (when (>= secs 0)
             (mpv-seek secs))))))
 
 ;; mpv seek to position at point
-(define-key global-map (kbd "C-x ,") 'mpv-seek-to-position-at-point)
+(define-key global-map (kbd "C-x ,") 'my/mpv-seek-to-position-at-point)
 
 ;; org-timer milliseconds for mpv ----------------------------------------------------------
 
 ;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
 (with-eval-after-load 'org-timer
-  (defun org-timer-secs-to-hms (s)
+  (defun my/org-timer-secs-to-hms (s)
     "Convert integer S into hh:mm:ss.m
   If the integer is negative, the string will start with \"-\"."
     (let (sign m h)
@@ -110,7 +108,7 @@ then press capital O in mpv to show the time
 
 ;; org-timer covert hours, minutes, seconds, milliseconds to seconds, milliseconds
 (with-eval-after-load 'org-timer
-  (defun org-timer-hms-to-secs (hms)
+  (defun my/org-timer-hms-to-secs (hms)
     "Convert h:mm:ss string to an integer time.
   If the string starts with a minus sign, the integer will be negative."
     (if (not (string-match
@@ -178,6 +176,6 @@ then press capital O in mpv to show the time
   ("SPC" mpv-pause "pause")
   ("q" mpv-kill "quit")
   ("s" mpv-screenshot "screenshot")
-  ("i" mpv-insert-playback-position "insert position")
+  ("i" my/mpv-insert-playback-position "insert position")
   ("n" end-of-line-and-indented-new-line "insert newline"))
 #+end_src
