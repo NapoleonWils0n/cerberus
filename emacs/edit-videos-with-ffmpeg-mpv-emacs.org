@@ -7,12 +7,7 @@ start and end point timestamps to create clips
 
 #+NAME: timestamps
 #+begin_example
-00:00:26.417
-00:00:33.583
-00:01:09.75
-00:01:36.792
-00:02:20.375
-00:02:30.00
+
 #+end_example
 
 *** export timestamps
@@ -24,9 +19,6 @@ export the timestamps block as a text file
 #+begin_src sh :stdin timestamps
 awk '{ print $0 }'
 #+end_src
-
-#+RESULTS: export
-[[file:timestamps.txt]]
 
 ** create timestamps for clips
 
@@ -41,13 +33,6 @@ awk -F: 'NF==3 { printf("%s\n"), ($1 * 3600) + ($2 * 60) + $3 } NF==2 { print ($
 NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }' \
 | awk '{ORS = NR%2 ? "," : "\n"} 1'
 #+end_src
-
-#+RESULTS: minutes
-:results:
-00:00:26.417,00:00:07.166
-00:01:09.75,00:00:27.042
-00:02:20.375,00:00:09.625
-:end:
 
 ** ffmpeg
 
