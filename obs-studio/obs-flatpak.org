@@ -1,0 +1,21 @@
+#+STARTUP: content
+* obs flatpak install
+** flatpak install
+
+#+begin_src sh
+sudo apt install flatpak
+#+end_src
+
+#+begin_src sh
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#+end_src
+
+** obs flatpak
+
+#+begin_src 
+flatpak install --user flathub com.obsproject.Studio
+#+end_src
+
+#+begin_src sh
+flatpak run com.obsproject.Studio
+#+end_src
