@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# firefox namespace
+
+sh -c "HOME=${HOME} PULSE_SERVER=/run/user/$(id -u "${USER}")/pulse/native PULSE_COOKIE=/home/${USER}/.config/pulse/cookie \
+BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/firefox_firefox.desktop \
+/snap/firefox/current/usr/lib/firefox/firefox"
