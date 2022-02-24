@@ -20,13 +20,13 @@ flatpak install --user flathub org.mozilla.firefox
 flatpak run org.mozilla.firefox
 #+end_src>
 
-+ desktop file
+*** desktop file
 
 #+begin_example
 ~/.local/share/flatpak/app/org.mozilla.firefox/current/active/export/share/applications/org.mozilla.firefox.desktop
 #+end_example>
 
-+ mozilla config directory
+*** mozilla config directory
 
 #+begin_example
 ~/.var/app/org.mozilla.firefox/.mozilla
