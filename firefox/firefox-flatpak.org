@@ -1,0 +1,33 @@
+#+STARTUP: content
+* firefox flatpak
+** flatpak install
+
+#+begin_src sh
+sudo apt install flatpak
+#+end_src
+
+#+begin_src sh
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#+end_src
+
+** firefox flatpak install
+
+#+begin_src sh
+flatpak install --user flathub org.mozilla.firefox
+#+end_src>
+
+#+begin_src sh
+flatpak run org.mozilla.firefox
+#+end_src>
+
++ desktop file
+
+#+begin_example
+~/.local/share/flatpak/app/org.mozilla.firefox/current/active/export/share/applications/org.mozilla.firefox.desktop
+#+end_example>
+
++ mozilla config directory
+
+#+begin_example
+~/.var/app/org.mozilla.firefox/.mozilla
+#+end_example>
