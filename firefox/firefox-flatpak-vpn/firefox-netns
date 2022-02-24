@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# firefox flatpak namespace
+
+sh -c "HOME=${HOME} PULSE_SERVER=unix:/run/user/$(id -u "${USER}")/pulse/native PULSE_COOKIE=/home/${USER}/.var/app/org.mozilla.firefox/config/pulse/cookie \
+BAMF_DESKTOP_FILE_HINT=${HOME}/.local/share/flatpak/app/org.mozilla.firefox/current/active/export/share/applications/org.mozilla.firefox.desktop \
+/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=firefox org.mozilla.firefox"
