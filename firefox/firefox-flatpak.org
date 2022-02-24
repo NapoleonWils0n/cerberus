@@ -31,3 +31,24 @@ flatpak run org.mozilla.firefox
 #+begin_example
 ~/.var/app/org.mozilla.firefox/.mozilla
 #+end_example>
+
+** set as default browser
+
+You need to use the xdg-settings command.
+This should return your current default browser:
+
+#+begin_src sh
+xdg-settings get default-web-browser
+#+end_src
+
+To change it to your Flatpak version, do this:
+
+#+begin_src sh
+xdg-settings set default-web-browser org.mozilla.firefox.desktop
+#+end_src
+
+To validate your new settings, do this:
+
+#+begin_src sh
+xdg-settings check default-web-browser org.mozilla.firefox.desktop
+#+end_src
