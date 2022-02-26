@@ -1,0 +1,8 @@
+#+STARTUP: content
+* mpv video filters
+
+mpv and the ffmpeg waveform filter
+
+#+begin_src sh
+mpv '--vf=lavfi="split=2[a][b],[b]waveform=f=lowpass:s=ire:g=green:e=instant[bb],[a][bb]vstack"' 
+#+end_src
