@@ -1,0 +1,79 @@
+#+STARTUP: content
+* transmission add magnet links
+** xdg-mime query
+
+query the default application for magnet links
+
+#+begin_src sh
+xdg-mime query default x-scheme-handler/magnet
+#+end_src
+
+** magnet-add script
+
+copy the script to ~/bin
+
+#+begin_src sh
+cp magnet-add ~/bin
+#+end_src
+
+magnet-add script
+
+#+begin_src sh
+#!/bin/sh
+
+# transmission add magnet link from browser
+
+# if script is run without arguments exit
+[ $# -gt 0 ] || exit
+
+# transmission add magnet link
+[ -d /etc/netns/vpn ] && doas namespace transmission-remote --add "$@" || transmission-remote --add "$@"
+#+end_src
+
+** transmission desktop file
+
+copy the transmission.desktop file to ~/.local/share/applications
+
+#+begin_src sh
+cp transmission.desktop ~/.local/share/applications
+#+end_src
+
+transmission.desktop file
+
+#+begin_example
+[Desktop Entry]
+Name=Transmission
+Exec=/home/djwilcox/bin/magnet-add %u
+Icon=utilities-terminal
+Type=Application
+Terminal=false
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+#+end_example
+
+** xdg-mime set magnet links
+
+#+begin_src sh
+xdg-mime default transmission.desktop x-scheme-handler/magnet
+#+end_src
+
+** xdg-mime reset
+
+edit the mimeapps.list 
+
+#+begin_example
+~/.config/mimeapps.list
+#+end_example
+
+** flatpak override
+
+#+begin_src sh
+flatpak override --user org.mozilla.firefox --filesystem=~/bin
+#+end_src
+
+#+begin_src sh
+flatpak override --user --show org.mozilla.firefox
+#+end_src
+
+#+begin_src sh
+flatpak override --user --reset org.mozilla.firefox
+#+end_src
