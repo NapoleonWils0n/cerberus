@@ -12,5 +12,5 @@ C-x n s
 ** widening
 
 #+begin_example
-C-x n s
+C-x n w
 #+end_example
