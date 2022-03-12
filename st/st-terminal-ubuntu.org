@@ -50,6 +50,20 @@ vi config.def.h
 static char font[] = "Inconsolata:pixelsize=19:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false";
 #+END_SRC
 
+** remove the border
+
+change this line 
+
+#+BEGIN_SRC conf
+static int borderpx = 2;
+#+END_SRC
+
+to this to remove the border
+
+#+BEGIN_SRC conf
+static int borderpx = 0;
+#+END_SRC
+
 ** change the shell 
 
 find the location of your current shell for example zsh
