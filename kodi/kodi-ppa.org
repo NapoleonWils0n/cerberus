@@ -1,11 +1,14 @@
-#+STARTUP: showall
-* kodi ppa
-
-kodi ppa set up
+#+STARTUP: content
+* kodi ppa install
 
 #+begin_src sh
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:team-xbmc/ppa
-sudo apt-get update
-sudo apt-get install kodi
+sudo apt install software-properties-common
+sudo add-apt-repository -y ppa:team-xbmc/ppa
+sudo apt install kodi
+#+end_src
+
+** kodi install
+
+#+begin_src sh
+sudo apt install kodi kodi-inputstream-adaptive kodi-inputstream-rtmp
 #+end_src

@@ -1,0 +1,55 @@
+#+STARTUP: content
+* mitmproxy
+** mitmproxy install
+
+#+begin_src sh
+sudo apt install mitmproxy
+#+end_src
+
+** trust mimproxy certificate
+
+#+begin_src sh
+sudo mkdir -p /usr/local/share/ca-certificates/extra
+sudo cp ~/.mitmproxy/mitmproxy-ca-cert.cer /usr/local/share/ca-certificates/extra/mitmproxy-ca-cert.crt
+sudo update-ca-certificates
+#+end_src
+
+[[https://docs.mitmproxy.org/stable/concepts-certificates/]]
+
+[[http://mitm.it/]]
+
+[[https://mitmproxy.org/]]
+
+* firefox
+** import certificates
+
+copy the mitmproxy-ca-cert.cer certificate to the desktop
+
+#+begin_src sh
+cp ~/.mitmproxy/mitmproxy-ca-cert.cer ~/Desktop
+#+end_src
+
++ open the firefox settings and go to the privacy and security section
+
++ click the view certificates button
+
++ click the import button
+
+select the mitmproxy-ca-cert.cer file from the desktop and trust it for https
+
+** change proxy settings
+
++ open the firefox settings and go to the general section
+
++ scroll to the bottom of the page
+
++ under Network Settings click the settings button
+
++ check the Manual proxy configuration
+
+set the HTTP proxy to 127.0.0.1
+set the Port to 8080
+
+check the box thats says also use this proxy for https
+
+then click ok
