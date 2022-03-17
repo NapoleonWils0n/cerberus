@@ -4,6 +4,7 @@
 #+begin_src sh
 sudo apt install software-properties-common
 sudo add-apt-repository -y ppa:team-xbmc/ppa
+sudo apt update
 sudo apt install kodi
 #+end_src
 
@@ -16,7 +17,7 @@ sudo apt install kodi kodi-inputstream-adaptive kodi-inputstream-rtmp
 ** firefox enable drm
 
 open the firefox settings and go to the general section
-scroll down and ceck the box next to Play DRM-controlled content
+scroll down and click the checkbox next to Play DRM-controlled content
 
 it will take a couple of minutes to install widevine
 
