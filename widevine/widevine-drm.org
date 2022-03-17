@@ -31,6 +31,9 @@ location of the libwidevinecdm.so file
 ~/snap/chromium/common/chromium/WidevineCdm/4.10.2449.0/_platform_specific/linux_x64/libwidevinecdm.so
 #+end_example
 
+** getwvkeys
+
+[[http://getwvkeys.cc/]]
 ** yt-dlp 
 
 #+begin_src sh
@@ -49,6 +52,25 @@ package name:
 bento4
 #+end_example
 
-** getwvkeys
+** mp4decrypt
+*** mp4decrypt video
 
-[[http://getwvkeys.cc/]]
+decrypt video replace the key with the actual key
+
+#+begin_src sh
+mp4decrypt –key 0294b9599d755de2bbf0fdca3fa5eab7:3bda2f40344c7def614227b9c0f03e26  input.mp4  decrypted-video.mp4
+#+end_src
+
+*** mp4decrypt audio
+
+decrypt audio replace the key with the actual key
+
+#+begin_src sh
+mp4decrypt –key 0294b9599d755de2bbf0fdca3fa5eab7:3bda2f40344c7def614227b9c0f03e26  input.m4a  decrypted-audio.m4a
+#+end_src
+
+** ffmpeg join audio and video
+
+#+begin_src sh
+ffmpeg -i decrypted-video.mp4 -i decrypted-audio.m4a -c:v copy -c:a output.mp4
+#+end_src
