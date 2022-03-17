@@ -12,3 +12,42 @@ sudo apt install kodi
 #+begin_src sh
 sudo apt install kodi kodi-inputstream-adaptive kodi-inputstream-rtmp
 #+end_src
+
+** firefox enable drm
+
+open the firefox settings and go to the general section
+scroll down and ceck the box next to Play DRM-controlled content
+
+it will take a couple of minutes to install widevine
+
+** find libwidevinecdm.so
+
+find the libwidevinecdm.so file
+
+#+begin_src sh
+find ~/ -name 'libwidevinecdm.so'
+#+end_src
+
+*** libwidevinecdm.so location
+
+location of the libwidevinecdm.so file
+
+**** firefox flatpak
+
+#+begin_example
+~/.var/app/org.mozilla.firefox/.mozilla/firefox/8x1h6e8d.default-release/gmp-widevinecdm/4.10.2391.0/libwidevinecdm.so
+#+end_example
+
+**** chromium snap
+
+#+begin_example
+~/snap/chromium/common/chromium/WidevineCdm/4.10.2449.0/_platform_specific/linux_x64/libwidevinecdm.so
+#+end_example
+
+** kodi manual libwidevinecdm.so install
+
+copy the libwidevinecdm.so to ~/.kodi/cdm
+
+#+begin_src sh
+cp libwidevinecdm.so ~/.kodi/cdm
+#+end_src
