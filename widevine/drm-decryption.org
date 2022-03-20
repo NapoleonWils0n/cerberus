@@ -1,0 +1,90 @@
+#+STARTUP: content hideblocks
+* drm decryption
+** mpd url
+
++ open the network inspector by pressing F12
+
++ play the video
+
++ search for mpd in the network inspector search box
+
++ download the mpd file
+
++ save the url for the mpd file
+
+** widevine url
+
++ open the network inspector by pressing F12
+
++ play the video
+
++ search for widevine in the network inspector search box
+
++ copy the widevine server url
+
++ copy the widevine headers
+
+** yt-dlp
+
+#+begin_src sh
+yt-dlp --allow-unplayable-formats https://cdn.live.dash.c4assets.com/v2/iso-dash-sp/c4/manifest.mpd
+#+end_src
+
+** key
+
+You can't get keys from MPD.
+
+To get keys, you need PSSH, license URL and license request headers. And a working (not-revoked) CDM, and a Python script or a website like
+
+http://getwvkeys.cc
+
+To find request headers, go to Developer Tools > Network... Search for values like "widevine" "drm" "license" "lic" "cenc"... (Cenc is for MUBI).
+
+You will find more than one. Once you find 2-3 lines with the same name like "cenc", take the one with the longest content-length. You'll see all content length values. You will also see the license URL there.
+
+License URL can also be seen in Developer Tools > Console (with EME Logger script)
+
+
+1- The simplest one: PSSH is clearly indicated in MPD file. Download MPD file (browser add-on "MPD Detector" will give you MPD link), open it with Notepad, search for pssh value.
+
+2- If there is KID, but no PSSH in MPD, calculate PSSH by using KID:
+
+https://tools.axinom.com/generators/PsshBox
+
+
+3- EME Logger script (installed on "Tampermonkey" add-on) will give you init data. That's your PSSH... Developer Tools>Console, under "MediaKeySession::generateRequest" you will find Init Data.
+
+If that Init Data is very very long, convert it to HEX:
+
+https://base64.guru/converter/decode/hex
+
+Find the Widevine-characteristic segment: 7073736800000000edef8ba979d64acea3c827dcd51d21ed
+
+PSSH box = PSSH header + PSSH system ID (for Widevine, EDEF8BA9-79D6-4ACE-A3C8-27DCD51D21ED) + 32-bit data size (0000001c) + PSSH payload
+PSSH header is (000000xx70737368), you will take the 8 digits before 7073... xx is changeable.
+
+Copy from "8 digits before 7073" to the end. These are in HEX. Convert it to Base64 again. That's your PSSH. The image will make it clear:
+
+** mp4decrypt
+
+#+begin_src sh
+mp4decrypt --key kid:key input output
+#+end_src
+
+** links
+
+https://gist.github.com/jaylinski/5e6a40b066c4bfcc310e79d9143cf741
+
+https://github.com/xbmc/inputstream.adaptive/issues/713
+
+https://forum.videohelp.com/forums/48-Video-Streaming-Downloading?s=0dcc8ba8fe1887febfecac20c95150cf
+
+https://forum.videohelp.com/threads/401859-How-to-download-mpd-stream-%28DRM-protected%29/page3
+
+https://forum.videohelp.com/threads/401717-How-are-you-going-to-respond-to-widevine-l3-decryptor-s-death-at-May-31st/page12#post2639461
+
+https://forum.videohelp.com/forums/48-Video-Streaming-Downloading?s=0dcc8ba8fe1887febfecac20c95150cf
+
+https://forum.videohelp.com/threads/404394-Help-with-downloading-Channel-4-All-4
+
+https://c4.eme.lp.aws.redbeemedia.com/wvlicenceproxy-service/widevine/acquire
