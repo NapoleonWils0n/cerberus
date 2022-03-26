@@ -1,0 +1,84 @@
+#+STARTUP: content
+* youtube image sizes and urls
+
+ YouTube is serving thumbnails from *2 servers*:
+
++ =img.youtube.com=
++ =i.ytimg.com=
+
+Examples are with *//i.ytimg.com* server just because it's shorter, no
+other particular reason. You can use both.
+
+** Player Background Thumbnail (480x360):
+
+#+begin_example
+WebP
+//i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/0.webp
+
+JPG
+//i.ytimg.com/vi/<YouTube_Video_ID_HERE>/0.jpg
+#+end_example
+
+** Video frames thumbnails (120x90)
+
+#+begin_example
+WebP:
+Start: //i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/1.webp
+Middle: //i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/2.webp
+End: //i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/3.webp
+
+JPG:
+Start: //i.ytimg.com/vi/<YouTube_Video_ID_HERE>/1.jpg
+Middle: //i.ytimg.com/vi/<YouTube_Video_ID_HERE>/2.jpg
+End: //i.ytimg.com/vi/<YouTube_Video_ID_HERE>/3.jpg
+#+end_example
+
+** Lowest quality thumbnail (120x90)
+
+#+begin_example
+WebP
+//i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/default.webp
+
+JPG
+//i.ytimg.com/vi/<YouTube_Video_ID_HERE>/default.jpg
+#+end_example
+
+** Medium quality thumbnail (320x180)
+
+#+begin_example
+WebP
+//i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/mqdefault.webp
+
+JPG
+//i.ytimg.com/vi/<YouTube_Video_ID_HERE>/mqdefault.jpg
+#+end_example
+
+** High quality thumbnail (480x360)
+
+#+begin_example
+WebP
+//i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/hqdefault.webp
+
+JPG
+//i.ytimg.com/vi/<YouTube_Video_ID_HERE>/hqdefault.jpg
+#+end_example
+
+** Standard quality thumbnail (640x480)
+
+#+begin_example
+WebP
+//i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/sddefault.webp
+
+JPG
+//i.ytimg.com/vi/<YouTube_Video_ID_HERE>/sddefault.jpg
+#+end_example
+
+** Unscaled thumbnail resolution
+
+#+begin_example
+WebP
+//i.ytimg.com/vi_webp/<YouTube_Video_ID_HERE>/maxresdefault.webp
+
+JPG
+//i.ytimg.com/vi/<YouTube_Video_ID_HERE>/maxresdefault.jpg
+#+end_example
