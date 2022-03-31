@@ -1,5 +1,10 @@
 #+STARTUP: content hideblocks
 * newsboat youtube xsl stylesheet
+
++ video on youtube
+
+[[https://www.youtube.com/watch?v=XKOQb0f0OTg][Newsboat with images for youtube rss feeds using filters and an xsl]]
+
 ** youtube-rss script
 
 copy the youtube-rss to ~/bin
