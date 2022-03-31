@@ -201,3 +201,22 @@ add a newsboat filter the path to the script and the youtube channel
 #+begin_src conf
 "filter:~/bin/youtube-rss:https://www.youtube.com/feeds/videos.xml?channel_id=UCVls1GmFKf6WlTraIb_IaJg" linux "~Distrotube" 
 #+end_src
+
+** w3m
+
+set w3m to turn urls into clickable links
+
+press o when w3m is open to open the settings,
+and set the following option
+
+#+begin_example
+Display link url automatically Yes
+#+end_example
+
+or edit your ~/.w3m/config file and set the following option
+
+#+begin_src conf
+display_link 1
+#+end_src
+
+
