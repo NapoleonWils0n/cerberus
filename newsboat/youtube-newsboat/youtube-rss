@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xsltproc "${HOME}/.config/newsboat/stylesheets/youtube-rss.xsl" "$1" - | sed 's/\&#13;*/<br>/g; s/^$/<br>/g'
