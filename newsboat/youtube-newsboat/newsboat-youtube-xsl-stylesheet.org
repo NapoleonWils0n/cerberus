@@ -232,7 +232,7 @@ html-renderer "/usr/bin/w3m"
 edit your newsboat urls 
 
 #+begin_src sh
-vi ~/.config/newsboat/config
+vi ~/.config/newsboat/urls
 #+end_src
 
 add a newsboat filter the path to the script and the youtube channel
