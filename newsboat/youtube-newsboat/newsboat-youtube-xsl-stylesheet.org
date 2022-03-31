@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: content hideblocks
 * newsboat youtube xsl stylesheet
 ** youtube-rss script
 
@@ -137,7 +137,6 @@ cp youtube-rss.xsl ~/.config/newsboat/stylesheets
                </a>
              </h1>
 
-
                <!-- youtube description -->
               <description>
                <p>
@@ -145,19 +144,18 @@ cp youtube-rss.xsl ~/.config/newsboat/stylesheets
                </p>
               </description>
 
-
-               <!-- youtube likes, views -->
+               <!-- youtube views, likes -->
              <ul>
-             <li>
-             <span>
-               <xsl:text>Likes: </xsl:text>
-               <xsl:value-of select="media:group/media:community/media:starRating/@count" />
-             </span>
-             </li>
              <li>
              <span>
                <xsl:text>Views: </xsl:text>
                <xsl:value-of select="media:group/media:community/media:statistics/@views" />
+             </span>
+             </li>
+             <li>
+             <span>
+               <xsl:text>Likes: </xsl:text>
+               <xsl:value-of select="media:group/media:community/media:starRating/@count" />
              </span>
              </li>
              </ul>
@@ -169,7 +167,6 @@ cp youtube-rss.xsl ~/.config/newsboat/stylesheets
 	</item>
 </xsl:template>
 </xsl:stylesheet>
-
 #+end_src
 
 ** newsboat config
