@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* Stop Firefox’s Download Menu From Popping Up
+
+Starting with Firefox 97, whenever you download a file, the download menu opens automatically.
+If you find this annoying, it’s easy to turn off with a visit to Firefox’s hidden options. 
+
+First, open Firefox. In the address bar at the top of the window, type about:config and press Enter or Return. 
+
+In the “Search preference name” box, type this (or you can copy and paste it):
+
+#+begin_example
+browser.download.alwaysOpenPanel
+#+end_example
+
+When you see the item in the results list below,
+click the toggle button (two half arrows pointing opposite directions) until you see “false” listed beside it.
