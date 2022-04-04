@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* yt-dlp split chapters and extract audio
+
+yt-dlp split chapters, extract audio and embed metadata
+
+#+begin_src sh
+yt-dlp \
+--ignore-config \
+--extract-audio \
+--audio-format 'mp3' \
+--split-chapters \
+--embed-metadata \
+'https://www.youtube.com/watch?v=pvkTC2xIbeY'
+#+end_src
