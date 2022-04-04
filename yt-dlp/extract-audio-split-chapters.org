@@ -3,6 +3,8 @@
 
 yt-dlp split chapters, extract audio and embed metadata
 
++ replace youtube url with the actual url
+
 #+begin_src sh
 yt-dlp \
 --ignore-config \
@@ -10,5 +12,6 @@ yt-dlp \
 --audio-format 'mp3' \
 --split-chapters \
 --embed-metadata \
-'https://www.youtube.com/watch?v=pvkTC2xIbeY'
+--no-playlist \
+'youtube url'
 #+end_src
