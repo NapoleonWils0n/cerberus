@@ -1,0 +1,12 @@
+<playercorefactory>
+ <players>
+   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
+	<filename>"/usr/bin/mpv"</filename>
+     <args>--fs "{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+ </players>
+ <rules action="overwrite">
+   <rule internetstream="true" player="mpv"></rule>
+ </rules>
+</playercorefactory>
