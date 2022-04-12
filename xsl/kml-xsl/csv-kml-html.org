@@ -9,9 +9,7 @@ sudo apt install gdal-bin
 ** convert csv to libkml
 
 where longitude and latitude are the column names in the csv
-works for converting csv files to kml for maphub
-
-keep the longitude and latitude columns to create streetview url
+keep the longitude and latitude columns to create google maps urls
 
 #+begin_src sh
 ogr2ogr -f LIBKML output.kml input.csv -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude
