@@ -1,0 +1,111 @@
+#!/bin/sh
+
+# open urls or local html pages in chromium without the gui chrome
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# chromium ssb
+$(basename "$0") -i input
+-i input or an http link"
+exit 2
+}
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# http link
+#===============================================================================
+
+remote_path () {
+chromium --new-window --app="${input}" 1>/dev/null &
+}
+
+
+#===============================================================================
+# local html file
+#===============================================================================
+
+local_path () {
+# path to file
+input_path="${input##}"
+
+# file name without path
+input_nopath="${input##*/}"
+input_name="${input_nopath%.}"
+
+# current directory
+input_pwd="$(pwd)"
+
+# directory path to file excluding the file name
+input_dir="$(dirname ${input})"
+
+# check if full path to file or a relative path
+if [ "${input_dir}" = '.' ]; then
+   input_path="${input_pwd}/${input_name}"
+   else
+   :
+fi
+
+# run chromium without chrome
+chromium --new-window --app=file://"${input_path}" 1>/dev/null &
+}
+
+
+#===============================================================================
+# check if http or local html file
+#===============================================================================
+
+# regular expressions for the expr command
+# match http or https
+http='^https\?://.*'
+
+# check if infile starts with https://
+# if the result is non zero its a http link
+result=$(expr "${input}" : "${http}")
+
+# run local or remote function
+if [ "${result}" -eq 0 ]; then
+    # local file
+    local_path
+    else
+    # http link
+    remote_path
+fi
