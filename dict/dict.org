@@ -1,0 +1,14 @@
+#+STARTUP: content
+* dictd dictionary server
+** dict client install
+
+#+begin_src sh
+sudo apt install dict
+#+end_src
+
+** dictd server install
+
+#+begin_src sh
+sudo apt install dictd dict-gcide
+#+end_src
+
