@@ -85,32 +85,32 @@ sudo apt install xsltproc
 
              <!-- site -->
              <li>
-               <xsl:text>Site: </xsl:text>
                <a>
                  <xsl:attribute name="href">
                  <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Site')])"/>
                  </xsl:attribute>
-                 <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Site')])"/>
+                 <xsl:text>Site - </xsl:text>
+                 <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
                </a>
              </li>
 
              <!-- wikipedia -->
              <li>
-               <xsl:text>Wikipedia: </xsl:text>
                <a>
                  <xsl:attribute name="href">
                  <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Wikipedia')])"/>
                  </xsl:attribute>
-                 <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Wikipedia')])"/>
+                 <xsl:text>Wikipedia - </xsl:text>
+                 <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
                </a>
              </li>
              </ul>
 
-             <h3>Maps</h3>
+
              <!-- google maps lat lon -->
+             <h3>Maps</h3>
             <ul>
              <li>
-               <xsl:text>Google Maps: </xsl:text>
              <a>
              <xsl:attribute name="href">
              <xsl:text>https://www.google.co.uk/maps/place/</xsl:text>
@@ -118,14 +118,14 @@ sudo apt install xsltproc
              <xsl:text>,</xsl:text>
              <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
              </xsl:attribute>
-             <xsl:text>Google maps</xsl:text>
+             <xsl:text>Google maps - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
              </a>
              </li>
 
 
              <!-- streetview lat lon -->
              <li>
-               <xsl:text>Streetview: </xsl:text>
              <a>
              <xsl:attribute name="href">
              <xsl:text>https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=</xsl:text>
@@ -133,13 +133,111 @@ sudo apt install xsltproc
              <xsl:text>,</xsl:text>
              <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
              </xsl:attribute>
-             <xsl:text>Streetview</xsl:text>
+             <xsl:text>Streetview - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             </a>
+             </li>
+             </ul>
+
+
+             <!-- directions -->
+             <h3>Directions</h3>
+            <ul>
+             <li>
+             <a>
+             <xsl:attribute name="href">
+             <xsl:text>https://www.google.com/maps/dir/?api=1&amp;destination=</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
+             <xsl:text>,</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
+             </xsl:attribute>
+             <xsl:text>Destination - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
              </a>
              </li>
 
-             <!-- coordinates -->
+             <!-- walking -->
              <li>
-               <xsl:text>Coordinates: </xsl:text>
+             <a>
+             <xsl:attribute name="href">
+             <xsl:text>https://www.google.com/maps/dir/?api=1&amp;travelmode=walking&amp;destination=</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
+             <xsl:text>,</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
+             </xsl:attribute>
+             <xsl:text>Walking - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             </a>
+             </li>
+
+
+             <!-- cycling -->
+             <li>
+             <a>
+             <xsl:attribute name="href">
+             <xsl:text>https://www.google.com/maps/dir/?api=1&amp;travelmode=bicycling&amp;destination=</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
+             <xsl:text>,</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
+             </xsl:attribute>
+             <xsl:text>Cycling - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             </a>
+             </li>
+
+             <!-- public transport -->
+             <li>
+             <a>
+             <xsl:attribute name="href">
+             <xsl:text>https://www.google.com/maps/dir/?api=1&amp;travelmode=transit&amp;destination=</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
+             <xsl:text>,</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
+             </xsl:attribute>
+             <xsl:text>Public Transport - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             </a>
+             </li>
+
+             <!-- driving -->
+             <li>
+             <a>
+             <xsl:attribute name="href">
+             <xsl:text>https://www.google.com/maps/dir/?api=1&amp;travelmode=driving&amp;destination=</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
+             <xsl:text>,</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
+             </xsl:attribute>
+             <xsl:text>Driving - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             </a>
+             </li>
+            </ul>
+
+             <!-- Weather -->
+             <h3>Weather</h3>
+            <ul>
+             <li>
+             <a>
+             <xsl:attribute name="href">
+             <xsl:text>https://weather.com/en-GB/weather/today/l/</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
+             <xsl:text>,</xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
+             </xsl:attribute>
+             <xsl:text>Weather - </xsl:text>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             </a>
+             </li>
+             </ul>
+
+
+             <!-- Latitude, Longitude -->
+             <h3>Latitude, Longitude</h3>
+            <ul>
+             <li>
+             <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:name)"/>
+             <xsl:text>: </xsl:text>
              <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Latitude')])"/>
              <xsl:text>,</xsl:text>
              <xsl:value-of disable-output-escaping="yes" select="normalize-space(kml:ExtendedData/kml:SchemaData/kml:SimpleData[(@name = 'Longitude')])"/>
