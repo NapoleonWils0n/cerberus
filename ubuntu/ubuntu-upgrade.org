@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* ubuntu upgrade
+
+#+begin_src sh
+sudo do-release-upgrade -d --allow-third-party
+#+end_src
