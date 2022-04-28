@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* yaru blue dark theme
+
+#+begin_src sh
+flatpak install --user org.gtk.Gtk3theme.Yaru-Blue-dark
+#+end_src
