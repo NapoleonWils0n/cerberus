@@ -1,0 +1,58 @@
+#+STARTUP: content
+* hide the firefox.tmp snap directory
+** Nautilus
+
+hide the firefox.tmp snap directory in ~/Downloads,
+by creating a file called .hidden in the ~/Downloads folder
+
+the .hidden file contains a list of files that will be hidden in the Nautilus file manager
+
+to hide the firefox.tmp directory just add firefox.tmp to the .hidden file
+
+pressing ctrl h in Nautilus will toggle showing and hiding the firefox.tmp directory
+and the .hidden file
+
+echo firefox.tmp into ~/Downloads/.hidden
+
+#+begin_src sh
+echo 'firefox.tmp' > ~/Downloads/.hidden
+#+end_src
+
+** ls command
+
+create an alias of the ls command to hide the firefox.tmp directory
+
+add the following code to your ~/.zshrc or ~/.bashrc file
+
+#+begin_src sh
+alias ls='ls --hide=firefox.tmp'
+#+end_src
+
+** zsh completion
+
+exclude the firefox.tmp directory from zsh completions
+when you are in the downloads directory and are using a program like mpv and press tab
+the firefox.tmp directory wont be listed in the completions for files to play
+
+#+begin_src sh
+zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
+    '*?.old' '*?.pro' 'firefox.tmp'
+#+end_src
+
+** emacs dired
+
+add the following code to your emacs config
+to exclude dotfiles and the firefox.tmp directory from dired listing
+
+pressing ctrl + x and meta + o will toggle showing and hiding the files
+
+#+begin_src emacs-lisp
+;; Toggle Hidden Files in Emacs dired with C-x M-o
+(require 'dired-x)
+;; hide dotfiles and firefox.tmp
+(setq dired-omit-files
+      (concat dired-omit-files "\\|^\\..+$\\|firefox.tmp$"))
+
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+#+end_src
+
