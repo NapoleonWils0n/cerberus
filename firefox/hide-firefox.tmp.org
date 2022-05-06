@@ -36,7 +36,7 @@ the firefox.tmp directory wont be listed in the completions for files to play
 
 #+begin_src sh
 zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
-    '*?.old' '*?.pro' 'firefox.tmp'
+    '*?.old' '*?.pro' 'firefox.tmp' '.hidden'
 #+end_src
 
 ** emacs dired
