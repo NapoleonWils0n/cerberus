@@ -1,0 +1,24 @@
+#+STARTUP: showall
+* nixpkg garbage collection
+
+nixpkg garbage collection
+
+** delete old generations of profile
+
+To delete all old (non-current) generations of your current profile:
+
+#+begin_src sh
+nix-env --delete-generations old
+#+end_src
+
+After removing appropriate old generations you can run the garbage collector as follows:
+
+#+begin_src sh
+nix-store --gc
+#+end_src
+
+There is also a convenient little utility nix-collect-garbage, which when invoked with the -d (--delete-old) switch deletes all old generations of all profiles in /nix/var/nix/profiles.
+
+#+begin_src sh
+nix-collect-garbage -d
+#+end_src
