@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* dpkg-reconfigure libdvd-pkg
+
+libdvd-pkg error
+
+#+begin_example
+libdvd-pkg: apt-get check failed, you may have broken packages
+#+end_example
+
+libdvd-pkg fix
+
+#+begin_src sh
+sudo dpkg-reconfigure libdvd-pkg
+#+end_src
