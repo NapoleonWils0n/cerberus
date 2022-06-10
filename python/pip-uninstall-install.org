@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* pip uninstall package
+
+#+begin_src sh
+pip uninstall pilfer
+#+end_src
+
+#+begin_src sh
+pip3 install --user ~/Desktop/pilfer
+#+end_src

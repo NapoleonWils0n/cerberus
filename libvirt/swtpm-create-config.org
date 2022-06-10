@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* swtpm create config
+
+#+begin_src sh
+/usr/share/swtpm/swtpm-create-user-config-files
+#+end_src
