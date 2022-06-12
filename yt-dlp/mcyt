@@ -15,8 +15,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -i url
--i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) or an http link"
+$(basename "$0") -i url"
 exit 2
 }
 
