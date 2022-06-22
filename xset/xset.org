@@ -1,6 +1,18 @@
 #+STARTUP: showall
 * xset screen power saving 
 
+To query the current settings:
+
+#+begin_src sh
+xset q
+#+end_src
+
+Disable DPMS and prevent screen from blanking
+
+#+begin_src sh
+xset s off -dpms
+#+end_src
+
 set display to blank after 1 hour
 
 #+begin_src sh
