@@ -1,6 +1,5 @@
 #+STARTUP: content
 #+OPTIONS: num:nil author:nil
-
 * ffprobe get video width and height
 
 #+BEGIN_SRC sh

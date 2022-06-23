@@ -1,0 +1,31 @@
+#+STARTUP: content
+* ffmpeg show video and audio codecs
+
+ffprobe show video and audio codec from video
+
+** video stream codec - default output format
+
+#+begin_src sh
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 -i input
+#+end_src
+
+** audio stream codec - default output format
+
+#+begin_src sh
+ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 -i input
+#+end_src
+
+** video stream codec - csv output format
+
+#+begin_src sh
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of csv=nk=1:p=0 -i input
+#+end_src
+
+** audio stream codec - csv output format
+
+#+begin_src sh
+ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of csv=nk=1:p=0 -i input
+#+end_src
+
+
+
