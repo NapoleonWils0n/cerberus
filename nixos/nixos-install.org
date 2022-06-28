@@ -1,0 +1,249 @@
+#+STARTUP: content
+* nixos install
+
+If you create a zpool in the installer, make sure you run zpool export <pool name> after nixos-install,
+or else when you reboot into your new system, zfs will fail to import the zpool.
+
+[[https://blog.xaviermaso.com/2019/02/28/NixOS-on-a-Dell-XPS15-9560.html]]
+
+[[https://grahamc.com/blog/nixos-on-dell-9560]]
+
+[[https://jtanguy.me/blog/installing-nixos-on-a-xps-9560/]]
+
+** iso download
+
+[[https://nixos.org/download.html#nixos-iso][nixos Minimal ISO image]]
+
+** zfs file system
+
+SSH server is enabled by default. To connect, set root password with:
+
+sudo passwd
+
+Connect from another computer:
+
+ssh root@192.168.1.19
+
+toor
+
+[[https://nixos.wiki/wiki/ZFS]]
+
+[[https://timklampe.cool/docs/example/nixos/nixos_install/]]
+
+*** Environment setup
+
+For convenience set a shell variable with the paths to your disk(s): 
+
+For a single disk: 
+
+#+begin_src sh
+disk=/dev/disk/by-id/foo
+#+end_src
+
+vm
+
+#+begin_src sh
+lsblk
+#+end_src
+
+#+begin_src sh
+disk=/dev/disk/by-path/virtio-pci-0000\:07\:00.0
+#+end_src
+
+*** Partitioning the disks
+
+#+begin_src sh
+# Single disk
+sudo parted "$disk" -- mklabel gpt
+sudo parted "$disk" -- mkpart primary 512MiB -8GiB
+sudo parted "$disk" -- mkpart primary linux-swap -8GiB 100%
+sudo parted "$disk" -- mkpart ESP fat32 1MiB 512MiB
+sudo parted "$disk" -- set 3 esp on
+
+sudo mkswap -L swap "${disk}-part2"
+sudo mkfs.fat -F 32 -n EFI "${disk}-part3"
+#+end_src
+
+*** Laying out the filesystem hierarchy
+
+Create the ZFS pool
+
+#+begin_src sh
+sudo zpool create \
+  -o ashift=12 \
+  -o autotrim=on \
+  -R /mnt \
+  -O canmount=off \
+  -O mountpoint=none \
+  -O acltype=posixacl \
+  -O compression=zstd \
+  -O dnodesize=auto \
+  -O normalization=formD \
+  -O relatime=on \
+  -O xattr=sa \
+  -O encryption=aes-256-gcm \
+  -O keylocation=prompt \
+  -O keyformat=passphrase \
+  rpool \
+  "${disk}-part1"
+#+end_src
+
+
+#+begin_example
+"${disk}1"
+#+end_example
+
+toortoor
+
+*** Create the ZFS datasets
+
+Since zfs is a copy-on-write filesystem even for deleting files disk space is needed. Therefore it should be avoided to run out of disk space. Luckily it is possible to reserve disk space for datasets to prevent this. 
+
+#+begin_src sh
+zfs create -o refreservation=1G -o mountpoint=none rpool/reserved
+#+end_src
+
+Create the datasets for the operating system. (Experienced ZFS users may wish to split up the OS datasets further.) 
+
+#+begin_src sh
+sudo zfs create -o canmount=on -o mountpoint=/ rpool/nixos
+sudo zfs create rpool/nixos/nix
+#+end_src
+
+Create datasets for user home directories. If you opted to not encrypt the entire pool, you can encrypt just the userdata by specifying the same ZFS properties when creating rpool/userdata, and the child datasets will also be encrypted. 
+
+#+begin_src sh
+sudo zfs create -o canmount=off -o mountpoint=/ rpool/userdata
+sudo zfs create -o canmount=on rpool/userdata/home
+sudo zfs create -o canmount=on -o mountpoint=/root rpool/userdata/home/root
+# Create child datasets of home for users' home directories.
+sudo zfs create -o canmount=on rpool/userdata/home/djwilcox
+#+end_src
+
+*** Mount /boot
+
+We are going to use the default NixOS bootloader systemd-boot
+
+for single-disk systems: 
+
+#+begin_src sh
+sudo mkdir /mnt/boot
+sudo mount "${disk}-part3" /mnt/boot
+#+end_src
+
+** Configure the NixOS system
+
+Generate the base NixOS configuration files. 
+
+#+begin_src sh
+nixos-generate-config --root /mnt
+#+end_src
+
+Open /mnt/etc/nixos/configuration.nix in a text editor and change imports to include hardware-configuration-zfs.nix instead of the default hardware-configuration.nix. We will be editing this file later.
+
+Now Add the following block of code anywhere (how you organise your configuration.nix is up to you): 
+
+#+begin_src sh
+# ZFS boot settings.
+boot.supportedFilesystems = [ "zfs" ];
+boot.zfs.devNodes = "/dev/";
+#+end_src
+
+Now set networking.hostName and networking.hostId. The host ID must be an eight digit hexadecimal value.
+You can derive it from the /etc/machine-id, taking the first eight characters; from the hostname, by taking the first eight characters of the hostname's md5sum 
+
+#+begin_src sh
+hostname | md5sum | head -c 8
+#+end_src
+
+or by taking eight hexadecimal characters from /dev/urandom
+
+#+begin_src sh
+tr -dc 0-9a-f < /dev/urandom | head -c 8
+#+end_src
+
+*** Now add some ZFS maintenance settings: 
+
+#+begin_src sh
+# ZFS maintenance settings.
+services.zfs.trim.enable = true;
+services.zfs.autoScrub.enable = true;
+services.zfs.autoScrub.pools = [ "rpool" ];
+#+end_src
+
+You may wish to also add services.zfs.autoSnapshot.enable = true; and set the ZFS property com.sun:auto-snapshot to true on rpool/userdata to have automatic snapshots. (See #How to use the auto-snapshotting service earlier on this page.)
+
+Now open /mnt/etc/nixos/hardware-configuration-zfs.nix.
+
+Add options = [ "zfsutil" ]; to every ZFS fileSystems block.
+Add options = [ "X-mount.mkdir" ]; to fileSystems."/boot" and fileSystems."/boot2".
+
+Replace swapDevices with the following, replacing DISK1 and DISK2 with the names of your disks.
+
+#+begin_src sh
+swapDevices = [
+  { device = "/dev/disk/by-id/DISK1-part2";
+    randomEncryption = true;
+  }
+];
+#+end_src    
+
+
+#+begin_src sh
+swapDevices = [
+  { device = "/dev/disk/by-label/swap";
+    randomEncryption = true;
+  }
+];
+#+end_src    
+
+** installing nixos
+
+#+begin_src sh
+nixos-install --show-trace --root /mnt
+#+end_src
+
+--show-trace will show you where exactly things went wrong if nixos-install fails. To take advantage of all cores on your system, also specify --max-jobs n replacing n with the number of cores on your machine. 
+
+** Mount datasets without legacy mountpoint
+
+Contrary to conventional wisdom, mountpoint=legacy is not required for mounting datasets. The trick is to use mount -t zfs -o zfsutil path/to/dataset /path/to/mountpoint.
+
+Also, legacy mountpoints are also inconvenient in that the mounts can not be natively handled by zfs mount command, hence legacy in the name.
+
+An example configuration of mounting non-legacy dataset is the following: 
+
+#+begin_src sh
+{
+  fileSystems."/tank" =
+    { device = "tank_pool/data";
+      fsType = "zfs"; options = [ "zfsutil" ];
+    };
+}
+#+end_src
+
+An alternative is to set boot.zfs.extraPools = [ pool_name ];, which is recommended by the documentation if you have many zfs filesystems. 
+
+*** zfs hardlinks
+
+Using NixOS on a ZFS root file system might result in the boot error external pointer tables not supported when the number of hardlinks in the nix store gets very high. This can be avoided by adding this option to your configuration.nix file:
+
+#+begin_src sh
+boot.loader.grub.copyKernels = true;
+#+end_src
+
+*** Automatic scrubbing
+
+Regular scrubbing of ZFS pools is recommended and can be enabled in your NixOS configuration via: 
+
+#+begin_src sh
+services.zfs.autoScrub.enable = true;
+#+end_src
+
+** xmonad
+
+[[https://gist.github.com/kodeFant/f08ffd89eab932028fe84a92aa90974f]]
+
+[[https://github.com/mixmixmix/config/blob/master/common_configuration.nix#L75]]
+
+[[https://nixos.wiki/wiki/XMonad]]
