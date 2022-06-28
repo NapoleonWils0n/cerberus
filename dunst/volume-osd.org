@@ -636,3 +636,9 @@ icon_path = /home/djwilcox/.local/share/icons/svg/status:/usr/share/icons/Adwait
 ** start xfce4-volumed sxhkd and dunst
 
 finally you need to start xfce4-volumed sxhkd and dunst in your window manager
+
+** playerctl install
+
+#+begin_src sh
+sudo apt install playerctl
+#+end_src
