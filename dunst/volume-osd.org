@@ -33,10 +33,14 @@ sxhkd config
 ctrl + super + Escape
     pkill -USR1 -x sxhkd
 
-
-# sxhkd reload config
+# open rofi
 ctrl + super + p
     rofi -show combi -modi combi
+
+# close dunst notifications
+ctrl + space
+    dunstctl close-all
+
 
 # multimedia keys
 #==========================
@@ -122,7 +126,6 @@ Prior
 # Next - ducky keyboard next, function + ;
 Next
     playerctl next
-
 #+end_src
 
 ** dunst
