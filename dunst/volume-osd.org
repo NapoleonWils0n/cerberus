@@ -9,127 +9,9 @@ use xfce4-volumed and dunst to create a volume osd
 sudo apt install xfce4-volumed
 #+end_src
 
-** sxhkd keyboard daemon
-*** sxhkd install
-
-#+begin_src sh
-sudo apt install sxhkd
-#+end_src
-
-*** sxhkd config
-
-sxhkd config file location
-
-#+begin_example
-~/.config/sxhkd/sxhkdrc
-#+end_example
-
-sxhkd config
-
-#+begin_src sh
-# sxhkdrc 
-
-# sxhkd reload config
-ctrl + super + Escape
-    pkill -USR1 -x sxhkd
-
-# open rofi
-ctrl + super + p
-    rofi -show combi -modi combi
-
-# close dunst notifications
-ctrl + space
-    dunstctl close-all
-
-
-# multimedia keys
-#==========================
-
-# Increase volume
-XF86AudioRaiseVolume
-    amixer set Master 10%+ 1>/dev/null
-
-# Decrease volume
-XF86AudioLowerVolume
-    amixer set Master 10%- 1>/dev/null
-
-# Mute Audio
-XF86AudioMute
-    amixer -D pulse set Master 1+ toggle 1>/dev/null
-
-# Play
-XF86AudioPlay
-    playerctl play-pause 
-
-# Next
-XF86AudioNext
-    playerctl next
-
-# Previous
-XF86AudioPrev
-    playerctl previous
-
-# Stop
-XF86AudioStop
-    playerctl stop
-
-
-# standard keys
-#==========================
-
-# h,j,k,l keys
-alt + super + {h,j,k,l}
-  playerctl position {0.5-,10-,10+,0.5+}
-
-# play/pause toggle
-alt + super + space
-    playerctl play-pause && now-playing
-
-# Next
-alt + super + ctrl + l
-    playerctl next && sleep 1 && now-playing
-
-# Previous
-alt + super + ctrl + h
-    playerctl previous && sleep 1 && now-playing
-
-# stop/quit
-alt + super + n
-    playerctl stop
-
-# go to start of video
-alt + super + 0
-  playerctl position 0
-
-
-# now playing
-#==========================
-
-alt + super + z
-  now-playing
-
-# ducky one 2 mini keyboard
-#==========================
-
-# mute = function + m
-# decrease volume = function + ,
-# increase volume = function + .
-
-# Play - ducky keyboard pause, function + o
-Pause
-    playerctl play-pause
-
-# Previous - ducky keyboard prior, function + p
-Prior
-    playerctl previous
-
-# Next - ducky keyboard next, function + ;
-Next
-    playerctl next
-#+end_src
-
 ** dunst
 *** dunst install
+
 #+begin_src sh
 sudo apt install dunst
 #+end_src
@@ -590,7 +472,6 @@ dunst config
 #    appname = "some_volume_notifiers"
 #    set_stack_tag = "volume"
 # vim: ft=cfg
-
 #+end_src
 
 ** dunst svg icons for xfce4-volumed
@@ -636,12 +517,6 @@ to the icon path, replace djwilcox with your username
 icon_path = /home/djwilcox/.local/share/icons/svg/status:/usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/icons/Adwaita/16x16/legacy/:/usr/share/icons/HighContrast/scalable/status/
 #+end_src
 
-** start xfce4-volumed sxhkd and dunst
+** start xfce4-volumed and dunst
 
-finally you need to start xfce4-volumed sxhkd and dunst in your window manager
-
-** playerctl install
-
-#+begin_src sh
-sudo apt install playerctl
-#+end_src
+finally you need to start xfce4-volumed and dunst in your window manager
