@@ -3,6 +3,8 @@
 
 [[https://askubuntu.com/questions/1090202/how-do-i-disable-showing-the-activities-overview-forever]]
 
+** unbind super number shortcuts
+
 To unbind the Super+number shortcuts from opening the dock apps you can run:
 
 #+begin_src sh
@@ -15,21 +17,28 @@ Then, to make Super+number switch to the corresponding workspace, run:
 for i in {1..9}; do gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-$i "['<Super>$i']";done
 #+end_src
 
-dash to dock
+** dash to dock
 
 #+begin_src sh
 for i in {1..9}; do gsettings set org.gnome.shell.extensions.dash-to-dock app-hotkey-$i "['']";done
 #+end_src
 
-
-dash to dock ctrl
+** dash to dock ctrl
 
 #+begin_src sh
 for i in {1..9}; do gsettings set org.gnome.shell.extensions.dash-to-dock app-ctrl-hotkey-$i "['']";done
 #+end_src
 
-shift
+** shift
 
 #+begin_src sh
 for i in {1..9}; do gsettings set org.gnome.shell.extensions.dash-to-dock app-shift-hotkey-$i "['']";done
+#+end_src
+
+** activities menu
+
+rebind activities key to Super_R
+
+#+begin_src sh
+gsettings set org.gnome.mutter overlay-key 'Super_R'
 #+end_src
