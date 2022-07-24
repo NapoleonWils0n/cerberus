@@ -42,3 +42,21 @@ rebind activities key to Super_R
 #+begin_src sh
 gsettings set org.gnome.mutter overlay-key 'Super_R'
 #+end_src
+
+** dash to dock
+
+hide the dock
+
+#+begin_src sh
+gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
+gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
+#+end_src
+
+reset settings
+
+#+begin_src sh
+gsettings set org.gnome.shell.extensions.dash-to-dock autohide true
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true
+gsettings set org.gnome.shell.extensions.dash-to-dock intellihide true
+#+end_src
