@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* xdg-desktop-portal-gnome
+
+xdg-desktop-portal-gnome for obs studio
+
+#+begin_src sh
+doas apt install xdg-desktop-portal-gnome
+#+end_src
