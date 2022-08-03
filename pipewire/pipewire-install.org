@@ -1,0 +1,112 @@
+#+STARTUP: content
+* pipewire ubuntu 22.04 
+
+[[https://ubuntuhandbook.org/index.php/2022/04/pipewire-replace-pulseaudio-ubuntu-2204/]]
+
+** install client libraries
+
+#+begin_src sh
+sudo apt install pipewire-audio-client-libraries libspa-0.2-bluetooth libspa-0.2-jack
+#+end_src
+
+** install wireplumber to replace pipewire-media-session
+
+To install the package and remove “pipewire-media-session”, run the command below in terminal:
+
+#+begin_src sh
+sudo apt install wireplumber pipewire-media-session-
+#+end_src
+
+NOTE: there’s a ‘-‘ in the end of the command indicates to remove the package.
+The command will also install the required pipewire-pulse automatically.
+
+** Copy configuration files:
+
+wireplumber makes things quite easy!
+If you just want to replace PulseAudio with Pipewire, enable the media session service and restart and that’s all!!
+
+For ALSA clients to be configured to output via PipeWire, run command to copy the configure file:
+
+#+begin_src sh
+sudo cp /usr/share/doc/pipewire/examples/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/
+#+end_src
+
+For JACK client, run command:
+
+#+begin_src sh
+sudo cp /usr/share/doc/pipewire/examples/ld.so.conf.d/pipewire-jack-*.conf /etc/ld.so.conf.d/
+#+end_src
+
+And then
+
+#+begin_src sh
+sudo ldconfig
+#+end_src
+
+For Bluetooth, just remove the pulseaudio-module-bluetooth package via command:
+
+#+begin_src sh
+sudo apt remove pulseaudio-module-bluetooth
+#+end_src
+
+And, finally enable the media session by running command:
+
+#+begin_src sh
+systemctl --user --now enable wireplumber.service
+#+end_src
+
+** verify pipewire is working
+
+After restarted Ubuntu 22.04, run the command below in terminal.
+
+#+begin_src sh
+pactl info
+#+end_src
+
+It should output Sound server: PulseAudio (on PipeWire x.x.x) indicates Pipewire is in use as sound ouput.
+
+** restore pulseaudio
+
+To undo the changes, firstly remove the client libraries via command:
+
+#+begin_src 
+sudo apt remove pipewire-audio-client-libraries libspa-0.2-bluetooth libspa-0.2-jack
+#+end_src
+
+Remove wireplumber and install back the previous media session package (there’s also ‘-‘ in the end):
+
+#+begin_src sh
+sudo apt install pipewire-media-session wireplumber-
+#+end_src
+
+Finally, re-enable pipewire-media-session service by running commands:
+
+#+begin_src sh
+rm -f ~/.config/systemd/user/pipewire-session-manager.service
+#+end_src
+
+#+begin_src sh
+systemctl --user --now enable pipewire-media-session
+#+end_src
+
+if sound’s still not working, try to disable pipewire-pulse services via command:
+
+#+begin_src sh
+systemctl --user --now disable pipewire-pulse.service pipewire-pulse.socket
+#+end_src
+
+If you tried to enabled it globally, also disable it via command:
+
+#+begin_src sh
+sudo systemctl --global --now disable pipewire-pulse.service pipewire-pulse.socket
+#+end_src
+
+And re-enable the original pulseaudio service via command:
+
+#+begin_src sh
+systemctl --user --now reenable pulseaudio.service pulseaudio.socket
+#+end_src
+
+#+begin_src sh
+sudo systemctl --global --now reenable pulseaudio.service pulseaudio.socket
+#+end_src
