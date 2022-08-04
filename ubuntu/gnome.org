@@ -48,6 +48,45 @@ gsettings set org.gnome.mutter overlay-key 'Super_R'
 #+begin_src sh
 gsettings set org.gnome.shell.keybindings toggle-overview "['']"
 #+end_src
+
+** switch-applications
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super>j']"
+#+end_src
+
++ reverse
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super>k']"
+#+end_src
+
++ reset
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super><Tab>']"
+#+end_src
+
++ reverse
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super><Shift><Tab>']"
+#+end_src
+
+** focus windows
+
+make windows focus automatically
+
+#+begin_src sh
+gsettings set org.gnome.mutter focus-change-on-pointer-rest false
+#+end_src
+
+** center windows
+
+#+begin_src sh
+gsettings set org.gnome.mutter center-new-windows true
+#+end_src
+
 ** gnome-shell-extension-manager
 
 #+begin_src sh
