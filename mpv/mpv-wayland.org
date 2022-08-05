@@ -74,11 +74,3 @@ add the following code snippet to your ~/.zshenv
 export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json mpv
 #+end_src
 
-*** ~/.zshrc alias
-
-create an alias with mpv that run gnome-session-inhibit
-
-#+begin_src sh
-# mpv gnome-session-inhibit for gnome wayland
-alias mpv='gnome-session-inhibit mpv --player-operation-mode=pseudo-gui -- %U'
-#+end_src
