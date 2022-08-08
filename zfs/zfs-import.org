@@ -1,7 +1,6 @@
 #+STARTUP: showall
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-
 * import zfs pool on external drive and mount
 
 import zfs pool on external drive and mount the drive

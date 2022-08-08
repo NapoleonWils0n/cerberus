@@ -1,7 +1,6 @@
 #+STARTUP: overview
 #+OPTIONS: num:nil author:nil
 * zfs datasets home
-
 ** create the zfs datasets
 
 zfs list datasets
@@ -10,20 +9,26 @@ zfs list datasets
 zfs list
 #+END_SRC
 
+switch to root to run the zfs commands
+
+#+begin_src sh
+doas su
+#+end_src
+
 create the main dataset under zpool as root
 
 #+BEGIN_SRC sh
-# zfs create zroot/data
-# zfs create zroot/data/desktop
-# zfs create zroot/data/documents
-# zfs create zroot/data/downloads
-# zfs create zroot/data/git
-# zfs create zroot/data/config
-# zfs create zroot/data/emacsd
-# zfs create zroot/data/local
-# zfs create zroot/data/mozilla
-# zfs create zroot/data/ossuary
-# zfs create zroot/data/weechat
+zfs create zroot/data
+zfs create zroot/data/desktop
+zfs create zroot/data/documents
+zfs create zroot/data/downloads
+zfs create zroot/data/git
+zfs create zroot/data/config
+zfs create zroot/data/emacsd
+zfs create zroot/data/local
+zfs create zroot/data/mozilla
+zfs create zroot/data/ossuary
+zfs create zroot/data/weechat
 #+END_SRC
 
 *** create the mount points in your home directory
@@ -39,14 +44,14 @@ switch to root to execute the following commands
 import the backup pool drive
 
 #+BEGIN_SRC sh
-# zpool import
+zpool import
 #+END_SRC
 
 import the pool which has the zfs mount point set to /mnt/usb
 backup pool is name zbackup in this case
 
 #+BEGIN_SRC sh
-# zpool import zbackup
+zpool import zbackup
 #+END_SRC
 
 list the zfs datasets 
@@ -59,7 +64,7 @@ send incremental snapshots
 use the -R option on the zroot pool to send incremental snapshots of the descendant file system
 
 #+BEGIN_SRC sh
-# zfs send -Rv zbackup/zroot/data/desktop@transfer | zfs recv -F zroot/data/desktop
+zfs send -Rv zbackup/zroot/data/desktop@transfer | zfs recv -F zroot/data/desktop
 #+END_SRC
 
 *** set the zfs mount points
@@ -67,22 +72,22 @@ use the -R option on the zroot pool to send incremental snapshots of the descend
 create the zfs mount points
 
 #+BEGIN_SRC sh
-# zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
-# zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
-# zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
-# zfs set mountpoint=/usr/home/djwilcox/git zroot/data/git
-# zfs set mountpoint=/usr/home/djwilcox/.config zroot/data/config
-# zfs set mountpoint=/usr/home/djwilcox/.emacs.d zroot/data/emacsd
-# zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
-# zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
-# zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
-# zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
+zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
+zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
+zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
+zfs set mountpoint=/usr/home/djwilcox/git zroot/data/git
+zfs set mountpoint=/usr/home/djwilcox/.config zroot/data/config
+zfs set mountpoint=/usr/home/djwilcox/.emacs.d zroot/data/emacsd
+zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
+zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
+zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
+zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
 #+END_SRC
 
 + change the permission on the mountpoint if needed
 
 #+BEGIN_SRC sh
-# chown -R djwilcox:djwilcox ~/Desktop
+chown -R djwilcox:djwilcox ~/Desktop
 #+END_SRC
 
 + chmod the permissions to 700

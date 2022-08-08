@@ -1,7 +1,6 @@
 #+STARTUP: showall
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-
 * zfs command
 
 + get zpool status

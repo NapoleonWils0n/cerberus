@@ -1,8 +1,13 @@
 #+STARTUP: showall
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-
 * zfs gpt label
+
+switch to root to run all the commands
+
+#+begin_src sh
+doas su
+#+end_src
 
 list the disks
 
@@ -47,9 +52,12 @@ zpool export zusb
 
 ** linux
 
+#+begin_src sh
+ls -lh /dev/disk/by-partlabel/
+#+end_src
+
 #+BEGIN_SRC sh
-# ls -lh /dev/disk/by-partlabel/
-# zpool import -d /dev/disk/by-partlabel zusb
+zpool import -d /dev/disk/by-partlabel zusb
 #+END_SRC
 
 import as read only

@@ -1,7 +1,6 @@
 #+STARTUP: content
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-
 * zfs snapshot usb drive
 
 list the disks
