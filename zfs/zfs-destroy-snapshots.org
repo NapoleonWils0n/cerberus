@@ -1,0 +1,77 @@
+#+STARTUP: showall hideblocks
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+* zfs list snapshots by date
+
+list zfs snapshots sorted by creation date
+
+#+BEGIN_SRC sh
+zfs list -t snapshot -o name,creation -s creation
+#+END_SRC
+
+this will output a list like this
+
+on ubuntu there are 2 pools
+bpool/BOOT and rpool/ROOT
+
+#+begin_example
+NAME                                                              CREATION
+bpool/BOOT/ubuntu_y1bmkm@autozsys_zsl17a                          Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm@autozsys_zsl17a                          Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/srv@autozsys_zsl17a                      Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/usr@autozsys_zsl17a                      Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/usr/local@autozsys_zsl17a                Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var@autozsys_zsl17a                      Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/games@autozsys_zsl17a                Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib@autozsys_zsl17a                  Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/AccountsService@autozsys_zsl17a  Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/NetworkManager@autozsys_zsl17a   Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/apt@autozsys_zsl17a              Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/dpkg@autozsys_zsl17a             Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/log@autozsys_zsl17a                  Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/mail@autozsys_zsl17a                 Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/snap@autozsys_zsl17a                 Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/spool@autozsys_zsl17a                Fri Aug  5 13:11 2022
+rpool/ROOT/ubuntu_y1bmkm/var/www@autozsys_zsl17a                  Fri Aug  5 13:11 2022
+rpool/USERDATA/djwilcox_7jb26k@autozsys_zsl17a                    Fri Aug  5 13:11 2022
+rpool/USERDATA/root_7jb26k@autozsys_zsl17a                        Fri Aug  5 13:11 2022
+bpool/BOOT/ubuntu_y1bmkm@autozsys_9dpw5m                          Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm@autozsys_9dpw5m                          Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/srv@autozsys_9dpw5m                      Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/usr@autozsys_9dpw5m                      Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/usr/local@autozsys_9dpw5m                Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var@autozsys_9dpw5m                      Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/games@autozsys_9dpw5m                Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib@autozsys_9dpw5m                  Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/AccountsService@autozsys_9dpw5m  Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/NetworkManager@autozsys_9dpw5m   Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/apt@autozsys_9dpw5m              Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/lib/dpkg@autozsys_9dpw5m             Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/log@autozsys_9dpw5m                  Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/mail@autozsys_9dpw5m                 Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/snap@autozsys_9dpw5m                 Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/spool@autozsys_9dpw5m                Fri Aug  5 14:27 2022
+rpool/ROOT/ubuntu_y1bmkm/var/www@autozsys_9dpw5m                  Fri Aug  5 14:27 2022
+rpool/USERDATA/djwilcox_7jb26k@autozsys_9dpw5m                    Fri Aug  5 14:27 2022
+rpool/USERDATA/root_7jb26k@autozsys_9dpw5m                        Fri Aug  5 14:27 2022
+#+end_example
+
+** zfs destroy snapshots
+
+switch to root
+
+#+begin_src sh
+doas su
+#+end_src
+
+destroy the boot pool
+
+#+begin_src sh
+zfs destroy -R bpool/BOOT/ubuntu_y1bmkm@autozsys_zsl17a
+#+end_src
+
+destroy the root pool
+
+#+begin_src sh
+zfs destroy -R rpool/ROOT/ubuntu_y1bmkm@autozsys_zsl17a
+#+end_src
