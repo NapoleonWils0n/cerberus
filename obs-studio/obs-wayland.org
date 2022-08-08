@@ -1,0 +1,6 @@
+#+STARTUP: content
+* obs wayland
+
+#+begin_src sh
+doas apt install qtwayland5
+#+end_src
