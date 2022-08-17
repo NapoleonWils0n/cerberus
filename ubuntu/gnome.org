@@ -63,6 +63,14 @@ gsettings set org.gnome.mutter focus-change-on-pointer-rest false
 gsettings set org.gnome.mutter center-new-windows true
 #+end_src
 
+** volume increment
+
+set the volume increment to 5
+
+#+begin_src sh
+gsettings set org.gnome.settings-daemon.plugins.media-keys volume-step 5
+#+end_src
+
 ** gnome-shell-extension-manager
 
 #+begin_src sh
