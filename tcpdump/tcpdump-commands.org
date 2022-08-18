@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* tcpdump commands
+
+#+begin_src sh
+doas tcpdump -n
+#+end_src
+
+#+begin_src sh
+doas tcpdump -Xx -s 500 -n
+#+end_src
+
+use the tee command to output to the screen and a file at the same time
+
+#+begin_src sh
+doas tcpdump -Xx -s 500 -n | tee tcpdump.txt
+#+end_src
