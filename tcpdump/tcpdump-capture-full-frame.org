@@ -1,0 +1,21 @@
+#+STARTUP: showall
+* tcpdump capture full frame
+
+capture the wlan0 interface
+
+#+begin_src sh
+doas tcpdump -s 0 -i wlan0 -w wlan0.pcap
+#+end_src
+
+capture any interface on linux
+
+#+begin_src sh
+doas tcpdump -s 0 -i any -w wlan0.pcap
+#+end_src
+
+** capture full frame from ip address on lan
+
+#+begin_src sh
+doas tcpdump -s 0 host 192.168.1.4 -i wlan0 -w wlan0.pcap
+#+end_src
+
