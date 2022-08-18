@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* tcpdump capture traffic from host
+
+#+begin_src sh
+doas tcpdump -s 0 host 192.168.1.4 -i wlan0 -w wlan0.pcap
+#+end_src
