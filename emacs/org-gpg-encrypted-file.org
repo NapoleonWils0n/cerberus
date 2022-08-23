@@ -1,0 +1,34 @@
+#+STARTUP: content
+* org mode gpg encrypted file
+
+** create the org file
+
+create an org file with the following header
+
+#+begin_src org
+# -*- mode:org; epa-file-encrypt-to: ("username@gmail.com") -*-
+# -*- buffer-auto-save-file-name: nil; -*-
+#+end_src
+
+- change username@gmail.com to gpg email address
+- auto save disabled, so gpg encrypted file isnt stored unencrypted as an auto saved file
+
+** encrypt the org file
+
+#+begin_src sh
+gpg --encrypt --output links.org.gpg --recipient username@gmail.com links.org
+#+end_src
+
+change links.org to the name of the file to encrypt
+
+- change username@gmail.com to gpg email address
+
+** edit your emacs config
+
+edit your emacs config and add the following code
+this will prompt you to enter your gpg password when you open a gpg encrypted file
+
+#+begin_src lisp
+(defvar epa-pinentry-mode)
+(setq epa-pinentry-mode 'loopback)
+#+end_src
