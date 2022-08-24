@@ -57,6 +57,20 @@ make windows focus automatically
 gsettings set org.gnome.mutter focus-change-on-pointer-rest false
 #+end_src
 
+** switch applications
+
+switch applications
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super>k']"
+#+end_src
+
+switch applications backward
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super>j']"
+#+end_src
+
 ** center windows
 
 #+begin_src sh

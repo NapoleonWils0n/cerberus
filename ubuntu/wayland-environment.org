@@ -1,0 +1,24 @@
+#+STARTUP: content
+* wayland environment
+
+Since Wayland does not initiate any Xorg related files,
+GDM and KDE Plasma source systemd user environment variables instead. 
+
+** create the environment.d directory
+
+#+begin_src sh
+mkdir -p ~/.config/environment.d
+#+end_src
+
+** create the envvars.conf file
+
+#+begin_src sh
+touch ~/.config/environment.d/envvars.conf
+#+end_src
+
+** add the variables to the envvars.conf file
+
+#+begin_src conf
+QT_QPA_PLATFORM=wayland
+MOZ_ENABLE_WAYLAND=1
+#+end_src
