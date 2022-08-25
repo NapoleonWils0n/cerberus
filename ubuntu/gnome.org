@@ -85,6 +85,18 @@ move window to right monitor
 gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "['<Shift><Super>l']"
 #+end_src
 
+** close window
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings close "['<Shift><Super>c']"
+#+end_src
+
+** toggle fullscreen
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['<Super>s']"
+#+end_src
+
 ** center windows
 
 #+begin_src sh
