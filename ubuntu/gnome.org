@@ -71,6 +71,20 @@ switch applications backward
 gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super>k']"
 #+end_src
 
+** switch workspace
+
+move window to left monitor
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-left "['<Shift><Super>h']"
+#+end_src
+
+move window to right monitor
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings move-to-monitor-right "['<Shift><Super>l']"
+#+end_src
+
 ** center windows
 
 #+begin_src sh
