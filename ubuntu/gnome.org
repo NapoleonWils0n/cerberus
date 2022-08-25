@@ -62,13 +62,13 @@ gsettings set org.gnome.mutter focus-change-on-pointer-rest false
 switch applications
 
 #+begin_src sh
-gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super>k']"
+gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super>j']"
 #+end_src
 
 switch applications backward
 
 #+begin_src sh
-gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super>j']"
+gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super>k']"
 #+end_src
 
 ** center windows
