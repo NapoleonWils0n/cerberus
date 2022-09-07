@@ -71,6 +71,12 @@ switch applications backward
 gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Super>k']"
 #+end_src
 
+** toggle-application-view
+
+#+begin_src sh
+gsettings set org.gnome.shell.keybindings toggle-application-view "['<Super><Ctrl>p']"
+#+end_src
+
 ** switch workspace
 
 move window to left monitor

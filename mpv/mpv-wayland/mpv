@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# mpv nvidia gnome wayland fix
+
+# check if nvidia file exists
+file='/usr/share/glvnd/egl_vendor.d/50_mesa.json'
+# mpv path
+mpv='/usr/bin/mpv'
+
+# check if running wayland
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    # check if nvidia file exists
+    if [ -f "$file" ]; then 
+      __EGL_VENDOR_LIBRARY_FILENAMES="${file}" "${mpv}" "$@"
+    else
+      "${mpv}" "$@"
+    fi
+else
+    # xorg
+      "${mpv}" "$@"
+fi
