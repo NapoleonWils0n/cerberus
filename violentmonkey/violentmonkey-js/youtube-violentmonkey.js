@@ -7,6 +7,8 @@
 // @author      jonas
 // @description  How to block the annoying “Before you continue” popup on Youtube?
 // @run-at       document-start
+// @downloadURL  https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/violentmonkey/violentmonkey-js/youtube-violentmonkey.js
+// @homepageURL  https://github.com/NapoleonWils0n/cerberus/blob/master/violentmonkey/violentmonkey-js/youtube-violentmonkey.js
 // ==/UserScript==
 
 // This will remove the popup but there are some problems:

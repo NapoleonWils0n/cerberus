@@ -7,6 +7,8 @@
 // @author      jonas
 // @description  How to block the annoying “Before you continue” popup on Google?
 // @run-at       document-start
+// @downloadURL  https://raw.githubusercontent.com/NapoleonWils0n/cerberus/master/violentmonkey/violentmonkey-js/google-violentmonkey.js
+// @homepageURL  https://github.com/NapoleonWils0n/cerberus/blob/master/violentmonkey/violentmonkey-js/google-violentmonkey.js
 // ==/UserScript==
 
 // This will remove the popup but there are some problems:
