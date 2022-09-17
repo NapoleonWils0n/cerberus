@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skip tinyurl.is
 // @namespace    Violentmonkey Scripts
-// @version      1.2
+// @version      1.3
 // @description  Skip tinyurl.is redirects
 // @author       Luke Pothier <lukepothier@gmail.com>
 // @match        https://tinyurl.is/*
@@ -11,7 +11,6 @@
 // @homepageURL  https://github.com/NapoleonWils0n/cerberus/blob/master/violentmonkey/violentmonkey-js/skip-tinyurl.si.js
 // ==/UserScript==
 
-// comments
 (function() {
     'use strict';
 
