@@ -1,4 +1,6 @@
 #+STARTUP: content
+#+STARTUP: show2levels
+#+STARTUP: hideblocks
 * tampermonkey
 
 [[https://www.tampermonkey.net/][tampermonkey]]
@@ -6,6 +8,8 @@
 [[https://superuser.com/questions/1595367/how-to-block-the-annoying-before-you-continue-popup-on-google][tampermonkey superuser]]
 
 ** youtube
+
+bypass youtube cookies popup
 
 #+begin_src javascript
 // ==UserScript==
@@ -36,6 +40,8 @@ document.cookie=`CONSENT=YES+${consentMatch ? consentMatch[2] : '0'}; domain=.yo
 
 ** google
 
+bypass google cookies popup
+
 #+begin_src javascript
 // ==UserScript==
 // @name         avoid Google's "before you continue"
@@ -61,4 +67,39 @@ document.head.append(style);
 // This solves the previous problems but it's probably not that great for privacy
 const consentMatch = document.cookie.match(/CONSENT=(PENDING|YES)\+(\d+)/);
 document.cookie=`CONSENT=YES+${consentMatch ? consentMatch[2] : '0'}; domain=.google.com`;
+#+end_src
+
+** tinyurl
+
+skips annoying tinyurl.is redirects
+
+[[https://gist.github.com/lukepothier/2719b1f3d5c152366cf0d0034ba925d9]]
+
+#+begin_src javascript
+// ==UserScript==
+// @name         Skip tinyurl.is
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Skip tinyurl.is redirects
+// @author       Luke Pothier <lukepothier@gmail.com>
+// @match        https://tinyurl.is/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    docReady(function() {
+        document.getElementsByClassName('btn-secondary')[0].click();
+    });
+})();
+
+function docReady(fn) {
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}
+
 #+end_src
