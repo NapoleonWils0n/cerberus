@@ -9,6 +9,7 @@
 // @run-at       document-start
 // ==/UserScript==
 
+// comments
 (function() {
     'use strict';
 
