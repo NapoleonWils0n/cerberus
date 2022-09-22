@@ -1,0 +1,8 @@
+#+STARTUP: content
+* v4l-utils
+
+install v4l-utils to get your webcam working
+
+#+begin_src sh
+sudo apt install v4l-utils
+#+end_src
