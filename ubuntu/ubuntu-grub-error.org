@@ -1,0 +1,36 @@
+#+STARTUP: showall
+* ubuntu grub error
+
+After standard apt-get upgrade and reboot now I am getting following error when I am trying to run apt-get upgrade in 22.04LTS. What happened here?
+
+#+begin_example
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ grub-efi-amd64-signed : Depends: grub-efi-amd64-bin (= 2.06-2ubuntu7) but 2.06-2ubuntu10 is to be installed
+E: Broken packages
+#+end_example
+
+Solution
+
+There’s a glitch in the upgrade to grub-efi-amd64-signed and grub-efi-amd64-bin, where they both need to be upgraded, but they depend on each other and neither wants to go first. You could wait for Ubuntu to sort it out somehow, but I was able to fix this problem by using:
+
+#+begin_src sh
+sudo apt install grub-efi-amd64-bin
+#+end_src
+
+…which forces the upgrade of that one package. (Using the ‘install’ flag on an already installed package makes it upgrade on its own). Then re-run apt upgrade, and you should find everything else flows again
+
+I had the same issue and
+
+#+begin_src sh
+sudo apt --only-upgrade install grub-efi-amd64-signed
+#+end_src
+
+did the trick.
+
+My guess is that this has something to do with your system not using Secure Boot as I can see there’s a grub-efi package suffixed with “unsigned”.
