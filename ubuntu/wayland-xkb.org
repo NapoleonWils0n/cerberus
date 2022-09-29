@@ -1,0 +1,100 @@
+#+STARTUP: content
+#+STARTUP: hideblocks
+* wayland xkb
+
+remapping keys on wayland with xkb
+
++ [[https://who-t.blogspot.com/2020/02/user-specific-xkb-configuration-part-1.html]]
+
++[[ https://who-t.blogspot.com/2020/07/user-specific-xkb-configuration-part-2.html]]
+
++ [[https://who-t.blogspot.com/2020/09/user-specific-xkb-configuration-putting.html]]
+
++ [[https://askubuntu.com/questions/482678/how-to-add-a-new-keyboard-layout-custom-keyboard-layout-definition]]
+
+Install Gnome Tweaks and then open the Keyboard and Mouse settings, 
+click the Additional Layout Options Button, at the bottom of the list you should see custom options
+
+your custom settings will be listed under this menu and you can enable them by clicking the checlbox next to their name
+
+create the ~/.config/xkb directory and sub directories
+
+#+begin_src sh
+mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
+#+end_src
+
+* symbols
+
+MacBook Air Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
+
+#+begin_example
+~/.config/xkb/symbols/custom
+#+end_example
+
+#+begin_src sh
+// Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
+partial modifier_keys
+xkb_symbols "alt_win_ctrl" {
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+};
+#+end_src
+
+* rules
+** evdev
+
+#+begin_example
+~/.config/xkb/rules/evdev
+#+end_example
+
+#+begin_src sh
+! option = symbols
+  custom:alt_win_ctrl = +custom(alt_win_ctrl)
+
+! include %S/evdev
+#+end_src
+
+** evdev.xml
+
+#+begin_example
+~/.config/xkb/rules/evdev.xml
+#+end_example
+
+#+begin_src sh
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>gb</name>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>alt_win_ctrl</name>
+            <shortDescription>alt_win_ctrl</shortDescription>
+            <description>GB(alt_win_ctrl)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>custom</name>
+        <description>custom options</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>custom:alt_win_ctrl</name>
+          <description>Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>
+
+#+end_src

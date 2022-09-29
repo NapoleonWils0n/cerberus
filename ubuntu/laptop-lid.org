@@ -1,0 +1,75 @@
+#+STARTUP: showall hideblocks
+* laptop lid
+
+If you look into the content of the file /etc/systemd/logind.conf, you’ll see three different types of default settings for the laptop lid closing.
+
+#+begin_example
+HandleLidSwitch: When the laptop is on battery power
+HandleLidSwitchExternalPower: When the laptop is plugged into a power outlet
+HandleLidSwitchDocked: When the laptop is connected to a docking station
+#+end_example
+
+If you want, you can change the value of those parameters to one of these as per your preference:
+
+#+begin_example
+lock: lock when lid is closed
+ignore: do nothing
+poweroff: shutdown
+hibernate: hibernate when lid is closed 
+#+end_example
+
+I would suggest going with ignore if you don’t want your system do anything special when the laptop lid is closed.
+
+You can either edit the /etc/systemd/logind.conf file and uncomment the said settings and change their value, or you create a new file in /etc/systemd/logind.conf.d directory. Create this directory if it doesn’t exist.
+
+#+begin_example
+/etc/systemd/logind.conf.d/logind.conf
+#+end_example
+
+#+begin_example
+#  This file is part of systemd.
+#
+#  systemd is free software; you can redistribute it and/or modify it under the
+#  terms of the GNU Lesser General Public License as published by the Free
+#  Software Foundation; either version 2.1 of the License, or (at your option)
+#  any later version.
+#
+# Entries in this file show the compile time defaults. Local configuration
+# should be created by either modifying this file, or by creating "drop-ins" in
+# the logind.conf.d/ subdirectory. The latter is generally recommended.
+# Defaults can be restored by simply deleting this file and all drop-ins.
+#
+# Use 'systemd-analyze cat-config systemd/logind.conf' to display the full config.
+#
+# See logind.conf(5) for details.
+
+[Login]
+#NAutoVTs=6
+#ReserveVT=6
+#KillUserProcesses=no
+#KillOnlyUsers=
+#KillExcludeUsers=root
+#InhibitDelayMaxSec=5
+#UserStopDelaySec=10
+#HandlePowerKey=poweroff
+#HandleSuspendKey=suspend
+#HandleHibernateKey=hibernate
+HandleLidSwitch=suspend
+HandleLidSwitchExternalPower=suspend
+HandleLidSwitchDocked=ignore
+#HandleRebootKey=reboot
+#PowerKeyIgnoreInhibited=no
+#SuspendKeyIgnoreInhibited=no
+#HibernateKeyIgnoreInhibited=no
+#LidSwitchIgnoreInhibited=yes
+#RebootKeyIgnoreInhibited=no
+#HoldoffTimeoutSec=30s
+#IdleAction=ignore
+#IdleActionSec=30min
+#RuntimeDirectorySize=10%
+#RuntimeDirectoryInodesMax=400k
+#RemoveIPC=yes
+#InhibitorsMax=8192
+#SessionsMax=8192
+
+#+end_example

@@ -1,0 +1,29 @@
+#+STARTUP: showall
+* gnome autostart application
+
+autostart directory
+
+#+begin_example
+~/.config/autostart
+#+end_example
+
+** urxvtd autostart
+
+#+begin_example
+~/.config/autostart/urxvtd.desktop
+#+end_example
+
+urxvtd terminal
+
+#+begin_src sh
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/urxvtd
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_GB]=urxvtd
+Name=urxvtd
+Comment[en_GB]=urxvt daemon
+Comment=urxvt daemon
+#+end_src
