@@ -6,7 +6,7 @@ remapping keys on wayland with xkb
 
 + [[https://who-t.blogspot.com/2020/02/user-specific-xkb-configuration-part-1.html]]
 
-+[[ https://who-t.blogspot.com/2020/07/user-specific-xkb-configuration-part-2.html]]
++ [[https://who-t.blogspot.com/2020/07/user-specific-xkb-configuration-part-2.html]]
 
 + [[https://who-t.blogspot.com/2020/09/user-specific-xkb-configuration-putting.html]]
 
