@@ -27,6 +27,8 @@ mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
 
 MacBook Air Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
 
+** custom 
+
 #+begin_example
 ~/.config/xkb/symbols/custom
 #+end_example
@@ -39,6 +41,29 @@ xkb_symbols "alt_win_ctrl" {
     key <LWIN> { [ Control_L, Control_L ] };
     key <LCTL> { [ Alt_L, Meta_L ] };
 };
+#+end_src
+
+** gb
+
+#+begin_example
+~/.config/xkb/symbols/gb
+#+end_example
+
+#+begin_src sh
+default partial alphanumeric_keys 
+xkb_symbols "alt_win_ctrl" {
+
+    // mac swap alt_win_ctrl
+
+    include "macintosh_vndr/gb"
+
+    name[Group1]= "alt_win_ctrl - Mac";
+
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+};
+
 #+end_src
 
 * rules
