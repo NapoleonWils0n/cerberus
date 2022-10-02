@@ -23,10 +23,10 @@ super 4 = switch to workspace 4
 *** move window to workspace
 
 #+begin_example
-super + shift 1 = move window to workspace 1
-super + shift 2 = move window to workspace 2
-super + shift 3 = move window to workspace 3
-super + shift 4 = move window to workspace 4
+super shift 1 = move window to workspace 1
+super shift 2 = move window to workspace 2
+super shift 3 = move window to workspace 3
+super shift 4 = move window to workspace 4
 #+end_example
 
 *** toggle fullscreen
