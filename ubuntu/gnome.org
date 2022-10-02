@@ -1,7 +1,5 @@
 #+STARTUP: content
 * gnome
-
-[[https://askubuntu.com/questions/1090202/how-do-i-disable-showing-the-activities-overview-forever]]
 ** keyboard shortcuts
 
 *** h j k l
