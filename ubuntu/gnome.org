@@ -7,7 +7,7 @@
 #+begin_example
 super h = move workspace left
 super j = switch application 
-super j = switch application backwards
+super k = switch application backwards
 super l = move workspace right
 #+end_example
 
