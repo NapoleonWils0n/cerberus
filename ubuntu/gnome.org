@@ -2,6 +2,52 @@
 * gnome
 
 [[https://askubuntu.com/questions/1090202/how-do-i-disable-showing-the-activities-overview-forever]]
+** keyboard shortcuts
+
+*** h j k l
+
+#+begin_example
+h = move workspace left
+j = switch application 
+j = switch application backwards
+l = move workspace right
+#+end_example
+
+*** switch workspaces
+
+#+begin_example
+super 1 = switch to workspace 1
+super 2 = switch to workspace 2
+super 3 = switch to workspace 3
+super 4 = switch to workspace 4
+#+end_example
+
+*** move window to workspace
+
+#+begin_example
+super + shift 1 = move window to workspace 1
+super + shift 2 = move window to workspace 2
+super + shift 3 = move window to workspace 3
+super + shift 4 = move window to workspace 4
+#+end_example
+
+*** toggle fullscreen
+
+#+begin_example
+super s = toggle fullscreen
+#+end_example
+
+*** close window
+
+#+begin_example
+shift super c = close window
+#+end_example
+
+*** application view
+
+#+begin_example
+super ctrl p = application view
+#+end_example
 
 ** unbind super number shortcuts
 
