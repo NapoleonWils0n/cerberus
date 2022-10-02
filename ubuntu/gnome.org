@@ -1,7 +1,6 @@
 #+STARTUP: content
 * gnome
 ** keyboard shortcuts
-
 *** h j k l
 
 #+begin_example
@@ -27,6 +26,13 @@ super shift 1 = move window to workspace 1
 super shift 2 = move window to workspace 2
 super shift 3 = move window to workspace 3
 super shift 4 = move window to workspace 4
+#+end_example
+
+*** move window another display
+
+#+begin_example
+super shift h = move window one monitor to the left
+super shift l = move window one monitor to the right
 #+end_example
 
 *** toggle fullscreen
