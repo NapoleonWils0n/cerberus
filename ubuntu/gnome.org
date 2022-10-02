@@ -5,10 +5,10 @@
 *** h j k l
 
 #+begin_example
-h = move workspace left
-j = switch application 
-j = switch application backwards
-l = move workspace right
+super h = move workspace left
+super j = switch application 
+super j = switch application backwards
+super l = move workspace right
 #+end_example
 
 *** switch workspaces
