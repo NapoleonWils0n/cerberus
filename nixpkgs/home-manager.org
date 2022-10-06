@@ -1,0 +1,226 @@
+#+STARTUP: content hideblocks
+* home manager nixpkgs
+
+[[https://github.com/nix-community/home-manager]]
+** home manager install
+
+If you are following Nixpkgs master or an unstable channel you can run 
+
+#+begin_src sh
+nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+#+end_src
+
+#+begin_src sh
+nix-channel --update
+#+end_src
+
+On non-NixOS, you may have to add to your ~/.zshenv
+
+#+begin_src sh
+export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+#+end_src
+
+to your shell 
+
+*** home manager install command
+
+Run the Home Manager installation command and create the first Home Manager generation: 
+
+#+begin_src sh
+nix-shell '<home-manager>' -A install
+#+end_src
+
+Once finished, Home Manager should be active and available in your user environment.
+
+*** home manager dont manage shell
+
+If you do not plan on having Home Manager manage your shell configuration then you must source the 
+
+#+begin_src sh
+$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+#+end_src
+
+file in your shell configuration. 
+
+#+begin_example
+~/.zshenv
+#+end_example
+
+#+begin_src sh
+# nix-path
+export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+
+# nix dont manage shell
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ];
+    then . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh";
+fi
+
+# nixpkgs
+if [ -e /home/djwilcox/.nix-profile/etc/profile.d/nix.sh ]; then . /home/djwilcox/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+#+end_src
+
+*** move config from config.nix to home.nix
+
+query installed packages
+
+#+begin_src sh
+nix-env --query --installed
+#+end_src
+
+output
+
+#+begin_example
+home-manager-path
+my-packages
+nix-2.11.0
+nss-cacert-3.80
+#+end_example
+
+**** remove packages
+
+#+begin_src sh
+nix-env -e my-packages
+#+end_src
+
+**** garbage collection
+
+To delete all old (non-current) generations of your current profile:
+
+#+begin_src sh
+nix-env --delete-generations old
+#+end_src
+
+After removing appropriate old generations you can run the garbage collector as follows:
+
+#+begin_src sh
+nix-store --gc
+#+end_src
+
+There is also a convenient little utility nix-collect-garbage, which when invoked with the -d (--delete-old) switch deletes all old generations of all profiles in /nix/var/nix/profiles.
+
+#+begin_src sh
+nix-collect-garbage -d
+#+end_src
+
+*** home.nix
+
+#+begin_src sh
+{ config, pkgs, ... }:
+
+let
+
+  unstable = import (fetchTarball
+    "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
+      overlays = [
+        (import (builtins.fetchTarball {
+          url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+        }))
+      ];
+    };
+
+in {
+
+    programs.emacs = {
+      enable = true;
+      package = unstable.emacsPgtkNativeComp;
+    };
+
+  home.packages = with pkgs;[
+    abook
+    apg
+    aria
+    awscli
+    bat
+    bc
+    curl
+    csvkit
+    dos2unix
+    dunst
+    exiftool
+    exa
+    feh
+    git
+    gnuplot
+    gpsbabel
+    graphviz
+    gparted
+    handbrake
+    html-xml-utils
+    imagemagick
+    jq
+    lynx
+    libxslt
+    mediainfo
+    meld
+    mpc_cli
+    mpd
+    mutt
+    ncdu
+    ncmpc
+    newsboat
+    nsxiv
+    oathToolkit
+    pandoc
+    playerctl
+    prowlarr
+    p7zip
+    ripgrep
+    socat
+    sox
+    shellcheck
+    streamlink
+    surfraw
+    sxiv
+    tig
+    tmux
+    unzip
+    viddy
+    urlscan
+    urlview
+    yt-dlp
+    weechat
+    zathura
+    zip
+  ];
+
+  # Home Manager needs a bit of information about you and the
+  # paths it should manage.
+  home.username = "djwilcox";
+  home.homeDirectory = "/home/djwilcox";
+
+  # This value determines the Home Manager release that your
+  # configuration is compatible with. This helps avoid breakage
+  # when a new Home Manager release introduces backwards
+  # incompatible changes.
+  #
+  # You can update Home Manager without changing this value. See
+  # the Home Manager release notes for a list of state version
+  # changes in each release.
+  home.stateVersion = "22.05";
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}
+#+end_src
+
+*** cachix
+
+[[https://app.cachix.org/cache/nix-community]]
+
+install
+
+#+begin_src sh
+nix-env -iA cachix -f https://cachix.org/api/v1/install
+#+end_src
+
+use the binary cache
+
+#+begin_src sh
+cachix use nix-community
+#+end_src
+
+*** home-manger switch
+
+#+begin_src sh
+home-manager switch
+#+end_src
