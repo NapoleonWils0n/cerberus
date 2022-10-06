@@ -1,0 +1,16 @@
+#+STARTUP: content
+* chromium wayland
+
+Open chromium in the url bar paste in the following url
+
+#+begin_example
+chrome://flags
+#+end_example
+
+search for wayland and change ozone-platform-hint to auto
+
+#+begin_example
+ozone-platform-hint auto
+#+end_example
+
+Note: When changing the "ozone-platform-hint" in browser flags menu, the browser will provide you a relaunch button. Do not use it, because the browser will still be relaunched in a platform it was before changing the flag. You need to close the browser, then open it.
