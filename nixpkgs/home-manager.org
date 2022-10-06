@@ -2,6 +2,47 @@
 * home manager nixpkgs
 
 [[https://github.com/nix-community/home-manager]]
+
+** nixos install
+*** single user install
+
+**** create the /nix directory
+
+#+begin_src sh
+sudo mkdir -p /nix
+#+end_src
+
+**** chown the directory
+
+Use the chown command and whoami to change the owener of the nix directory
+to your user account
+
+#+begin_src sh
+sudo chown $(whoami) /nix
+#+end_src
+
+**** nixpkgs single user install script
+
+#+begin_src sh
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+#+end_src
+
+**** run the following command after the install
+
+replace username with your user name
+
+#+begin_src sh
+. /home/username/.nix-profile/etc/profile.d/nix.sh
+#+end_src
+
+** desktop files
+
+add the following code to your shell config file like your ~/.zshenv file
+
+#+begin_src sh
+export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
+#+end_src
+
 ** home manager install
 
 If you are following Nixpkgs master or an unstable channel you can run 
