@@ -1,0 +1,27 @@
+#+STARTUP: showall
+* ubuntu change the default terminal
+
+You can use it to change the default command line text editor, terminal and more.
+To do that, run the following command:
+
+#+begin_src sh
+sudo update-alternatives --config x-terminal-emulator
+#+end_src
+
+It will show all the terminal emulators present on your system that can be used as default.
+The current default terminal is marked with the asterisk.
+
+#+begin_example
+user@computer:~$ sudo update-alternatives --config x-terminal-emulator 
+There are 2 choices for the alternative x-terminal-emulator (providing /usr/bin/x-terminal-emulator).
+
+  Selection    Path                             Priority   Status
+------------------------------------------------------------
+  0            /usr/bin/gnome-terminal.wrapper   40        auto mode
+  1            /usr/bin/gnome-terminal.wrapper   40        manual mode
+* 2            /usr/bin/st                       15        manual mode
+
+Press <enter> to keep the current choice[*], or type selection number:
+#+end_example
+
+All you have to do is to enter the selection number.
