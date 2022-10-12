@@ -1,0 +1,22 @@
+#+STARTUP: showall
+* update firmware
+
+[[https://itsfoss.com/update-firmware-ubuntu/]]
+
+The software center in Ubuntu is capable of updating the firmware. But in situations when it fails for some reasons, you can use the command line tool fwupd.
+
+fwupd is an open source daemon that handles firmware upgrades in Linux based systems. It is created by GNOME developer Richard Hughes. Developers from Dell also contributed to the development of this open source tool.
+
+Basically, it utilizes the LVFS, Linux Vendor Firmware Service. Hardware vendors upload redistributable firmware to the LVFS site and thanks to fwupd, you can upgrade those firmware from inside the operating system itself. fwupd is supported by major Linux distributions like Ubuntu and Fedora.
+
+** Check if there are any firmware updates available.
+
+#+begin_src sh
+sudo fwupdmgr refresh
+#+end_src
+
+** After this, run the firmware update:
+
+#+begin_src sh
+sudo fwupdmgr update
+#+end_src
