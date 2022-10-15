@@ -1,0 +1,130 @@
+#+STARTUP: content hideblocks
+* emacs vterm install
+
+[[https://github.com/akermu/emacs-libvterm]]
+
+[[https://github.com/suonlight/multi-vterm]]
+
+** required packages to build vterm
+
+install the following packages
+
+#+begin_src sh
+sudo apt install cmake libtool libtool-bin
+#+end_src
+
+** install the vterm package from melpa
+
+#+begin_example
+M-x package-install vterm
+#+end_example
+
+** install the vterm library
+
+run vterm which will prompt you to download and the install the vterm library
+
+#+begin_example
+M-x vterm
+#+end_example
+
+** install the multi-vterm package from melpa
+
+#+begin_example
+M-x package-install multi-vterm
+#+end_example
+
+** emacs init.el
+
++ vterm prompt, font and h1 line mode
+
+#+begin_src emacs-lisp
+;; vterm prompt regex
+(setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
+
+;; font settings
+(defvar efs/default-font-size 160)
+(defvar efs/default-variable-font-size 160)
+
+;; Set the default pitch face
+(set-face-attribute 'default nil :font "Fira Code Retina" :height efs/default-font-size)
+
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height efs/default-font-size)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+
+;; h1 line mode
+;; let's enable it for all programming major modes
+(add-hook 'prog-mode-hook #'hl-line-mode)
+;; and for all modes derived from text-mode
+(add-hook 'text-mode-hook #'hl-line-mode)
+
+;;(set-face-background hl-line-face "#073042")
+(set-face-background hl-line-face "#073042")
+#+end_src
+
++ vterm evil
+
+#+begin_src emacs-lisp
+;; evil
+(setq evil-want-keybinding nil)
+(require 'evil)
+(evil-collection-init)
+(evil-mode 1)
+
+;; vterm and evil
+(with-eval-after-load 'evil
+  (evil-set-initial-state 'vterm-mode 'emacs))
+#+end_src
+
++ multi-vterm keybindings
+
+#+begin_src emacs-lisp
+;; Multi Vterm keybinds ------------------------------------------------------------------------------
+
+(global-set-key (kbd "C-c t v") 'multi-vterm)
+(global-set-key (kbd "C-c t n") 'multi-vterm-next)
+(global-set-key (kbd "C-c t p") 'multi-vterm-prev)
+(global-set-key (kbd "C-c t r") 'multi-vterm-rename-buffer)
+(global-set-key (kbd "C-c t d") 'multi-vterm-dedicated-open)
+(global-set-key (kbd "C-c t j") 'multi-vterm-project)
+(global-set-key (kbd "C-c t c") 'multi-vterm-dedicated-close)
+(global-set-key (kbd "C-c t t") 'multi-vterm-dedicated-toggle)
+(global-set-key (kbd "C-c t s") 'multi-vterm-dedicated-select)
+#+end_src
+
+** zshrc
+
+vterm prompt, directory and prompt tracking
+
+#+begin_src sh
+# vterm
+vterm_printf(){
+    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}
+
+# vterm clear scroll back
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+fi
+
+# vterm Directory tracking and Prompt tracking
+vterm_prompt_end() {
+    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+}
+setopt PROMPT_SUBST
+PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+
+autoload -U add-zsh-hook
+add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+
+#+end_src
