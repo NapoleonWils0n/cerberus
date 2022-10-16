@@ -60,15 +60,12 @@ M-x package-install multi-vterm
 ;; and for all modes derived from text-mode
 (add-hook 'text-mode-hook #'hl-line-mode)
 
-;;(set-face-background hl-line-face "#073042")
-(set-face-background hl-line-face "#073042")
 #+end_src
 
 + vterm evil
 
 #+begin_src emacs-lisp
 ;; evil
-(setq evil-want-keybinding nil)
 (require 'evil)
 (evil-collection-init)
 (evil-mode 1)
@@ -76,11 +73,17 @@ M-x package-install multi-vterm
 ;; vterm and evil
 (with-eval-after-load 'evil
   (evil-set-initial-state 'vterm-mode 'emacs))
+
+(setq evil-want-keybinding nil)
 #+end_src
 
 + multi-vterm keybindings
 
 #+begin_src emacs-lisp
+;; vterm keybinds ---------------------------------------------------------------------------------------
+
+(global-set-key (kbd "C-c p") 'vterm-yank-primary)
+
 ;; Multi Vterm keybinds ------------------------------------------------------------------------------
 
 (global-set-key (kbd "C-c t v") 'multi-vterm)
