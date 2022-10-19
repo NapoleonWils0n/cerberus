@@ -1,0 +1,157 @@
+#+STARTUP: content
+* alacritty install
+
+[[https://github.com/alacritty/alacritty/blob/master/INSTALL.md]]
+
+** Clone the source code
+
+clone the alacritty git repos
+
+#+begin_src sh
+git clone https://github.com/alacritty/alacritty.git
+#+end_src
+
+change directory into the alacritty git repo
+
+#+begin_src sh
+cd alacritty
+#+end_src
+
+** Install the Rust compiler with rustup
+
+#+begin_src sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
+
+Rust is installed now. Great!
+
+To get started you may need to restart your current shell.
+This would reload your PATH environment variable to include
+Cargo's bin directory ($HOME/.cargo/bin).
+
+To configure your current shell, run:
+
+#+begin_src sh
+source "$HOME/.cargo/env"
+#+end_src
+
+
+To make sure you have the right Rust compiler installed, run
+
+#+begin_src sh
+rustup override set stable
+#+end_src
+
+then run 
+
+#+begin_src sh
+rustup update stable
+#+end_src
+
+** Dependencies
+
+These are the minimum dependencies required to build Alacritty, please note that with some setups additional dependencies might be desired.
+
+If you're running Wayland with an Nvidia GPU, you'll likely want the EGL drivers installed too (these are called libegl1-mesa-dev on Ubuntu).
+
++ debian/ubuntu
+
+#+begin_src sh
+sudo apt-get install cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3 libegl1-mesa-dev
+#+end_src
+
+** Building
+
+On Linux/BSD, if it is desired to build Alacritty without support for either the X11 or Wayland rendering backend the following commands can be used.
+
+Force support for only Wayland
+
+#+begin_src sh
+cargo build --release --no-default-features --features=wayland
+#+end_src
+
+If all goes well, this should place a binary at target/release/alacritty.
+
+** Terminfo
+
+If the following command returns without any errors, the alacritty terminfo is already installed:
+
+#+begin_src sh
+infocmp alacritty
+#+end_src
+
+If it is not present already, you can install it globally with the following command:
+
+#+begin_src sh
+sudo tic -xe alacritty,alacritty-direct extra/alacritty.info
+#+end_src
+
+** Desktop Entry
+
+Many Linux and BSD distributions support desktop entries for adding applications to system menus. This will install the desktop entry for Alacritty:
+
+#+begin_src sh
+sudo cp target/release/alacritty /usr/local/bin # or anywhere else in $PATH
+sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
+sudo desktop-file-install extra/linux/Alacritty.desktop
+sudo update-desktop-database
+#+end_src
+
+If you are having problems with Alacritty's logo, you can replace it with prerendered PNGs and simplified SVGs available in the extra/logo/compat directory.
+
+** Manual Page
+
+Installing the manual page requires the additional dependency gzip.
+
+#+begin_src sh
+sudo mkdir -p /usr/local/share/man/man1
+gzip -c extra/alacritty.man | sudo tee /usr/local/share/man/man1/alacritty.1.gz > /dev/null
+gzip -c extra/alacritty-msg.man | sudo tee /usr/local/share/man/man1/alacritty-msg.1.gz > /dev/null
+#+end_src
+
+** Shell completions
+
+To get automatic completions for Alacritty's flags and arguments you can install the provided shell completions.
+
+To install the completions for zsh, you can place the extra/completions/_alacritty file in any directory referenced by $fpath.
+
+*** system zsh completions
+
+copy extra/completions/_alacritty to //usr/share/zsh/vendor-completions/
+
+#+begin_src sh
+sudo cp extra/completions/_alacritty /usr/share/zsh/vendor-completions
+#+end_src
+
+*** user zsh completions
+
+Skip this step if you have installed the alacritty zsh completion to the system zsh completions directory
+
+If you do not already have such a directory registered through your ~/.zshrc, you can add one like this:
+
+#+begin_src sh
+mkdir -p ${ZDOTDIR:-~}/.zsh_functions
+echo 'fpath+=${ZDOTDIR:-~}/.zsh_functions' >> ${ZDOTDIR:-~}/.zshrc
+#+end_src
+
+Then copy the completion file to this directory:
+
+#+begin_src sh
+cp extra/completions/_alacritty ${ZDOTDIR:-~}/.zsh_functions/_alacritty
+#+end_src
+
+** alacritty config file
+
+create the alacritty directory
+
+#+begin_src sh
+mkdir -p ~/.config/alacritty
+#+end_src
+
+copy the alacritty.yml file to ~/.config/alacritty
+
+#+begin_src sh
+cp alacritty.yml ~/.config/alacritty
+#+end_src
+
+edit the alacritty.yml config and change the settings
