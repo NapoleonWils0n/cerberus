@@ -48,6 +48,14 @@ then run
 rustup update stable
 #+end_src
 
+*** cargo profile
+
+rust will add the following code to your ~/.profile
+
+#+begin_src sh
+. "$HOME/.cargo/env"
+#+end_src
+
 ** Dependencies
 
 These are the minimum dependencies required to build Alacritty, please note that with some setups additional dependencies might be desired.
