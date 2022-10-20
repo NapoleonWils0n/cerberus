@@ -125,7 +125,7 @@ To install the completions for zsh, you can place the extra/completions/_alacrit
 
 *** system zsh completions
 
-copy extra/completions/_alacritty to //usr/share/zsh/vendor-completions/
+copy extra/completions/_alacritty to /usr/share/zsh/vendor-completions/
 
 #+begin_src sh
 sudo cp extra/completions/_alacritty /usr/share/zsh/vendor-completions
