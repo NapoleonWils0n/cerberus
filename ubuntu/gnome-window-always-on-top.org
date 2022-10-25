@@ -1,0 +1,5 @@
+#+STARTUP: showall
+* gnome window always on top
+
+press alt tab and select always on top, 
+this will set the window to float above other windows
