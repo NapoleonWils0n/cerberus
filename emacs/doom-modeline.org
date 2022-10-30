@@ -1,0 +1,31 @@
+#+STARTUP: showall
+* emacs doom-modeline install
+
+[[https://github.com/seagle0128/doom-modeline]]
+
+** install doom-modeline
+
+#+begin_example
+M-x package-install doom-modeline
+#+end_example
+
+** install all-the-icons
+
+#+begin_example
+M-x package-install all-the-icons
+#+end_example
+
+** install all-the-icons-fonts
+
+#+begin_example
+M-x all-the-icons-install-fonts
+#+end_example
+
+** init.el
+
+add to your emacs init.el file
+
+#+begin_src emacs-lisp
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+#+end_src
