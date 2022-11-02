@@ -15,6 +15,12 @@ M-x package-install doom-modeline
 M-x package-install all-the-icons
 #+end_example
 
+** install all-the-icons-dired
+
+#+begin_example
+M-x package-install all-the-icons-dired
+#+end_example
+
 ** install all-the-icons-fonts
 
 #+begin_example
