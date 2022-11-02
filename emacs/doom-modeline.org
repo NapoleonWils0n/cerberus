@@ -26,6 +26,12 @@ M-x all-the-icons-install-fonts
 add to your emacs init.el file
 
 #+begin_src emacs-lisp
+;; Don’t compact font caches during GC.
+(setq inhibit-compacting-font-caches t)
+#+end_src
+
+#+begin_src emacs-lisp
 (require 'doom-modeline)
 (doom-modeline-mode 1)
 #+end_src
+
