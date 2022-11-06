@@ -15,7 +15,7 @@
     'use strict';
 
     docReady(function() {
-        document.getElementsByClassName('btn-success')[0].click();
+        document.getElementsByClassName('btn-block')[0].click();
     });
 })();
 
