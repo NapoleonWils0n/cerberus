@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skip cutin.it
 // @namespace    Violentmonkey Scripts
-// @version      1.0
+// @version      1.1
 // @description  Skip tinyurl.is redirects
 // @author       Luke Pothier <lukepothier@gmail.com>
 // @match        https://cutin.it/*
