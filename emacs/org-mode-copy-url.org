@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* org mode copy url
+
+copy a url from an org link
+
+#+begin_example
+C-c C-l C-a C-k C-g
+#+end_example
