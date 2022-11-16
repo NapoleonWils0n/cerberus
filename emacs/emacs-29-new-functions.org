@@ -1,0 +1,163 @@
+#+STARTUP: show2levels
+* emacs 29 new commands
+
+Emacs news
+
+[[https://github.com/emacs-mirror/emacs/blob/master/etc/NEWS]]
+
+Legacy define-key and global-set-key in Emacs
+
+[[https://blog.drshapeless.com/p/legacy-define-key-and-global-set-key-in-emacs.html][legacy-define-key-and-global-set-key-in-emacs]]
+
+** keymap
+*** Use 'keymap-set' instead of 'define-key'.
+
+*** Use 'keymap-global-set' instead of 'global-set-key'.
+
+*** Use 'keymap-local-set' instead of 'local-set-key'.
+
+*** Use 'keymap-global-unset' instead of 'global-unset-key'.
+
+*** Use 'keymap-local-unset' instead of 'local-unset-key'.
+
+*** Use 'keymap-substitute' instead of 'substitute-key-definition'.
+
+*** Use 'keymap-set-after' instead of 'define-key-after'.
+
+*** Use 'keymap-lookup' instead of 'lookup-keymap' and 'key-binding'.
+
+*** Use 'keymap-local-lookup' instead of 'local-key-binding'.
+
+*** Use 'keymap-global-lookup' instead of 'global-key-binding'.
+
+*** 'define-key' now takes an optional REMOVE argument.
+
+If non-nil, remove the definition from the keymap.  This is subtly
+different from setting a definition to nil (when the keymap has a
+parent).
+
+*** New function 'key-valid-p'.
+
+The 'kbd' function is quite permissive, and will try to return
+something usable even if the syntax of the argument isn't completely
+correct.  The 'key-valid-p' predicate does a stricter check of the
+syntax.
+
+** package
+*** New command 'package-update'.
+
+This command allows you to upgrade packages without using 'M-x list-packages'.
+
+*** New command 'package-update-all'.
+
+This command allows updating all packages without any queries.
+
+*** New commands 'package-recompile' and 'package-recompile-all'.
+
+These commands can be useful if the ".elc" files are out of date
+(invalid byte code and macros).
+
+*** New command 'package-vc-install'
+
+Packages can now be installed directly from source by cloning from a
+repository.
+
+*** New command 'package-vc-install-from-checkout'
+
+An existing checkout can now be loaded via package.el, by creating a
+symbolic link from the usual package directory to the checkout.
+
+*** New command 'package-vc-checkout'
+
+Used to fetch the source of a package by cloning a repository without
+activating the package.
+
+*** New command 'package-vc-prepare-patch'
+
+This command allows you to send patches to package maintainers, for
+packages checked out using 'package-vc-install'.
+
+*** New command 'package-report-bug'
+
+This command helps you compose an email for sending bug reports to
+package maintainers.
+
+*** New user option 'package-vc-selected-packages'
+
+By customizing this user option you can specify specific packages to
+install.
+
+** emacsclient
+*** New command-line option '-r'/'--reuse-frame' for emacsclient.
+
+With this command-line option, Emacs reuses an existing graphical client
+frame if one exists; otherwise it creates a new frame.
+
+add the following code to your ~/.zshenv file
+
+#+begin_src sh
+# set emacsclient as editor
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -r -a emacs"
+export VISUAL="emacsclient -r -c -a emacs"
+#+end_src
+
+** frames
+*** New frame parameter 'alpha-background' and X resource "alphaBackground".
+
+This controls the opacity of the text background when running on a composited display.
+
+** windows
+*** New commands 'split-root-window-below' and 'split-root-window-right'.
+
+These commands split the root window in two, and are bound to 'C-x w 2'
+and 'C-x w 3', respectively.  A number of other useful window-related
+commands are now available on the 'C-x w' prefix.
+
+** dired 
+*** New user option 'dired-free-space'.
+
+hide free space text in dired
+
+#+begin_src emacs-lisp
+(setq dired-free-space nil)
+#+end_src
+
+** scratch
+*** New command 'scratch-buffer'.
+
+This command switches to the "*scratch*" buffer.  If "*scratch*" doesn't
+exist, the command creates it first.  You can use this command if you
+inadvertently delete the "*scratch*" buffer.
+
+** emacs restart
+*** New command 'restart-emacs'.
+
+This is like 'save-buffers-kill-emacs', but instead of just killing
+the current Emacs process at the end, it starts a new Emacs process
+(using the same command line arguments as the running Emacs process).
+'kill-emacs' and 'save-buffers-kill-emacs' have also gained new
+optional parameters to restart instead of just killing the current
+process.
+
+** buffers
+*** New display action 'display-buffer-full-frame'.
+
+This action removes other windows on the frame when displaying a buffer.
+
+
+** tab bar
+*** New keymap 'tab-bar-history-mode-map'.
+
+By default, it contains 'C-c <left>' and 'C-c <right>' to browse
+the history of tab window configurations back and forward.
+
+
+** mouse
+*** New minor mode 'pixel-scroll-precision-mode'.
+
+When enabled, and if your mouse supports it, you can scroll the
+display up or down at pixel resolution, according to what your mouse
+wheel reports.  Unlike 'pixel-scroll-mode', this mode scrolls the
+display pixel-by-pixel, as opposed to only animating line-by-line
+scrolls.
