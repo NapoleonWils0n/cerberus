@@ -1,0 +1,5 @@
+#+STARTUP: showall
+* picture in picture shortcut
+
+To access via the keyboard, press the combination Ctrl + Shift + ].
+Firefox will attempt to launch the most relevant video on the page into a Picture-in-Picture window, or will close it if already open.
