@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# kill gnome notifications
+
+pkill -f 'org.gnome.Shell.Notifications'
+

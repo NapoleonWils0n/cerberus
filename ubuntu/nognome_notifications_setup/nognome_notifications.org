@@ -1,0 +1,66 @@
+#+STARTUP: content
+* no gnome notifications
+** script no gnome notifications
+
+use pkill to kill the org.gnome.Shell.Notifications
+
+#+begin_src sh
+#!/bin/sh
+
+# kill gnome notifications
+
+pkill -f 'org.gnome.Shell.Notifications'
+
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+chmod +x nognome_notifications
+#+end_src
+
+move the script to /usr/local/bin
+
+#+begin_src sh
+sudo mv nognome_notifications /usr/local/bin
+#+end_src
+
+** autostart desktop file no gnome notifications
+
+autostart desktop file to run the nognome_notifications script after login
+
+#+begin_example
+[Desktop Entry]
+Type=Application
+Exec=/usr/local/bin/nognome_notifications
+Hidden=True
+NoDisplay=True
+X-GNOME-Autostart-enabled=true
+Name=nognome_notifications
+Comment=nognome_notifications
+#+end_example
+
+
+move the nognome_notifications.desktop file to ~/.config/autostart
+
+#+begin_src sh
+mv nognome_notifications.desktop ~/.config/autostart
+#+end_src
+
+** reboot
+
+reboot your computer and test that gnome notifications has been killed by running notify-send
+
+#+begin_src sh
+notify-send "test"
+#+end_src
+
+you should see an error message in the terminal saying
+
+#+begin_example
+GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+#+end_example
+
+and no gnome notification
+
+you can now create another autostart file to start another notification server
