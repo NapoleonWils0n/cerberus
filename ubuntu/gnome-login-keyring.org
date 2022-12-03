@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* gnome login keyring
+
+fix for user password not in login keyring
+move the login.keyring to the desktop and reboot
+
+#+begin_src sh
+mv ~/.local/share/keyrings/login.keyring ~/Desktop
+#+end_src
