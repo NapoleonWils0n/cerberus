@@ -1,0 +1,89 @@
+#+STARTUP: content hideblocks
+* gnome extensions nvidia fix
+
+[[https://github.com/NVIDIA/egl-wayland/issues/41#issuecomment-1279097003]]
+
+** gnome-extensions-app
+
+gnome-extensions-app
+
+#+begin_src sh
+#!/bin/sh
+
+# gnome-extensions-app nvidia fix
+
+# check if nvidia file exists
+file='/usr/share/glvnd/egl_vendor.d/50_mesa.json'
+
+# gnome-extensions-app path
+extensions='/usr/bin/gnome-extensions-app'
+
+# check if running wayland
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    # check if nvidia file exists
+    if [ -f "$file" ]; then 
+      export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
+      /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Extensions & "${extensions}" "$@" 2>/dev/null
+    else
+      "${extensions}" "$@"
+    fi
+else
+    # xorg
+      "${extensions}" "$@"
+fi
+#+end_src
+
+make the script executable 
+
+#+begin_src sh
+chmod +x gnome-extensions-app
+#+end_src
+
+and move it to your bin directory
+
+#+begin_src sh
+mv gnome-extensions-app ~/bin
+#+end_src
+
+** extensions-manager
+
+extensions-manager
+
+#+begin_src sh
+#!/bin/sh
+
+# extensions-manager nvidia fix
+
+# check if nvidia file exists
+file='/usr/share/glvnd/egl_vendor.d/50_mesa.json'
+
+# gnome-extensions-app path
+extension='/usr/bin/extension-manager'
+
+# check if running wayland
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    # check if nvidia file exists
+    if [ -f "$file" ]; then 
+      export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
+      /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Extensions & "${extension}" 2>/dev/null
+    else
+      "${extension}"
+    fi
+else
+    # xorg
+      "${extension}"
+fi
+#+end_src
+
+make the script executable 
+
+#+begin_src sh
+chmod +x extensions-manager
+#+end_src
+
+and move it to your bin directory
+
+#+begin_src sh
+mv extensions-manager ~/bin
+#+end_src
+

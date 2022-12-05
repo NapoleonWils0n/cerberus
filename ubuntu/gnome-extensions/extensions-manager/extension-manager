@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# extensions-manager nvidia fix
+
+# check if nvidia file exists
+file='/usr/share/glvnd/egl_vendor.d/50_mesa.json'
+
+# gnome-extensions-app path
+extension='/usr/bin/extension-manager'
+
+# check if running wayland
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    # check if nvidia file exists
+    if [ -f "$file" ]; then 
+      export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
+      /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Extensions & "${extension}" 2>/dev/null
+    else
+      "${extension}"
+    fi
+else
+    # xorg
+      "${extension}"
+fi
