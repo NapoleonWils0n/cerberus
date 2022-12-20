@@ -1,0 +1,50 @@
+#+STARTUP: content
+* desktop entries
+
+location of desktop entries for applications on linux
+
+** package manager
+
++ system
+
+#+begin_src sh
+/usr/share/applications
+#+end_src
+
++ user
+
+#+begin_src sh
+~/.local/share/applications
+#+end_src
+  
+** snap
+
++ system
+
+#+begin_src sh
+/var/lib/snapd/desktop/applications
+#+end_src
+
+** flatpak
+
++ system
+
+#+begin_src sh
+/var/lib/flatpak/exports/share/applications
+#+end_src
+
++ user
+
+#+begin_src sh
+~/.local/share/flatpak/exports/share/applications
+#+end_src
+
+** nixpkgs
+
++ user
+
+#+begin_src sh
+~/.nix-profile/share/applications
+#+end_src
+
+
