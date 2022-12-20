@@ -1,0 +1,19 @@
+#+STARTUP: content
+* emacs frames
+** frame
+#+begin_src emacs-lisp
+(with-current-buffer (get-buffer-create "*scratch*")
+(let ((frame (make-frame '((name . "alfred")
+                               (auto-raise . t) ; focus on this frame
+                               (fullscreen . 0) ; no fullscreen
+                               (undecorated . t) ; remove title bar
+                               (height . 12)
+                               (width . 60)
+                               (tool-bar-lines . 0)
+                               (menu-bar-lines . 0)
+                               (left . 613)
+                               (top . 391)
+                               (setq-local default-frame-alist '((left . 0) (fullscreen . 0)))
+                               (vertical-scroll-bars . nil))))))
+                               (setq-local mode-line-format nil))
+#+end_src
