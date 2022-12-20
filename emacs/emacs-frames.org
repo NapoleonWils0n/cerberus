@@ -7,8 +7,8 @@
                                (auto-raise . t) ; focus on this frame
                                (fullscreen . 0) ; no fullscreen
                                (undecorated . t) ; remove title bar
-                               (height . 12)
-                               (width . 60)
+                               (height . 20)
+                               (width . 80)
                                (tool-bar-lines . 0)
                                (menu-bar-lines . 0)
                                (left . 613)
