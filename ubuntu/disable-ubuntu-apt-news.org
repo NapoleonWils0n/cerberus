@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* disable ubuntu apt news
+
+#+begin_src sh
+sudo pro config set apt_news=false
+#+end_src
