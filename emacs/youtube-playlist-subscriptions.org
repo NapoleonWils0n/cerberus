@@ -1,0 +1,24 @@
+#+TITLE: Youtube Playlist Subscriptions
+#+STARTUP: overview
+#+STARTUP: hideblocks
+* noweb code block
+
+use yt-dlp to dump the json output of a playlist
+and pipe into jq and extract the title and url and save as org link
+
+#+NAME: noweb-block
+#+begin_src sh 
+yt-dlp -j --flat-playlist "${url}" \
+| jq -rj '"[[\(.url)][\(.title)]]\n"'
+#+end_src
+
+#+RESULTS: noweb-block
+
+* emacs playlist
+#+NAME: emacs
+#+HEADER: :var url="https://www.youtube.com/playlist?list=PL7hhhG5qUoXk266pUiPhm-gqBgM5P8vBV"
+#+BEGIN_SRC sh :async t :results output list :noweb yes :wrap
+<<noweb-block>>
+#+end_src
+
+
