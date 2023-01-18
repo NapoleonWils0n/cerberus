@@ -247,7 +247,6 @@ INST_PARTSIZE_RPOOL=
 #+end_src
 
 **** System Installation
-
 ***** Partition the disks:
 
 #+begin_src sh
@@ -323,7 +322,6 @@ zpool create \
 This section implements dataset layout as described in overview.
 
 ***** Create root system container:
-
 ****** Encrypted
 
 Pick a strong password. Once compromised, changing password will not keep your data safe. See zfs-change-key(8) for more info:
@@ -366,6 +364,125 @@ done
 
 mkdir -p /mnt/boot/efi
 mount -t vfat $(echo $DISK | cut -f1 -d\ )-part1 /mnt/boot/efi
+#+end_src
+
+**** System Configuration
+
+***** Disable cache, stale cache will prevent system from booting:
+
+#+begin_src sh
+mkdir -p /mnt/etc/zfs/
+rm -f /mnt/etc/zfs/zpool.cache
+touch /mnt/etc/zfs/zpool.cache
+chmod a-w /mnt/etc/zfs/zpool.cache
+chattr +i /mnt/etc/zfs/zpool.cache
+#+end_src
+
+***** Generate initial system configuration:
+
+#+begin_src sh
+nixos-generate-config --root /mnt
+#+end_src
+
+***** Import ZFS-specific configuration:
+
+#+begin_src sh
+sed -i "s|./hardware-configuration.nix|./hardware-configuration.nix ./zfs.nix|g" /mnt/etc/nixos/configuration.nix
+#+end_src
+
+***** Configure hostid:
+
+#+begin_src sh
+tee -a /mnt/etc/nixos/zfs.nix <<EOF
+{ config, pkgs, ... }:
+
+{ boot.supportedFilesystems = [ "zfs" ];
+  networking.hostId = "$(head -c 8 /etc/machine-id)";
+  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+EOF
+#+end_src
+
+***** Configure bootloader for both legacy boot and UEFI boot and mirror bootloader:
+
+#+begin_src sh
+sed -i '/boot.loader/d' /mnt/etc/nixos/configuration.nix
+sed -i '/services.xserver/d' /mnt/etc/nixos/configuration.nix
+tee -a /mnt/etc/nixos/zfs.nix <<-'EOF'
+boot.loader.efi.efiSysMountPoint = "/boot/efi";
+boot.loader.efi.canTouchEfiVariables = false;
+boot.loader.generationsDir.copyKernels = true;
+boot.loader.grub.efiInstallAsRemovable = true;
+boot.loader.grub.enable = true;
+boot.loader.grub.version = 2;
+boot.loader.grub.copyKernels = true;
+boot.loader.grub.efiSupport = true;
+boot.loader.grub.zfsSupport = true;
+boot.loader.grub.extraPrepareConfig = ''
+  mkdir -p /boot/efis
+  for i in  /boot/efis/*; do mount $i ; done
+
+  mkdir -p /boot/efi
+  mount /boot/efi
+'';
+boot.loader.grub.extraInstallCommands = ''
+ESP_MIRROR=$(mktemp -d)
+cp -r /boot/efi/EFI $ESP_MIRROR
+for i in /boot/efis/*; do
+ cp -r $ESP_MIRROR/EFI $i
+done
+rm -rf $ESP_MIRROR
+'';
+boot.loader.grub.devices = [
+EOF
+
+for i in $DISK; do
+  printf "      \"$i\"\n" >>/mnt/etc/nixos/zfs.nix
+done
+
+tee -a /mnt/etc/nixos/zfs.nix <<EOF
+    ];
+EOF
+#+end_src
+
+***** Mount datasets with zfsutil option:
+
+#+begin_src sh
+sed -i 's|fsType = "zfs";|fsType = "zfs"; options = [ "zfsutil" "X-mount.mkdir" ];|g' \
+/mnt/etc/nixos/hardware-configuration.nix
+#+end_src
+
+***** Set root password:
+
+#+begin_src sh
+rootPwd=$(mkpasswd -m SHA-512 -s)
+#+end_src
+
+***** Declare password in configuration:
+
+#+begin_src sh
+tee -a /mnt/etc/nixos/zfs.nix <<EOF
+users.users.root.initialHashedPassword = "${rootPwd}";
+}
+EOF
+#+end_src
+
+***** Install system and apply configuration:
+
+#+begin_src sh
+nixos-install -v --show-trace --no-root-passwd --root /mnt
+#+end_src
+
+***** Unmount filesystems:
+
+#+begin_src sh
+umount -Rl /mnt
+zpool export -a
+#+end_src
+
+***** Reboot:
+
+#+begin_src sh
+reboot
 #+end_src
 
 **** enable ZFS support
