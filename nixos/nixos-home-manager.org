@@ -188,6 +188,64 @@ By default, all ZFS pools available to the system will be forcibly imported duri
 If you are running within a VM and NixOS fails to import the zpool on reboot, you may need to add boot.zfs.devNodes = "/dev/disk/by-path"; to your configuration.nix file.
 
 *** zfs on root
+**** preperation
+
+Disable Secure Boot. ZFS modules can not be loaded if Secure Boot is enabled.
+
+Download NixOS Live Image and boot from it.
+
+Connect to the Internet.
+
+Set root password or /root/.ssh/authorized_keys.
+
+Start SSH server:
+
+#+begin_src sh
+systemctl restart sshd
+#+end_src
+
+Connect from another computer:
+
+#+begin_src sh
+ssh root@192.168.1.19
+#+end_src
+
+Target disk
+
+List available disks with:
+
+#+begin_src sh
+ls /dev/disk/by-id/*
+#+end_src
+
+If using virtio as disk bus, use /dev/disk/by-path/*.
+
+Declare disk array:
+
+#+begin_src sh
+DISK='/dev/disk/by-id/ata-FOO /dev/disk/by-id/nvme-BAR'
+#+end_src
+
+For single disk installation, use:
+
+#+begin_src sh
+DISK='/dev/disk/by-id/disk1'
+#+end_src
+
+Set partition size:
+
+Set swap size. It’s recommended to setup a swap partition. If you intend to use hibernation, the minimum should be no less than RAM size. Skip if swap is not needed:
+
+#+begin_src sh
+INST_PARTSIZE_SWAP=8
+#+end_src
+
+Root pool size, use all remaining disk space if not set:
+
+#+begin_src sh
+INST_PARTSIZE_RPOOL=
+#+end_src
+
 **** enable ZFS support
 
 Common ZFS installation guides are now maintained at OpenZFS Documentation website. Visit there for details and if an issue arises, submit an issue or pull request. 
