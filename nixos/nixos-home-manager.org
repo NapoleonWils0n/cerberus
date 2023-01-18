@@ -1,0 +1,382 @@
+#+STARTUP: content
+* nixos home-manager
+** nixos
+
+
+Creating bootable USB flash drive from a Terminal on Linux
+
+Plug in the USB flash drive.
+
+Find the corresponding device with lsblk. You can distinguish them by their size.
+
+Make sure all partitions on the device are properly unmounted. Replace sdX with your device (e.g. sdb). 
+
+#+begin_src sh
+sudo umount /dev/sdX*
+#+end_src
+
+Then use the dd utility to write the image to the USB flash drive. 
+
+#+begin_src sh
+sudo dd if=<path-to-image> of=/dev/sdX bs=4M conv=fsync
+#+end_src
+
+** boot from usb
+
+To begin the installation, you have to boot your computer from the install drive.
+
+Plug in the install drive. Then turn on or restart your computer.
+
+Open the boot menu by pressing the appropriate key, which is usually shown on the display on early boot. Select the USB flash drive (the option usually contains the word “USB”). If you choose the incorrect drive, your computer will likely continue to boot as normal. In that case restart your computer and pick a different drive.
+    Note
+
+The key to open the boot menu is different across computer brands and even models. It can be F12, but also F1, F9, F10, Enter, Del, Esc or another function key. If you are unsure and don’t see it on the early boot screen, you can search online for your computers brand, model followed by “boot from usb”. The computer might not even have that feature, so you have to go into the BIOS/UEFI settings to change the boot order. Again, search online for details about your specific computer model.
+
+For Apple computers with Intel processors press and hold the ⌥ (Option or Alt) key until you see the boot menu. On Apple silicon press and hold the power button.
+
+If your computer supports both BIOS and UEFI boot, choose the UEFI option.
+
+If you use a CD for the installation, the computer will probably boot from it automatically. If not, choose the option containing the word “CD” from the boot menu.
+
+Shortly after selecting the appropriate boot drive, you should be presented with a menu with different installer options. Leave the default and wait (or press Enter to speed up).
+
+The graphical images will start their corresponding desktop environment and the graphical installer, which can take some time. The minimal images will boot to a command line. You have to follow the instructions in Section 2.3, “Manual Installation” there. 
+
+** Manual Installation
+
+NixOS can be installed on BIOS or UEFI systems. The procedure for a UEFI installation is broadly the same as for a BIOS installation. The differences are mentioned in the following steps.
+
+The NixOS manual is available by running nixos-help in the command line or from the application menu in the desktop environment.
+
+To have access to the command line on the graphical images, open Terminal (GNOME) or Konsole (Plasma) from the application menu.
+
+You are logged-in automatically as nixos. The nixos user account has an empty password so you can use sudo without a password:
+
+#+begin_src sh
+$ sudo -i
+#+end_src
+
+You can use loadkeys to switch to your preferred keyboard layout. (We even provide neo2 via loadkeys de neo!)
+
+If the text is too small to be legible, try setfont ter-v32n to increase the font size.
+
+To install over a serial port connect with 115200n8 (e.g. picocom -b 115200 /dev/ttyUSB0). When the bootloader lists boot entries, select the serial console boot entry.
+
+** Networking in the installer
+
+The boot process should have brought up networking (check ip a). Networking is necessary for the installer, since it will download lots of stuff (such as source tarballs or Nixpkgs channel binaries). It’s best if you have a DHCP server on your network. Otherwise configure networking manually using ifconfig.
+
+On the graphical installer, you can configure the network, wifi included, through NetworkManager. Using the nmtui program, you can do so even in a non-graphical session. If you prefer to configure the network manually, disable NetworkManager with systemctl stop NetworkManager.
+
+On the minimal installer, NetworkManager is not available, so configuration must be perfomed manually. To configure the wifi, first start wpa_supplicant with sudo systemctl start wpa_supplicant, then run wpa_cli. For most home networks, you need to type in the following commands:
+
+#+begin_example
+> add_network
+0
+> set_network 0 ssid "myhomenetwork"
+OK
+> set_network 0 psk "mypassword"
+OK
+> set_network 0 key_mgmt WPA-PSK
+OK
+> enable_network 0
+OK
+#+end_example
+
+For enterprise networks, for example eduroam, instead do: 
+
+#+begin_example
+> add_network
+0
+> set_network 0 ssid "eduroam"
+OK
+> set_network 0 identity "myname@example.com"
+OK
+> set_network 0 password "mypassword"
+OK
+> set_network 0 key_mgmt WPA-EAP
+OK
+> enable_network 0
+OK
+#+end_example
+
+When successfully connected, you should see a line such as this one 
+
+#+begin_example
+<3>CTRL-EVENT-CONNECTED - Connection to 32:85:ab:ef:24:5c completed [id=0 id_str=]
+#+end_example
+
+ you can now leave wpa_cli by typing quit.
+
+If you would like to continue the installation from a different machine you can use activated SSH daemon. You need to copy your ssh key to either /home/nixos/.ssh/authorized_keys or /root/.ssh/authorized_keys (Tip: For installers with a modifiable filesystem such as the sd-card installer image a key can be manually placed by mounting the image on a different machine). Alternatively you must set a password for either root or nixos with passwd to be able to login. 
+
+** UEFI (GPT)
+
+Here's an example partition scheme for UEFI, using /dev/sda as the device.
+
++ Note
+
+You can safely ignore parted's informational message about needing to update /etc/fstab. 
+
+Create a GPT partition table.
+
+#+begin_src sh
+# parted /dev/sda -- mklabel gpt
+#+end_src
+
+Add the root partition. This will fill the disk except for the end part, where the swap will live, and the space left in front (512MiB) which will be used by the boot partition.
+
+#+begin_src sh
+# parted /dev/sda -- mkpart primary 512MB -8GB
+#+end_src
+
+Next, add a swap partition. The size required will vary according to needs, here a 8GB one is created.
+
+#+begin_src sh
+# parted /dev/sda -- mkpart primary linux-swap -8GB 100%
+#+end_src
+
++ Note
+
+The swap partition size rules are no different than for other Linux distributions.
+
+Finally, the boot partition. NixOS by default uses the ESP (EFI system partition) as its /boot partition. It uses the initially reserved 512MiB at the start of the disk.
+
+#+begin_src sh
+# parted /dev/sda -- mkpart ESP fat32 1MB 512MB
+# parted /dev/sda -- set 3 esp on
+#+end_src
+
+Once complete, you can follow with Section 2.3.2.3, “Formatting”. 
+
+** Formatting
+
+Use the following commands:
+
+For initialising Ext4 partitions: mkfs.ext4. It is recommended that you assign a unique symbolic label to the file system using the option -L label, since this makes the file system configuration independent from device changes. For example:
+
+#+begin_src sh
+# mkfs.ext4 -L nixos /dev/sda1
+#+end_src
+
+For creating swap partitions: mkswap. Again it’s recommended to assign a label to the swap partition: -L label. For example:
+
+#+begin_src sh
+# mkswap -L swap /dev/sda2
+#+end_src
+
+UEFI systems
+
+For creating boot partitions: mkfs.fat. Again it’s recommended to assign a label to the boot partition: -n label. For example:
+
+#+begin_src sh
+# mkfs.fat -F 32 -n boot /dev/sda3
+#+end_src
+
+For creating LVM volumes, the LVM commands, e.g., pvcreate, vgcreate, and lvcreate.
+
+For creating software RAID devices, use mdadm. 
+
+** zfs
+
+Newest kernels might not be supported by ZFS yet. If you are running an newer kernel which is not yet officially supported by zfs, the zfs module will refuse to evaluate and show up as broken. Use boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+
+ZFS does not support swap. Hibernation must be either disabled with boot.kernelParams = [ "nohibernate" ];, or enabled with a separate, non-ZFS swap partition.
+
+By default, all ZFS pools available to the system will be forcibly imported during boot. This behaviour can be disabled by setting boot.zfs.forceImportAll = false;.
+
+If you are running within a VM and NixOS fails to import the zpool on reboot, you may need to add boot.zfs.devNodes = "/dev/disk/by-path"; to your configuration.nix file.
+
+*** Enable ZFS support
+
+Common ZFS installation guides are now maintained at OpenZFS Documentation website. Visit there for details and if an issue arises, submit an issue or pull request. 
+
+[[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/index.html]]
+
+*** Importing on boot
+
+If you create a zpool, it will not be imported on the next boot unless you either add the zpool name to boot.zfs.extraPools: 
+
+#+begin_src nix
+## In /etc/nixos/configuration.nix:
+boot.zfs.extraPools = [ "zpool_name" ];
+#+end_src
+
+*** Root on ZFS
+
+Root on ZFS guide is now maintained at OpenZFS Documentation website. Visit there for details and if an issue arises, submit an issue or pull request. 
+
+[[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/Root%20on%20ZFS.html]]
+
+*** Mount datasets at boot
+
+zfs-mount service is enabled by default on NixOS 22.05.
+
+To automatically mount a dataset at boot, you only need to set canmount=on and mountpoint=/mount/point on the respective datasets. 
+
+*** Changing the Adaptive Replacement Cache size
+
+To change the maximum size of the ARC to (for example) 12 GB, add this to your NixOS configuration: 
+
+#+begin_src nix
+boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
+#+end_src
+
+*** Tuning other parameters
+
+To tune other attributes of ARC, L2ARC or of ZFS itself via runtime modprobe config, add this to your NixOS configuration (keys and values are examples only!): 
+
+#+begin_src nix
+boot.extraModprobeConfig = ''
+options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
+'';
+#+end_src
+
+You can confirm whether any specified configuration/tuning got applied via commands like arc_summary and arcstat -a -s " ". 
+
+*** Automatic scrubbing
+
+Regular scrubbing of ZFS pools is recommended and can be enabled in your NixOS configuration via: 
+
+#+begin_src nix
+services.zfs.autoScrub.enable = true;
+#+end_src
+
+You can tweak the interval (defaults to once a week) and which pools should be scrubbed (defaults to all). 
+
+*** Reservations
+
+On ZFS, the performance will deteriorate significantly when more than 80% of the available space is used. To avoid this, reserve disk space beforehand.
+
+To reserve space create a new unused dataset that gets a guaranteed disk space of 10GB. 
+
+#+begin_src sh
+# zfs create -o refreservation=10G -o mountpoint=none zroot/reserved
+#+end_src
+
+*** Auto ZFS trimming
+
+#+begin_src nix
+services.zfs.trim.enable = true;. 
+#+end_src
+
+For further information read the man pages. 
+
+*** Take snapshots automatically
+
+See services.sanoid section in man configuration.nix. 
+
+** links
+*** nixos
+
+[[https://nixos.org/download.html]]
+
+[[https://nixos.org/manual/nixos/stable/index.html#sec-booting-from-usb]]
+
+[[https://nixos.org/manual/nixos/stable/options.html]]
+
+[[https://discourse.nixos.org/]]
+
+*** zfs
+
+[[https://nixos.wiki/wiki/ZFS]]
+
+[[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/Root%20on%20ZFS.html]]
+
+[[https://timklampe.cool/docs/example/nixos/nixos_install/]]
+
+boot.loader.grub.zfsSupport
+
+boot.zfs.enabled
+boot.zfs.requestEncryptionCredentials
+
+fileSystems
+
+*** nvidia
+[[https://www.arthurkoziel.com/installing-nixos-on-a-macbookpro/]]
+
+
+[[https://discourse.nixos.org/t/nvidia-settings-on-xps-15-9520-rtx-3050/24479/6]]
+
+[[https://github.com/NixOS/nixos-hardware]]
+
+*** other
+
+[[https://eevie.ro/posts/2022-01-24-how-i-nix.html]]
+
+[[https://mudrii.medium.com/nixos-home-manager-on-native-nix-flake-installation-and-configuration-22d018654f0c]]
+
+*** imports
+
+[[https://github.com/mudrii/hmtst/blob/master/users/mudrii/home.nix]]
+
+[[https://github.com/mudrii/hmtst/blob/master/users/mudrii/dotfiles/tmux.nix]]
+
+[[https://cbailey.co.uk/posts/drinking_the_nixos_kool_aid]]
+
+*** nur
+
+[[https://gitlab.com/rycee/nur-expressions/-/tree/master]]
+
+[[https://github.com/nix-community/NUR]]
+
+[[https://nixos.wiki/wiki/Home_Manager]]
+
+*** gnome
+
+[[https://nixos.wiki/wiki/GNOME]]
+
+[[https://determinate.systems/posts/declarative-gnome-configuration-with-nixos]]
+
+[[https://hoverbear.org/blog/declarative-gnome-configuration-in-nixos/]]
+
+[[https://gvolpe.com/blog/gnome3-on-nixos/]]
+
+[[https://kcode.co.za/nixos-dconf-error-when-managing-gtk-theme/]]
+
+#+begin_src sh
+dconf dump / > dconf.settings
+#+end_src
+
+
+gtk.gtk3.extraConfig
+gtk.gtk4.extraConfig
+
+programs.keychain.enable
+programs.keychain.enableZshIntegration
+programs.keychain.
+
+*** firefox
+
+[[https://www.reddit.com/r/NixOS/comments/t5g0fk/firefox_extensions_not_working_with_nur_home/]]
+
+[[https://discourse.nixos.org/t/help-setting-up-firefox-with-home-manager/23333]]
+
+*** config
+
+[[https://github.com/angristan/nixos-config/blob/master/configuration.nix]]
+
+*** home manager
+
+[[https://rycee.gitlab.io/home-manager/options.html]]
+
+[[https://gitlab.com/rycee/configurations/-/blob/master/user/firefox.nix]]
+
+[[https://rycee.gitlab.io/home-manager/options.html#opt-programs.firefox.enable]]
+
+[[https://nur.nix-community.org/repos/rycee/]]
+
+*** macbook air
+
+[[https://discourse.nixos.org/t/nixos-on-macbook-air-mid-2011/15611]]
+
+*** firefox about:config
+
+[[https://gist.github.com/0XDE57/fbd302cef7693e62c769]]
+
+[[https://cmacr.ae/post/2020-05-09-managing-firefox-on-macos-with-nix/]]
+
+*** home manager auto upgrade
+
+services.home-manager.autoUpgrade.enable
+services.home-manager.autoUpgrade.frequency
