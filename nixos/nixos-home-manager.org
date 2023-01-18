@@ -187,13 +187,14 @@ By default, all ZFS pools available to the system will be forcibly imported duri
 
 If you are running within a VM and NixOS fails to import the zpool on reboot, you may need to add boot.zfs.devNodes = "/dev/disk/by-path"; to your configuration.nix file.
 
-*** Enable ZFS support
+*** zfs on root
+**** enable ZFS support
 
 Common ZFS installation guides are now maintained at OpenZFS Documentation website. Visit there for details and if an issue arises, submit an issue or pull request. 
 
 [[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/index.html]]
 
-*** Importing on boot
+**** Importing on boot
 
 If you create a zpool, it will not be imported on the next boot unless you either add the zpool name to boot.zfs.extraPools: 
 
@@ -202,19 +203,19 @@ If you create a zpool, it will not be imported on the next boot unless you eithe
 boot.zfs.extraPools = [ "zpool_name" ];
 #+end_src
 
-*** Root on ZFS
+**** Root on ZFS
 
 Root on ZFS guide is now maintained at OpenZFS Documentation website. Visit there for details and if an issue arises, submit an issue or pull request. 
 
 [[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/Root%20on%20ZFS.html]]
 
-*** Mount datasets at boot
+**** Mount datasets at boot
 
 zfs-mount service is enabled by default on NixOS 22.05.
 
 To automatically mount a dataset at boot, you only need to set canmount=on and mountpoint=/mount/point on the respective datasets. 
 
-*** Changing the Adaptive Replacement Cache size
+**** Changing the Adaptive Replacement Cache size
 
 To change the maximum size of the ARC to (for example) 12 GB, add this to your NixOS configuration: 
 
@@ -222,7 +223,7 @@ To change the maximum size of the ARC to (for example) 12 GB, add this to your N
 boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
 #+end_src
 
-*** Tuning other parameters
+**** Tuning other parameters
 
 To tune other attributes of ARC, L2ARC or of ZFS itself via runtime modprobe config, add this to your NixOS configuration (keys and values are examples only!): 
 
@@ -234,7 +235,7 @@ options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=167772
 
 You can confirm whether any specified configuration/tuning got applied via commands like arc_summary and arcstat -a -s " ". 
 
-*** Automatic scrubbing
+**** Automatic scrubbing
 
 Regular scrubbing of ZFS pools is recommended and can be enabled in your NixOS configuration via: 
 
@@ -244,7 +245,7 @@ services.zfs.autoScrub.enable = true;
 
 You can tweak the interval (defaults to once a week) and which pools should be scrubbed (defaults to all). 
 
-*** Reservations
+**** Reservations
 
 On ZFS, the performance will deteriorate significantly when more than 80% of the available space is used. To avoid this, reserve disk space beforehand.
 
@@ -254,7 +255,7 @@ To reserve space create a new unused dataset that gets a guaranteed disk space o
 # zfs create -o refreservation=10G -o mountpoint=none zroot/reserved
 #+end_src
 
-*** Auto ZFS trimming
+**** Auto ZFS trimming
 
 #+begin_src nix
 services.zfs.trim.enable = true;. 
@@ -262,7 +263,7 @@ services.zfs.trim.enable = true;.
 
 For further information read the man pages. 
 
-*** Take snapshots automatically
+**** Take snapshots automatically
 
 See services.sanoid section in man configuration.nix. 
 
