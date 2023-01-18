@@ -583,6 +583,8 @@ See services.sanoid section in man configuration.nix.
 
 [[https://timklampe.cool/docs/example/nixos/nixos_install/]]
 
+[[https://marcopolo.io/code/backups-made-simple/]]
+
 boot.loader.grub.zfsSupport
 
 boot.zfs.enabled
