@@ -1,0 +1,21 @@
+#+STARTUP: showall
+* home-manager tracker extract 3
+
+home manager can fail when you run home-manager switch
+with an error saying it couldnt stop the tracker-extract-3.service
+
+the tracker-extract-3.service is used by gnome search to index files
+
+you can disable the tracker-extract-3.service by running the following command
+
+#+begin_src sh
+systemctl --user mask tracker-extract-3.service
+#+end_src
+
+reboot and then run 
+
+#+begin_src sh
+home-manager switch
+#+end_src
+
+and home manager should no longer show and error 
