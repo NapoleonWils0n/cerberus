@@ -6,25 +6,6 @@
 
 [[https://nixos.org/manual/nixos/stable/options.html]]
 
-** create the torrents directories
-
-create the torrents directories
-
-#+begin_src sh
-sudo mkdir -p /var/lib/transmission/torrents/{complete,incomplete,watch-dir}
-#+end_src
-
-set the permissions on the torrent directories
-
-#+begin_src sh
-sudo chown -R transmission:transmission /var/lib/transmission/torrents
-#+end_src
-
-
-#+begin_src sh
-sudo chown -R transmission:transmission /var/lib/transmission/.config
-#+end_src
-
 ** transmission config
 
 edit your configuration.nix
@@ -39,13 +20,13 @@ edit your configuration.nix
         bind-address-ipv4 = "0.0.0.0";
         blocklist-enabled = false;
         dht-enabled = true;
-        download-dir = "/var/lib/transmission/torrents/complete";
+        download-dir = "/var/lib/transmission/Downloads";
         download-queue-enabled = true;
         download-queue-size = 5;
         encryption = 1;
         idle-seeding-limit = 30;
         idle-seeding-limit-enabled = false;
-        incomplete-dir = "/var/lib/transmission/torrents/incomplete";
+        incomplete-dir = "/var/lib/transmission/.incomplete";
         incomplete-dir-enabled = true;
         message-level = 2;
         peer-id-ttl-hours = 6;
@@ -81,7 +62,7 @@ edit your configuration.nix
         speed-limit-up-enabled = true;
         start-added-torrents = true;
         trash-original-torrent-files = true;
-        watch-dir = "/var/lib/transmission/torrents/watch-dir";
+        watch-dir = "/var/lib/transmission/watch-dir";
         watch-dir-enabled = true;
         umask = 18;
         };
