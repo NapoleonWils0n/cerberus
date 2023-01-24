@@ -1,0 +1,170 @@
+#+STARTUP: content hideblocks
+* transmission nixos
+** nixos transmission links
+
+[[https://nixos.wiki/wiki/Transmission]]
+
+[[https://nixos.org/manual/nixos/stable/options.html]]
+
+** create the torrents directories
+
+create the torrents directories
+
+#+begin_src sh
+sudo mkdir -p /var/lib/transmission/torrents/{complete,incomplete,watch-dir}
+#+end_src
+
+set the permissions on the torrent directories
+
+#+begin_src sh
+sudo chown -R transmission:transmission /var/lib/transmission/torrents
+#+end_src
+
+
+#+begin_src sh
+sudo chown -R transmission:transmission /var/lib/transmission/.config
+#+end_src
+
+** transmission config
+
+edit your configuration.nix
+
+#+begin_src nix
+    transmission = {
+      enable = true;
+      credentialsFile = "/var/lib/secrets/transmission/settings.json";
+      home = "/var/lib/transmission";
+      settings = {
+        alt-speed-enabled = false;
+        bind-address-ipv4 = "0.0.0.0";
+        blocklist-enabled = false;
+        dht-enabled = true;
+        download-dir = "/var/lib/transmission/torrents/complete";
+        download-queue-enabled = true;
+        download-queue-size = 5;
+        encryption = 1;
+        idle-seeding-limit = 30;
+        idle-seeding-limit-enabled = false;
+        incomplete-dir = "/var/lib/transmission/torrents/incomplete";
+        incomplete-dir-enabled = true;
+        message-level = 2;
+        peer-id-ttl-hours = 6;
+        peer-limit-global = 200;
+        peer-limit-per-torrent = 50;
+        peer-port = 6881;
+        peer-port-random-high = 65535;
+        peer-port-random-low = 49152;
+        peer-port-random-on-start = false;
+        peer-socket-tos = "default";
+        pex-enabled = true;
+        port-forwarding-enabled = false;
+        preallocation = 1;
+        prefetch-enabled = true;
+        queue-stalled-enabled = true;
+        queue-stalled-minutes = 30;
+        ratio-limit = 0;
+        ratio-limit-enabled = true;
+        rename-partial-files = true;
+        rpc-authentication-required = true;
+        rpc-bind-address = "0.0.0.0";
+        rpc-enabled = true;
+        rpc-host-whitelist-enabled = true;
+        rpc-port = 9091;
+        rpc-url = "/transmission/";
+        rpc-whitelist = "127.0.0.1,::1";
+        scrape-paused-torrents-enabled = true;
+        seed-queue-enabled = false;
+        seed-queue-size = 10;
+        speed-limit-down = 100;
+        speed-limit-down-enabled = false;
+        speed-limit-up = 100;
+        speed-limit-up-enabled = true;
+        start-added-torrents = true;
+        trash-original-torrent-files = true;
+        watch-dir = "/var/lib/transmission/torrents/watch-dir";
+        watch-dir-enabled = true;
+        umask = 18;
+        };
+      };
+#+end_src
+
+*** open the ports
+
+#+begin_src sh
+  # networking
+  networking = {
+    hostName = "hostname"; # Define your hostname
+    networkmanager.enable = true;
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 6881 ];
+      allowedUDPPorts = [ 6882 ];
+    };
+  };
+#+end_src
+
+** transmission-pwgen
+
+transmission-pwgen generate passwords for the transmission webui
+
+#+begin_src sh
+#!/usr/bin/env bash
+#
+# https://github.com/tomwijnroks/transmission-pwgen
+
+# Define the password length.
+PASSWORD_LENGTH=16
+
+# Generate a random password (alphanumeric).
+PASS=$(cat /dev/urandom | tr -dc '[:alnum:]' | fold -w ${PASSWORD_LENGTH} | head -n1)
+
+# Generate a random salt (alphanumeric + two special characters).
+# Source: https://github.com/transmission/transmission/blob/master/libtransmission/crypto-utils.c#L132-L136
+SALT=$(cat /dev/urandom | tr -dc '[:alnum:]./' | fold -w 8 | head -n1)
+
+# Combine password + salt and use sha1sum to create the hash.
+HASH=$(echo -n ${PASS}${SALT} | sha1sum | awk '{print $1}')
+
+# Print the plain text password.
+echo "plain_text_password = ${PASS}"
+
+# Print the rpc-password string: hash + salt prepended with a curly bracket.
+# Source: https://github.com/transmission/transmission/blob/master/libtransmission/crypto-utils.c#L153
+echo "rpc_password_string = {${HASH}${SALT}"
+#+end_src
+
+** rpc password
+
+run the transmission-pwgen script which will generate the plain text password 
+which you use to login to the web ui and the rpc password which goes in the settings.json file
+
+#+begin_example
+plain_text_password = 8ADRKOZLbEY6lOY7
+rpc_password_string = {f371ac04e38d12561ec6cb9ae8b4c6d273f87db64HBIXdOf
+#+end_example
+
+create the settings.json with the rpc password and your username
+
+#+begin_src json
+{
+    "rpc-password": "{79a6a218541d4af074f892865b261d399e0aa122QuqMTXDO",
+    "rpc-username": "username"
+}
+#+end_src
+
+create the directory for the settings.json file
+
+#+begin_src sh
+sudo mkdir -p /var/lib/secrets/transmission/
+#+end_src
+
+#+begin_src sh
+sudo mv settings.json /var/lib/secrets/transmission/
+#+end_src
+
+change the permission on the directory and file so they are readable by the transmission group
+
+#+begin_src sh
+sudo chown -R root:transmission /var/lib/secrets
+#+end_src
+
