@@ -139,8 +139,16 @@ create the directory for the settings.json file
 sudo mkdir -p /var/lib/secrets/transmission/
 #+end_src
 
+move the settings.json file into place
+
 #+begin_src sh
 sudo mv settings.json /var/lib/secrets/transmission/
+#+end_src
+
+run nixos-rebuild switch which will create the transmission group
+
+#+begin_src sh
+sudo nixos-rebuild switch
 #+end_src
 
 change the permission on the directory and file so they are readable by the transmission group
@@ -149,3 +157,26 @@ change the permission on the directory and file so they are readable by the tran
 sudo chown -R root:transmission /var/lib/secrets
 #+end_src
 
+** netrc
+
+create a ~/.netrc file with transmission rpc login details for the transmission-remote command
+
+#+begin_src sh
+nano ~/.netrc
+#+end_src
+
+the password and account is the plain_text_password you created with transmission-pwgen
+and the login name is set in your transmission config
+
+#+begin_src sh
+machine localhost
+login username
+password 8ADRKOZLbEY6lOY7
+account 8ADRKOZLbEY6lOY7
+#+end_src
+
+change the permissions on the ~/.netrc file
+
+#+begin_src sh
+chmod 600 ~/.netrc
+#+end_src
