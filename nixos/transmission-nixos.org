@@ -180,3 +180,54 @@ change the permissions on the ~/.netrc file
 #+begin_src sh
 chmod 600 ~/.netrc
 #+end_src
+
+** firefox
+
+open firefox about:config
+
+paste in the following code and click the plus button
+
+#+begin_example
+network.protocol-handler.expose.magnet
+#+end_example
+
+then set the value to false
+
+now clicking magnet links should work
+
+** magnet-add script
+
+add the magnet-add script to your bin directory
+
+#+begin_src sh
+#!/bin/sh
+
+# transmission add magnet link from browser
+
+# if script is run without arguments exit
+[ $# -gt 0 ] || exit
+
+# transmission add magnet link
+transmission-remote --add "$@"
+
+#+end_src
+
+** desktop file
+
+create a desktop file for the magnet-add script to open magnet links in transmission from your browser
+
+#+begin_src sh
+nano ~/.local/share/applications/transmission.desktop
+#+end_src
+
+add the following code and change the path to the script
+
+#+begin_example
+[Desktop Entry]
+Name=Transmission
+Exec=/home/djwilcox/bin/magnet-add %u
+Icon=utilities-terminal
+Type=Application
+Terminal=false
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+#+end_example
