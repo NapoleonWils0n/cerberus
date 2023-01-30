@@ -120,15 +120,15 @@ run the transmission-pwgen script which will generate the plain text password
 which you use to login to the web ui and the rpc password which goes in the settings.json file
 
 #+begin_example
-plain_text_password = 8ADRKOZLbEY6lOY7
-rpc_password_string = {f371ac04e38d12561ec6cb9ae8b4c6d273f87db64HBIXdOf
+plain_text_password = zOF0DVCBAAxaxlCG
+rpc_password_string = {e6884270b235d215848637e9108851a45897e91200E/KarJ
 #+end_example
 
 create the settings.json with the rpc password and your username
 
 #+begin_src json
 {
-    "rpc-password": "{79a6a218541d4af074f892865b261d399e0aa122QuqMTXDO",
+    "rpc-password": "{e6884270b235d215848637e9108851a45897e91200E/KarJ",
     "rpc-username": "username"
 }
 #+end_src
