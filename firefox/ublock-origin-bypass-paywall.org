@@ -1,0 +1,6 @@
+#+STARTUP: overview
+* ublock origin bypass paywall clean filter
+
+[[https://www.ghacks.net/2023/02/13/mozilla-removes-bypass-paywalls-clean-extension-from-its-add-ons-repository/][ghacks bypass paywall clean]]
+
+https://gitlab.com/magnolia1234/bypass-paywalls-clean-filters/-/raw/main/bpc-paywall-filter.txt
