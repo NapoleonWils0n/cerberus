@@ -1,0 +1,61 @@
+#+STARTUP: overview
+* transmission netns
+** transmission-daemon
+
+stop the transmission systemd service
+
+#+begin_src sh
+doas systemctl stop transmission
+#+end_src
+
+start the transmission daemon as the transmission user
+
+#+begin_src sh
+doas -u transmission transmission-daemon -g /var/lib/transmission/.config/transmission-daemon
+#+end_src
+
+** transmission netns doas
+
+#+begin_src sh
+#!/bin/sh
+
+# trdvpn - run transmission in a seperate network namespace
+
+# ip netns exec vpn namespace, doas switch to transmission user and start the daemon
+doas ip netns exec vpn doas -u transmission transmission-daemon -g /var/lib/transmission/.config/transmission-daemon
+#+end_src
+
+run the script
+
+#+begin_src sh
+doas trdvpn
+#+end_src
+
+** firefox
+
+#+begin_example
+[Desktop Entry]
+Actions=new-private-window;new-window;profile-manager-window
+Categories=Network;WebBrowser
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox %U
+GenericName=Web Browser
+Icon=firefox
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;x-scheme-handler/http;x-scheme-handler/https
+Name=Firefox-VPN
+StartupNotify=true
+Terminal=false
+Type=Application
+Version=1.4
+
+[Desktop Action new-private-window]
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox --private-window %U
+Name=New Private Window
+
+[Desktop Action new-window]
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox --new-window %U
+Name=New Window
+
+[Desktop Action profile-manager-window]
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox --ProfileManager
+Name=Profile Manager
+#+end_example
