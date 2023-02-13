@@ -46,11 +46,6 @@
 
 + search for mpd in the filter box
 
-
-#+begin_example
-https://itvpnpdotcom.blue.content.itv.com/ENT0865-0017-002/34/1/VAR028-HD-s/ENT0865-0017-002_34_1_VAR028-HD-s.ism/.mpd?filter=%28%28type%3D%3D%22video%22%26%26DisplayHeight%3C%3D720%29%7C%7C%28type%21%3D%22video%22%29%29&hdnea=st%3D1675544059~exp%3D1675565659~acl%3D/ENT0865-0017-002/%2A~data%3Dnohubplus~hmac%3D559dbeaace091d34e7813af472536941f90a6752249f97d523764e48d8197955
-#+end_example
-
 ** yt-dlp
 
 #+begin_src sh
