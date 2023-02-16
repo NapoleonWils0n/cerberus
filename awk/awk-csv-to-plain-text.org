@@ -1,0 +1,6 @@
+#+STARTUP: content
+* awk convert csv to plain text
+
+#+begin_src sh
+awk -v RS=, '$1' input.csv > output.txt
+#+end_src
