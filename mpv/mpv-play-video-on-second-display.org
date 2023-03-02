@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* mpv play video on second display
+
+mpv play video on second display
+
+#+begin_src sh
+mpv --fs --fs-screen=1 input
+#+end_src
