@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* netstat listen
+
+#+begin_src sh
+doas netstat -tulpn | grep LISTEN
+#+end_src

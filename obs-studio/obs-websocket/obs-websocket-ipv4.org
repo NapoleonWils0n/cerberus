@@ -1,0 +1,45 @@
+#+STARTUP: showall
+* obs websocket use ipv4
+
+obs on linux defaults to listening on ipv6
+
+** obs command line
+
+you can start obs on with the command line and specify ipv4 only for the websocket
+
+#+begin_src sh
+obs --websocket_ipv4_only
+#+end_src
+
+** obs desktop entry
+
+obs studio desktop entry with ipv4 only for the websocket
+
+create a text file called
+
+#+begin_example
+com.obsproject.Studio.desktop
+#+end_example
+
+with the following content
+
+#+begin_example
+[Desktop Entry]
+Version=1.0
+Name=OBS Studio
+GenericName=Streaming/Recording Software
+Comment=Free and Open Source Streaming/Recording Software
+Exec=obs --websocket_ipv4_only
+Icon=com.obsproject.Studio
+Terminal=false
+Type=Application
+Categories=AudioVideo;Recorder;
+StartupNotify=true
+StartupWMClass=obs
+#+end_example
+
+copy the obs desktop entry to the following location
+
+#+begin_src sh
+cp com.obsproject.Studio.desktop ~/.local/share/applications
+#+end_src
