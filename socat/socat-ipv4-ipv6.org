@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* socat ipv4 and ipv6
+
+#+begin_src sh
+doas socat -u TCP4-LISTEN:4456,reuseaddr,fork,bind=localhost,su=nobody TCP6:localhost:4455
+#+end_src

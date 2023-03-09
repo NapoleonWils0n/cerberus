@@ -1,0 +1,20 @@
+#+STARTUP: showall
+* netcat listen on ipv6
+
+netcat listen on ipv6 port 4455
+
+#+begin_src sh
+nc -l6 localhost 4455
+#+end_src
+
+socat standard in connect to netcat 
+
+#+begin_src sh
+socat STDIO TCP6:localhost:4455
+#+end_src
+
+netstat grep for listening ports
+
+#+begin_src sh
+doas netstat -tulpn | grep LISTEN
+#+end_src
