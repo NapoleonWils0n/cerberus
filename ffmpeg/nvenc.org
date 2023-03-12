@@ -1,0 +1,29 @@
+#+STARTUP: content
+* ffmpeg nvenc
+** nvidia
+
+[[https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/index.html]]
+
+#+begin_src sh
+ffmpeg -y -vsync 0 -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:a copy -c:v h264_nvenc -b:v 5M output.mp4
+#+end_src
+
+#+begin_src sh
+ffmpeg -y -vsync 0 -hwaccel cuda -hwaccel_output_format cuda -i input.mp4 -c:a copy -c:v h264_nvenc -preset p6 -tune ll -b:v 5M -bufsize 5M -maxrate 10M -qmin 0 -g 250 -bf 3 -b_ref_mode middle -temporal-aq 1 -rc-lookahead 20 -i_qfactor 0.75 -b_qfactor 1.1 output.mp4
+#+end_src
+
+** ffmpeg
+
+[[https://trac.ffmpeg.org/wiki/HWAccelIntro]]
+
+#+begin_src sh
+ffmpeg -i input -c:v h264_nvenc -profile high444p -pixel_format yuv444p -preset default output.mp4
+#+end_src
+
+#+begin_src sh
+ffmpeg -hwaccel cuda -hwaccel_output_format cuda -i input -c:v h264_nvenc -preset slow output
+#+end_src
+
+** superuser
+
+[[https://superuser.com/questions/1296374/best-settings-for-ffmpeg-with-nvenc]]

@@ -1,0 +1,62 @@
+#+STARTUP: content
+* nixos system generations
+
+[[https://nixos.wiki/wiki/Overview_of_the_NixOS_Linux_distribution#Generations][nixos generations]]
+
+** generations
+
+Every time the system state is rebuilt using nixos-rebuild switch, a new generation is created. You can revert to the previous generation at any time, which is useful if a configuration change (or system update) turns out to be detrimental. 
+
+*** roll back a user environment
+
+#+begin_src sh
+nix-env --rollback               # roll back a user environment
+#+end_src
+
+*** roll back a system environment
+
+#+begin_src sh
+doas nixos-rebuild switch --rollback  # roll back a system environment
+#+end_src
+
+*** set the currently booted generation
+
+NixOS also places entries for previous generations in the bootloader menu, so as a last resort you can always revert to a previous configuration by rebooting. To set the currently booted generation as the default run 
+
+#+begin_src sh
+doas /run/current-system/bin/switch-to-configuration boot
+#+end_src
+
+Because NixOS keeps previous generations of system state available in case rollback is desired, old package versions aren't deleted from your system immediately after an update. You can delete old generations manually: 
+
+*** List generations: 
+
+#+begin_src sh
+doas nix-env --list-generations --profile /nix/var/nix/profiles/system
+#+end_src
+
+*** list current generation
+
+#+begin_src sh
+ls -l /nix/var/nix/profiles/system
+#+end_src
+
+*** list specific generation
+
+#+begin_src sh
+ls -l /nix/var/nix/profiles/system/system-67-link
+#+end_src
+
+*** Switch generations: 
+
+#+begin_src sh
+doas nix-env --profile /nix/var/nix/profiles/system --switch-generation 67
+#+end_src
+
+*** delete broken generation(s): 
+
+as root delete broken generations 68 and 69 
+
+#+begin_src sh
+doas nix-env --profile /nix/var/nix/profiles/system --delete-generations 68 69
+#+end_src
