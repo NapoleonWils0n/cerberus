@@ -38,13 +38,19 @@ doas nix-env --list-generations --profile /nix/var/nix/profiles/system
 *** list current generation
 
 #+begin_src sh
-ls -l /nix/var/nix/profiles/system
+ls -l /nix/var/nix/profiles/system/
+#+end_src
+
+*** list all generations
+
+#+begin_src sh
+ls -l /nix/var/nix/profiles/
 #+end_src
 
 *** list specific generation
 
 #+begin_src sh
-ls -l /nix/var/nix/profiles/system/system-67-link
+ls -l /nix/var/nix/profiles/system-67-link/
 #+end_src
 
 *** Switch generations: 
