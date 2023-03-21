@@ -1,0 +1,86 @@
+#+STARTUP: content
+* ffmpeg add chapters
+** extract metadata
+
+#+begin_src sh
+ffmpeg -i input.mp4 -f ffmetadata metadata.txt
+#+end_src
+
+metadata from the video
+
+#+begin_example
+;FFMETADATA1
+major_brand=isom
+minor_version=512
+compatible_brands=isomiso2avc1mp41
+encoder=Lavf59.27.100
+#+end_example
+
+** remove chapters and subtitles
+
+#+begin_src sh
+ffmpeg -i input.mkv -c:v copy -c:a copy -sn -map_metadata -1 -map_chapters -1 output.mkv
+#+end_src
+
+** add title 
+
+#+begin_src sh
+ffmpeg -i input.mkv -c copy -metadata title='the title' output.mkv
+#+end_src
+
+** metadata chapters example
+
+The START and END times are based on milliseconds in this case so you must multiply seconds * 1000.
+Also the END of a chapter must be one millisecond less than the START of the next. This is to ensure no overlapping boundaries.
+
+#+begin_example
+;FFMETADATA1
+title=Adding Chapters using FFMPEG
+artist=Terry Butler
+
+[CHAPTER]
+TIMEBASE=1/1000
+# Chapter 1 starts at 00:00
+START=0
+# Chapter 1 ends at 02:30 (minus 1 millisecond)
+END=149999
+title=Chapter 1
+
+[CHAPTER]
+TIMEBASE=1/1000
+# Chapter 2 starts at 02:30
+START=150000
+# Chapter 2 ends at 04:45 (minus 1 millisecond)
+END=284999
+title=Chapter 2
+
+[CHAPTER]
+TIMEBASE=1/1000
+# Chapter 3 starts at 04:45
+START=285000
+# Chapter 3 / end of file ends at 06:00 (minus 1 millisecond)
+END=360000
+title=Chapter 3
+#+end_example
+
+** add metadata
+
+#+begin_src sh
+ffmpeg -i input.mp4 -i metadata.txt -map_metadata 1 -c copy output.mp4
+#+end_src
+
+** yt-dlp download video with chapters
+
+#+begin_src sh
+yt-dlp --embed-chapters 'the url'
+#+end_src
+
+** mpv switch chapters
+
+use PgUp and PgDn to switch chapters
+
+** reference
+
+[[https://www.terrybutler.co.uk/2021/08/01/how-to-add-chapters-to-video-using-ffmpeg/]]
+
+[[https://wiki.multimedia.cx/index.php/FFmpeg_Metadata]]
