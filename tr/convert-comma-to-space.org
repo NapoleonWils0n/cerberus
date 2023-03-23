@@ -1,0 +1,6 @@
+#+STARTUP: content
+* tr convert comma to space 
+
+#+begin_src sh
+tr ',' ' ' < input.txt > output.txt
+#+end_src
