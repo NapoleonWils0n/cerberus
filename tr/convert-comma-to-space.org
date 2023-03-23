@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: showall
 * tr convert comma to space 
 
 #+begin_src sh
