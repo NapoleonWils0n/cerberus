@@ -1,0 +1,178 @@
+#+STARTUP: content
+* ffmpeg chapters
+** intro
+
+in today's video I'm going to be looking at creating and extracting chapters from media files
+using ffmpeg.
+
+we will take a look at the format of the ffmpeg metadata file for creating chapters,
+and how we can use a csv file to create it
+
+** quick demo
+*** csv file
+
+the csv file contains timestamps in sexagesimal format,
+followed by a comma and the scene name
+
+#+begin_example
+00:00:00,Intro
+00:00:36,Scene 1
+00:01:20,Scene 2
+00:02:00,Scene 3
+00:04:42,End
+#+end_example
+
+the last record is the end time of the previous scene and isn't added as a chapter
+
+*** metadata file format
+
+take a look at the ffmpeg metadata format for creating chapters
+
+the file starts with ;FFMETADATA1
+followed by chapter, time base, start, end and title
+
+the timebase is in milliseconds so we have to convert from sexagesimal format hours, minutes and seconds to seconds and then to milliseconds
+
++ start time is the start of the chapter
+
++ end time is the start time of the next chapter minus 1 millisecond except the last record so the chapters don't overlap
+
++ title is the chapter title
+
+#+begin_example
+;FFMETADATA1
+[CHAPTER]
+TIMEBASE=1/1000
+START=0
+END=35999
+title=Intro
+[CHAPTER]
+TIMEBASE=1/1000
+START=36000
+END=79999
+title=Scene 1
+[CHAPTER]
+TIMEBASE=1/1000
+START=80000
+END=119999
+title=Scene 2
+[CHAPTER]
+TIMEBASE=1/1000
+START=120000
+END=282000
+title=Scene 3
+#+end_example
+
++ Add other metadata
+
+[[https://wiki.multimedia.cx/index.php/FFmpeg_Metadata]]
+
+add additional metadata after ;FFMETADATA1 and before [CHAPTER]
+
+#+begin_example
+;FFMETADATA1
+title=Big Buck Bunny
+#+end_example
+
+*** ffmpeg add chapter metadata
+
+use the chapter-add script with 
+
+#+begin_src sh
+chapter-add -i input -c metadata -o output
+#+end_src
+
+** the problem to solve
+*** convert from sexagesimal time format to milliseconds
+
+we need to convert each field containing sexagesimal in the csv file to milliseconds
+
++ sexagesimal
+
+#+begin_example
+00:01:20
+#+end_example
+
++ milliseconds
+
+#+begin_example
+120000
+#+end_example
+
+*** chapter end time 
+
+the chapter end time has to be the start time of the next chapter minus 1 milliseconds expect the last timestamp,
+which is the end of the video
+
+*** add the title
+
+we also need to add the chapters to the title metadata field
+
+*** what program do we use
+
+we need a program that can do arithmetic, work with csv data and create the metadata file
+
+the answer is awk
+
+** looking at the scripts
+*** chapter-csv
+
+convert a csv file into a chapter metadata file for ffmpeg
+
+*** chapter-add
+
+take a video and add the chapter metadata and create a new video without re encoding the video
+
+*** chapter-extract
+
+extract chapter information from a media file and save it to a csv file
+
+**** tr convert comma to space 
+
+#+begin_src sh
+tr ',' ' ' < input.txt > output.txt
+#+end_src
+
+** extract metadata
+
+#+begin_src sh
+ffmpeg -i input.mp4 -f ffmetadata metadata.txt
+#+end_src
+
+metadata from the video
+
+#+begin_example
+;FFMETADATA1
+major_brand=isom
+minor_version=512
+compatible_brands=isomiso2avc1mp41
+encoder=Lavf59.27.100
+#+end_example
+
+** remove chapters and subtitles
+
+#+begin_src sh
+ffmpeg -i input.mkv -c:v copy -c:a copy -sn -map_metadata -1 -map_chapters -1 output.mkv
+#+end_src
+
+** add title 
+
+#+begin_src sh
+ffmpeg -i input.mkv -c copy -metadata title='the title' output.mkv
+#+end_src
+
+** add metadata
+
+#+begin_src sh
+ffmpeg -i input.mp4 -i metadata.txt -map_metadata 1 -c copy output.mp4
+#+end_src
+
+** yt-dlp download video with chapters
+
+#+begin_src sh
+yt-dlp --embed-chapters 'the url'
+#+end_src
+
+** mpv switch chapters
+
+use PgUp and PgDn to switch chapters
