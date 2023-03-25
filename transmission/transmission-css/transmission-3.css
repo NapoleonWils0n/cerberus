@@ -1,4 +1,3 @@
-
 @-moz-document url(http://localhost:9091/transmission/web/) {
 :root,
 #footer_super_menu,
@@ -18,21 +17,6 @@ div#torrent_inspector div.inspector_torrent_file_list_entry_name {
   color-scheme: dark light;
 }
 
-#torrent_list .torrent {
-  border-bottom: 1px solid #404040;
-}
-
-#torrent_list .selected {
-  color: CanvasText;
-  background-color: grey;
-  color-scheme: light dark;
-}
-
-div.torrent_footer {
-  border-top: 1px solid #404040;
-  background-image: none;
-}
-
 div#toolbar {
   border-bottom: 1px solid #404040;
   background-image: none;
@@ -45,5 +29,22 @@ div#toolbar {
 
 div#torrent_inspector {
   border-left: 1px solid #404040;
+}
+
+#torrent_list .torrent {
+  border-bottom: 1px solid #404040;
+}
+
+#torrent_list .selected {
+  background-color: #404040;
+}
+
+#torrent_list .selected div.torrent_name {
+  background-color: #404040;
+}
+
+div.torrent_footer {
+  border-top: 1px solid #404040;
+  background-image: none;
 }
 }
