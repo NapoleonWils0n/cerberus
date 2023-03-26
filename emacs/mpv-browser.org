@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* mpv browser
+
+#+begin_src emacs-lisp
+(defun mpv-play-link (url &rest args)
+  ""
+  (interactive)
+  (start-process "mpv" nil "mpv" url))
+
+;;browse url open different browsers based on url
+(setq browse-url-handlers
+      '(("https://www.youtube.com/\.*" . mpv-play-link)
+    ("." . browse-url-default-browser)))
+#+end_src
