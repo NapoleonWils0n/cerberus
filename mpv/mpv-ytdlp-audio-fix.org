@@ -1,0 +1,36 @@
+#+STARTUP: showall
+* mpv yt-dlp audio fix
+
+[[https://github.com/iina/iina/issues/4253]]
+
+This is mpv issue mpv-player/mpv#11392. The fix is in PR mpv-player/mpv#11398 which has been merged into the mpv master branch. The fix updates the Lua script ytdl_hook.lua to be compatible with the latest version of yt-dlp (2023.03.04).
+
+As the fix only updates that Lua script a new release of mpv is not required. You can download the latest version of that script and place it in ~/.config/mpv/scripts/ and then set the mpv option ytdl to no to get mpv to use the new version of the script in the scripts directory instead of the now faulty version embedded in mpv.
+
+
+[[https://raw.githubusercontent.com/mpv-player/mpv/master/player/lua/ytdl_hook.lua]]
+
+** download the ytdl_hook.lua script
+
+create the mpv scripts directory
+
+#+begin_src sh
+mkdir -p ~/.config/mpv/scripts
+#+end_src
+
+download the ytdl_hook.lua script to the scripts directory
+
+#+begin_src sh
+curl 'https://raw.githubusercontent.com/mpv-player/mpv/master/player/lua/ytdl_hook.lua' -o ~/.config/mpv/scripts/ytdl_hook.lua
+#+end_src
+
+** mpv config
+
+edit your ~/.config/mpv/mpv.conf file
+
+and add the no-ytdl option 
+
+#+begin_src sh
+# use ~/.config/mpv/scripts/ytdl_hook.lua to fix no audio issue with yt-dlp 2023.03.04
+no-ytdl
+#+end_src
