@@ -1,0 +1,28 @@
+#+STARTUP: showall
+* awk tab to comma
+
+[[https://stackoverflow.com/questions/22419979/how-do-i-convert-a-tab-separated-values-tsv-file-to-a-comma-separated-values]]
+
+#+begin_src awk
+awk 'BEGIN { FS="\t"; OFS="," } {
+  rebuilt=0
+  for(i=1; i<=NF; ++i) {
+    if ($i ~ /,/ && $i !~ /^".*"$/) { 
+      gsub("\"", "\"\"", $i)
+      $i = "\"" $i "\""
+      rebuilt=1 
+    }
+  }
+  if (!rebuilt) { $1=$1 }
+  print
+}' input.tsv > output.csv
+#+end_src
+
+
+$i ~ /[,"]/ && $i !~ /^".*"$/ detects any field that contains , and/or " and isn't already enclosed in double quotes
+
+gsub("\"", "\"\"", $i) escapes embedded " chars. by doubling them
+
+$i = "\"" $i "\"" updates the result by enclosing it in double quotes
+
+As stated before, updating any field causes awk to rebuild the line from the fields with the OFS value, i.e., , in this case, which amounts to the effective TSV -> CSV conversion; flag rebuilt is used to ensure that each input record is rebuilt at least once.

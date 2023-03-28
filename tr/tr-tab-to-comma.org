@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* tr tab to comma
+
+#+begin_src 
+tr '\t' ',' < input.tsv > input.csv
+#+end_src
