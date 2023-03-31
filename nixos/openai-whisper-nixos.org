@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* openai-whisper nixos cuda
+
+#+begin_src nix
+nix-shell -p 'openai-whisper.override { torch = python3.pkgs.torch-bin; }'
+#+end_src
