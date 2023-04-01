@@ -1,0 +1,18 @@
+#+STARTUP: content
+* nixos libvirt
+** virt manager
+
+[[https://nixos.wiki/wiki/Virt-manager]]
+
+** osx-kvm
+
+[[https://nixos.wiki/wiki/OSX-KVM]]
+
+[[https://github.com/kholia/OSX-KVM]]
+
+** windows
+
+[[https://www.youtube.com/watch?v=rCVW8BGnYIc]]
+
+[[https://raw.githubusercontent.com/TechsupportOnHold/Nixos-VM/main/vm.nix]]
+
