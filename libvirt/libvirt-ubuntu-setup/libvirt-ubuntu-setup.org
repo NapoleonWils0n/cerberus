@@ -1,0 +1,1105 @@
+#+STARTUP: content
+* libvirt ubuntu
+** check hardware support
+
+#+begin_src sh
+lscpu
+#+end_src
+
+** Check if the kernel modules are loaded
+
+#+begin_src sh
+lsmod | grep kvm
+#+end_src
+
+check for virtio
+
+#+begin_src sh
+lsmod | grep virtio
+#+end_src
+
+** libvirt install
+
+#+begin_src sh
+sudo apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager
+#+end_src
+
+** adduser to group
+
+#+begin_src sh
+sudo adduser $(id -un) libvirt
+sudo adduser $(id -un) kvm
+newgrp libvirt
+#+end_src
+
+** start libvirt
+
+#+begin_src sh
+sudo systemctl enable --now libvirtd
+#+end_src
+
+reboot your computer
+
+** bridge network
+
+[[https://www.answertopia.com/ubuntu/creating-an-ubuntu-kvm-networked-bridge-interface/]]
+
+*** Identifying the Network Management System
+
+The steps to create a network bridge will differ depending on whether the host system is using Network Manager or Netplan for network management. If you installed Ubuntu using the desktop installation media then you most likely have a system running Network Manager. If, on the other hand, you installed from the server or Network installer image, then your system is most likely using Netplan.
+
+To identify which networking system is being used, open a Terminal window and run the following command:
+
+#+begin_src sh
+# networkctl status
+#+end_src
+
+If the above command generates output similar to the following then the system is using Netplan:
+
+#+begin_example
+# networkctl status
+●          State: routable                             
+         Address: 192.168.86.242 on enp0s3             
+                  fe80::a00:27ff:fe52:69a9 on enp0s3   
+         Gateway: 192.168.86.1 (Google, Inc.) on enp0s3
+             DNS: 192.168.86.1                         
+  Search Domains: lan                                  
+
+May 04 15:46:09 demo systemd[1]: Starting Network Service...
+May 04 15:46:09 demo systemd-networkd[625]: Enumeration completed
+#+end_example
+
+If, on the other hand, output similar to the following appears, then Netplan is not running:
+
+#+begin_example
+# networkctl status -a
+WARNING: systemd-networkd is not running, output will be incomplete.
+
+Failed to query link bit rates: Unit dbus-org.freedesktop.network1.service not found.
+#+end_example
+
+To identify if NetworkManager is running, change directory to /etc/netplan. If you are using NetworkManager this directory will contain a file named 01-network-manager-all.yaml with the following content:
+
+#+begin_example
+# Let NetworkManager manage all devices on this system
+network:
+  version: 2
+  renderer: NetworkManager
+#+end_example
+
+Having identified your network management system, follow the corresponding steps in the remainder of this chapter.
+
+*** Getting the Netplan Network Settings
+
+Before creating the network bridge on a Netplan based system, begin by obtaining information about the current network configuration using the networkctl command as follows:
+
+#+begin_example
+# networkctl status -a
+● 1: lo
+       Link File: /lib/systemd/network/99-default.link
+    Network File: n/a
+            Type: loopback
+           State: carrier (unmanaged)
+         Address: 127.0.0.1
+                  ::1
+ 
+● 2: eno1
+       Link File: /lib/systemd/network/99-default.link
+    Network File: /run/systemd/network/10-netplan-eno1.network
+            Type: ether
+           State: routable (configured)
+            Path: pci-0000:00:19.0
+          Driver: e1000e
+          Vendor: Intel Corporation
+           Model: 82579LM Gigabit Network Connection (Lewisville)
+      HW Address: fc:4d:d4:3b:e4:0f (Universal Global Scientific Industrial Co., Ltd.)
+         Address: 192.168.86.214
+                  fe80::fe4d:d4ff:fe3b:e40f
+         Gateway: 192.168.86.1
+             DNS: 192.168.86.1
+  Search Domains: lan
+ 
+● 3: virbr0
+       Link File: /lib/systemd/network/99-default.link
+    Network File: n/a
+            Type: ether
+           State: no-carrier (unmanaged)
+          Driver: bridge
+      HW Address: 52:54:00:2d:f4:2a
+         Address: 192.168.122.1
+ 
+● 4: virbr0-nic
+       Link File: /lib/systemd/network/99-default.link
+    Network File: n/a
+            Type: ether
+           State: off (unmanaged)
+          Driver: tun
+      HW Address: 52:54:00:2d:f4:2a
+#+end_example
+
+In the above output we can see that the host has an Ethernet network connection established via a device named eno1 and the default bridge interface named virbr0 which provides access to the NAT-based virtual network to which KVM guest systems are connected by default. The output also lists the loopback interface (lo).
+
+*** Creating a Netplan Network Bridge
+
+The creation of a network bridge on an Ubuntu system using Netplan involves the addition of an entry to the /etc/netplan/01-netcfg.yaml or /etc/netplan/00-installer-config.yaml file. Using your preferred editor, open the file and add a bridges entry beneath the current content as follows (replacing eno1 with the connection name on your system):
+
+#+begin_example
+network:
+  ethernets:
+    eno1:
+      dhcp4: true
+  version: 2
+
+  bridges:
+    br0:
+      interfaces: [eno1]
+      dhcp4: yes
+#+end_example
+
+Note that the bridges: line must be indented by two spaces. Without this indentation, the netplan tool will fail with the following error when run:
+
+#+begin_example
+Error in network definition: unknown key ‘bridges’
+#+end_example
+
+Once the changes have been made, apply them using the following command:
+
+#+begin_src sh
+# netplan apply
+#+end_src
+
+Note that this command will switch the network from the current connection to the bridge resulting in the system being assigned a different IP address by the DHCP server. If you are connected via a remote SSH session this will cause you to lose contact with the server. If you would prefer to assign a static IP address to the bridge connection, modify the bridge declaration as follows (making sure to turn off DHCP for both IPv4 and IPv6):
+
+#+begin_example
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eno1:
+      dhcp4: no
+      dhcp6: no
+ 
+  bridges:
+    br0:
+      interfaces: [eno1]
+      dhcp4: no
+      addresses: [192.168.86.230/24]
+      gateway4: 192.168.86.1
+      nameservers:
+        addresses: [192.168.86.1]
+#+end_example
+
+After running the netplan apply command, check that the bridge is now configured and ready for use within KVM virtual machines:
+
+#+begin_example
+# networkctl status -a
+● 1: lo
+       Link File: /lib/systemd/network/99-default.link
+    Network File: n/a
+            Type: loopback
+           State: carrier (unmanaged)
+         Address: 127.0.0.1
+                  ::1
+ 
+● 2: eno1
+       Link File: /lib/systemd/network/99-default.link
+    Network File: /run/systemd/network/10-netplan-eno1.network
+            Type: ether
+           State: carrier (configured)
+            Path: pci-0000:00:19.0
+          Driver: e1000e
+          Vendor: Intel Corporation
+           Model: 82579LM Gigabit Network Connection (Lewisville)
+      HW Address: fc:4d:d4:3b:e4:0f (Universal Global Scientific Industrial Co.,
+.
+.
+● 5: br0
+       Link File: /lib/systemd/network/99-default.link
+    Network File: /run/systemd/network/10-netplan-br0.network
+            Type: ether
+           State: routable (configured)
+          Driver: bridge
+      HW Address: b6:56:ed:e9:d5:75
+         Address: 192.168.86.230
+                  fe80::b456:edff:fee9:d575
+         Gateway: 192.168.86.1
+             DNS: 192.168.86.1
+#+end_example
+
+*** Getting the Current Network Manager Settings
+
+A network bridge can be created using the NetworkManager command-line interface tool (nmcli). The NetworkManager is installed and enabled by default on Ubuntu desktop systems and is responsible for detecting and connecting to network devices in addition to providing an interface for managing networking configurations.
+
+A list of current network connections on the host system can be displayed as follows:
+
+#+begin_src sh
+# nmcli con show
+#+end_src
+
++ output
+
+#+begin_example
+# nmcli con show
+NAME                UUID                                  TYPE      DEVICE
+Wired connection 1  e600942c-5261-3da0-878c-015069acf30a  ethernet  enx0050b610e975
+virbr0              59bf4111-e0d2-4e6c-b8d4-cb70fa6d695e  bridge    virbr0
+#+end_example
+
+In the above output we can see that the host has an Ethernet network connection established via a device named eno1 and the default bridge interface named virbr0 which provides access to the NAT-based virtual network to which KVM guest systems are connected by default.
+
+Similarly, the following command can be used to identify the devices (both virtual and physical) that are currently configured on the system:
+
+#+begin_src sh
+# nmcli device show
+#+end_src
+
++ output
+
+#+begin_example
+# nmcli device show
+GENERAL.DEVICE:                         eno1
+GENERAL.TYPE:                           ethernet
+GENERAL.HWADDR:                         FC:4D:D4:3B:E4:0F
+GENERAL.MTU:                            1500
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     Wired connection 1
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/1
+WIRED-PROPERTIES.CARRIER:               on
+IP4.ADDRESS[1]:                         192.168.86.207/24
+IP4.GATEWAY:                            192.168.86.1
+IP4.ROUTE[1]:                           dst = 0.0.0.0/0, nh = 192.168.86.1, mt = 100
+IP4.ROUTE[2]:                           dst = 192.168.86.0/24, nh = 0.0.0.0, mt = 100
+IP4.ROUTE[3]:                           dst = 169.254.0.0/16, nh = 0.0.0.0, mt = 1000
+IP4.DNS[1]:                             192.168.86.1
+IP4.DOMAIN[1]:                          lan
+IP6.ADDRESS[1]:                         fe80::d3e2:c3dc:b69b:cd30/64
+IP6.GATEWAY:                            --
+IP6.ROUTE[1]:                           dst = ff00::/8, nh = ::, mt = 256, table=255
+IP6.ROUTE[2]:                           dst = fe80::/64, nh = ::, mt = 256
+IP6.ROUTE[3]:                           dst = fe80::/64, nh = ::, mt = 100
+ 
+GENERAL.DEVICE:                         virbr0
+GENERAL.TYPE:                           bridge
+GENERAL.HWADDR:                         52:54:00:9D:19:E5
+GENERAL.MTU:                            1500
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     virbr0
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/2
+IP4.ADDRESS[1]:                         192.168.122.1/24
+IP4.GATEWAY:                            --
+IP4.ROUTE[1]:                           dst = 192.168.122.0/24, nh = 0.0.0.0, mt = 0
+IP6.GATEWAY:     
+#+end_example
+
+The above partial output indicates that the host system on which the command was executed contains a physical Ethernet device
+(eno1) and the virtual bridge (virbr0).
+
+The virsh command may also be used to list the virtual networks currently configured on the system:
+
+#+begin_src sh
+# virsh net-list --all
+#+end_src
+
+#+begin_example
+# virsh net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ default              active     yes           yes
+#+end_example
+
+At this point, the only virtual network present is the default network provided by virbr0. Now that some basic information about the current network configuration has been obtained, the next step is to create a network bridge connected to the physical network device (in this case the device named eno1).
+
+*** Creating a Network Manager Bridge from the Command-Line
+
+The first step in creating the network bridge is to add a new connection to the network configuration. This can be achieved using the nmcli tool, specifying that the connection is to be a bridge and providing names for both the connection and the interface:
+
+#+begin_src sh
+# nmcli con add ifname br0 type bridge con-name br0
+#+end_src
+
++ output
+
+#+begin_example
+Connection 'br0' (283945d4-d9f9-4b2e-ab6d-9b28065dbcce) successfully added.
+#+end_example
+
+Once the connection has been added, a bridge slave interface needs to be established between physical device eno1 (the slave) and the bridge connection br0 (the master) as follows:
+
+find the name of your ethernet connection
+
+#+begin_src sh
+# nmcli con show
+#+end_src
+
++ output
+
+#+begin_example
+NAME                UUID                                  TYPE      DEVICE          
+Wired connection 1  e600942c-5261-3da0-878c-015069acf30a  ethernet  enx0050b610e975 
+virbr0              86a3fbc9-be7f-40fd-b93d-3833543c05ce  bridge    virbr0   
+#+end_example
+
+replace enx0050b610e975 with the name of your ethernet connection
+
+#+begin_src sh
+# nmcli con add type bridge-slave ifname enx0050b610e975 master br0
+#+end_src
+
++ output
+
+#+begin_example
+Connection 'bridge-slave-enx0050b610e975' (1fa5f302-d35c-4399-aaa9-2c311e08f06a) successfully added.
+#+end_example
+
+At this point, the NetworkManager connection list should read as follows:
+
+#+begin_src sh
+# nmcli con show
+#+end_src
+
++ output
+
+#+begin_example
+# nmcli con show
+NAME                UUID                                  TYPE      DEVICE 
+Wired connection 1  56f32c14-a4d2-32c8-9391-f51967efa173  ethernet  eno1   
+br0                 8416607e-c6c1-4abb-8583-1661689b95a9  bridge    br0    
+virbr0              dffab88d-1588-4e69-8d1c-2148090aa5ee  bridge    virbr0 
+bridge-slave-eno1   43383092-6434-448f-b735-0cbea39eb38f  ethernet  --
+#+end_example
+
+The next step is to start up the bridge interface. If the steps to configure the bridge are being performed over a network connection (i.e. via SSH) this step can be problematic because the current eno1 connection must be closed down before the bridge connection can be brought up. This means that the current connection will be lost before the bridge connection can be enabled to replace it, potentially leaving the remote host unreachable.
+
+*** enable bridge remotely
+
+If you are accessing the host system remotely this problem can be avoided by creating a shell script to perform the network changes. This will ensure that the bridge interface is enabled after the eno1 interface is brought down, allowing you to reconnect to the host after the changes are complete. Begin by creating a shell script file named bridge.sh containing the following commands:
+
+#+begin_src sh
+#!/bin/sh
+nmcli con down "Wired connection 1"
+nmcli con up br0
+#+end_src
+
+Once the script has been created, execute it as follows:
+
+#+begin_src sh
+# sh ./bridge.sh
+#+end_src
+
+When the script executes, the connection will be lost when the eno1 connection is brought down. After waiting a few seconds, however, it should be possible to reconnect to the host once the br0 connection has been activated.
+
+*** enable bridge locally
+
+If you are working locally on the host, the two nmcli commands can be run within a terminal window without any risk of losing connectivity:
+
+#+begin_src sh
+# nmcli con down "Wired connection 1"
+# nmcli con up br0
+#+end_src
+
+Once the bridge is up and running, the connection list should now include both the bridge and the bridge-slave connections:
+
+#+begin_src sh
+# nmcli con show
+#+end_src
+
++ output
+
+#+begin_example
+# nmcli con show
+NAME                          UUID                                  TYPE      DEVICE          
+br0                           283945d4-d9f9-4b2e-ab6d-9b28065dbcce  bridge    br0             
+virbr0                        86a3fbc9-be7f-40fd-b93d-3833543c05ce  bridge    virbr0          
+bridge-slave-enx0050b610e975  1fa5f302-d35c-4399-aaa9-2c311e08f06a  ethernet  enx0050b610e975 
+Wired connection 1            e600942c-5261-3da0-878c-015069acf30a  ethernet  --     
+#+end_example
+
+Note that the Wired Connection 1 connection is still listed but is actually no longer active. To exclude inactive connections from the list, simply use the –active flag when requesting the list:
+
+#+begin_src sh
+# nmcli con show --active
+#+end_src
+
++ output
+
+#+begin_example
+# nmcli con show --active
+NAME                          UUID                                  TYPE      DEVICE          
+br0                           283945d4-d9f9-4b2e-ab6d-9b28065dbcce  bridge    br0             
+virbr0                        86a3fbc9-be7f-40fd-b93d-3833543c05ce  bridge    virbr0          
+bridge-slave-enx0050b610e975  1fa5f302-d35c-4399-aaa9-2c311e08f06a  ethernet  enx0050b610e975
+#+end_example
+
+*** Declaring the KVM Bridged Network
+
+At this point, the bridge connection is present on the system but is not visible to the KVM environment. Running the virsh command should still list the default network as being the only available network option:
+
+#+begin_src sh
+# virsh net-list --all
+#+end_src
+
++ output
+
+#+begin_example
+# virsh net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ default              active     yes           yes
+#+end_example
+
+Before the bridge can be used by a virtual machine it must be declared and added to the KVM network configuration. This involves the creation of a definition file and, once again, the use of the virsh command-line tool.
+
+Begin by creating a definition file for the bridge network named bridge.xml that reads as follows:
+
+#+begin_example
+<network>
+  <name>br0</name>
+  <forward mode="bridge"/>
+  <bridge name="br0" />
+</network>
+#+end_example
+
+Next, use the file to define the new network:
+
+#+begin_src sh
+# virsh net-define ./bridge.xml
+#+end_src
+
++ output
+
+#+begin_example
+Network br0 defined from ./bridge.xml
+#+end_example
+
+Once the network has been defined, start it and, if required, configure it to autostart each time the system reboots:
+
+#+begin_src sh
+# virsh net-start br0
+# virsh net-autostart br0
+#+end_src
+
++ output
+
+#+begin_example
+Network br0 started
+Network br0 marked as autostarted
+#+end_example
+
+Once again list the networks to verify that the bridge network is now accessible within the KVM environment:
+
+#+begin_src sh
+# virsh net-list --all
+#+end_src
+
++ output
+
+#+begin_example
+# virsh net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ br0                  active     yes           yes
+ default              active     yes           yes
+#+end_example
+
+*** Using a Bridge Network in a Virtual Machine
+
+To create a virtual machine that makes use of the bridge network,
+use the virt-install –network option and specify the br0 bridge name. For example:
+
+#+begin_src sh
+# virt-install --name MyFedora --memory 1024 --disk path=/tmp/myFedora.img,size=10 --network network=br0 --os-variant fedora28 --cdrom /home/demo/Downloads/Fedora-Server-dvd-x86_64-29-1.2.iso 
+#+end_src
+
+When the guest operating system is running it will appear on the same physical network as the host system and will no longer be on the NAT-based virtual network.
+
+To modify an existing virtual machine so that it uses the bridge, use the virsh edit command. This command loads the XML definition file into an editor where changes can be made and saved:
+
+#+begin_src sh
+# virsh edit GuestName
+#+end_src
+
+By default, the file will be loaded into the vi editor.
+To use a different editor, simply change the $EDITOR environment variable, for example:
+
+#+begin_src sh
+# export EDITOR=gedit
+#+end_src
+
+To change from the default virtual network, locate the <interface> section of the file which will read as follows for a NAT based configuration:
+
+#+begin_example
+<interface type='network'>
+      <mac address='<your mac address here>'/>
+      <source network='default'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+</interface>
+#+end_example
+
+Alternatively, if the virtual machine was using a direct connection, the entry may read as follows:
+
+#+begin_example
+<interface type='direct'>
+      <mac address='<your mac address here>'/>
+      <source dev='enx0050b610e975' mode='vepa'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+#+end_example
+
+To use the bridge, change the source network property to read as follows before saving the file:
+
+#+begin_example
+<interface type='network'>
+      <mac address='<your mac address here>'/>
+      <source network='br0'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+</interface>
+#+end_example
+
+If the virtual machine is already running, the change will not take effect until it is restarted.
+
+** Test if libvirt is working properly 
+*** To test if the daemon is working properly on a system level:
+
+#+begin_src sh
+virsh -c qemu:///system
+#+end_src
+
+*** the virsh prompt looks like this:
+
+#+begin_example
+virsh #
+#+end_example
+
+*** To test if libvirt is working properly for a user-session: 
+
+#+begin_src sh
+virsh -c qemu:///session
+#+end_src
+
+** create a storage pool file directory in your home directory
+
+create a directory for the libvirt storage pool
+replace username with your username
+
+#+begin_src sh
+mkdir -p ~/libvirt/images
+#+end_src
+
+chown the libvirt directory to allow both your user and the kvm group access
+replace username with your username
+
+#+begin_src sh
+sudo chown -R username:kvm /home/username/libvirt
+#+end_src
+
+** home directory file permissions
+
+#+begin_src sh
+chmod o+x ~
+#+end_src
+
+** change libvirt default storage pool directory
+*** list pools
+
+#+begin_src sh
+virsh pool-list --all
+#+end_src
+
+*** stop default pool
+
+#+begin_src sh
+virsh pool-destroy default
+#+end_src
+
+*** remove default pool
+
+#+begin_src sh
+virsh pool-undefine default
+#+end_src
+
+*** create new pool
+
+replace username with your username
+
+#+begin_src sh
+virsh pool-define-as --name default --type dir --target /home/username/libvirt/images 
+#+end_src
+
+*** start the new pool
+
+#+begin_src sh
+virsh pool-start default
+#+end_src
+
+*** autostart the new pool
+
+#+begin_src sh
+virsh pool-autostart default
+#+end_src
+
+** libvirt commands
+*** list pools
+
+#+begin_src sh
+virsh pool-list --all
+#+end_src
+
+** virsh pool-dumpxml
+
+#+begin_src sh
+virsh pool-dumpxml default 
+#+end_src
+
+** Stopping a Pool
+
+#+begin_src sh
+virsh pool-destroy poolname
+#+end_src
+
+** Remove the storage pools definition
+
+#+begin_src sh
+virsh pool-undefine poolname
+#+end_src
+
+** Starting a Pool
+
+#+begin_src sh
+virsh pool-start poolname
+#+end_src
+
+** Enable Autostarting a Pool
+
+#+begin_src sh
+virsh pool-autostart poolname
+#+end_src
+
+** Verify that the storage pool was created correctly and is running
+
+#+begin_src sh
+virsh pool-info poolname
+#+end_src
+
+** windows 11 install
+
+download the latest virtio-win.iso
+
+[[https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/]]
+
+[[https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.208-1/virtio-win-0.1.208.iso]]
+
+*** ubuntu tpm ppa
+
+[[https://github.com/stefanberger/swtpm][swtpm-tools]]
+[[https://github.com/stefanberger/swtpm/wiki][swtpm-tools wiki]]
+
++ useful articles
+
+[[https://getlabsdone.com/how-to-install-windows-11-on-kvm/]]
+[[https://getlabsdone.com/how-to-enable-tpm-and-secure-boot-on-kvm/]]
+
+To emulate the TPM, we are going to install a software called swtpm-tools. And it works great with the KVM.
+
+Since it is not available to download from the default ubuntu repository, you must add the below repository to Ubuntu.
+
+[[http://ppa.launchpad.net/stefanberger/swtpm-focal/ubuntu]]
+
+You must find the Ubuntu version before you proceed.
+
+To check the version of Ubuntu, you can enter the below command.
+
+#+begin_src sh
+lsb_release -a
+#+end_src
+
++ output
+
+#+begin_example
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.3 LTS
+Release:	20.04
+Codename:	focal
+#+end_example
+
+As I am using the Ubuntu version 20.04, my Ubuntu codename is focal, so you must use the version’s codename.
+
+add the repository
+
+#+begin_src sh
+sudo vi /etc/apt/sources.list
+#+end_src
+
+add the below line.
+
+#+begin_src sh
+deb [trusted=yes] http://ppa.launchpad.net/stefanberger/swtpm-focal/ubuntu focal main
+#+end_src
+
+*** import the gpg key
+
+#+begin_src sh
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9E66385D3E4D5D
+#+end_src
+
+*** update the repository
+
+#+begin_src sh
+sudo apt update
+#+end_src
+
+*** swtpm-tools install
+
+#+begin_src sh
+sudo apt-get install swtpm-tools -y
+#+end_src
+
+check the version of swtrm-tools
+
+#+begin_src sh
+swtpm --version
+#+end_src
+
+*** Enable secure-boot/UEFI on KVM.
+
+The secure boot/UEFI is available by default when you have installed the KVM program on your machine.
+If it is not available by any chance, you may enter the command below to install it.
+
+#+begin_src sh
+sudo apt install ovmf
+#+end_src
+
+To enable Secure boot or UEFI boot, click on the Overview option during the VM installation and change the following settings.
+
++ Chipset – i440FX
++ Firmware – UEFI x86_64:/usr/share/OVMF/OVMF_CODE.fd
+
+And click on Apply.
+*** tpm v2.0
+
++ click add hardware
+
++ then select TPM
+
++ set the model to TIS
+
++ set the Backend to Emulated device
+
++ set the Version to 2.0
+
+https://tpm2-software.github.io/2020/10/19/TPM2-Device-Emulation-With-QEMU.html
+
+*** add TPM to the virtual machine
+
+Shut down the VM with the below command.
+
+#+begin_src sh
+virsh shutdown <vmname>
+#+end_src
+
+Edit the VM configuration using the command
+
+#+begin_src sh
+virsh edit <vmname>
+#+end_src
+
+This will let you edit the XML file of your VM, add the below line.
+
+#+begin_example
+<tpm model='tpm-tis'>
+      <backend type='emulator' version='2.0'/>
+      <alias name='tpm0'/>
+    </tpm>
+#+end_example
+
+*** windows vm
+
+**** 1. Configure TPM and Secure-Boot.
+
+To emulate the TPM we are going to install a software called swtpm-tools. Follow the guide here to install the TPMOpens in a new tab. on your KVM host. In the same guide, we covered the command to install the secure boot as well in case if it is not installed.
+
+Once you have them configured come back here for the creation of windows 11 VM in KVM. We will enable the TPM and the secure boot during the installation.
+
+**** 2. Create the Windows 11 VM in the KVM.
+
+Open terminal in your Linux host (CTRL + ALT + T) and on the command line type virt-manager, this will open up the virtualization manager GUI on your machine.
+
+On the GUI type, click on the icon on the top left that says create a new virtual machine. This will open up the KVM virtual machine creation wizard.
+windows 11 VM creation in KVM.
+Choose the Windows 11 image for the installation.
+
+We will install windows 11 with an ISO image, so choose the option that says Local install media and click on forward.
+choose windows 11 iso in KVM
+Attach the windows 11 iso.
+
+Click on Browse to attach the windows 11 iso file, the KVM will automatically detect the operating system like Windows 10, at the time of this writing the windows11 is not in the KVM supported operating system, so you won’t be able to find the windows11 by manually choosing the option either. Windows 10 should work fine, so click on forward.
+choose windows 11 iso in KVM for windows 11 installation.
+Configure the Memory and CPU for windows 11.
+
+By default, Qemu KVM will choose the Memory as 4GB and 2 CPUs, which is more than enough for daily operations. If you wanted to make changes here, you may increase it as per your requirement. We will be further changing the CPU configuration later on, Click on Forward.
+configure the memory and CPU for windows 11 in kvm.
+Create windows 11 virtual hard disk.
+
+You can leave the default virtual hard disk storage as 40GB, but for my requirement, I would require 60GB, so choose the storage based on your requirement.
+
+40GB will be more than enough for most of the installations. If you would like to extend the storage later on in the KVM, you can follow the article here to extend it.
+
+After defining the storage, Click on Forward.
+create windows 11 virtual hard disk in kvm.
+Specify the VM properties.
+
+Define the Name.
+
+Here you need to specify the VM name because the VM was picked up as windows 10 initially, the name also shows win10, and I am going to change it to Windows 11.
+
+Choose the Customize configuration before install.
+Choose the network.
+
+Here I am choosing the default NAT interface, so the virtual machine can go out to the internet, which is the safe and best option. If you wanted this VM to be part of the same network as your host machine, you could choose the bridge interface known as the host device. But I am not going to do that here.
+
+After the changes, click on Finish, a VM customization window will now pop up.
+windows 11 customize configuration before install in KVM.
+
+**** 2. Configure the virtual hardware for windows 11 in KVM.
+
+For the windows11 VM to work perfectly on the KVM, we need to make some changes on the virtual hardware, lets go ahead and do that now.
+Choose the Virtual hard disk as qemu VirtIO.
+
+We need to tell the KVM to use virtio as the hard disk bus type in the customization window.
+
+Click on SATA Disk 1.
+Under details click on Advanced options.
+Choose the disk bus as VirtIO, and leave the hard disk type as qcow2.
+
+If you want to get good performance, you can make the storage format raw, but that will have limitations on taking snapshots, expanding the storage, and so on. So I am okay with qcow2, in case if you would like to have a good performance, you may change it to raw.
+
+After the selection click on Apply.
+choose windows 11 sata disk type as virtio.
+Configure the graphics.
+
+We have to add a VNC viewer as the graphics, click on add hardware option on the bottom,
+
+In the Add new virtual hardware window, click on Graphics, and choose Graphics type as VNC Server, and click on Finish.
+choose windows 11 graphics as VNC server.
+Change the network interface as Qemu KVM compatible.
+
+Click on the Network interface, in the device model you can see the interface as e1000e, change the interface to virtio.
+
+Click on Apply.
+Choose network interface as virtio.
+
+**** 3. Add the windows 11 virtio driver.
+
+Remember we have downloaded virtio driver, you need to attach that ISO as CD driver here, so that the windows 11 operating system can choose the KVM virtio virtual drivers during the installation.
+
+Click on Add hardware.
+Select storage, click on Manage to attach the virtio driver that you have downloaded.
+Choose the Device type as CDROM Device.
+Click on Finish.
+
+attach windows 11 virtio driver in kvm.
+
+**** 4. Change the boot order.
+
+At this point, you will have two virtual CD-ROMs attached to the VM, the first one has the windows 11 iso, and the second one has virtio drivers.
+
+You need to make sure the CDROM1 gets selected during the boot. Click on Boot options. Under boot device order, check the SATA CDROM1 and click on the up arrow on the right to move it up.
+
+You now will have CDROM1 as the primary and virtual hard drive, and then CDROM2. After the selection, click on Apply
+change windows 11 kvm boot order.
+
+**** 5. Configure the CPU for windows 11.
+
+I have enough CPU cores on my machine, and I will give 4 CPUs for the windows 11 guest machine.
+
+Click on CPU, Choose the current allocations to 4.
+
+Under topology, Select manually set CPU topology.
+Select socket as 1.
+Core as 2.
+Thread as 2.
+
+Note: If you would like to change the CPU to just two, you may change the allocation to 2, and the core as 1, and the thread as 1. If the CPU doesn’t support threading, you can choose the core as 2 and click on Apply.
+configure windows 11 cpu in KVM.
+
+**** 6. Enable the TPM.
+
+In the installation wizard, click on Add hardware.
+
+Add the TPM as below.
+
+Model – You will see two models, choose TIS,
+Backend – select Backend as Emulated.
+Version – 2.0
+
+Click on Finish.
+
+You will see TPM v2.0 under the VM hardware list now.
+
+**** 7. Enable Secure-Boot.
+
+The secure boot/UEFI is available by default when you have installed the KVM program on your machine. If it is not available by any chance, you may enter the command below to install it.
+
+sudo apt install ovmf
+
+To enable Secure boot or UEFI boot, click on the Overview option during the VM installation and change the following settings.
+
+Chipset – i440FX
+Firmware – UEFI x86_64:/usr/share/OVMF/OVMF_CODE.fd
+
+**** 8. Begin the Windows 11 installation in KVM.
+
+You may now click on Begin installation in the top left corner
+Begin windows 11 installation in KVM.
+
+The windows 11 installation will begin, choose the language and keyboard layout of your choice and click on Next and choose to Install now.
+windows 11 installation in kvm.
+
+Since I don’t have the product key, check the option that says, I don’t have a product key.
+choose the product key during windows 11 installation in kvm.
+
+Choose the version of your choice.
+
+I am choosing Windows 11 pro, and click on next.
+windows 11 version in kvm.
+
+Accept the license agreement and click on Next.
+accept windows 11 license agreement.
+
+Choose the type of installation as custom.
+
+You won’t be able to find the hard disk that you have added,
+
+Click on Load driver. In the prompt, click on OK.
+configure the virtual hard disk for windows 11.
+
+Because we have attached the virtio IO driver iso file while customizing the VM, you will see the list virto drivers listed for each windows operating system. Currently, the virto IO driver isn’t available for windows11 yet, we have to choose windows 10 instead, and click on Next
+select qemu windows 11 driver.
+
+You should now see your virtual hard disk listed in the windows 11 setup wizard.
+
+Choose the hard disk, and click on Next.
+choose windows 11 virtual hard disk for installation in kvm.
+
+The installation will now begin, and this process will take time depends on your hardware.
+windows 11 installation progress in kvm.
+
+**** 9. Complete the initial setup wizard.
+
+After the installation, you will be presented with the initial setup wizard.
+
+Choose the country of your choice and click on Next.
+windows 11 initial setup wizard in kvm.
+
+On the screen where it says, let’s connect to the network, choose I don’t have a network.
+
+Even if you try to connect to the network, it won’t let you connect because you don’t have windows 11 qemu drivers installed yet, which we will do later.
+disconnect windows 11 from network prior to the installation in kvm.
+
+On the next screen, choose to continue with a Limited setup.
+windows 11 continue with limited setup in kvm.
+
+You will have to create a local account to begin with, enter the username and password, and you also need to setup 3 security questions as well. After that privacy settings, accept the privacy setting based on your requirement.
+
+Wait for a couple of minutes and you will boot into the windows successfully.
+windows 11 desktop in kvm.
+
+**** 10. Install QEMU virtio drivers for windows 11.
+
+Click on the search button and search for Device Manager, just open it.
+open device manager to install windows 11 driver in kvm.
+
+Here you will see the list of drivers that you have on your machine. If you notice under ‘other drivers‘, you should see some drivers are not installed.
+
+Right-click on the Ethernet adapter and click on update driver.
+In the update windows driver wizard click on Browse my computer for drivers.
+
+browse my computer for drivers in kvm.
+
+Click on browse and choose the virtio iso file that we have attached earlier as CDROM.
+
+And click on Next.
+choose virtio drivers for windows 11 kvm driver installation.
+
+You should see the ethernet adapter driver installed successfully.
+windows 11 network adapter driver installed successfully.
+
+You can also notice that your computer is now connected to the internet.
+
+Follow the same steps for all other drives, except ‘unknown device’, which you cannot install with the virtio driver and it is okay to leave it as it is.
+
+**** 11. Update the Display adapter.
+
+After completing the installation of other devices, you may now go ahead and install the Display adapters.
+
+If you look under Display adapter, you should see Microsoft Basic Display Adapter by default installed, right-click on the driver and click on update driver.
+update windows 11 kvm display driver.
+
+Follow the same steps that you followed for other device drivers and you should see the display driver got updated with Redhat QXL Controller.
+update to Red har qxl driver in windows 11 display drivers.
+
+**** 12. Remove the CDROM from the KVM.
+
+After the driver installation, let’s go ahead and remove both the windows 11 iso and virtio driver from the cd rom.
+
+Select the CDROM1, click on the x icon to remove the file, and click on Apply.
+Follow the same steps for the CDROM2 as well.
+
+Remove windows 11 and virtio iso file from the KVM.
+How to enable the audio for windows11 in kvm?
+
+Follow the guide here to enable the sound on the windows machine.Opens in a new tab.
+
+That’s it, you have successfully installed the windows 11 operating system on a KVM environment.
+How to start using windows 11 in KVM ?
+
+To start the windows 11. Open terminal and type virt-viewer and choose windows 11 from the list and click on connect.
+Connect windows 11 VM from terminal.
+
+Note: the windows 11 machine should be powered on, for you to connect to the machine.
+
+If you are unable to find the windows11 to connect,
+
+you may type virsh list --all
+Check the status of windows11 machine.
+If it is in shut off state, you may power them on with the below command.
+virsh start windows-11
+
+*** windows 11 spice download
+
+after booting into windows 11 you need to install the spice tools
+
+[[https://www.spice-space.org/download.html]]
+
+under the Windows binaries / Windows guest tools section download the exe
+
+[[https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe]]
+
+run the spice-guest-tools-latest.exe and allow software from redhat
+
+reboot windows and go to setting display and change the display to 1920 x 1080
+
+*** Chocolatey
+
+The first step is to open PowerShell on your Windows 11 computer, and that too with administrator privileges. Opening PowerShell with administrator privileges is important, as you will be unable to install Chocolatey without that.
+
+Now type in the following command to know the execution policy status of PowerShell.
+
+#+begin_example
+Get-ExecutionPolicy
+#+end_example
+
+If it says ‘Restricted’ as shown in the below screenshot, type in the following screenshot, type in the following command as shown below, all on the PowerShell with administrator privileges.
+
+#+begin_example
+Set-ExecutionPolicy AllSigned
+#+end_example
+
+You will have to type ‘Y’ and hit the enter key when you will be asked for a confirmation.
+
+Now run the following command:
+
+#+begin_example
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+#+end_example
