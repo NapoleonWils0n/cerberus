@@ -1,5 +1,59 @@
 #+STARTUP: content
 * nixos libvirt
+** configuration.nix
+
+#+begin_src nix
+  # libvirt
+  users.extraUsers.djwilcox.extraGroups = [ "libvirtd" ];
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      allowedBridges = [ "virbr0" ];
+      qemu = {
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
+    };
+    spiceUSBRedirection.enable = true;
+  };
+  services.spice-vdagentd.enable = true;
+
+  # for mac
+  boot.extraModprobeConfig = ''
+    options kvm_intel nested=1
+    options kvm_intel emulate_invalid_guest_state=0
+    options kvm ignore_msrs=1
+  '';
+
+  # networking
+  networking = {
+    hostName = "pollux"; # Define your hostname
+    networkmanager.enable = true;
+    bridges.br0.interfaces = [ "enp0s20f0u2u3" ]; # bridge for libvirt
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 6881 ];
+      allowedUDPPorts = [ 6882 ];
+    };
+  };
+#+end_src
+
+** packages
+
+packages to install
+
+#+begin_src nix
+dmg2img
+python3
+virt-manager
+virt-viewer
+spice spice-gtk
+spice-protocol
+win-virtio
+win-spice
+#+end_src
+
 ** virt manager
 
 [[https://nixos.wiki/wiki/Virt-manager]]
@@ -16,6 +70,277 @@ HyperVisor = QEMU/KVM
 Autoconnect = checkmark
 
 Connect
+
+*** qemu create hd
+
+create mac_hdd_ng.img with qemu
+
+#+begin_src sh
+qemu-img create -f qcow2 mac_hdd_ng.img 128G
+#+end_src
+
+change the permissions
+
+#+begin_src sh
+doas chown -R root:libvirtd mac_hdd_ng.img
+#+end_src
+
+move the mac_hdd_ng.img file to the libvirt images directory
+
+#+begin_src sh
+doas mv mac_hdd_ng.img /var/lib/libvirt/images/
+#+end_src
+
+*** OpenCore-Boot.sh
+
+#+begin_src sh
+#!/usr/bin/env bash
+
+# Special thanks to:
+# https://github.com/Leoyzen/KVM-Opencore
+# https://github.com/thenickdude/KVM-Opencore/
+# https://github.com/qemu/qemu/blob/master/docs/usb2.txt
+#
+# qemu-img create -f qcow2 mac_hdd_ng.img 128G
+#
+# echo 1 > /sys/module/kvm/parameters/ignore_msrs (this is required)
+
+############################################################################
+# NOTE: Tweak the "MY_OPTIONS" line in case you are having booting problems!
+############################################################################
+
+MY_OPTIONS="+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check"
+
+# This script works for Big Sur, Catalina, Mojave, and High Sierra. Tested with
+# macOS 10.15.6, macOS 10.14.6, and macOS 10.13.6.
+
+ALLOCATED_RAM="8196" # MiB
+CPU_SOCKETS="1"
+CPU_CORES="2"
+CPU_THREADS="4"
+
+REPO_PATH="."
+OVMF_DIR="."
+
+# shellcheck disable=SC2054
+args=(
+  -enable-kvm -m "$ALLOCATED_RAM" -cpu Penryn,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,"$MY_OPTIONS"
+  -machine q35
+  -usb -device usb-kbd -device usb-tablet
+  -smp "$CPU_THREADS",cores="$CPU_CORES",sockets="$CPU_SOCKETS"
+  -device usb-ehci,id=ehci
+  # -device usb-kbd,bus=ehci.0
+  # -device usb-mouse,bus=ehci.0
+  -device nec-usb-xhci,id=xhci
+  -global nec-usb-xhci.msi=off
+  # -device usb-host,vendorid=0x8086,productid=0x0808  # 2 USD USB Sound Card
+  # -device usb-host,vendorid=0x1b3f,productid=0x2008  # Another 2 USD USB Sound Card
+  -device isa-applesmc,osk="ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
+  -drive if=pflash,format=raw,readonly=on,file="$REPO_PATH/$OVMF_DIR/OVMF_CODE.fd"
+  -drive if=pflash,format=raw,file="$REPO_PATH/$OVMF_DIR/OVMF_VARS-1024x768.fd"
+  -smbios type=2
+  -device ich9-intel-hda -device hda-duplex
+  -device ich9-ahci,id=sata
+  -drive id=OpenCoreBoot,if=none,snapshot=on,format=qcow2,file="$REPO_PATH/OpenCore/OpenCore.qcow2"
+  -device ide-hd,bus=sata.2,drive=OpenCoreBoot
+  -device ide-hd,bus=sata.3,drive=InstallMedia
+  -drive id=InstallMedia,if=none,file="$REPO_PATH/BaseSystem.img",format=raw
+  -drive id=MacHDD,if=none,file="/var/lib/libvirt/images/mac_hdd_ng.img",format=qcow2
+  -device ide-hd,bus=sata.4,drive=MacHDD
+  # -netdev tap,id=net0,ifname=tap0,script=no,downscript=no -device virtio-net-pci,netdev=net0,id=net0,mac=52:54:00:c9:18:27
+  -netdev user,id=net0 -device virtio-net-pci,netdev=net0,id=net0,mac=52:54:00:c9:18:27
+  # -netdev user,id=net0 -device vmxnet3,netdev=net0,id=net0,mac=52:54:00:c9:18:27  # Note: Use this line for High Sierra
+  -monitor stdio
+  -device VGA,vgamem_mb=128
+)
+
+qemu-system-x86_64 "${args[@]}"
+#+end_src
+
+*** dmg2img
+
+#+begin_src sh
+dmg2img -i BaseSystem.dmg BaseSystem.img
+#+end_src
+
+*** macosx.xml
+
+#+begin_src xml
+<domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+  <name>macOS</name>
+  <uuid>2aca0dd6-cec9-4717-9ab2-0b7b13d111c3</uuid>
+  <title>macOS</title>
+  <memory unit='KiB'>4194304</memory>
+  <currentMemory unit='KiB'>4194304</currentMemory>
+  <vcpu placement='static'>4</vcpu>
+  <os>
+    <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
+    <loader readonly='yes' type='pflash'>/home/djwilcox/libvirt/OSX-KVM/OVMF_CODE.fd</loader>
+    <nvram>/home/djwilcox/libvirt/OSX-KVM/OVMF_VARS-1024x768.fd</nvram>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <cpu mode='custom' match='exact' check='none'>
+    <model fallback='forbid'>qemu64</model>
+  </cpu>
+  <clock offset='utc'>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+  <devices>
+    <emulator>/run/current-system/sw/bin/qemu-system-x86_64</emulator>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' cache='writeback' io='threads'/>
+      <source file='/home/djwilcox/libvirt/OSX-KVM/OpenCore/OpenCore.qcow2'/>
+      <target dev='vda' bus='virtio'/>
+      <boot order='1'/>
+      <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' cache='writeback' io='threads'/>
+      <source file='/var/lib/libvirt/images/mac_hdd_ng.img'/>
+      <target dev='vdb' bus='virtio'/>
+      <boot order='2'/>
+      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='raw' cache='writeback'/>
+      <source file='/home/djwilcox/libvirt/OSX-KVM/BaseSystem.img'/>
+      <target dev='vdc' bus='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
+    </disk>
+    <controller type='sata' index='0'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1f' function='0x2'/>
+    </controller>
+    <controller type='pci' index='0' model='pcie-root'/>
+    <controller type='pci' index='1' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='1' port='0x8'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0' multifunction='on'/>
+    </controller>
+    <controller type='pci' index='2' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='2' port='0x9'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+    </controller>
+    <controller type='pci' index='3' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='3' port='0xa'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
+    </controller>
+    <controller type='pci' index='4' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='4' port='0xb'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x3'/>
+    </controller>
+    <controller type='pci' index='5' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='5' port='0xc'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x4'/>
+    </controller>
+    <controller type='pci' index='6' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='6' port='0xd'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x5'/>
+    </controller>
+    <controller type='pci' index='7' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='7' port='0xe'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x6'/>
+    </controller>
+    <controller type='pci' index='8' model='pcie-root-port'>
+      <model name='pcie-root-port'/>
+      <target chassis='8' port='0xf'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x7'/>
+    </controller>
+    <controller type='pci' index='9' model='pcie-to-pci-bridge'>
+      <model name='pcie-pci-bridge'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-ehci1'>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x7'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci1'>
+      <master startport='0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0' multifunction='on'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci2'>
+      <master startport='2'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x1'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci3'>
+      <master startport='4'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x2'/>
+    </controller>
+    <interface type='bridge'>
+      <mac address='52:54:00:e6:85:40'/>
+      <source bridge='virbr0'/>
+      <model type='vmxnet3'/>
+      <address type='pci' domain='0x0000' bus='0x09' slot='0x02' function='0x0'/>
+    </interface>
+    <serial type='pty'>
+      <target type='isa-serial' port='0'>
+        <model name='isa-serial'/>
+      </target>
+    </serial>
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+    <channel type='unix'>
+      <target type='virtio' name='org.qemu.guest_agent.0'/>
+      <address type='virtio-serial' controller='0' bus='0' port='1'/>
+    </channel>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+    <graphics type='spice' autoport='yes'>
+      <listen type='address'/>
+    </graphics>
+    <video>
+      <model type='virtio' heads='1' primary='yes'>
+        <acceleration accel3d='no'/>
+      </model>
+      <address type='pci' domain='0x0000' bus='0x06' slot='0x00' function='0x0'/>
+    </video>
+    <memballoon model='none'/>
+  </devices>
+  <qemu:commandline>
+    <qemu:arg value='-device'/>
+    <qemu:arg value='isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc'/>
+    <qemu:arg value='-smbios'/>
+    <qemu:arg value='type=2'/>
+    <qemu:arg value='-device'/>
+    <qemu:arg value='usb-tablet'/>
+    <qemu:arg value='-device'/>
+    <qemu:arg value='usb-kbd'/>
+    <qemu:arg value='-cpu'/>
+    <qemu:arg value='Penryn,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check'/>
+  </qemu:commandline>
+</domain>
+
+#+end_src
+
+copy macOS.xml to
+
+#+begin_src sh
+cp macOS.xml ~/libvirt/OSX-KVM
+#+end_src
+
+#+begin_src sh
+virsh --connect qemu:///system define ~/libvirt/OSX-KVM/macOS.xml
+#+end_src
+
+#+begin_src sh
+./OpenCore-Boot.sh
+#+end_src
 
 ** osx-kvm
 
