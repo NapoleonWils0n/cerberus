@@ -4,6 +4,19 @@
 
 [[https://nixos.wiki/wiki/Virt-manager]]
 
+You will get a warning when you open it for the first time
+
+Could not detect a default hypervisor. Make sure the appropriate virtualization packages containing kvm, qemu, libvirt, etc. are installed and that libvirtd is running.
+
+To resolve
+
+File (in the menu bar) -> Add connection
+
+HyperVisor = QEMU/KVM
+Autoconnect = checkmark
+
+Connect
+
 ** osx-kvm
 
 [[https://nixos.wiki/wiki/OSX-KVM]]
