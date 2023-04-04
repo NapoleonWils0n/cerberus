@@ -49,6 +49,7 @@ virt-manager
 virt-viewer
 spice spice-gtk
 spice-protocol
+swtpm
 win-virtio
 win-spice
 #+end_src
