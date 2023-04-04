@@ -54,6 +54,9 @@ win-spice
 #+end_src
 
 ** osx-kvm
+
+[[https://github.com/kholia/OSX-KVM]]
+
 *** clone the repo
 
 #+begin_src sh
