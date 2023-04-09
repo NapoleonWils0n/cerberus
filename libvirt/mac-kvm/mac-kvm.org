@@ -124,7 +124,7 @@ qemu-img create -f qcow2 mac_hdd_ng.img 128G
 move the mac_hdd_ng.img file to libvirt images
 
 #+begin_src sh
-mv mac_hdd_ng.img ~/libvirt/images
+mkdir -p ~/libvirt/images && mv mac_hdd_ng.img ~/libvirt/images
 #+end_src
 
 *** edit the ~/libvirt/OSX-KVM/OpenCore-Boot.sh
