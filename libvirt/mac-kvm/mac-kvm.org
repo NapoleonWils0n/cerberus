@@ -110,7 +110,7 @@ git clone --depth 1 --recursive https://github.com/kholia/OSX-KVM.git
 move the OSX-KVM git repo to ~/libvirt
 
 #+begin_src sh
-mv OSX-KVM ~/libvirt
+mkdir -p ~/libvirt/OSX-KVM && mv OSX-KVM ~/libvirt
 #+end_src
 
 *** Create a virtual HDD image where macOS will be installed.
