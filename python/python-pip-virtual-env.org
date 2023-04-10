@@ -1,0 +1,30 @@
+#+STARTUP: content
+* python pip virtual env
+** create python virtual env
+
+#+begin_src sh
+python -m venv .venv
+source .venv/bin/activate
+#+end_src
+
+** install package
+
+#+begin_src sh
+pip install --use-pep517 git+https://github.com/NapoleonWils0n/roughcut.git
+#+end_src
+
+** upgrade package
+
+#+begin_src sh
+pip install --use-pep517 --upgrade git+https://github.com/NapoleonWils0n/roughcut.git
+#+end_src
+
+#+begin_src sh
+source ~/.venv/bin/activate
+#+end_src
+
+** deactivate
+
+#+begin_src sh
+deactivate
+#+end_src
