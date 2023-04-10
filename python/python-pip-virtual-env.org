@@ -10,13 +10,13 @@ source .venv/bin/activate
 ** install package
 
 #+begin_src sh
-pip install --use-pep517 git+https://github.com/NapoleonWils0n/roughcut.git
+pip install --use-pep517 git+https://github.com/NapoleonWils0n/pilfer.git
 #+end_src
 
 ** upgrade package
 
 #+begin_src sh
-pip install --use-pep517 --upgrade git+https://github.com/NapoleonWils0n/roughcut.git
+pip install --use-pep517 --upgrade git+https://github.com/NapoleonWils0n/pilfer.git
 #+end_src
 
 #+begin_src sh
