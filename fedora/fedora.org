@@ -1,0 +1,179 @@
+#+STARTUP: content
+* fedora
+** nvidia
+
+[[https://rpmfusion.org/Howto/NVIDIA]]
+
+#+begin_src sh
+sudo dnf update -y # and reboot if you are not on the latest kernel
+sudo dnf install akmod-nvidia # rhel/centos users can use kmod-nvidia instead
+sudo dnf install xorg-x11-drv-nvidia-cuda #optional for cuda/nvdec/nvenc support
+#+end_src
+
+** rpmfusion
+
+[[https://rpmfusion.org/Configuration]]
+
+Fedora with dnf: 
+
+install free and non free repos
+
+#+begin_src sh
+sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+#+end_src
+
+AppStream metadata
+
+RPM Fusion repositories also provide Appstream metadata to enable users to install packages using Gnome Software/KDE Discover. Please note that these are a subset of all packages since the metadata are only generated for GUI packages.
+
+For the current Fedora releases: the suggested method is to install appstream-data using DNF.
+
+The following command will install the required packages
+
+#+begin_src sh
+sudo dnf groupupdate core
+#+end_src
+
+** codecs
+
+[[https://rpmfusion.org/Howto/Multimedia]]
+Install additional codec
+
+This will allows the application using the gstreamer framework to play others restricted codecs:
+
+The following command will install the complements multimedia packages needed by gstreamer enabled applications:
+
+#+begin_src sh
+sudo dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+#+end_src
+
+The following command will install the sound-and-video complement packages needed by some applications:
+
+#+begin_src sh
+sudo dnf groupupdate sound-and-video
+#+end_src
+
+** dnf.conf
+
+#+begin_src sh
+sudo vi /etc/dnf/dnf.conf
+#+end_src
+
+#+begin_src sh
+max_parallel_downloads=5
+#+end_src
+
+** dnf clean cache
+
+#+begin_src sh
+sudo dnf clean dbcache
+#+end_src
+
+#+begin_src sh
+sudo dnf clean all
+#+end_src
+
+** dnf update
+
+#+begin_src sh
+sudo dnf update
+#+end_src
+
+** packages
+
+#+begin_src sh
+sudo dnf install alacritty emacs fira-code-fonts mpv mpv-mpris yt-dlp yt-dlp-zsh-completion zsh zsh-syntax-highlighting tmux abook apg aria2 aspell aspell-en bat fd-find fira-code fzf ImageMagick mpc mpd mutt ncmpc newsboat oathtool pandoc ripgrep shellcheck surfraw tmux task-spooler transmission urlscan w3m xclip util-linux-user
+#+end_src
+
+** flatpak
+
+#+begin_src sh
+obs-studio
+#+end_src
+
+** zsh
+
+zsh location
+
+#+begin_src sh
+which zsh
+#+end_src
+
+change shell, you need to install the util-linux-user package first
+
+#+begin_src sh
+chsh -s /usr/bin/zsh
+#+end_src
+
+** ssh 
+
+set up systemd ssh agent
+install seahorse
+
+#+begin_src sh
+sudo dnf install seahorse
+#+end_src
+
+** firewall
+
+[[https://docs.fedoraproject.org/en-US/quick-docs/firewalld/]]
+
+[[https://www.redhat.com/sysadmin/beginners-guide-firewalld]]
+
+*** list zones
+
+#+begin_src sh
+sudo firewall-cmd --get-zones
+#+end_src
+
+*** list all
+
+#+begin_src sh
+sudo firewall-cmd --list-all 
+#+end_src
+
+*** get active zone
+
+#+begin_src sh
+sudo firewall-cmd --get-active-zones
+#+end_src
+
+FedoraWorkstation
+
+*** list all zone
+
+#+begin_src sh
+sudo firewall-cmd --zone=FedoraWorkstation --list-all
+#+end_src
+
+*** list services
+
+#+begin_src sh
+sudo firewall-cmd --zone=FedoraWorkstation --list-services
+#+end_src
+
+*** Allow and deny by port
+
+Now, what happens when you need to allow traffic over a non-standard port? Imagine you have a backup service that needs to run over a dedicated UDP port. How would you add this exception to your zone? The syntax is very user friendly and is only slightly different from what we used for services. To add a port to your zone configuration, use the following:
+
+#+begin_src sh
+sudo firewall-cmd --permanent --zone=external --add-port=6881/udp
+sudo firewall-cmd --permanent --zone=external --add-port=6881/tcp
+#+end_src
+
+success
+
+We check the allowed ports with the following command:
+
+#+begin_src sh
+sudo firewall-cmd --zone=external --list-ports
+#+end_src
+
+60001/udp
+
+And to remove the port rule, you guessed it... simply switch --add-port=x to --remove-port=x
+
+#+begin_src sh
+sudo firewall-cmd --permanent --zone=external --remove-port=6881/udp
+sudo firewall-cmd --permanent --zone=external --remove-port=6881/tcp
+#+end_src
