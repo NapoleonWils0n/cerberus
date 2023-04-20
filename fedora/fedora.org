@@ -215,8 +215,8 @@ sudo firewall-cmd --zone=FedoraWorkstation --list-services
 Now, what happens when you need to allow traffic over a non-standard port? Imagine you have a backup service that needs to run over a dedicated UDP port. How would you add this exception to your zone? The syntax is very user friendly and is only slightly different from what we used for services. To add a port to your zone configuration, use the following:
 
 #+begin_src sh
-sudo firewall-cmd --permanent --zone=external --add-port=6881/udp
-sudo firewall-cmd --permanent --zone=external --add-port=6881/tcp
+sudo firewall-cmd --permanent --zone=FedoraWorkstation  --add-port=6881/udp
+sudo firewall-cmd --permanent --zone=FedoraWorkstation  --add-port=6881/tcp
 #+end_src
 
 success
@@ -224,7 +224,7 @@ success
 We check the allowed ports with the following command:
 
 #+begin_src sh
-sudo firewall-cmd --zone=external --list-ports
+sudo firewall-cmd --zone=FedoraWorkstation  --list-ports
 #+end_src
 
 60001/udp
@@ -232,6 +232,6 @@ sudo firewall-cmd --zone=external --list-ports
 And to remove the port rule, you guessed it... simply switch --add-port=x to --remove-port=x
 
 #+begin_src sh
-sudo firewall-cmd --permanent --zone=external --remove-port=6881/udp
-sudo firewall-cmd --permanent --zone=external --remove-port=6881/tcp
+sudo firewall-cmd --permanent --zone=FedoraWorkstation --remove-port=6881/udp
+sudo firewall-cmd --permanent --zone=FedoraWorkstation --remove-port=6881/tcp
 #+end_src
