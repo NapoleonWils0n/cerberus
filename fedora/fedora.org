@@ -87,8 +87,16 @@ sudo dnf install alacritty emacs fira-code-fonts mpv mpv-mpris yt-dlp yt-dlp-zsh
 
 ** flatpak
 
+install the flatpak repo
+
 #+begin_src sh
-obs-studio
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#+end_src
+
+install obs
+
+#+begin_src 
+flatpak install --user flathub com.obsproject.Studio
 #+end_src
 
 ** zsh
@@ -108,6 +116,38 @@ chsh -s /usr/bin/zsh
 ** ssh 
 
 set up systemd ssh agent
+
+#+begin_src sh
+vi ~/.config/systemd/user/ssh-agent.service
+#+end_src
+
+add the following code
+
+#+begin_src sh
+[Unit]
+Description=SSH key agent
+
+[Service]
+Type=forking
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/ssh-agent -a $SSH_AUTH_SOCK
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+enable the ssh agent
+
+#+begin_src sh
+systemctl --user enable ssh-agent.service
+#+end_src
+
+start the ssh agent
+
+#+begin_src sh
+systemctl --user start ssh-agent.service
+#+end_src
+
 install seahorse
 
 #+begin_src sh
