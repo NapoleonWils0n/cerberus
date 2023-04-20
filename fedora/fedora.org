@@ -1,5 +1,23 @@
 #+STARTUP: content
 * fedora
+** create a bootable usb drive
+
+download the iso
+
+[[https://fedoraproject.org/workstation/download/]]
+
+find the usb device with lsblk
+
+#+begin_src sh
+lsblk
+#+end_src
+
+replace /dev/sdb with the actual drive
+
+#+begin_src sh
+sudo dd if=Fedora-Workstation-Live-x86_64-38-1.6.iso of=/dev/sdb bs=1M status=progress conv=noerror,sync
+#+end_src
+
 ** nvidia
 
 [[https://rpmfusion.org/Howto/NVIDIA]]
