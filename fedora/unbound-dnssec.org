@@ -1,0 +1,99 @@
+#+STARTUP: content
+* unbound dnssec trigger
+** packages
+
+#+begin_src sh
+sudo dnf install unbound dnssec-trigger
+#+end_src
+
+** unbound set up
+
+change directory to the /etc/unbound/conf.d directory
+
+#+begin_src sh
+cd /etc/ubound/conf.d/
+#+end_src
+
+edit the /etc/unbound/unbound.conf file
+
+#+begin_src sh
+sudo vi /etc/unbound/unbound.conf
+#+end_src
+
+add the following line
+
+#+begin_src sh
+include: "/etc/unbound/conf.d/custom.conf"
+#+end_src
+
+*** custom.conf
+
+copy the custom.conf to the unbound directory
+
+#+begin_src sh
+sudo cp custom.conf /etc/unbound/conf.d/
+#+end_src
+
+custom.conf
+
+#+begin_src conf
+# See unbound.conf(5) man page, version 1.5.7.
+server:
+	verbosity: 1
+	access-control: 0.0.0.0/0 refuse
+	access-control: 127.0.0.0/8 allow
+	access-control: ::0/0 refuse
+	access-control: ::1 allow
+	access-control: ::ffff:127.0.0.1 allow
+	
+	# enable to not answer id.server and hostname.bind queries.
+	hide-identity: yes
+	hide-version: yes
+	harden-glue: yes
+	harden-dnssec-stripped: yes
+
+        # needed for dnscrypt
+	do-not-query-localhost: no
+
+remote-control:
+	control-enable: no
+
+# dnscrypt
+#forward-zone:
+#        name: "."
+#        forward-addr: 127.0.0.1@5353
+#+end_src
+
+*** start unbound
+
+start unbound dns server
+
+#+begin_src sh
+sudo systemctl start unbound.service
+#+end_src
+
+enable unbound dns server to start at boot
+
+#+begin_src sh
+sudo systemctl enable unbound.service
+#+end_src
+
+*** network settings
+
+open the settings app / network
+
+click the cog next to you network
+
+switch to the ipv4 tab
+
+turn the automatic switch next to dns to off
+
+in the text field below the dns settings add the following
+
+#+begin_example
+127.0.0.1
+#+end_example
+
+and click apply
+
+
