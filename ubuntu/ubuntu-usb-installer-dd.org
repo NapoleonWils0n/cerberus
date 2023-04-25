@@ -1,0 +1,12 @@
+#+STARTUP: content
+* ubuntu create a usb installer with dd
+
+#+begin_src sh
+lsblk
+#+end_src
+
+replace sdX with the device name
+
+#+begin_src sh
+sudo dd if=ubuntu.iso of=/dev/sdX bs=4M && sync
+#+end_src
