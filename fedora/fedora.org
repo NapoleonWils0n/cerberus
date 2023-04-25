@@ -100,7 +100,7 @@ sudo dnf update
 ** packages
 
 #+begin_src sh
-sudo dnf install alacritty emacs fira-code-fonts mpv mpv-mpris yt-dlp yt-dlp-zsh-completion zsh zsh-syntax-highlighting tmux abook apg aria2 aspell aspell-en bat fd-find fira-code fzf ImageMagick mpc mpd mutt ncmpc newsboat oathtool opendoas pandoc ripgrep shellcheck surfraw tmux task-spooler transmission urlscan w3m xclip util-linux-user
+sudo dnf install alacritty emacs fira-code-fonts mpv mpv-mpris yt-dlp yt-dlp-zsh-completion zsh zsh-syntax-highlighting tmux abook apg aria2 aspell aspell-en bat fd-find fzf ImageMagick mpc mpd mutt ncmpc newsboat oathtool opendoas pandoc ripgrep shellcheck surfraw tmux task-spooler transmission urlscan w3m xclip util-linux-user
 #+end_src
 
 ** flatpak
