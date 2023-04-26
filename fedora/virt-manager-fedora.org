@@ -1,0 +1,36 @@
+#+STARTUP: content
+* virt manager fedora
+
+#+begin_src sh
+sudo dnf group install --with-optional virtualization
+#+end_src
+
+** libvirtd
+
+enable libvirtd
+
+#+begin_src sh
+sudo systemctl enable libvirtd
+#+end_src
+
+start libvirtd
+
+#+begin_src sh
+sudo systemctl start libvirtd
+#+end_src
+
+** add user to libvirt group
+
+add the current user to the libvirt group
+
+#+begin_src sh
+sudo usermod -a -G libvirt $(whoami)
+#+end_src
+
+** virt-manager
+
+install virt-manager
+
+#+begin_src sh
+sudo dnf install virt-manager
+#+end_src
