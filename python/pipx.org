@@ -1,0 +1,19 @@
+#+STARTUP: content
+* pipx
+** pipx install
+
+#+begin_src sh
+sudo apt install pipx
+#+end_src
+
+** pipx ensure path
+
+#+begin_src sh
+pipx ensurepath
+#+end_src
+
+** pipx install pilfer
+
+#+begin_src sh
+pipx install git+https://github.com/NapoleonWils0n/pilfer.git
+#+end_src
