@@ -1,0 +1,6 @@
+#+STARTUP: content
+* sqlite for dnf
+
+#+begin_src sh
+sudo dnf install sqlite
+#+end_src
