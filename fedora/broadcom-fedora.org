@@ -1,0 +1,28 @@
+#+STARTUP: content
+* broadcom
+
+install broadcom-wl driver (in most cases, you already have this installed) -
+
+#+begin_src sh
+sudo dnf -y install broadcom-wl
+#+end_src
+
+Install kernel-devel package
+
+#+begin_src sh
+sudo dnf -y install kernel-devel-$(uname -r)
+#+end_src
+
+Compile drivers
+
+#+begin_src sh
+sudo akmods --force
+#+end_src
+
+#+begin_src sh
+sudo depmod -a
+#+end_src
+
+#+begin_src sh
+sudo modprobe wl
+#+end_src
