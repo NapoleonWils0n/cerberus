@@ -28,7 +28,7 @@ sudo dnf builddep emacs
 *** images packages install
 
 #+begin_src sh
-sudo dnf install Xaw3d Xaw3d-devel libpng libpng-devel zlib libjpeg-turbo libjpeg-devel libtiff libtiff-devel giflib giflib-devel librsvg2 librsvg2-devel libwebp libwebp-devel ImageMagick-devel
+sudo dnf install Xaw3d Xaw3d-devel libpng libpng-devel zlib libjpeg-turbo libjpeg-devel libtiff libtiff-devel giflib giflib-devel librsvg2 librsvg2-devel libwebp libwebp-devel ImageMagick ImageMagick-devel
 #+end_src
 
 *** emacs packages install
