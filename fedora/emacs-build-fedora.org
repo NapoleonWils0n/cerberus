@@ -1,0 +1,103 @@
+#+STARTUP: content
+* emacs build fedora
+** git clone emacs
+
+#+begin_src sh
+git clone git://git.sv.gnu.org/emacs.git
+#+end_src
+
+** change directory in the emacs directory
+
+#+begin_src sh
+cd emacs
+#+end_src
+
+** packages
+*** development tools install
+
+#+begin_src sh
+sudo dnf group install "Development Tools"
+#+end_src
+
+*** build dependencies for emacs
+
+#+begin_src sh
+sudo dnf builddep emacs
+#+end_src
+
+*** images packages install
+
+#+begin_src sh
+sudo dnf install Xaw3d Xaw3d-devel libpng libpng-devel zlib libjpeg-turbo libjpeg-devel libtiff libtiff-devel giflib giflib-devel librsvg2 librsvg2-devel libwebp libwebp-devel ImageMagick-devel
+#+end_src
+
+*** emacs packages install
+
+#+begin_src sh
+sudo dnf install autoconf gnutls-devel gmp-devel gtk3-devel jansson-devel libgccjit libgccjit-devel libmpc-devel mpfr-devel ncurses-devel texinfo 
+#+end_src
+
+** autogen
+
+Set CC and CXX environment variables to inform the Emacs configuration script as to the location of gcc,
+otherwise it fails to find libgccjit
+
+#+begin_src sh
+export CC=/usr/bin/gcc && export CXX=/usr/bin/gcc
+#+end_src
+
+run autogen
+
+#+begin_src sh
+./autogen.sh
+#+end_src
+
+** configure 
+
+#+begin_src sh
+./configure --help
+#+end_src
+
+run configure
+
+#+begin_src sh
+./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg --with-tiff --with-xft --with-xpm --with-gpm=no --with-imagemagick --with-json --with-xwidgets --with-modules --with-native-compilation --with-pgtk --without-pop --prefix=/usr/local
+#+end_src
+
+** make  
+
+#+begin_src sh
+make -j$(nproc)
+#+end_src
+
+** check native comp is working
+
+run emacs
+
+#+begin_src sh
+src/emacs -Q
+#+end_src
+
+check native comp is working
+
+#+begin_src emacs-lisp
+(native-comp-available-p)
+#+end_src
+
+** install 
+
+#+begin_src sh
+sudo make install
+#+end_src
+
+** init.el
+
+To compile elc files as needed, in a deferred/async manner, add to your init.el the following.
+
+The default configuration uses at most half of the cores for asynchronous compilation, this can be configured with the comp-async-jobs-number variable.
+
+#+begin_src emacs-lisp
+(when (fboundp 'native-compile-async)
+  (setq comp-deferred-compilation t
+        comp-deferred-compilation-black-list '("/mu4e.*\\.el$")))
+#+end_src
