@@ -103,6 +103,8 @@ sudo make install
 require treesit, then run M-x treesit-install-language-grammar bash
 set sh-mode to use bash-ts-mode
 
+add the following to your emacs init.el
+
 #+begin_src emacs-lisp
 (require 'treesit)
 
