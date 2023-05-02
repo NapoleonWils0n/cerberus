@@ -37,6 +37,14 @@ sudo dnf install Xaw3d Xaw3d-devel libpng libpng-devel zlib libjpeg-turbo libjpe
 sudo dnf install autoconf gnutls-devel gmp-devel gtk3-devel jansson-devel libgccjit libgccjit-devel libmpc-devel mpfr-devel ncurses-devel texinfo 
 #+end_src
 
+*** tree-sitter packages
+
+install tree-sitter and gcc-c++
+
+#+begin_src sh
+sudo dnf install libtree-sitter libtree-sitter-devel tree-sitter-cli gcc-c++
+#+end_src
+
 ** autogen
 
 Set CC and CXX environment variables to inform the Emacs configuration script as to the location of gcc,
@@ -61,7 +69,7 @@ run autogen
 run configure
 
 #+begin_src sh
-./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg --with-tiff --with-xft --with-xpm --with-gpm=no --with-imagemagick --with-json --with-xwidgets --with-modules --with-native-compilation --with-pgtk --without-pop --prefix=/usr/local
+./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg --with-tiff --with-xft --with-xpm --with-gpm=no --with-imagemagick --with-json --with-xwidgets --with-modules --with-native-compilation --with-pgtk --with-tree-sitter --without-pop --prefix=/usr/local
 #+end_src
 
 ** make  
@@ -88,6 +96,31 @@ check native comp is working
 
 #+begin_src sh
 sudo make install
+#+end_src
+
+** tree-sitter
+
+require treesit, then run M-x treesit-install-language-grammar bash
+set sh-mode to use bash-ts-mode
+
+#+begin_src emacs-lisp
+(require 'treesit)
+
+;; M-x treesit-install-language-grammar bash
+(add-to-list
+ 'treesit-language-source-alist
+ '(bash "https://github.com/tree-sitter/tree-sitter-bash.git"))
+
+;; sh-mode use bash-ts-mode
+(add-to-list 'major-mode-remap-alist
+             '(sh-mode . bash-ts-mode))
+#+end_src
+
+
+Now check if Emacs is built with tree-sitter library
+
+#+begin_src emacs-lisp
+(treesit-available-p)
 #+end_src
 
 ** init.el
