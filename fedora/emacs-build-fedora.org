@@ -123,6 +123,18 @@ Now check if Emacs is built with tree-sitter library
 (treesit-available-p)
 #+end_src
 
+*** tree-sitter links
+
+[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html]]
+
+[[https://emacs-tree-sitter.github.io/languages/]]
+
+[[https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter]]
+
+[[https://github.com/orgs/tree-sitter/repositories]]
+
+[[https://www.nathanfurnal.xyz/posts/building-tree-sitter-langs-emacs/]]
+
 ** init.el
 
 To compile elc files as needed, in a deferred/async manner, add to your init.el the following.
