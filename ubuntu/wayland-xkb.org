@@ -55,7 +55,7 @@ xkb_symbols "alt_win_ctrl" {
 
     // mac swap alt_win_ctrl
 
-    include "macintosh_vndr/gb"
+    // include "macintosh_vndr/gb"
 
     name[Group1]= "alt_win_ctrl - Mac";
 
