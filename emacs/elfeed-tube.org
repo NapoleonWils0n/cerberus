@@ -1,0 +1,6 @@
+#+STARTUP: content
+* elfeed tube
+
+[[https://github.com/karthink/elfeed-tube]]
+
+[[https://github.com/NapoleonWils0n/feeds/blob/master/feeds.org]]
