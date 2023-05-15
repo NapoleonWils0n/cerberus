@@ -1,0 +1,38 @@
+#+STARTUP: content
+* emacs app-launcher
+
+[[https://github.com/SebastienWae/app-launcher/blob/main/app-launcher.el]]
+
+[[https://www.reddit.com/r/unixporn/comments/s7p7pr/so_which_run_launcher_do_you_use_rofi_or_dmenu/]]
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; app launcher
+;; ----------------------------------------------------------------------------------
+
+(require 'app-launcher)
+
+;; app-launcher frame
+(defun emacs-run-launcher ()
+"Create and select a frame called emacs-run-launcher which consists only of a minibuffer and has specific dimensions. Run app-launcher-run-app on that frame, which is an emacs command that prompts you to select an app and open it in a dmenu like behaviour. Delete the frame after that command has exited"
+(interactive)
+(with-selected-frame (make-frame '((name . "emacs-run-launcher")
+(minibuffer . only)
+(auto-raise . t) ; focus on this frame
+(fullscreen . 0) ; no fullscreen
+(undecorated . t) ; remove title bar
+(tool-bar-lines . 0)
+(menu-bar-lines . 0)
+(width . 60)
+(alpha . 98)
+(height . 11)))
+(unwind-protect
+(app-launcher-run-app)
+(delete-frame))))
+#+end_src
+
+** emacsclient run function
+
+#+begin_src sh
+emacsclient -e "(emacs-run-launcher)"
+#+end_src
