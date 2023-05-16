@@ -129,6 +129,20 @@ gsettings set org.gnome.shell.keybindings toggle-application-view "['<Super><Ctr
 
 ** switch workspace
 
+switch to workspace left
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Super>h']"
+#+end_src
+
+switch to workspace right
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Super>l']"
+#+end_src
+
+** move window to monitor
+
 move window to left monitor
 
 #+begin_src sh
