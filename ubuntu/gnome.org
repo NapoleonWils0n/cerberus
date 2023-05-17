@@ -167,6 +167,12 @@ gsettings set org.gnome.desktop.wm.keybindings close "['<Shift><Super>c']"
 gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['<Super>s']"
 #+end_src
 
+** name workspaces
+
+#+begin_src sh
+gsettings set org.gnome.desktop.wm.preferences workspace-names "['terminal', 'emacs', 'firefox', 'scratch']"
+#+end_src
+
 ** center windows
 
 #+begin_src sh
