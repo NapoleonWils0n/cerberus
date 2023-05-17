@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# bagpuss
+# workspace
 
 # wmctrl
 workspace() {
