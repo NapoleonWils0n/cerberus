@@ -1,0 +1,72 @@
+#+STARTUP: content
+* dired tips
+** t toggle mark
+
+t = toggle marks
+
+#+begin_src emacs-lisp
+dired-toggle-marks
+#+end_src
+
+** D delete marked files
+
+D = delete marked files
+
+#+begin_src emacs-lisp
+dired-do-delete
+#+end_src
+
+** R rename file
+
+R = rename file
+
+#+begin_src emacs-lisp
+dired-do-rename
+#+end_src
+
+** U clear marked files
+
+U = clear marked files
+
+#+begin_src emacs-lisp
+dired-unmark-all-marks
+#+end_src
+** + create directory
+
++ = create directory
+
+#+begin_src emacs-lisp
+dired-create-directory
+#+end_src
+
+** %m mark all files that match regex
+
+%m = mark all files that match regex
+
+#+begin_src emacs-lisp
+dired-mark-files-regexp
+#+end_src
+
+** %g mark files containing regex
+
+%g = mark files containing regex
+
+#+begin_src emacs-lisp
+dired-mark-files-containing-regexp
+#+end_src
+
+** Renaming files with a regular expression:
+
+C-x C-q then C-M-%, enter a regular expression like \(.*\)-\([[:digit:]]\{4\}\) → \2-\1
+
+** dired % commands
+
+#+begin_src sh
+% &             dired-flag-garbage-files
+% C             dired-do-copy-regexp
+% R             dired-do-rename-regexp
+% d             dired-flag-files-regexp
+% g             dired-mark-files-containing-regexp
+% m             dired-mark-files-regexp
+% r             dired-do-rename-regexp
+#+end_src
