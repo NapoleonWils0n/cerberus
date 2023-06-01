@@ -1,0 +1,27 @@
+#+STARTUP: showall
+* yank-media org mode
+
+enable yank-media for org mode by adding the following code to your emacs init.el
+
+#+begin_src emacs-lisp
+;; yank-media--registered-handlers org mode
+(with-eval-after-load 'org
+  (setq yank-media--registered-handlers '(("image/.*" . #'org-mode--image-yank-handler))))
+
+;; org mode image yank handler
+(yank-media-handler "image/.*" #'org-mode--image-yank-handler)
+
+;; org-mode insert image as file link from the clipboard
+(defun org-mode--image-yank-handler (type image)
+  (let ((file (read-file-name (format "Save %s image to: " type))))
+    (when (file-directory-p file)
+      (user-error "%s is a directory"))
+    (when (and (file-exists-p file)
+               (not (yes-or-no-p (format "%s exists; overwrite?" file))))
+      (user-error "%s exists"))
+    (with-temp-buffer
+      (set-buffer-multibyte nil)
+      (insert image)
+      (write-region (point-min) (point-max) file))
+    (insert (format "[[file:%s]]\n" (file-relative-name file)))))
+#+end_src
