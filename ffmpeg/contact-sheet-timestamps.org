@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* ffmpeg contact sheet time stamps
+
+#+begin_src sh
+ffmpeg -i input.mp4 -filter:v "drawtext=text='%{pts\:hms}':x='(main_w-text_w)/2':y='(main_h-text_h)':fontcolor='Yellow':fontsize='(main_h/8)':boxcolor='Black':box=1,select=expr='not(mod(n\,100))',scale=width=320:height=-2,tile='4x4'" -frames:v 1 -update 1 "output_contact_sheet.jpg"
+#+end_src
