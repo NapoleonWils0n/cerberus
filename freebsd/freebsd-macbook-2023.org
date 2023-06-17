@@ -182,6 +182,12 @@ It has been reported that ZFS users may experience issues with some Wayland clie
 sudo pkg install wayland seatd
 #+end_src
 
+#+begin_src sh
+sudo mkdir -p /var/run/user/1001
+sudo chown -R djwilcox:wheel /var/run/user/1001
+sudo chmod 700 /var/run/user/1001
+#+end_src
+
 set the runtime dir
 
 #+begin_src sh
@@ -209,6 +215,38 @@ sudo sysrc dbus_enable=YES
 [[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop.85930/]]
 
 [[https://forums.freebsd.org/threads/sway-and-wayland.83682/]]
+
+** wayfire
+
+#+begin_src sh
+sudo pkg install wayfire wf-shell alacritty swaylock-effects swayidle wlogout kanshi mako wlsunset wcm
+#+end_src
+
+config
+
+#+begin_src sh
+mkdir ~/.config/wayfire
+cp /usr/local/share/examples/wayfire/wayfire.ini ~/.config/wayfire
+#+end_src
+
+test config
+
+#+begin_src sh
+wayfire -c ~/.config/wayfire/wayfire.ini
+#+end_src
+
+other package
+wcm
+wayfire-plugins-extra
+
+HiDPI settings
+
+#+begin_src sh
+[core]
+xwayland_scale = 2
+[autostart]
+xsettingsd = xsettingsd
+#+end_src
 
 ** install zsh
 

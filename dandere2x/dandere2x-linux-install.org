@@ -1,0 +1,111 @@
+#+STARTUP: content
+* linux video upscaling
+
+[[https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#setting-up-nvidia-container-toolkit]]
+
+[[https://blog.shawonashraf.com/nvidia-podman-fedora-37]]
+
+** dandere2x
+
+[[https://github.com/akai-katto/dandere2x]]
+
+Linux
+
+Dependencies:
+
+python 3
+cmake
+ffmpeg
+
+*** Installation:
+
+Download the source by cloning this repository or by going into releases and downloading the source from there.
+https://github.com/akai-katto/dandere2x/archive/refs/heads/master.zip
+
+Extract the contents of the source file.
+
+**** edit Block.cpp
+
+edit dandere2x-master/dandere2x_cpp/plugins/block_plugins/Block.cpp
+
+#+begin_src sh
+vi dandere2x-master/dandere2x_cpp/plugins/block_plugins/Block.cpp
+#+end_src
+
+change from 
+
+#+begin_src c
+#include "Block.h"
+#+end_src
+
+to
+
+#+begin_src c
+#include "Block.h"
+#include <cstdint>
+#+end_src
+
+**** Navigate to the src directory inside the root of Dandere2x.
+
+While in src on the root directory, run ./unix_setup.sh.
+
+#+begin_src sh
+./unix_setup.sh
+#+end_src
+
+This will download the lastest linux binaries for waifu2x-ncnn-vulkan and realsr-ncnn-vulkan. If you want waifu2x-converter-cpp or waifu2x-caffe, you will have to compile them from source.
+
+Setup a virtual environment with python3 -m venv .venv.
+
+#+begin_src sh
+python -m venv ~/.venv
+#+end_src
+
+To activate, run source .venv/bin/activate. .venv can be exchanged for any path that you prefer.
+
+#+begin_src sh
+source ~/.venv/bin/activate
+#+end_src
+
+This step is not strictly necessary, but highly recommended.
+
+edit the pyvenv.cfg file in the Virtual environment folder
+
+#+begin_src sh
+vi ~/.venv/pyvenv.cfg
+#+end_src
+
+Set the include-system-site-packages to true and save the change
+
+#+begin_src sh
+include-system-site-packages = false
+#+end_src
+
+stop the virtual env
+
+#+begin_src sh
+deactivate
+#+end_src
+
+Reactivate the virtual environment.
+
+#+begin_src sh
+source ~/.venv/bin/activate
+#+end_src
+
+Install the Python dependencies with pip3 install --user -r requirements.txt
+
+make sure you are in the danere2x/src direcotory which contains the requirements.txt file
+
+#+begin_src sh
+pip3 install --user -r requirements.txt
+#+end_src
+
+Run Dandere2x: python3 main.py. Running without any command-line arguments will attempt to start the GUI, if you want to see a complete list of options, use the --help argument.
+
+#+begin_src sh
+python main.py
+#+end_src
+
+You can remove the PyQt line from the requirements.txt file, if you aren't going to use the GUI.
+If you can't run ./linux_setup.sh, try changing its permissions by running chmod u+x linux_setup.sh.
