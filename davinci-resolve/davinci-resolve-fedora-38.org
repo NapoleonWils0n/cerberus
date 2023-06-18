@@ -1,0 +1,8 @@
+#+STARTUP: content
+* davinci resolve fedora 38 install
+
+Running resolve from terminal with the following preload allows it to run without modifying it's install:
+
+#+begin_src sh
+export LD_PRELOAD="/usr/lib64/libglib-2.0.so" /opt/resolve/bin/resolve
+#+end_src
