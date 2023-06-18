@@ -1,0 +1,128 @@
+#+STARTUP: content
+* ffmpeg convert video to prores and pcm
+** prores
+*** bits_per_mb
+
+#+begin_src sh
+ffmpeg -i input.mp4 \
+-c:v prores_ks \
+-profile:v 3 \
+-vendor apl0 \
+-bits_per_mb 8000 \
+-pix_fmt yuv422p10le \
+proRes422_output.mov
+#+end_src
+
+*** qscale
+
+#+begin_src sh
+ffmpeg -i input.mp4 \
+-c:v prores_ks \
+-profile:v 3 \
+-vendor apl0 \
+-bits_per_mb 8000 \
+-qscale:v 1 \
+-pix_fmt yuv422p10le \
+proRes422_output.mov
+#+end_src
+
+
+** prores script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# convert video to prores
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# convert video to prores and audio to pcm
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -o outfile.mov
+-i infile.(mp4|mkv|mov|m4v|webm)
+-o outfile.mov :optional agument # if option not provided defaults to infile-name-prores-date-time"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# defaults for variables if not defined
+outfile_default="${infile_name}-prores-$(date +"%Y-%m-%d-%H-%M-%S").mov"
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# dnxhd-pcm function
+prores () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -vf "[in]crop=592:480:26:0:keep_aspect=1[middle];[middle]delogo=x=380:y=438:w=210:h=32:show=0[end]" \
+    -c:v prores_ks \
+    -c:a pcm_s16le \
+    -profile:v 3 \
+    -vendor apl0 \
+    -qscale:v 1 \
+    -pix_fmt yuv422p10le \
+    -f mov \
+    "${outfile:=${outfile_default}}"
+}
+
+# run the prores function
+prores "${infile}"
+#+end_src

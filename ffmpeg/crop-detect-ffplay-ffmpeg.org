@@ -1,0 +1,39 @@
+#+STARTUP: content
+* ffmpeg crop
+** ffmpeg crop detect
+
+#+begin_src sh
+ffmpeg -i file.mp4 -vf cropdetect,metadata=mode=print -f null -
+#+end_src
+
+** ffplay crop
+
+#+begin_src sh
+ffplay -i input.mp4 -vf "crop=592:480:26:0:keep_aspect=1"
+#+end_src
+
+** ffmpeg crop
+
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vf "crop=592:480:26:0:keep_aspect=1" -c:a copy cropped.mp4
+#+end_src
+
+** delogo
+
+#+begin_src sh
+ffplay -i cropped.mp4 -vf "delogo=x=380:y=438:w=210:h=32:show=1"
+#+end_src
+
+ffplay crop and delogo
+
+#+begin_src sh
+ffplay -i input.mp4 -vf "[in]crop=592:480:26:0:keep_aspect=1[middle];[middle]delogo=x=380:y=438:w=210:h=32:show=1"
+#+end_src
+
+** ffmpeg crop and delogo
+
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vf "[in]crop=592:480:26:0:keep_aspect=1[middle];[middle]delogo=x=380:y=438:w=210:h=32:show=0" -c:a copy output.mp4
+#+end_src
