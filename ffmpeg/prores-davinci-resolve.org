@@ -26,7 +26,6 @@ ffmpeg -i input.mp4 \
 proRes422_output.mov
 #+end_src
 
-
 ** prores script
 
 #+begin_src sh
