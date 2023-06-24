@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=DaVinci Resolve
+GenericName=DaVinci Resolve
+Comment=Revolutionary new tools for editing, visual effects, color correction and professional audio post production, all in a single application!
+Path=/opt/resolve/
+Exec= env LD_PRELOAD=/usr/lib64/libglib-2.0.so __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia /opt/resolve/bin/resolve %u
+Terminal=false
+MimeType=application/x-resolveproj;
+Icon=/opt/resolve/graphics/DV_Resolve.png
+StartupNotify=true
+Name[en_US]=DaVinci Resolve
