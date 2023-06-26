@@ -1,0 +1,136 @@
+#+STARTUP: content
+* podman davinci resolve
+** links
+
+[[https://github.com/fat-tire/resolve]]
+
+[[https://blog.shawonashraf.com/nvidia-podman-fedora-37]]
+
+[[https://discussion.fedoraproject.org/t/how-can-i-use-podman-to-run-a-wayland-app/1672/2]]
+
+[[https://www.reddit.com/r/podman/comments/g0kbnp/use_ui_apps_in_wayland/]]
+
+[[https://github.com/mody5bundle/capps]]
+
+[[https://gist.github.com/eoli3n/93111f23dbb1233f2f00f460663f99e2]]
+
+** Install the nvidia-container-toolkit
+
+[[https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html]]
+
+Nvidia officially provides conatiner toolkit releases for RHEL but not for Fedora. However, since it's compatible with RHEL, Fedora should be too. So what you have to do here is use the release for RHEL. Use the latest release of RHEL (which is now 9.x).
+
+Minor releases of Open Suse/SLES 15.x are symlinked (redirected) to sles15.1. (#) Debian 11 packages are symlinked (redirected) to debian10. (&) RHEL 7 packages are symlinked (redirected) to centos7 (&) RHEL 8 and RHEL 9 packages are symlinked (redirected) to centos8 (%) Ubuntu 20.04 and Ubuntu 22.04 packages are symlinked (redirected) to ubuntu18.04
+
+*** add the nvidia toolkit repo
+
+#+begin_src sh
+curl -s -L https://nvidia.github.io/nvidia-docker/centos8/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+#+end_src
+
+*** install the nvidia toolkit repo
+
+#+begin_src sh
+sudo dnf clean expire-cache && sudo dnf install -y nvidia-container-toolkit
+#+end_src
+
+*** Configuration tweaks to run rootless containers
+
+By default the container toolkit requires that you run GPU containers as root. This isn't ideal and can open up security issues in many cases. Running as a user process should be the better alternative. 
+
+#+begin_src sh
+sudo sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml
+#+end_src
+
+** test nvidia-smi inside a podman container
+
+When asked to select a registry, select the docker.io one. 
+
+#+begin_src sh
+podman run --rm --security-opt=label=disable \
+--hooks-dir=/usr/share/containers/oci/hooks.d/ \
+nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
+#+end_src
+
+** packages to install
+
+#+begin_src sh
+sudo dnf install fuse-overlayfs crun buildah
+#+end_src
+
+** install
+
+*** create the containers directory
+
+#+begin_src sh
+mkdir -p ~/containers
+#+end_src
+
+*** change into the containers directory
+
+#+begin_src sh
+cd ~/containers
+#+end_src
+
+*** download the davinci resolve zip
+
+move the zip file into the ~/containers/resolve directory
+
+*** build
+
+#+begin_src sh
+./build.sh
+#+end_src
+
+*** resolve
+
+#+begin_src sh
+./resolve
+#+end_src
+
+*** launch shell
+
+#+begin_src sh
+./resolve.sh /bin/bash
+#+end_src
+
+As shown above-- instead of ./resolve.sh try ./resolve.sh /bin/bash to get a prompt in CentOS. You can get a root shell (no password needed) by typing sudo bash. (If you want to disable "resolve"'s access to root privileges or change its password from "resolve", you just need to change the Dockerfile lines.)
+
+*** podman cp
+
+image
+
+#+begin_src sh
+podman cp resolve_container:/opt/resolve/graphics/DV_Resolve.png ~/.local/share/icons/DV_Resolve.png
+#+end_src
+
+resolve
+
+#+begin_src sh
+podman cp resolve_container:/opt/resolve/bin/resolve resolve
+#+end_src
+
+edit and copy back
+
+
+#+begin_src sh
+podman cp resolve resolve_container:/opt/resolve/bin/resolve 
+#+end_src
+
+*** network access for registration
+
+Resolve doesn't have network access!
+
+By default, I opted to isolate the container from the Internet. If you want to give it the same Internet access as your host computer, set an environment variable when running ./resolve.sh like this:
+
+#+begin_src sh
+RESOLVE_NETWORK="host" ./resolve.sh
+#+end_src
+
+This will use the host's network stack. You can make this behavior persist for the session by setting the environment variable:
+
+** podman delete all images
+
+#+begin_src sh
+podman rmi -a
+#+end_src
