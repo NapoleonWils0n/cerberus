@@ -1,0 +1,57 @@
+#+STARTUP: content
+* waifu2x-ncnn-vulkan
+
+[[https://github.com/nihui/waifu2x-ncnn-vulkan/]]
+
+** Download and setup the Vulkan SDK from [[https://vulkan.lunarg.com/]]
+
+For Linux distributions, you can either get the essential build requirements from package manager
+
++ fedora
+
+#+begin_src sh
+sudo dnf install vulkan-headers vulkan-loader-devel
+#+end_src
+
++ debian
+
+#+begin_src sh
+sudo apt-get install libvulkan-dev
+#+end_src
+
++ arch linux
+
+#+begin_src sh
+sudo pacman -S vulkan-headers vulkan-icd-loader
+#+end_src
+
+** Clone this project with all submodules
+
+#+begin_src sh
+git clone https://github.com/nihui/waifu2x-ncnn-vulkan.git
+cd waifu2x-ncnn-vulkan
+git submodule update --init --recursive
+#+end_src
+
+** Build with CMake
+
+#+begin_src sh
+mkdir build
+cd build
+cmake ../src
+cmake --build . -j 4
+#+end_src
+
+** copy waifu2x-ncnn-vulkan to /usr/local/bin
+
+#+begin_src sh
+sudo cp waifu2x-ncnn-vulkan /usr/local/bin
+#+end_src
+
+** models
+
+copy the models directory somewhere and use the -m option and the path to the model
+
+#+begin_src sh
+waifu2x-ncnn-vulkan -i input.jpg -o output.webp -n 1 -s 2 -f webp -m ~/Videos/waifu2x/models/models-upconv_7_photo
+#+end_src
