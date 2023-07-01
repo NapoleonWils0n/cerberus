@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* magick reotate webp image
+** rotate anti clockwise
+
+#+begin_src sh
+magick input.webp -rotate -90 -define webp:lossless=true output.webp
+#+end_src
+
+** rotate clockwise
+
+#+begin_src sh
+magick input.webp -rotate 90 -define webp:lossless=true output.webp
+#+end_src
