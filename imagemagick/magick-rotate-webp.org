@@ -1,13 +1,63 @@
 #+STARTUP: showall
 * magick reotate webp image
-** rotate anti clockwise
+** magick
+*** rotate anti clockwise 90 degrees
 
 #+begin_src sh
 magick input.webp -rotate -90 -define webp:lossless=true output.webp
 #+end_src
 
-** rotate clockwise
+*** rotate clockwise 90 degrees
 
 #+begin_src sh
 magick input.webp -rotate 90 -define webp:lossless=true output.webp
 #+end_src
+
+*** rotate clockwise 180 degrees
+
+#+begin_src sh
+magick input.webp -rotate 180 -define webp:lossless=true output.webp
+#+end_src
+
+** mogrify
+*** mogrify rotate anti clockwise 90 degrees
+
+create output directory
+
+#+begin_src sh
+mkdir -p output
+#+end_src
+
+batch process images
+
+#+BEGIN_SRC sh
+mogrify -rotate -90 -define webp:lossless=true -path output *.webp
+#+END_SRC
+
+*** mogrify rotate clockwise 90 degrees
+
+create output directory
+
+#+begin_src sh
+mkdir -p output
+#+end_src
+
+batch process images
+
+#+BEGIN_SRC sh
+mogrify -rotate 90 -define webp:lossless=true -path output *.webp
+#+END_SRC
+
+*** mogrify rotate clockwise 180 degrees
+
+create output directory
+
+#+begin_src sh
+mkdir -p output
+#+end_src
+
+batch process images
+
+#+BEGIN_SRC sh
+mogrify -rotate 180 -define webp:lossless=true -path output *.webp
+#+END_SRC
