@@ -1,0 +1,281 @@
+#+STARTUP: content
+* nlmeans reduce video noise with ffmpeg
+** nlmeans h264
+
+#+begin_src sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-i input.mp4 \
+-vf "[fps]fps=fps=30[nlmeans];[nlmeans]nlmeans=s=1:p=7:pc=0:r=15:rc=0[unsharp];[unsharp]unsharp[end];" \
+-c:a aac \
+-c:v libx264 \
+-crf 18 \
+-profile:v high -pix_fmt yuv420p -movflags +faststart \
+-f mp4 \
+output.mp4
+#+end_src
+
+** nlmeans_opencl
+*** nlmeans_opencl nvenc h264
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mp4 \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=1:p=7:pc=0:r=15:rc=0,hwdownload,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a aac -ac 2 \
+-c:v h264_nvenc \
+-cq:v 22 \
+-b:v 0 \
+-movflags +faststart \
+ouput.mp4
+#+end_src
+
+*** nlmeans_opencl nvenc h264 unsharp
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mov \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=2.5:p=7:pc=0:r=31:rc=0,hwdownload,unsharp,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a aac -ac 2 \
+-c:v h264_nvenc \
+-cq:v 22 \
+-b:v 0 \
+-movflags +faststart \
+ouput.mp4
+#+end_src
+
+*** nvenc lossless
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mov \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=1:p=7:pc=0:r=15:rc=0,hwdownload,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a aac \
+-c:v h264_nvenc \
+-preset p7 \
+-tune lossless \
+-b:v 0 \
+-movflags +faststart \
+-f mp4 \
+output.mp4
+#+end_src
+
+*** nvenc lossless crop copy audio
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mp4 \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=1:p=7:pc=0:r=15:rc=0,hwdownload,crop=448:352:18:4:keep_aspect=1,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a copy \
+-c:v h264_nvenc \
+-preset p7 \
+-tune lossless \
+-b:v 0 \
+-movflags +faststart \
+-f mp4 \
+output.mp4
+#+end_src
+
+*** nvenc lossless crop aac audio
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mp4 \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=1:p=7:pc=0:r=15:rc=0,hwdownload,crop=448:352:18:4:keep_aspect=1,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a aac \
+-c:v h264_nvenc \
+-preset p7 \
+-tune lossless \
+-b:v 0 \
+-movflags +faststart \
+-f mp4 \
+output.mp4
+#+end_src
+
+*** nvenc lossless unsharp
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mp4 \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=1:p=7:pc=0:r=15:rc=0,hwdownload,unsharp,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a aac \
+-c:v h264_nvenc \
+-preset p7 \
+-tune lossless \
+-b:v 0 \
+-movflags +faststart \
+-f mp4 \
+output.mp4
+#+end_src
+
+*** nvenc lossless crop unsharp
+
+[[https://ffmpeg.org/ffmpeg-filters.html#delogo]]
+
+#+begin_src sh
+ffmpeg \
+-hwaccel_device 0 \
+-hwaccel cuda \
+-init_hw_device opencl=gpu:0.0 \
+-filter_hw_device gpu \
+-i input.mp4 \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=3.5:p=7:pc=0:r=31:rc=0,hwdownload,crop=448:352:18:4:keep_aspect=1,unsharp,format=yuv420p" \
+-pixel_format yuv420p \
+-c:a aac \
+-c:v h264_nvenc \
+-preset p7 \
+-tune lossless \
+-b:v 0 \
+-movflags +faststart \
+-f mp4 \
+output.mp4
+#+end_src
+
+** nlmeans prores unsharp
+
+#+begin_src sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-i input.mp4 \
+-vf "[fps]fps=fps=30[nlmeans];[nlmeans]nlmeans=s=1:p=7:pc=0:r=15:rc=0[unsharp];[unsharp]unsharp[end];" \
+-c:v prores_ks \
+-c:a pcm_s16le \
+-profile:v 3 \
+-vendor apl0 \
+-qscale:v 1 \
+-pix_fmt yuv422p10le \
+-f mov \
+output.mp4
+#+end_src
+
+** prores nlmeans script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# convert video to prores and audio to pcm and use nlmeans to reduce video noise
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# convert video to prores and audio to pcm and use nlmeans to reduce video noise
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -o outfile.mov
+-i infile.(mp4|mkv|mov|m4v|webm)
+-o outfile.mov :optional agument # if option not provided defaults to infile-name-prores-nlmeans-date-time"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# defaults for variables if not defined
+outfile_default="${infile_name}-prores-nlmeans-$(date +"%Y-%m-%d-%H-%M-%S").mov"
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# prores function
+proresnl () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -vf "[fps]fps=fps=30[nlmeans];[nlmeans]nlmeans=s=1:p=7:pc=0:r=15:rc=0[unsharp];[unsharp]unsharp[end];" \
+    -c:v prores_ks \
+    -c:a pcm_s16le \
+    -profile:v 3 \
+    -vendor apl0 \
+    -qscale:v 1 \
+    -pix_fmt yuv422p10le \
+    -f mov \
+    "${outfile:=${outfile_default}}"
+}
+
+# run the proresnl function
+proresnl "${infile}"
+#+end_src
