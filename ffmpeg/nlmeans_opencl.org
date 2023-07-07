@@ -45,7 +45,7 @@ ffmpeg \
 -init_hw_device opencl=gpu:0.0 \
 -filter_hw_device gpu \
 -i input.mov \
--filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=2.5:p=7:pc=0:r=31:rc=0,hwdownload,unsharp,format=yuv420p" \
+-filter_complex "format=yuv420p,hwupload,nlmeans_opencl=s=1:p=7:pc=0:r=15:rc=0,hwdownload,unsharp,format=yuv420p" \
 -pixel_format yuv420p \
 -c:a aac -ac 2 \
 -c:v h264_nvenc \
