@@ -1,0 +1,213 @@
+#+STARTUP: content
+* ffmpeg super resolution
+** links
+
+[[https://github.com/MIR-MU/ffmpeg-tensorflow]]
+
+[[https://github.com/MIR-MU/ffmpeg-tensorflow/blob/main/Dockerfile]]
+
+If you wish to use different versions of Libtensorflow, FFMpeg, CUDA, or Ubuntu you can also build a customized container. Keep in mind that your version of Libtensorflow (here 1.15.0) should match your version of CUDA (here ≥ 10.0), see the compatibility table. Your version of CUDA should match your NVIDIA driver, see NVIDIA CUDA Toolkit Release Notes, Table 2:
+
+[[https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html#cuda-major-component-versions]]
+
+[[https://www.tensorflow.org/install/source#gpu]]
+
+[[https://hub.docker.com/r/miratmu/ffmpeg-tensorflow]]
+
+[[https://video.stackexchange.com/questions/29337/how-do-the-super-resolution-filters-in-ffmpeg-work]]
+
+[[https://www.redhat.com/sysadmin/container-permission-denied-errors]]
+
+** Install the nvidia-container-toolkit
+
+[[https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html]]
+
+Nvidia officially provides conatiner toolkit releases for RHEL but not for Fedora. However, since it's compatible with RHEL, Fedora should be too. So what you have to do here is use the release for RHEL. Use the latest release of RHEL (which is now 9.x).
+
+Minor releases of Open Suse/SLES 15.x are symlinked (redirected) to sles15.1. (#) Debian 11 packages are symlinked (redirected) to debian10. (&) RHEL 7 packages are symlinked (redirected) to centos7 (&) RHEL 8 and RHEL 9 packages are symlinked (redirected) to centos8 (%) Ubuntu 20.04 and Ubuntu 22.04 packages are symlinked (redirected) to ubuntu18.04
+
+*** add the nvidia toolkit repo
+
+#+begin_src sh
+curl -s -L https://nvidia.github.io/nvidia-docker/centos8/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+#+end_src
+
+*** install the nvidia toolkit repo
+
+#+begin_src sh
+sudo dnf clean expire-cache && sudo dnf install -y nvidia-container-toolkit
+#+end_src
+
+*** Configuration tweaks to run rootless containers
+
+By default the container toolkit requires that you run GPU containers as root. This isn't ideal and can open up security issues in many cases. Running as a user process should be the better alternative. 
+
+#+begin_src sh
+sudo sed -i 's/^#no-cgroups = false/no-cgroups = true/;' /etc/nvidia-container-runtime/config.toml
+#+end_src
+
+** test nvidia-smi inside a podman container
+
+When asked to select a registry, select the docker.io one. 
+
+#+begin_src sh
+podman run --rm --security-opt=label=disable \
+--hooks-dir=/usr/share/containers/oci/hooks.d/ \
+nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
+#+end_src
+
+** podman
+
+#+begin_src sh
+podman pull miratmu/ffmpeg-tensorflow
+#+end_src
+
+select
+
+#+begin_example
+docker.io/miratmu/ffmpeg-tensorflow:latest.
+#+end_example
+
+** upscale podman
+
+*** Dockerfile
+
+#+begin_src sh
+ARG VERSION_CUDA=11.4.1-cudnn8
+ARG VERSION_UBUNTU=20.04
+
+FROM nvidia/cuda:${VERSION_CUDA}-devel-ubuntu${VERSION_UBUNTU} as build
+
+ARG VERSION_FFMPEG=4.4
+ARG VERSION_LIBTENSORFLOW=2.5.0
+ARG DEPENDENCIES="\
+  autoconf \
+  automake \
+  build-essential \
+  cmake \
+  curl \
+  git \
+  git-core \
+  libass-dev \
+  libfdk-aac-dev \
+  libfreetype6-dev \
+  libgnutls28-dev \
+  libgomp1 \
+  libmp3lame-dev \
+  libnuma-dev \
+  libopus-dev \
+  libsdl2-dev \
+  libtool \
+  libunistring-dev \
+  libva-dev \
+  libvdpau-dev \
+  libvorbis-dev \
+  libvpx-dev \
+  libxcb-shm0-dev \
+  libxcb-xfixes0-dev \
+  libxcb1-dev \
+  libx264-dev \
+  libx265-dev \
+  nasm \
+  pkg-config \
+  python3 \
+  python3-pip \
+  python3.6 \
+  python3.6-distutils \
+  texinfo \
+  yasm \
+  zlib1g-dev \
+"
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    TERM=xterm
+
+COPY script/ /usr/local/sbin/
+
+RUN set -o errexit \
+ && set -o xtrace \
+ && bootstrap-prepare \
+ && bootstrap-upgrade \
+ && bootstrap-install ${DEPENDENCIES} \
+ && build ${VERSION_LIBTENSORFLOW} ${VERSION_FFMPEG} \
+ && produce-sr-models ${VERSION_LIBTENSORFLOW} \
+ && cleanup ${DEPENDENCIES}
+
+ENTRYPOINT ["/usr/local/bin/ffmpeg"]
+
+
+FROM nvidia/cuda:${VERSION_CUDA}-runtime-ubuntu${VERSION_UBUNTU}
+
+LABEL authors="Vít Novotný <witiko@mail.muni.cz>,Mikuláš Bankovič <456421@mail.muni.cz>,Dirk Lüth <dirk.lueth@gmail.com>" \
+      org.label-schema.docker.dockerfile="/Dockerfile" \
+      org.label-schema.name="jetson.ffmpeg"
+
+ARG DEPENDENCIES="\
+  libgomp1 \
+"
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    TERM=xterm
+
+COPY script/ /usr/local/sbin/
+
+COPY --from=build /deps /
+COPY --from=build /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
+COPY --from=build /usr/local/bin/ffprobe /usr/local/bin/ffprobe
+COPY --from=build /usr/local/share/ffmpeg-tensorflow-models/ /usr/local/share/ffmpeg-tensorflow-models/
+
+RUN set -o errexit \
+ && set -o xtrace \
+ && bootstrap-prepare \
+ && bootstrap-install ${DEPENDENCIES} \
+ && ln -s /usr/local/share/ffmpeg-tensorflow-models/ /models \
+ && cleanup
+
+ENTRYPOINT ["/usr/local/bin/ffmpeg"]
+#+end_src
+
+*** download video
+
+#+begin_src sh
+wget https://media.xiph.org/video/derf/y4m/flower_cif.y4m
+#+end_src
+
+*** add an alias to your ~/.zshrc file
+
+#+begin_src sh
+alias ffmpeg-tensorflow='podman run --rm --security-opt=label=disable --gpus all -u $(id -u):$(id -g) --privileged -v /tmp/data:/data -w /data -i miratmu/ffmpeg-tensorflow'
+#+end_src
+
+*** create /tmp/data
+
+#+begin_src sh
+mkdir /tmp/data
+#+end_src
+
+*** chmod 777 /tmp/data
+
+#+begin_src sh
+chmod 777 /tmp/data
+#+end_src
+
+*** copy the video to process to /tmp/data
+
+#+begin_src sh
+cp input.mp4 /tmp/data
+#+end_src
+
+*** ffmpeg command espcn
+
+#+begin_src sh
+ffmpeg-tensorflow \
+-hide_banner \
+-stats -v panic \
+-i input.mp4 \
+-filter_complex '[0:v] format=pix_fmts=yuv420p, extractplanes=y+u+v [y][u][v]; [y] sr=dnn_backend=tensorflow:scale_factor=2:model=/models/espcn.pb [y_scaled]; [u] scale=iw*2:ih*2 [u_scaled]; [v] scale=iw*2:ih*2 [v_scaled]; [y_scaled][u_scaled][v_scaled] mergeplanes=0x001020:yuv420p [merged]' \
+-map '[merged]' -map '0:a' \
+-sws_flags lanczos \
+-c:v libx264 -crf 17 \
+-c:a aac \
+output.mp4
+#+end_src
+
