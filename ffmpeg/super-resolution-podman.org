@@ -196,7 +196,7 @@ chmod 777 /tmp/data
 cp input.mp4 /tmp/data
 #+end_src
 
-*** ffmpeg command espcn
+*** ffmpeg command espcn model
 
 #+begin_src sh
 ffmpeg-tensorflow \
@@ -208,6 +208,8 @@ ffmpeg-tensorflow \
 -sws_flags lanczos \
 -c:v libx264 -crf 17 \
 -c:a aac \
+-pix_fmt yuv420p -movflags +faststart \
+-f mp4 \
 output.mp4
 #+end_src
 
