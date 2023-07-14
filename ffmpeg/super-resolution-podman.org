@@ -221,7 +221,7 @@ output.mp4
 #!/bin/sh
 
 #===============================================================================
-# ffmpeg superscale
+# ffmpeg super resolution
 #===============================================================================
 
 
@@ -235,11 +235,11 @@ usage()
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-# ffmpeg superscale
+# ffmpeg super resolution
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -o outfile.mov
 -i infile.(mp4|mkv|mov|m4v|webm)
--o outfile.mov :optional agument # if option not provided defaults to infile-name-superscale-date-time"
+-o outfile.mov :optional agument # if option not provided defaults to infile-name-super-resolution-date-time"
 exit 2
 }
 
@@ -287,7 +287,7 @@ infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
 # defaults for variables if not defined
-outfile_default="${infile_name}-superscale-$(date +"%Y-%m-%d-%H-%M-%S").mov"
+outfile_default="${infile_name}-super-resolution-$(date +"%Y-%m-%d-%H-%M-%S").mov"
 
 
 #===============================================================================
@@ -295,10 +295,10 @@ outfile_default="${infile_name}-superscale-$(date +"%Y-%m-%d-%H-%M-%S").mov"
 #===============================================================================
 
 # create the /tmp/data directory and set permissions
-# mkdir /tmp/data
-# chmod 777 /tmp/data
+#mkdir /tmp/data
+#chmod 777 /tmp/data
 
-superscale () {
+superresolution () {
 podman run \
 --rm --security-opt=label=disable \
 --gpus all -u $(id -u):$(id -g) \
@@ -317,7 +317,7 @@ podman run \
 "${outfile:=${outfile_default}}"
 }
 
-# run the superscale function
-superscale "${infile}"
+# run the superresolution function
+superresolution "${infile}"
 
 #+end_src
