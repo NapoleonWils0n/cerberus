@@ -177,7 +177,7 @@ wget https://media.xiph.org/video/derf/y4m/flower_cif.y4m
 *** add an alias to your ~/.zshrc file
 
 #+begin_src sh
-alias ffmpeg-tensorflow='podman run --rm --security-opt=label=disable --gpus all -u $(id -u):$(id -g) --privileged -v /tmp/data:/data -w /data -i miratmu/ffmpeg-tensorflow'
+alias ffmpeg-tensorflow='podman run --rm --gpus all -u $(id -u):$(id -g) --privileged -v /tmp/data:/data -w /data -i miratmu/ffmpeg-tensorflow'
 #+end_src
 
 *** create /tmp/data
@@ -306,8 +306,8 @@ outfile_default="${infile_name}-super-resolution-$(date +"%Y-%m-%d-%H-%M-%S").mp
 
 superresolution () {
 podman run \
---rm --security-opt=label=disable \
---gpus all -u $(id -u):$(id -g) \
+--rm \
+--gpus all -u "$(id -u)":"$(id -g)" \
 --privileged -v /tmp/data:/data -w /data \
 -i miratmu/ffmpeg-tensorflow \
 -hide_banner \
