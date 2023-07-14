@@ -2,6 +2,8 @@
 * ffmpeg super resolution
 ** links
 
+[[https://ffmpeg.org/ffmpeg-filters.html#sr-1]]
+
 [[https://github.com/MIR-MU/ffmpeg-tensorflow]]
 
 [[https://github.com/MIR-MU/ffmpeg-tensorflow/blob/main/Dockerfile]]
@@ -213,7 +215,7 @@ ffmpeg-tensorflow \
 output.mp4
 #+end_src
 
-** ff-superscale script
+** ff-superresolution
 
 #+begin_src sh
 #!/bin/sh
