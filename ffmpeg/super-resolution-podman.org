@@ -183,7 +183,7 @@ alias ffmpeg-tensorflow='podman run --rm --security-opt=label=disable --gpus all
 *** create /tmp/data
 
 #+begin_src sh
-mkdir /tmp/data
+mkdir -p /tmp/data
 #+end_src
 
 *** chmod 777 /tmp/data
@@ -287,16 +287,22 @@ infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
 # defaults for variables if not defined
-outfile_default="${infile_name}-super-resolution-$(date +"%Y-%m-%d-%H-%M-%S").mov"
+outfile_default="${infile_name}-super-resolution-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 
 #===============================================================================
 # functions
 #===============================================================================
 
+# selinux fix
 # create the /tmp/data directory and set permissions
-#mkdir /tmp/data
-#chmod 777 /tmp/data
+# mkdir -p /tmp/data
+# chmod 777 /tmp/data
+
+# we then map /tmp/data to /data in the docker container
+# /tmp/data:/data
+
+# if you arenet using selinunx change /tmp/data:/data to "$PWD":/data below and omit creating the directory
 
 superresolution () {
 podman run \
@@ -319,5 +325,4 @@ podman run \
 
 # run the superresolution function
 superresolution "${infile}"
-
 #+end_src
