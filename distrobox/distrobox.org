@@ -1,0 +1,180 @@
+#+STARTUP: content
+* distrobox
+** distrobox github
+
+[[https://github.com/89luca89/distrobox]]
+
+[[https://fedoramagazine.org/run-distrobox-on-fedora-linux/]]
+
+** distrobox install
+
++ fedora
+
+#+begin_src sh
+sudo dnf install distrobox
+#+end_src
+
+** distrobox create
+*** ubuntu 20.04
+
+#+begin_src sh
+distrobox-create --name ubuntu-20 --image ubuntu:20.04
+#+end_src
+
+*** arch linux
+
+#+begin_src sh
+distrobox-create --name arch-distrobox --image archlinux:latest
+#+end_src
+
+** distrobox-enter
+
+enter the container
+
+#+begin_src sh
+distrobox-enter --name arch-distrobox
+#+end_src
+
+** distrobox-export
+*** export an application
+
+enter the container
+
+#+begin_src sh
+distrobox-enter --name arch-distrobox
+#+end_src
+
+export an app
+
+#+begin_src sh
+distrobox-export --app atom
+#+end_src
+
+*** export a service
+
+enter the container
+
+#+begin_src sh
+distrobox-enter --name ubuntu-21
+#+end_src
+
+install an application
+
+#+begin_src sh
+sudo apt install syncthing
+#+end_src
+
+export syncthing’s service from the container back to the host by running:
+
+#+begin_src sh
+distrobox-export --service syncthing@ --extra-flags
+#+end_src
+
+output
+
+#+begin_example
+Service ubuntu-21-syncthing@.service successfully exported.
+OK
+ubuntu-21-syncthing@.service will appear in your services list in a few seconds.
+To check the status, run:
+        systemctl --user status ubuntu-21-syncthing@.service
+To start it, run:
+        systemctl --user start ubuntu-21-syncthing@.service
+To start it at login, run:
+        systemctl --user enable ubuntu-21-syncthing@.service
+#+end_example
+
+Now back on the host you can run:
+
+#+begin_src sh
+systemctl --user enable --now ubuntu-21-syncthing@$USER
+#+end_src
+
+** Exiting a distrobox
+
+At any time you can exit the distrobox by simply using exit, or pressing Ctrl+D:
+
+** Executing commands directly into a distrobox
+
+#+begin_src sh
+distrobox-enter --name fedora-toolbox-35 -- sudo dnf update -y
+#+end_src
+
+** Duplicating an existing distrobox
+
+It comes handy to also have the ability to duplicate your existing distrobox. This is useful during for example distrobox updates, or to rename a distrobox, or simply snapshot it and save the image.
+
+clone a container
+
+#+begin_src sh
+distrobox-create --name cloned-arch --clone arch-distrobox
+#+end_src
+
+enter the cloned container
+
+#+begin_src sh
+distrobox-enter --name cloned-arch
+#+end_src
+
+** Backup and restore a distrobox
+
+To save, export and reuse an already configured container, you can leverage podman save together with podman import to create snapshots of your environment.
+
+To save a container to an image with podman:
+
+commit the container
+
+#+begin_src sh
+podman container commit -p distrobox_name image_name_you_choose
+#+end_src
+
+save the container image
+
+#+begin_src sh
+podman save image_name_you_choose:latest | gzip > image_name_you_choose.tar.gz
+#+end_src
+
+This will create a tar.gz of the container of your choice at that exact moment.
+Now you can backup that archive or transfer it to another host, and to restore it just run
+
+#+begin_src sh
+podman import image_name_you_choose.tar.gz
+#+end_src
+
+And create a new container based on that image:
+
+#+begin_src sh
+distrobox-create --image image_name_you_choose:latest --name distrobox_name
+#+end_src
+
+enter the container
+
+#+begin_src sh
+distrobox-enter --name distrobox_name
+#+end_src
+
+** Managing your distroboxes
+
+#+begin_src sh
+podman ps -a
+#+end_src
+
+You can delete an existing distrobox using
+
+stop the container
+
+#+begin_src sh
+podman stop your_distrobox_name
+#+end_src
+
+remove the container
+
+#+begin_src sh
+podman rm your_distrobox_name
+#+end_src
+
+** distrobox nvidia
+
+#+begin_src sh
+distrobox create --name example-nvidia-toolkit --additional-flags "--runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_CAPABILITIES=all" --image nvidia/cuda
+#+end_src
