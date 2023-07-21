@@ -15,12 +15,6 @@ sudo dnf install distrobox
 #+end_src
 
 ** distrobox create
-*** ubuntu 20.04
-
-#+begin_src sh
-distrobox-create --name ubuntu-20 --image ubuntu:20.04
-#+end_src
-
 *** arch linux
 *** create the arch container
 
@@ -107,32 +101,31 @@ sudo pacman -Syy
 #+end_src
 
 *** install yay
-
-install the required dependencies
+**** install the required dependencies
 
 #+begin_src sh
 sudo pacman -S --needed base-devel git
 #+end_src
 
-switch to the desktop
+**** switch to the desktop
 
 #+begin_src sh
 cd ~/Desktop
 #+end_src
 
-clone the yay git repo
+**** clone the yay git repo
 
 #+begin_src sh
 git clone https://aur.archlinux.org/yay.git
 #+end_src
 
-cd into the yay git repo
+**** cd into the yay git repo
 
 #+begin_src sh
 cd yay
 #+end_src
 
-build yay
+**** build yay
 
 #+begin_src sh
 makepkg -si
@@ -140,6 +133,59 @@ makepkg -si
 
 press y at the prompts
 
+**** yay first Use
+
+Development packages upgrade
+
+#+begin_src sh
+yay -Y --gendb
+#+end_src
+
+to generate a development package database for *-git packages that were installed without yay. This command should only be run once.
+
+#+begin_src sh
+yay -Syu --devel 
+#+end_src
+
+will then check for development package updates
+
+#+begin_src sh
+yay -Y --devel --save
+#+end_src
+
+to make development package updates permanently enabled (yay and yay -Syu will then always check dev packages)
+
+*** yay prowlarr install
+
+#+begin_src sh
+yay -S prowlarr
+#+end_src
+
+**** prowlarr authentication
+
+select forms login page
+
+create a username and password
+
+**** prowlarr export
+
+export the prowlarr binary to the host system
+
+#+begin_src sh
+distrobox-export --bin /usr/lib/prowlarr/bin/Prowlarr --export-path ~/.local/bin
+#+end_src
+
+**** add the bin directory to your path
+
+edit your ~/.zshenv file and add ~/.local/bin to your path
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
+export PATH
+#+end_src
+
+** distrobox commands
 ** distrobox-enter
 
 enter the container
