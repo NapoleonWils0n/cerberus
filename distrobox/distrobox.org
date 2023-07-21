@@ -22,17 +22,130 @@ distrobox-create --name ubuntu-20 --image ubuntu:20.04
 #+end_src
 
 *** arch linux
+*** create the arch container
 
 #+begin_src sh
-distrobox-create --name arch-distrobox --image archlinux:latest
+distrobox create -n arch -i archlinux:latest
 #+end_src
+
+*** enter the arch container
+
+#+begin_src sh
+distrobox enter arch
+#+end_src
+
+*** update repos
+
+#+begin_src sh
+sudo pacman -Syy
+#+end_src
+
+*** install vi
+
+#+begin_src sh
+sudo pacman -S vi
+#+end_src
+
+*** edit /etc/locale.gen
+
+#+begin_src sh
+sudo vi /etc/locale.gen
+#+end_src
+
+add the following code to the file and save
+
+#+begin_src conf
+C.UTF-8 UTF-8
+en_GB.UTF-8 UTF-8
+#+end_src
+
+*** edit /etc/locale.conf
+
+#+begin_src sh
+sudo vi /etc/locale.conf
+#+end_src
+
+add the following code to the file and save
+
+#+begin_src conf
+LC_COLLATE=C.UTF-8
+LANG=en_GB.UTF-8 UTF-8
+#+end_src
+
+*** locale-gen
+
+generate the locale file
+
+#+begin_src sh
+sudo locale-gen
+#+end_src
+
+*** check the locale
+
+#+begin_src sh
+locale -a
+#+end_src
+
+*** activate locale
+
+#+begin_src sh
+source /etc/profile
+#+end_src
+
+*** pacman-key
+
+generate pacman key
+
+#+begin_src sh
+sudo pacman-key --init
+#+end_src
+
+update
+
+#+begin_src sh
+sudo pacman -Syy
+#+end_src
+
+*** install yay
+
+install the required dependencies
+
+#+begin_src sh
+sudo pacman -S --needed base-devel git
+#+end_src
+
+switch to the desktop
+
+#+begin_src sh
+cd ~/Desktop
+#+end_src
+
+clone the yay git repo
+
+#+begin_src sh
+git clone https://aur.archlinux.org/yay.git
+#+end_src
+
+cd into the yay git repo
+
+#+begin_src sh
+cd yay
+#+end_src
+
+build yay
+
+#+begin_src sh
+makepkg -si
+#+end_src
+
+press y at the prompts
 
 ** distrobox-enter
 
 enter the container
 
 #+begin_src sh
-distrobox-enter --name arch-distrobox
+distrobox enter -n arch
 #+end_src
 
 ** distrobox-export
