@@ -161,12 +161,6 @@ to make development package updates permanently enabled (yay and yay -Syu will t
 yay -S prowlarr
 #+end_src
 
-**** prowlarr authentication
-
-select forms login page
-
-create a username and password
-
 **** prowlarr export
 
 export the prowlarr binary to the host system
@@ -174,6 +168,12 @@ export the prowlarr binary to the host system
 #+begin_src sh
 distrobox-export --bin /usr/lib/prowlarr/bin/Prowlarr --export-path ~/.local/bin
 #+end_src
+
+**** prowlarr authentication
+
+select forms login page
+
+create a username and password
 
 **** add the bin directory to your path
 
