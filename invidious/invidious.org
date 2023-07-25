@@ -1,0 +1,182 @@
+#+STARTUP: content
+* invidious
+
+[[https://docs.invidious.io/installation/]]
+** required packages
+
+#+begin_src sh
+sudo dnf install podman-compose pwgen
+#+end_src
+
+** clone the invidious repository
+
+#+begin_src sh
+git clone https://github.com/iv-org/invidious.git
+#+end_src
+
+change directory in the invidious repository
+
+#+begin_src sh
+cd invidious
+#+end_src
+
+** edit docker-compose.yml
+
+edit docker-compose.yml
+
++ add the invidious image
+
+#+begin_src yaml
+    image: quay.io/invidious/invidious:latest
+#+end_src
+
++ change the ports
+
+#+begin_src yaml
+    ports:
+      - "3000:3000"
+#+end_src
+
++ change the hmac_key
+
+#+begin_src yaml
+        hmac_key: "CHANGE_ME!!"
+#+end_src
+
+You must set a random generated value for the parameter hmac_key:!
+On Linux you can generate it using the command
+
+#+begin_src sh
+pwgen 20 1
+#+end_src
+
+pwgen output
+
+#+begin_example
+Ees6vou2IekaipeiCeib
+#+end_example
+
+
+#+begin_src yaml
+        hmac_key: Ees6vou2IekaipeiCeib
+#+end_src
+
+*** docker-compose.yml 
+
+#+begin_src yaml
+  invidious:
+    image: quay.io/invidious/invidious:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Please read the following file for a comprehensive list of all available
+      # configuration options and their associated syntax:
+      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: kemal
+          password: kemal
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        # external_port:
+        # domain:
+        # https_only: false
+        # statistics_enabled: false
+        hmac_key: "CHANGE_ME!!"
+#+end_src
+
+#+begin_src yaml
+# Warning: This docker-compose file is made for development purposes.
+# Using it will build an image from the locally cloned repository.
+#
+# If you want to use Invidious in production, see the docker-compose.yml file provided
+# in the installation documentation: https://docs.invidious.io/installation/
+
+version: "3"
+services:
+
+  invidious:
+    image: quay.io/invidious/invidious:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Please read the following file for a comprehensive list of all available
+      # configuration options and their associated syntax:
+      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: kemal
+          password: kemal
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        # external_port:
+        # domain:
+        # https_only: false
+        # statistics_enabled: false
+        hmac_key: Ees6vou2IekaipeiCeib
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+    depends_on:
+      - invidious-db
+
+  invidious-db:
+    image: docker.io/library/postgres:13
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./config/sql:/config/sql
+      - ./docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
+    environment:
+      POSTGRES_DB: invidious
+      POSTGRES_USER: kemal
+      POSTGRES_PASSWORD: kemal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+
+volumes:
+  postgresdata:
+#+end_src
+
+Because of various issues Invidious must be restarted often, at least once a day, ideally every hour.
+
+** podman-compose
+
+make sure you are in the invidious git repository and run podman-compose up
+
+#+begin_src sh
+podman-compose up
+#+end_src
+
+** login
+
+select login and add a user name and password
+on the next screen add in the time from the clock
+
+** start 
+
+#+begin_src sh 
+podman start containerid
+#+end_src
+
+** update
+
+#+begin_src sh
+podman-compose pull
+podman-compose up -d
+podman image prune -f
+#+end_src
