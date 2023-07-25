@@ -64,34 +64,6 @@ Ees6vou2IekaipeiCeib
 *** docker-compose.yml 
 
 #+begin_src yaml
-  invidious:
-    image: quay.io/invidious/invidious:latest
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      # Please read the following file for a comprehensive list of all available
-      # configuration options and their associated syntax:
-      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
-      INVIDIOUS_CONFIG: |
-        db:
-          dbname: invidious
-          user: kemal
-          password: kemal
-          host: invidious-db
-          port: 5432
-        check_tables: true
-        # external_port:
-        # domain:
-        # https_only: false
-        # statistics_enabled: false
-        hmac_key: "CHANGE_ME!!"
-#+end_src
-
-#+begin_src yaml
 # Warning: This docker-compose file is made for development purposes.
 # Using it will build an image from the locally cloned repository.
 #
