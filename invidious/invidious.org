@@ -139,10 +139,16 @@ podman-compose up
 select login and add a user name and password
 on the next screen add in the time from the clock
 
-** start 
+** start invidious
 
 #+begin_src sh 
-podman start containerid
+podman start invidious_invidious_1
+#+end_src
+
+** stop invidious
+
+#+begin_src sh 
+podman stop invidious_invidious_1
 #+end_src
 
 ** update
