@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* distrobox systemd
+
+#+begin_src sh
+distrobox create -n ubuntu -i ubuntu:22.04 --init --additional-packages "systemd"
+#+end_src
