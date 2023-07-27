@@ -1,5 +1,12 @@
 #+STARTUP: showall
 * distrobox systemd
+** arch linux systemd
+
+#+begin_src sh
+distrobox create -n arch -i archlinux:latest --init --additional-packages "systemd"
+#+end_src
+
+** ubuntu systemd
 
 #+begin_src sh
 distrobox create -n ubuntu -i ubuntu:22.04 --init --additional-packages "systemd"
