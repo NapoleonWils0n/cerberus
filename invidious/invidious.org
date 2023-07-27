@@ -141,14 +141,18 @@ on the next screen add in the time from the clock
 
 ** start invidious
 
+change directory into the invidious git repository
+
 #+begin_src sh 
-podman start invidious_invidious_1
+podman-compose up -d
 #+end_src
 
 ** stop invidious
 
+change directory into the invidious git repository
+
 #+begin_src sh 
-podman stop invidious_invidious_1
+podman-compose down
 #+end_src
 
 ** update
