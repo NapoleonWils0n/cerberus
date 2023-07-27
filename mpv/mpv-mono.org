@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* mpv mono
+
+#+begin_src sh
+mpv --audio-channels=mono input.mkv
+#+end_src
