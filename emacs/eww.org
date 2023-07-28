@@ -1,0 +1,32 @@
+#+STARTUP: content
+* eww
+** eww keyboard shortcuts
+*** eww copy page url
+
+#+begin_example
+eww-copy-page-url
+#+end_example
+
+*** copy url
+
+#+begin_example
+w
+#+end_example
+
+*** text field insert
+
+#+begin_example
+a
+#+end_example
+
+*** async-shell-command
+
+#+begin_example
+M-S-&
+#+end_example
+
+example command
+
+#+begin_src sh
+pinch -i 'url'
+#+end_src
