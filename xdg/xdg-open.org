@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* xdg-open
+** set mpv as the default app for videos
+
+#+begin_src sh
+xdg-mime default mpv.desktop video/mp4
+#+end_src
