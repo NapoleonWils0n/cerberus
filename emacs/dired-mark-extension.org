@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* dired-mark-extension
+
+mark all files with a regrex in dired
+
+asterix period
+
+at the prompt enter the extension like mp4
