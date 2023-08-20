@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* emacs upgrade built in packages
+
+#+begin_src emacs-lisp
+(setq package-install-upgrade-built-in t)
+#+end_src
