@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* dired-hide-details-mode 
+
+toggle dired-hide-details-mode with shift + 9
+
+#+begin_example
+(
+#+end_example
