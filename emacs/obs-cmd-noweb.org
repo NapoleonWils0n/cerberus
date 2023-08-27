@@ -1,0 +1,67 @@
+#+STARTUP: show2levels 
+#+PROPERTY: header-args :results silent :noweb yes
+* obs cmd
+[[https://github.com/grigio/obs-cmd]]
+
+** noweb
+*** scene
+
+#+NAME: scene-noweb
+#+begin_src sh
+obs-cmd scene switch "${scene}"
+#+end_src
+
+** record
+
+#+begin_src sh 
+obs-cmd recording toggle
+#+end_src
+
+** laptop
+
+#+HEADER: :var scene="laptop"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+** monitor 
+
+#+HEADER: :var scene="monitor"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+** emacs 
+
+#+HEADER: :var scene="emacs"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+** firefox 
+
+#+HEADER: :var scene="firefox"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+** bunny
+
+#+HEADER: :var scene="bunny"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+** sintel
+
+#+HEADER: :var scene="sintel"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+** elephant
+
+#+HEADER: :var scene="elephant"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
