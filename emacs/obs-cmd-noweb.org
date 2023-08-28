@@ -11,6 +11,26 @@
 obs-cmd scene switch "${scene}"
 #+end_src
 
+*** relay
+
+#+NAME: relay-noweb
+#+begin_src sh
+tsp relay -i "${url}"
+#+end_src
+
+*** relay trim
+
+#+NAME: relay-trim-noweb
+#+begin_src sh
+tsp relay -i "${url}" -s "${start}" -t "${end}"
+#+end_src
+
+** tsp kill
+
+#+begin_src sh
+tsp -k
+#+end_src
+
 ** record
 
 #+begin_src sh 
@@ -31,37 +51,39 @@ obs-cmd recording toggle
 <<scene-noweb>>
 #+end_src
 
-** emacs 
+** ffmpeg 
 
-#+HEADER: :var scene="emacs"
+#+HEADER: :var scene="ffmpeg"
 #+begin_src sh
 <<scene-noweb>>
 #+end_src
 
-** firefox 
+** relay noweb
 
-#+HEADER: :var scene="firefox"
+#+HEADER: :var url="https://www.youtube.com/watch?v=Wmc8bQoL-J0"
+#+begin_src sh
+<<relay-noweb>>
+#+end_src
+
++ switch to ffmpeg scene
+
+#+HEADER: :var scene="ffmpeg"
 #+begin_src sh
 <<scene-noweb>>
 #+end_src
 
-** bunny
+** relay time
 
-#+HEADER: :var scene="bunny"
+#+HEADER: :var url="https://www.youtube.com/watch?v=Wmc8bQoL-J0"
+#+HEADER: :var start="00:01:30"
+#+HEADER: :var end="00:00:30"
 #+begin_src sh
-<<scene-noweb>>
+<<relay-trim-noweb>>
 #+end_src
 
-** sintel
++ switch to ffmpeg scene
 
-#+HEADER: :var scene="sintel"
-#+begin_src sh
-<<scene-noweb>>
-#+end_src
-
-** elephant
-
-#+HEADER: :var scene="elephant"
+#+HEADER: :var scene="ffmpeg"
 #+begin_src sh
 <<scene-noweb>>
 #+end_src
