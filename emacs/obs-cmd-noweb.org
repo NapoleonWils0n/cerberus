@@ -11,6 +11,20 @@
 obs-cmd scene switch "${scene}"
 #+end_src
 
+*** relay-local
+
+#+NAME: relay-local-noweb
+#+begin_src sh
+tsp relay-local -i "${input}"
+#+end_src
+
+*** relay-local trim
+
+#+NAME: relay-local-trim-noweb
+#+begin_src sh
+tsp relay-local -i "${input}" -s "${start}" -t "${end}"
+#+end_src
+
 *** relay
 
 #+NAME: relay-noweb
@@ -25,42 +39,45 @@ tsp relay -i "${url}"
 tsp relay -i "${url}" -s "${start}" -t "${end}"
 #+end_src
 
-** tsp kill
-
-#+begin_src sh
-tsp -k
-#+end_src
-
-** record
+** commands
+*** record
 
 #+begin_src sh 
 obs-cmd recording toggle
 #+end_src
 
-** laptop
+*** tsp kill
+
+#+begin_src sh
+tsp -k
+#+end_src
+
+** scenes
+*** laptop
 
 #+HEADER: :var scene="laptop"
 #+begin_src sh
 <<scene-noweb>>
 #+end_src
 
-** monitor 
+*** monitor 
 
 #+HEADER: :var scene="monitor"
 #+begin_src sh
 <<scene-noweb>>
 #+end_src
 
-** ffmpeg 
+*** ffmpeg 
 
 #+HEADER: :var scene="ffmpeg"
 #+begin_src sh
 <<scene-noweb>>
 #+end_src
 
-** relay noweb
+** media
+*** relay 
 
-#+HEADER: :var url="https://www.youtube.com/watch?v=Wmc8bQoL-J0"
+#+HEADER: :var url="https://www.youtube.com/watch?v=TLkA0RELQ1g"
 #+begin_src sh
 <<relay-noweb>>
 #+end_src
@@ -72,11 +89,11 @@ obs-cmd recording toggle
 <<scene-noweb>>
 #+end_src
 
-** relay time
+*** relay trim
 
-#+HEADER: :var url="https://www.youtube.com/watch?v=Wmc8bQoL-J0"
+#+HEADER: :var url="https://www.youtube.com/watch?v=TLkA0RELQ1g"
 #+HEADER: :var start="00:01:30"
-#+HEADER: :var end="00:00:30"
+#+HEADER: :var end="00:00:10"
 #+begin_src sh
 <<relay-trim-noweb>>
 #+end_src
@@ -86,4 +103,47 @@ obs-cmd recording toggle
 #+HEADER: :var scene="ffmpeg"
 #+begin_src sh
 <<scene-noweb>>
+#+end_src
+
+*** relay trim
+
+#+HEADER: :var url="https://www.youtube.com/watch?v=TLkA0RELQ1g"
+#+HEADER: :var start="00:02:30"
+#+HEADER: :var end="00:00:10"
+#+begin_src sh
+<<relay-trim-noweb>>
+#+end_src
+
++ switch to ffmpeg scene
+
+#+HEADER: :var scene="ffmpeg"
+#+begin_src sh
+<<scene-noweb>>
+#+end_src
+
+*** relay-local trim
+
+#+HEADER: :var input="bbb.mkv"
+#+HEADER: :var start="00:05:30"
+#+HEADER: :var end="00:00:12"
+#+begin_src sh
+<<relay-local-trim-noweb>>
+#+end_src
+
+*** relay-local trim
+
+#+HEADER: :var input="bbb.mkv"
+#+HEADER: :var start="00:06:30"
+#+HEADER: :var end="00:00:12"
+#+begin_src sh
+<<relay-local-trim-noweb>>
+#+end_src
+
+*** relay-local trim
+
+#+HEADER: :var input="bbb.mkv"
+#+HEADER: :var start="00:07:30"
+#+HEADER: :var end="00:00:12"
+#+begin_src sh
+<<relay-local-trim-noweb>>
 #+end_src
