@@ -1,0 +1,28 @@
+#+STARTUP: content
+* emacs async
+
+You can install emacs-async package from MELPA using package.el.
+
+the package is called async not emacs-async
+
+#+begin_example
+M-x async
+#+end_example
+
+** Install dired-async
+
+#+begin_src emacs-lisp
+(autoload 'dired-async-mode "dired-async.el" nil t)
+(dired-async-mode 1)
+#+end_src
+
+This will allow you to run asynchronously the dired commands for copying, renaming and symlinking.
+
+** Enable asynchronous compilation of your (M)elpa packages
+
+By default emacs package.el compile packages in its running emacs session. This is not a problem when installing a new package (which is not actually loaded in current emacs) but it may create errors and bad compilation when upgrading a package (old version of package is already loaded and running in current emacs). You can remedy to this by allowing async to compile your packages asynchronously, (helm and magit actually do this by default, so if you are using these packages they will compile asynchronously) to do this, add to your init file:
+
+#+begin_src emacs-lisp
+(async-bytecomp-package-mode 1)
+(async-bytecomp-allowed-packages '(all))
+#+end_src
