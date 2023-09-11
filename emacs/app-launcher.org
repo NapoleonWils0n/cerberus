@@ -36,3 +36,9 @@
 #+begin_src sh
 emacsclient -e "(emacs-run-launcher)"
 #+end_src
+
++ version 2
+
+#+begin_src sh
+emacsclient -cF "((visibility . nil))" -e "(emacs-run-launcher)" 
+#+end_src
