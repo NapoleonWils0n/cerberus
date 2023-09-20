@@ -105,59 +105,68 @@ sudo cp vpn-netns /usr/local/bin
 
 # openvpn up script
 up() {
-    # create network namespace
-    ip netns add vpn || true
+  ip='/usr/sbin/ip'
+  
+  # create network namespace
+  "${ip}" netns add vpn || true
+  
+  # bring up loop device
+  "${ip}" netns exec vpn "${ip}" link set dev lo up
+  
+  # move VPN tunnel to netns
+  "${ip}" link set dev "${1}" up netns vpn mtu "${2}"
+  
+  # configure tunnel in netns
+  "${ip}" netns exec vpn "${ip}" addr add dev "${1}" \
+          "${4}/${ifconfig_netmask:-30}" \
+          ${ifconfig_broadcast:+broadcast "${ifconfig_broadcast}"}
+  if [ -n "${ifconfig_ipv6_local}" ]; then
+          "${ip}" netns exec vpn "${ip}" addr add dev "${1}" \
+                  "${ifconfig_ipv6_local}"/112
+  fi
+  
+  # set route in netns
+  "${ip}" netns exec vpn "${ip}" route add default via "${route_vpn_gateway}"
 
-    # bring up loop device
-    ip netns exec vpn ip link set dev lo up
+  # create vpn namespace directory
+  mkdir -p /etc/netns/vpn
 
-    # move VPN tunnel to netns
-    ip link set dev "$1" up netns vpn mtu "$2"
+  # create resolv.conf with 
+  echo 'nameserver 127.0.0.1' > /etc/netns/vpn/resolv.conf 
 
-    # configure tunnel in netns
-    ip netns exec vpn ip addr add dev "$1" \
-            "$4/${ifconfig_netmask:-30}" \
-            ${ifconfig_broadcast:+broadcast "$ifconfig_broadcast"}
-    if [ -n "$ifconfig_ipv6_local" ]; then
-            ip netns exec vpn ip addr add dev "$1" \
-                    "$ifconfig_ipv6_local"/112
-    fi
+  # stop unbound dns server
+  systemctl stop unbound.service
 
-    # set route in netns
-    ip netns exec vpn ip route add default via "$route_vpn_gateway"
+  # sleep for 1 second
+  sleep 1
 
-    # create vpn namespace directory
-    mkdir -p /etc/netns/vpn
+  # start unbound dns server in vpn namespace
+  systemctl start unbound-netns.service
 
-    # create resolv.conf with 
-    echo 'nameserver 127.0.0.1' > /etc/netns/vpn/resolv.conf 
-
-    # stop unbound dns server
-    systemctl stop unbound.service
-
-    # sleep for 1 second
-    sleep 1
-
-    # start unbound dns server in vpn namespace
-    systemctl start unbound-netns.service
+  # xhost allow access for gui apps
+  xhost +SI:localuser:"$(whoami)"
 }
+
 
 # openvpn down script
 down() {
-    # remove namespace and delete resolv.conf
-    rm -rf /etc/netns/vpn
-    ip netns delete vpn
+  ip='/usr/sbin/ip'
+  rm -rf /etc/netns/vpn
+  "${ip}" netns delete vpn
+  
+  # restart unbound dns server
+  systemctl stop unbound-netns.service
 
-    # restart unbound dns server
-    systemctl stop unbound-netns.service
+  # sleep for 1 second
+  sleep 1
 
-    # sleep for 1 second
-    sleep 1
+  # start unbound dns server
+  systemctl start unbound.service
 
-    # start unbound dns server
-    systemctl start unbound.service
+  # xhost remove access
+  xhost -
 
-    true
+  true
 }
 
 "$script_type" "$@"
@@ -177,6 +186,7 @@ sudo cp netns-vpn /usr/local/bin
 
 ** unbound systemd namespace
 *** unbound-netns.service
+**** ubuntu 
 
 #+begin_src sh
 [Unit]
@@ -198,6 +208,32 @@ PIDFile=/run/unbound-netns.pid
 
 [Install]
 WantedBy=multi-user.target
+#+end_src
+
+**** fedora
+
+#+begin_src sh
+[Unit]
+Description=Unbound recursive Domain Name Server
+After=network-online.target
+After=unbound-keygen.service
+Wants=unbound-keygen.service
+After=unbound-anchor.service
+Wants=unbound-anchor.service
+Before=nss-lookup.target
+Wants=nss-lookup.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/sysconfig/unbound
+ExecStartPre=/usr/sbin/unbound-checkconf
+ExecStart=/usr/sbin/ip netns exec vpn /usr/sbin/unbound -d $UNBOUND_OPTIONS
+ExecReload=/usr/sbin/ip netns exec vpn /usr/sbin/unbound-control reload
+PIDFile=/run/unbound-netns.pid
+
+[Install]
+WantedBy=multi-user.target
+
 #+end_src
 
 *** copy unbound-netns.service
@@ -345,7 +381,7 @@ djwilcox ALL=(ALL:ALL) NOPASSWD: /usr/bin/ip netns exec vpn sudo -u djwilcox -- 
 
 Note the final -- is important to prevent the user from passing other options to sudo.
 
-** firefox-namespace-audio
+** firefox-netns
 
 by default pulseaudio wont work in a linux namespace,
 so we need to create a script to set some variables for pulse audio to get it to work
@@ -357,7 +393,8 @@ create a script called firefox-namespace-audio with the code below
 #+begin_src sh
 #!/bin/sh
 
-sh -c "HOME=${HOME} PULSE_SERVER=/run/user/$(id -u "${USER}")/pulse/native PULSE_COOKIE=/home/${USER}/.config/pulse/cookie firefox"
+sh -c "HOME=${HOME} PULSE_SERVER=/run/user/$(id -u "${USER}")/pulse/native PULSE_COOKIE=/home/${USER}/.config/pulse/cookie firefox" \
+BAMF_DESKTOP_FILE_HINT=/usr/share/applications/firefox.desktop
 #+end_src
 
 then make it executable

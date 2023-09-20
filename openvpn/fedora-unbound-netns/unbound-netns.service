@@ -1,0 +1,20 @@
+[Unit]
+Description=Unbound recursive Domain Name Server
+After=network-online.target
+After=unbound-keygen.service
+Wants=unbound-keygen.service
+After=unbound-anchor.service
+Wants=unbound-anchor.service
+Before=nss-lookup.target
+Wants=nss-lookup.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/sysconfig/unbound
+ExecStartPre=/usr/sbin/unbound-checkconf
+ExecStart=/usr/sbin/ip netns exec vpn /usr/sbin/unbound -d $UNBOUND_OPTIONS
+ExecReload=/usr/sbin/ip netns exec vpn /usr/sbin/unbound-control reload
+PIDFile=/run/unbound-netns.pid
+
+[Install]
+WantedBy=multi-user.target
