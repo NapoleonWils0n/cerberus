@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* yt-dlp duration creator uploader title
+
+#+begin_src sh
+yt-dlp --skip-download --print "%(duration>%H:%M:%S.%s)s %(creator)s %(uploader)s - %(title)s"
+#+end_src
