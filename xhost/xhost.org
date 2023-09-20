@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* xhost
+
+[[https://wiki.archlinux.org/title/Xhost]]
+
+To provide access to an application running with sudo or su to the graphical server (aka your X session aka your computer screen), open a terminal and type as your normal user: 
+
+#+begin_src sh
+xhost +SI:localuser:"$(whoami)"
+#+end_src
+
+To get things back to normal, with controlled access to the X screen:
+
+#+begin_src sh
+xhost -
+#+end_src
