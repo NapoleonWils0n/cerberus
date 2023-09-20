@@ -142,9 +142,6 @@ up() {
 
   # start unbound dns server in vpn namespace
   systemctl start unbound-netns.service
-
-  # xhost allow access for gui apps
-  xhost +SI:localuser:"$(whoami)"
 }
 
 
@@ -162,9 +159,6 @@ down() {
 
   # start unbound dns server
   systemctl start unbound.service
-
-  # xhost remove access
-  xhost -
 
   true
 }
