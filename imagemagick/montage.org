@@ -1,0 +1,62 @@
+#+STARTUP: content
+* montage imagemagick
+
+[[https://patdavid.net/2013/04/using-imagemagick-to-create-contact/]]
+
+** 200x200 filename as label
+
+#+begin_src sh
+montage -verbose -label '%f' -font Helvetica -pointsize 10 -background '#000000' -fill 'gray' -define jpeg:size=200x200 -geometry 200x200+2+2 -auto-orient *.png output.jpg
+#+end_src
+
+*** Break down of the monatge command
+
+Label all the thumbnails with the filename, using the font Helvetica at a point size of 10. 
+
+#+begin_src sh
+montage -verbose -label '%f' -font Helvetica -pointsize 10 
+#+end_src
+
+Set the background color to black (#000), and the fill color for the label text to gray.
+
+#+begin_src sh
+-background '#000000' -fill 'gray' 
+#+end_src
+
+This one is interesting. I found that if I tried to run the command on a full directory of jpegs, I would quickly run out of memory. This is because imagemagick will read in each file and keep the full size image in memory until it’s done. Holy Mackerel!
+
+So this option tells imagemagick to resize the jpeg as soon as it’s read in, and to only keep the smaller version in memory. This significantly speeds up the process of generating the contact sheet.
+
+#+begin_src sh
+-define jpeg:size=200x200 
+#+end_src
+
+This just tells imagemagick to set each thumbnail size on the final output to be 200x200 pixels, with a 2px border around them.
+
+#+begin_src sh
+-geometry 200x200+2+2 
+#+end_src
+
+Rotate any images to their correct orientation as specified in their metadata.
+
+#+begin_src sh
+-auto-orient 
+#+end_src
+
+If you wanted to just do all the images in the directory, you could use the normal glob syntax for all png images:
+
+#+begin_src sh
+*.png 
+#+end_src
+
+specify a numerical range of images that I want to be in my final output.
+
+#+begin_src sh
+image-{65..70}.png
+#+end_src
+
+output filename
+
+#+begin_src sh
+output.jpg
+#+end_src
