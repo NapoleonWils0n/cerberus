@@ -1,0 +1,262 @@
+#+STARTUP: content
+* mediawiki
+** mediawiki links
+
+[[https://www.mediawiki.org/wiki/MediaWiki]]
+
+[[https://www.mediawiki.org/wiki/Manual:Extensions]]
+
+[[https://www.mediawiki.org/wiki/Extension:Iframe]]
+
+[[https://github.com/sigbertklinke/Iframe]]
+
+[[https://linux.how2shout.com/how-to-install-mediawiki-on-ubuntu-22-04-lts-jammy/]]
+
+[[https://www.linuxbabe.com/ubuntu/install-mediawiki-ubuntu-20-04-apache-nginx]]
+
+[[https://www.howtoforge.com/how-to-install-mediawiki-on-ubuntu-22-04/]]
+
+[[https://www.atlantic.net/vps-hosting/how-to-install-mediawiki-ubuntu-20-04/]]
+
+[[https://github.com/89luca89/distrobox/issues/884]]
+
+** distrobox
+
+#+begin_src sh
+distrobox create -n mediawiki -i ubuntu:22.04 --init --additional-packages "systemd"
+#+end_src
+
+** ubuntu update
+
+#+begin_src sh
+sudo apt update
+sudo apt upgrade
+#+end_src
+
+** lamp 
+
+#+begin_src sh
+sudo apt install apache2 mariadb-server php php-mysql libapache2-mod-php php-xml php-mbstring
+#+end_src
+
+#+begin_src sh
+sudo apt install php-apcu php-intl imagemagick inkscape php-gd php-cli php-curl php-bcmath git 
+#+end_src
+
+** mediawiki
+
+#+begin_src sh
+cd /tmp/
+wget https://releases.wikimedia.org/mediawiki/1.40/mediawiki-1.40.1.tar.gz
+#+end_src
+
+** extract in your Web directory
+
+#+begin_src sh
+tar -xvzf /tmp/mediawiki-*.tar.gz
+sudo mkdir -p /var/www/html/mediawiki
+sudo mv mediawiki-*/* /var/www/html/mediawiki
+#+end_src
+
+#+begin_src sh
+sudo chown -R www-data:www-data /var/www/html/mediawiki
+sudo chmod 755 /var/www/html/mediawiki
+#+end_src
+
+** Configuring MySQL
+
+enable mariadb
+
+#+begin_src sh
+sudo systemctl enable --now mariadb
+#+end_src
+
+run the secire installation script
+
+#+begin_src sh
+sudo mysql_secure_installation
+#+end_src
+
+set a root password
+
+root password
+
+#+begin_example
+t00rsql
+#+end_example
+
+To check the status:
+
+#+begin_src sh
+sudo systemctl status mariadb --no-pager
+#+end_src
+
+*** create a NEW mysql user (new_mysql_user):
+
+#+begin_src sh
+sudo mysql -u root -p 
+#+end_src
+
+*** create a NEW mysql database mediawiki
+
+#+begin_src mysql
+CREATE DATABASE mediawiki;
+#+end_src
+
+#+begin_src mysql
+CREATE USER 'wikiuser'@'localhost' IDENTIFIED BY 'jS[&RW<^n%v_6**%';
+#+end_src
+
+*** GRANT the NEW mysql user access to the NEW created mysql database my_wiki:
+
+#+begin_src mysql
+GRANT ALL ON mediawiki.* TO 'wikiuser'@'localhost';
+flush privileges;
+quit;
+#+end_src
+
+** vi editor
+
+distrobox apache fix
+
+install vi
+
+#+begin_src sh
+sudo apt install vim-tiny
+#+end_src
+
+** apache change port number
+
+#+begin_src sh
+sudo vi /etc/apache2/ports.conf
+#+end_src
+
+change the port from 80
+
+#+begin_src conf
+Listen 80
+#+end_src
+
+change the port to 8080
+
+#+begin_src conf
+Listen 8080
+#+end_src
+
+edit the 000-default.conf
+
+#+begin_src sh
+sudo vi /etc/apache2/sites-enabled/000-default.conf
+#+end_src
+
+change the port from 80
+
+#+begin_src conf
+<VirtualHost *:80>
+#+end_src
+
+change the port to 8080
+
+#+begin_src conf
+<VirtualHost *:80>
+#+end_src
+
+#+begin_src sh
+sudo systemctl restart apache2
+#+end_src
+
+** Optional: Configure PHP
+
+#+begin_src sh
+sudo vi /etc/php/8.1/apache2/php.ini
+#+end_src
+
+These steps are optional and can be done post-installation. MediaWiki will still work without these changes.
+
+Edit your PHP configuration file, php.ini. It is located at /etc/php/7.*/apache2/php.ini, depending on exact version of PHP.
+Maximum upload file size
+Assuming that various files are going to be uploaded to the Wiki as content, the limit on the maximum size of an upload has to be adjusted. About one-half way down is the File Uploads section. Change: 
+
+#+begin_src sh
+upload_max_filesize = 2M
+#+end_src
+
+to at least 20M. You may have to adjust this again in the future if you want bigger uploads. 
+
+Memory limit
+Some PHP scripts require a lot of memory to run. To increase the maximum amount of memory a script can use, page down to about 21%, and change the following entry, if found, from 
+
+#+begin_src sh
+memory_limit = 8M
+#+end_src
+
+to
+
+#+begin_src sh
+memory_limit = 256M
+#+end_src
+
+If it is already set to 128M or more, leave it as is. 
+
+#+begin_src sh
+max_execution_time = 360
+#+end_src
+
+restart apache
+
+#+begin_src sh
+sudo systemctl restart apache2
+#+end_src
+
+** apache vhost
+
+enable rewrite
+
+#+begin_src sh
+sudo a2enmod rewrite
+#+end_src
+
+restart apache
+
+#+begin_src sh
+sudo systemctl reload apache2
+#+end_src
+
+create vhost config
+
+#+begin_src sh
+sudo vi /etc/apache2/sites-available/mediawiki.conf
+#+end_src
+
+apache vhost config
+
+#+begin_src conf
+<VirtualHost *:8080>
+    ServerAdmin admin@example.com
+    DocumentRoot /var/www/html/mediawiki/
+    ServerName example.com
+    
+    <Directory /var/www/html/mediawiki/>
+        Options FollowSymLinks
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+    
+    ErrorLog /var/log/apache2/media-error_log
+    CustomLog /var/log/apache2/media-access_log common
+</VirtualHost>
+#+end_src
+
+Save and close the file. Then enable this virtual host.
+
+#+begin_src sh
+sudo a2ensite mediawiki.conf
+#+end_src
+
+Reload Apache for the above changes to take effect.
+
+#+begin_src sh
+sudo systemctl reload apache2
+#+end_src
+
