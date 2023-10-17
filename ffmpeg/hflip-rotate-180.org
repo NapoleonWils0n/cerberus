@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* hflip rotate video 180 degrees
+** ffplay
+
+#+begin_src sh
+ffplay -i input.mkv -vf 'hflip' output.mkv
+#+end_src
+
+** ffmpeg
+
+#+begin_src sh
+ffmpeg -i input.mkv -vf 'hflip' output.mkv
+#+end_src
+
