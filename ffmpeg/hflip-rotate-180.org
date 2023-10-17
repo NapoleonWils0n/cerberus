@@ -3,7 +3,7 @@
 ** ffplay
 
 #+begin_src sh
-ffplay -i input.mkv -vf 'hflip' output.mkv
+ffplay -i input.mkv -vf 'hflip'
 #+end_src
 
 ** ffmpeg
