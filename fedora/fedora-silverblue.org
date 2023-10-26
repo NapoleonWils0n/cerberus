@@ -1,0 +1,46 @@
+#+STARTUP: content
+* fedora silverblue
+** links
+
+fedota silverblue
+
+[[https://fedoraproject.org/silverblue]]
+
+rpm fusion
+[[https://davejansen.com/install-rpmfusion-automatic-updated-fedora-silverblue/]]
+
+** commands
+
+update
+
+#+begin_src sh
+sudo rpm-ostree upgrade
+#+end_src
+
+keyboard
+
+#+begin_src sh
+rpm-ostree initramfs-etc --track=/etc/vconsole.conf
+#+end_src
+
+** rpm fusion
+
+First, let's install both RPM Fusion free and nonfree repositories using their recommended way, if you've not done so already:
+
+#+begin_src sh
+sudo rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+#+end_src
+
+Next, reboot your system. This is a required step.
+
+Now, after rebooting, we'll both remove the specific package version we just installed and install the "automatic version matching" versions available from the RPM Fusion repositories, all in one fell swoop:
+
+#+begin_src sh
+sudo rpm-ostree update --uninstall $(rpm -q rpmfusion-free-release) --uninstall $(rpm -q rpmfusion-nonfree-release) --install rpmfusion-free-release --install rpmfusion-nonfree-release
+#+end_src
+
+** rpm-ostree overlay package
+
+#+begin_src sh
+rpm-ostree install <package name>
+#+end_src

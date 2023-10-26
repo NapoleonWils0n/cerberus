@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* userinstalled packages
+
+#+begin_src sh
+dnf history userinstalled > user-installed.txt
+#+end_src
+
