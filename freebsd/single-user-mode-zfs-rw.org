@@ -28,3 +28,8 @@ we do this by setting readonly to off
 zfs set readonly=off zroot
 #+END_SRC
 
+** mount home directory
+
+#+begin_src sh
+zfs mount -a
+#+end_src

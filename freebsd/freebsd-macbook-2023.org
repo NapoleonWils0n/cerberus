@@ -216,6 +216,64 @@ sudo sysrc dbus_enable=YES
 
 [[https://forums.freebsd.org/threads/sway-and-wayland.83682/]]
 
+** kde
+
+[[https://www.youtube.com/watch?v=XjPha2bWvxs]]
+
+[[https://www.reddit.com/r/freebsd/comments/w16pyo/kde_sddm/]]
+
+[[https://community.kde.org/FreeBSD/Setup]]
+
+[[https://euroquis.nl//kde/2021/04/30/wayland.html]]
+
+#+begin_src sh
+sudo pkg install plasma5-plasma plasma5-sddm-kcm
+#+end_src
+
+To increase messages size execute:
+
+#+begin_src sh
+sudo sysctl net.local.stream.recvspace=65536
+sudo sysctl net.local.stream.sendspace=65536
+#+end_src
+
+The preferred KDE Plasma display manager is x11/sddm. To install x11/sddm, execute:
+
+#+begin_src sh
+sudo pkg install sddm
+#+end_src
+
+Enable SDDM service in /etc/rc.conf to start at system boot:
+
+#+begin_src sh
+sudo sysrc sddm_enable="YES"
+#+end_src
+
+to have smartd start at boot
+
+#+begin_src sh
+echo 'smartd_enable="YES"' >> /etc/rc.conf
+#+end_src
+
+gstreamer
+
+#+begin_src sh
+sudo pkg install multimedia/gstreamer1-plugins-all
+#+end_src
+
+You will need:
+
+    FreeBSD 13 or later. I’m not going to look at 12-or-older compatibility.
+    Intel i915kms graphics. I’m not going to look at AMD compatibility, or nVidia for the time being.
+    No display manager. service sddm stop will do for now.
+    The sufficiently-new packages for plasma-workspace and kwin installed.
+
+To run it:
+
+    Boot to a text console,
+    Log in as a regular user,
+    Run /usr/local/bin/startplasma-wayland.sh.
+
 ** wayfire
 
 #+begin_src sh
