@@ -1,0 +1,26 @@
+#+STARTUP: showall
+* Preparing Files for USB Memory Stick Booting
+
+[[https://www.debian.org/releases/stable/amd64/ch04s03.en.html]]
+
+To prepare the USB stick, we recommend to use a system where GNU/Linux is already running and where USB is supported. With current GNU/Linux systems the USB stick should be automatically recognized when you insert it.
+
+If it is not you should check that the usb-storage kernel module is loaded. When the USB stick is inserted, it will be mapped to a device named /dev/sdX, where the “X” is a letter in the range a-z.
+
+You should be able to see to which device the USB stick was mapped by running the command lsblk before and after inserting it. (The output of dmesg (as root) is another possible method for that.) To write to your stick, you may have to turn off its write protection switch. 
+
+Debian installation images for this architecture are created using the isohybrid technology; that means they can be written directly to a USB stick, which is a very easy way to make an installation media. Simply choose an image (such as the netinst, CD or DVD-1) that will fit on your USB stick. See Section 4.1, “Official Debian GNU/Linux installation images” to get an installation image.
+
+The installation image you choose should be written directly to the USB stick, overwriting its current contents. For example, when using an existing GNU/Linux system, the image file can be written to a USB stick as follows, after having made sure that the stick is unmounted: 
+
+#+begin_src sh
+sudo cp debian.iso /dev/sdX
+sudo sync
+#+end_src
+** password for live install
+
+when you run the debian installer it prompts you for a password for the live user
+
+the password is
+
+live
