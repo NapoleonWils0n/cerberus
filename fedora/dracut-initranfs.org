@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* fedora create initramfs
+
+#+begin_src sh
+sudo dracut -f
+#+end_src
