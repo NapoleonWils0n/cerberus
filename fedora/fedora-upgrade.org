@@ -1,0 +1,43 @@
+#+STARTUP: content
+* fedora dnf group upgrade
+** links
+[[https://www.reddit.com/r/Fedora/comments/17s8274/essential_things_to_do_after_upgrading_to_fedora/]]
+
+[[https://docs.fedoraproject.org/en-US/quick-docs/upgrading-fedora-offline/]]
+
+** dnf group upgrade
+
+#+begin_src sh
+sudo dnf group upgrade 'Fedora Workstation'
+#+end_src
+
+** retired packages
+
+#+begin_src sh
+sudo dnf install remove-retired-packages
+remove-retired-packages
+#+end_src
+
+** remove old kernels
+
+After you boot into the latest kernel and test the system you can remove previous kernels. Old kernels remain even after dnf autoremove to avoid unintentional removals.
+
+One of the easier ways to remove old kernels is with a script that retains the latest kernel. The script below works whenever Fedora updates a kernel, and does not depend upon a system upgrade.
+
+#+begin_src bash
+#!/usr/bin/env bash
+
+old_kernels=($(dnf repoquery --installonly --latest-limit=-1 -q))
+if [ "${#old_kernels[@]}" -eq 0 ]; then
+    echo "No old kernels found"
+    exit 0
+fi
+
+if ! dnf remove "${old_kernels[@]}"; then
+    echo "Failed to remove old kernels"
+    exit 1
+fi
+
+echo "Removed old kernels"
+exit 0
+#+end_src
