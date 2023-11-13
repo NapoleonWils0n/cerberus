@@ -40,7 +40,7 @@ xz -dv FreeBSD-13.2-RELEASE-amd64-memstick.img.xz
 #+end_src
 
 #+begin_src sh
-sudo dd if=FreeBSD-13.1-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=sync
+sudo dd if=FreeBSD-13.2-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=sync
 #+end_src
 
 ** root on zfs
@@ -94,13 +94,16 @@ username   ALL=(ALL:ALL) ALL
 
 ** create new user
 
-create new user
+if you didnt create a new user duration the install
+you can run the adduser command to add a new user
 
 #+BEGIN_SRC sh
 adduser
 #+END_SRC
 
-** add new user to wheel and video groups
+add the new user to wheel and video groups
+
+** single user mode
 
 single user mode require root password
 
@@ -113,13 +116,17 @@ edit /etc/ttys
 sudo nano /etc/ttys
 #+END_SRC
 
-** xorg
+** drivers
 
+#+BEGIN_SRC sh
+sudo pkg install libva-intel-driver libva-utils drm-510-kmod 
+#+END_SRC
+
+old
 instal xorg
 
 #+BEGIN_SRC sh
 sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-input-synaptics \
-libva-intel-driver libva-utils drm-510-kmod 
 #+END_SRC
 
 + use libva-intel-driver and drm-510-kmod instead of xf86-video-intel for video hardware accleration
@@ -179,8 +186,10 @@ FontPath "/usr/local/share/fonts/powerline-fonts/"
 It has been reported that ZFS users may experience issues with some Wayland clients because they need access to posix_fallocate() in the runtime directory. While the author could not reproduce this issue on their ZFS system, a recommended workaround is not to use ZFS for the runtime directory and instead use tmpfs for the /var/run directory. In this case, the tmpfs file system is used for /var/run and mounted through the command mount -t tmpfs tmpfs /var/run command and then make this change persist across reboots through /etc/fstab. The XDG_RUNTIME_DIR environment variable could be configured to use /var/run/user/$UID and avoid potential pitfalls with ZFS. Consider that scenario when reviewing the configuration examples in the following sections.
 
 #+begin_src sh
-sudo pkg install wayland seatd
+sudo pkg install wayland wayland-protocols seatd qt5ct qt5-wayland 
 #+end_src
+
+gtk-layer-shell gtk4
 
 #+begin_src sh
 sudo mkdir -p /var/run/user/1001
@@ -199,15 +208,15 @@ fstab
 Add tmpfs and procfs to /etc/fstab with this line
 
 #+begin_src sh
-tmpfs /var/run tmpfs rw 0 0
+#tmpfs /var/run tmpfs rw 0 0
 proc /proc procfs rw 0 0
 #+end_src
 
 The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
 
 #+begin_src sh
-sudo sysrc seatd_enable=”YES”
-sudo sysrc dbus_enable=YES
+sudo sysrc seatd_enable="YES"
+sudo sysrc dbus_enable="YES"
 #+end_src
 
 [[https://docs.freebsd.org/en/books/handbook/wayland/]]
@@ -216,68 +225,16 @@ sudo sysrc dbus_enable=YES
 
 [[https://forums.freebsd.org/threads/sway-and-wayland.83682/]]
 
-** kde
-
-[[https://www.youtube.com/watch?v=XjPha2bWvxs]]
-
-[[https://www.reddit.com/r/freebsd/comments/w16pyo/kde_sddm/]]
-
-[[https://community.kde.org/FreeBSD/Setup]]
-
-[[https://euroquis.nl//kde/2021/04/30/wayland.html]]
-
-#+begin_src sh
-sudo pkg install plasma5-plasma plasma5-sddm-kcm
-#+end_src
-
-To increase messages size execute:
-
-#+begin_src sh
-sudo sysctl net.local.stream.recvspace=65536
-sudo sysctl net.local.stream.sendspace=65536
-#+end_src
-
-The preferred KDE Plasma display manager is x11/sddm. To install x11/sddm, execute:
-
-#+begin_src sh
-sudo pkg install sddm
-#+end_src
-
-Enable SDDM service in /etc/rc.conf to start at system boot:
-
-#+begin_src sh
-sudo sysrc sddm_enable="YES"
-#+end_src
-
-to have smartd start at boot
-
-#+begin_src sh
-echo 'smartd_enable="YES"' >> /etc/rc.conf
-#+end_src
-
-gstreamer
-
-#+begin_src sh
-sudo pkg install multimedia/gstreamer1-plugins-all
-#+end_src
-
-You will need:
-
-    FreeBSD 13 or later. I’m not going to look at 12-or-older compatibility.
-    Intel i915kms graphics. I’m not going to look at AMD compatibility, or nVidia for the time being.
-    No display manager. service sddm stop will do for now.
-    The sufficiently-new packages for plasma-workspace and kwin installed.
-
-To run it:
-
-    Boot to a text console,
-    Log in as a regular user,
-    Run /usr/local/bin/startplasma-wayland.sh.
-
 ** wayfire
 
+[[https://github.com/WayfireWM/wayfire/wiki/Configuration]]
+
+[[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop.85930/]]
+
+[[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop-discussion.85994/]]
+
 #+begin_src sh
-sudo pkg install wayfire wf-shell alacritty swaylock-effects swayidle wlogout kanshi mako wlsunset wcm
+sudo pkg install wayfire wf-shell wayfire-plugins-extra alacritty swaylock-effects swayidle wlogout kanshi wcm
 #+end_src
 
 config
@@ -354,49 +311,48 @@ install truetype fonts
 # pkg install urwfonts powerline-fonts
 #+END_SRC
 
-** i3wm tiling window manager
+** emacs
 
-install i3wm
+#+begin_src sh
+sudo pkg install emacs-devel
+#+end_src
 
-#+BEGIN_SRC sh
-sudo pkg install -y i3 i3lock i3status rofi
-#+END_SRC
+add the follwing line to the top of your emacs config
 
-copy default xinitrc to ~/.xinitrx
+#+begin_src emacs-lisp
+(setq native-comp-deferred-compilation nil
+comp-enable-subr-trampolines nil)
+#+end_src
 
-#+BEGIN_SRC sh
-cp /usr/local/etc/X11/xinit/xinitrc ~/.xinitrc
-#+END_SRC
+exit emacs
 
-edit ~/.xinitrc
+#+begin_src sh
+rm -rf ~/.emacs.d/eln-cache
+#+end_src
 
-#+BEGIN_SRC sh
-vi ~/.xinitrc
-#+END_SRC
+throttle compilation jobs
 
-#+BEGIN_SRC sh
-exec /usr/local/bin/i3
-#+END_SRC
+native-comp-async-jobs-number
+
+** qtt5
+
+#+begin_src sh
+export QT_QPA_PLATFORMTHEME=qt5ct
+#+end_src
 
 ** applications
 
 + xkbcomp set keyboard
 
 #+BEGIN_SRC sh
-sudo pkg install xkbcomp
+sudo pkg install xkbcomp wget2 ImageMagick7 tmux-3.3a_1
 #+END_SRC
 
-+ urxvt-unicode terminal
-
-#+BEGIN_SRC sh
-sudo pkg install rxvt-unicode urxvt-perls
-#+END_SRC
-
-## dotfiles
+dotfiles
 
 freebsd dot files
 
-## /etc/rc.conf
+/etc/rc.conf
 
 edit /etc/rc.conf  
 
@@ -701,6 +657,23 @@ sudo dbus-uuidgen > /etc/machine-id
 # freebsd dhclient
 
 avoid overwriting /etc/resolv.conf
+
+** chromium widevine
+
+[[https://forums.freebsd.org/threads/watching-spotify-and-listening-to-netflix-in-2023.90695/#post-626065]]
+
+#+begin_src sh
+% sudo pkg install chromium # 117.0.5938.149_2 or higher
+
+% sudo pkg install foreign-cdm
+% sudo sysrc linux_enable="YES"
+% sudo service linux start
+
+% git clone --depth 1 https://github.com/freebsd/freebsd-ports
+% cd freebsd-ports/www/linux-widevine-cdm
+% make
+% sudo make install
+#+end_src
 
 ** edit /etc/dhclient-enter-hooks
 
