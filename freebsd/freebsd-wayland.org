@@ -335,21 +335,11 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 ** applications
 
 #+BEGIN_SRC sh
-sudo pkg install xkbcomp 
+sudo pkg install openvpn wget2 ImageMagick7 tmux xkbcomp mpv mpv-mpris abook apg aria2 aspell en-aspell bat dictd fd-find firacode fzf noto mpc mutt ncmpc oath-toolkit ripgrep ripgrep-all socat sox ts translate urlview w3m weechat wl-clipboard yt-dlp
 #+END_SRC
 
 #+begin_src sh
-sudo pkg install hs-pandoc hs-pandoc-citeproc
-#+end_src
-
-#+begin_src sh
-sudo pkg install wget2 ImageMagick7 tmux-3.3a_1
-#+end_src
-
-*** openvpn
-
-#+begin_src sh
-sudo pkg install openvpn
+sudo pkg install hs-pandoc hs-ShellCheck
 #+end_src
 
 ** mount ext4 as read only
