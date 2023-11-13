@@ -306,7 +306,7 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 ** emacs
 
 #+begin_src sh
-sudo pkg install emacs-devel
+sudo pkg install emacs-devel tree-sitter
 #+end_src
 
 add the follwing line to the top of your emacs config
