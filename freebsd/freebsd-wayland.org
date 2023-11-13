@@ -303,14 +303,6 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 # portsnap fetch update
 #+END_SRC
 
-** fonts
-
-install truetype fonts
-
-#+BEGIN_SRC sh
-# pkg install urwfonts powerline-fonts
-#+END_SRC
-
 ** emacs
 
 #+begin_src sh
@@ -342,321 +334,128 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 ** applications
 
-+ xkbcomp set keyboard
-
 #+BEGIN_SRC sh
-sudo pkg install xkbcomp wget2 ImageMagick7 tmux-3.3a_1
+sudo pkg install xkbcomp 
 #+END_SRC
 
-dotfiles
-
-freebsd dot files
-
-/etc/rc.conf
-
-edit /etc/rc.conf  
-
-use moused_enable="YES" and moused_port="wsp0" for mac touchpad
-
-```
-clear_tmp_enable="YES"
-syslogd_flags="-ss"
-sendmail_enable="NONE"
-hostname="pollux"
-#ifconfig_bge0="DHCP"
-ifconfig_ue0="DHCP"
-local_unbound_enable="YES"
-moused_port="wsp0"
-moused_enable="YES"
-ntpd_enable="YES"
-ntpd_flags="-g"
-# performance
-powerd_enable="YES"
-powerd_flags="-a hiadaptive -b adaptive"
-performance_cx_lowest="Cmax"
-economy_cx_lowest="Cmax"
-# Set dumpdev to "AUTO" to enable crash dumps, "NO" to disable
-dumpdev="AUTO"
-zfs_enable="YES"
-pf_enable="YES"
-nfs_client_enable="YES"
-hald_enable="YES"
-dbus_enable="YES"
-#devfs_system_ruleset="localrules"
-# hardware accleration
-kld_list="/boot/modules/i915kms.ko"
-```
-
-## /etc/sysctl.conf
-
-edit /etc/sysctl.conf
-
-```
-# $FreeBSD: releng/12.0/sbin/sysctl/sysctl.conf 337624 2018-08-11 13:28:03Z brd $
-#
-#  This file is read when going to multi-user and its contents piped thru
-#  ``sysctl'' to adjust kernel values.  ``man 5 sysctl.conf'' for details.
-#
-
-# Uncomment this to prevent users from seeing information about processes that
-# are being run under another UID.
-#security.bsd.see_other_uids=0
-security.bsd.see_other_uids=0
-security.bsd.see_other_gids=0
-security.bsd.see_jail_proc=0
-security.bsd.unprivileged_read_msgbuf=0
-security.bsd.unprivileged_proc_debug=0
-kern.randompid=1
-vfs.zfs.min_auto_ashift=12
-# disable pc speaker
-hw.syscons.bell=0
-# allow users to mount drives
-# vfs.usermount=1
-# automatically use new audio devices
-hw.snd.default_auto=1
-# sleep resume
-hw.acpi.lid_switch_state=s3
-# bit perfect audio
-hw.snd.default_unit=2
-dev.pcm.2.play.vchans=0
-dev.pcm.2.bitperfect=1
-```
-
-## /etc/pf.conf
-
-pf firewall
-
-```
-#=========================================================================#
-# variables, macro and tables                                             #
-#=========================================================================#
-
-int_if="ue0" # usb to ethernet adaptor
-#int_if="bge0" # thunderbolt to ethernet adaptor
-vpn_if="tun0" # vpn interface
-all_networks="0.0.0.0/0"
-vpn_network="$vpn_if:network"
-tcp_services = "{ ntp, 6881, 22000 }" # tcp services
-udp_services = "{ ntp, 6882, 21025 }" # udp services
-icmp_types = "{ echoreq, unreach }"
-tcp_state="flags S/SA keep state"
-udp_state="keep state"
-
-#table <internet> { $all_networks, !self, !$int_if:network } # internet
-#table <lan> { $int_if:network, !self }                      # lan network
-table <myself> { self }                                     # self
-table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
-	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
-	 	   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
-	 	   203.0.113.0/24 }                         # broken networks
-
-#=========================================================================#
-# global policy                                                           #
-#=========================================================================#
-
-set block-policy drop
-set loginterface $int_if
-set fingerprints "/etc/pf.os"
-set skip on lo0
-scrub in all fragment reassemble no-df max-mss 1440
-antispoof log quick for { lo $int_if } label "block_spoofing"
-
-#=========================================================================#
-# block                                                                   #
-#=========================================================================#
-
-block log all # block log all
-block return out quick inet6 all tag IPV6 # block ipv6 
-block in quick inet6 all tag IPV6 # block ipv6
-
-# block broken networks
-block in quick from { <martians> no-route urpf-failed } to any tag BAD_PACKET
-
-#=========================================================================#
-# anchors                                                                 #
-#=========================================================================#
-
-# emerging threats - anchor
-anchor "emerging-threats"
-load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
-
-# openvpn - anchor
-anchor "openvpn"
-
-#=========================================================================#
-# traffic tag                                                             #
-#=========================================================================#
-
-# icmp
-pass inet proto icmp all icmp-type $icmp_types keep state tag ICMP
-
-# Allow the tcp and udp services defined in the macros at the top of the file
-pass in on $int_if inet proto tcp from any to ($int_if) port $tcp_services $tcp_state tag TCP_IN
-pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_state tag UDP_IN
-
-# outbound traffic
-block out on $int_if all
-pass out quick on $int_if all modulate state
-#pass out quick on $int_if from <myself> to <lan> modulate state tag LAN_OUT
-#pass out quick on $int_if from <myself> to <internet> modulate state tag INTERNET_OUT
-```
-
-reload pf firewall
-
-```
-# pfctl -f /etc/pf.conf
-```
-
-## /boot/loader.conf
-
-edit /boot/loader.conf
-
-```
-# vi /boot/loader.conf
-```
-
-use wsp_load="YES" for mac touchpad  
-add the following code
-
-```
-aesni_load="YES"
-geom_eli_load="YES"
-security.bsd.allow_destructive_dtrace=0
-kern.geom.label.disk_ident.enable="0"
-kern.geom.label.gptid.enable="0"
-zfs_load="YES"
-snd_hda_load="YES"
-snd_uaudio_load="YES"
-# fibs
-net.fibs=2
-net.add_addr_allfibs=0
-asmc_load="YES"
-acpi_video_load="YES"
-hint.p4tcc.0.disabled="1"
-hint.acpi_throttle.0.disabled="1"
-# enable CPU temperature monitoring
-coretemp_load="YES"
-# driver for touchpad
-wsp_load="YES"
-```
-
-
-## pandoc
-
-```
+#+begin_src sh
 sudo pkg install hs-pandoc hs-pandoc-citeproc
-```
+#+end_src
 
-## openvpn
+#+begin_src sh
+sudo pkg install wget2 ImageMagick7 tmux-3.3a_1
+#+end_src
 
-```
+*** openvpn
+
+#+begin_src sh
 sudo pkg install openvpn
-```
+#+end_src
 
-## mount ext4 as read only
+** mount ext4 as read only
 	
 add user to operator group
 
-```
+#+begin_src sh
 sudo pw groupmod operator -m djwilcox
-```
+#+end_src
 
 Edit /etc/devfs.rules to allow the operator group to be able to read and write the device:
 
-```
-sudo vim /etc/devfs.rules
-```
+#+begin_src sh
+sudo vi /etc/devfs.rules
+#+end_src
 
 /etc/devfs.rules
 
 
-```
+#+begin_src sh
 [localrules=5]
 add path 'da*' mode 0660 group operator
-```
+#+end_src
 
 Then edit /etc/rc.conf to enable the devfs.rules(5) ruleset:
 
-```
+#+begin_src sh
 sudo vi /etc/rc.conf
-```
+#+end_src
 
-```
+#+begin_src sh
 devfs_system_ruleset="localrules"
-```
+#+end_src
 
 Next allow regular user to mount file system:
 
-```
+#+begin_src sh
 sudo vi /etc/sysctl.conf
-```
+#+end_src
 
-```
+#+begin_src sh
 vfs.usermount=1
-```
+#+end_src
 
 Also execute sysctl to make the update available now:
 
-```
+#+begin_src sh
 sudo sysctl vfs.usermount=1
-```
+#+end_src
 
-```
 vfs.usermount: 0 -> 1
-```
 
 Create a directory which a regular use can mount to:
 
-```
-sudo mkdir /mnt/usb
-```
+#+begin_src sh
+sudo mkdir -p /mnt/usb
+#+end_src
 
 change the permission so your user own the directory with chown
 replace username with your username
 
-```
+#+begin_src sh
 sudo chown username:username /mnt/usb
-```
+#+end_src
 
 install ext4 fuse
 
-```
+#+begin_src sh
 sudo pkg install fusefs-ext4fuse
-```
+#+end_src
 
 Lastly, edit /boot/loader.conf to load the module each boot:
 
-```
-sudo vim /boot/loader.conf
-```
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
 
-```
+#+begin_src sh
 fuse_load="YES"
 fusefs_load="YES"
-```
+#+end_src
 
 Now mounting USB drive with ext4 filesystem is working!
 
-```
+#+begin_src sh
 ext4fuse /dev/da0s1 /mnt/usb
-```
+#+end_src
 
-# gpg
+*** gpg
 To export your secret keys, use:
-  gpg --export-secret-key -a > secret.key
+
+#+begin_src sh
+gpg --export-secret-key -a > secret.key
+#+end_src
 
 and to import them again:
-  gpg --import secret.key
 
-## freebsd dbus
+#+begin_src sh
+gpg --import secret.key
+#+end_src
 
-```
+*** freebsd dbus
+
+#+begin_src sh
 sudo dbus-uuidgen > /etc/machine-id
-```
-
-# freebsd dhclient
-
-avoid overwriting /etc/resolv.conf
+#+end_src
 
 ** chromium widevine
 
