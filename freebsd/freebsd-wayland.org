@@ -335,8 +335,14 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 ** applications
 
 #+BEGIN_SRC sh
-sudo pkg install openvpn wget2 ImageMagick7 tmux xkbcomp mpv mpv-mpris abook apg aria2 aspell en-aspell bat dictd fd-find firacode fzf noto mpc mutt ncmpc oath-toolkit ripgrep ripgrep-all socat sox ts translate urlview w3m weechat wl-clipboard yt-dlp
+sudo pkg install openvpn wget2 ImageMagick7 tmux xkbcomp mpv mpv-mpris abook apg aria2 aspell en-aspell bat dictd fd-find firacode fzf noto-basic noto-emoji mpc mutt ncmpc oath-toolkit ripgrep ripgrep-all socat sox ts translate-shell urlview w3m weechat wl-clipboard yt-dlp
 #+END_SRC
+
+enable dict
+
+#+begin_src sh
+sudo sysrc dictd_enable="YES"
+#+end_src
 
 #+begin_src sh
 sudo pkg install hs-pandoc hs-ShellCheck
