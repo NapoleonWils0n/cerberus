@@ -18,29 +18,29 @@
 download the memstick.img.xz to install on a usb stick
 
 #+begin_src sh
-wget https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/13.2/FreeBSD-13.2-RELEASE-amd64-memstick.img.xz
+wget https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/14.0/FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
 #+end_src
 
 download the checksum
 
 #+begin_src sh
-wget https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/13.2/CHECKSUM.SHA512-FreeBSD-13.2-RELEASE-amd64
+wget https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/14.0/CHECKSUM.SHA512-FreeBSD-14.0-RELEASE-amd64
 #+end_src
 
 Verify the checksum 
 
 #+begin_src sh
-sha512sum -c CHECKSUM.SHA512-FreeBSD-13.2-RELEASE-amd64 FreeBSD-13.2-RELEASE-amd64-memstick.img.xz
+sha512sum -c CHECKSUM.SHA512-FreeBSD-14.0-RELEASE-amd64 FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
 #+end_src
 
 ** writing an image file to usb
 
 #+begin_src sh
-xz -dv FreeBSD-13.2-RELEASE-amd64-memstick.img.xz
+xz -dv FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
 #+end_src
 
 #+begin_src sh
-sudo dd if=FreeBSD-13.2-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=sync
+sudo dd if=FreeBSD-14.0-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=sync
 #+end_src
 
 ** root on zfs
@@ -68,22 +68,32 @@ console none unknown off insecure
 
 To bootstrap the system, run:
 
+#+begin_src sh
+su
+#+end_src
+
 #+BEGIN_SRC sh
-# /usr/sbin/pkg
+/usr/sbin/pkg
 #+END_SRC
 
 ** sudo
 
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
 install sudo 
 
 #+BEGIN_SRC sh
-# pkg install sudo
+pkg install sudo
 #+END_SRC
 
 edit /etc/sudoers
 
 #+BEGIN_SRC sh
-# visudo
+visudo
 #+END_SRC
 
 add your user to the sudoers file, replace username with your username
@@ -119,19 +129,18 @@ sudo nano /etc/ttys
 ** drivers
 
 #+BEGIN_SRC sh
-sudo pkg install libva-intel-driver libva-utils drm-510-kmod 
+sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
 #+END_SRC
 
-old
-instal xorg
-
-#+BEGIN_SRC sh
-sudo pkg install xorg xinit xf86-input-keyboard xf86-input-mouse xf86-input-synaptics \
-#+END_SRC
-
-+ use libva-intel-driver and drm-510-kmod instead of xf86-video-intel for video hardware accleration
++ use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
 
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+#+begin_src sh
+sudo sysrc kld_list="i915kms"
+#+end_src
+
+or manually edit the config file
 
 #+BEGIN_SRC sh
 sudo vim /etc/rc.conf
@@ -139,46 +148,8 @@ sudo vim /etc/rc.conf
 
 then add the code below to /etc/rc.conf
 
-new
-
 #+BEGIN_SRC sh
 kld_list="i915kms"
-#+END_SRC
-
-old
-
-#+BEGIN_SRC sh
-kld_list="/boot/modules/i915kms.ko"
-#+END_SRC
-
-
-
-add freetype to modules, and filepath to dejavu in xorg.conf
-
-Generating an xorg.conf:
-
-#+BEGIN_SRC sh
-# Xorg -configure
-#+END_SRC
-
-location of new file
-
-#+BEGIN_SRC sh
-/root/xorg.conf.new
-#+END_SRC
-
-add the follwoing to the Modules of x config file
-
-#+BEGIN_SRC sh
-Load "freetype"
-#+END_SRC
-
-add following to Files section of x config
-
-#+BEGIN_SRC sh
-FontPath "/usr/local/share/fonts/dejavu/"
-FontPath "/usr/local/share/fonts/urwfonts/"
-FontPath "/usr/local/share/fonts/powerline-fonts/"
 #+END_SRC
 
 ** wayland
@@ -203,12 +174,11 @@ set the runtime dir
 export XDG_RUNTIME_DIR=/var/run/user/`id -u`
 #+end_src
 
-fstab
+*** fstab
 
-Add tmpfs and procfs to /etc/fstab with this line
+Add procfs to /etc/fstab with this line
 
 #+begin_src sh
-#tmpfs /var/run tmpfs rw 0 0
 proc /proc procfs rw 0 0
 #+end_src
 
@@ -217,6 +187,7 @@ The seatd daemon helps manage access to shared system devices for non-root users
 #+begin_src sh
 sudo sysrc seatd_enable="YES"
 sudo sysrc dbus_enable="YES"
+sudo sysrc hald_enable="YES"
 #+end_src
 
 [[https://docs.freebsd.org/en/books/handbook/wayland/]]
@@ -305,8 +276,9 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 
 ** emacs
 
+
 #+begin_src sh
-sudo pkg install emacs-devel tree-sitter
+sudo pkg install emacs-devel tree-sitter cantarell-fonts
 #+end_src
 
 add the follwing line to the top of your emacs config
@@ -335,17 +307,13 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 ** applications
 
 #+BEGIN_SRC sh
-sudo pkg install openvpn wget2 ImageMagick7 tmux xkbcomp mpv mpv-mpris abook apg aria2 aspell en-aspell bat dictd fd-find firacode fzf noto-basic noto-emoji mpc mutt ncmpc oath-toolkit ripgrep ripgrep-all socat sox ts translate-shell urlview w3m weechat wl-clipboard yt-dlp
+sudo pkg install openvpn wget2 ImageMagick7 tmux xkbcomp mpv mpv-mpris abook apg aria2 aspell en-aspell bat dictd fd-find firacode fzf noto-basic noto-emoji mpc mutt ncmpc oath-toolkit ripgrep ripgrep-all socat sox ts translate-shell urlview w3m weechat wl-clipboard yt-dlp git firefox ffmpeg hs-pandoc gstreamer1-plugins-opus
 #+END_SRC
 
 enable dict
 
 #+begin_src sh
 sudo sysrc dictd_enable="YES"
-#+end_src
-
-#+begin_src sh
-sudo pkg install hs-pandoc hs-ShellCheck
 #+end_src
 
 ** mount ext4 as read only
