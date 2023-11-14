@@ -1,0 +1,63 @@
+#+STARTUP: content
+* freebsd move home
+** Upgrading /usr/home to /home on an existing installation
+
+[[https://group.miletic.net/en/blog/2023-11-13-coming-home/]]
+
+I started to wonder if this change was also made while performing an upgrade via freebsd-update(8), but it expectedly turned out that it was not.
+
+#+begin_src sh
+ls -ld /home
+#+end_src
+
+lrwxr-xr-x  1 root wheel 11  7 tra   2023 /home -> usr/home
+
+** Preparing for the move
+
+It is impossible to perform this operation without unmounting the filesystem first, and unmounting can't be done on a busy filesystem. A busy filesystem in this case means a busy home directory, and a busy home directory in general means user processes running, be it session processes or per-user daemons. As a consequence, all regular users have to be logged out and all of their processes should be killed before the move can happen. Logging out is easy, killing session processes too, so let's check which daemons are running for my user.
+
+One can now log out as a regular user and log in as root on the display and the keyboard attached to the system, if any. As this particular machine is headless and without an input device, I opted to log in as root via SSH. To do this, one has to replace the line in the OpenSSH daemon configuration file /etc/ssh/sshd_config. Instead of
+
+** Moving the home directory
+
+It looks like we can finally log in as root and perform the move. Let's first get the existing symlink out of the way.
+
+#+begin_src sh
+rm /home
+#+end_src
+
+ZFS is smart enough to unmount and mount on filesystem rename so running just zfs-rename(8) should do the whole job for us.
+
+#+begin_src sh
+sudo zfs rename zroot/usr/home zroot/home
+#+end_src
+
+That went with issues, good! Let's use zfs-get(8) to see what we got.
+
+# zfs get mountpoint zroot/home
+NAME        PROPERTY    VALUE        SOURCE
+zroot/home  mountpoint  /zroot/home  inherited from zroot
+# ls /zroot
+home
+
+Honestly, /zroot is not exactly the place where we want the home directory to be. Let's fix that using zfs-set(8).
+
+#+begin_src sh
+sudo zfs set mountpoint=/home zroot/home
+sudo zfs get mountpoint zroot/home
+sudo ls /zroot
+#+end_src
+
+zroot/home  mountpoint  /home       local
+
+It looks like that worked. Is the home directory finally where it should be?
+
+#+begin_src sh
+sudo ls -ld /home
+#+end_src
+
+drwxr-xr-x  3 root wheel 3 15 kol  00:25 /home
+
+The home directory is indeed in its proper place, great!
+
+And that's it! That's what I like about FreeBSD (and ZFS), there is absolutely no need to reinstall the operating system just to get all the latest and greatest directory hierarchy conventions from 14.0-RELEASE applied. To the contrary, the required changes can be done fairly easily in an existing installation that was upgraded from 13.2-RELEASE or 12.4-RELEASE.
