@@ -653,18 +653,16 @@ sudo su
 create the main dataset under zpool
 
 #+BEGIN_SRC sh
-zfs create zroot/data
-zfs create zroot/data/desktop
-zfs create zroot/data/documents
-zfs create zroot/data/downloads
-zfs create zroot/data/git
-zfs create zroot/data/kodi
-zfs create zroot/data/config
-zfs create zroot/data/emacsd
-zfs create zroot/data/local
-zfs create zroot/data/mozilla
-zfs create zroot/data/ossuary
-zfs create zroot/data/weechat
+zfs create zroot/home/data
+zfs create zroot/home/data/desktop
+zfs create zroot/home/data/documents
+zfs create zroot/home/data/downloads
+zfs create zroot/home/data/git
+zfs create zroot/home/data/config
+zfs create zroot/home/data/local
+zfs create zroot/home/data/mozilla
+zfs create zroot/home/data/ossuary
+zfs create zroot/home/data/weechat
 #+END_SRC
 
 *** copy directories to zfs datasets
@@ -672,17 +670,15 @@ zfs create zroot/data/weechat
 copy files to the dataset before setting the mount point and mounting the dataset
 
 #+BEGIN_SRC sh
-sudo cp -Rpv /home/djwilcox/Desktop/ /zroot/data/desktop
-sudo cp -Rpv /home/djwilcox/documents/ /zroot/data/documents
-sudo cp -Rpv /home/djwilcox/downloads/ /zroot/data/downloads
-sudo cp -Rpv /home/djwilcox/git/ /zroot/data/git
-sudo cp -Rpv /home/djwilcox/.kodi/ /zroot/data/kodi
-sudo cp -Rpv /home/djwilcox/.config/ /zroot/data/config
-sudo cp -Rpv /home/djwilcox/.emacs.d/ /zroot/data/emacsd
-sudo cp -Rpv /home/djwilcox/.local/ /zroot/data/local
-sudo cp -Rpv /home/djwilcox/.mozilla/ /zroot/data/mozilla
-sudo cp -Rpv /home/djwilcox/.ossuary/ /zroot/data/ossuary
-sudo cp -Rpv /home/djwilcox/.weechat/ /zroot/data/weechat
+sudo cp -Rpv /home/djwilcox/Desktop/ /zroot/home/data/desktop
+sudo cp -Rpv /home/djwilcox/documents/ /zroot/home/data/documents
+sudo cp -Rpv /home/djwilcox/downloads/ /zroot/home/data/downloads
+sudo cp -Rpv /home/djwilcox/git/ /zroot/home/data/git
+sudo cp -Rpv /home/djwilcox/.config/ /zroot/home/data/config
+sudo cp -Rpv /home/djwilcox/.local/ /zroot/home/data/local
+sudo cp -Rpv /home/djwilcox/.mozilla/ /zroot/home/data/mozilla
+sudo cp -Rpv /home/djwilcox/.ossuary/ /zroot/home/data/ossuary
+sudo cp -Rpv /home/djwilcox/.weechat/ /zroot/home/data/weechat
 #+END_SRC
 
 we use the -r option for recursive copy  
