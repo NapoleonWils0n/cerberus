@@ -269,6 +269,8 @@ I will prepare a boot environment just in case after installing them something b
 I need to upgrade this host to the latest version of FreeBSD 12.0, p3.  
 This is where we need a new boot environment. I’ll name it after the release.
 
+run the beadm commands as root
+
 #+BEGIN_SRC sh
 beadm create 12.0-p3
 #+END_SRC
@@ -323,7 +325,7 @@ create a zfs snapshot
 zfs snapshot -r zroot@12.0-p3
 #+END_SRC
 
-** blue freebsd stop
+** bluetooth freebsd stop
 
 #+BEGIN_SRC sh
 sudo service bluetooth onestop ubt0
