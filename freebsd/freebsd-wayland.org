@@ -316,6 +316,43 @@ enable dict
 sudo sysrc dictd_enable="YES"
 #+end_src
 
+** audio
+*** set vol to 100
+
+#+begin_src sh
+mixer vol.volume=100:100
+#+end_src
+
+*** set pcm to 100
+
+#+begin_src sh
+mixer pcm.volume=100:100
+#+end_src
+
+*** set rec to 100
+
+#+begin_src sh
+mixer rec.volume=100:100
+#+end_src
+
+*** set monitor to 100
+
+#+begin_src sh
+mixer monitor.volume=100:100
+#+end_src
+
+*** mute
+
+#+begin_src sh
+mixer vol.mute=1
+#+end_src
+
+*** unmute
+
+#+begin_src sh
+mixer vol.mute=0
+#+end_src
+
 ** mount ext4 as read only
 	
 add user to operator group
