@@ -1,0 +1,246 @@
+#+STARTUP: content
+* build custom kernel
+** dump smc stats from mac osx
+
+You need to have SMCFanControl on your system and know where the smcFanControl.app is located.
+[[smc fan control][https://github.com/hholtmann/smcFanControl/tree/master/smc-command]]
+
+Open Terminal, cd to the directory that has the smcFanControl.app
+
+#+BEGIN_SRC sh
+cd /Applications/smcFanControl.app/Contents/Resources
+#+END_SRC
+
+dump the smc stats to a text file on the desktop
+
+#+BEGIN_SRC sh
+type ./smc -l
+#+END_SRC
+
+** bless freebsd efi partition
+
+boot in to mac recovery by pressing option and selecting
+disable sips on the mac so we can use the bless comand on the efi partition for freebsd
+
+#+BEGIN_SRC sh
+sudo csrutil disable
+#+END_SRC
+
+shut the mac
+boot into mac osx ,open the terminal
+
+list the disk with diskutil
+
+#+BEGIN_SRC sh
+diskutil list
+#+END_SRC
+
+switch to root
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+create a mount point called ESP in /Volumes
+
+#+BEGIN_SRC sh
+mkdir /Volumes/ESP
+#+END_SRC
+
+mount the efi partition you found by running diskutil list, it will have efi next to the drive
+
+#+BEGIN_SRC sh
+mount -t msdos /dev/disk0s1 /Volumes/ESP
+#+END_SRC
+
+bless the freebsd efi file
+
+#+BEGIN_SRC sh
+bless --mount /Volumes/ESP --setBoot --file /Volumes/ESP/EFI/BOOT/BOOTX64.efi --shortform
+#+END_SRC
+
+unmount the /Volume/ESP and the mounted freebsd efi partition
+
+#+BEGIN_SRC sh
+umount /Volumes/ESP
+#+END_SRC
+
+exit root
+
+#+BEGIN_SRC sh
+exit
+#+END_SRC
+
+** git check out src
+
+install git
+
+#+BEGIN_SRC sh
+sudo pkg install git
+#+END_SRC
+
+checkout src to /usr/src
+replace 13.2 with the release you want
+
+#+begin_src sh
+sudo git clone -b releng/13.2 --depth 1 https://git.freebsd.org/src.git /usr/src
+#+end_src
+
+** asmc add macbook air entries
+
+Change directory into the asmc directory you checked out with subversion
+
+#+BEGIN_SRC sh
+cd /usr/src/sys/dev/asmc/
+#+END_SRC
+
+Back up asmc.c and asmcvar.h  
+and add .bak extension
+
+#+BEGIN_SRC sh
+cp asmc.c{,.bak}
+#+END_SRC
+
+#+BEGIN_SRC sh
+cp asmcvar.h{,.bak}
+#+END_SRC
+
+edit /usr/src/sys/dev/asmc/asmc.c
+
+#+BEGIN_SRC sh
+sudo vim /usr/src/sys/dev/asmc/asmc.c
+#+END_SRC
+
+add new entry for macbook air 4,1
+
+#+BEGIN_SRC sh
+    {
+     "MacBookAir4,1", "Apple SMC Macbook Air 11-inch (Mid 2011)",
+     ASMC_SMS_FUNCS_DISABLED,
+     ASMC_FAN_FUNCS2, 
+     ASMC_LIGHT_FUNCS,
+     ASMC_MBA4_TEMPS, ASMC_MBA4_TEMPNAMES, ASMC_MBA4_TEMPDESCS
+    },
+#+END_SRC
+
+edit /usr/src/sys/dev/asmc/asmcvar.h
+
+#+BEGIN_SRC sh
+sudo vim /usr/src/sys/dev/asmc/asmcvar.h
+#+END_SRC
+
+add the smc stats we dumped from the mac, you need to add NULL to the end of the array
+
+#+BEGIN_SRC sh
+#define	ASMC_MBA4_TEMPS { "TB0T", "TB1T", "TB2T", "TC0C", \
+                	"TC0D", "TC0E", "TC0F", "TC0P", \
+                        "TC1C", "TC2C", "TCGC", "TCSA", \
+                        "TH0F", "TH0J", "TH0O", "TH0o", \
+                        "TM0P", "TPCD", "Ta0P", "Th1H", \
+                        "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                         NULL }
+
+#define	ASMC_MBA4_TEMPNAMES { "TB0T", "TB1T", "TB2T", "TC0C", \
+                       	   "TC0D", "TC0E", "TC0F", "TC0P", \
+                           "TC1C", "TC2C", "TCGC", "TCSA", \
+                           "TH0F", "TH0J", "TH0O", "TH0o", \
+                           "TM0P", "TPCD", "Ta0P", "Th1H", \
+                           "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                            NULL }
+
+#define	ASMC_MBA4_TEMPDESCS { "TB0T", "TB1T", "TB2T", "TC0C", \
+                           "TC0D", "TC0E", "TC0F", "TC0P", \
+                           "TC1C", "TC2C", "TCGC", "TCSA", \
+                           "TH0F", "TH0J", "TH0O", "TH0o", \
+                           "TM0P", "TPCD", "Ta0P", "Th1H", \
+                           "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
+                            NULL }
+#+END_SRC
+
+After editing the asmc files we can now build the custom kernel
+
+** build generic kernel and modules
+
+Switch to root
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+** new method for building a custom kernel
+
+Do not make edits to GENERIC. Instead, copy the file to a different name and make edits to the copy. The convention is to use a name with all capital letters. When maintaining multiple FreeBSD machines with different hardware, it is a good idea to name it after the machine's hostname. This example creates a copy, named MYKERNEL, of the GENERIC configuration file for the amd64 architecture:
+
+change into the /usr/src/sys/amd64/conf directory
+
+#+BEGIN_SRC sh
+cd /usr/src/sys/amd64/conf
+#+END_SRC
+
+*** copy the GENERIC file to MYKERENL
+
+#+BEGIN_SRC sh
+cp GENERIC MYKERNEL
+#+END_SRC
+
+*** edit the MYKERNEL file with vi
+
+#+BEGIN_SRC sh
+vi MYKERNEL
+#+END_SRC
+
+add the code below to the MYKEREL file,  
+this will include the GENERIC kernel using the include option,  
+and use the ident option to change the identity name to the name of your custom kernel which is the same as the name of the file.
+which in this case is MYKEREL
+
+#+BEGIN_SRC sh
+include GENERIC
+ident MYKERNEL
+#+END_SRC
+
+An include directive is available for use in configuration files. This allows another configuration file to be included in the current one, making it easy to maintain small changes relative to an existing file. If only a small number of additional options or drivers are required, this allows a delta to be maintained with respect to GENERIC, as seen in this example:
+
+Using this method, the local configuration file expresses local differences from a GENERIC kernel. As upgrades are performed, new features added to GENERIC will also be added to the local kernel unless they are specifically prevented using nooptions or nodevice.
+
+*** Change to the /usr/src directory
+
+#+BEGIN_SRC sh
+cd /usr/src
+#+END_SRC
+
+*** Compile the new kernel by specifying the name of the custom kernel configuration file:
+
+#+BEGIN_SRC sh
+make buildkernel KERNCONF=MYKERNEL
+#+END_SRC
+
+Install the new kernel associated with the specified kernel configuration file. This command will copy the new kernel to /boot/kernel/kernel and save the old kernel to /boot/kernel.old/kernel:
+
+#+BEGIN_SRC sh
+make installkernel KERNCONF=MYKERNEL
+#+END_SRC
+
+Shutdown the system and reboot into the new kernel. 
+
+*** old method for building kernel
+
+#+BEGIN_SRC sh
+sudo su
+cd /usr/src/sys/amd64/conf; config GENERIC; cd ../compile/GENERIC && make cleandepend && make depend && make -j 2 && make install
+#+END_SRC
+
+*** keyboard backlight
+
++ keyboard backlight on
+
+#+BEGIN_SRC sh
+sysctl dev.asmc.0.light.control:255
+#+END_SRC
+
++ keyboard backlight off
+
+#+BEGIN_SRC sh
+sysctl dev.asmc.0.light.control:0
+#+END_SRC
+	
