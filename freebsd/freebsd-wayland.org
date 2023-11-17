@@ -3,12 +3,6 @@
 #+OPTIONS: author:nil
 * Freebsd macbook install
 
-
-+ Download iso file
-+ Burn to disc
-+ Insert disc restart mac and hold down alt to boot into efi mode
-
-
 + [[freebsd dotfiles][https://github.com/NapoleonWils0n/freebsd-dotfiles]]
 + [[freebsd root dotfiles][https://github.com/NapoleonWils0n/freebsd-root]]
 + [[freebsd home bin][https://github.com/NapoleonWils0n/freebsd-bin]]
@@ -221,17 +215,98 @@ test config
 wayfire -c ~/.config/wayfire/wayfire.ini
 #+end_src
 
-other package
-wcm
-wayfire-plugins-extra
+** install zsh
 
-HiDPI settings
+install zsh
+
+#+BEGIN_SRC sh
+sudo pkg install zsh zsh-completions zsh-syntax-highlighting
+#+END_SRC
+
+change the shell to bash
+
+#+BEGIN_SRC sh
+chsh -s /usr/local/bin/zsh
+#+END_SRC
+
+add to your ~/.zshrc
 
 #+begin_src sh
-[core]
-xwayland_scale = 2
-[autostart]
-xsettingsd = xsettingsd
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#+end_src
+
+** emacs
+
+#+begin_src sh
+sudo pkg install emacs-devel tree-sitter cantarell-fonts
+#+end_src
+
+add the follwing line to the top of your emacs config
+
+#+begin_src emacs-lisp
+(setq native-comp-deferred-compilation nil
+comp-enable-subr-trampolines nil)
+#+end_src
+
+exit emacs
+
+#+begin_src sh
+rm -rf ~/.emacs.d/eln-cache
+#+end_src
+
+** applications
+
+#+BEGIN_SRC sh
+sudo pkg install abook apg aria2 aspell en-aspell bat dictd fd-find firacode firefox ffmpeg fzf git gstreamer1-plugins-opus hs-pandoc  ImageMagick7 mpc mutt ncmpc noto-basic noto-emoji oath-toolkit obs-studio openvpn ripgrep ripgrep-all socat sox tmux ts translate-shell urlview w3m weechat wl-clipboard yt-dlp wget2 xkbcomp mpv 
+#+END_SRC
+
+enable dict
+
+#+begin_src sh
+sudo sysrc dictd_enable="YES"
+#+end_src
+
+** qtt5
+
+#+begin_src sh
+export QT_QPA_PLATFORMTHEME=qt5ct
+#+end_src
+
+** audio
+*** set vol to 100
+
+#+begin_src sh
+mixer vol.volume=100:100
+#+end_src
+
+*** set pcm to 100
+
+#+begin_src sh
+mixer pcm.volume=100:100
+#+end_src
+
+*** set rec to 100
+
+#+begin_src sh
+mixer rec.volume=100:100
+#+end_src
+
+*** set monitor to 100
+
+#+begin_src sh
+mixer monitor.volume=100:100
+#+end_src
+
+*** mute
+
+#+begin_src sh
+mixer vol.mute=1
+#+end_src
+
+*** unmute
+
+#+begin_src sh
+mixer vol.mute=0
 #+end_src
 
 ** beadm install
@@ -325,31 +400,107 @@ create a zfs snapshot
 zfs snapshot -r zroot@12.0-p3
 #+END_SRC
 
-** bluetooth freebsd stop
+** edit /etc/dhclient-enter-hooks
 
 #+BEGIN_SRC sh
-sudo service bluetooth onestop ubt0
+sudo vim /etc/dhclient-enter-hooks
 #+END_SRC
 
-** install zsh
-
-install zsh
+add the following to /etc/dhclient-enter-hooks
 
 #+BEGIN_SRC sh
-sudo pkg install zsh zsh-completions zsh-syntax-highlighting
+add_new_resolv_conf() {
+  # We don't want /etc/resolv.conf changed
+  # So this is an empty function
+  return 0
+}
 #+END_SRC
 
-change the shell to bash
+** zfs datasets
+
+zfs list datasets
 
 #+BEGIN_SRC sh
-chsh -s /usr/local/bin/zsh
+zfs list
 #+END_SRC
 
-add to your ~/.zshrc
+the name of the main pool is called zpool
 
-#+begin_src sh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#+end_src
++ switch to root
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+*** create the zfs datasets
+
+create the main dataset under zpool
+
+#+BEGIN_SRC sh
+zfs create zroot/home/data
+zfs create zroot/home/data/desktop
+zfs create zroot/home/data/documents
+zfs create zroot/home/data/downloads
+zfs create zroot/home/data/git
+zfs create zroot/home/data/config
+zfs create zroot/home/data/local
+zfs create zroot/home/data/mozilla
+zfs create zroot/home/data/ossuary
+zfs create zroot/home/data/weechat
+#+END_SRC
+
+*** copy directories to zfs datasets
+
+copy files to the dataset before setting the mount point and mounting the dataset
+
+#+BEGIN_SRC sh
+sudo cp -Rpv /home/djwilcox/Desktop/ /zroot/home/data/desktop
+sudo cp -Rpv /home/djwilcox/documents/ /zroot/home/data/documents
+sudo cp -Rpv /home/djwilcox/downloads/ /zroot/home/data/downloads
+sudo cp -Rpv /home/djwilcox/git/ /zroot/home/data/git
+sudo cp -Rpv /home/djwilcox/.config/ /zroot/home/data/config
+sudo cp -Rpv /home/djwilcox/.local/ /zroot/home/data/local
+sudo cp -Rpv /home/djwilcox/.mozilla/ /zroot/home/data/mozilla
+sudo cp -Rpv /home/djwilcox/.ossuary/ /zroot/home/data/ossuary
+sudo cp -Rpv /home/djwilcox/.weechat/ /zroot/home/data/weechat
+#+END_SRC
+
+we use the -r option for recursive copy  
+and the -p option to keep the permissions of the files and directorys  
+and the -v option for verbose
+
+we use ~/documents/ to copy the contents of the documents directory  
+note the slash at the end of the docuemnts path
+
+**** create the mount points in your home directory
+
+create the zfs mount points
+
+#+BEGIN_SRC sh
+zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
+zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
+zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
+zfs set mountpoint=/usr/home/djwilcox/git zroot/data/git
+zfs set mountpoint=/usr/home/djwilcox/.kodi zroot/data/kodi
+zfs set mountpoint=/usr/home/djwilcox/.config zroot/data/config
+zfs set mountpoint=/usr/home/djwilcox/.emacs.d zroot/data/emacsd
+zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
+zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
+zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
+zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
+#+END_SRC
+
++ change the permission on the mountpoint if needed
+
+#+BEGIN_SRC sh
+sudo chown -R djwilcox:djwilcox ~/Desktop
+#+END_SRC
+
++ chmod the permissions to 700
+
+#+BEGIN_SRC sh
+chmod 700 ~/Desktop
+#+END_SRC
 
 ** ports
 
@@ -371,84 +522,11 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 # portsnap fetch update
 #+END_SRC
 
-** emacs
-
-
-#+begin_src sh
-sudo pkg install emacs-devel tree-sitter cantarell-fonts
-#+end_src
-
-add the follwing line to the top of your emacs config
-
-#+begin_src emacs-lisp
-(setq native-comp-deferred-compilation nil
-comp-enable-subr-trampolines nil)
-#+end_src
-
-exit emacs
-
-#+begin_src sh
-rm -rf ~/.emacs.d/eln-cache
-#+end_src
-
-throttle compilation jobs
-
-native-comp-async-jobs-number
-
-** qtt5
-
-#+begin_src sh
-export QT_QPA_PLATFORMTHEME=qt5ct
-#+end_src
-
-** applications
+** bluetooth freebsd stop
 
 #+BEGIN_SRC sh
-sudo pkg install openvpn wget2 ImageMagick7 tmux xkbcomp mpv mpv-mpris abook apg aria2 aspell en-aspell bat dictd fd-find firacode fzf noto-basic noto-emoji mpc mutt ncmpc oath-toolkit ripgrep ripgrep-all socat sox ts translate-shell urlview w3m weechat wl-clipboard yt-dlp git firefox ffmpeg hs-pandoc gstreamer1-plugins-opus
+sudo service bluetooth onestop ubt0
 #+END_SRC
-
-enable dict
-
-#+begin_src sh
-sudo sysrc dictd_enable="YES"
-#+end_src
-
-** audio
-*** set vol to 100
-
-#+begin_src sh
-mixer vol.volume=100:100
-#+end_src
-
-*** set pcm to 100
-
-#+begin_src sh
-mixer pcm.volume=100:100
-#+end_src
-
-*** set rec to 100
-
-#+begin_src sh
-mixer rec.volume=100:100
-#+end_src
-
-*** set monitor to 100
-
-#+begin_src sh
-mixer monitor.volume=100:100
-#+end_src
-
-*** mute
-
-#+begin_src sh
-mixer vol.mute=1
-#+end_src
-
-*** unmute
-
-#+begin_src sh
-mixer vol.mute=0
-#+end_src
 
 ** mount ext4 as read only
 	
@@ -571,152 +649,6 @@ sudo dbus-uuidgen > /etc/machine-id
 % make
 % sudo make install
 #+end_src
-
-** edit /etc/dhclient-enter-hooks
-
-#+BEGIN_SRC sh
-sudo vim /etc/dhclient-enter-hooks
-#+END_SRC
-
-add the following to /etc/dhclient-enter-hooks
-
-#+BEGIN_SRC sh
-add_new_resolv_conf() {
-  # We don't want /etc/resolv.conf changed
-  # So this is an empty function
-  return 0
-}
-#+END_SRC
-
-** pf firewall emerging threats
-
-create /etc/pf.anchors/emerging-threats
-
-#+BEGIN_SRC sh
-sudo vim /etc/pf.anchors/emerging-threats
-#+END_SRC
-
-add the follow to the file
-
-#+BEGIN_SRC sh
-table <emerging_threats> persist file "/etc/emerging-Block-IPs.txt"
-block log from <emerging_threats> to any
-#+END_SRC
-
-*** edit the /etc/pf.conf file
-
-#+BEGIN_SRC sh
-sudo vim /etc/pf.conf
-#+END_SRC
-
-add the following code to the file
-
-#+BEGIN_SRC sh
-anchor "emerging-threats"
-load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
-#+END_SRC
-
-*** download emerging threats text file
-
-#+BEGIN_SRC sh
-$ curl http://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt -o /tmp/emerging-Block-IPs.txt
-$ sudo cp /tmp/emerging-Block-IPs.txt /etc
-$ sudo chmod 644 /etc/emerging-Block-IPs.txt
-$ sudo pfctl -f /etc/pf.conf
-#+END_SRC
-
-*** logging
-
-#+BEGIN_SRC sh
-$ sudo ifconfig pflog0 create
-$ sudo tcpdump -n -e -ttt -i pflog0
-#+END_SRC
-
-* zfs datasets
-
-zfs list datasets
-
-#+BEGIN_SRC sh
-zfs list
-#+END_SRC
-
-the name of the main pool is called zpool
-
-+ switch to root
-
-#+BEGIN_SRC sh
-sudo su
-#+END_SRC
-
-** create the zfs datasets
-
-create the main dataset under zpool
-
-#+BEGIN_SRC sh
-zfs create zroot/home/data
-zfs create zroot/home/data/desktop
-zfs create zroot/home/data/documents
-zfs create zroot/home/data/downloads
-zfs create zroot/home/data/git
-zfs create zroot/home/data/config
-zfs create zroot/home/data/local
-zfs create zroot/home/data/mozilla
-zfs create zroot/home/data/ossuary
-zfs create zroot/home/data/weechat
-#+END_SRC
-
-*** copy directories to zfs datasets
-
-copy files to the dataset before setting the mount point and mounting the dataset
-
-#+BEGIN_SRC sh
-sudo cp -Rpv /home/djwilcox/Desktop/ /zroot/home/data/desktop
-sudo cp -Rpv /home/djwilcox/documents/ /zroot/home/data/documents
-sudo cp -Rpv /home/djwilcox/downloads/ /zroot/home/data/downloads
-sudo cp -Rpv /home/djwilcox/git/ /zroot/home/data/git
-sudo cp -Rpv /home/djwilcox/.config/ /zroot/home/data/config
-sudo cp -Rpv /home/djwilcox/.local/ /zroot/home/data/local
-sudo cp -Rpv /home/djwilcox/.mozilla/ /zroot/home/data/mozilla
-sudo cp -Rpv /home/djwilcox/.ossuary/ /zroot/home/data/ossuary
-sudo cp -Rpv /home/djwilcox/.weechat/ /zroot/home/data/weechat
-#+END_SRC
-
-we use the -r option for recursive copy  
-and the -p option to keep the permissions of the files and directorys  
-and the -v option for verbose
-
-we use ~/documents/ to copy the contents of the documents directory  
-note the slash at the end of the docuemnts path
-
-**** create the mount points in your home directory
-
-create the zfs mount points
-
-#+BEGIN_SRC sh
-zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
-zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
-zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
-zfs set mountpoint=/usr/home/djwilcox/git zroot/data/git
-zfs set mountpoint=/usr/home/djwilcox/.kodi zroot/data/kodi
-zfs set mountpoint=/usr/home/djwilcox/.config zroot/data/config
-zfs set mountpoint=/usr/home/djwilcox/.emacs.d zroot/data/emacsd
-zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
-zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
-zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
-zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
-#+END_SRC
-
-+ change the permission on the mountpoint if needed
-
-#+BEGIN_SRC sh
-sudo chown -R djwilcox:djwilcox ~/Desktop
-#+END_SRC
-
-+ chmod the permissions to 700
-
-#+BEGIN_SRC sh
-chmod 700 ~/Desktop
-#+END_SRC
 
 ** shutdown
 
