@@ -3,8 +3,8 @@
 #+OPTIONS: author:nil
 * Freebsd macbook install
 
-+ [[freebsd dotfiles][https://github.com/NapoleonWils0n/freebsd-dotfiles]]
 + [[freebsd root dotfiles][https://github.com/NapoleonWils0n/freebsd-root]]
++ [[freebsd dotfiles][https://github.com/NapoleonWils0n/freebsd-dotfiles]]
 + [[freebsd home bin][https://github.com/NapoleonWils0n/freebsd-bin]]
 
 ** download freebsd 
@@ -29,9 +29,13 @@ sha512sum -c CHECKSUM.SHA512-FreeBSD-14.0-RELEASE-amd64 FreeBSD-14.0-RELEASE-amd
 
 ** writing an image file to usb
 
+extract the xz file
+
 #+begin_src sh
 xz -dv FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
 #+end_src
+
+dd the image to a usb drive
 
 #+begin_src sh
 sudo dd if=FreeBSD-14.0-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=sync
@@ -50,13 +54,7 @@ for apple hardware choose gpt (bios+uefi)
 
 ** set the root password
 
-set the root password
-
-** change settings to insecure
-
-#+BEGIN_SRC sh
-console none unknown off insecure
-#+END_SRC
+set the root password during the install
 
 ** bootstrap the system
 
@@ -117,7 +115,13 @@ change setting from secure to insecure to require root password
 edit /etc/ttys
 
 #+BEGIN_SRC sh
-sudo nano /etc/ttys
+sudo vi /etc/ttys
+#+END_SRC
+
+change the settings to insecure
+
+#+BEGIN_SRC sh
+console none unknown off insecure
 #+END_SRC
 
 ** drivers
@@ -148,13 +152,11 @@ kld_list="i915kms"
 
 ** wayland
 
-It has been reported that ZFS users may experience issues with some Wayland clients because they need access to posix_fallocate() in the runtime directory. While the author could not reproduce this issue on their ZFS system, a recommended workaround is not to use ZFS for the runtime directory and instead use tmpfs for the /var/run directory. In this case, the tmpfs file system is used for /var/run and mounted through the command mount -t tmpfs tmpfs /var/run command and then make this change persist across reboots through /etc/fstab. The XDG_RUNTIME_DIR environment variable could be configured to use /var/run/user/$UID and avoid potential pitfalls with ZFS. Consider that scenario when reviewing the configuration examples in the following sections.
-
 #+begin_src sh
 sudo pkg install wayland wayland-protocols seatd qt5ct qt5-wayland 
 #+end_src
 
-gtk-layer-shell gtk4
+*** create the xdg runtime directory, change the user and set the permissions
 
 #+begin_src sh
 sudo mkdir -p /var/run/user/1001
@@ -162,7 +164,19 @@ sudo chown -R djwilcox:wheel /var/run/user/1001
 sudo chmod 700 /var/run/user/1001
 #+end_src
 
-set the runtime dir
+*** set the runtime dir in the console
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+*** set the runtime dir in your zshrc config
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+export the XDG_RUNTIME_DIR
 
 #+begin_src sh
 export XDG_RUNTIME_DIR=/var/run/user/`id -u`
@@ -273,43 +287,105 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 #+end_src
 
 ** audio
-*** set vol to 100
+
+*** freebsd set default audio
+
+view detected audio devices
+
+#+BEGIN_SRC sh
+cat /dev/sndstat
+#+END_SRC
+
+change to the first audio device
+
+#+BEGIN_SRC sh
+sudo sysctl hw.snd.default_unit=1
+#+END_SRC
+
+change to the second audio device
+
+#+BEGIN_SRC sh
+sudo sysctl hw.snd.default_unit=2
+#+END_SRC
+
+**** freebsd bit perfect audio 
+
+list audio devices
+
+#+BEGIN_SRC sh
+cat /dev/sndstat
+#+END_SRC
+
+set values at boot
+
+#+BEGIN_SRC sh
+sudo vim /etc/sysctl.conf
+#+END_SRC
+
+edit /etc/sysctl.conf
+
+replace dev.pcm.2 with the number of your audio device
+
+#+BEGIN_SRC sh
+dev.pcm.2.play.vchans=0
+dev.pcm.2.bitperfect=1
+#+END_SRC
+
++ regular audio
+
+#+BEGIN_SRC sh
+sudo sysctl dev.pcm.2.bitperfect=0
+#+END_SRC
+
++ bit perfect
+
+#+BEGIN_SRC sh
+sudo sysctl dev.pcm.2.bitperfect=1
+#+END_SRC
+
++ show volume
+
+#+BEGIN_SRC sh
+mixer
+#+END_SRC
+
+***** set vol to 100
 
 #+begin_src sh
 mixer vol.volume=100:100
 #+end_src
 
-*** set pcm to 100
+***** set pcm to 100
 
 #+begin_src sh
 mixer pcm.volume=100:100
 #+end_src
 
-*** set rec to 100
+***** set rec to 100
 
 #+begin_src sh
 mixer rec.volume=100:100
 #+end_src
 
-*** set monitor to 100
+***** set monitor to 100
 
 #+begin_src sh
 mixer monitor.volume=100:100
 #+end_src
 
-*** mute
+***** mute
 
 #+begin_src sh
 mixer vol.mute=1
 #+end_src
 
-*** unmute
+***** unmute
 
 #+begin_src sh
 mixer vol.mute=0
 #+end_src
 
-** beadm install
+**** beadm install
 
 #+BEGIN_SRC sh
 pkg install beadm
@@ -339,7 +415,7 @@ freebsd-update fetch
 The updates have been downloaded but still haven’t been installed.  
 I will prepare a boot environment just in case after installing them something breaks
 
-*** create new boot environment
+***** create new boot environment
 
 I need to upgrade this host to the latest version of FreeBSD 12.0, p3.  
 This is where we need a new boot environment. I’ll name it after the release.
@@ -373,7 +449,7 @@ the 12.0-p3 environment has an R, so it will be active after a reboot.
 
 Reboot. After the reboot, you’ll see the new environment is running.
 
-**** install updates in new boot environment
+****** install updates in new boot environment
 
 install update in new boot environment
 
@@ -400,7 +476,7 @@ create a zfs snapshot
 zfs snapshot -r zroot@12.0-p3
 #+END_SRC
 
-** edit /etc/dhclient-enter-hooks
+**** edit /etc/dhclient-enter-hooks
 
 #+BEGIN_SRC sh
 sudo vim /etc/dhclient-enter-hooks
@@ -416,7 +492,7 @@ add_new_resolv_conf() {
 }
 #+END_SRC
 
-** zfs datasets
+**** zfs datasets
 
 zfs list datasets
 
@@ -432,7 +508,7 @@ the name of the main pool is called zpool
 sudo su
 #+END_SRC
 
-*** create the zfs datasets
+***** create the zfs datasets
 
 create the main dataset under zpool
 
@@ -449,7 +525,7 @@ zfs create zroot/home/data/ossuary
 zfs create zroot/home/data/weechat
 #+END_SRC
 
-*** copy directories to zfs datasets
+***** copy directories to zfs datasets
 
 copy files to the dataset before setting the mount point and mounting the dataset
 
@@ -472,7 +548,7 @@ and the -v option for verbose
 we use ~/documents/ to copy the contents of the documents directory  
 note the slash at the end of the docuemnts path
 
-**** create the mount points in your home directory
+****** create the mount points in your home directory
 
 create the zfs mount points
 
@@ -502,7 +578,7 @@ sudo chown -R djwilcox:djwilcox ~/Desktop
 chmod 700 ~/Desktop
 #+END_SRC
 
-** ports
+**** ports
 
 To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 
@@ -522,13 +598,13 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 # portsnap fetch update
 #+END_SRC
 
-** bluetooth freebsd stop
+**** bluetooth freebsd stop
 
 #+BEGIN_SRC sh
 sudo service bluetooth onestop ubt0
 #+END_SRC
 
-** mount ext4 as read only
+**** mount ext4 as read only
 	
 add user to operator group
 
@@ -614,7 +690,7 @@ Now mounting USB drive with ext4 filesystem is working!
 ext4fuse /dev/da0s1 /mnt/usb
 #+end_src
 
-*** gpg
+***** gpg
 To export your secret keys, use:
 
 #+begin_src sh
@@ -627,13 +703,13 @@ and to import them again:
 gpg --import secret.key
 #+end_src
 
-*** freebsd dbus
+***** freebsd dbus
 
 #+begin_src sh
 sudo dbus-uuidgen > /etc/machine-id
 #+end_src
 
-** chromium widevine
+**** chromium widevine
 
 [[https://forums.freebsd.org/threads/watching-spotify-and-listening-to-netflix-in-2023.90695/#post-626065]]
 
@@ -650,7 +726,7 @@ sudo dbus-uuidgen > /etc/machine-id
 % sudo make install
 #+end_src
 
-** shutdown
+**** shutdown
 
 shutdown and reboot
 
