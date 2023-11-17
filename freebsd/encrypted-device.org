@@ -89,7 +89,7 @@ zfs set compression=lz4 crypt
 + zfs set mount point
 
 #+BEGIN_SRC sh
-zfs set mountpoint=/usr/home/djwilcox/mnt crypt
+zfs set mountpoint=/home/djwilcox/mnt crypt
 #+END_SRC
 
 + change the permission on the container
@@ -131,7 +131,7 @@ mdconfig -a -t vnode -f disk.img -u 0
 + use geli with the path to the key and device
 
 #+BEGIN_SRC sh
-geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
+geli attach -k /home/djwilcox/.ossuary/ossuary.key /dev/md0
 #+END_SRC
 
 + we need to import the zpool which will also mount the container
