@@ -272,13 +272,41 @@ rm -rf ~/.emacs.d/eln-cache
 ** applications
 
 #+BEGIN_SRC sh
-sudo pkg install abook apg aria2 aspell en-aspell bat dictd fd-find firacode firefox ffmpeg fzf git gstreamer1-plugins-opus hs-pandoc  ImageMagick7 mpc mutt ncmpc noto-basic noto-emoji oath-toolkit obs-studio openvpn ripgrep ripgrep-all socat sox tmux ts translate-shell urlview w3m weechat wl-clipboard yt-dlp wget2 xkbcomp mpv 
+sudo pkg install abook adwaita-qt5 adwaita-qt6 apg aria2 aspell en-aspell bat dictd fd-find firacode firefox ffmpeg fzf git gstreamer1-plugins-opus hs-pandoc  ImageMagick7 mpc mutt ncmpc noto-basic noto-emoji oath-toolkit obs-studio openvpn ripgrep ripgrep-all socat sox tmux ts translate-shell urlview w3m weechat wl-clipboard yt-dlp wget2 xkbcomp mpv 
 #+END_SRC
 
 enable dict
 
 #+begin_src sh
 sudo sysrc dictd_enable="YES"
+#+end_src
+
+** obs studio
+
+#+begin_src sh
+sudo pkg install obs-studio qt6-wayland
+#+end_src
+
+Only root can grant real-time priority to processes for now, using rtprio(1).
+Upcoming FreeBSD releases will have a MAC policy with a realtime user group.
+
+Memory locking has to be allowed in /etc/login.conf or ~/.login_conf. Set the
+resource limit ":memorylocked=unlimited:" and don't forget to run
+
+#+begin_src sh
+vi ~/.login_conf
+#+end_src
+
+#+begin_src conf
+me:\
+  :charset=UTF-8:\
+  :lang=en_GB.UTF-8:\
+  :setenv=LC_COLLATE=C:\
+  :memorylocked=unlimited:
+#+end_src
+
+#+begin_src sh
+cap_mkdb ~/.login.conf
 #+end_src
 
 ** qtt5
