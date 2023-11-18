@@ -224,12 +224,6 @@ ipv6_servers = false
 server_names = ['google']
 #+END_SRC
 
-+ disable dnscrypt_servers
-
-#+BEGIN_SRC sh
-dnscrypt_servers = false
-#+END_SRC
-
 + require_dnssec
   
 #+BEGIN_SRC sh
@@ -292,9 +286,9 @@ cache_neg_max_ttl = 600
 use the sysrc command as root to add commands to /etc/rc.conf
 
 #+BEGIN_SRC sh
-sysrc dnscrypt_proxy_enable="YES"
-sysrc dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
-sysrc dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
+sudo sysrc dnscrypt_proxy_enable="YES"
+sudo sysrc dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
+sudo sysrc dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
 #+END_SRC
 
 we also need to enable unbound in the /etc/rc.conf
