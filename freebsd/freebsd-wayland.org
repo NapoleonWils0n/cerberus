@@ -504,10 +504,330 @@ create a zfs snapshot
 zfs snapshot -r zroot@12.0-p3
 #+END_SRC
 
-** edit /etc/dhclient-enter-hooks
+** unbound dns server
+
+Select local_unbound during freebsd setup
+or install the unbound package
+
++ switch to root using sudo 
 
 #+BEGIN_SRC sh
-sudo vim /etc/dhclient-enter-hooks
+sudo su
+#+END_SRC
+
++ or doas
+
+#+BEGIN_SRC sh
+doas su
+#+END_SRC
+
+install unbound dns server
+
+#+BEGIN_SRC sh
+pkg install unbound
+#+END_SRC
+
+enable unbound to start at boot 
+if you enable unbound during the freebsd the service is called local_unbound
+
+We can use the sysrc command to enable the service in /etc/rc.conf
+
+#+BEGIN_SRC sh
+sysrc local_unbound_enable="YES"
+#+END_SRC
+
+or if you install unbound pkg or port the service with be called unbound
+
+#+BEGIN_SRC sh
+sysrc unbound_enable="YES"
+#+END_SRC
+
+You can also edit the /etc/rc.conf as root to enable unbound
+
+#+BEGIN_SRC sh
+vi /etc/rc.conf
+#+END_SRC
+
+which should look like the following for the local_unbound pkg
+
+#+BEGIN_SRC sh
+local_unbound_enable="YES"
+#+END_SRC
+
+*** ca_root_nss install
+
+Install the ca_root_nss package which contains the trusted internet root CA servers
+This is used by unbound to create the root.key file which is auto trusted
+
+#+BEGIN_SRC sh
+pkg install ca_root_nss
+#+END_SRC
+
+*** unbound config
+
+dnscrypt needs - do-not-query-localhost: no
+in the custom.conf file in order to work
+
+**** unbound custom.conf
+
+Create a custom.conf configuration file for unbound
+switch to root and then create custom.conf
+
+#+BEGIN_SRC sh
+vi /etc/unbound/conf.d/custom.conf
+#+END_SRC
+
+#+BEGIN_SRC sh
+server:
+	include: "/var/unbound/unbound_ad_servers"
+# include: "/etc/unbound/unbound_outgoing_interface"
+	verbosity: 1
+	access-control: 0.0.0.0/0 refuse
+	access-control: 127.0.0.0/8 allow
+	access-control: ::0/0 refuse
+	access-control: ::1 allow
+	access-control: ::ffff:127.0.0.1 allow
+	
+	# enable to not answer id.server and hostname.bind queries.
+	hide-identity: yes
+	hide-version: yes
+	harden-glue: yes
+	harden-dnssec-stripped: yes
+	
+        # dont query localhost needed for dnscrypt-proxy
+        do-not-query-localhost: no
+# remote-control:
+#	control-enable: no
+#+END_SRC
+
+**** unbound forward.conf
+
+edit the unbound forward.conf file as root
+
+#+BEGIN_SRC sh
+vi /etc/unbound/forward.conf
+#+END_SRC
+
+replace the contents of the file with the code below
+this will use dnscrypt as the forwarder
+
+#+BEGIN_SRC sh
+forward-zone:
+	name: "."
+	forward-addr: 127.0.0.1@5353
+#+END_SRC
+
+**** unbound adblocking
+
+Convert the Yoyo.org anti-ad server listing
+into an unbound dns spoof redirection list.
+
+#+BEGIN_SRC sh
+wget -q -O- --header\="Accept-Encoding: gzip" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext' | \
+gunzip | \
+awk '/^127\./{
+        print "local-zone: \"" $2 "\" redirect"
+        print "local-data: \"" $2 " A 127.0.0.1\""
+}' > unbound_ad_servers
+#+END_SRC
+
+Copy unbound_ad_servers file to /etc/unbound as root
+
+#+BEGIN_SRC sh
+cp unbound_ad_servers /etc/unbound
+#+END_SRC
+
+chown the unbound_ad_servers file as root
+
+#+BEGIN_SRC sh
+chown root:unbound /etc/unbound/unbound_ad_servers
+#+END_SRC
+
+edit the unbound custom.conf file as root
+
+#+BEGIN_SRC sh
+vi /etc/unbound/conf.d/custom.conf
+#+END_SRC
+
+add an include statement to add the unbound_ad_servers to the config file
+
+#+BEGIN_SRC sh
+server:
+	include: "/var/unbound/unbound_ad_servers"
+# include: "/etc/unbound/unbound_outgoing_interface"
+	verbosity: 1
+	access-control: 0.0.0.0/0 refuse
+	access-control: 127.0.0.0/8 allow
+	access-control: ::0/0 refuse
+	access-control: ::1 allow
+	access-control: ::ffff:127.0.0.1 allow
+	
+	# enable to not answer id.server and hostname.bind queries.
+	hide-identity: yes
+	hide-version: yes
+	harden-glue: yes
+	harden-dnssec-stripped: yes
+	
+        # dont query localhost needed for dnscrypt-proxy
+        do-not-query-localhost: no
+# remote-control:
+#	control-enable: no
+#+END_SRC
+
+** dnscrypt-proxy2
+*** dnscrypt-proxy2 install
+
+dnscrypt-proxy2 and dns over https 
+
+install dnscrypt-proxy as root
+
+#+BEGIN_SRC sh
+pkg install dnscrypt-proxy2
+#+END_SRC
+
+*** dnscrypt config
+**** dnscrypt-proxy.toml
+
+edit the dnscrypt-proxy.toml as root
+
+#+BEGIN_SRC sh
+vi /usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
+#+END_SRC
+
++ iPv6 blocking
+
+If you don't have IPv6 connectivity, most applications will keep sending DNS queries to resolve IPv6 IP addresses no matter what.
+
+In this scenario, dnscrypt-proxy can immediately respond "there are no IPv6 addresses" instead of sending queries to upstream DNS servers, and waiting for useless responses.
+
+In order to do so, change:
+
+#+BEGIN_SRC sh
+block_ipv6 = false
+#+END_SRC
+
+to:
+
+#+BEGIN_SRC sh
+block_ipv6 = true
+#+END_SRC
+
+You may also want to avoid probing resolvers that are only accessible using IPv6:
+
+#+BEGIN_SRC sh
+ipv6_servers = false
+#+END_SRC
+
++ choose a server
+
+#+BEGIN_SRC sh
+server_names = ['google']
+#+END_SRC
+
++ require_dnssec
+  
+#+BEGIN_SRC sh
+require_dnssec = true
+#+END_SRC
+
++ dnscrypt-proxy.toml file
+  
+The complete dnscrypt-proxy.toml file should look like this
+
+#+BEGIN_SRC sh
+server_names = ['google']
+listen_addresses = ['127.0.0.1:5353']
+max_clients = 250
+ipv4_servers = true
+ipv6_servers = false
+dnscrypt_servers = true
+doh_servers = true
+require_dnssec = true
+require_nolog = true
+require_nofilter = true
+force_tcp = false
+timeout = 2500
+keepalive = 30
+cert_refresh_delay = 240
+fallback_resolver = '9.9.9.9:53'
+ignore_system_dns = false
+netprobe_timeout = 60
+log_files_max_size = 10
+log_files_max_age = 7
+log_files_max_backups = 1
+block_ipv6 = true
+cache = true
+cache_size = 512
+cache_min_ttl = 600
+cache_max_ttl = 86400
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+[query_log]
+  format = 'tsv'
+[nx_log]
+  format = 'tsv'
+[blacklist]
+[ip_blacklist]
+[whitelist]
+[schedules]
+[sources]
+  [sources.'public-resolvers']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v2/public-resolvers.md']
+  cache_file = 'public-resolvers.md'
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  refresh_delay = 72
+  prefix = ''
+[static]
+
+#+END_SRC
+
+*** rc.conf
+
+use the sysrc command as root to add commands to /etc/rc.conf
+
+#+BEGIN_SRC sh
+sudo sysrc dnscrypt_proxy_enable="YES"
+sudo sysrc dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
+sudo sysrc dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
+#+END_SRC
+
+we also need to enable unbound in the /etc/rc.conf
+
+#+BEGIN_SRC sh
+# unbound dns
+local_unbound_enable="YES"
+# dnscrypt
+dnscrypt_proxy_enable="YES"
+dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
+dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
+#+END_SRC
+
+*** resolv.conf
+
+Stop unbound dns server and take down interfaces before editing resolv.conf
+
+#+BEGIN_SRC sh
+doas service local_unbound stop
+doas ifconfig bge0 down
+doas vim /etc/resolv.conf
+doas service local_unbound start
+doas ifconfig bge0 up
+#+END_SRC
+
+edit /etc/resolv.conf
+
+#+BEGIN_SRC sh
+# Generated by resolvconf
+search localdomain
+nameserver 127.0.0.1
+options edns0
+#+END_SRC
+
+avoid overwriting /etc/resolv.conf
+edit /etc/dhclient-enter-hooks as root
+
+#+BEGIN_SRC sh
+vi /etc/dhclient-enter-hooks
 #+END_SRC
 
 add the following to /etc/dhclient-enter-hooks
@@ -519,6 +839,24 @@ add_new_resolv_conf() {
   return 0
 }
 #+END_SRC
+
+protect your /etc/resolv.conf from being modified by setting the immutable (write-protection) attribute as root
+
+#+BEGIN_SRC sh
+chattr +i /etc/resolv.conf
+#+END_SRC
+
+** dnscrypt check
+
+check dnscrypt-proxy can resolve a domain
+
+#+BEGIN_SRC sh
+dnscrypt-proxy -resolve google.com
+#+END_SRC
+
++ website to test dnsec is working
+
+[[https://dnssec.vs.uni-due.de/][dnsec test]]
 
 ** zfs datasets
 
