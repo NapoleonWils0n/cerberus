@@ -894,11 +894,12 @@ zfs create zroot/home/data/desktop
 zfs create zroot/home/data/documents
 zfs create zroot/home/data/downloads
 zfs create zroot/home/data/git
+zfs create zroot/home/data/music
+zfs create zroot/home/data/video
+zfs create zroot/home/data/torrents
 zfs create zroot/home/data/config
 zfs create zroot/home/data/local
 zfs create zroot/home/data/mozilla
-zfs create zroot/home/data/ossuary
-zfs create zroot/home/data/weechat
 #+END_SRC
 
 *** copy directories to zfs datasets
@@ -910,11 +911,12 @@ sudo cp -Rpv /home/djwilcox/Desktop/ /zroot/home/data/desktop
 sudo cp -Rpv /home/djwilcox/documents/ /zroot/home/data/documents
 sudo cp -Rpv /home/djwilcox/downloads/ /zroot/home/data/downloads
 sudo cp -Rpv /home/djwilcox/git/ /zroot/home/data/git
+sudo cp -Rpv /home/djwilcox/music/ /zroot/home/data/music
+sudo cp -Rpv /home/djwilcox/video/ /zroot/home/data/video
+sudo cp -Rpv /home/djwilcox/torrents/ /zroot/home/data/torrents
 sudo cp -Rpv /home/djwilcox/.config/ /zroot/home/data/config
 sudo cp -Rpv /home/djwilcox/.local/ /zroot/home/data/local
 sudo cp -Rpv /home/djwilcox/.mozilla/ /zroot/home/data/mozilla
-sudo cp -Rpv /home/djwilcox/.ossuary/ /zroot/home/data/ossuary
-sudo cp -Rpv /home/djwilcox/.weechat/ /zroot/home/data/weechat
 #+END_SRC
 
 we use the -r option for recursive copy  
@@ -929,17 +931,16 @@ note the slash at the end of the docuemnts path
 create the zfs mount points
 
 #+BEGIN_SRC sh
-zfs set mountpoint=/usr/home/djwilcox/Desktop zroot/data/desktop
-zfs set mountpoint=/usr/home/djwilcox/documents zroot/data/documents
-zfs set mountpoint=/usr/home/djwilcox/downloads zroot/data/downloads
-zfs set mountpoint=/usr/home/djwilcox/git zroot/data/git
-zfs set mountpoint=/usr/home/djwilcox/.kodi zroot/data/kodi
-zfs set mountpoint=/usr/home/djwilcox/.config zroot/data/config
-zfs set mountpoint=/usr/home/djwilcox/.emacs.d zroot/data/emacsd
-zfs set mountpoint=/usr/home/djwilcox/.local zroot/data/local
-zfs set mountpoint=/usr/home/djwilcox/.mozilla zroot/data/mozilla
-zfs set mountpoint=/usr/home/djwilcox/.ossuary zroot/data/ossuary
-zfs set mountpoint=/usr/home/djwilcox/.weechat zroot/data/weechat
+zfs set mountpoint=/home/djwilcox/Desktop zroot/home/data/desktop
+zfs set mountpoint=/home/djwilcox/documents zroot/home/data/documents
+zfs set mountpoint=/home/djwilcox/downloads zroot/home/data/downloads
+zfs set mountpoint=/home/djwilcox/git zroot/home/data/git
+zfs set mountpoint=/home/djwilcox/music zroot/home/data/music
+zfs set mountpoint=/home/djwilcox/torrents zroot/home/data/torrents
+zfs set mountpoint=/home/djwilcox/video zroot/home/data/video
+zfs set mountpoint=/home/djwilcox/.config zroot/home/data/config
+zfs set mountpoint=/home/djwilcox/.local zroot/home/data/local
+zfs set mountpoint=/home/djwilcox/.mozilla zroot/home/data/mozilla
 #+END_SRC
 
 + change the permission on the mountpoint if needed
