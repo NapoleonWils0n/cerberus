@@ -914,7 +914,7 @@ move your home directory to a new name like username-bak
 mv djwilcox djwilcox-bak
 #+end_src
 
-**** create the zfs datasets
+*** create the zfs datasets
 
 list datasets
 
@@ -936,7 +936,7 @@ zfs create zroot/home/djwilcox/video
 zfs create zroot/home/djwilcox/torrents
 #+END_SRC
 
-**** copy directories to zfs datasets
+*** copy directories to zfs datasets
 
 check the zfs dataset is mounted
 
@@ -948,8 +948,6 @@ copy files to the dataset before setting the mount point and mounting the datase
 
 #+BEGIN_SRC sh
 cp -Rpv /home/djwilcox-bak/ /home/djwilcox
-
-
 cp -Rpv /home/djwilcox-bak/documents/ /zroot/home/documents
 cp -Rpv /home/djwilcox-bak/downloads/ /zroot/home/downloads
 cp -Rpv /home/djwilcox-bak/git/ /zroot/home/git
@@ -966,7 +964,7 @@ and the -v option for verbose
 we use ~/documents/ to copy the contents of the documents directory  
 note the slash at the end of the docuemnts path
 
-***** change mount point permisions
+*** change mount point permisions
 
 change the permission on the mountpoint if needed
 
@@ -993,6 +991,13 @@ chmod 700 /home/djwilcox/pictures
 chmod 700 /home/djwilcox/torrents
 chmod 700 /home/djwilcox/video
 #+END_SRC
+
+*** exit single user mode
+
+exit single user by typing exit
+
+login into your user account and check everything work
+then you can delete the back of your home directory in /home
 
 ** ports
 
