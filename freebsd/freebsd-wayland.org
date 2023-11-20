@@ -1124,12 +1124,6 @@ and to import them again:
 gpg --import secret.key
 #+end_src
 
-** freebsd dbus
-
-#+begin_src sh
-sudo dbus-uuidgen > /etc/machine-id
-#+end_src
-
 ** chromium widevine
 
 [[https://forums.freebsd.org/threads/watching-spotify-and-listening-to-netflix-in-2023.90695/#post-626065]]
