@@ -330,7 +330,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 [[https://forums.freebsd.org/threads/listen-to-music-on-youtube-with-the-music-player-daemon.75289/]]
 
 #+begin_src sh
-mkdir -p ~/config/mpd/playlists
+mkdir -p ~/.config/mpd/playlists
 #+end_src
 
 touch files
