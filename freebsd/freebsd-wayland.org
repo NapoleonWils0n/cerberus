@@ -325,6 +325,7 @@ cap_mkdb ~/.login.conf
 export QT_QPA_PLATFORMTHEME=qt5ct
 #+end_src
 
+** mpd
 ** audio
 *** freebsd set default audio
 
