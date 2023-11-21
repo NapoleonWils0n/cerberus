@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* hide dekstop entries
+
+The visibility of the desktop entry can be controlled in multiple ways. See the Desktop Entry Specification for more information. Add one of the following lines to your .desktop file:
+
+All desktop environments, choose one (or both) of the following:
+Add the line NoDisplay=true for applications that you do not want displayed in the menus.
+Add the line Hidden=true for applications that you consider deleted and do not want displayed in the menus.
+
+Specified desktop environments, choose one of the following where desktop_names is a semicolon-delimited list of desktop environments (e.g. GNOME, GNOME;Xfce;KDE;):
+
+Add the line NotShowIn=desktop_names to hide the entry only in the specified desktop environments.
+Add the line OnlyShowIn=desktop_names to show the entry only in the specified desktop environments.
