@@ -1023,6 +1023,20 @@ exit single user by typing exit
 login into your user account and check everything work
 then you can delete the back of your home directory in /home
 
+** ssh-agent and ssh-add
+
+start the ssh-agent
+
+#+begin_src sh
+eval $(ssh-agent)
+#+end_src
+
+run ssh-add and enter the password for your ssh key
+
+#+begin_src sh
+ssh-add
+#+end_src
+
 ** ports
 
 To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
