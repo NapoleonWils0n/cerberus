@@ -327,7 +327,11 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 ** mpd
 
-[[https://forums.freebsd.org/threads/listen-to-music-on-youtube-with-the-music-player-daemon.75289/]]
+#+begin_src sh
+sudo pkg install musicpd
+#+end_src
+
+create the mpd playlists directory
 
 #+begin_src sh
 mkdir -p ~/.config/mpd/playlists
@@ -336,8 +340,15 @@ mkdir -p ~/.config/mpd/playlists
 touch files
 
 #+begin_src sh
-touch ~/.config/mpd/{database,log,pid,state,sticker.sql,socket}
+touch ~/.config/mpd/{mpd.db,mpd.log,mpd.pid,mpdstate,sticker.sql,socket}
 #+end_src
+
+start mpd
+
+#+begin_src sh
+musicpd &
+#+end_src
+
 
 ** audio
 *** freebsd set default audio
