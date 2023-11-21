@@ -1050,7 +1050,39 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 sudo service bluetooth onestop ubt0
 #+END_SRC
 
-** mount ext4 as read only
+** ext2fs
+
+enable ext2fs with sysrc
+
+#+begin_src sh
+sudo sysrc kld_list="ext2fs"
+#+end_src
+
+or edit your /etc/rc.conf manually
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+enable ext2fs by adding the following code to your rc.conf
+
+#+begin_src conf
+kld_list="ext2fs"
+#+end_src
+
+To load as a kernel loadable module:
+
+#+begin_src sh
+sudo kldload ext2fs
+#+end_src
+
+To mount a ext2fs volume located on /dev/ada1s1:
+
+#+begin_src sh
+mount -t ext2fs /dev/ada1s1 /mnt
+#+end_src
+
+** mount drives devfs rules
 	
 add user to operator group
 
@@ -1111,29 +1143,6 @@ replace username with your username
 
 #+begin_src sh
 sudo chown username:username /mnt/usb
-#+end_src
-
-install ext4 fuse
-
-#+begin_src sh
-sudo pkg install fusefs-ext4fuse
-#+end_src
-
-Lastly, edit /boot/loader.conf to load the module each boot:
-
-#+begin_src sh
-sudo vi /boot/loader.conf
-#+end_src
-
-#+begin_src sh
-fuse_load="YES"
-fusefs_load="YES"
-#+end_src
-
-Now mounting USB drive with ext4 filesystem is working!
-
-#+begin_src sh
-ext4fuse /dev/da0s1 /mnt/usb
 #+end_src
 
 ** gpg
