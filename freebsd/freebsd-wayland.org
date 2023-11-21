@@ -349,7 +349,6 @@ start mpd
 musicpd &
 #+end_src
 
-
 ** audio
 *** freebsd set default audio
 
@@ -1050,38 +1049,6 @@ To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
 sudo service bluetooth onestop ubt0
 #+END_SRC
 
-** ext2fs
-
-enable ext2fs with sysrc
-
-#+begin_src sh
-sudo sysrc kld_list="ext2fs"
-#+end_src
-
-or edit your /etc/rc.conf manually
-
-#+begin_src sh
-sudo vi /etc/rc.conf
-#+end_src
-
-enable ext2fs by adding the following code to your rc.conf
-
-#+begin_src conf
-kld_list="ext2fs"
-#+end_src
-
-To load as a kernel loadable module:
-
-#+begin_src sh
-sudo kldload ext2fs
-#+end_src
-
-To mount a ext2fs volume located on /dev/ada1s1:
-
-#+begin_src sh
-mount -t ext2fs /dev/ada1s1 /mnt
-#+end_src
-
 ** mount drives devfs rules
 	
 add user to operator group
@@ -1114,6 +1081,12 @@ sudo vi /etc/rc.conf
 devfs_system_ruleset="localrules"
 #+end_src
 
+or use sysrc instead
+
+#+begin_src sh
+sudo sysrc devfs_system_ruleset="localrules"
+#+end_src
+
 Next allow regular user to mount file system:
 
 #+begin_src sh
@@ -1143,6 +1116,38 @@ replace username with your username
 
 #+begin_src sh
 sudo chown username:username /mnt/usb
+#+end_src
+
+** ext2fs
+
+enable ext2fs with sysrc
+
+#+begin_src sh
+sudo sysrc kld_list="ext2fs"
+#+end_src
+
+or edit your /etc/rc.conf manually
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+enable ext2fs by adding the following code to your rc.conf
+
+#+begin_src conf
+kld_list="ext2fs"
+#+end_src
+
+To load as a kernel loadable module:
+
+#+begin_src sh
+sudo kldload ext2fs
+#+end_src
+
+To mount a ext2fs volume located on /dev/ada1s1:
+
+#+begin_src sh
+mount -t ext2fs /dev/ada1s1 /mnt/usb
 #+end_src
 
 ** gpg
