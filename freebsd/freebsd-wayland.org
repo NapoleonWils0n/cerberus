@@ -447,6 +447,63 @@ mixer vol.mute=1
 mixer vol.mute=0
 #+end_src
 
+** obs studio
+*** xdg runtime directory
+
+make sure to set up the xdg runtime directory as described earlier
+
+*** dmesg
+
+After logging in run dmesg as root to make sure the device is recognised
+
+#+BEGIN_SRC sh
+# dmesg
+#+END_SRC
+
+*** check dsp devices
+
+Check /dev/dsp* for the device
+
+#+BEGIN_SRC sh
+ls /dev/dsp*
+#+END_SRC
+
+in my case my mic is listed as /dev/dsp2
+
+*** unmute the mic
+
+Un mute the volume for the devices mixer,
+the mixer number for dsp2 will be mixer2
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer2 mic.volume=100:100
+#+END_SRC
+
+*** pavucontrol
+
+obs uses pulse audio so install pavucontrol to adjust the volume
+
+#+begin_src sh
+sudo pkg install pavucontrol
+#+end_src
+
+*** pulseaudio
+
+obs studio use pulseaudio so we need to start pulseaudio before opening obs studio,
+otherwise the mic wont show up 
+
++ start pulse audio
+
+#+BEGIN_SRC sh
+pulseaudio --start
+#+END_SRC
+
++ stop pulseaudio
+
+#+BEGIN_SRC sh
+pulseaudio --kill
+#+END_SRC
+
 ** beadm install
 
 #+BEGIN_SRC sh
