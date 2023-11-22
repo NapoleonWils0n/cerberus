@@ -142,7 +142,7 @@ sudo sysrc kld_list="i915kms"
 or manually edit the config file
 
 #+BEGIN_SRC sh
-sudo vim /etc/rc.conf
+sudo vi /etc/rc.conf
 #+END_SRC
 
 then add the code below to /etc/rc.conf
