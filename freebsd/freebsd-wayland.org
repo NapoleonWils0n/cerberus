@@ -1046,7 +1046,7 @@ vi ~/.gnupg/gpg-agent.conf
 add the following code
 
 #+begin_src conf
-pinentry-program /usr/bin/pinentry-curses
+pinentry-program /usr/local/bin/pinentry-curses
 default-cache-ttl 36000
 max-cache-ttl 36000
 #+end_src
