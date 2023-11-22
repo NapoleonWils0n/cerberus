@@ -196,7 +196,6 @@ The seatd daemon helps manage access to shared system devices for non-root users
 #+begin_src sh
 sudo sysrc seatd_enable="YES"
 sudo sysrc dbus_enable="YES"
-sudo sysrc hald_enable="YES"
 #+end_src
 
 [[https://docs.freebsd.org/en/books/handbook/wayland/]]
@@ -266,17 +265,10 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 sudo pkg install emacs-devel tree-sitter cantarell-fonts
 #+end_src
 
-add the follwing line to the top of your emacs config
-
-#+begin_src emacs-lisp
-(setq native-comp-deferred-compilation nil
-comp-enable-subr-trampolines nil)
-#+end_src
-
-exit emacs
+remove the eln-cache and restart if needed
 
 #+begin_src sh
-rm -rf ~/.emacs.d/eln-cache
+rm -rf ~/.config/emacs/eln-cache
 #+end_src
 
 ** applications
@@ -328,7 +320,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 ** mpd
 
 #+begin_src sh
-sudo pkg install musicpd
+sudo pkg install musicpd musicpc
 #+end_src
 
 create the mpd playlists directory
@@ -542,7 +534,7 @@ This is where we need a new boot environment. I’ll name it after the release.
 run the beadm commands as root
 
 #+BEGIN_SRC sh
-beadm create 12.0-p3
+beadm create 14.0-p0
 #+END_SRC
 
 list the boot environments
@@ -554,7 +546,7 @@ beadm list
 Activate the new boot environment.
 
 #+BEGIN_SRC sh
-beadm activate 12.0-p3
+beadm activate 14.0-p0
 #+END_SRC
 
 list the boot environments
@@ -564,7 +556,7 @@ beadm list
 #+END_SRC
 
 While the default environment has an N, indicating it’s active now,
-the 12.0-p3 environment has an R, so it will be active after a reboot.
+the 14.0-p0 environment has an R, so it will be active after a reboot.
 
 Reboot. After the reboot, you’ll see the new environment is running.
 
@@ -592,7 +584,7 @@ pkg upgrade
 create a zfs snapshot
 
 #+BEGIN_SRC sh
-zfs snapshot -r zroot@12.0-p3
+zfs snapshot -r zroot@14.0-p0
 #+END_SRC
 
 ** unbound dns server
@@ -646,6 +638,8 @@ local_unbound_enable="YES"
 #+END_SRC
 
 *** ca_root_nss install
+
+may be automatically installed
 
 Install the ca_root_nss package which contains the trusted internet root CA servers
 This is used by unbound to create the root.key file which is auto trusted
@@ -991,8 +985,25 @@ ls
 you should now see your home directory
 move your home directory to a new name like username-bak
 
+replace djwilcox with your username
+
 #+begin_src sh
-mv djwilcox djwilcox-bak
+mv djwilcox bak-djwilcox
+#+end_src
+
+next create a direcory called bak-dir in the home directory
+
+#+begin_src sh
+mkdir -p /home/bak-dir
+#+end_src
+
+then move all of the directories from your bak-username home folder into the bak-dir directory
+so that your bak-username directory only contains the dotfiles
+
+#+begin_src sh
+mv /home/bak-djwilcox/desktop /home/bak-dir
+mv /home/bak-djwilcox/documents /home/bak-dir
+mv /home/bak-djwilcox/downloads /home/bak-dir
 #+end_src
 
 *** create the zfs datasets
@@ -1025,18 +1036,24 @@ check the zfs dataset is mounted
 mount
 #+end_src
 
-copy files to the dataset before setting the mount point and mounting the dataset
+copy files from bak-username home directory to the dataset before setting the mount point and mounting the dataset
+replace djwilcox with your username
 
 #+BEGIN_SRC sh
-cp -Rpv /home/djwilcox-bak/ /home/djwilcox
-cp -Rpv /home/djwilcox-bak/documents/ /zroot/home/documents
-cp -Rpv /home/djwilcox-bak/downloads/ /zroot/home/downloads
-cp -Rpv /home/djwilcox-bak/git/ /zroot/home/git
-cp -Rpv /home/djwilcox-bak/music/ /zroot/home/music
-cp -Rpv /home/djwilcox-bak/pictures/ /zroot/home/pictures
-cp -Rpv /home/djwilcox-bak/video/ /zroot/home/video
-cp -Rpv /home/djwilcox-bak/torrents/ /zroot/home/torrents
+cp -Rpv /home/bak-djwilcox/ /home/djwilcox
 #+END_SRC
+
+copy the directories from bak-dir into the new datasets
+
+#+begin_src sh
+cp -Rpv /home/bak-dir/documents/ /zroot/home/documents
+cp -Rpv /home/bak-dir/downloads/ /zroot/home/downloads
+cp -Rpv /home/bak-dir/git/ /zroot/home/git
+cp -Rpv /home/bak-dir/music/ /zroot/home/music
+cp -Rpv /home/bak-dir/pictures/ /zroot/home/pictures
+cp -Rpv /home/bak-dir/video/ /zroot/home/video
+cp -Rpv /home/bak-dir/torrents/ /zroot/home/torrents
+#+end_src
 
 we use the -r option for recursive copy  
 and the -p option to keep the permissions of the files and directorys  
@@ -1078,7 +1095,7 @@ chmod 700 /home/djwilcox/video
 exit single user by typing exit
 
 login into your user account and check everything work
-then you can delete the back of your home directory in /home
+then you can delete the back of your home directory in /home and the bak-dir directory
 
 ** ssh-agent and ssh-add
 
@@ -1095,6 +1112,20 @@ ssh-add
 #+end_src
 
 ** gpg
+
+To export your secret keys, use:
+
+#+begin_src sh
+gpg --export-secret-key -a > secret.key
+#+end_src
+
+and to import them again:
+
+#+begin_src sh
+gpg --import secret.key
+#+end_src
+
+create the gpg-agent.conf file
 
 #+begin_src sh
 vi ~/.gnupg/gpg-agent.conf
@@ -1233,19 +1264,6 @@ To mount a ext2fs volume located on /dev/ada1s1:
 
 #+begin_src sh
 mount -t ext2fs /dev/ada1s1 /mnt/usb
-#+end_src
-
-** gpg
-To export your secret keys, use:
-
-#+begin_src sh
-gpg --export-secret-key -a > secret.key
-#+end_src
-
-and to import them again:
-
-#+begin_src sh
-gpg --import secret.key
 #+end_src
 
 ** chromium widevine
