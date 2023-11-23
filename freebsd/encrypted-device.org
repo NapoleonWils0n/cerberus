@@ -57,9 +57,9 @@ mkdir -p ~/.config/ossuary
 Now we want to create a key for GELI to encrypt with, and attach it to our disk image device:
 
 #+BEGIN_SRC sh
-dd if=/dev/zero of=/usr/home/djwilcox/.config/ossuary/ossuary.key bs=256 count=1
-geli init -e aes -l 256 -s 4096 -K /usr/home/djwilcox/.config/ossuary/ossuary.key /dev/md0
-geli attach -k /usr/home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+dd if=/dev/zero of=/home/djwilcox/.config/ossuary/ossuary.key bs=256 count=1
+geli init -e aes -l 256 -s 4096 -K /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
 #+END_SRC
 
 Enter passphrase:
