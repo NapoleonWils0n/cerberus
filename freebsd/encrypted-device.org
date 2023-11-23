@@ -95,8 +95,14 @@ zfs set mountpoint=/home/djwilcox/mnt crypt
 + change the permission on the container
 
 #+BEGIN_SRC sh
-sudo chmod -R djwilcox:djwilcox ~/mnt
+sudo chown -R djwilcox:djwilcox ~/mnt
 #+END_SRC
+
++ chmod the ~/mnt directory
+
+#+begin_src sh
+chmod 700 ~/mnt
+#+end_src
 
 Finally, when you want to unmount, we also want to detach from GELI and detach from md:
 
