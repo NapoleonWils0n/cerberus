@@ -51,15 +51,15 @@ Here, the -a option forces the disk mounting, -t vnode is used for opening a reg
 create directory to store geli key
 
 #+BEGIN_SRC sh
-mkdir ~/.ossuary
+mkdir -p ~/.config/ossuary
 #+END_SRC
 
 Now we want to create a key for GELI to encrypt with, and attach it to our disk image device:
 
 #+BEGIN_SRC sh
-dd if=/dev/zero of=/usr/home/djwilcox/.ossuary/ossuary.key bs=256 count=1
-geli init -e aes -l 256 -s 4096 -K /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
-geli attach -k /usr/home/djwilcox/.ossuary/ossuary.key /dev/md0
+dd if=/dev/zero of=/usr/home/djwilcox/.config/ossuary/ossuary.key bs=256 count=1
+geli init -e aes -l 256 -s 4096 -K /usr/home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+geli attach -k /usr/home/djwilcox/.config/ossuary/ossuary.key /dev/md0
 #+END_SRC
 
 Enter passphrase:
@@ -131,7 +131,7 @@ mdconfig -a -t vnode -f disk.img -u 0
 + use geli with the path to the key and device
 
 #+BEGIN_SRC sh
-geli attach -k /home/djwilcox/.ossuary/ossuary.key /dev/md0
+geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
 #+END_SRC
 
 + we need to import the zpool which will also mount the container
