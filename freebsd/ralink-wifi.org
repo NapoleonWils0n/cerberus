@@ -1,0 +1,96 @@
+#+STARTUP: content
+* freebsd ralink wifi set up 
+** identify network adaptors
+
+#+begin_src sh
+pciconf -lv | grep -A1 -B3 network
+#+end_src
+
+** loader.conf
+
+#+begin_src sh
+if_run_load="YES"
+runfw_load="YES"
+wlan_wep_load="YES"
+wlan_ccmp_load="YES"
+wlan_tkip_load="YES"
+#+end_src
+
+** create the wifi device
+
+#+begin_src sh
+su
+#+end_src
+
+#+begin_src sh
+ifconfig wlan create wlandev run0
+#+end_src
+
+/etc/rc.conf
+
+#+begin_src sh
+wlans_run0="wlan0"
+ifconfig_wlan0="WPA SYNDHCP"
+#+end_src
+
+** scan for networks
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+scan
+
+#+begin_src sh
+ifconfig wlan0 up list scan
+#+end_src
+
+** pf reload
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+flush and reload pf rules
+
+#+begin_src sh
+pfctl -F all -f /etc/pf.conf
+#+end_src
+
+** wpa_supplicant
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+run wpa_supplicant with the network interface and path to the config
+
+#+begin_src sh
+wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf
+#+end_src
+
+Once you're sure it's working, you can run it in the background, by adding the -B option. 
+
+#+begin_src sh
+wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+#+end_src
+
+** dhclient
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+dhclient
+
+#+begin_src sh
+dhclient wlan0
+#+end_src
