@@ -1244,6 +1244,9 @@ mount -t ext2fs /dev/ada1s1 /mnt/usb
 #+end_src
 
 ** chromium widevine
+
+work in progress the package doesnt seem to show up after being built
+
 *** chromium install
 
 #+begin_src sh
@@ -1283,6 +1286,9 @@ Then run "mount /compat/linux/sys".
 #+begin_src sh
 sudo mount /compat/linux/sys
 #+end_src
+
+shm doesnt get mounted as throws an error
+which mean you have to boot into single user mode to fix the fstab
 
 Some programs need tmpfs mounted on /compat/linux/dev/shm.
 Add the following line to /etc/fstab:
@@ -1361,7 +1367,6 @@ We now have the SSL components we need to sign packages and verify the signature
 #+BEGIN_SRC sh
 pkg install poudriere
 #+END_SRC
-
 
 *** create the distfiles directory
 
