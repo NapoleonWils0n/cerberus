@@ -1248,11 +1248,12 @@ mount -t ext2fs /dev/ada1s1 /mnt/usb
 [[https://forums.freebsd.org/threads/watching-spotify-and-listening-to-netflix-in-2023.90695/#post-626065]]
 
 #+begin_src sh
-% sudo pkg install chromium # 117.0.5938.149_2 or higher
+sudo pkg install chromium # 117.0.5938.149_2 or higher
 
-% sudo pkg install foreign-cdm
-% sudo sysrc linux_enable="YES"
-% sudo service linux start
+sudo sysrc linux_enable="YES"
+sudo service linux start
+
+sudo pkg install foreign-cdm
 
 % git clone --depth 1 https://github.com/freebsd/freebsd-ports
 % cd freebsd-ports/www/linux-widevine-cdm

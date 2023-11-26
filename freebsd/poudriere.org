@@ -105,7 +105,7 @@ ZROOTFS=/poudriere
 # Also note that every protocols supported by fetch(1) are supported here, even
 # file:///
 # Suggested: https://download.FreeBSD.org
-FREEBSD_HOST=ftp://ftp.freebsd.org
+FREEBSD_HOST=https://download.FreeBSD.org
 
 # By default the jails have no /etc/resolv.conf, you will need to set
 # RESOLV_CONF to a file on your hosts system that will be copied has
@@ -395,7 +395,7 @@ PKG_REPO_SIGNING_KEY=/usr/local/etc/ssl/keys/poudriere.key
 *** Creating the Build Environment
 
 #+BEGIN_SRC sh
-# poudriere jail -c -j freebsd_12-0x64 -v 12.0-RELEASE
+# poudriere jail -c -j freebsd_14-0x64 -v 14.0-RELEASE
 #+END_SRC
 
 This will take awhile to complete, so be patient.  
@@ -518,7 +518,7 @@ In the end, your file should look something like this:
 
 #+BEGIN_SRC sh
 Poudriere: {
-    url: "file:///usr/local/poudriere/data/packages/freebsd_12-0x64-HEAD"
+    url: "file:///usr/local/poudriere/data/packages/freebsd_14-0x64-HEAD"
     mirror_type: "srv",
     signature_type: "pubkey",
     pubkey: "/usr/local/etc/ssl/certs/poudriere.cert",
