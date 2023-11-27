@@ -1244,9 +1244,6 @@ mount -t ext2fs /dev/ada1s1 /mnt/usb
 #+end_src
 
 ** chromium widevine
-
-work in progress the package doesnt seem to show up after being built
-
 *** chromium install
 
 #+begin_src sh
@@ -1275,6 +1272,7 @@ kldload -n tmpfs
 #+end_src
 
 *** fstab
+
 Some programs need linprocfs mounted on /compat/linux/proc.
 Add the following line to /etc/fstab:
 
@@ -1299,22 +1297,6 @@ Then run "mount /compat/linux/sys".
 
 #+begin_src sh
 sudo mount /compat/linux/sys
-#+end_src
-
-shm doesnt get mounted as throws an error
-which mean you have to boot into single user mode to fix the fstab
-
-Some programs need tmpfs mounted on /compat/linux/dev/shm.
-Add the following line to /etc/fstab:
-
-#+begin_src conf
-tmpfs    /compat/linux/dev/shm	tmpfs	rw,mode=1777	0	0
-#+end_src
-
-Then run "mount /compat/linux/dev/shm".
-
-#+begin_src sh
-sudo mount /compat/linux/dev/shm
 #+end_src
 
 *** foreign-cdm
@@ -1863,6 +1845,7 @@ To mix packages, add a priority setting to your repository definition, specifyin
 
 *** pkg update
 
+make sure you have switched to root
 Update the repo info:
 
 #+begin_src sh
@@ -1872,7 +1855,31 @@ pkg update -f
 install
 
 #+begin_src sh
-www/linux-widevine-cdm
+pkg install linux-widevine-cdm
+#+end_src
+
+*** chromium ozone and wayland
+
+Since version 97, native Wayland support in Chromium can be enabled with the following flags [6]:
+
+#+begin_src sh
+chrome --ozone-platform-hint=auto
+#+end_src
+
+If this doesn't work, e.g. on version 106 under Weston, then use:
+
+#+begin_src sh
+chrome --ozone-platform=wayland
+#+end_src
+
+you can set the wayland option using the chromium-flags.conf
+
+#+begin_src sh
+vi ~/.config/chromium-flags.conf
+#+end_src
+
+#+begin_src conf
+--ozone-platform=wayland
 #+end_src
 
 ** shutdown
