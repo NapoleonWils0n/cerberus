@@ -1872,14 +1872,68 @@ If this doesn't work, e.g. on version 106 under Weston, then use:
 chrome --ozone-platform=wayland
 #+end_src
 
-you can set the wayland option using the chromium-flags.conf
+you can set the wayland option using the using a desktop entry
+
+copy the chromium-browser.desktop which is used in application launchers
 
 #+begin_src sh
-vi ~/.config/chromium-flags.conf
+cp /usr/local/share/applications/chromium-browser.desktop ~/.local/share/applications
 #+end_src
 
+edit chromium-browser.desktop you just copied in the local share application directory in your home
+
+#+begin_src sh
+vi ~/.local/share/applications/chromium-browser.desktop
+#+end_src
+
+edit the Exec line and set the option to start chromium using wayland
+
 #+begin_src conf
---ozone-platform=wayland
+Exec=chrome --ozone-platform=wayland %U
+#+end_src
+
+the final desktop entry should look like this
+
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=chrome --ozone-platform=wayland %U
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+
+#+end_src
+
+
+*** check widevine drm is working
+
+in the url bar in chromium add the following url to show the chromium flags
+
+#+begin_src conf
+chrome://flags
+#+end_src
+
+if you scroll to the bottom of the page
+
+#+begin_src conf
+Cdm Storage Database
+Start to use the CdmStorageDatabase to store data alongside the MediaLicenseDatabase. If disabled, we will not use CdmStorage* at all, even in MediaLicense* code. – Mac, Windows, Linux, ChromeOS, Fuchsia, Lacros
+
+#cdm-storage-database
+
+Default
+
+Cdm Storage Database Migration
+Use the Cdm Storage Database over the MediaLicenseDatabase for Cdm storage operations. – Mac, Windows, Linux, ChromeOS, Fuchsia, Lacros
+
+#cdm-storage-database-migration
+
+Default
 #+end_src
 
 ** shutdown
