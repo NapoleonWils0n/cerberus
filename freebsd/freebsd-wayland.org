@@ -1260,6 +1260,20 @@ sudo sysrc linux_enable="YES"
 sudo service linux start
 #+end_src
 
+*** tmpfs and nullfs
+
+make sure you have switched to root
+
+enable tmpfs and nullfs in loader.conf
+then use kldload to load them
+
+#+begin_src sh
+sysrc -f /boot/loader.conf nullfs_load=YES
+kldload -n nullfs
+sysrc -f /boot/loader.conf tmpfs_load=YES
+kldload -n tmpfs
+#+end_src
+
 *** fstab
 Some programs need linprocfs mounted on /compat/linux/proc.
 Add the following line to /etc/fstab:
@@ -1748,6 +1762,14 @@ Again, this procedure will take awhile because the entire ports tree must be fet
 poudriere ports -l
 #+END_SRC
 
+*** license
+
+Accepting all possible licenses is also a good idea.
+
+#+begin_src sh
+echo DISABLE_LICENSES=yes >> /usr/local/etc/poudriere.d/make.conf
+#+end_src
+
 *** Creating a Port Building List and Setting Port Options
 
 We will be creating a list of ports that we can pass directly to the command.  
@@ -1844,7 +1866,7 @@ To mix packages, add a priority setting to your repository definition, specifyin
 Update the repo info:
 
 #+begin_src sh
-pkg update
+pkg update -f
 #+end_src
 
 install
