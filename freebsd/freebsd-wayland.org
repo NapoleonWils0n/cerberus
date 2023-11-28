@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: show2levels
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
 * Freebsd macbook install
@@ -1906,11 +1906,9 @@ Exec=chrome --ozone-platform=wayland %U
 Categories=Application;Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
 StartupNotify=true
-
 #+end_src
 
-
-*** check widevine drm is working
+**** check widevine drm is working
 
 in the url bar in chromium add the following url to show the chromium flags
 
@@ -1935,6 +1933,94 @@ Use the Cdm Storage Database over the MediaLicenseDatabase for Cdm storage opera
 
 Default
 #+end_src
+
+** virtual_oss audiofor obs
+
+virtual oss to record sndio audio in obs studio
+
+#+begin_src sh
+sudo pkg install virtual_oss
+#+end_src
+
+*** cuse boot loader.conf
+
+add cuse_load="YES" loader.conf using sysrc
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf cuse_load="YES"
+#+end_src
+
+or edit loader.conf with vi
+
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
+
+and add the following code
+
+#+begin_src conf
+cuse_load="YES"
+#+end_src
+
+load cuse
+
+#+begin_src sh
+sudo kldload cuse
+#+end_src
+
+*** rc.conf
+
+enable virtual_oss and sndiod in your rc.conf using sysrc
+
+#+begin_src sh
+sudo sysrc virtual_oss_enable="YES"
+sudo sysrc sndiod_enable="YES"
+#+end_src
+
+or manually edit your /etc/rc/.conf
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+add the following code to your /etc/rc.conf
+
+#+begin_src conf
+# virtual oss
+virtual_oss_enable="YES"
+# sndiod audio
+sndiod_enable="YES"
+#+end_src
+
+*** virtual oss
+
+create a loopback device on /dev/dsp to record desktop audio
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+replace dsp0 with you device
+
+#+begin_src sh
+virtual_oss -S -C 2 -c 2 -r 48000 -b 16 -s 1024 -f /dev/dsp0 -w vdsp.wav -l dsp
+#+end_src
+
+*** obs
+
+under sources click add select
+
+Audio Input Capture
+
+in the properties window set DSP to Custom
+
+and the Custom DSP Path to
+
+#+begin_example
+/dev/dsp
+#+end_example
 
 ** shutdown
 

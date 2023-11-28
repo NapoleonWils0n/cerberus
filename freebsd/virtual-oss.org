@@ -1,30 +1,89 @@
 #+STARTUP: content
+* virtual oss
 
-* virtual oss freebsd
+virtual oss to record sndio audio in obs studio
 
-virtual oss notes
+#+begin_src sh
+sudo pkg install virtual_oss
+#+end_src
 
-#+BEGIN_SRC sh
-virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 1024 -R /dev/null \
--P /dev/dsp1.0 -w vdsp -l dsp
-#+END_SRC
+** cuse boot loader.conf
 
-+ freebsd handbook
+add cuse_load="YES" loader.conf using sysrc
 
-#+BEGIN_SRC sh
-virtual_oss -C 2 -c 2 -r 48000 -b 16 -s 768 -R /dev/null -P /dev/dsp1.0 -d vdsp
-#+END_SRC
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf cuse_load="YES"
+#+end_src
 
-#+BEGIN_SRC sh
-virtual_oss -C 2 -c 2 -r 44100 -b 16 -s 1024 -f /dev/dsp4 -w dsp.wav -d dsp
-#+END_SRC
+or edit loader.conf with vi
 
-#+BEGIN_SRC sh
-sudo virtual_oss -S -C 2 -c 2 -r 44100 -b 16 -s 1024 -f /dev/dsp4 \
--d dsp -w dsp.rec.wav -l dsp.rec -t /dev/vdsp.ctl
-#+END_SRC
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
 
+and add the following code
 
-#+BEGIN_SRC sh
-virtual_oss -S -C 2 -c 2 -r 44100 -b 16 -s 1024 -f /dev/dsp2 -d dsp -w dsp.rec.wav -l dsp.rec
-#+END_SRC
+#+begin_src conf
+cuse_load="YES"
+#+end_src
+
+load cuse
+
+#+begin_src sh
+sudo kldload cuse
+#+end_src
+
+** rc.conf
+
+enable virtual_oss and sndiod in your rc.conf using sysrc
+
+#+begin_src sh
+sudo sysrc virtual_oss_enable="YES"
+sudo sysrc sndiod_enable="YES"
+#+end_src
+
+or manually edit your /etc/rc/.conf
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+add the following code to your /etc/rc.conf
+
+#+begin_src conf
+# virtual oss
+virtual_oss_enable="YES"
+# sndiod audio
+sndiod_enable="YES"
+#+end_src
+
+** virtual oss
+
+create a loopback device on /dev/dsp to record desktop audio
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+replace dsp0 with you device
+
+#+begin_src sh
+virtual_oss -S -C 2 -c 2 -r 48000 -b 16 -s 1024 -f /dev/dsp0 -w vdsp.wav -l dsp
+#+end_src
+
+** obs
+
+under sources click add select
+
+Audio Input Capture
+
+in the properties window set DSP to Custom
+
+and the Custom DSP Path to
+
+#+begin_example
+/dev/dsp
+#+end_example
+
