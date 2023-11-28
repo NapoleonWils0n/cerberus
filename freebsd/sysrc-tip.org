@@ -1,0 +1,6 @@
+#+STARTUP: content
+* sysrc
+
+#+begin_src sh
+sudo sysrc kld_list += "cuse"
+#+end_src
