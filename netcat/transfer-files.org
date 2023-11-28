@@ -20,3 +20,15 @@ nc -v -w 30 6881 -l > wireshark.pdf
 #+begin_src sh
 nc -v -w 2 192.168.1.3 6881 > wireshark.pdf
 #+end_src
+
+** client listen
+
+#+begin_src sh
+nc -w 30 -lv 6881 > output.tar.gz
+#+end_src
+
+** server send
+
+#+begin_src sh
+nc -v -w 2 192.168.1.3 6881 < input.tar.gz
+#+end_src
