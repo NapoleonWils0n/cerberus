@@ -1,0 +1,43 @@
+#+STARUP: content
+* nvidia drivers freebsd
+** links
+
+[[https://forums.freebsd.org/threads/call-for-testing-nvidia-drm-kernel-module.87161/]]
+
+** drivers
+
+#+begin_src sh
+sudo pkg install nvidia-driver nvidia-settings nvidia-drm-kmod
+#+end_src
+
+Then add the modules to /etc/rc.conf file, executing the following command:
+
+#+begin_src sh
+sudo sysrc kld_list+="nvidia-modeset nvidia-drm linux linux64"
+#+end_src
+
+the /etc/rc.conf file whould look like this
+
+#+begin_src conf
+kld_list="nvidia-modeset nvidia-drm linux linux64"
+#+end_src
+
+Ensure that your UID is a member of the video group.
+
+load the modules
+
+#+begin_src sh
+sudo kldload linux linux64 nvidia nvidia-modeset 
+#+end_src
+
+check if the modules are loaded
+
+#+begin_src sh
+kldstat
+#+end_src
+
+Restart your system, or run:
+
+#+begin_src sh
+sudo service kld restart
+#+end_src
