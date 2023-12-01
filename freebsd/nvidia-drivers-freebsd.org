@@ -7,19 +7,19 @@
 ** drivers
 
 #+begin_src sh
-sudo pkg install nvidia-driver nvidia-settings nvidia-drm-kmod
+sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils
 #+end_src
 
 Then add the modules to /etc/rc.conf file, executing the following command:
 
 #+begin_src sh
-sudo sysrc kld_list+="nvidia-modeset nvidia-drm linux linux64"
+sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
 #+end_src
 
 the /etc/rc.conf file whould look like this
 
 #+begin_src conf
-kld_list="nvidia-modeset nvidia-drm linux linux64"
+kld_list="i915kms nvidia-modeset nvidia-drm linux linux64"
 #+end_src
 
 Ensure that your UID is a member of the video group.
