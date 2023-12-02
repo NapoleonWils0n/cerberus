@@ -126,8 +126,33 @@ console none unknown off insecure
 #+END_SRC
 
 ** drivers
+*** dell xps 15 2019
+
+#+begin_SRC sh
+sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils
+#+END_SRC
+
+we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+#+begin_src sh
+sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
+#+end_src
+
+or manually edit the config file
 
 #+BEGIN_SRC sh
+sudo vi /etc/rc.conf
+#+END_SRC
+
+then add the code below to /etc/rc.conf
+
+#+BEGIN_SRC sh
+kld_list="i915kms nvidia-modeset nvidia-drm linux linux64"
+#+END_SRC
+
+*** macbook air 2011 
+
+#+begin_SRC sh
 sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
 #+END_SRC
 
