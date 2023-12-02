@@ -299,7 +299,7 @@ rm -rf ~/.config/emacs/eln-cache
 ** applications
 
 #+BEGIN_SRC sh
-sudo pkg install abook adwaita-qt5 adwaita-qt6 apg aria2 aspell en-aspell bat dictd fd-find firacode firefox ffmpeg fzf git gstreamer1-plugins-opus hs-pandoc ImageMagick7 libnotify mpc mutt ncmpc noto-basic noto-emoji oath-toolkit obs-studio openvpn ripgrep ripgrep-all socat sox tmux ts translate-shell urlview w3m weechat wl-clipboard yt-dlp wget2 xkbcomp mpv 
+sudo pkg install abook adwaita-qt5 adwaita-qt6 apg aria2 aspell en-aspell bat dictd fd-find firacode firefox ffmpeg fzf git gstreamer1-plugins-opus hs-pandoc ImageMagick7 libnotify mpc mutt ncmpc noto-basic noto-emoji oath-toolkit obs-studio openvpn ripgrep ripgrep-all socat sox tmux ts translate-shell urlview w3m weechat wl-clipboard yt-dlp wget2 xkbcomp mpv mpv-mpris
 #+END_SRC
 
 enable dict
