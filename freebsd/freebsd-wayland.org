@@ -2012,7 +2012,7 @@ add the following code to your /etc/rc.conf
 
 #+begin_src conf
 # virtual oss
-virtual_oss_enable="YES"
+virtual_oss_enable="NO"
 # sndiod audio
 sndiod_enable="YES"
 #+end_src
@@ -2025,6 +2025,12 @@ switch to root
 
 #+begin_src sh
 su
+#+end_src
+
+start virtual_oss
+
+#+begin_src sh
+sudo service onestart virtual_oss
 #+end_src
 
 replace dsp0 with you device
