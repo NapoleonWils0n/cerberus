@@ -1,0 +1,59 @@
+#+STARTUP: content
+* mixertui
+
+Audio Mixer with a Terminal User Interface
+
+** Message from sysctlinfo-kmod-20221211:
+
+To use this interface, make sure that you have loaded the sysctlinfo kernel
+module, by doing
+
+#+begin_src sh
+sudo kldload sysctlinfo
+#+end_src
+
+use sysrc to add sysctlinfo_load="YES" to /boot/loader.conf
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf sysctlinfo_load="YES"
+#+end_src
+
+or by manually your /boot/loader.conf
+
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
+
+then add sysctlinfo_load="YES" to loader.conf
+
+#+begin_src conf
+sysctlinfo_load="YES"
+#+end_src
+
+** Message from sysctlbyname-improved-kmod-20221211:
+
+To use the sysctl.entryidinputbyname sysctl node and the sysctlbyname_improved
+function, make sure that you have loaded the sysctlbyname_improved kernel
+module, by doing
+
+#+begin_src sh
+sudo kldload sysctlbyname_improved
+#+end_src
+
+use sysrc to add sysctlbyname_improved="YES" to /boot/loader.conf
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf sysctlbyname_improved="YES"
+#+end_src
+
+or by manually your /boot/loader.conf
+
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
+
+then add sysctlbyname_improved to loader.conf
+
+#+begin_src conf
+sysctlbyname_improved="YES"
+#+end_src
