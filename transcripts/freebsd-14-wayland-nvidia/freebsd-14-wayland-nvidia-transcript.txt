@@ -1,0 +1,1423 @@
+Freebsd 14 Wayland and Wayfire using Nvidia on Dell XPS 15
+https://www.youtube.com/watch?v=5vHdJ5-drMs
+
+[0:00] - [0:30]:
+hi in today's video I'm going to be covering installing freebs D14 running whand
+using the wfire compositor with WL roots on a Dell XPS 15 2019 model with an
+Nvidia graphics card that's right FreeBSD 14 with whand running on an Nvidia
+graphics card let me switch across the browser here and this is some photos of
+the machine I'm using this is
+
+[0:30] - [1:01]:
+Del XPS 15 2019 model with a GTX 1650 Nvidia graphics card what I'm going to do
+is tell you how to get this set up uh explain what works on the hardware side
+and on the software side and take you through lots of T um tips and tricks um
+that will be useful to you so first of all on the FreeBSD Forum um first thing I
+came across about wfire which is the WL Roots compositor that
+
+[1:01] - [1:33]:
+I'm using for Wayland was this message found zero gpus cannot create backend
+failed to open any DRM device so I saw this before I actually decided to try and
+get this working and thought okay that doesn't look good but maybe it's possible
+and it is and I'm going to show you how so what I'm going to do is uh come
+across to some notes that I've been going through so what I'm going to do is
+just come across to YouTube here and show the previous video I did about this
+
+[1:33] - [2:01]:
+uhsd 14 Wayland okay what you'll see here is a video I did about 10 days ago
+fbsd wh and desktop with wfire and this was running on my old 2011 MacBook a 11
+in uh with 4 gig of RAM okay so what I'm going to do is actually expand upon
+this video
+
+[2:01] - [2:30]:
+and uh show you the steps that uh you need to go through to get this working
+with Nvidia on a delx ps15 and also some new tips and tricks um that will be
+useful to you so what I'm going to do is actually come across to my notes for
+that video and show you the actual difference so the difference there's only um
+a couple of bits of difference in the setup for the Delux PS 15 compared to
+
+[2:30] - [3:00]:
+the MacBook Air so on the MacBook Air what we were doing is installing some
+drivers that we needed basically we had to install Li um VA Intel driver Li VA
+utils DRM 515 kod and that required us to put in our Etc rc.com um kld Dore list
+equals i915 KMS
+
+[3:00] - [3:30]:
+okay so that was the setup um on the MacBook Air and that was all working so I
+was figuring okay maybe um there's something that we can actually do to get this
+working so had a look at Robo noie on YouTube and he's got a a video about um
+getting Nvidia set up I think it was done about last year and from that video I
+got a couple of tips and those were the packages that we needed to install
+
+[3:30] - [4:03]:
+and some things we needed to add to our kld list uh which is kind of like the
+sort of modules that get loaded basically so here's the secret Source this is
+what you need to do to get this working so the packages that we're going to be
+installing are the nvidia-driver Nvidia Das settings nvidia-drm d515 kod Liv va-
+Intel driver and lib va-
+
+[4:03] - [4:30]:
+utils uh now this particular machine has got sort of um uh Intel and Nvidia
+graphics cards basically uh let me just have some M te so this is the next bit
+of the secret source and I'm going to give you a tip about um the SRC command as
+well so the csrc command can be used to edit your
+
+[4:30] - [5:01]:
+Etc rc. Com or you can add it manually but what we need to do is add these
+particular modules to be loaded okay so what we do is pseudo Sy ysrc kld Dore
+list plus equals and what this plus equals does is it will append these items to
+the K delete um kld list in your rc. comp instead of overwriting the content so
+we do plus
+
+[5:01] - [5:30]:
+equals I 915 KMS Nvidia D mode set nvidia-drm Linux and Linux 64 or what you can
+do is manually edit the ETC rc. comp file and then basically add this section in
+so that's the only difference really uh between getting this set up on the
+Nvidia graphics card
+
+[5:30] - [6:00]:
+in my dxps compared to my old 2011 MacBook Air so what I'm going to do is
+actually go through and show you some other tips and tricks on getting this set
+up and show you what actually works and what doesn't so first of all what
+doesn't work on the hardware everything works there's only two things um that
+don't work and one has a fix so if config you'll notice that
+
+[6:00] - [6:30]:
+there is no WiFi card showing up however if I do PKG search WiFi what you'll see
+down here is this thing here Wi-Fi box do- iwl WiFi and this is a w Wireless car
+driver via virtualized Linux wi-fi box I believe is a virtualized Linux
+environment that allows you to use
+
+[6:30] - [7:00]:
+um wireless cards that are supported on Linux on free BSD I haven't actually got
+into that um but it looks like it is possible um using Wi-Fi box to get the
+built-in Wi-Fi drivers working on the delx ps15 however I have got a old Alpha
+wireless card um an external USB card that I know works on pbsd because I've
+tested it on my Mac book air so
+
+[7:00] - [7:31]:
+that's not an issue so that's the only um thing that wasn't supported out of the
+box is the Wi-Fi but it looks like you can actually get it working with Wi-Fi
+box the next thing is um mbank in cuder with the Nvidia graphics card that
+doesn't seem to be supported so for instance when I'm using OBS I don't have the
+option to record using inven um encoding that's the only other thing so
+
+[7:31] - [8:01]:
+the wireless we can fix the enven encoding it doesn't look like we can
+everything else works so um the HDMI uh works perfectly so I've got my external
+monitor set up the keyboard backlight works the screen backlight Works um the
+headphone jack um all the keyboard I manag to switch the keys which I'll show
+you because on a Delux ps15 the control key um is on the far left and the ALT
+
+[8:01] - [8:30]:
+key is by the space bar we want to swap those over so I'll show you how to do
+that what I'm going to do now is actually come through and show you a nice new
+bit of kit that you can use and that is tofi and that is a whand roofi dmenu
+clone so I'm going to launch that now and this is tofi you can see it looks
+exactly like a dmenu up here
+
+[8:30] - [9:00]:
+and what I have um it set up to do is just show desktop entries and you can see
+here these are all the desktop applications that I've got installed I've got
+chromium which I showed you in a previous video so if I just open chromium here
+this is chromium with wide Vine support to enable DRM video and audio playback I
+showed you how to do this in the previous video this is built using a poudrier
+Jael
+
+[9:00] - [9:31]:
+and this has got uh wide Vine support so I do Chrome flags and scroll down to
+the bottom down here what you'll see is CDM storage database and CDM storage
+database migration that means wide Vine is enabled so that you can work watch
+things like Netflix um Channel 4 ITV in the UK um uh the Youtube movies um in
+the US which use DRM encryption Spotify all that kind of of stuff so we got
+
+[9:31] - [10:00]:
+chromium set up there um we've got the ality terminal we've got volume which is
+the pulse um audio volume control because uh Firefox and OBS use pulse audio we
+got Firefox we've got OBS studio um we've got displays which is a [Music] um
+displays so this is the um thing that lets you configure your displays
+
+[10:00] - [10:30]:
+basically and this is going to be important because um you can see here we've
+got two screen names dp-3 and Ed p-1 and that's going to be important for MPV
+because I'm going to show you how to use MPV to automatically play videos on
+your second display because there a trick you need to know for that so you can
+see here these are all the desktop applications say chromium ality pul audio
+we've got emac that's
+
+[10:30] - [11:02]:
+the emac client Firefox displays um OBS config this is the config GUI for the
+wfire compositor we got the Nvidia settings um program and then we've got VLC
+which is actually automatically installed with OBS on FreeBSD now what I'm going
+to do is while I've got this open I'm going to show you how to configure this
+because there's some tips and tricks you need to know to get this to work
+properly um and I'm also going to show you how to
+
+[11:02] - [11:33]:
+shorten all these names are displayed here because by default in your
+application launcher things like Firefox will be called Firefox web browser um
+OBS would be called OBS studio um config would actually be called the wfire
+config manager and then VLC would be called the VLC media player I'm going to do
+is show you to toffey so first of all what you need to do PKG
+
+[11:33] - [12:00]:
+search toffee it's like Ry but with a tea okay toffee tiny Dynamic menu for
+Wayland I also saw this mentioned on Brody Robinson's Channel um with a few tips
+on getting the best performance out of this by explicitly setting the font path
+to the font you're going to use but there was one thing um that had me stomp
+here with the background color
+
+[12:00] - [12:30]:
+for the menu so what I'm going to do is actually come into the coffee config
+toffee okay so this is toffee so the configuration file is do config toffey
+config and basically this has got um two modes you can either run in the dmenu
+mode that I showed you or in a typical Ry mode where it comes up with a big
+
+[12:30] - [13:03]:
+um overlay on top of your application showing you a list now the important thing
+about this application launcher which is vital is that it works even when
+applications are full screen so you can see here this application is full screen
+but toffey still comes up at the top of the screen so that's really important um
+the thing I'm going to do is actually show you how you can while
+
+[13:03] - [13:32]:
+my brain's still working how you set up WF fire so that it doesn't start up with
+a panel I'll explain why you don't want a panel um okay so back to toffee so
+these are the important settings anchor top so this sets toffee um to be run at
+the top here now there are several different um ways you can run toffee you can
+run if you just run toffee um it
+
+[13:32] - [14:03]:
+will start up like typical um sort of dmenu kind of Clone where it just shows
+all the binaries on your application but you don't on your system but you don't
+want that you want tofy Das drun and what that does is that just shows the
+applications that got desktop launchers so anchor top so that sets this to be at
+the top we got the background color hex color here sort of an off black um
+
+[14:03] - [14:31]:
+border width what we need to do is set the Border width to be zero D1 launch
+equals true and then what we need to do is actually set the font path so by
+default what happens is it uses Pango um which does a font look up and that
+delays the startup because it's got to look up the font uh before it renders it
+so what you do to impr improve the St up time is you actually specify the full
+
+[14:31] - [15:02]:
+path to a font um in this case I'm using Fe code bold uh which gives us this um
+nice thing here I would recommend the code bold because um we're not going to be
+using hinting for the fonts and if you don't use a bold font it can look a bit
+uh pixelated okay we set the font size the height we set um here the hint font
+equals false okay um so we don't hint the f um the
+
+[15:02] - [15:31]:
+fonts because that improves the rendering time as well horizontal true mint
+input width what this does is this controls the input size so as you can see
+here if you set like a by default it'll have a input in a input width and you
+can see as I start typing here the text comes up
+
+[15:31] - [16:00]:
+um so for example if you had a input width of 100 what would that would do is
+that would make a gap of 100 pixels here um and then it would list all the
+applications so you'd have a big gap um and the text wouldn't be buted up to the
+left of the screen so we don't want that so we set the Min input width equal
+zero and what that does is that kind of removes the left padding on
+
+[16:00] - [16:31]:
+there um it's not the you can see I've got padding left here here all this kind
+of stuff um you need minute input width equal zero to remove all the padding to
+the left and that's going to not that's not going to um interfere with you
+actually typing out the name of the application um so let me just escape this um
+number of results so this is the number of results that actually show up by
+default uh in the menu and you want to set that
+
+[16:31] - [17:01]:
+to something like 10 um the more results you have um that it's going to render
+by default the longer it will take to launch so outline width now this is
+another one that's really um important the Ry menu that um tofu tofy can do you
+know um how it comes up what it does it by default it has a big border around
+the
+
+[17:01] - [17:31]:
+menu right and when I was setting this up and the in the Border color with
+something like magenta uh so what happened was every time I was launching this
+um instead of me being able to see all this text and everything it just coming
+coming up of a big magenta bar and I couldn't figure what that the hell it was
+until I realized um the outline width is related to the border which pull in the
+Border color so we set the outline width to
+
+[17:31] - [18:00]:
+zero we set all these padding options padding bottom left right to zero and
+padding top um eight okay because otherwise the text would be sort of right up
+at the top of the screen so they want a little bit of padding um there so eight
+this the set up font size 10 height 30 and padding top eight get it sort of
+centered properly like that then we've got the prompt color we got the prompt
+text so you can see here this
+
+[18:00] - [18:31]:
+is a little um prompt you know like you get a shell uh prompt color and the
+input color result spacing we've got the selection color so this is um when
+something is selected yeah uh the text color and the width so the width is 100%
+so that goes the full width of the screen so that's toffee so the config for
+tofy now what I'm going to do is
+
+[18:31] - [19:00]:
+move on and show you how to reduce the names that are displayed in the toffee
+menu so if we come into local share applications what you'll see is I've
+actually copied all the default um applications that I use uh into this D
+directory and modified them and I'm going to show you
+
+[19:00] - [19:33]:
+how to do that so by default the desktop application launchers on freeb FreeBSD
+are installed in user local share applications so you can see all here here are
+all the desktop entries for the applications what I'm going to do is show you
+how we copy these um from this location to local share applications and modify
+them so what we do is we we do a
+
+[19:33] - [20:01]:
+CP user local share applications like chromium uh to local local share
+applications okay we do this copy the applications we want to modify from that
+directory into our local share applications okay so what we're going to be doing
+is actually modifying these in some different ways there are some
+
+[20:01] - [20:31]:
+applications where I want to reduce the the the name that it shows up in the
+launcher and there are some applications I want to hide from the launcher as
+well I'm going to show you how to do that so first thing simp simply here uh I
+think this might be called chromium web browser by default let's have a look uh
+list user local share applic ation chromium web
+
+[20:31] - [21:01]:
+browser uh no I know why I copied that one okay important one this is important
+this is vital if you're running wfire and in this case um uh what we need to do
+is change this exact line you can see here exact by default it's just going to
+be Chrome percent capital u what we need to do is add in this Das Dash O Zone
+Das platform equals whand
+
+[21:01] - [21:30]:
+okay so that's what you need to do um for chromium so that's why we copied that
+across and I've run out of T um otherwise chromium won't launch okay so that's
+first tip for chromium um OBS studio um by default this is called um you know
+OBS studio so all you need to do is edit the name here and just change it to OBS
+okay and that will um basically make it come
+
+[21:30] - [22:03]:
+up as OBS um emac so what we have is emac and the emac uh client and each and
+they both create desktop entries um I'm always going to be running the emac
+client so what I want to do is hide emac from showing up as an entry in the
+toffey launcher and this is done by adding this line at the bottom here hang on
+hidden equals true so copy the emex uh
+
+[22:03] - [22:32]:
+desktop file from user local share applications desktop um emac do desktop to
+tier. loal share applications modify and stick hidden equals true at the bottom
+and then for emac client what I did was the name for that by default is emac uh
+in sort of parentheses um client so I just changed that to emac okay
+
+[22:32] - [23:02]:
+um uh Firefox again Firefox is going to be called Firefox web browser so what we
+do is we just change the name to Firefox um MPV um I'm always going to be
+running MPV on the command line so I don't want it to show up as a desktop entry
+so we just put hidden equals true to prevent MPV showing up as a desktop
+application in the launcher um Nvidia settings uh I think this is
+
+[23:02] - [23:32]:
+called Nvidia settings config or settings manager or something um let's have a
+look let's user local share applications Nvidia yeah Nvidia X server settings is
+what it's called by default so we can just shorten that to Nvidia yeah rather
+than having um you know big lot of text come up so the the idea is we want to
+remove all the extra text um that shows
+
+[23:32] - [24:01]:
+up here basically that we don't need okay pavu control um that is called let's
+see yeah see by default that's called pulse audio volume control we'll just
+shorten it to volume okay qt5 CT desktop that's a application for setting the
+theme for
+
+[24:01] - [24:32]:
+qt5 um applications like um OBS studio so that you can set the dark mode but I
+don't actually once I've done it I can I can always run it on the command line
+so I just set it to be hidden so I'm not going to use it again once I've set it
+up um uh VLC you know that's like called VLC media player so we just shorten
+that to VLC uh wfire config manager um I changed that from wfire
+
+[24:32] - [25:00]:
+config manager to just config because otherwise when you're typing Firefox um
+you're going to have to choose between the wfire config manager and Firefox uh
+which would be annoying so when I type fire fire I just want Firefox to come up
+not the way fire config config manager so we just change that to config and
+WeChat um is a command line application for some reason it installs a desktop
+entry tree so we just set that to be um hidden equals
+
+[25:00] - [25:30]:
+true once you've done all of that you've got the toffee set up um that that's
+what you'll end up with basically a nice little application launcher there
+that's really easy to use so let's go on to um some other stuff um so what I'm
+going to do is actually go through um some settings that are important so while
+my brain is still on that topic um of screens and stuff from
+
+[25:30] - [26:01]:
+earlier I'll show you um MPV okay config MPV MPV doc config okay couple of
+things here um what we can actually do is specify the audio device like this so
+this is how you can actually specify um the default audio device that MPV uses
+so audio- device equals
+
+[26:01] - [26:30]:
+ossd dsp1 that's my headphones we can check what devices we've got with cat Dev
+snd stat and you'll see here um PCM uh one is the uh PC Z is the default that's
+the speakers pcm1 is the headphones uh PCM 2 is HDMI and pcm3 is
+
+[26:30] - [27:00]:
+my USB mic okay so that's how we set the audio device now um I'll also show also
+while I'm actually thinking of this um on on the audio side what I need to do is
+uh show you something else um sorry to get switched back and forth but just
+while I'm thinking cuz this is important there is a um I showed you in this
+video here how you can set up virtual
+
+[27:00] - [27:33]:
+osss um audio for OBS Studio that you can actually record snd IOD audio which is
+used by things like chromium Firefox uses pulse audio by default and so does OBS
+studio so you can capture the audio from Firefox but not from chromium so in
+this setup guide what I was basically doing is showing you how to get up um
+virtual OSS um set up but
+
+[27:33] - [28:03]:
+what you need to do [Music] um is actually um I should have put that in I didn't
+so hang on let me just switch to my root okay right virtual OSS enable equals no
+so
+
+[28:03] - [28:30]:
+virtual OSS um what it does you can use it to create a loop back device so that
+you can basically record the audio from chromium and stuff but if you enable it
+at boot what happens is it interferes with your DSP devices so you can set a
+default DSP device like your headphones but if you have virtual OSS enabled um
+in rc. comp what it's going to do is
+
+[28:30] - [29:02]:
+it's going to clone the default uh the first audio device which would be your
+speakers um so you could set your default audio device to be headphones but if
+you've got virtual OSS enabled it will override that and send it back to the
+speakers which is really irritating and you have to faf about with virtual OSS
+um and a control thing to actually switch to another um audio device which
+
+[29:02] - [29:35]:
+would mean every time you boot up you'd have to run a command to set the V the
+audio device back to what you want what we do is in our rt.com we set virtual
+OSS enable equals no and then what we can do is when we actually want to use it
+to record uh snd IOD audio from things like chromium with OBS we would run
+pseudo CIS RC onear virtual OSS um and um let me just put
+
+[29:35] - [30:01]:
+that in my docs so I remember to push it um let me just put this in while I
+remember and I'll amend the notes as I go along um but this is just important
+because otherwise it's going to interfere with your audio setup so in
+
+[30:01] - [30:31]:
+this bit here what I was basically saying is um you set up virtual OSS you set
+it to enable no and then you can basically do sudo service on stock virtual OSS
+um and then as root what you can do is create the loop back device um and
+replace the device name you want to capture here so this would capture the um
+speakers if I wanted to C to the audio from the headphones I'll do that
+
+[30:31] - [31:00]:
+um and then you can record um in OBS but that's just a little tip um if you've
+set up virtual OSS and you're wondering why your default um audio device is not
+working okay so while I'm on the audio device thing uh which is related to MPV
+as I just s showed you here the default audio device what you have is um is it
+bootload is it sometimes I forget no
+
+[31:00] - [31:32]:
+it's in your CIS c.com okay this is where you can set the default audio output
+so to set the default audio output in your CIS c.com fuse hw. sn. deault unit
+equals 1 one will be the headphone zero would be the speakers and what you can
+also do is use all new your devices automatically by adding this code here
+
+[31:32] - [32:01]:
+so hw. snd do default uncore Auto equals 1 and what that means is suppose you
+you boot up without anything plugged in um any headphones or anything plugged in
+then you plug your headphones in it should automatically switch to your
+headphones and then when you unplug the headphones it will switch back to the
+speakers but this only applies to things that uh a new device
+
+[32:01] - [32:31]:
+seems to be something that's not connected when you boot up so if you boot up
+with your headphones so if you set the default audio unit to zero your speakers
+and this to one and you boot up of your headphones plugged in it's not going to
+switch to the headphones because it's kind of not a new device as it were it was
+already plugged in when you boot it up so the new the using new devices seems to
+
+[32:31] - [33:00]:
+be after you've actually booted up um and then it will be a new device if that
+makes sense uh also here this is something you need for chromium as well and
+this is a tip from Robo noie to um improve the responsiveness and change the
+responsiveness from the server to the desktop so that's just a bit on the audio
+side of things that I wanted to cover um how virtual OSS can interfere with your
+default audio device and how
+
+[33:00] - [33:32]:
+you can use new audio devices automatically there are things you can supposedly
+answer to your boot loader. comp uh or or boot device. hints to specify speakers
+and headphones but I don't think that's actually needed and it's a bit of a
+fuffle to do so anyway after that little Sidetrack I want to get back to MPV uh
+because the next important thing is full screen okay so here we go full screen
+
+[33:32] - [34:01]:
+full screen on second display so on gnome um there is a different option you
+need to use for getting the full screen to work um let me see if I've got that
+here so I can just show you the difference I just want to show you the
+difference
+
+[34:01] - [34:31]:
+between the two okay so on gnome uh running Wayland what you can do is um in
+your MPV Doom you can run you can have FS fs- screen equals 1 and that will um
+set the video to be automatically displayed full screen on your second display
+because it's a zerob based index uh screen zero would be your
+
+[34:31] - [35:02]:
+laptop screen one would be the uh external display however these options don't
+work on wfire on WL loots and this is something that kind of really critical to
+me every time I open a video I want it to be open full screen on the second
+display I don't want to have to constantly move a video across to the second
+display every time I open it so after a bit of fapping about I figured out what
+the option is these are two two
+
+[35:02] - [35:30]:
+options you need here fs and fs- Screen Dame equals where do we get the equals
+from the display application so as you can see here in um this application here
+W displays we got dp3 that's the um external Monitor and Ed dp-1 so this is how
+we figure out the screen
+
+[35:30] - [36:02]:
+name okay so we want dp-3 we put that in our MPV doc config and it will work and
+basically automatically open videos on the second display full screen so that's
+something really important to actually get set up um and I just wanted to cover
+that um so what I'm going to do is actually go
+
+[36:02] - [36:30]:
+through um my DOT files and just see if anything rings a bell that I need to
+actually point out um so one thing really important input uh input okay so as I
+said uh D xps15 the keyboard
+
+[36:30] - [37:01]:
+layout what you have is um on the on the left side of the keyboard you got
+Control Function the sort of Super Key then alt then space so what we need to do
+is actually swap control and ALT that's vital um so what we need to do is we
+come into our wfire so wfi is the um conf the compositor that we're basically
+
+[37:01] - [37:33]:
+using and there is a GUI application that you can use to configure this and what
+it does is it will automatically save the config file in do config wfire um you
+can create a config wfire directory in put wfire in in there but then the GUI
+application doesn't pick that file up so my advice is to keep the config file
+for wfire in in
+
+[37:33] - [38:02]:
+config.ini uh so that you can use the GUI application uh to actually configure
+it and the reason why you want to use the GUI application is because it will
+allow you to um create commands to do things um like launch Firefox or you know
+um run toi the application launcher up here and you put in the command and you
+can then it will give you an option to say
+
+[38:02] - [38:33]:
+okay what keys do you want to use to launch this command um and you need to use
+that because some of the key names are hard to figure out otherwise but anyway
+this is the setup you need for the Dell XPS 15 keyboard layout um in your
+wifi. inii so under the input section what we have here is X kbor layout equal
+GB xkb uncore model equal
+
+[38:33] - [39:00]:
+pc105 this is the critical bit here xkb options equals control colon swap
+underscore l altore l control so what that basically does is that swaps left alt
+and left control so that the uh instead of control being at the far left um an
+ALT being next to the space bar
+
+[39:00] - [39:33]:
+alt will become control next to the space bar and control on the far left of the
+space bar become alt so you'll then have a layout of um alt the function key the
+super key and then control um because otherwise it's going to be a real stretch
+to do copy and paste so this is um something that's completely vital and then
+what we have here is um uh Ed um xkb rules equals EV Dev and we
+
+[39:33] - [40:00]:
+what we do here is I know this isn't a Mac but we set the xkb variant to Mac and
+the reason for that is so that the um shift um and the key on the second level
+yeah will will will add a till okay because we're always going to be typing till
+uh as a shortcut for our home directory and otherwise youve kind of got to do a
+stretch to shift and then the key
+
+[40:00] - [40:30]:
+underneath the Escape so that's why we set the xkb variant to Mac so that the
+till um is right next to the shift key so that's vital next thing is um how do
+we um set up wave fire without a panel and you're going to say I need a panel no
+you don't cuz explain why
+
+[40:30] - [41:00]:
+uh two reasons why you don't want to panel uh because we've got the application
+launcher up here yeah so all you're going to be having in the panel is the time
+real realistically you can have um like an applet for the volume so uh but you
+can see here volume so that's the pulse audio volume here but we can launch that
+as a GUI application so there's no need to actually it it's it's faster to
+launch
+
+[41:00] - [41:30]:
+something the volume by using tofy rather than coming up here clicking a little
+drop down and then selecting stuff and faing about okay um so realistically all
+you'd be having because you um on FreeBSD there is like a network manager for
+ghost BSD but is a bit clunky and you know not great so you're going to be using
+the command line to change um networks and stuff like that
+
+[41:30] - [42:00]:
+so all you'd be having up here is a clock so you need a panel just for the clock
+because I say I've got a clock down here in emac I got a clock in t-x here so
+and and I'm I'm always going to have applications full screen um so that was
+another annoyance every time with a panel um it was really annoying because
+every time I open an application on a window
+
+[42:00] - [42:30]:
+and a new workspace I was having to put it full screen so that um you know
+because otherwise for example I'll show you emac this is full screen if I take
+this down here you can see it's got a title bar if I had a panel as well that
+would push the content down to like here so you'd be losing um at a guess sort
+of 80 to 100 pixels ju just to have a clock up here um and why do you need that
+if you've
+
+[42:30] - [43:03]:
+got it in there so the other reason is it actually makes wfire a lot faster to
+actually start um it actually starts up a lot faster without the panel um and
+also when it opens Windows because it doesn't have to figure out okay there's a
+panel there so I need to resize it so that you know all that kind of stuff so it
+actually makes uh wfire start up faster and the actual Windows render
+
+[43:03] - [43:30]:
+quicker without the panel there so what I'm going to do is actually show you how
+to uh set up um WF um okay this is the section here I don't need this I need I
+need to comment that bit out okay so this is the bit here auto start so in your
+wave fire.in
+
+[43:30] - [44:02]:
+file what you have is auto start and what we do is auto start WF shell equals
+false WF shell is the thing that controls both the panel and the desktop picture
+the lovely um icon here so what we do is auto start WF shell equals false and
+then we have background equals w WF background so config WF
+
+[44:02] - [44:30]:
+shell um and what you'll see here is the background up at the top here this is
+the background and this is the path to the FreeBSD Lynch mob. JPEG that is set
+as my um desktop background and um if you go to veren site uh if you search for
+verm moden fbsd wallpapers he actually got a link to a lot of our wallpapers for
+free BSD uh where you can actually download
+
+[44:30] - [45:00]:
+this wallpaper so that's how you can um set up wave fire and WF shell not to use
+a panel there's two parts um in your wfire inii you have auto start the auto
+start WF shell equals false and then background equals WF background and that's
+a tip from um the a gith Hub issue that was actually um recommended
+
+[45:00] - [45:31]:
+by the developer of wfi so that's all good um and then in your W WF shell. inii
+um file you actually have the backround and you can actually set that um open
+the config here so uh in the config so this is the wfire config manager and this
+is where you start stop up and this is like the command so um this is the toffee
+
+[45:31] - [46:00]:
+drun thing here so what you can see is um what you do is to create the keyboard
+shortcut for toffee um in the wfire config manager we open command click plus
+and then we fill it out like this type regular command tofe Das dun and then
+what you do is you press here this will be empty then you press the keyboard
+shortcut that you want to to use and you
+
+[46:00] - [46:30]:
+can see why I'm suggesting that you use the GUI applications because otherwise
+it's extremely difficult to work out sometimes what the actual key you pressed
+is here because you can see here it's super Capital key a um and there's no way
+you would figure that out without using the um GUI config manager here you'd be
+stumped if you were trying to do this manually so you do want to use the wfi
+
+[46:30] - [47:02]:
+config manager and remember it will store the config file in config wfire ini
+and it won't pick up a wfire file in config wfire wfire okay so this is how you
+um create the keyboard shortcuts okay and you can see here these are things what
+I also want to mention is Hardware related touchpad gestures yeah touchpad
+
+[47:02] - [47:32]:
+gestures perfectly working perfectly touchpad work out absolutely brilliantly um
+so in the desktop side here what we've got is extra touchscreen gestures
+viewport switcher uh follow Focus output switcher Expo idle view Port swipe so
+that's for swiping and what you need to get the touchpad working while my brain
+is still on that um uh get 3 BSD 3
+
+[47:32] - [48:00]:
+BSD uh XPS rout XPS uh is it loader yeah that's the one this is what you need
+this is what you need for um touchpad they used to be a separate thing which
+I've been um I can't remember off hand there used to be a separate thing for
+touchpads that you would use but this is the new module and
+
+[48:00] - [48:33]:
+this works both on my MacBook Air 2011 um and on the Dell xps15 so what you need
+is wsp load equals yes in boot loader. and that is how you set up the touchpad
+uh is anything else why um H yeah I want to cover mixer Tui as well while I've
+got that um set up
+
+[48:33] - [49:00]:
+um which I'll show you so that's the touchpads gestures so you can get the the
+touchpad working with wfire so you can swipe left and right okay wsp load equals
+yes in your boot loader. comp and then in your wfire um thing what you want is
+extra touchscreen gestures um viewport swipe some of these options here
+basically
+
+[49:00] - [49:33]:
+um okay and you can see here this is how you can figure the panel um so you can
+put in um stuff like here um there thing well put in the uh okay yeah menu uh no
+that's not it what you set the background in here um but I'm I'm not using this
+um I'm I'm specifying config and you can copy my config okay we got other things
+like here like move resize window walls
+
+[49:33] - [50:03]:
+um yeah there's a way to I think there's a way to actually um move Windows
+across to this to the other display but I need to get into I haven't fixed that
+so mix a Tui okay so you're thinking okay why do I need another mixer I've got
+pavu control here why do I need two mixers what two
+
+[50:03] - [50:31]:
+audio systems unfortunately or fortunately depending on your Viewpoint um so
+what we got is um the default audio is OSS which is was it snd IOD audio however
+Firefox and some other applications like OBS Studio use pulse audio I believe
+you can actually set Firefox to use snd audio in the back end
+
+[50:31] - [51:00]:
+uh you can do about config and change the output for Firefox from pulse audio to
+snd audio um but what what the um issue is um if I come across to my sort of
+notes Here let me um my audio notes hang on me
+
+[51:00] - [51:30]:
+just okay [Music] um yeah audio okay so um setting the um if I just run mixer
+hang on mixer um what you'll see is the sort of audio levels for Stuff basically
+um and you can see we've got
+
+[51:30] - [52:02]:
+various things we've got Vol we've got PCM we've got speaker record iio gain
+monitor um and what you have to do is to set the volume level of each of these
+um options you kind have to do Vol mixer vol. volume equal 1 100 then set the
+PCM mixer PCM volume equal 100 100 and it's a paint and then record and monitor
+um this is how you mute and
+
+[52:02] - [52:32]:
+unmute so mixer vol.1 mute equals one that mutes it and zero unmutes it um but
+the issue is setting all these um options on the command line is a bit of a pain
+so what we want to do is actually install mixer Tui PKG search mixer Tui audio
+mixer with a terminal user interface so mixer Tui and what you'll see here is
+this looks like the Ula
+
+[52:32] - [53:00]:
+mixer that you may be familiar with on Linux uh works the same way you can
+easily come through um select the audio devices and um easily increase the
+volume so I would really recommend this because um escape to quit um otherwise
+it's a real pain to set the volume levels for stuff and it's very easy to
+overlook setting the volume level for
+
+[53:00] - [53:30]:
+your mic before you start recording an OBS studio so you need to set the volume
+level using the mixer Tui and for your recording devices and all that kind of
+stuff um but there's a couple of things you need to do to actually um get this
+set up so when you install mixer Tui you'll get two messages come out in the
+console message from CIS CTL info mod to use
+
+[53:30] - [54:01]:
+this interface make sure you have loaded the cisl info kernel module by doing
+sud KD load CIS CTL info um um to add it permanently what you need to do is add
+um cctl info load equals yes to your bootloader doc config now you can do this
+two ways you can do it by manually editing the file or you can be Co and use the
+CIS RC command which
+
+[54:01] - [54:30]:
+actually is it primary use is to edit the um rc. comp file in etc etc rc. comp
+but with the- f option you can specify any file um and this makes it um is is a
+safer way of doing things because um uh you're not kind of editing the file
+going to make a mistake of course you can still make make a spelling mistake
+here but what you do is you run sud sudo cisr
+
+[54:30] - [55:00]:
+c-f booot loader. cctl infocore load equals yes or you can manually edit the
+boot loader. config you know pseudo booot loader. and then add cisl info uncore
+load equals yes to load comp like this then what you need to do um is the next
+section uh the message you'll
+
+[55:00] - [55:33]:
+get is uh you need to use um cctl by name so what we do is pseudo KD load cctl
+by name uncore improved and we need to add that to our bootloader do comp as
+well so we do p sudo cisr c-foot loader. com cctl by name improved equals yes or
+by manly editing your uh bootloader Doom um P sudoi bootloader Doc and then
+
+[55:33] - [56:00]:
+adding cctl by name improved equals yes once you've done that you will have um
+mixer um Tui setup and another thing um that just reminds me um um okay where is
+it up here OBS Studio okay so we're actually use to record the screen with
+
+[56:00] - [56:30]:
+OBS studio um another thing that you need to install is W robs um because what
+you if you you don't you won't be able to record the screen basically um WL robs
+will give you an extra option in the sources section in OBS um which will say uh
+let me brck it up you it'll give you two options whand
+
+[56:30] - [57:02]:
+output DMF a buff or Wayland output scy and what you want is the DMF a buff and
+you can then uh select a screen to record just the same way as you would um
+normally but you need WL robs installed for OBS studio and um this is really
+important because basically I got everything set out ready do the demo um opened
+OBS studio for the first time oh
+
+[57:02] - [57:30]:
+ I can't I've got no option to record the screen um then I remembered okay I
+ need to install something else um and once You' install WL robs you will get
+ the option in sources um to um select a screen using dmfa uh buff and you want
+ to use dmfa buff and instead of SCP y because it's um apparently better um I
+ think sepy copies a lot of stuff into memory or something
+
+[57:30] - [58:03]:
+um but that's just something while my brain was uh think about it and also with
+OBS studio if you've been going through the guide and watch the previous video
+um which I'd recommend um what you need to do for OBS studio is um create the uh
+VI um under uh login.com and need um memory locked unlimited like this so this
+is how now we set the character set language um and then once you've done that
+you do capore MK DB till the for
+
+[58:03] - [58:31]:
+sl. login and it should be login I keep forgetting to change this um my bad comp
+um and that creates a sort of database um but you need that for OBS studio um so
+what I'm going to do is just go through some stuff and refresh my memory of all
+the things have gone through to um set up so um what I'll do is I'll go
+
+[58:31] - [59:03]:
+through the vot config files and I'll go through the um dot files just to see if
+there anything sort of um you know rings a bell about what I got set up so I've
+gone through a lot of this before uh in the previous guide um so we've got
+things like um asni load and these will be default we we want ZFS uh we need
+null fs and temp FS for purrier um which
+
+[59:03] - [59:31]:
+is the build environment uh is the package Builder that lets us build the wide
+Vine port for chromium so we can watch DRM encrypted audio and video uh we set
+the audio here um uh HDI load U audio load um temperature stuff the touchpad um
+I mentioned there wsp load equals yes uh
+
+[59:31] - [60:02]:
+this is a tip from rogo Robo nugie um asynchronous IO so we want that um and
+then we want uh Q's load um for virtual OSS but again we don't load virtual OSS
+because as I said if you load virtual osss it will override thep device um so
+you can set as I said if you set the thep device um Qs um Q um virtual OSS will
+override it and set it back to the speakers basically um and
+
+[60:02] - [60:31]:
+these were the things that are needed for mixer Tui uh CTL info load equals yes
+and CTL by name improve load equals yes so that's the loader let's go for the
+acceptor uh we got the devs um FS tab so this is needed for Linux here so
+[Music] so Linux so this is needed
+
+[60:31] - [61:03]:
+um for actually I think the Nvidia card actually loads Linux as you can see in
+the KD list we actually to load Linux and Linux 64 um uh so these things are
+required for the Nvidia card and um also prri a as well one of them I think was
+required purrier um but I may be wrong um we've got our PF config so we got PF
+here um
+
+[61:03] - [61:33]:
+this is my USB to ethernet adapter um got like I don't need that one I can
+remove that and then this is um for my railink USB card uh rc.com so rc.com
+let's go through that just bring that down one level uh ZFS enabled clear temp
+poost name um if config um on the sort of default
+
+[61:33] - [62:01]:
+um device sh enable no um PF yes time and date and we got powered here so we got
+um powered enabled powered Flags um performance and economy and that brings me
+on to what's the fans like on this computer quiet as anything it's like a Prius
+yeah there's not a noise even when
+
+[62:01] - [62:32]:
+playing YouTube videos or um DRM encrypted video using chromium um using MPV
+recording with OBS studio now not a whisper nothing the fans don't go crazy at
+all um so there's absolutely no noise at all and the performance is great okay
+now this is the important thing here the kld list that I mentioned so kld list
+equals Nvidia mode set Nvidia DRM oh
+
+[62:32] - [63:00]:
+I've got that in twice my bad I don't know why I got that in twice okay um I was
+adding something and uh so these are the things you need Nvidia mode set Nvidia
+DRM Linux Linux 64 I 915 KMS you also want ext2fs and what that does is that
+allows you to mount Linux drives like EXT 2 3 and four
+
+[63:00] - [63:32]:
+um I'm not sure if it's got right access I think it might do um okay so then
+we've got seat enabled um seat D enabled equals yes that's needed for um Wayland
+we got debus enabled um and just while I think of it bit being w wfire start so
+this is how you start wfire you can you um if you just start
+
+[63:32] - [64:00]:
+wayf fire in the terminal we're not using a um a login manager so basically we
+just log in on the command line you know username password and then we start
+wfire and the way you want to start wfire is like this uh you want to create a
+script so I just call it wfire start or whatever um exe db- launch D- exit with
+with session wfire and that will start wfire with debuff and you want that for
+things like desktop
+
+[64:00] - [64:30]:
+notifications um so I have desktop notifications that come in from things like
+um YouTube and what will happen is they will sharpen emac because I use um emac
+the ednc emac desktop notification server so notifications will come up um in
+emx notify send three BSD is awesome
+
+[64:30] - [65:00]:
+bang oops and you can see there notify send 3bd is awesome so that's how you get
+um desktop notifications working um just something um am on this one or this one
+yeah TheBus uh Linux enabl yes we want that um for various things um I think we
+need it for um the mvidia primarily uh also
+
+[65:00] - [65:31]:
+here virtual OSS enabled equals no um so again we don't start virtual OSS by
+default because otherwise it's going to override the DSP and so what you do is
+when you want to use it you run sudo CIS rc1 virtual OSS uh snd IOD enable
+equals yes that's the audio um used by chromium we we enable that so that we can
+um chromium will play without that but we need to enable that so that we can
+capture the audio
+
+[65:31] - [66:02]:
+with OBS uh we got um devfs system rule set so that we can mount um drives as
+our regular user and these are the settings for my Ray link Alpha WiFi so w
+Lands Run Z wl0 if config WLAN WPA um sin DHCP so uh you then create you know
+you
+
+[66:02] - [66:30]:
+create the um wa WPA supplicant thing with your um you know the SSD and password
+and stuff and um if you have that set up and you boot up it will just
+automatically connect to the Wi-Fi so um that's the let me just um see if I can
+find it Alpha May link adapter yeah like this you get for like
+
+[66:30] - [67:02]:
+10 quid okay also works with Kelly NX um so this is what I got one of these um
+it looks a bit like this um says gasy uh I think I can't remember which one it
+is I'll have to dig out the thing but it's basically an alpha Ray Link Card and
+they work fine on um fre BSD is it or is it this one it might be this
+
+[67:02] - [67:31]:
+one yeah it looks a bit more like this yeah basically it says Alpha on it but
+basically it looks like that and you can pick them up for you can see dirt cheap
+um and they work perfectly so I have to dig that out um so that was the uh WiFi
+uh cctl okay just go for the cctl disable the system Bell uh VFS us Mount equals
+one that's
+
+[67:31] - [68:00]:
+so that we can mount uh drives as our user um this is where we set the default
+audio unit so s SW snd default unit equals 1 that's going to be the headphones
+use um new um audio devices automatically um this is still required for chromium
+I believe k. ic. shm mcore allore removed equals 1 and this is a chip tip from
+Robo noie who change your
+
+[68:00] - [68:32]:
+responsiveness from server to desktop using k. shed. preemptor fresh equals 224
+so that's assist CTL um user local Etc I've got my doas um and this is sort of
+Puri a setup so um basically I've got doc files or both both the MacBook Air and
+the uh Delux ps15 um root files for both the um
+
+[68:32] - [69:01]:
+MacBook Air and the XPS um okay hang on so uh the pp do files um so what I'm
+going to do is go through zsh EMV couple of things you need to set up which I
+covered in the previous video but these are the things you need to set like your
+home uh this is important the xdg runtime directory
+
+[69:01] - [69:31]:
+which are covered in the guide um amongst this lot um you're getting set stuff
+set up Wayland here yeah this is how you create the xdg runtime directory um
+change the section here with you know to your username basically you go through
+and you got you got to get this set up because otherwise whan's not going to
+work um so in your shell config you have to have xdg runtime directory um
+pointed to
+
+[69:31] - [70:03]:
+VAR run user and then the ID which is going to be 1,1 um by default uh M enabled
+um whand uh qtp uh QT qpa Platform Theme so that will allow you to set the dark
+mode for QT applications uh shush uh wlc um and MPD I'll also cover uh MPD uh
+zsh is
+
+[70:03] - [70:31]:
+sort of um nothing I need to cover in in that um here's the login comp so your
+loginor comp should look like this basically uh memory unlocked equals unlimited
+I think I need to actually uh I think I've got login missing a couple of options
+from
+
+[70:31] - [71:03]:
+that one no um I think I had it set somewhere else I was also setting the text
+uh the you know um that other stuff you can set the C and you know um okay um so
+config um the other thing yet um you want to set up is the gpg agent um I cover
+this in the guide as well you want to set uh you want to create in [Music] um
+
+[71:03] - [71:34]:
+ing Nu PG in your home directory you want to create gpg-agent Doom uh we set in
+the pinak program used by gpg and you want to set it to user local bin piny
+curses because the graphical versions of the pin prompts don't allow you to
+paste in your password so you want to use the terminal version pentry curses CU
+otherwise you get really pissed off okay um so I'm
+
+[71:34] - [72:02]:
+going to go through the dot files um the config uh so is a laity um nothing you
+need to go through any of these um gtk3 uh settings this is how you enable dark
+mode um so uh in in the settings.ini in the gtk3 do0 file um directory in do
+config
+
+[72:02] - [72:31]:
+you want um something like this um I think some application some application I
+installed automatically installed ader um as a default theme so basically what
+you do is gtk D ion D theme name equals aditer Dark gtk theme name equals Ed wa
+to dark and then gtk application preferred Dark theme equals true once you've
+done that all your gtk applications will have a dark theme and I also showed you
+in that guide how you
+
+[72:31] - [73:00]:
+can set QT applications to have a dark theme as well okay MPD um yeah uh so we
+got MPD set up here um and basically this is so that you can run MPD as your
+regular user um so it will have access to the music in your home directory
+because otherwise by default it will store everything in something like Varon
+MPD uh which is all
+
+[73:00] - [73:31]:
+owned by the audio user or something um which makes it a real pain um so this is
+how you run MPD as your regular user um got MPV as I showed you MPV the
+important things in there we can set the audio device so we can yeah so DSP zero
+will be speakers one you know headphones two Etc um and the other important
+thing that we needed
+
+[73:31] - [74:00]:
+to set is this down here FS full screen and fs- screen- name equals and you get
+the screen name from the display program which I believe is called canini or
+something uh but I've listed that in the guide um the application you need to
+install once you got that set up an MPV um the videos will automatically um be
+opened up on your second display and these are basically
+
+[74:00] - [74:31]:
+um profiles so what you can do is you can actually have profiles that apply to
+particular URLs so I covered this in a previous video but you can create a
+profile that only applies to YouTube here so you can see here it's kind of
+matching a regular expression and you can um override particular settings just
+for that um URL basically so that's MPV um and got M NCP
+
+[74:31] - [75:02]:
+TX um so again toffee last thing um anchor top border width dun launch equals
+true and again I'll show you the [Music] um config w f was it w f um if it's in
+this one or the other I'm going to forget coffee yeah okay
+
+[75:02] - [75:30]:
+command Okay so this the tofe config and this is the um wii. um you can see here
+um this is how um I launched um sort of toffee basically um and you can see how
+I did it in the gy and this is the config um and we launch it with tofy Das dun
+which gives you um only applications
+
+[75:30] - [76:02]:
+that have a desktop entry okay because there's no point having a load of
+binaries coming up there that's just pointless in my opinion um and again we set
+the font so I'd recommend um F code bold is a nice font and um um PKG search F
+code yeah so just uh PSE sudo PKG install Fe code and then in toffee what you do
+is font equals user local share fonts F
+
+[76:02] - [76:30]:
+code F code-- ttf and that will give you um nice stuff like that I recommend
+using the B the Bold font because otherwise uh because we're um setting the font
+hinting to false um if it's not bold it will look really crap basically um
+horizontal to yeah we want it be horizontal as a dmenu clone remember the Min
+input width is the thing that
+
+[76:30] - [77:01]:
+controls space right here so if you had 300 you'd have 300 pixel space and then
+all the things listed I don't want that big space I just want them coming up
+here like that um outline WID padding you know promp color you can copy all of
+all that stuff there so I think that's most of um everything I wanted to go
+through um I've gone through the root dot files the um dot
+
+[77:01] - [77:32]:
+files uh the config for wfire um so let's just have a quick recap of the
+important things so most important thing is the drivers so recap on this the
+drivers that we need to install are nvidia-driver Nvidia Das settings now let me
+just do do a search here PKG so cuz this took a this is one thing that had me
+stumped okay so what you'll
+
+[77:32] - [78:02]:
+see is you got a couple of options you've got Nvidia drmk mod um and what I
+think that did was that installed Nvidia DRM 5110 K mod okay so this kind of
+like a meta package I believe um so when I tried with the 510 um uh km mod
+drivers that didn't work that didn't work on my um MacBook Air either I had to
+use the 515 on the um the
+
+[78:02] - [78:30]:
+MacBook Air so first of all what happened was I installed the Nvidia drmk mod
+and that didn't work what happens if I install the other one so I uninstalled
+that and then installed Nvidia DRM 515k mod um as shown here and I tried it and
+it didn't work and I thought okay what happens if I then install the lib VA
+Intel driver and the lib VA
+
+[78:30] - [79:02]:
+utils um and at that point what I had was Nvidia mod set Nvidia DRM Linux and
+Linux 64 installed and it still wasn't working and I thought okay um what was
+happening basically was first of all um first stage I got to was no gpus found
+then I got something um saying waiting for DRM back end oh well that's a bit of
+an improvement uh then what after actually installing these things
+
+[79:02] - [79:30]:
+after switching to Nvidia DRM 515k mod installing the LI VA Intel driver and
+livv utils cuz this machine used Intel as well and then what happened was you
+know it was so I put in I also added in the i915 KMS typed wave fire and me the
+terminal and the desktop came up and it all worked so it took a
+
+[79:30] - [80:04]:
+bit of uh detective work to actually get this working and figure out the correct
+packages and all that kind of stuff um but these two here Linux and Linux 64
+these were a tip from Robo and nugie site um and also saw people mentioning you
+need Nvidia mode settings but so this is the setup this is the secret source to
+get this working the Nvidia driver Nvidia settings so that's the settings thing
+Nvidia DRM 515k mode that's critical Livia Intel driver livier utils
+
+[80:04] - [80:32]:
+and this is the kld list in our rc.com I 915 KMS Nvidia mod set Nvidia DRM Linux
+and Linux 64 so those are the things you need to get set up um to actually get
+this to work okay um so that's what basically going to um sort of look like in
+the rc. com um and again there is uh no en and
+
+[80:32] - [81:00]:
+no Cuda um by the looks of things um so that's that's the the one and only
+downside um of this is um you don't have en enven encoding for OBS Studio but
+that was really the only thing that I ever used it for um so I can live with
+about it's not too bad um you know nothing to Grumble about so that was the
+drivers
+
+[81:00] - [81:31]:
+that you need to get set up um the other thing that I almost forgot was you need
+um WL robs for OBS studio um yeah and this is what the login comp should look
+like um we set the I'll amend my thing there um setting the character set
+language um in LC um yeah uh the other new thing was um we set up mix of Tui um
+and the other thing was
+
+[81:31] - [82:02]:
+getting MPV to automatically open the video on the second display um so this is
+um my setup guide um for pbsd 14 with whand using the w fire compositor which is
+based on WL Roots um and the other thing I me should mention is for ages I was
+using gnome with whand
+
+[82:02] - [82:32]:
+uh either running a buntu nixos or Fedora on this machine uh purely because that
+was the only thing that would actually run it on Linux so um you know people
+always say oh no you can't run um WL rout stuff uh with Nvidia graphics cards
+it's you know it's not working it's not supported um and again you know when I
+was searching um for wfire and um Nvidia on fre BSD this was the first thing I
+
+[82:32] - [83:01]:
+actually got mentioned found zero gpus cannot create back end fail to open any
+DRM device so you know it wasn't off to a good start before I even tried to
+install this but to be honest I was just so fed up with Fedora and gnome um and
+I just got everything set up on the MacBook Air and I just really had to get it
+set up on um this machine as well uh the the issues with um gnome are basically
+that
+
+[83:01] - [83:30]:
+uh I think I saw a comment recently someone said yeah I installed gnome and
+suddenly I've got iOS on my desktop yeah is like that um and basically it's it's
+like a closed environment there are no application launches or anything that
+works with it is all done through extensions um and it's style over function uh
+really is um so you know I've got a really nice
+
+[83:30] - [84:00]:
+application launcher like this um the other nice thing I wanted to mention about
+um uh I I will mention theor in a second is wave fire um is is is actually
+really really good it's better than gnome in my opinion because what it's got um
+which is vital is it's got independent workspace per monitor so if I switch
+workspaces on this display here it's not going to change the workspace on the
+
+[84:00] - [84:30]:
+second display okay which is really annoying suppose you're watching a video on
+the second display and you switch workspaces you don't want it to suddenly
+switch the video to another workspace you know every time you switch one on the
+laptop that would drive you nuts so there's independent workspaces put a monitor
+on wfi that's something else I wanted to mention um downsides for for Dora um a
+couple of things one it's completely different to a Buon so a lot
+
+[84:30] - [85:01]:
+of the commands that you'll learned using a bunto don't work on um fedoras for
+example when you regenerate your init Ram FSS you got to use something like
+called Draw cut on fbsd um also you have to manually add repositories for the
+audio and video for you know codec and stuff um the other really annoying thing
+is you have um some things are updated
+
+[85:01] - [85:32]:
+the terminal and some things are updated in the software Center um so you know
+you'll you do an update in the terminal but then you've also got to check the
+software thing because it will give you some updates there and also um when you
+upgrade Fedora say I upgraded fedora from 38 to 39 um it's got a big button in
+the software Center update you just click that okay great that's nice and easy
+but um you have to switch back to
+
+[85:32] - [86:02]:
+the terminal you got to do something like um group updates to update um um that
+all the video and audio groups that you installed using these repositories and
+stuff which is ridiculous so you got some stuff that's updated in the terminal
+some stuff that's updated in the software Center um so you got to use both um
+also um dnf is unbelievably slow the package manager
+
+[86:02] - [86:30]:
+um if I just come across here you know it's a PKG search uh Nvidia bang just
+spits everything out instantly right with dnf on Fedora what happens is you've
+got all these additional repositories that you'd had to enable for the audio and
+video so when you search for something it has to go through and it reloads each
+one of those so before it gives you the results
+
+[86:30] - [87:02]:
+you'll be sat there for like 30 seconds a minute waiting for it to update all
+the repositories before it can actually give you a list of software that you can
+install um so that was something that was really really irritating about for
+Dora um as well as the fact that literally every other couple of days you got
+updates for pipe pip pip wire or um a new kernel every couple of days so problem
+with door is you boot it up you've got a load of updates like new kernel new
+audio system
+
+[87:02] - [87:32]:
+so you got to install them and then reboot before you can actually get on with
+any bloody work um so that so that was something that was really annoying um so
+what's what's the benefits of actually using 3bsc let's have a look what we got
+set up here uh we got vot ZFS so we've got [Music] um ZFS on rout with
+encryption on Fedora it uses um butter fs and Lux and butter
+
+[87:32] - [88:00]:
+FS by default doesn't have encryption so what you have to do is have a lux
+encrypted container with butter FS inside um and you can only use Lux one not
+Lux two um the other thing is you can uh with butter FS you can have a thing
+where you've got butter FS snapshots for like boot environments but you kind of
+got to go through all this setup install something and change your grab file and
+
+[88:00] - [88:31]:
+everything on FreeBSD what we have is BDM boot environments um so basically what
+you can do is when there's an update to the system you you can actually install
+them in a separate boot environment and if something goes wrong you can just
+boot into the previous one so that's brilliant the other thing that you've got
+to um get your head round is packages are separate from the system so when Linux
+you'll be used to like you
+
+[88:31] - [89:03]:
+know updating your packages and it updates the system at the same time on
+FreeBSD it doesn't they're separated so you have um a release and all the
+packages are for that release so like you know 14 you have all the packages for
+14 you've got release 14.1 and all the packages will then be upgraded to work
+with that release um so you don't have dependency hell um and you you either
+update your
+
+[89:03] - [89:32]:
+packages um um you know PKG updates that's just going to update the actual
+packages it's not doing the system you're still on release 14 and then when
+release 14.1 comes out basically what you do if I've got BDM okay you basically
+set up BDM um you create a new boot environment you install the updates um and
+you boot into that uh so
+
+[89:32] - [90:01]:
+that's sort of another sort of Advantage is the user land and the system are
+completely separate and when you're updating your packages you're not updating
+the system as it were also all the config files are kept separate if you look on
+um uh user bin so this is like user bin here um you know all you've got user s
+
+[90:01] - [90:30]:
+spin these are all the um system sort of utilities basically those are the
+system commands have a look if you're on Linux have a look in your bin directory
+you see just is full of everything everything just gets dumped in with the
+system configuration as well so on Linux basically um everything go goes in one
+pot um on free BSD everything is separated all the user um installed
+
+[90:30] - [91:01]:
+applications are completely separate there'll be um you know user so user local
+bin okay um as you can see YT DLP [Music] um xdg you can see um w WF background
+WF doc so that's another really important thing to get your head round is all
+the applications are installed separately
+
+[91:01] - [91:33]:
+from the system so it's much much cleaner you're not have a look on your bin
+directory on Linux and you'll see you've got all your system stuff coupled in
+with things like YT DLP um that's another kind of really important thing no
+system D no system D hooray um starting services and stopping on FreeBSD is so
+much simpler uh you know service start service stop that's it um let's have a
+look in top here uh
+
+[91:33] - [92:01]:
+you can see top um is is kind of running in one screen you can see OBS um it's
+only actually saying 11% um in the OBS there but um that's another thing is you
+have a lot less stuff running um on 3 BSD and it's so much easier to actually
+figure out what's running and what's uh what you actually set up and installed
+
+[92:01] - [92:30]:
+um compared to uh Linux um sometimes you know you just want to stop something
+and then you figure out it's I know it's using system D which calls some other
+package off something it's like going to make a cup of tea and finding out you
+got to turn the toaster on to get the kettle to work um drives you not trying to
+um to figure out what's going on it's just so much easier on FreeBSD so another
+thing some things work better on
+
+[92:30] - [93:01]:
+FreeBSD emac so much better on FreeBSD on on um FreeBSD you install the emac
+devel package and that will install the latest version of emac so I'm running
+emac 30 pure GGK wh and support tree sitter all that kind of stuff on Fedora or
+a bun to I had to build it from Source um all the and a lot of the time on Linux
+um for years had problems with packages um you
+
+[93:01] - [93:31]:
+know not loading so you know you do an update um for your packages uh from elper
+and stuff and um you go to use something like it's kind of not loaded properly
+or um you know it's not compiled properly that kind of thing um rock solid solid
+on FreeBSD and um I don't have to build everything from Source I mean if I show
+you um if I got
+
+[93:31] - [94:03]:
+it um I think it might be Fedora Fedora emx build Fedora so these are all the
+steps I had to go through on Fedora to build um emac had to clone emac um like
+you got to do all this weird stuff from Fedora like group install development
+tools um and also I don't like the concept of the firewall where you got all
+these different zones then you kind of got to build all these dependencies uh
+install all this stuff
+
+[94:03] - [94:33]:
+um you know configure it with all these options make it um go through all that
+plava where on FreeBSD all I have to do is um PKG install emac and that will
+install the latest version of emac uh so how do other things compare other
+applications compare um to Linux so this is ality
+
+[94:33] - [95:00]:
+ality works exactly the same as Linux no better no worse absolutely fine no
+problems with it at all um I said emac much much better on pbsd much more solid
+you can install the latest versions no issues with things glitching out or
+anything like that uh Firefox works perfectly um uh YouTube video playback
+everything's absolutely perfect no
+
+[95:00] - [95:33]:
+problems at all um chromium chromium absolutely fine um works perfectly well um
+again I've got chromium set up with uh DRM wide Vine DRM so I can watch uh
+encrypted content so that's 3bs uh FreeBSD 40 running Wayland using wfire WL
+Roots compositor on a Del xps15 with an Nvidia graphics card so
+
+[95:33] - [96:00]:
+yeah it does work um and again the only um only niggles um the Wi-Fi um again
+PKG search Wii um it looks like to use the built-in Wi-Fi you got to use this
+thing called Wi-Fi box and the device is the iwl
+
+[96:00] - [96:31]:
+Wi-Fi um that is the card that is used by this machine I haven't looked into
+Wi-Fi box but basically it's like a virtualized Linux environment to run the
+Wi-Fi cards um that are supported on Linux on FreeBSD and might be something
+interesting to look into um so you got lot of different cards down here so I've
+got a external uh R link Alpha USB Wi-Fi card that I know works so I've tested
+it on my other
+
+[96:31] - [97:04]:
+machine so that's not really a problem the only other issue as said um is nank
+and Cuda um don't seem to be supported so those the only two things um that sort
+of kind of niggles but um uh I never Ed Wi-Fi and I said I got a card anyway so
+that's not an issue um the only thing I ever used enen en coding for was in OBS
+studio um so I'm not going to really miss that too much that's not too much of a
+biggie um so
+
+[97:04] - [97:33]:
+yeah absolutely great performance there's absolutely zero issues at all um
+Hardware or software side so um no fan noise at all I mean you haven't heard the
+fans kick in once while I've been doing this video um you know uh played videos
+full screen in Firefox chromium MPV not a whisper nothing um doesn't make a
+sound
+
+[97:33] - [98:03]:
+keyboard backlight Works screen backlight Works um all the ports work I haven't
+tested the SD card um I can change the keyboard layout um absolutely zero
+glitches with whand there's no artifacts there's no um funny issues R drawing
+the screen or any bits of green or any of that kind of stuff um so there's
+absolutely zero issues um with
+
+[98:03] - [98:30]:
+the hardware um and zero issues with the software or any of the um config
+options that have actually um gone through and used um absolutely um rock solid
+um uh great performance um it's really Snappy um let's see if I can actually uh
+record uh a bit of a video
+
+[98:30] - [99:01]:
+so um let's just open up my one here I don't know if I've actually got this set
+up to record the um actually saying I don't know if I got this set up to um
+record the desktop audio um on this machine I have to go through and do some
+sort of uh couple more tests but it does work um I just don't think I've
+actually um got it set up as yet um on my to-do list but I just wanted to go
+through and um show that this actually
+
+[99:01] - [99:32]:
+does work uh zero issue so this is the first video here bbsd whand desktop with
+wave fire and that was on the MacBook Air 2011 with 4 gig of RAM so we got his
+3B sd14 whand running on a um 2011 machine with 4 gig of RAM and a Dell XPS 15
+2019 um we have 16 gig ram um so we got
+
+[99:32] - [100:01]:
+both old and new computers running fre BSD uh with zero issues and people always
+say fbsd only works on 20-year-old think pads uh well I got to tell you that's
+fake news um it does work on newer um machines uh again this is uh there's been
+a lot of work going into the Nvidia DRM module which you can actually see on the
+3bd forums and I just wanted to confirm it's
+
+[100:01] - [100:30]:
+the um DRM the one that actually works is the Nvidia DRM 515k mod that's what
+you want to install um absolutely zero issues with this at all um I haven't
+tried um you know hibernation closing the lid um that's usually done with the um
+sort of S3 sort of power setting um and there's a I think ver Mod's got a tip on
+
+[100:30] - [101:01]:
+his site about how you can uh sort of look into that um I'm not sure um it may
+be possible to kind of like log out a wfire to the console and then put the
+screen down I suppose that could be a workaround um that wouldn't be too bad um
+but yeah everything everything works all the um audio video um desktop
+applications um no problems with anything so far touch would and um I'll
+
+[101:01] - [101:30]:
+leave that here for now so hope that helps you get uh FreeBSD 14 running on your
+Delux PS with an Nvidia graphics card uh cuz it is possible and it works better
+for me um than Fedora 39 basically um much more stable there's there's no
+shitloads of upgrades of kernels and everything every couple of days um no sort
+of obscure sort of
+
+[101:30] - [102:00]:
+commands that you're not used to running for D instead of sort of auntu and
+things like that um so yeah I got two BSD on all my machines now pf5 wall um on
+a my router um with My BT um internet uh MacBook Air 2011 11 in 4 gig of RAM uh
+same setup and now the Delux
+
+[102:00] - [102:33]:
+PS5 um I'm pretty sure it's a um 2019 specs uh see if I can find something with
+the actual specs um yeah I haven't tested the webcam cuz I never use it um I'm
+pretty sure it's got a [Music] um yeah it's got really nice display this um I'm
+just wondering it's got
+
+[102:33] - [103:03]:
+anything about the actual effects in here of course not uh I think it's a GTX
+1650 graphics card um let me just see if I can find it I is it so difficult to
+bloody find something from like Dell with the bloody specs um but anyway just to
+prove this isn't a um you know some elaborate hoax
+
+[103:03] - [103:32]:
+um it's actually Linux and I'm just you know faked it you name- a bbsd 14
+release there you go poofs in the pudding that's 3 BSD so what I got here is 3
+BSD I've got GFS list so I' got all my um as I showed you in the previous guide
+got home directory as a zfss ZFS data set and all
+
+[103:32] - [104:02]:
+my um uh all the directories in my home are also ZF and ZFS data sets as well
+I've got Puri air set up for building stuff I've got boot environments um so
+yeah and basically I've got ZFS encrypted rout um Wayland wave fire Z zsh emac
+you know all the command line applications I want um MPD audio um OBS
+
+[104:02] - [104:31]:
+got boot environments got um Unbound DNS server um you know got ports I can
+mount Linux drives uh so I can mount all my Linux drives uh using the EXT2 FS
+kernel module uh I got chromium wide Vine enabled got virtual OSS um audio for
+capturing audio from applications like uh chromium so yeah all good um took a
+bit of a while
+
+[104:31] - [105:02]:
+to figure out the secret source to get it working and the correct combination of
+packages and options that sort of thing but um you know a bit of persistence and
+uh it's possible um so um I'll have to respond to this sort of post um but no
+gpus found and uh put a link um to this guide on the FreeBSD Forum um so you can
+follow along but I'll put links to all this under the video and um
+
+[105:02] - [105:22]:
+again this is the first video that you want to have a look at um because I go
+through a lot of the steps um that I didn't mention here um getting prri a set
+up that sort of thing to get chromium working um so I'll put link to all this
+under the video and hope that helps
