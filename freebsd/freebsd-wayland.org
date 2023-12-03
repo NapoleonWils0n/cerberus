@@ -2086,6 +2086,13 @@ switch to root
 su
 #+end_src
 
+edit you /boot/loader.conf
+
+#+begin_src sh
+vi /boot/loader.conf
+#+end_src
+
+and add the following code
 
 #+begin_src conf
 # virtual oss - start with: sudo sysrc onestart virtual_oss 
