@@ -135,7 +135,8 @@ sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-d
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
 
 #+begin_src sh
-sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
+sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm"
+sudo sysrc linux_enable="YES"
 #+end_src
 
 or manually edit the config file
@@ -147,7 +148,8 @@ sudo vi /etc/rc.conf
 then add the code below to /etc/rc.conf
 
 #+BEGIN_SRC sh
-kld_list="i915kms nvidia-modeset nvidia-drm linux linux64"
+kld_list="i915kms nvidia-modeset nvidia-drm"
+linux_enable="YES"
 #+END_SRC
 
 *** macbook air 2011 
@@ -161,7 +163,7 @@ use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video ha
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
 
 #+begin_src sh
-sudo sysrc kld_list="i915kms"
+sudo sysrc kld_list+="i915kms"
 #+end_src
 
 or manually edit the config file
