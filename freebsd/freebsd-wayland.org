@@ -333,7 +333,7 @@ me:\
 #+end_src
 
 #+begin_src sh
-cap_mkdb ~/.login.conf
+cap_mkdb ~/.login_conf
 #+end_src
 
 ** qtt5
@@ -2084,6 +2084,12 @@ switch to root
 
 #+begin_src sh
 su
+#+end_src
+
+
+#+begin_src conf
+# virtual oss - start with: sudo sysrc onestart virtual_oss 
+virtual_oss_enable="NO"
 #+end_src
 
 start virtual_oss
