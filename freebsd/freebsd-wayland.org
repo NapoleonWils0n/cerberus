@@ -311,7 +311,7 @@ sudo sysrc dictd_enable="YES"
 ** obs studio
 
 #+begin_src sh
-sudo pkg install obs-studio qt6-wayland
+sudo pkg install obs-studio qt6-wayland wlrobs
 #+end_src
 
 Only root can grant real-time priority to processes for now, using rtprio(1).
