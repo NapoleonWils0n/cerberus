@@ -132,7 +132,7 @@ console none unknown off insecure
 sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils
 #+END_SRC
 
-we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+we also need to edit `/etc/rc.conf`
 
 #+begin_src sh
 sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm"
@@ -160,7 +160,7 @@ sudo pkg install libva-intel-driver libva-utils drm-515-kmod
 
 use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
 
-we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+we also need to edit `/etc/rc.conf`
 
 #+begin_src sh
 sudo sysrc kld_list+="i915kms"
