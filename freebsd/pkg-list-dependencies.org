@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* pkg show dependencies
+
+#+begin_src sh
+pkg info -dr tmux
+#+end_src
