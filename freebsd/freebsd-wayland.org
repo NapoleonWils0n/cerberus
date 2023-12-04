@@ -1000,10 +1000,6 @@ check dnscrypt-proxy can resolve a domain
 dnscrypt-proxy -resolve google.com
 #+END_SRC
 
-+ website to test dnsec is working
-
-[[https://dnssec.vs.uni-due.de/][dnsec test]]
-
 ** zfs home datasets
 *** boot into single user mode
 
