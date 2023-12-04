@@ -109,19 +109,25 @@ Finally, when you want to unmount, we also want to detach from GELI and detach f
 + zfs unmount
 
 #+BEGIN_SRC sh
-zfs umount crypt
+sudo zfs umount crypt
 #+END_SRC
+
++ zpool export
+
+#+begin_src sh
+sudo zpool export crypt
+#+end_src
 
 + geli detach
 
 #+BEGIN_SRC sh
-geli detach md0.eli
+sudo geli detach md0.eli
 #+END_SRC
 
 + mdconfig free loop device
 
 #+BEGIN_SRC sh
-mdconfig -d -u 0
+sudo mdconfig -d -u 0
 #+END_SRC
 
 ** mounting and unmounting
