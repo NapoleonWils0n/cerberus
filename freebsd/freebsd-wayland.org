@@ -452,6 +452,18 @@ mixer rec.volume=100:100
 mixer monitor.volume=100:100
 #+end_src
 
+***** toggle mute
+
+#+begin_src conf
+mixer vol.mute=^
+#+end_src
+
+in the terminal you will need to quote the caret
+
+#+begin_src sh
+mixer vol.mute="^"
+#+end_src
+
 ***** mute
 
 #+begin_src sh
