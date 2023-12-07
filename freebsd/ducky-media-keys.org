@@ -1,0 +1,256 @@
+#+STARTUP: content
+* duck media keys
+** links
+
+[[https://forums.freebsd.org/threads/howto-using-multimedia-keys-from-uhid-4-devices.24069/]]
+
+** usbhid -- USB HID transport driver
+
+Alternatively, to load the driver as a module at boot time, place the following line in loader.conf(5):
+
+*** loader.conf
+
+#+begin_example
+/boot/loader.conf
+#+end_example
+
+#+begin_src conf
+usbhid_load="YES"
+#+end_src
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf usbhid_load="YES"
+#+end_src
+
+*** sysctl.conf
+
+#+begin_example
+/etc/sysctl.conf
+#+end_example
+
+#+begin_src conf
+hw.usb.usbhid.enable=1
+#+end_src
+
+** Detect your USB (uhid) keyboard
+
+First, check if you really have a uhid(4) device, do not forget to add it to your kernel config!
+
+#+begin_src sh
+dmesg | grep uhid
+#+end_src
+
+** Get the usable keys
+
+Now we need to see which keys are available. Let see on mine.
+
+#+begin_src sh
+usbhidctl -f /dev/uhid0 -r
+#+end_src
+
++ output
+
+#+begin_src conf
+# usbhidctl -f /dev/uhid0 -r
+Report descriptor:
+Collection type=Application page=Consumer usage=Consumer_Control
+Input   rid=0 pos=0 size=1 count=1 page=Consumer usage=Mute, logical range 0..1
+Input   rid=0 pos=1 size=1 count=1 page=Consumer usage=Volume_Increment, logical range 0..1
+Input   rid=0 pos=2 size=1 count=1 page=Consumer usage=Volume_Decrement, logical range 0..1
+Input   rid=0 pos=3 size=1 count=1 page=Consumer usage=Play/Pause, logical range 0..1
+Input   rid=0 pos=4 size=1 count=1 page=Consumer usage=Stop, logical range 0..1
+Input   rid=0 pos=5 size=1 count=1 page=Consumer usage=Scan_Next_Track, logical range 0..1
+Input   rid=0 pos=6 size=1 count=1 page=Consumer usage=Scan_Previous_Track, logical range 0..1
+Input   rid=0 pos=7 size=1 count=1 page=Consumer usage=AL_Calculator, logical range 0..1
+Input   rid=0 pos=8 size=1 count=1 page=Consumer usage=AL_Local_Machine_Browser, logical range 0..1
+Input   rid=0 pos=9 size=1 count=1 page=Consumer usage=AC_Home, logical range 0..1
+Input   rid=0 pos=10 size=1 count=1 page=Consumer usage=AL_Email_Reader, logical range 0..1
+Input   rid=0 pos=11 size=1 count=1 page=Consumer usage=AL_Consumer_Control_Configuration, logical range 0..1
+Input   rid=0 pos=12 size=1 count=1 page=Consumer usage=AC_Search, logical range 0..1
+End collection
+Total   input size 4 bytes
+Total  output size 0 bytes
+Total feature size 0 bytes
+#+end_src
+
+** Write a usbhidaction(1) config file
+
+Now it's time to setup a usbhidaction(1) file to associate a shell command to the specified button, the syntax is really easy.
+
+Let's try to add an action for the Volume_Increment input:
+
+Collection page=Consumer(1) usage=Consumer_Control(2)
+Input size=1 count=1 page=Consumer(3) usage=Volume_Increment(4), logical range 0..1
+
+There is two way to fill an action, by specifying everything like this:
+
+#+begin_src conf
+# Syntax of usbhidaction file
+# Collection page(1):Collection usage(2).input page(4):input usage(3) bounce debounce command
+
+Consumer:Consumer_Control.Consumer:Volume_Increment 1 0 mixer vol +2
+#+end_src
+
+Or the simpliest method is to remove (2) and (4) and simply use the following: 
+
+#+begin_src conf
+# Simplified syntax
+
+Consumer:Volume_Increment 1 0 mixer vol +2
+#+end_src
+
+You must admit, it's really better.
+
+But what are these 1 0 ?
+
+As you can see the input has two logical range logical range 0..1, because it's a button it can has two states: pressed and released. 1 means pressed and 0 means released (I guess).
+
+Thus the usbhidaction(1) waits for the bounce value 1 and the debounce value 0 that simply means the key was pressed and released.
+
+** Passing arguments when calling the action 
+
+Whenever the command is called you can pass any arguments you like just like a shell command see :
+
+#+begin_src conf
+# Syntax with arguments passed when calling the command
+# $1 is the mixer device
+# $2 is the increment value I want to use
+
+Consumer:Volume_Increment 1 0 mixer -f $1 vol +$2
+#+end_src
+
+Now if I run the usbhidaction(1) and give the both arguments it will use them each time I press the key.
+
+#+begin_src sh
+usbhidaction -d -f /dev/uhid0 -c usbaction.conf /dev/mixer1 2
+#+end_src
+
+#+begin_example
+Setting the mixer vol from 56:56 to 58:58.
+Setting the mixer vol from 58:58 to 60:60.
+Setting the mixer vol from 60:60 to 62:62.
+Setting the mixer vol from 62:62 to 64:64.
+#+end_example
+
+As you can see in this example I passed the /dev/mixer device and the increment value I wanted, then I pressed my volume up button fourth times.
+
+** Automatically run usbhidaction when the device is found
+
+Now you may guess, using the /dev/uhid0 device is not well, imagine you have a joypad detected as /dev/uhid0 before the keyboard you will need to check which one is the good one. So now we will add a devd(8) appropriate entry to match only our keyboard.
+
+First we need to get the keyboard hid vendor Id and product Id with usbconfig(8)
+
+I know that my keyboard hid is /dev/uhid0 but to know the vendor Id and product Id I need to deal with ugenx.y devices.
+
+#+begin_src sh
+usbconfig show_ifdrv
+#+end_src
+
++ output
+
+#+begin_src conf
+# usbconfig show_ifdrv
+ugen0.1: <Intel XHCI root HUB> at usbus0, cfg=0 md=HOST spd=SUPER (5.0Gbps) pwr=SAVE (0mA)
+ugen0.1.0: uhub0: <Intel XHCI root HUB, class 9/0, rev 3.00/1.00, addr 1>
+ugen1.1: <Intel XHCI root HUB> at usbus1, cfg=0 md=HOST spd=SUPER (5.0Gbps) pwr=SAVE (0mA)
+ugen1.1.0: uhub1: <Intel XHCI root HUB, class 9/0, rev 3.00/1.00, addr 1>
+ugen0.2: <Generic 4-Port USB 2.0 Hub> at usbus0, cfg=0 md=HOST spd=HIGH (480Mbps) pwr=SAVE (0mA)
+ugen0.2.0: uhub2: <Generic 4-Port USB 2.0 Hub, class 9/0, rev 2.10/1.36, addr 1>
+ugen0.3: <ASIX Elec. Corp. AX88x72A> at usbus0, cfg=0 md=HOST spd=HIGH (480Mbps) pwr=ON (250mA)
+ugen0.3.0: axe0: <0>
+ugen0.5: <BenQ ZOWIE BenQ ZOWIE Gaming Mouse> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
+ugen0.5.0: ums0: <BenQ ZOWIE BenQ ZOWIE Gaming Mouse, class 0/0, rev 2.00/0.20, addr 4>
+ugen0.6: <Generic 4-Port USB 2.0 Hub> at usbus0, cfg=0 md=HOST spd=HIGH (480Mbps) pwr=SAVE (0mA)
+ugen0.6.0: uhub3: <Generic 4-Port USB 2.0 Hub, class 9/0, rev 2.10/1.36, addr 5>
+ugen0.7: <vendor 0x8087 product 0x0029> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
+ugen0.8: <HTMicroelectronics Goodix Fingerprint Device> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
+ugen0.8.0: umodem0: <HTMicroelectronics Goodix Fingerprint Device, class 239/2, rev 2.00/1.00, addr 7>
+ugen0.9: <CN09357G8LG00062AR07A01 IntegratedWebcamHD> at usbus0, cfg=0 md=HOST spd=HIGH (480Mbps) pwr=ON (500mA)
+ugen0.10: <Generic 4-Port USB 3.0 Hub> at usbus0, cfg=0 md=HOST spd=SUPER (5.0Gbps) pwr=SAVE (0mA)
+ugen0.10.0: uhub4: <Interrupt In Interface>
+ugen0.11: <Generic 4-Port USB 3.0 Hub> at usbus0, cfg=0 md=HOST spd=SUPER (5.0Gbps) pwr=SAVE (0mA)
+ugen0.11.0: uhub5: <Interrupt In Interface>
+ugen0.4: <Ducky Ducky One2 Mini RGB> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
+ugen0.4.0: ukbd0: <Ducky Ducky One2 Mini RGB, class 0/0, rev 1.10/0.00, addr 11>
+ugen0.4.1: ums1: <Ducky Ducky One2 Mini RGB, class 0/0, rev 1.10/0.00, addr 11>
+ugen0.4.2: ukbd1: <Ducky Ducky One2 Mini RGB, class 0/0, rev 1.10/0.00, addr 11>
+ugen0.4.3: uhid0: <Ducky Ducky One2 Mini RGB, class 0/0, rev 1.10/0.00, addr 11>
+#+end_src
+
++ keyboard
+
+#+begin_src conf
+ugen0.4: <Ducky Ducky One2 Mini RGB> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
+#+end_src
+
+
+Now I know that my keyboard hid is located at ugen0.4, directly attached to the same ukbd(4) device.
+
+We need to get the vendor Id and product Id
+
+#+begin_src sh
+usbconfig -d ugen0.4 dump_device_desc
+#+end_src
+
+#+begin_src conf
+ugen0.4: <Ducky Ducky One2 Mini RGB> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
+
+  bLength = 0x0012
+  bDescriptorType = 0x0001
+  bcdUSB = 0x0110
+  bDeviceClass = 0x0000  <Probed by interface class>
+  bDeviceSubClass = 0x0000
+  bDeviceProtocol = 0x0000
+  bMaxPacketSize0 = 0x0008
+  idVendor = 0x0416
+  idProduct = 0x0123
+  bcdDevice = 0x0000
+  iManufacturer = 0x0001  <Ducky>
+  iProduct = 0x0002  <Ducky One2 Mini RGB>
+  iSerialNumber = 0x0003  <DK-V1.18-190819>
+  bNumConfigurations = 0x0001
+#+end_src
+
+product id and vendor
+
+#+begin_src conf
+  idVendor = 0x0416
+  idProduct = 0x0123
+#+end_src
+
+Now, we need to add the devd.conf(5) entry:
+
+#+begin_example
+/usr/local/etc/devd/devd.conf 
+#+end_example
+
+#+begin_src conf
+# ducky one 2 mini
+attach 100 {
+        device-name "uhid[0-9]+";                                                           
+        match "vendor"  "0x0416"; # (1)
+        match "product" "0x0123"; # (2)
+
+	#
+	# Do not add -d flag ! if you do it devd will never detach to background
+	# because usbhidaction will run in foreground !
+	#
+	# Remember you can add arguments after /etc/usbhidaction.conf like
+	# action "/usr/bin/usbhidaction -f $device-name -c /etc/usbhidaction.conf /dev/mixer1 2"
+	#
+        action "/usr/bin/usbhidaction -f $device-name -c /usr/local/etc/usbhidaction.conf";
+};
+#+end_src
+
+Not so hard, and of course the usbhidaction(1) config in /usr/local/etc/usbhidaction.conf like this:
+
+#+begin_example
+/usr/local/etc/usbhidaction.conf
+#+end_example
+
+#+begin_src conf
+# ducky 
+Consumer:Volume_Increment	1 0 mixer vol +2
+Consumer:Volume_Decrement	1 0 mixer vol -2
+Consumer:Mute			1 0 mixer vol 0
+#+end_src
