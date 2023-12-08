@@ -73,11 +73,13 @@ wayfire-plugins-extra
 wayland-protocols
 wcm
 weechat
+wev
 wf-shell
 wget2
 wl-clipboard
 wlogout
 wlrobs
+xdg-desktop-portal-wlr
 yt-dlp
 zsh
 zsh-completions
