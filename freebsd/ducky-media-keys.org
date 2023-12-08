@@ -1,5 +1,5 @@
 #+STARTUP: content
-* duck media keys
+* ducky media keys
 ** links
 
 [[https://forums.freebsd.org/threads/howto-using-multimedia-keys-from-uhid-4-devices.24069/]]
