@@ -39,7 +39,7 @@ hw.usb.usbhid.enable=1
 First, check if you really have a uhid(4) device, do not forget to add it to your kernel config!
 
 #+begin_src sh
-dmesg | grep uhid
+sudo dmesg | grep uhid
 #+end_src
 
 ** Get the usable keys
@@ -47,7 +47,7 @@ dmesg | grep uhid
 Now we need to see which keys are available. Let see on mine.
 
 #+begin_src sh
-usbhidctl -f /dev/uhid0 -r
+sudo usbhidctl -f /dev/uhid0 -r
 #+end_src
 
 + output
@@ -124,7 +124,7 @@ Consumer:Volume_Increment 1 0 mixer -f $1 vol +$2
 Now if I run the usbhidaction(1) and give the both arguments it will use them each time I press the key.
 
 #+begin_src sh
-usbhidaction -d -f /dev/uhid0 -c usbaction.conf /dev/mixer1 2
+sudo usbhidaction -d -f /dev/uhid0 -c usbaction.conf /dev/mixer1 2
 #+end_src
 
 #+begin_example
@@ -145,7 +145,7 @@ First we need to get the keyboard hid vendor Id and product Id with usbconfig(8)
 I know that my keyboard hid is /dev/uhid0 but to know the vendor Id and product Id I need to deal with ugenx.y devices.
 
 #+begin_src sh
-usbconfig show_ifdrv
+sudo usbconfig show_ifdrv
 #+end_src
 
 + output
@@ -191,33 +191,33 @@ Now I know that my keyboard hid is located at ugen0.4, directly attached to the 
 We need to get the vendor Id and product Id
 
 #+begin_src sh
-usbconfig -d ugen0.4 dump_device_desc
+sudo usbconfig -d ugen0.4 dump_device_desc
 #+end_src
 
 #+begin_src conf
 ugen0.4: <Ducky Ducky One2 Mini RGB> at usbus0, cfg=0 md=HOST spd=FULL (12Mbps) pwr=ON (100mA)
 
-  bLength = 0x0012
-  bDescriptorType = 0x0001
-  bcdUSB = 0x0110
-  bDeviceClass = 0x0000  <Probed by interface class>
-  bDeviceSubClass = 0x0000
-  bDeviceProtocol = 0x0000
-  bMaxPacketSize0 = 0x0008
-  idVendor = 0x0416
-  idProduct = 0x0123
-  bcdDevice = 0x0000
-  iManufacturer = 0x0001  <Ducky>
-  iProduct = 0x0002  <Ducky One2 Mini RGB>
-  iSerialNumber = 0x0003  <DK-V1.18-190819>
-  bNumConfigurations = 0x0001
+bLength = 0x0012
+bDescriptorType = 0x0001
+bcdUSB = 0x0110
+bDeviceClass = 0x0000  <Probed by interface class>
+bDeviceSubClass = 0x0000
+bDeviceProtocol = 0x0000
+bMaxPacketSize0 = 0x0008
+idVendor = 0x0416
+idProduct = 0x0123
+bcdDevice = 0x0000
+iManufacturer = 0x0001  <Ducky>
+iProduct = 0x0002  <Ducky One2 Mini RGB>
+iSerialNumber = 0x0003  <DK-V1.18-190819>
+bNumConfigurations = 0x0001
 #+end_src
 
 product id and vendor
 
 #+begin_src conf
-  idVendor = 0x0416
-  idProduct = 0x0123
+idVendor = 0x0416
+idProduct = 0x0123
 #+end_src
 
 Now, we need to add the devd.conf(5) entry:
