@@ -15,6 +15,7 @@ Alternatively, to load the driver as a module at boot time, place the following 
 #+end_example
 
 #+begin_src conf
+# usb keyboard multimedia keys
 usbhid_load="YES"
 #+end_src
 
@@ -29,6 +30,7 @@ sudo sysrc -f /boot/loader.conf usbhid_load="YES"
 #+end_example
 
 #+begin_src conf
+# usb keyboard media keys
 hw.usb.usbhid.enable=1
 #+end_src
 
