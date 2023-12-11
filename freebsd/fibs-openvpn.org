@@ -25,7 +25,7 @@ sudo setfib 1 route add default 192.168.1.1
 ** start openvpn in the 2nd routing table
 
 #+BEGIN_SRC sh
-sudo setfibs 1 openvpn --config config.ovpn
+sudo setfib 1 openvpn --config config.ovpn
 #+END_SRC
 
 #+BEGIN_SRC sh

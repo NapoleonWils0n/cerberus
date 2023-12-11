@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* pkg message
+
+show pkg message
+
+#+begin_src sh
+pkg info --pkg-message firefox
+#+end_src
