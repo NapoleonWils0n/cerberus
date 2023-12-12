@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* grim wayland screenshot
+** laptop display
+
+#+begin_src sh
+grim -o eDP-1
+#+end_src
+
+** external display
+
+#+begin_src sh
+grim -o DP-3
+#+end_src
