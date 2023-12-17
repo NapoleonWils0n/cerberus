@@ -1,0 +1,122 @@
+#+STARTUP: content
+* obs nvenc freebsd
+
+** with-glibc-shim
+
+https://github.com/shkhln/libc6-shim/commit/1a4333055abd778081d71c9c11675afed152c64e
+
+#+begin_src sh
+sudo chmod +w /usr/local/bin/with-glibc-shim
+#+end_src
+
+#+begin_src sh
+sudo vi /usr/local/bin/with-glibc-shim
+#+end_src
+
+change line 27 
+
+#+begin_src conf
+  if libdir_suffix == '' && File.exist?("/usr/librt.so.1")
+#+end_src
+
+to
+
+#+begin_src conf
+  if libdir_suffix == '' && File.exist?("/lib/librt.so.1")
+#+end_src
+
+run obs
+
+#+begin_src sh
+sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" obs'
+#+end_src
+
+nv-sglrun nvidia-smi
+
+#+begin_src conf
+Sun Dec 17 02:04:01 2023       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.104.05             Driver Version: 535.104.05   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA GeForce GTX 1650        Off | 00000000:01:00.0 Off |                  N/A |
+| N/A   42C    P8               1W /  50W |      0MiB /  4096MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+
+#+end_src
+** desktop launcher
+
+create a desktop entry called com.obsproject.Studio.desktop
+in ~/.local/share/applications/
+
+#+begin_src sh
+vi ~/.local/share/applications/com.obsproject.Studio.desktop
+#+end_src
+
+add the following code to com.obsproject.Studio.desktop
+
+#+begin_src sh
+[Desktop Entry]
+Version=1.0
+Name=OBS
+GenericName=Streaming/Recording Software
+Comment=Free and Open Source Streaming/Recording Software
+Exec=sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" obs'
+Icon=com.obsproject.Studio
+Terminal=false
+Type=Application
+Categories=AudioVideo;Recorder;
+StartupNotify=true
+StartupWMClass=obs
+#+end_src
+
+** packages
+
+#+begin_src sh
+sudo pkg install nvidia-driver linux-nvidia-libs libc6-shim libvdpau-va-gl libva-nvidia-driver 
+#+end_src
+
+** links
+
+[[https://docs.freebsd.org/en/books/handbook/linuxemu/#linuxemu-debootstrap]]
+
+[[https://forums.freebsd.org/threads/linuxulator-how-to-install-brave-linux-app-on-freebsd-13-0.78879/]]
+
+[[https://www.reddit.com/r/freebsd/comments/1118eae/how_to_install_the_nvidia_driver_5257801_cuda_12/]]
+
+[[https://forums.freebsd.org/threads/how-to-install-on-freebsd-13-1-release-a-different-nvidia-driver-version-than-one-that-exists-between-ports-and-packages.87998/]]
+
+[[https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=264027]]
+
+[[https://docs.freebsd.org/en/books/handbook/linuxemu/]]
+
+[[https://github.com/verm/freebsd-stable-diffusion]]
+
+[[https://vermaden.wordpress.com/2019/03/21/fix-broken-dependency-on-freebsd/]]
+
+** nv-sglrun printenv
+
+#+begin_src sh
+nv-sglrun printenv LD_LIBMAP
+#+end_src
+
+#+begin_src sh
+nv-sglrun printenv LD_LIBMAP > cuda.conf
+#+end_src
+
+#+begin_src sh
+sudo cp cuda.conf /usr/local/etc/libmap.d/
+#+end_src
+

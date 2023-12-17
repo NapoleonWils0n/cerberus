@@ -1,0 +1,236 @@
+#+STARTUP: content
+* linuxlator ubuntu
+** Important notes:
+
+1) This guide is for FreeBSD 13.0 and newer only!!
+
+For FreeBSD 12, please see:
+[[https://forums.freebsd.org/threads/...-google-chrome-linux-binary-on-freebsd.77559/]]
+
+2) This method should be valid for installing any other Chromium-based web browser (Google Chrome, Opera, Vivaldi, Edge, etc), as long as they (or their dependencies) are not Snaps/Flatpaks.
+
+3) Most enhancements found in this tutorial were taken from/inspired by:
+[[https://github.com/mrclksr/linux-browser-installer]]
+
+4) Given the many improvements made in Linuxulator and DRM drivers, we don't rely on games/linux-steam-utils workarounds anymore. Likewise, disabling DRI3 is no longer necessary.
+
+5) Here we use an Ubuntu-based userspace, instead of default CentOS one.
+
+6) Sound, webcam, microphone, hardware acceleration all properly work. Widevine support too (Netflix, Spotify, Amazon Prime Video, HBO Max, etc).
+
+7) The /home and /tmp directories are shared by FreeBSD and Linux apps.
+
+8) We now use /compat/ubuntu as Linux compat location, to avoid conflicting with CentOS-based ports. Still, be aware you can't run both Ubuntu and CentOS environments at the same time. When you want to switch back to running your CentOS-based applications, you'll need to disable Ubuntu rc.d script and enable the Linux one:
+
+#+begin_src sh
+sysrc ubuntu_enable=NO && sysrc linux_enable=YES
+#+end_src
+
+Then reboot to make your changes take effect, or manually stop Ubuntu service and start the Linux one:
+
+#+begin_src sh
+service ubuntu onestop && sysctl compat.linux.emul_path=/compat/linux && service linux start
+#+end_src
+
+9) I recommend (although is not a requirement as far as I know) to use tmpfs for /tmp. This is not the case when using ZFS default installation, but can be easily fixed. Assuming the ZFS pool is named "zroot":
+
+# First reboot into single-user mode.
+# Remount root filesystem as read/write:
+mount -u /
+# Destroy /tmp from zroot:
+zfs destroy -f zroot/tmp
+# Add this fstab entry:
+printf "tmpfs\t/tmp\ttmpfs\trw,mode=1777\t0\t0\n" >> /etc/fstab
+# Reboot back to normal multi-user mode.
+
+** ubuntu
+
+#+begin_src sh
+su
+#+end_src
+
+Create Ubuntu rc.d script and make it executable:
+
+#+begin_src sh
+touch /usr/local/etc/rc.d/ubuntu && chmod +x /usr/local/etc/rc.d/ubuntu
+#+end_src
+
+
+#+begin_src sh
+sudo cp ubuntu /usr/local/etc/rc.d/
+#+end_src
+
+
+#+begin_src sh
+sudo chmod +x /usr/local/etc/rc.d/ubuntu
+#+end_src
+
+#+begin_src sh
+#!/bin/sh
+#
+# PROVIDE: ubuntu
+# REQUIRE: archdep mountlate
+# KEYWORD: nojail
+#
+# This is a modified version of /etc/rc.d/linux
+# Based on the script by mrclksr:
+# https://github.com/mrclksr/linux-browser-installer/blob/main/rc.d/ubuntu.in
+#
+. /etc/rc.subr
+
+name="ubuntu"
+desc="Enable Ubuntu chroot, and Linux ABI"
+rcvar="ubuntu_enable"
+start_cmd="${name}_start"
+stop_cmd=":"
+
+unmounted()
+{
+    [ `stat -f "%d" "$1"` == `stat -f "%d" "$1/.."` -a \
+      `stat -f "%i" "$1"` != `stat -f "%i" "$1/.."` ]
+}
+
+ubuntu_start()
+{
+    local _emul_path _tmpdir
+
+    load_kld -e 'linux(aout|elf)' linux
+    case `sysctl -n hw.machine_arch` in
+    amd64)
+        load_kld -e 'linux64elf' linux64
+        ;;
+    esac
+    if [ -x /compat/ubuntu/sbin/ldconfigDisabled ]; then
+        _tmpdir=`mktemp -d -t linux-ldconfig`
+        /compat/ubuntu/sbin/ldconfig -C ${_tmpdir}/ld.so.cache
+        if ! cmp -s ${_tmpdir}/ld.so.cache /compat/ubuntu/etc/ld.so.cache; then
+            cat ${_tmpdir}/ld.so.cache > /compat/ubuntu/etc/ld.so.cache
+        fi
+        rm -rf ${_tmpdir}
+    fi
+
+    # Linux uses the pre-pts(4) tty naming scheme.
+    load_kld pty
+
+    # Handle unbranded ELF executables by defaulting to ELFOSABI_LINUX.
+    if [ `sysctl -ni kern.elf64.fallback_brand` -eq "-1" ]; then
+        sysctl kern.elf64.fallback_brand=3 > /dev/null
+    fi
+
+    if [ `sysctl -ni kern.elf32.fallback_brand` -eq "-1" ]; then
+        sysctl kern.elf32.fallback_brand=3 > /dev/null
+    fi
+    sysctl compat.linux.emul_path=/compat/ubuntu
+
+    _emul_path="/compat/ubuntu"
+    unmounted "${_emul_path}/dev" && (mount -o nocover -t devfs devfs "${_emul_path}/dev" || exit 1)
+    unmounted "${_emul_path}/dev/fd" && (mount -o nocover,linrdlnk -t fdescfs fdescfs "${_emul_path}/dev/fd" || exit 1)
+    unmounted "${_emul_path}/dev/shm" && (mount -o nocover,mode=1777 -t tmpfs tmpfs "${_emul_path}/dev/shm" || exit 1)
+    unmounted "${_emul_path}/home" && (mount -t nullfs /home "${_emul_path}/home" || exit 1)
+    unmounted "${_emul_path}/proc" && (mount -o nocover -t linprocfs linprocfs "${_emul_path}/proc" || exit 1)
+    unmounted "${_emul_path}/sys" && (mount -o nocover -t linsysfs linsysfs "${_emul_path}/sys" || exit 1)
+    unmounted "${_emul_path}/tmp" && (mount -t nullfs /tmp "${_emul_path}/tmp" || exit 1)
+    unmounted /dev/fd && (mount -o nocover -t fdescfs fdescfs /dev/fd || exit 1)
+    unmounted /proc && (mount -o nocover -t procfs procfs /proc || exit 1)
+    true
+}
+
+load_rc_config $name
+run_rc_command "$1"
+#+end_src
+
+*** Enable Linux compatibility layer (Ubuntu):
+
+stop linux
+
+#+begin_src sh
+sudo sysrc linux_enable="NO"
+#+end_src
+
+start ubuntu
+
+#+begin_src sh
+sudo sysrc ubuntu_enable=YES
+#+end_src
+
+*** Create necessary mount points for a working Linuxulator:
+
+#+begin_src sh
+sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,/compat/ubuntu/tmp,/compat/ubuntu/proc,/compat/ubuntu/sys}
+#+end_src
+
+*** Start Ubuntu service:
+
+#+begin_src sh
+sudo service ubuntu start
+#+end_src
+
+*** Install needed packages:
+
+#+begin_src sh
+sudo pkg install debootstrap 
+#+end_src
+
+*** Install Ubuntu 22.04 into /compat/ubuntu:
+
+#+begin_src sh
+sudo debootstrap --arch=amd64 --no-check-gpg jammy /compat/ubuntu
+#+end_src
+
+*** Restart Ubuntu service to make sure everything is properly mounted:
+
+#+begin_src sh
+service ubuntu restart
+#+end_src
+
+*** Fix broken symlink:
+
+maybe not needed for ubuntu 22.10
+
+#+begin_src sh
+cd /compat/ubuntu/lib64/ && rm ./ld-linux-x86-64.so.2 ; ln -s ../lib/x86_64-linux-gnu/ld-2.31.so ld-linux-x86-64.so.2
+#+end_src
+
+*** Chroot into your Linux environment:
+
+#+begin_src sh
+chroot /compat/ubuntu /bin/bash
+#+end_src
+
+*** Set correct timezone inside your chroot:
+
+#+begin_src sh
+printf "%b\n" "0.0 0 0.0\n0\nUTC" > /etc/adjtime
+#+end_src
+
+For some reason sudo is necessary here, otherwise it fails.
+
+#+begin_src sh
+sudo dpkg-reconfigure tzdata 
+#+end_src
+
+*** Fix APT package manager:
+
+#+begin_src sh
+printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
+#+end_src
+
+*** Enable more repositories:
+
+#+begin_src sh
+printf "deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list
+#+end_src
+
+*** Install required programs:
+
+#+begin_src sh
+apt update ; apt install -y apt-transport-https curl fonts-symbola gnupg pulseaudio
+#+end_src
+
+*** Exit chroot:
+
+#+begin_src sh
+exit
+#+end_src
+
+
