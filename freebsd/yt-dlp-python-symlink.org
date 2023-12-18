@@ -1,0 +1,50 @@
+#+STARTUP: showall
+* yt-dlp python symlink
+
+the yt-dlp shebang points to python3
+
+so we need to create a symlink from python 3.9 to python3
+
+#+begin_src sh
+sudo ln -s /usr/local/bin/python3.9 /usr/local/bin/python3
+#+end_src
+
+edit your ~/.zshenv
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+set your path so that the bin directory in your home comes before /usr/local/bin
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
+export PATH
+#+end_src
+
+this allows us override yt-dlp installed in /usr/local/bin
+with our newer version install in the bin directory in your home
+
+download yt-dlp from the release on github
+
+[[https://github.com/yt-dlp/yt-dlp/releases]]
+
+make yt-dlp executable
+
+#+begin_src sh
+chmod +x yt-dlp
+#+end_src
+
+and move it to the bin directory in your home
+if you dont have a bin directory create it
+
+#+begin_src sh
+mv yt-dlp ~/bin
+#+end_src
+
+check the version
+
+#+begin_src sh
+yt-dlp --version
+#+end_src
