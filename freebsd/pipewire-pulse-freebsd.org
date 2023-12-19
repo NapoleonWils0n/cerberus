@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* pipewire-pulse
+
+#+begin_src sh
+pipewire-pulse --start
+#+end_src

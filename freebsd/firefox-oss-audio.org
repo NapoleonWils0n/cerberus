@@ -1,0 +1,20 @@
+#+STARTUP: content
+* firefox oss audio freebsd
+
+To force a specific backend open
+
+#+begin_example
+about:config
+#+end_example
+
+and create
+
+#+begin_example
+media.cubeb.backend
+#+end_example
+
+set the option to string and
+
+#+begin_example
+oss
+#+end_example
