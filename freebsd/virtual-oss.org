@@ -1,12 +1,13 @@
 #+STARTUP: content
 * virtual oss
 
+[[https://wiki.freebsd.org/Sound]]
+
 virtual oss to record sndio audio in obs studio
 
 #+begin_src sh
 sudo pkg install virtual_oss
 #+end_src
-
 ** cuse boot loader.conf
 
 add cuse_load="YES" loader.conf using sysrc
@@ -65,17 +66,13 @@ switch to root
 su
 #+end_src
 
-start virtual_oss
-
-#+begin_src sh
-sudo service onestart virtual_oss
-#+end_src
-
 replace dsp0 with you device
 
 #+begin_src sh
-virtual_oss -S -C 2 -c 2 -r 48000 -b 16 -s 1024 -f /dev/dsp0 -w vdsp.wav -l dsp
+virtual_oss -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp
 #+end_src
+
+ctrl c to stop
 
 ** obs
 
@@ -90,4 +87,17 @@ and the Custom DSP Path to
 #+begin_example
 /dev/dsp
 #+end_example
+
+** links
+
+[[https://wiki.freebsd.org/Sound]]
+[[https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=252063]]
+[[https://meka.rs/blog/2021/10/12/freebsd-audio/]]
+[[https://man.freebsd.org/cgi/man.cgi?query=virtual_oss&sektion=8&format=html]]
+[[https://forums.freebsd.org/threads/virtual_oss-how-do-you-record-currently-playing-audio.75948/]]
+[[https://forums.freebsd.org/threads/recording-audio-output.75819/]]
+[[https://forums.freebsd.org/threads/change-default-audio-device-without-restarting-applications-to-take-effect.90033/#post-619597]]
+[[https://forums.freebsd.org/threads/set-different-default-audio-device-for-input-and-output-respectively.90568/#post-625642]]
+[[https://forums.freebsd.org/threads/how-to-recored-audio-from-game-on-freebsd.77855/#post-631969]]
+
 
