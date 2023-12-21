@@ -39,7 +39,7 @@ sudo kldload cuse
 enable virtual_oss and sndiod in your rc.conf using sysrc
 
 #+begin_src sh
-sudo sysrc virtual_oss_enable="YES"
+sudo sysrc virtual_oss_enable="NO"
 sudo sysrc sndiod_enable="YES"
 #+end_src
 
