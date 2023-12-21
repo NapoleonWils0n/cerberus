@@ -91,13 +91,21 @@ and the Custom DSP Path to
 ** links
 
 [[https://wiki.freebsd.org/Sound]]
+
 [[https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=252063]]
+
 [[https://meka.rs/blog/2021/10/12/freebsd-audio/]]
+
 [[https://man.freebsd.org/cgi/man.cgi?query=virtual_oss&sektion=8&format=html]]
+
 [[https://forums.freebsd.org/threads/virtual_oss-how-do-you-record-currently-playing-audio.75948/]]
+
 [[https://forums.freebsd.org/threads/recording-audio-output.75819/]]
+
 [[https://forums.freebsd.org/threads/change-default-audio-device-without-restarting-applications-to-take-effect.90033/#post-619597]]
+
 [[https://forums.freebsd.org/threads/set-different-default-audio-device-for-input-and-output-respectively.90568/#post-625642]]
+
 [[https://forums.freebsd.org/threads/how-to-recored-audio-from-game-on-freebsd.77855/#post-631969]]
 
 
