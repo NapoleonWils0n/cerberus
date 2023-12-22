@@ -1,0 +1,49 @@
+#+STARTUP: content
+* obs-cmd
+** install rust
+
+#+begin_src sh
+sudo pkg install rust
+#+end_src
+
+** clone the repository
+
+First ensure that Rust is installed on your system. Clone the repo to your local system:
+
+#+begin_src sh
+git clone https://github.com/grigio/obs-cmd.git
+#+end_src
+
+Next cd into the cloned directory 
+
+#+begin_src sh
+cd obs-cmd
+#+end_src
+
+** cargo build
+
+then at the top-level of the directory run:
+
+#+begin_src sh
+cargo build --release
+#+end_src
+
+** copy the binary to your bin directory
+
+#+begin_src sh
+cp target/release/obs-cmd ~/bin
+#+end_src
+
+** obs-cmd.toml
+
+create the obs-cmd.toml config file
+
+#+begin_src sh
+vi ~/.config/obs-cmd.toml
+#+end_src
+
+add the following code and your password
+
+#+begin_src config
+OBS_WS_PASSWORD = ""
+#+end_src
