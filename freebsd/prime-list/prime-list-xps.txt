@@ -10,6 +10,7 @@ bat
 beadm
 cantarell-fonts
 chromium
+debootstrap
 dictd
 dnscrypt-proxy2
 doas
@@ -25,9 +26,13 @@ git
 gstreamer1-plugins-opus
 hs-pandoc
 kanshi
+libc6-shim
 libnotify
 libva-intel-driver
+libva-nvidia-driver
 libva-utils
+libvdpau-va-gl
+linux-nvidia-libs
 linux-widevine-cdm
 mixertui
 mpv
@@ -53,6 +58,7 @@ qt5ct
 qt6-wayland
 ripgrep
 ripgrep-all
+rust
 seatd
 socat
 sox
@@ -81,6 +87,8 @@ wlogout
 wlrobs
 xdg-desktop-portal-wlr
 yt-dlp
+zathura
+zathura-pdf-mupdf
 zsh
 zsh-completions
 zsh-syntax-highlighting
