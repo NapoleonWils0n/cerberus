@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* zathura freebsd 
+** install
+
+#+begin_src sh
+sudo pkg install zathura zathua-pdf-mupdf
+#+end_src
+
+** set zathura as the default pdf reader
+
+#+begin_src sh
+xdg-mime default org.pwmt.zathura.desktop application/pdf
+#+end_src
