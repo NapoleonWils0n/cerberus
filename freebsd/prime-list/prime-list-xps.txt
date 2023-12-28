@@ -69,6 +69,7 @@ tmux
 tofi
 translate-shell
 transmission-gtk
+transmission-utils
 tree-sitter
 ts
 urlview
