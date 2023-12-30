@@ -1,0 +1,53 @@
+#+STARTUP: content
+* chromium webgpu
+
+#+begin_src sh
+chrome --ozone-platform=wayland --enable-features=Vulkan --use-vulkan 
+#+end_src
+
+
+#+begin_src sh
+chrome --ozone-platform=wayland --enable-features=Vulkan --enable-vulkan --use-vulkan --enable-angle-features=Vulkan --ignore-gpu-blocklist
+#+end_src
+** working
+
+#+begin_src sh
+#!/bin/sh
+
+env LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`"
+chrome --ozone-platform=wayland \
+--ignore-gpu-blocklist \
+--disable-gpu-driver-bug-workarounds \
+--enable-gpu-rasterization \
+--enable-unsafe-webgpu \
+--enable-zero-copy \
+--enable-drdc \
+--no-sandbox \
+--skia-graphite \
+--enable-webgl-draft-extensions \
+--enable-features=Vulkan,UseSkiaRendererer \
+--use-vulkan \
+--enable-features=VaapiVideoDecoder \
+--canvas-oop-rasterization \
+--enable-webgpu-developer-features \
+--origin-trial-enabled-features=WebGPU \
+--test-type --v=0
+#+end_src
+
+** desktop entry
+
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+#Exec=chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U
+Exec=sh -c 'LD_LIBMAP="`nv-sglrun printenv LD_LIBMAP | grep -v libGL`" chrome --ozone-platform=wayland --ignore-gpu-blocklist --disable-gpu-driver-bug-workarounds --enable-gpu-rasterization --enable-unsafe-webgpu --enable-zero-copy --enable-drdc --no-sandbox --skia-graphite --enable-webgl-draft-extensions --enable-features=Vulkan,UseSkiaRendererer --use-vulkan --enable-features=VaapiVideoDecoder --canvas-oop-rasterization --enable-webgpu-developer-features --origin-trial-enabled-features=WebGPU --test-type --v=0 %U'
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
