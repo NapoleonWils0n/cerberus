@@ -58,6 +58,7 @@ qt5ct
 qt6-wayland
 ripgrep
 ripgrep-all
+rsync
 rust
 seatd
 socat
