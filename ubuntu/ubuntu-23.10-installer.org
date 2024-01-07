@@ -1,0 +1,30 @@
+#+STARTUP: content
+* ubuntu 23.10 installer fix
+** fix
+
+Boot the 23.10.1 desktop ISO
+
+Once the "Welcome to Ubuntu" window shows up, asking you to choose the language, close the window.
+
+Refresh the installer using the following command: $ sudo snap refresh ubuntu-desktop-installer --channel=latest/candidate
+
+Run the installer using the "Install Ubuntu 23.10.1" icon on the bottom right of the desktop.
+
+Go through the installation steps normally.
+
+Source: https://bugs.launchpad.net/subiquity/+bug/2040190 #5
+
+** emacs
+
+#+begin_src sh
+sudo apt install emacs-pgtk --no-install-recommends
+#+end_src
+
+** build essential
+
+install build essential for gcc needed for tree sitter for emacs
+
+#+begin_src sh
+sudo apt install build-essential
+#+end_src
+
