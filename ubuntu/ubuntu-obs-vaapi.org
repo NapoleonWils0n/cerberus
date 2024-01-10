@@ -1,0 +1,6 @@
+#+STARTUP: content
+* ubuntu obs vaapi
+
+#+begin_src sh
+sudo apt install intel-media-va-driver-non-free
+#+end_src
