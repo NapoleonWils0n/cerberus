@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* ubuntu disable preinstalled extensions
+
+#+begin_src sh
+gsettings set org.gnome.shell disabled-extensions ['tiling-assistant@ubuntu.com, ding@rastersoft.com', 'ubuntu-dock@ubuntu.com']
+#+end_src
