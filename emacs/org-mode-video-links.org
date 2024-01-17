@@ -1,0 +1,49 @@
+#+STARTUP: content
+* org mode video links
+** emacs init.el
+
+org mode video link handler
+
+#+begin_src elisp
+;; create a video: link type that opens a url using mpv-play-remote-video
+(org-link-set-parameters "video"
+                         :follow #'mpv-play-remote-video
+                         :store #'org-video-store-link)
+
+
+;; org video store link
+(defun org-video-store-link ()
+  "Store a link to a video url."
+      (org-link-store-props
+       :type "video"
+       :link link
+       :description description))
+
+
+;; mpv-play-remote-video
+(defun mpv-play-remote-video (url &rest args)
+  "Start an mpv process playing the video stream at URL."
+  (interactive)
+  (unless (mpv--url-p url)
+    (user-error "Invalid argument: `%s' (must be a valid URL)" url))
+  (if (not mpv--process)
+      ;; mpv isnt running play file
+      (mpv-start url)
+      ;; mpv running append file to playlist
+    (mpv--playlist-append url)))
+
+
+(setq org-capture-templates
+    '(("v" "video url" entry
+       (file+olp "~/git/personal/bookmarks/video.org" "links")
+       "** [[video:%c][%^{link-description}]]"
+        :empty-lines-after 1)))
+#+end_src
+
+** capture file
+
+#+begin_example
+#+TITLE: video links
+#+STARTUP: overview
+* links
+#+end_example
