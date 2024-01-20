@@ -2110,7 +2110,7 @@ virtual_oss_enable="NO"
 start virtual_oss
 
 #+begin_src sh
-sudo service onestart virtual_oss
+sudo service virtual_oss onestart 
 #+end_src
 
 replace dsp0 with you device
