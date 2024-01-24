@@ -1,0 +1,522 @@
+#+STARTUP: content
+* dwl freebsd install
+** links
+
+[[https://forums.freebsd.org/threads/building-dwl-fails-with-c99-illegal-option-p.92040/]]
+
+[[https://github.com/djpohly/dwl]]
+
+[[https://github.com/djpohly/dwl/wiki/Patches]]
+
+[[https://dwm.suckless.org/customisation/customfuncs/]]
+
+[[https://github.com/willgreen946/dwl/blob/main/config.h]]
+
+[[https://codeberg.org/luuksa/dwl/src/branch/my_dwl/config.h]]
+
+scroll
+[[https://codeberg.org/dwl/dwl/issues/537]]
+
+[[https://codeberg.org/dwl/dwl/pulls/545]]
+
+[[https://www.reddit.com/r/unixporn/comments/12orgaq/dwl_after_hours_of_errors_i_have_got_dwl_on_my/]]
+
+[[https://github.com/LukeSmithxyz/dwm/blob/master/config.h]]
+
+** dependencies
+
+dwl site dependencies list
+
+#+begin_src sh
+libinput
+wayland
+wlroots (compiled with the libinput backend)
+xkbcommon
+wayland-protocols (compile-time only)
+pkg-config (compile-time only)
+#+end_src
+
+freebsd port depencies list
+
+#+begin_example
+Build dependencies:
+        evdev-proto>0 : devel/evdev-proto
+        wayland-protocols>0 : graphics/wayland-protocols
+        gmake>=4.3 : devel/gmake
+        pkgconf>=1.3.0_1 : devel/pkgconf
+        xcb.pc : x11/libxcb
+#+end_example
+
+** packages install
+
+#+begin_src sh
+sudo pkg install evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots libxkbcommon xcb-util-wm
+#+end_src
+
+** git clone dwl
+
+[[https://codeberg.org/dwl/dwl]]
+
+#+begin_src sh
+git clone https://codeberg.org/dwl/dwl.git
+#+end_src
+
+** create git branch for customizations
+
+Create a special branch where all the customizations will be kept. It doesn't matter what the name is, it just needs to be something different than master.
+
+create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
+make edits and commit them one by one
+
+** copy config.def.h to config.h
+
+copy config.def.h to config.h
+
+#+BEGIN_SRC sh
+cp config.def.h config.h
+#+END_SRC
+
+add config.h with git
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'copied config.def.h to config.h'
+#+END_SRC
+
+make any changes to config.h and then commit the changes
+
+#+BEGIN_SRC sh
+vi config.h
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -a
+#+END_SRC
+
+** make file
+
+#+begin_src sh
+sed -i'' -e s/_POSIX_C_SOURCE=200809L/_XOPEN_SOURCE=700/ Makefile
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'makefile'
+#+END_SRC
+
+** keyboard set up
+
+#+begin_src c
+/* keyboard */
+static const struct xkb_rule_names xkb_rules = {
+	/* can specify fields: rules, model, layout, variant, options */
+	/* example:
+	.options = "ctrl:nocaps",
+	*/
+	.layout = "gb",
+	.model = "104",
+	.options = "ctrl:swap_lalt_lctl,caps:none",
+	.rules = "evdev",
+	.variant = "mac",
+};
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'keyboard xkb'
+#+END_SRC
+
+** modkey
+
+set the modkey to the super key
+
+#+begin_src c
+/* If you want to use the windows key for MODKEY, use WLR_MODIFIER_LOGO */
+#define MODKEY WLR_MODIFIER_LOGO
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'modkey'
+#+END_SRC
+
+** terminal and launcher
+
+#+begin_src c
+/* commands */
+static const char *termcmd[] = { "alacritty", NULL };
+static const char *menucmd[] = { "tofi-drun", NULL };
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'terminal and application launcher'
+#+END_SRC
+
+** firefox and mpv
+
+#+begin_src c
+static const Rule rules[] = {
+	/* app_id     title       tags mask     isfloating   monitor */
+	/* examples:
+	{ "Gimp",     NULL,       0,            1,           -1 },
+	,*/
+	{ "firefox",  NULL,       0,            1,           -1 },
+	{ "mpv",  NULL,           0,            1,           -1 },
+};
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'firefox and mpv'
+#+END_SRC
+
+** emacs and keyboard shortcuts
+
+#+begin_src c
+static const Key keys[] = {
+	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
+	/* modifier                  key                 function        argument */
+	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,     spawn,          SHCMD("emacsclient --alternate-editor= --create-frame") },
+	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
+	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
+	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
+	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
+	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
+	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
+	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
+	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
+	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
+	{ MODKEY,                    XKB_KEY_s,         togglefullscreen, {0} },
+	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
+	{ MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY,                    XKB_KEY_period,     focusmon,       {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,       tagmon,         {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,    tagmon,         {.i = WLR_DIRECTION_RIGHT} },
+	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
+	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
+	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
+	TAGKEYS(          XKB_KEY_4, XKB_KEY_dollar,                     3),
+	TAGKEYS(          XKB_KEY_5, XKB_KEY_percent,                    4),
+	TAGKEYS(          XKB_KEY_6, XKB_KEY_asciicircum,                5),
+	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
+	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
+	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'emacs'
+#+END_SRC
+
+** libinput scroll
+
+#+begin_src c
+/* You can choose between:
+LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT
+LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE
+,*/
+static const enum libinput_config_accel_profile accel_profile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
+static const double accel_speed = 1.0;
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'libinput'
+#+END_SRC
+
+** move stack patch
+
+[[https://github.com/djpohly/dwl/wiki/movestack]]
+
+#+begin_src sh
+wget 'https://github.com/djpohly/dwl/compare/main...NikitaIvanovV:movestack.patch'
+#+end_src
+
+*** movestack patch file
+
+#+begin_src diff
+From 5518f76de363500a9c5b61cbcd0c7aca180e90f0 Mon Sep 17 00:00:00 2001
+From: Nikita Ivanov <nikita.vyach.ivanov@gmail.com>
+Date: Tue, 5 Sep 2023 02:26:40 +0200
+Subject: [PATCH] Allows you to move a window up and down the stack
+
+Fix for loops bug.
+---
+ config.def.h |  2 ++
+ dwl.c        | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/config.def.h b/config.def.h
+index 1677f6f12..07ee6d4c5 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -114,6 +114,8 @@ static const Key keys[] = {
+ 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+ 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
+ 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
++	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,          movestack,      {.i = +1} },
++	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          movestack,      {.i = -1} },
+ 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
+ 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
+ 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05} },
+diff --git a/dwl.c b/dwl.c
+index 4ff5c37f7..f70b26411 100644
+--- a/dwl.c
++++ b/dwl.c
+@@ -273,6 +273,7 @@ static void maplayersurfacenotify(struct wl_listener *listener, void *data);
+ static void mapnotify(struct wl_listener *listener, void *data);
+ static void maximizenotify(struct wl_listener *listener, void *data);
+ static void monocle(Monitor *m);
++static void movestack(const Arg *arg);
+ static void motionabsolute(struct wl_listener *listener, void *data);
+ static void motionnotify(uint32_t time);
+ static void motionrelative(struct wl_listener *listener, void *data);
+@@ -1633,6 +1634,48 @@ monocle(Monitor *m)
+ 		wlr_scene_node_raise_to_top(&c->scene->node);
+ }
+ 
++void
++movestack(const Arg *arg)
++{
++	Client *c, *sel = focustop(selmon);
++
++	if (!sel) {
++		return;
++	}
++
++	if (wl_list_length(&clients) <= 1) {
++		return;
++	}
++
++	if (arg->i > 0) {
++		wl_list_for_each(c, &sel->link, link) {
++			if (&c->link == &clients) {
++				c = wl_container_of(&clients, c, link);
++				break; /* wrap past the sentinel node */
++			}
++			if (VISIBLEON(c, selmon) || &c->link == &clients) {
++				break; /* found it */
++			}
++		}
++	} else {
++		wl_list_for_each_reverse(c, &sel->link, link) {
++			if (&c->link == &clients) {
++				c = wl_container_of(&clients, c, link);
++				break; /* wrap past the sentinel node */
++			}
++			if (VISIBLEON(c, selmon) || &c->link == &clients) {
++				break; /* found it */
++			}
++		}
++		/* backup one client */
++		c = wl_container_of(c->link.prev, c, link);
++	}
++
++	wl_list_remove(&sel->link);
++	wl_list_insert(&c->link, &sel->link);
++	arrange(selmon);
++}
++
+ void
+ motionabsolute(struct wl_listener *listener, void *data)
+ {
+
+#+end_src
+
+** merge changes into master branch
+
+#+BEGIN_SRC sh
+git checkout main
+#+END_SRC
+
+merge the patch branch into the master branch
+
+#+BEGIN_SRC sh
+git merge patch
+#+END_SRC
+
+** make dwl
+
+change into the dwm directory
+
+#+BEGIN_SRC sh
+cd dwl
+#+END_SRC
+
+#+begin_src sh
+gmake CC=cc CFLAGS+='-std=c11' XWAYLAND="-DXWAYLAND" XLIBS="xcb xcb-icccm"
+#+end_src
+
+https://forums.freebsd.org/threads/building-dwl-fails-with-c99-illegal-option-p.92040/
+
+** dwl git update
+
+If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
+Updating customizations after new release
+
+When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+git pull
+#+END_SRC
+
+Then rebase your customization branch on top of the master branch
+
+#+BEGIN_SRC sh
+git checkout my_dwl
+git rebase --preserve-merges master
+#+END_SRC
+
+The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
+
+In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
+
+#+BEGIN_SRC sh
+git add resolved_file.ext
+git rebase --continue
+#+END_SRC
+
+If you want to give up, you can always abort the rebase
+
+#+BEGIN_SRC sh
+git rebase --abort
+#+END_SRC
+
+** apply diff patch
+
+to apply the diff to the freshly checked out git repository
+
+checkout the git repository
+
+#+BEGIN_SRC sh
+git clone git://git.suckless.org/dwm
+#+END_SRC
+
+create a new git branch
+
+#+BEGIN_SRC sh
+git checkout -b patch
+#+END_SRC
+
++ apply the diff patch
+
+#+BEGIN_SRC sh
+git apply ~/Desktop/dwm-freebsd-patch.diff
+#+END_SRC
+
+checkout the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+#+END_SRC
+
+merge the patch branch into the master branch
+
+#+BEGIN_SRC sh
+git merge patch
+#+END_SRC
+
+If you some conflicts occur, resolve them and then record the changes and commit the result. git mergetool can help with resolving the conflicts.
+Updating customizations after new release
+
+When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
+
+#+BEGIN_SRC sh
+git checkout master
+git pull
+#+END_SRC
+
+Then rebase your customization branch on top of the master branch
+
+#+BEGIN_SRC sh
+git checkout my_dwm
+git rebase --preserve-merges master
+#+END_SRC
+
+The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
+
+In case there are merge conflicts anyway, resolve them (possibly with the help of git mergetool), then record them as resolved and let the rebase continue
+
+#+BEGIN_SRC sh
+git add resolved_file.ext
+git rebase --continue
+#+END_SRC
+
+If you want to give up, you can always abort the rebase
+
+#+BEGIN_SRC sh
+git rebase --abort
+#+END_SRC
+

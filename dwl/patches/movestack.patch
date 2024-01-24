@@ -1,0 +1,85 @@
+From 5518f76de363500a9c5b61cbcd0c7aca180e90f0 Mon Sep 17 00:00:00 2001
+From: Nikita Ivanov <nikita.vyach.ivanov@gmail.com>
+Date: Tue, 5 Sep 2023 02:26:40 +0200
+Subject: [PATCH] Allows you to move a window up and down the stack
+
+Fix for loops bug.
+---
+ config.def.h |  2 ++
+ dwl.c        | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/config.def.h b/config.def.h
+index 1677f6f12..07ee6d4c5 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -114,6 +114,8 @@ static const Key keys[] = {
+ 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+ 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
+ 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
++	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,          movestack,      {.i = +1} },
++	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          movestack,      {.i = -1} },
+ 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
+ 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
+ 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05} },
+diff --git a/dwl.c b/dwl.c
+index 4ff5c37f7..f70b26411 100644
+--- a/dwl.c
++++ b/dwl.c
+@@ -273,6 +273,7 @@ static void maplayersurfacenotify(struct wl_listener *listener, void *data);
+ static void mapnotify(struct wl_listener *listener, void *data);
+ static void maximizenotify(struct wl_listener *listener, void *data);
+ static void monocle(Monitor *m);
++static void movestack(const Arg *arg);
+ static void motionabsolute(struct wl_listener *listener, void *data);
+ static void motionnotify(uint32_t time);
+ static void motionrelative(struct wl_listener *listener, void *data);
+@@ -1633,6 +1634,48 @@ monocle(Monitor *m)
+ 		wlr_scene_node_raise_to_top(&c->scene->node);
+ }
+ 
++void
++movestack(const Arg *arg)
++{
++	Client *c, *sel = focustop(selmon);
++
++	if (!sel) {
++		return;
++	}
++
++	if (wl_list_length(&clients) <= 1) {
++		return;
++	}
++
++	if (arg->i > 0) {
++		wl_list_for_each(c, &sel->link, link) {
++			if (&c->link == &clients) {
++				c = wl_container_of(&clients, c, link);
++				break; /* wrap past the sentinel node */
++			}
++			if (VISIBLEON(c, selmon) || &c->link == &clients) {
++				break; /* found it */
++			}
++		}
++	} else {
++		wl_list_for_each_reverse(c, &sel->link, link) {
++			if (&c->link == &clients) {
++				c = wl_container_of(&clients, c, link);
++				break; /* wrap past the sentinel node */
++			}
++			if (VISIBLEON(c, selmon) || &c->link == &clients) {
++				break; /* found it */
++			}
++		}
++		/* backup one client */
++		c = wl_container_of(c->link.prev, c, link);
++	}
++
++	wl_list_remove(&sel->link);
++	wl_list_insert(&c->link, &sel->link);
++	arrange(selmon);
++}
++
+ void
+ motionabsolute(struct wl_listener *listener, void *data)
+ {
