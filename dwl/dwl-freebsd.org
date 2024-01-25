@@ -125,6 +125,8 @@ git commit -m 'makefile'
 
 ** keyboard set up
 
+config.h
+
 #+begin_src c
 /* keyboard */
 static const struct xkb_rule_names xkb_rules = {
@@ -202,7 +204,7 @@ static const Rule rules[] = {
 	{ "Gimp",     NULL,       0,            1,           -1 },
 	,*/
 	{ "firefox",  NULL,       0,            1,           -1 },
-	{ "mpv",  NULL,           0,            1,           -1 },
+	{ "mpv",  NULL,           0,            1,           0 },
 };
 #+end_src
 
