@@ -522,3 +522,13 @@ If you want to give up, you can always abort the rebase
 git rebase --abort
 #+END_SRC
 
+** push branch to github
+
+create a new repo on github and push the branches
+
+#+begin_src sh
+git remote add github git@github.com:NapoleonWils0n/dwl-freebsd.git
+git branch -M main
+git push -u github main
+git push github patch
+#+end_src
