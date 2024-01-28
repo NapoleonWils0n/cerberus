@@ -30,6 +30,18 @@ Build dependencies:
 sudo pkg install evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots libxkbcommon xcb-util-wm
 #+end_src
 
+** dwlb
+
+dwlb dwl bar
+
+[[https://github.com/kolunmi/dwlb]]
+
+freebsd dwlb install
+
+#+begin_src sh
+sudo pkg install dwlb
+#+end_src
+
 ** git clone dwl
 
 [[https://codeberg.org/dwl/dwl]]
