@@ -274,6 +274,74 @@ commit the changes
 git commit -m 'libinput'
 #+END_SRC
 
+** media keys
+
+config.h
+
+#+begin_src c
+/* media keys - freebsd volume mixer */
+#include <X11/XF86keysym.h>
+
+/* commands */
+static const char *volumeup[]      = { "/usr/sbin/mixer",   "vol=+5%:+5%",  NULL };
+static const char *volumedown[]    = { "/usr/sbin/mixer",   "vol=-5%:-5%",  NULL };
+static const char *mutevolume[]    = { "/usr/sbin/mixer",   "vol.mute=^",        NULL };
+
+static const Key keys[] = {
+	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
+	/* modifier                  key                 function        argument */
+	{ 0,                         XF86XK_AudioRaiseVolume, spawn, {.v = volumeup   } },
+	{ 0,                         XF86XK_AudioLowerVolume, spawn, {.v = volumedown } },
+	{ 0,                         XF86XK_AudioMute, spawn, {.v = mutevolume } },
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'media keys'
+#+END_SRC
+
+** wlrctl cursor
+*** wlrctl install
+
+freebsd
+
+#+begin_src sh
+sudo pkg install wlrctl
+#+end_src
+
+*** config.h
+
+#+begin_src c
+/* commands */
+static const char *cursorleft[]    = { "/usr/local/bin/wlrctl",   "pointer",  "move", "-1920",     NULL };
+static const char *cursorright[]    = { "/usr/local/bin/wlrctl",   "pointer", "move", "1920",        NULL };
+
+/* keys /
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_period,     focusmon,       {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY,                    XKB_KEY_comma,      spawn,          {.v = cursorleft} },
+	{ MODKEY,                    XKB_KEY_period,     spawn,          {.v = cursorright} },
+#+end_src
+
+*** commit the changes
+
+#+BEGIN_SRC sh
+git add .
+#+END_SRC
+
+commit the changes
+
+#+BEGIN_SRC sh
+git commit -m 'cursor'
+#+END_SRC
+
 ** move stack patch
 
 [[https://github.com/djpohly/dwl/wiki/movestack]]
