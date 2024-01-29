@@ -291,9 +291,6 @@ git commit -m 'libinput'
 config.h
 
 #+begin_src c
-/* media keys - freebsd volume mixer */
-#include <X11/XF86keysym.h>
-
 /* commands */
 static const char *volumeup[]      = { "/usr/sbin/mixer",   "vol=+5%:+5%",  NULL };
 static const char *volumedown[]    = { "/usr/sbin/mixer",   "vol=-5%:-5%",  NULL };
@@ -302,9 +299,10 @@ static const char *mutevolume[]    = { "/usr/sbin/mixer",   "vol.mute=^",       
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ 0,                         XF86XK_AudioRaiseVolume, spawn, {.v = volumeup   } },
-	{ 0,                         XF86XK_AudioLowerVolume, spawn, {.v = volumedown } },
-	{ 0,                         XF86XK_AudioMute, spawn, {.v = mutevolume } },
+
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
+	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
 #+end_src
 
 *** commit the changes

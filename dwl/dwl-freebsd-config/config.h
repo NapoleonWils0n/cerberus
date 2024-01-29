@@ -1,5 +1,5 @@
 /* media keys - freebsd volume mixer */
-#include <X11/XF86keysym.h>
+/*#include <X11/XF86keysym.h>*/
 
 /* Taken from https://github.com/djpohly/dwl/issues/466 */
 #define COLOR(hex)    { ((hex >> 24) & 0xFF) / 255.0f, \
@@ -132,9 +132,9 @@ static const char *cursorright[]    = { "/usr/local/bin/wlrctl",   "pointer", "m
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ 0,                         XF86XK_AudioRaiseVolume, spawn, {.v = volumeup   } },
-	{ 0,                         XF86XK_AudioLowerVolume, spawn, {.v = volumedown } },
-	{ 0,                         XF86XK_AudioMute, spawn, {.v = mutevolume } },
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
+	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
 	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
 	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,     spawn,          SHCMD("emacsclient -a= -c") },
