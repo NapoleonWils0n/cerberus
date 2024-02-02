@@ -1,6 +1,3 @@
-/* media keys - freebsd volume mixer */
-/*#include <X11/XF86keysym.h>*/
-
 /* Taken from https://github.com/djpohly/dwl/issues/466 */
 #define COLOR(hex)    { ((hex >> 24) & 0xFF) / 255.0f, \
                         ((hex >> 16) & 0xFF) / 255.0f, \
@@ -128,6 +125,7 @@ static const char *volumedown[]    = { "/usr/sbin/mixer",   "vol=-5%:-5%",  NULL
 static const char *mutevolume[]    = { "/usr/sbin/mixer",   "vol.mute=^",        NULL };
 static const char *cursorleft[]    = { "/usr/local/bin/wlrctl",   "pointer",  "move", "-1920",     NULL };
 static const char *cursorright[]    = { "/usr/local/bin/wlrctl",   "pointer", "move", "1920",        NULL };
+static const char *wlrwhichkey[]    = { "/usr/local/bin/wlr-which-key",  NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -135,6 +133,7 @@ static const Key keys[] = {
 	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
 	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
 	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
+	{ MODKEY,                    XKB_KEY_z,          spawn,          {.v = wlrwhichkey} },
 	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
 	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,     spawn,          SHCMD("emacsclient -a= -c") },
