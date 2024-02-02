@@ -14,8 +14,10 @@ debootstrap
 dictd
 dnscrypt-proxy2
 doas
+dwlb
 emacs-devel
 en-aspell
+evdev-proto
 fd-find
 ffmpeg
 firacode
@@ -23,6 +25,7 @@ firefox
 foreign-cdm
 fzf
 git
+gmake
 gstreamer1-plugins-opus
 hs-pandoc
 kanshi
@@ -34,6 +37,7 @@ libva-utils
 libvdpau-va-gl
 linux-nvidia-libs
 linux-widevine-cdm
+lynx
 mixertui
 mpv
 mpv-mpris
@@ -53,6 +57,7 @@ pavucontrol
 pkg
 playerctl
 poudriere
+qjackctl
 qt5-wayland
 qt5ct
 qt6-wayland
@@ -86,7 +91,10 @@ wf-shell
 wget2
 wl-clipboard
 wlogout
+wlr-which-key
+wlrctl
 wlrobs
+wlroots
 xdg-desktop-portal-wlr
 yt-dlp
 zathura
