@@ -1,5 +1,8 @@
 #+STARTUP: content
 * linuxlator ubuntu
+
+[[https://forums.freebsd.org/threads/linuxulator-how-to-install-brave-linux-app-on-freebsd-13-0.78879/]]
+
 ** Important notes:
 
 1) This guide is for FreeBSD 13.0 and newer only!!
