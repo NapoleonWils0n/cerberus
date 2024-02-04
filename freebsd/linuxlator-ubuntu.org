@@ -48,14 +48,10 @@ printf "tmpfs\t/tmp\ttmpfs\trw,mode=1777\t0\t0\n" >> /etc/fstab
 
 ** ubuntu
 
-#+begin_src sh
-su
-#+end_src
-
 Create Ubuntu rc.d script and make it executable:
 
 #+begin_src sh
-touch /usr/local/etc/rc.d/ubuntu && chmod +x /usr/local/etc/rc.d/ubuntu
+sudo touch /usr/local/etc/rc.d/ubuntu && chmod +x /usr/local/etc/rc.d/ubuntu
 #+end_src
 
 
@@ -221,7 +217,7 @@ printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
 *** Enable more repositories:
 
 #+begin_src sh
-printf "deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list
+printf "deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list
 #+end_src
 
 *** Install required programs:
