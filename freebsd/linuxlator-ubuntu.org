@@ -51,13 +51,15 @@ printf "tmpfs\t/tmp\ttmpfs\trw,mode=1777\t0\t0\n" >> /etc/fstab
 note if you already have linux installed in /compat/linux
 you will need to boot into single user mode and move the /compat/linux directory
 
+if you dont have /compat/linux you can jump to create the zfs datasets
+
 *** boot into single user mode
 
 at the boot screen press 2 to boot into single user mode
 
 enter the root password at the prompt
 
-*** mount home directory
+*** mount root directory
 
 we need to mount /root as read write  
 we do this by setting readonly to off
@@ -66,7 +68,7 @@ we do this by setting readonly to off
 zfs set readonly=off zroot
 #+END_SRC
 
-mount our home directory
+mount the datasets
 
 #+begin_src sh
 zfs mount -a
@@ -74,7 +76,7 @@ zfs mount -a
 
 *** move the compat and linux directories
 
-we need to move the compat and linux directories because when we create the home datasets
+we need to move the compat and linux directories because when we create the datasets
 it will be mounted over the current directories
 
 change directory into the root directory
@@ -95,7 +97,6 @@ move the compat directory to a new name like bak-compat
 #+begin_src sh
 mv compat bak-compat
 #+end_src
-
 
 *** create the zfs datasets
 
@@ -145,7 +146,7 @@ mount
 copy files from bak-compat to the dataset before setting the mount point and mounting the dataset
 
 #+BEGIN_SRC sh
-cp -Rpv /compat/linux/ /compat/linux
+cp -Rpv /bak-compat/linux/ /compat/linux
 #+END_SRC
 
 we use the -r option for recursive copy  
@@ -161,6 +162,15 @@ exit single user by typing exit
 
 login into your user account and check everything work
 then you can delete the back of your home directory in /home and the bak-dir directory
+
+*** delete bak-compat directory
+
+when you have made sure the linux chroot has been copied into the zfs dataset
+you can then delete the /bak-compat directory
+
+#+begin_src sh
+sudo rm -rfx /bak-compat
+#+end_src
 
 *** fstab
 
