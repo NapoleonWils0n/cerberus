@@ -48,16 +48,84 @@ printf "tmpfs\t/tmp\ttmpfs\trw,mode=1777\t0\t0\n" >> /etc/fstab
 ** ubuntu
 *** zfs dataset
 
-create a zfs dataset for the ubuntu chroot
+note if you already have linux installed in /compat/linux
+you will need to boot into single user mode and move the /compat/linux directory
+
+*** boot into single user mode
+
+at the boot screen press 2 to boot into single user mode
+
+enter the root password at the prompt
+
+*** mount home directory
+
+we need to mount /root as read write  
+we do this by setting readonly to off
+
+#+BEGIN_SRC sh
+zfs set readonly=off zroot
+#+END_SRC
+
+mount our home directory
 
 #+begin_src sh
-sudo zfs create zroot/compat/ubuntu
+zfs mount -a
 #+end_src
+
+*** move the compat and linux directories
+
+we need to move the compat and linux directories because when we create the home datasets
+it will be mounted over the current directories
+
+change directory into the root directory
+
+#+begin_src sh
+cd /
+#+end_src
+
+list the directories
+
+#+begin_src sh
+ls
+#+end_src
+
+you should now see the compat directory
+move the compat directory to a new name like bak-compat
+
+#+begin_src sh
+mv compat bak-compat
+#+end_src
+
+
+*** create the zfs datasets
+
+make sure you are root either using single user mode
+or bu switching to root
+
+#+begin_src sh
+su
+#+end_src
+
+list datasets
+
+#+begin_src sh
+zfs list
+#+end_src
+
+create the main dataset under zpool
+
+#+BEGIN_SRC sh
+zfs create zroot/compat
+zfs create zroot/compat/linux
+zfs create zroot/compat/ubuntu
+#+END_SRC
 
 set the zfs mountpoint
 
 #+begin_src sh
-sudo zfs set mountpoint=/compat/ubuntu zroot/compat/ubuntu
+zfs set mountpoint=/compat zroot/compat
+zfs set mountpoint=/compat/linux zroot/compat/linux
+zfs set mountpoint=/compat/ubuntu zroot/compat/ubuntu
 #+end_src
 
 check the zfs dataset is mounted
@@ -65,6 +133,34 @@ check the zfs dataset is mounted
 #+begin_src sh
 mount
 #+end_src
+
+*** copy directories to zfs datasets
+
+check the zfs dataset is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
+copy files from bak-compat to the dataset before setting the mount point and mounting the dataset
+
+#+BEGIN_SRC sh
+cp -Rpv /compat/linux/ /compat/linux
+#+END_SRC
+
+we use the -r option for recursive copy  
+and the -p option to keep the permissions of the files and directorys  
+and the -v option for verbose
+
+we use /compat/linux/ to copy the contents of the documents directory  
+note the slash at the end of the docuemnts path
+
+*** exit single user mode
+
+exit single user by typing exit
+
+login into your user account and check everything work
+then you can delete the back of your home directory in /home and the bak-dir directory
 
 *** fstab
 
