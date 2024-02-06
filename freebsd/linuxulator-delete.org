@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* linuxulator delete
+
+#+begin_src sh
+sudo rm -rfx /compat/ubuntu
+#+end_src

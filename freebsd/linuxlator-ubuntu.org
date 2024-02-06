@@ -551,13 +551,19 @@ make the resolve-wrapper script executable
 chmod +x /usr/local/bin/resolve-wrapper
 #+end_src
 
-*** Exit chroot:
+*** wayland 
+**** wayland packages
 
 #+begin_src sh
-exit
+libinput
+wayland
+wlroots 
+xkbcommon
+wayland-protocols 
+pkg-config 
 #+end_src
 
-*** wayland environment
+**** wayland environment
 
 Since Wayland does not initiate any Xorg related files,
 GDM and KDE Plasma source systemd user environment variables instead. 
@@ -578,7 +584,12 @@ touch ~/.config/environment.d/envvars.conf
 
 #+begin_src conf
 QT_QPA_PLATFORM=wayland
-MOZ_ENABLE_WAYLAND=1
+#+end_src
+
+*** Exit chroot:
+
+#+begin_src sh
+exit
 #+end_src
 
 ** linuxulator delete
