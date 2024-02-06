@@ -315,7 +315,6 @@ sudo apt install fakeroot xorriso
 sudo apt install nvidia-driver-535 nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
 #+end_src
 
-
 *** blacklist Nouveau nvidia driver
 
 create the blacklist-nvidia-nouveau.conf file
