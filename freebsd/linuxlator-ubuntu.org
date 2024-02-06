@@ -1,9 +1,8 @@
 #+STARTUP: content
 * linuxlator ubuntu
+** Important notes:
 
 [[https://forums.freebsd.org/threads/linuxulator-how-to-install-brave-linux-app-on-freebsd-13-0.78879/]]
-
-** Important notes:
 
 1) This guide is for FreeBSD 13.0 and newer only!!
 
@@ -47,22 +46,54 @@ printf "tmpfs\t/tmp\ttmpfs\trw,mode=1777\t0\t0\n" >> /etc/fstab
 # Reboot back to normal multi-user mode.
 
 ** ubuntu
+*** zfs dataset
 
-Create Ubuntu rc.d script and make it executable:
-
-#+begin_src sh
-sudo touch /usr/local/etc/rc.d/ubuntu && chmod +x /usr/local/etc/rc.d/ubuntu
-#+end_src
-
+create a zfs dataset for the ubuntu chroot
 
 #+begin_src sh
-sudo cp ubuntu /usr/local/etc/rc.d/
+sudo zfs create zroot/compat/ubuntu
 #+end_src
 
+set the zfs mountpoint
 
 #+begin_src sh
-sudo chmod +x /usr/local/etc/rc.d/ubuntu
+sudo zfs set mountpoint=/compat/ubuntu zroot/compat/ubuntu
 #+end_src
+
+check the zfs dataset is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
+*** fstab
+
+#+begin_example
+/etc/fstab
+#+end_example
+
+fstab for ubuntu chroot
+
+#+begin_src conf
+# Device        Mountpoint              FStype          Options                      Dump    Pass#
+devfs           /compat/ubuntu/dev      devfs           rw,late                      0       0
+tmpfs           /compat/ubuntu/dev/shm  tmpfs           rw,late,size=1g,mode=1777    0       0
+fdescfs         /compat/ubuntu/dev/fd   fdescfs         rw,late,linrdlnk             0       0
+linprocfs       /compat/ubuntu/proc     linprocfs       rw,late                      0       0
+linsysfs        /compat/ubuntu/sys      linsysfs        rw,late                      0       0
+/tmp            /compat/ubuntu/tmp      nullfs          rw,late                      0       0
+/home           /compat/ubuntu/home     nullfs          rw,late                      0       0
+#+end_src
+
+mount the devices in fstab
+
+#+begin_src sh
+sudo mount -al
+#+end_src
+
+*** ubuntu rc.d script 
+
+ubuntu rc.d script content
 
 #+begin_src sh
 #!/bin/sh
@@ -138,6 +169,18 @@ load_rc_config $name
 run_rc_command "$1"
 #+end_src
 
+copy the ubuntu script to /usr/local/etc/rc.d/
+
+#+begin_src sh
+sudo cp ubuntu /usr/local/etc/rc.d/
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+sudo chmod +x /usr/local/etc/rc.d/ubuntu
+#+end_src
+
 *** Enable Linux compatibility layer (Ubuntu):
 
 stop linux
@@ -149,7 +192,7 @@ sudo sysrc linux_enable="NO"
 start ubuntu
 
 #+begin_src sh
-sudo sysrc ubuntu_enable=YES
+sudo sysrc ubuntu_enable="YES"
 #+end_src
 
 *** Create necessary mount points for a working Linuxulator:
@@ -164,7 +207,7 @@ sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,
 sudo service ubuntu start
 #+end_src
 
-*** Install needed packages:
+*** Install needed packages on freebsd
 
 #+begin_src sh
 sudo pkg install debootstrap 
@@ -193,7 +236,7 @@ cd /compat/ubuntu/lib64/ && rm ./ld-linux-x86-64.so.2 ; ln -s ../lib/x86_64-linu
 *** Chroot into your Linux environment:
 
 #+begin_src sh
-chroot /compat/ubuntu /bin/bash
+sudo chroot /compat/ubuntu /bin/bash
 #+end_src
 
 *** Set correct timezone inside your chroot:
@@ -216,8 +259,34 @@ printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
 
 *** Enable more repositories:
 
+add more repos
+
 #+begin_src sh
-printf "deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list
+printf "deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" > /etc/apt/sources.list
+printf "deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" > /etc/apt/sources.list
+printf "deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" > /etc/apt/sources.list
+#+end_src
+
+/etc/apt/sources.list
+
+#+begin_example
+deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+#+end_example
+
+*** apt update
+
+use allow-insecure-repositories needed for gpg issue on latest versions of ubuntu
+
+#+begin_src sh
+apt-get update --allow-insecure-repositories
+#+end_src
+
+upgrade
+
+#+begin_src sh
+apt-get upgrade 
 #+end_src
 
 *** Install required programs:
@@ -226,10 +295,295 @@ printf "deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ focal main restricte
 apt update ; apt install -y apt-transport-https curl fonts-symbola gnupg pulseaudio
 #+end_src
 
+** davinci resolve install
+
+da vinci resolve install on ubuntu with nvidia graphics
+
+*** Install xorriso and fakeroot
+
++ install fakeroot and xorriso for makeresolvedeb
+
+#+begin_src sh
+sudo apt install fakeroot xorriso
+#+end_src
+
+*** nvidia-cuda-toolkit
+
++ install the nvidia-driver, nvidia-cuda-toolkit
+
+#+begin_src sh
+sudo apt install nvidia-driver-535 nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
+#+end_src
+
+
+*** blacklist Nouveau nvidia driver
+
+create the blacklist-nvidia-nouveau.conf file
+
+#+begin_src sh
+sudo vi /etc/modprobe.d/blacklist-nvidia-nouveau.conf
+#+end_src
+
+add the following code and save the file
+
+#+begin_src conf
+blacklist nouveau
+options nouveau modeset=0
+#+end_src
+
+*** update-initramfs
+
+If you have full disk encryption enabled you have to run the command
+
+#+begin_src sh
+sudo update-initramfs -u
+#+end_src
+
+*** reboot
+
+#+begin_src sh
+sudo reboot
+#+end_src
+
+*** nvidia-smi
+
+use nvidia-smi to see GPU info and process that are using Nvidia GPU
+
+#+begin_src sh
+nvidia-smi
+#+end_src
+
+apt purge nvidia*
+apt purge *cuda*
+
+# Check
+apt list -i |grep nvidia
+apt list -i |grep cuda
+
+*** da vinci resolve download
+
++ download da vinci resolve
+
+[[https://www.blackmagicdesign.com/products/davinciresolve/][da vinci resolve]]
+
++ unzip the da-vinci-resolve.zip
+
+#+begin_src sh
+unzip "DaVinci_Resolve_*_Linux.zip"
+#+end_src
+
+*** makeresolvedeb
+
++ download the makeresolvedeb script
+
+[[https://www.danieltufvesson.com/makeresolvedeb][makeresolvedeb]]
+
++ extract the makeresolvedeb.tar.gz file
+
+#+begin_src sh
+tar zxvf makeresolvedeb_1.6.4_multi.sh.tar.gz
+#+end_src  
+
+**** copy the resolve.run and make resolve script to the chroot
+
+copy the resolve.run to the chroot home directory
+
+#+begin_src sh
+sudo cp -rv /home/djwilcox/downloads/DaVinci_Resolve_18.6.4_Linux.run /compat/ubuntu/home/djwilcox
+#+end_src
+
+copy the resolve.run to the chroot home directory
+
+#+begin_src sh
+sudo cp -rv /home/djwilcox/downloads/makeresolvedeb_1.6.4_multi.sh /compat/ubuntu/home/djwilcox
+#+end_src
+
+**** makeresolvedeb create deb file
+
+make sure you have chrooted into ubuntu by running
+
+#+begin_src sh
+sudo chroot /compat/ubuntu /bin/bash
+#+end_src
+
+switch to home in the chroot
+replace djwilcox with your username
+
+#+begin_src sh
+cd home/djwilcox
+#+end_src
+
+then run makeresolvedeb
+
+#+begin_src sh
+./makeresolvedeb_1.6.4_multi.sh DaVinci_Resolve_18.6.4_Linux.run
+#+end_src
+
+this will take about an hour
+
+**** install the da vinci resolve deb file
+
+#+begin_src sh
+dpkg -i davinci-resolve_18.6.4-mrd1.6.4_amd64.deb 
+#+end_src
+
+or
+
+#+begin_src sh
+apt install davinci-resolve_18.6.4-mrd1.6.4_amd64.deb
+#+end_src
+
+**** desktop launcher
+
+davinci resolve desktop entry 
+
+#+begin_src sh
+ls /usr/share/applications/davinci-resolve.desktop
+#+end_src
+
+**** davinci resolve desktop entry 
+
+davinci-resolve.desktop
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=DaVinci Resolve
+Path=/opt/resolve
+Exec=/opt/resolve/bin/resolve
+Icon=/opt/resolve/graphics/DV_Resolve.png
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
+***** freebsd desktop entry
+
+#+begin_example
+~/.local/share/applications/davinci-resolve.desktop
+#+end_example
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=DaVinci Resolve
+Exec=/usr/local/bin/linux-resolve
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
+***** linux-resolve
+
+freebsd host
+
+#+begin_example
+sudo vi /usr/local/bin/linux-resolve
+#+end_example
+
+linux-resolve
+
+#+begin_src sh
+#!/bin/sh
+
+get_pa_sock_path()
+{
+	PA_SOCK_PATH=$(sockstat | awk -v me=$(whoami) -F'[ \t]+' '
+		$1 == me && $2 == "pulseaudio" && $6 ~ /native/ {
+			print $6;
+			exit 0
+		}'
+	)
+}
+
+get_pa_sock_path
+if [ ! -S "$PA_SOCK_PATH" ]; then
+	while killall pulseaudio; do
+		sleep 0.5
+	done
+	pulseaudio --start
+	get_pa_sock_path
+fi
+[ -S "$PA_SOCK_PATH" ] && export PULSE_SERVER=unix:$PA_SOCK_PATH
+
+# Let the wrapped binary know that it has been run through the wrapper:
+export RESOLVE_WRAPPER="`readlink -f "$0"`"
+
+/compat/ubuntu/usr/local/bin/resolve-wrapper "$@"
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+sudo chmod +x /usr/local/bin/linux-resolve
+#+end_src
+
+***** resolve-wrapper
+
+create the resolve-wrapper script in the chroot
+
+#+begin_src sh
+vi /usr/local/bin/resolve-wrapper
+#+end_src
+
+resolve-wrapper
+
+#+begin_src sh
+#!/compat/ubuntu/bin/bash
+#
+#
+export RESOLVE_PATH="/opt/resolve/bin/resolve"
+export RESOLVE_WRAPPER="$(readlink -f "$0")"
+#export LD_LIBRARY_PATH=/usr/local/steam-utils/lib64/fakeudev
+#export LD_PRELOAD=/usr/local/
+#export LIBGL_DRI3_DISABLE=1
+exec -a "$0" "$RESOLVE_PATH" "$@"
+#+end_src
+
+make the resolve-wrapper script executable
+
+#+begin_src sh
+chmod +x /usr/local/bin/resolve-wrapper
+#+end_src
+
 *** Exit chroot:
 
 #+begin_src sh
 exit
 #+end_src
 
+*** wayland environment
 
+Since Wayland does not initiate any Xorg related files,
+GDM and KDE Plasma source systemd user environment variables instead. 
+
+**** create the environment.d directory
+
+#+begin_src sh
+mkdir -p ~/.config/environment.d
+#+end_src
+
+**** create the envvars.conf file
+
+#+begin_src sh
+touch ~/.config/environment.d/envvars.conf
+#+end_src
+
+**** add the variables to the envvars.conf file
+
+#+begin_src conf
+QT_QPA_PLATFORM=wayland
+MOZ_ENABLE_WAYLAND=1
+#+end_src
+
+** linuxulator delete
+
+#+begin_src sh
+sudo rm -rfx /compat/ubuntu
+#+end_src
