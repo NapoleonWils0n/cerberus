@@ -1,74 +1,160 @@
 #+STARTUP: content
 * linuxlator ubuntu
-** Important notes:
-
-[[https://forums.freebsd.org/threads/linuxulator-how-to-install-brave-linux-app-on-freebsd-13-0.78879/]]
-
-1) This guide is for FreeBSD 13.0 and newer only!!
-
-For FreeBSD 12, please see:
-[[https://forums.freebsd.org/threads/...-google-chrome-linux-binary-on-freebsd.77559/]]
-
-2) This method should be valid for installing any other Chromium-based web browser (Google Chrome, Opera, Vivaldi, Edge, etc), as long as they (or their dependencies) are not Snaps/Flatpaks.
-
-3) Most enhancements found in this tutorial were taken from/inspired by:
-[[https://github.com/mrclksr/linux-browser-installer]]
-
-4) Given the many improvements made in Linuxulator and DRM drivers, we don't rely on games/linux-steam-utils workarounds anymore. Likewise, disabling DRI3 is no longer necessary.
-
-5) Here we use an Ubuntu-based userspace, instead of default CentOS one.
-
-6) Sound, webcam, microphone, hardware acceleration all properly work. Widevine support too (Netflix, Spotify, Amazon Prime Video, HBO Max, etc).
-
-7) The /home and /tmp directories are shared by FreeBSD and Linux apps.
-
-8) We now use /compat/ubuntu as Linux compat location, to avoid conflicting with CentOS-based ports. Still, be aware you can't run both Ubuntu and CentOS environments at the same time. When you want to switch back to running your CentOS-based applications, you'll need to disable Ubuntu rc.d script and enable the Linux one:
+** linux centos
+*** stop linux
 
 #+begin_src sh
-sysrc ubuntu_enable=NO && sysrc linux_enable=YES
+sudo service linux stop
 #+end_src
 
-Then reboot to make your changes take effect, or manually stop Ubuntu service and start the Linux one:
+*** unmount the linux centos fstab mount
 
 #+begin_src sh
-service ubuntu onestop && sysctl compat.linux.emul_path=/compat/linux && service linux start
+sudo umount /compat/linux/proc
+sudo umount /compat/linux/sys
 #+end_src
 
-9) I recommend (although is not a requirement as far as I know) to use tmpfs for /tmp. This is not the case when using ZFS default installation, but can be easily fixed. Assuming the ZFS pool is named "zroot":
+*** linunx enable no
 
-# First reboot into single-user mode.
-# Remount root filesystem as read/write:
-mount -u /
-# Destroy /tmp from zroot:
-zfs destroy -f zroot/tmp
-# Add this fstab entry:
-printf "tmpfs\t/tmp\ttmpfs\trw,mode=1777\t0\t0\n" >> /etc/fstab
-# Reboot back to normal multi-user mode.
+#+begin_src sh
+sudo sysrc linux_enable="NO"
+#+end_src
 
 ** ubuntu
-*** fstab
-
-#+begin_example
-/etc/fstab
-#+end_example
-
-fstab for ubuntu chroot
-
-#+begin_src conf
-# Device        Mountpoint              FStype          Options                      Dump    Pass#
-devfs           /compat/ubuntu/dev      devfs           rw,late                      0       0
-tmpfs           /compat/ubuntu/dev/shm  tmpfs           rw,late,size=1g,mode=1777    0       0
-fdescfs         /compat/ubuntu/dev/fd   fdescfs         rw,late,linrdlnk             0       0
-linprocfs       /compat/ubuntu/proc     linprocfs       rw,late                      0       0
-linsysfs        /compat/ubuntu/sys      linsysfs        rw,late                      0       0
-/tmp            /compat/ubuntu/tmp      nullfs          rw,late                      0       0
-/home           /compat/ubuntu/home     nullfs          rw,late                      0       0
-#+end_src
-
-mount the devices in fstab
+*** Install needed packages on freebsd
 
 #+begin_src sh
-sudo mount -al
+sudo pkg install debootstrap 
+#+end_src
+
+*** zfs dataset
+
+note if you already have linux installed in /compat/linux
+you will need to boot into single user mode and move the /compat/linux directory
+
+if you dont have /compat/linux you can jump to create the zfs datasets
+
+*** boot into single user mode
+
+at the boot screen press 2 to boot into single user mode
+
+enter the root password at the prompt
+
+*** mount root directory
+
+we need to mount /root as read write  
+we do this by setting readonly to off
+
+#+BEGIN_SRC sh
+zfs set readonly=off zroot
+#+END_SRC
+
+mount the datasets
+
+#+begin_src sh
+zfs mount -a
+#+end_src
+
+*** move the compat and linux directories
+
+we need to move the compat and linux directories because when we create the datasets
+it will be mounted over the current directories
+
+change directory into the root directory
+
+#+begin_src sh
+cd /
+#+end_src
+
+list the directories
+
+#+begin_src sh
+ls
+#+end_src
+
+you should now see the compat directory
+move the compat directory to a new name like bak-compat
+
+#+begin_src sh
+mv compat bak-compat
+#+end_src
+
+*** create the zfs datasets
+
+make sure you are root either using single user mode
+or bu switching to root
+
+#+begin_src sh
+su
+#+end_src
+
+list datasets
+
+#+begin_src sh
+zfs list
+#+end_src
+
+create the main dataset under zpool
+
+#+BEGIN_SRC sh
+zfs create -o compression=on -o mountpoint=/compat zroot/compat
+#+END_SRC
+
+#+begin_src sh
+zfs create zroot/compat
+zfs create zroot/compat/linux
+zfs create zroot/compat/ubuntu
+#+end_src
+
+set the zfs mountpoint
+
+#+begin_src sh
+zfs set mountpoint=/compat zroot/compat
+zfs set mountpoint=/compat/linux zroot/compat/linux
+zfs set mountpoint=/compat/ubuntu zroot/compat/ubuntu
+#+end_src
+
+check the zfs dataset is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
+*** copy directories to zfs datasets
+
+check the zfs dataset is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
+copy files from bak-compat to the dataset before setting the mount point and mounting the dataset
+
+#+BEGIN_SRC sh
+cp -Rpv /bak-compat/linux/ /compat/linux
+#+END_SRC
+
+we use the -r option for recursive copy  
+and the -p option to keep the permissions of the files and directorys  
+and the -v option for verbose
+
+we use /compat/linux/ to copy the contents of the documents directory  
+note the slash at the end of the docuemnts path
+
+*** exit single user mode
+
+exit single user by typing exit
+
+login into your user account and check everything work
+then you can delete the back of your home directory in /home and the bak-dir directory
+
+*** delete bak-compat directory
+
+when you have made sure the linux chroot has been copied into the zfs dataset
+you can then delete the /bak-compat directory
+
+#+begin_src sh
+sudo rm -rfx /bak-compat
 #+end_src
 
 *** ubuntu rc.d script 
@@ -161,13 +247,39 @@ make the script executable
 sudo chmod +x /usr/local/etc/rc.d/ubuntu
 #+end_src
 
-*** Enable Linux compatibility layer (Ubuntu):
-
-stop linux
+*** Create necessary mount points for a working Linuxulator:
 
 #+begin_src sh
-sudo sysrc linux_enable="NO"
+sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,/compat/ubuntu/tmp,/compat/ubuntu/proc,/compat/ubuntu/sys}
 #+end_src
+
+*** fstab
+
+#+begin_example
+/etc/fstab
+#+end_example
+
+fstab for ubuntu chroot
+
+#+begin_src conf
+# Device        Mountpoint              FStype          Options                      Dump    Pass#
+proc            /proc           procfs  rw      0       0
+devfs           /compat/ubuntu/dev      devfs           rw,late                      0       0
+tmpfs           /compat/ubuntu/dev/shm  tmpfs           rw,late,size=1g,mode=1777    0       0
+fdescfs         /compat/ubuntu/dev/fd   fdescfs         rw,late,linrdlnk             0       0
+linprocfs       /compat/ubuntu/proc     linprocfs       rw,late                      0       0
+linsysfs        /compat/ubuntu/sys      linsysfs        rw,late                      0       0
+/tmp            /compat/ubuntu/tmp      nullfs          rw,late                      0       0
+/home           /compat/ubuntu/home     nullfs          rw,late                      0       0
+#+end_src
+
+mount the devices in fstab
+
+#+begin_src sh
+sudo mount -al
+#+end_src
+
+*** Enable Linux compatibility layer (Ubuntu):
 
 start ubuntu
 
@@ -175,22 +287,10 @@ start ubuntu
 sudo sysrc ubuntu_enable="YES"
 #+end_src
 
-*** Create necessary mount points for a working Linuxulator:
-
-#+begin_src sh
-sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,/compat/ubuntu/tmp,/compat/ubuntu/proc,/compat/ubuntu/sys}
-#+end_src
-
 *** Start Ubuntu service:
 
 #+begin_src sh
 sudo service ubuntu start
-#+end_src
-
-*** Install needed packages on freebsd
-
-#+begin_src sh
-sudo pkg install debootstrap 
 #+end_src
 
 *** Install Ubuntu 22.04 into /compat/ubuntu:
@@ -213,10 +313,17 @@ maybe not needed for ubuntu 22.10
 cd /compat/ubuntu/lib64/ && rm ./ld-linux-x86-64.so.2 ; ln -s ../lib/x86_64-linux-gnu/ld-2.31.so ld-linux-x86-64.so.2
 #+end_src
 
+*** chroot settings
+
+#+begin_src sh
+sudo sysctl security.bsd.unprivileged_chroot=1
+#+end_src
+
 *** Chroot into your Linux environment:
 
 #+begin_src sh
 sudo chroot /compat/ubuntu /bin/bash
+sudo chroot -n /compat/ubuntu /bin/bash
 #+end_src
 
 *** Set correct timezone inside your chroot:
