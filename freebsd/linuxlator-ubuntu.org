@@ -100,20 +100,6 @@ create the main dataset under zpool
 zfs create -o compression=on -o mountpoint=/compat zroot/compat
 #+END_SRC
 
-#+begin_src sh
-zfs create zroot/compat
-zfs create zroot/compat/linux
-zfs create zroot/compat/ubuntu
-#+end_src
-
-set the zfs mountpoint
-
-#+begin_src sh
-zfs set mountpoint=/compat zroot/compat
-zfs set mountpoint=/compat/linux zroot/compat/linux
-zfs set mountpoint=/compat/ubuntu zroot/compat/ubuntu
-#+end_src
-
 check the zfs dataset is mounted
 
 #+begin_src sh
@@ -128,22 +114,15 @@ check the zfs dataset is mounted
 mount
 #+end_src
 
-copy files from bak-compat to the dataset before setting the mount point and mounting the dataset
+copy the linux directory from bak-compat to the dataset before
 
 #+begin_src sh
 cp -Rpv /bak-compat/linux /compat/
 #+end_src
 
-#+BEGIN_SRC sh
-cp -Rpv /bak-compat/linux/ /compat/linux
-#+END_SRC
-
 we use the -r option for recursive copy  
 and the -p option to keep the permissions of the files and directorys  
 and the -v option for verbose
-
-we use /compat/linux/ to copy the contents of the documents directory  
-note the slash at the end of the docuemnts path
 
 *** exit single user mode
 
