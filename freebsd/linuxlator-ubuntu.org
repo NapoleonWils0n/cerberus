@@ -130,6 +130,10 @@ mount
 
 copy files from bak-compat to the dataset before setting the mount point and mounting the dataset
 
+#+begin_src sh
+cp -Rpv /bak-compat/linux /compat/
+#+end_src
+
 #+BEGIN_SRC sh
 cp -Rpv /bak-compat/linux/ /compat/linux
 #+END_SRC
