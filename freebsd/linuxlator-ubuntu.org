@@ -29,6 +29,8 @@ sudo pkg install debootstrap
 
 *** ubuntu rc.d script 
 
++ not used
+
 ubuntu rc.d script content
 
 #+begin_src sh
@@ -125,6 +127,8 @@ sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,
 
 *** fstab
 
++ not used
+
 #+begin_example
 /etc/fstab
 #+end_example
@@ -151,6 +155,8 @@ sudo mount -al
 
 *** Enable Linux compatibility layer (Ubuntu):
 
++ not used
+
 start ubuntu
 
 #+begin_src sh
@@ -158,6 +164,8 @@ sudo sysrc ubuntu_enable="YES"
 #+end_src
 
 *** Start Ubuntu service:
+
++ not used
 
 #+begin_src sh
 sudo service ubuntu start
@@ -177,7 +185,7 @@ sudo service ubuntu restart
 
 *** Fix broken symlink:
 
-maybe not needed for ubuntu 22.10
+maybe not needed
 
 #+begin_src sh
 cd /compat/ubuntu/lib64/ && rm ./ld-linux-x86-64.so.2 ; ln -s ../lib/x86_64-linux-gnu/ld-2.31.so ld-linux-x86-64.so.2
@@ -192,7 +200,7 @@ sudo sysctl security.bsd.unprivileged_chroot=1
 *** Chroot into your Linux environment:
 
 #+begin_src sh
-chroot -n /compat/ubuntu /bin/bash
+sudo chroot /compat/ubuntu /bin/bash
 #+end_src
 
 *** Set correct timezone inside your chroot:
@@ -217,38 +225,95 @@ printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
 
 add more repos
 
-#+begin_src sh
-printf "deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" > /etc/apt/sources.list
-printf "deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" > /etc/apt/sources.list
-printf "deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" > /etc/apt/sources.list
-#+end_src
-
-/etc/apt/sources.list
+#+begin_example
+/compat/ubuntu/etc/apt/sources.list
+#+end_example
 
 #+begin_example
-deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
 #+end_example
 
 *** apt update
 
-use allow-insecure-repositories needed for gpg issue on latest versions of ubuntu
+make sure you are chrooted with sudo
 
 #+begin_src sh
-apt-get update --allow-insecure-repositories
+apt update
 #+end_src
 
 upgrade
 
 #+begin_src sh
-apt-get upgrade 
+apt upgrade 
 #+end_src
 
 *** Install required programs:
 
 #+begin_src sh
-apt update ; apt install -y apt-transport-https curl fonts-symbola gnupg pulseaudio
+apt install pulseaudio zsh
+#+end_src
+
+*** copy user and group
+
+#+begin_example
+groups: cannot find name for group ID 1001
+groups: cannot find name for group ID 47
+#+end_example
+
+check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+output
+
+#+begin_src sh
+uid=1001(djwilcox) gid=1001(djwilcox) groups=1001(djwilcox),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+copy user from freebsd /etc/passwd to /compat/ubuntu/etc/passwd
+copy group from freebsd //etc/group to /compat/ubuntu/etc/
+
+in this case we need to copy the user with the uid of 1001 from the passwd file,
+and the group with a id of 47 from the group file
+
+we also need to check that the shell path is correct
+
+change zsh path to /bin/zsh
+
+freebsd passwd
+
+#+begin_src sh
+djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/local/bin/zsh
+#+end_src
+
+ubuntu passwd
+
+#+begin_src sh
+djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/bin/zsh
+#+end_src
+
+freebsd group
+
+#+begin_src sh
+djwilcox:*:1001:
+realtime:*:47:djwilcox
+#+end_src
+
+ubuntu group
+
+#+begin_src sh
+djwilcox:*:1001:
+realtime:*:47:djwilcox
+#+end_src
+
+*** chroot without sudo
+
+#+begin_src sh
+chroot -n /compat/ubuntu /bin/bash
 #+end_src
 
 ** davinci resolve install
