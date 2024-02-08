@@ -166,13 +166,13 @@ sudo service ubuntu start
 *** Install Ubuntu 22.04 into /compat/ubuntu:
 
 #+begin_src sh
-sudo debootstrap --arch=amd64 --no-check-gpg jammy /compat/ubuntu
+sudo debootstrap --arch=amd64 --no-check-gpg focal /compat/ubuntu
 #+end_src
 
 *** Restart Ubuntu service to make sure everything is properly mounted:
 
 #+begin_src sh
-service ubuntu restart
+sudo service ubuntu restart
 #+end_src
 
 *** Fix broken symlink:
@@ -193,7 +193,6 @@ sudo sysctl security.bsd.unprivileged_chroot=1
 
 #+begin_src sh
 sudo chroot /compat/ubuntu /bin/bash
-sudo chroot -n /compat/ubuntu /bin/bash
 #+end_src
 
 *** Set correct timezone inside your chroot:
@@ -552,5 +551,5 @@ exit
 ** linuxulator delete
 
 #+begin_src sh
-sudo rm -rfx /compat/ubuntu
+sudo rm -rxv /compat/ubuntu
 #+end_src
