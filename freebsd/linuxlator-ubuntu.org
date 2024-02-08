@@ -192,7 +192,7 @@ sudo sysctl security.bsd.unprivileged_chroot=1
 *** Chroot into your Linux environment:
 
 #+begin_src sh
-sudo chroot /compat/ubuntu /bin/bash
+chroot -n /compat/ubuntu /bin/bash
 #+end_src
 
 *** Set correct timezone inside your chroot:
