@@ -249,6 +249,42 @@ upgrade
 apt upgrade 
 #+end_src
 
+*** set locale
+
+#+begin_src sh
+/etc/default/locale
+#+end_src
+
+#+begin_src sh
+LANG=en_GB.UTF-8
+LANGUAGE=
+LC_CTYPE="en_GB.UTF-8"
+LC_NUMERIC="en_GB.UTF-8"
+LC_TIME="en_GB.UTF-8"
+LC_COLLATE=C
+LC_MONETARY="en_GB.UTF-8"
+LC_MESSAGES="en_GB.UTF-8"
+LC_PAPER="en_GB.UTF-8"
+LC_NAME="en_GB.UTF-8"
+LC_ADDRESS="en_GB.UTF-8"
+LC_TELEPHONE="en_GB.UTF-8"
+LC_MEASUREMENT="en_GB.UTF-8"
+LC_IDENTIFICATION="en_GB.UTF-8"
+LC_ALL=
+#+end_src
+
+locale-gen
+
+#+begin_src sh
+locale-gen
+#+end_src
+
+dpkg-reconfigure locales
+
+#+begin_src sh
+dpkg-reconfigure locales
+#+end_src
+
 *** Install required programs:
 
 #+begin_src sh
@@ -310,10 +346,25 @@ djwilcox:*:1001:
 realtime:*:47:djwilcox
 #+end_src
 
-*** chroot without sudo
+*** chroot with and without sudo
+
+chroot without sudo
 
 #+begin_src sh
 chroot -n /compat/ubuntu /bin/bash
+#+end_src
+
+with sudo
+
+#+begin_src sh
+sudo chroot /compat/ubuntu /bin/bash
+#+end_src
+
+switch to your user in the chroot
+replace djwilcox with your username
+
+#+begin_src sh
+su - djwilcox
 #+end_src
 
 ** davinci resolve install
