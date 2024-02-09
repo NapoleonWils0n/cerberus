@@ -29,8 +29,6 @@ sudo pkg install debootstrap
 
 *** ubuntu rc.d script 
 
-+ not used
-
 ubuntu rc.d script content
 
 #+begin_src sh
@@ -127,8 +125,6 @@ sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,
 
 *** fstab
 
-+ not used
-
 #+begin_example
 /etc/fstab
 #+end_example
@@ -155,8 +151,6 @@ sudo mount -al
 
 *** Enable Linux compatibility layer (Ubuntu):
 
-+ not used
-
 start ubuntu
 
 #+begin_src sh
@@ -164,8 +158,6 @@ sudo sysrc ubuntu_enable="YES"
 #+end_src
 
 *** Start Ubuntu service:
-
-+ not used
 
 #+begin_src sh
 sudo service ubuntu start
