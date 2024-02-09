@@ -379,6 +379,31 @@ sudo apt install fakeroot xorriso
 sudo apt install nvidia-driver-535 nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
 #+end_src
 
+purge driver
+
+#+begin_src sh
+apt purge nvidia-driver-535 nvidia-cuda-toolkit
+#+end_src
+
+autoremove
+
+#+begin_src sh 
+apt autoremove
+#+end_src
+
+dist upgrade
+
+#+begin_src sh
+apt install update-manager-core
+do-release-upgrade
+#+end_src
+
+allow-insecure-repositories
+
+#+begin_src sh
+apt update --allow-insecure-repositories
+#+end_src
+
 *** blacklist Nouveau nvidia driver
 
 create the blacklist-nvidia-nouveau.conf file
@@ -415,13 +440,6 @@ use nvidia-smi to see GPU info and process that are using Nvidia GPU
 #+begin_src sh
 nvidia-smi
 #+end_src
-
-apt purge nvidia*
-apt purge *cuda*
-
-# Check
-apt list -i |grep nvidia
-apt list -i |grep cuda
 
 *** da vinci resolve download
 
