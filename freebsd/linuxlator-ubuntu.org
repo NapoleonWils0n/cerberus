@@ -250,6 +250,25 @@ full path for symlinks
 /compat/ubuntu/usr/sbin
 #+end_example
 
+find files with 700 permissions
+
+#+begin_src sh
+find /compat/ubuntu/usr/ -perm -700
+#+end_src
+
+echo the files that will be operated on
+to make sure the find and exec commands are operating on the correct files
+
+#+begin_src sh
+find /compat/ubuntu/usr/ -type f -perm -700 -exec echo '{}' \;
+#+end_src
+
+change the permissions from 700 to 755
+
+#+begin_src sh
+sudo find /compat/ubuntu/usr/ -type f -perm -700 -exec chmod 755 '{}' \;
+#+end_src
+
 *** Fix broken symlink:
 
 maybe not needed
