@@ -1,25 +1,5 @@
 #+STARTUP: content
 * linuxlator ubuntu
-** linux centos
-*** stop linux
-
-#+begin_src sh
-sudo service linux stop
-#+end_src
-
-*** unmount the linux centos fstab mount
-
-#+begin_src sh
-sudo umount /compat/linux/proc
-sudo umount /compat/linux/sys
-#+end_src
-
-*** linunx enable no
-
-#+begin_src sh
-sudo sysrc linux_enable="NO"
-#+end_src
-
 ** ubuntu
 *** Install needed packages on freebsd
 
@@ -123,6 +103,50 @@ sudo chmod +x /usr/local/etc/rc.d/ubuntu
 sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,/compat/ubuntu/tmp,/compat/ubuntu/proc,/compat/ubuntu/sys}
 #+end_src
 
+*** stop linux
+
+stop linux
+
+#+begin_src sh
+sudo service linux stop
+#+end_src
+
+linunx enable no
+
+#+begin_src sh
+sudo sysrc linux_enable="NO"
+#+end_src
+
+check whats mounted
+
+#+begin_src sh
+mount | grep /compat
+#+end_src
+
+#+begin_example
+linprocfs on /compat/linux/proc (linprocfs, local)
+linsysfs on /compat/linux/sys (linsysfs, local)
+devfs on /compat/linux/dev (devfs)
+fdescfs on /compat/linux/dev/fd (fdescfs)
+tmpfs on /compat/linux/dev/shm (tmpfs, local)
+#+end_example
+
+unmount the linux centos fstab mount
+
+#+begin_src sh
+sudo umount /compat/linux/proc 
+sudo umount /compat/linux/sys 
+#sudo umount /compat/linux/dev
+sudo umount /compat/linux/dev/fd
+sudo umount /compat/linux/dev/shm
+#+end_src
+
+check whats mounted
+
+#+begin_src sh
+mount
+#+end_src
+
 *** fstab
 
 #+begin_example
@@ -130,17 +154,25 @@ sudo mkdir -p {/compat/ubuntu/dev/fd,/compat/ubuntu/dev/shm,/compat/ubuntu/home,
 #+end_example
 
 fstab for ubuntu chroot
+edit your fstab and comment out the linux centos section
+and uncomment the ubuntu section
 
 #+begin_src conf
-# Device        Mountpoint              FStype          Options                      Dump    Pass#
-proc            /proc           procfs  rw      0       0
+# Device		Mountpoint	FStype	Options		Dump	Pass#
+# linux
+fdesc           /dev/fd                 fdescfs         rw                           0       0
+proc            /proc                   procfs          rw                           0       0
+# centos
+#linprocfs       /compat/linux/proc	linprocfs	rw	0	0
+#linsysfs        /compat/linux/sys	linsysfs	rw	0	0
+# ubuntu
 devfs           /compat/ubuntu/dev      devfs           rw,late                      0       0
-tmpfs           /compat/ubuntu/dev/shm  tmpfs           rw,late,size=1g,mode=1777    0       0
 fdescfs         /compat/ubuntu/dev/fd   fdescfs         rw,late,linrdlnk             0       0
+tmpfs           /compat/ubuntu/dev/shm  tmpfs           rw,late,size=1g,mode=1777    0       0
+/home           /compat/ubuntu/home     nullfs          rw,late                      0       0
 linprocfs       /compat/ubuntu/proc     linprocfs       rw,late                      0       0
 linsysfs        /compat/ubuntu/sys      linsysfs        rw,late                      0       0
 /tmp            /compat/ubuntu/tmp      nullfs          rw,late                      0       0
-/home           /compat/ubuntu/home     nullfs          rw,late                      0       0
 #+end_src
 
 mount the devices in fstab
@@ -149,7 +181,14 @@ mount the devices in fstab
 sudo mount -al
 #+end_src
 
+check whats mounted
+
+#+begin_src sh
+mount | grep compat
+#+end_src
+
 *** Enable Linux compatibility layer (Ubuntu):
+
 
 start ubuntu
 
@@ -157,16 +196,22 @@ start ubuntu
 sudo sysrc ubuntu_enable="YES"
 #+end_src
 
-*** Start Ubuntu service:
+Start Ubuntu service:
 
 #+begin_src sh
 sudo service ubuntu start
 #+end_src
 
+check everything is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
 *** Install Ubuntu 22.04 into /compat/ubuntu:
 
 #+begin_src sh
-sudo debootstrap --arch=amd64 --no-check-gpg focal /compat/ubuntu
+sudo debootstrap --arch=amd64 --no-check-gpg jammy /compat/ubuntu
 #+end_src
 
 *** Restart Ubuntu service to make sure everything is properly mounted:
@@ -174,6 +219,25 @@ sudo debootstrap --arch=amd64 --no-check-gpg focal /compat/ubuntu
 #+begin_src sh
 sudo service ubuntu restart
 #+end_src
+
+*** fix permissions
+
+list /compat/ubuntu
+
+#+begin_src sh
+ls -l /compat/ubuntu
+#+end_src
+
+ouput showing the symlinks
+
+#+begin_example
+lrwxr-xr-x   1 root wheel   7 10 Feb 20:59 bin -> usr/bin
+lrwxr-xr-x   1 root wheel   7 10 Feb 20:59 lib -> usr/lib
+lrwxr-xr-x   1 root wheel   9 10 Feb 20:59 lib32 -> usr/lib32
+lrwxr-xr-x   1 root wheel   9 10 Feb 20:59 lib64 -> usr/lib64
+lrwxr-xr-x   1 root wheel  10 10 Feb 20:59 libx32 -> usr/libx32
+lrwxr-xr-x   1 root wheel   8 10 Feb 20:59 sbin -> usr/sbin
+#+end_example
 
 *** Fix broken symlink:
 
