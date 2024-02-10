@@ -239,6 +239,17 @@ lrwxr-xr-x   1 root wheel  10 10 Feb 20:59 libx32 -> usr/libx32
 lrwxr-xr-x   1 root wheel   8 10 Feb 20:59 sbin -> usr/sbin
 #+end_example
 
+full path for symlinks
+
+#+begin_example
+/compat/ubuntu/usr/bin
+/compat/ubuntu/usr/lib
+/compat/ubuntu/usr/lib32
+/compat/ubuntu/usr/lib64
+/compat/ubuntu/usr/libx32
+/compat/ubuntu/usr/sbin
+#+end_example
+
 *** Fix broken symlink:
 
 maybe not needed
