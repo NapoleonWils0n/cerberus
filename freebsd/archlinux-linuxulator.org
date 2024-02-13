@@ -1,0 +1,299 @@
+#+STARTUP: content
+* arch freebsd 
+
+[[https://github.com/mtrkss/arch-compat-tutorial/blob/main/Tutorial.md]]
+
+** install packages on freebsd
+
+#+begin_src sh
+pkg install pulseaudio dbus git gtar
+service dbus enable
+service dbus start
+#+end_src
+
+#+begin_src sh
+sudo pkg install gtar
+#+end_src
+
+** Setting up the chroot 
+
+org link
+
+[[https://geo.mirror.pkgbuild.com/iso/latest/archlinux-bootstrap-x86_64.tar.gz]]
+
+plain link
+
+
+https://geo.mirror.pkgbuild.com/iso/latest/archlinux-bootstrap-x86_64.tar.gz
+
+download the bootstrap and extract it into /compat/archlinux.
+First execute the following commands (replace /path/to with the actual path):
+
+#+begin_src sh
+sudo mkdir -p /compat/archlinux
+#+end_src
+
+#+begin_src sh
+sudo gtar xvp --numeric-owner --strip-components=1 -f archlinux-bootstrap-x86_64.tar.gz -C /compat/archlinux
+#+end_src
+
+Now drop the script named archlinux into /usr/local/etc/rc.d and enable it. If you want, you can do it like this:
+
+#+begin_src sh
+git clone https://github.com/mtrkss/archcompat-tutorial.git 
+#+end_src
+
+stop linux
+
+#+begin_src sh
+sudo service linux stop
+sudo sysrc linux_enable="NO"
+#+end_src
+
+reboot to make sure the centos linux mountpoints are unmounted
+you cant unmount becuase they are active otherwise
+
+#+begin_src sh
+sudo cp -v arch-compat-tutorial/scripts/archlinux /usr/local/etc/rc.d
+sudo chmod +x /usr/local/etc/rc.d/archlinux
+#+end_src
+
+#+begin_src sh
+sudo sysrc archlinux_enable="YES"
+sudo sysrc archlinux_enable="NO"
+#sudo service archlinux enable
+sudo service archlinux start
+#+end_src
+
+Check if the filesystems are mounted with df. The output should look like this:
+
+#+begin_example
+Filesystem  1K-blocks     Used     Avail Capacity  Mounted on
+/dev/ada1p2 233596184 16800280 198108212     8%    /
+devfs               1        0         1     0%    /dev
+/dev/ada1p1    524128      688    523440     0%    /boot/efi
+devfs               1        0         1     0%    /compat/archlinux/dev
+fdescfs             1        0         1     0%    /compat/archlinux/dev/fd
+tmpfs         8828196    18584   8809612     0%    /compat/archlinux/dev/shm
+/home       233596184 16800280 198108212     8%    /compat/archlinux/home
+linprocfs           8        0         8     0%    /compat/archlinux/proc
+linsysfs            8        0         8     0%    /compat/archlinux/sys
+/tmp        233596184 16800280 198108212     8%    /compat/archlinux/tmp
+fdescfs             1        0         1     0%    /dev/fd
+procfs              8        0         8     0%    /proc
+#+end_example
+
+If the /compat/archlinux directories are mounted, we can continue.
+
+** Installing and fixing pacman
+
+#+begin_src sh
+sudo pkg install archlinux-keyring archlinux-pacman
+#+end_src
+
+After installing pacman, run on the freebsd host
+
+#+begin_src sh
+sudo pacman-key --init
+sudo pacman-key --populate
+#+end_src
+
+After that, copy pacman.conf from this repo into
+
+fresbsd path
+
+#+begin_example
+/compat/archlinux/usr/local/etc/pacman.conf
+#+end_example
+
+arch chroot path
+
+#+begin_example
+/usr/local/etc/pacman.conf
+#+end_example
+
+copy pacman.conf into the chroot
+
+#+begin_src sh
+sudo cp arch-compat-tutorial/configs/pacman.conf /compat/archlinux/usr/local/etc/pacman.conf
+#+end_src
+
+** pacman update
+
+Now update your repos with pacman -Sy and try installing something like tmux with pacman -S tmux
+
+If pacman starts screaming about PGP keys, you may need to run pacman-key --refresh-keys (keep in mind that this command takes several hours to finish)
+
+then initialize and populate the keyring with previous pacman-key commands again.
+
+** Setting up the chroot (part 2)
+
+generate a mirrorlist 
+make sure to uncomment the top 5 entries
+
+[[https://archlinux.org/mirrorlist/]]
+
+#+begin_src conf
+##
+## Arch Linux repository mirrorlist
+## Generated on 2024-02-12
+##
+
+## United Kingdom
+Server = http://archlinux.uk.mirror.allworldit.com/archlinux/$repo/os/$arch
+Server = https://archlinux.uk.mirror.allworldit.com/archlinux/$repo/os/$arch
+Server = http://mirror.bytemark.co.uk/archlinux/$repo/os/$arch
+Server = https://mirror.bytemark.co.uk/archlinux/$repo/os/$arch
+Server = https://london.mirror.pkgbuild.com/$repo/os/$arch
+#Server = http://mirrors.gethosted.online/archlinux/$repo/os/$arch
+#Server = https://mirrors.gethosted.online/archlinux/$repo/os/$arch
+#Server = http://mirrors.manchester.m247.com/arch-linux/$repo/os/$arch
+#Server = http://mirrors.melbourne.co.uk/archlinux/$repo/os/$arch
+#Server = https://mirrors.melbourne.co.uk/archlinux/$repo/os/$arch
+#Server = http://mirror.infernocomms.net/archlinux/$repo/os/$arch
+#Server = https://mirror.infernocomms.net/archlinux/$repo/os/$arch
+#Server = http://www.mirrorservice.org/sites/ftp.archlinux.org/$repo/os/$arch
+#Server = https://www.mirrorservice.org/sites/ftp.archlinux.org/$repo/os/$arch
+#Server = http://mirror.netweaver.uk/archlinux/$repo/os/$arch
+#Server = https://mirror.netweaver.uk/archlinux/$repo/os/$arch
+#Server = http://lon.mirror.rackspace.com/archlinux/$repo/os/$arch
+#Server = https://lon.mirror.rackspace.com/archlinux/$repo/os/$arch
+#Server = http://arch.serverspace.co.uk/arch/$repo/os/$arch
+#Server = https://repo.slithery.uk/$repo/os/$arch
+#Server = http://mirrors.ukfast.co.uk/sites/archlinux.org/$repo/os/$arch
+#Server = https://mirrors.ukfast.co.uk/sites/archlinux.org/$repo/os/$arch
+#Server = http://mirror.cov.ukservers.com/archlinux/$repo/os/$arch
+#Server = https://mirror.cov.ukservers.com/archlinux/$repo/os/$arch
+#Server = http://mirror.vinehost.net/archlinux/$repo/os/$arch
+#Server = https://mirror.vinehost.net/archlinux/$repo/os/$arch
+#+end_src
+
+create the pacman.d directory in the chroot
+
+#+begin_src sh
+sudo mkdir -p /compat/archlinux/usr/local/etc/pacman.d/
+#+end_src
+
+switch to root with su on the freebsd host
+
+#+begin_src sh
+su
+#+end_src
+
+#+begin_src sh
+cp arch-compat-tutorial/configs/chroot-pacman.conf /compat/archlinux/etc/pacman.conf
+cp mirrorlist /compat/archlinux/etc/pacman.d/mirrorlist
+echo "$(hostname)" > /compat/archlinux/etc/hostname
+echo "en_US.UTF-8 UTF-8" >> /compat/archlinux/etc/locale.gen
+echo "LANG=en_US.UTF-8" > /compat/archlinux/etc/locale.conf
+printf "nameserver 1.1.1.1\nnameserver 1.0.0.1\n" > /compat/archlinux/etc/resolv.conf
+#+end_src
+
+** Chroot into Arch Linux with
+
+#+begin_src sh
+sudo chroot /compat/archlinux /bin/bash
+source /etc/profile
+#+end_src
+
+Run locale-gen.
+
+#+begin_src sh
+locale-gen
+#+end_src
+
+Now fix pacman here and install some text editors, tools for building AUR packages and pulseaudio using
+
+#+begin_src sh
+pacman-key --init && pacman-key --populate
+#+end_src
+
+pacman update
+
+#+begin_src sh
+pacman -Syu
+#+end_src
+
+#+begin_src sh
+pacman -S base base-devel 
+#+end_src
+
+#+begin_src sh
+pacman -S git sudo vi less pulseaudio alsa-lib
+#+end_src
+
+
+
+At this step you'll get some errors regarding /proc, systemd and /etc/passwd. Ignore them.
+
+The chroot is done now, it's time to install something cool!
+
+** add a user in the chroot
+
+
+#+begin_src sh
+useradd djwilcox -s /bin/bash -G wheel,input,audio,video
+#+end_src
+
+passwd
+
+#+begin_src sh
+passwd djwilcox
+#+end_src
+
+password
+arch
+
+** sudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+#+begin_example
+/etc/sudoers
+#+end_example
+
+#+begin_src conf
+%wheel ALL=(ALL:ALL) ALL
+#+end_src
+
+** switch to our user in the chroot
+
+#+begin_src sh
+su - djwilcox
+#+end_src
+
+** wayland
+
+#+begin_src sh
+sudo pacman -S wayland wayland-protocols wlroots libinput libxkbcommon
+#+end_src
+
+** nvidia and cuda
+
+[[https://medium.com/@TechHutTV/how-to-install-davinci-resolve-in-linux-ubuntu-arch-and-fedora-4b42d4ce5e1]]
+
+nvidia-cuda-toolkit ocl-icd-opencl-dev
+
+ocl-icd
+cuda cuda-tools
+xf86-video-intel 
+
+install nvida package first
+
+#+begin_src sh
+sudo pacman -S nvidia nvidia-utils opencl-nvidia 
+#+end_src
+
+then install cuda
+
+#+begin_src sh
+sudo pacman -S cuda
+#+end_src
+
+** aur
+
+#+begin_src sh
+yay -S davinci-resolve
+#+end_src

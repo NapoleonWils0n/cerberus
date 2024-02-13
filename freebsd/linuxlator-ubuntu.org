@@ -250,7 +250,7 @@ full path for symlinks
 /compat/ubuntu/usr/sbin
 #+end_example
 
-find files with 700 permissions
+**** find files with 700 permissions
 
 #+begin_src sh
 find /compat/ubuntu/usr/ -perm -700
@@ -269,6 +269,37 @@ change the permissions from 700 to 755
 sudo find /compat/ubuntu/usr/ -type f -perm -700 -exec chmod 755 '{}' \;
 #+end_src
 
+**** find files with 600 permissions
+
+on the host
+
+#+begin_src sh
+find /compat/ubuntu/lib/x86_64-linux-gnu -perm -600
+#+end_src
+
+in the chroot
+
+#+begin_src sh
+find /lib/x86_64-linux-gnu -perm -600
+#+end_src
+
+echo the files that will be operated on
+to make sure the find and exec commands are operating on the correct files
+
+#+begin_src sh
+find /compat/ubuntu/lib/x86_64-linux-gnu -type f -perm -600 -exec echo '{}' \;
+#+end_src
+
+change the permissions from 600 to 644
+
+#+begin_src sh
+sudo find /compat/ubuntu/lib/x86_64-linux-gnu -type f -perm -600 -exec chmod 644 '{}' \;
+#+end_src
+
+**** fix symlink permissions
+
+
+
 *** Fix broken symlink:
 
 maybe not needed
@@ -281,6 +312,10 @@ cd /compat/ubuntu/lib64/ && rm ./ld-linux-x86-64.so.2 ; ln -s ../lib/x86_64-linu
 
 #+begin_src sh
 sudo sysctl security.bsd.unprivileged_chroot=1
+#+end_src
+
+#+begin_src sh
+chroot -n /compat/ubuntu /bin/bash
 #+end_src
 
 *** Chroot into your Linux environment:
@@ -316,17 +351,24 @@ add more repos
 #+end_example
 
 #+begin_example
-deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
 #+end_example
 
 *** apt update
 
-make sure you are chrooted with sudo
+install gnupg
 
 #+begin_src sh
-apt update
+sudo apt install gnupg
+#+end_src
+
+make sure you are chrooted with sudo
+--allow-insecure-repositories is needed on jammy
+
+#+begin_src sh
+apt update --allow-insecure-repositories
 #+end_src
 
 upgrade
@@ -336,6 +378,14 @@ apt upgrade
 #+end_src
 
 *** set locale
+
+on the host
+
+#+begin_src sh
+/compat/ubuntu/etc/default/locale
+#+end_src
+
+in the chroot
 
 #+begin_src sh
 /etc/default/locale
@@ -397,13 +447,21 @@ uid=1001(djwilcox) gid=1001(djwilcox) groups=1001(djwilcox),0(wheel),5(operator)
 #+end_src
 
 copy user from freebsd /etc/passwd to /compat/ubuntu/etc/passwd
+
+#+begin_example
+djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/local/bin/zsh
+#+end_example
+
 copy group from freebsd //etc/group to /compat/ubuntu/etc/
+
+#+begin_example
+djwilcox:*:1001:
+#+end_example
 
 in this case we need to copy the user with the uid of 1001 from the passwd file,
 and the group with a id of 47 from the group file
 
 we also need to check that the shell path is correct
-
 change zsh path to /bin/zsh
 
 freebsd passwd
@@ -413,6 +471,19 @@ djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/local/bin/zsh
 #+end_src
 
 ubuntu passwd
+
+host path
+
+#+begin_example
+/compat/ubuntu/etc/passwd
+#+end_example
+
+chroot path
+
+#+begin_example
+/etc/passwd
+#+end_example
+
 
 #+begin_src sh
 djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/bin/zsh
@@ -427,9 +498,39 @@ realtime:*:47:djwilcox
 
 ubuntu group
 
-#+begin_src sh
+host path
+
+#+begin_example
+/compat/ubuntu/etc/group
+#+end_example
+
+chroot path
+
+#+begin_example
+/etc/group
+#+end_example
+
+
+#+begin_src conf
 djwilcox:*:1001:
 realtime:*:47:djwilcox
+#+end_src
+
+*** add user to groups
+
+#+begin_src sh
+usermod -a -G adm djwilcox
+usermod -a -G cdrom djwilcox
+usermod -a -G sudo djwilcox
+usermod -a -G dip djwilcox
+usermod -a -G plugdev djwilcox
+usermod -a -G users djwilcox
+#+end_src
+
+*** chown home directory
+
+#+begin_src sh
+chown djwilcox:djwilcox /home/djwilcox
 #+end_src
 
 *** chroot with and without sudo
