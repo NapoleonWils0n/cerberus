@@ -60,8 +60,6 @@ sudo chmod +x /usr/local/etc/rc.d/archlinux
 
 #+begin_src sh
 sudo sysrc archlinux_enable="YES"
-sudo sysrc archlinux_enable="NO"
-#sudo service archlinux enable
 sudo service archlinux start
 #+end_src
 
@@ -117,14 +115,6 @@ copy pacman.conf into the chroot
 #+begin_src sh
 sudo cp arch-compat-tutorial/configs/pacman.conf /compat/archlinux/usr/local/etc/pacman.conf
 #+end_src
-
-** pacman update
-
-Now update your repos with pacman -Sy and try installing something like tmux with pacman -S tmux
-
-If pacman starts screaming about PGP keys, you may need to run pacman-key --refresh-keys (keep in mind that this command takes several hours to finish)
-
-then initialize and populate the keyring with previous pacman-key commands again.
 
 ** Setting up the chroot (part 2)
 
@@ -193,6 +183,11 @@ printf "nameserver 1.1.1.1\nnameserver 1.0.0.1\n" > /compat/archlinux/etc/resolv
 
 #+begin_src sh
 sudo chroot /compat/archlinux /bin/bash
+#+end_src
+
+source profile
+
+#+begin_src sh
 source /etc/profile
 #+end_src
 
@@ -219,20 +214,113 @@ pacman -S base base-devel
 #+end_src
 
 #+begin_src sh
-pacman -S git sudo vi less pulseaudio alsa-lib
+pacman -S git sudo vi 
 #+end_src
 
-
+less pulseaudio alsa-lib
 
 At this step you'll get some errors regarding /proc, systemd and /etc/passwd. Ignore them.
 
 The chroot is done now, it's time to install something cool!
 
+** install zsh
+
+#+begin_src sh
+pacman -S zsh zsh-completions zsh-syntax-highlighting
+#+end_src
+
 ** add a user in the chroot
+#+begin_example
+groups: cannot find name for group ID 1001
+groups: cannot find name for group ID 47
+#+end_example
+
+check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+output
+
+#+begin_src sh
+uid=1001(djwilcox) gid=1001(djwilcox) groups=1001(djwilcox),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+copy user from freebsd /etc/passwd to /compat/ubuntu/etc/passwd
+
+#+begin_example
+djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/local/bin/zsh
+#+end_example
+
+copy group from freebsd //etc/group to /compat/ubuntu/etc/
+
+#+begin_example
+djwilcox:*:1001:
+#+end_example
+
+in this case we need to copy the user with the uid of 1001 from the passwd file,
+and the group with a id of 47 from the group file
+
+we also need to check that the shell path is correct
+change zsh path to /bin/zsh
+
+freebsd passwd
+
+#+begin_src sh
+djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/local/bin/zsh
+#+end_src
+
+ubuntu passwd
+
+host path
+
+#+begin_example
+/compat/ubuntu/etc/passwd
+#+end_example
+
+fond the location of zsh in the chroot
+
+#+begin_src sh
+which zsh
+#+end_src
+
+chroot path
+
+#+begin_example
+/etc/passwd
+#+end_example
 
 
 #+begin_src sh
-useradd djwilcox -s /bin/bash -G wheel,input,audio,video
+djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/bin/zsh
+#+end_src
+
+freebsd group
+
+#+begin_src sh
+djwilcox:*:1001:
+realtime:*:47:djwilcox
+#+end_src
+
+ubuntu group
+
+host path
+
+#+begin_example
+/compat/ubuntu/etc/group
+#+end_example
+
+chroot path
+
+#+begin_example
+/etc/group
+#+end_example
+
+
+#+begin_src conf
+djwilcox:*:1001:
+realtime:*:47:djwilcox
 #+end_src
 
 passwd
@@ -243,6 +331,15 @@ passwd djwilcox
 
 password
 arch
+
+*** add user to groups
+
+#+begin_src sh
+usermod -a -G wheel djwilcox
+usermod -a -G input djwilcox
+usermod -a -G audio djwilcox
+usermod -a -G video djwilcox
+#+end_src
 
 ** sudo
 
@@ -292,8 +389,21 @@ then install cuda
 sudo pacman -S cuda
 #+end_src
 
-** aur
+** paru
+
+[[https://github.com/Morganamilo/paru]]
 
 #+begin_src sh
-yay -S davinci-resolve
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si
 #+end_src
+
+** davinci-resolve
+
+#+begin_src sh
+paru -S davinci-resolve
+#+end_src
+
+select option 3 opencl nvidia
