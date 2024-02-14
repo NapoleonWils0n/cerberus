@@ -737,6 +737,17 @@ download link for 535.146.02
 
 [[https://www.nvidia.com/download/driverResults.aspx/216728/en-us/]]
 
+*** copy the nvidia run file in the chroot home direcory
+
+change into the directory you download the nvidia drivers into on the freebsd host
+
+then copy the nvidia run file into the home directory in the chroot
+change djwilcox for your username
+
+#+begin_src sh
+cp -rv NVIDIA-Linux-x86_64-535.146.02.run /compat/ubuntu/home/djwilcox
+#+end_src
+
 *** Install xorriso and fakeroot
 
 + install fakeroot and xorriso for makeresolvedeb
