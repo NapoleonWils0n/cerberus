@@ -117,75 +117,7 @@ linunx enable no
 sudo sysrc linux_enable="NO"
 #+end_src
 
-check whats mounted
-
-#+begin_src sh
-mount | grep /compat
-#+end_src
-
-#+begin_example
-linprocfs on /compat/linux/proc (linprocfs, local)
-linsysfs on /compat/linux/sys (linsysfs, local)
-devfs on /compat/linux/dev (devfs)
-fdescfs on /compat/linux/dev/fd (fdescfs)
-tmpfs on /compat/linux/dev/shm (tmpfs, local)
-#+end_example
-
-unmount the linux centos fstab mount
-
-#+begin_src sh
-sudo umount /compat/linux/proc 
-sudo umount /compat/linux/sys 
-#sudo umount /compat/linux/dev
-sudo umount /compat/linux/dev/fd
-sudo umount /compat/linux/dev/shm
-#+end_src
-
-check whats mounted
-
-#+begin_src sh
-mount
-#+end_src
-
-*** fstab
-
-#+begin_example
-/etc/fstab
-#+end_example
-
-fstab for ubuntu chroot
-edit your fstab and comment out the linux centos section
-and uncomment the ubuntu section
-
-#+begin_src conf
-# Device		Mountpoint	FStype	Options		Dump	Pass#
-# linux
-fdesc           /dev/fd                 fdescfs         rw                           0       0
-proc            /proc                   procfs          rw                           0       0
-# centos
-#linprocfs       /compat/linux/proc	linprocfs	rw	0	0
-#linsysfs        /compat/linux/sys	linsysfs	rw	0	0
-# ubuntu
-devfs           /compat/ubuntu/dev      devfs           rw,late                      0       0
-fdescfs         /compat/ubuntu/dev/fd   fdescfs         rw,late,linrdlnk             0       0
-tmpfs           /compat/ubuntu/dev/shm  tmpfs           rw,late,size=1g,mode=1777    0       0
-/home           /compat/ubuntu/home     nullfs          rw,late                      0       0
-linprocfs       /compat/ubuntu/proc     linprocfs       rw,late                      0       0
-linsysfs        /compat/ubuntu/sys      linsysfs        rw,late                      0       0
-/tmp            /compat/ubuntu/tmp      nullfs          rw,late                      0       0
-#+end_src
-
-mount the devices in fstab
-
-#+begin_src sh
-sudo mount -al
-#+end_src
-
-check whats mounted
-
-#+begin_src sh
-mount | grep compat
-#+end_src
+reboot so the linux mount points are unmounted
 
 *** Enable Linux compatibility layer (Ubuntu):
 
@@ -208,114 +140,381 @@ check everything is mounted
 mount
 #+end_src
 
+*** create linuxulator script for lunar and mantic
+
+#+begin_src sh
+case $ARCH in
+  amd64|i386)
+	case $SUITE in
+	  gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|utopic|vivid|wily|yakkety|zesty)
+	default_mirror http://old-releases.ubuntu.com/ubuntu
+	  ;;
+	  ,*)
+	default_mirror http://archive.ubuntu.com/ubuntu
+	;;
+	esac
+	;;
+  sparc)
+	case $SUITE in
+	  gutsy)
+	default_mirror http://old-releases.ubuntu.com/ubuntu
+	;;
+	  ,*)
+	default_mirror http://ports.ubuntu.com/ubuntu-ports
+	;;
+	esac
+	;;
+  ,*)
+	default_mirror http://ports.ubuntu.com/ubuntu-ports
+	;;
+esac
+mirror_style release
+download_style apt
+finddebs_style from-indices
+variants - buildd fakechroot minbase
+keyring /usr/local/share/keyrings/ubuntu-archive-keyring.gpg
+
+if doing_variant fakechroot; then
+	test "$FAKECHROOT" = "true" || error 1 FAKECHROOTREQ "This variant requires fakechroot environment to be started"
+fi
+
+case $ARCH in
+	alpha|ia64) LIBC="libc6.1" ;;
+	kfreebsd-*) LIBC="libc0.1" ;;
+	hurd-*)     LIBC="libc0.3" ;;
+	,*)          LIBC="libc6" ;;
+esac
+
+case $SUITE in
+	gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy|hirsute) ;;
+	,*)
+		# impish+ will use zstd compression, check if supported
+		dpkg_zstd="$(dpkg-deb --help 2>/dev/null | grep ' zstd,' || :)"
+		if [ -z "$EXTRACTOR_OVERRIDE" ] && [ -z "$dpkg_zstd" ]; then
+			info CHOSENEXTRACTOR "%s uses zstd compression, setting --extractor=ar option" "$SUITE"
+			export EXTRACTOR_OVERRIDE=ar
+		fi
+	;;
+esac
+
+work_out_debs () {
+	required="$(get_debs Priority: required)"
+
+	if doing_variant - || doing_variant fakechroot; then
+		#required="$required $(get_debs Priority: important)"
+		#  ^^ should be getting debconf here somehow maybe
+		base="$(get_debs Priority: important)"
+	elif doing_variant buildd; then
+		base="apt build-essential"
+	elif doing_variant minbase; then
+		base="apt"
+	fi
+
+	if doing_variant fakechroot; then
+		# ldd.fake needs binutils
+		required="$required binutils"
+	fi
+
+	case $MIRRORS in
+	    https://*)
+		case "$CODENAME" in
+			gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty)
+			base="$base apt-transport-https ca-certificates"
+			;;
+			,*)
+			base="$base ca-certificates"
+			;;
+		esac
+		;;
+	esac
+
+	# do not install usrmerge in fresh bootstraps
+	# but do print it for germinate to accept it into minimal
+	if [ "$WHAT_TO_DO" = "finddebs printdebs kill_target" ]; then
+		case "$CODENAME" in
+			# "merged-usr" blacklist for past releases
+			gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy)
+			;;
+			hirsute)
+				# keep hirsute buildd chroots split-usr to allow for escape hatch
+				if ! doing_variant buildd; then
+					if [ -z "$MERGED_USR" ] || [ "$MERGED_USR" = "yes" ]; then
+						base="$base usrmerge"
+					fi
+				fi
+				;;
+			,*)
+				# all future series post hirsute use merged-usr in buildd chroots too
+				if [ -z "$MERGED_USR" ] || [ "$MERGED_USR" = "yes" ]; then
+					base="$base usrmerge"
+				fi
+				;;
+		esac
+	fi
+}
+
+first_stage_install () {
+	case "$CODENAME" in
+		# "merged-usr" blacklist for past releases
+		gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic)
+			[ -z "$MERGED_USR" ] && MERGED_USR="no"
+			;;
+		disco|eoan|focal|groovy)
+			# see https://bugs.debian.org/838388
+			EXTRACT_DEB_TAR_OPTIONS="$EXTRACT_DEB_TAR_OPTIONS -k"
+			;;
+		hirsute)
+			# keep hirsute buildd chroots split-usr to allow for escape hatch
+			if [ -z "$MERGED_USR" ]; then
+				if doing_variant buildd; then
+					MERGED_USR="no"
+				else
+					MERGED_USR="yes"
+				fi
+			fi
+			# see https://bugs.debian.org/838388
+			EXTRACT_DEB_TAR_OPTIONS="$EXTRACT_DEB_TAR_OPTIONS -k"
+			;;
+		,*)
+			# all future series post hirsute use merged-usr in buildd chroots too
+			[ -z "$MERGED_USR" ] && MERGED_USR="yes"
+			# see https://bugs.debian.org/838388
+			EXTRACT_DEB_TAR_OPTIONS="$EXTRACT_DEB_TAR_OPTIONS -k"
+			;;
+	esac
+
+	setup_merged_usr
+	extract $required
+
+	mkdir -p "$TARGET/var/lib/dpkg"
+	: >"$TARGET/var/lib/dpkg/status"
+	: >"$TARGET/var/lib/dpkg/available"
+
+	setup_etc
+	if [ ! -e "$TARGET/etc/fstab" ]; then
+		echo '# UNCONFIGURED FSTAB FOR BASE SYSTEM' > "$TARGET/etc/fstab"
+		chown 0:0 "$TARGET/etc/fstab"; chmod 644 "$TARGET/etc/fstab"
+	fi
+
+	setup_devices
+
+        if doing_variant fakechroot || [ "$CONTAINER" = "docker" ]; then
+		setup_proc_symlink
+	fi
+}
+
+second_stage_install () {
+	in_target /bin/true
+
+	setup_dynamic_devices
+
+	x_feign_install () {
+		local pkg="$1"
+		local deb="$(debfor $pkg)"
+		local ver="$(in_target dpkg-deb -f "$deb" Version)"
+
+		mkdir -p "$TARGET/var/lib/dpkg/info"
+
+		echo \
+"Package: $pkg
+Version: $ver
+Maintainer: unknown
+Status: install ok installed" >> "$TARGET/var/lib/dpkg/status"
+
+		touch "$TARGET/var/lib/dpkg/info/${pkg}.list"
+	}
+
+	x_feign_install dpkg
+
+	x_core_install () {
+		smallyes '' | in_target dpkg --force-depends --install $(debfor "$@")
+	}
+
+	p () {
+		baseprog="$(($baseprog + ${1:-1}))"
+	}
+
+	if ! doing_variant fakechroot; then
+		setup_proc
+		in_target /sbin/ldconfig
+	fi
+
+	DEBIAN_FRONTEND=noninteractive
+	DEBCONF_NONINTERACTIVE_SEEN=true
+	export DEBIAN_FRONTEND DEBCONF_NONINTERACTIVE_SEEN
+
+	baseprog=0
+	bases=7
+
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #1
+	info INSTCORE "Installing core packages..."
+
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #2
+	ln -sf mawk "$TARGET/usr/bin/awk"
+	x_core_install base-passwd
+	x_core_install base-files
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #3
+	x_core_install dpkg
+
+	if [ ! -e "$TARGET/etc/localtime" ]; then
+		ln -sf /usr/share/zoneinfo/UTC "$TARGET/etc/localtime"
+	fi
+
+	if doing_variant fakechroot; then
+		install_fakechroot_tools
+	fi
+
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #4
+	x_core_install $LIBC
+
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #5
+	x_core_install perl-base
+
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #6
+	rm "$TARGET/usr/bin/awk"
+	x_core_install mawk
+
+	p; progress $baseprog $bases INSTCORE "Installing core packages" #7
+	if doing_variant -; then
+		x_core_install debconf
+	fi
+
+	baseprog=0
+	bases=$(set -- $required; echo $#)
+
+	info UNPACKREQ "Unpacking required packages..."
+
+	exec 7>&1
+
+	smallyes '' |
+		(repeatn 5 in_target_failmsg UNPACK_REQ_FAIL_FIVE "Failure while unpacking required packages.  This will be attempted up to five times." "" \
+		dpkg --status-fd 8 --force-depends --unpack $(debfor $required) 8>&1 1>&7 || echo EXITCODE $?) |
+		dpkg_progress $baseprog $bases UNPACKREQ "Unpacking required packages" UNPACKING
+
+	info CONFREQ "Configuring required packages..."
+
+	if doing_variant fakechroot && [ -e "$TARGET/var/lib/dpkg/info/initscripts.postinst" ]
+	then
+		# fix initscripts postinst (no mounting possible, and wrong if condition)
+		sed -i '/dpkg.*--compare-versions/ s/\<lt\>/lt-nl/' "$TARGET/var/lib/dpkg/info/initscripts.postinst"
+	fi
+
+	echo \
+"#!/bin/sh
+exit 101" > "$TARGET/usr/sbin/policy-rc.d"
+	chmod 755 "$TARGET/usr/sbin/policy-rc.d"
+
+	mv "$TARGET/sbin/start-stop-daemon" "$TARGET/sbin/start-stop-daemon.REAL"
+	echo \
+"#!/bin/sh
+echo
+echo \"Warning: Fake start-stop-daemon called, doing nothing\"" > "$TARGET/sbin/start-stop-daemon"
+	chmod 755 "$TARGET/sbin/start-stop-daemon"
+
+	if [ -x "$TARGET/sbin/initctl" ]; then
+	  mv "$TARGET/sbin/initctl" "$TARGET/sbin/initctl.REAL"
+	  echo \
+"#!/bin/sh
+if [ \"\$1\" = version ]; then exec /sbin/initctl.REAL \"\$@\"; fi
+echo
+echo \"Warning: Fake initctl called, doing nothing\"" > "$TARGET/sbin/initctl"
+	  chmod 755 "$TARGET/sbin/initctl"
+	fi
+
+	setup_dselect_method apt
+
+	smallyes '' |
+		(in_target_failmsg CONF_REQ_FAIL "Failure while configuring required packages." "" \
+		dpkg --status-fd 8 --configure --pending --force-configure-any --force-depends 8>&1 1>&7 || echo EXITCODE $?) |
+		dpkg_progress $baseprog $bases CONFREQ "Configuring required packages" CONFIGURING
+
+	baseprog=0
+	bases="$(set -- $base; echo $#)"
+
+	info UNPACKBASE "Unpacking the base system..."
+
+	setup_available $required $base
+	done_predeps=
+	while predep=$(get_next_predep); do
+		# We have to resolve dependencies of pre-dependencies manually because
+		# dpkg --predep-package doesn't handle this.
+		predep=$(without "$(without "$(resolve_deps $predep)" "$required")" "$done_predeps")
+		# XXX: progress is tricky due to how dpkg_progress works
+		# -- cjwatson 2009-07-29
+		# This step sometimes fails due to some missing functionality in Linuxulator.  Just ignore it.
+		set +e
+		p; smallyes '' |
+		in_target dpkg --force-overwrite --force-confold --skip-same-version --install $(debfor $predep)
+		rc=$?
+		base=$(without "$base" "$predep")
+		done_predeps="$done_predeps $predep"
+
+		if [ $rc != 0 ]; then
+			warning FREEBSD_00 "Applying FreeBSD-specific workaround..."
+			# ... for "Failed to mount /etc/machine-id: Bad address" with Focal.
+			in_target truncate -s0 /var/lib/dpkg/info/systemd.postinst
+			in_target dpkg --configure systemd
+		fi
+		set -e
+	done
+
+	if [ -n "$base" ]; then
+		smallyes '' |
+			(repeatn 5 in_target_failmsg INST_BASE_FAIL_FIVE "Failure while installing base packages.  This will be re-attempted up to five times." "" \
+			dpkg --status-fd 8 --force-overwrite --force-confold --skip-same-version --unpack $(debfor $base) 8>&1 1>&7 || echo EXITCODE $?) |
+			dpkg_progress $baseprog $bases UNPACKBASE "Unpacking base system" UNPACKING
+
+		info CONFBASE "Configuring the base system..."
+
+		# This step sometimes fails due to some missing functionality in Linuxulator.  Just ignore it.
+		set +e
+		smallyes '' |
+			(repeatn 5 in_target_failmsg CONF_BASE_FAIL_FIVE "Failure while configuring base packages.  This will be re-attempted up to five times." "" \
+			dpkg --status-fd 8 --force-confold --skip-same-version --configure -a 8>&1 1>&7 || echo EXITCODE $?) |
+			dpkg_progress $baseprog $bases CONFBASE "Configuring base system" CONFIGURING
+		set -e
+	fi
+
+	if [ -x "$TARGET/sbin/initctl.REAL" ]; then
+		mv "$TARGET/sbin/initctl.REAL" "$TARGET/sbin/initctl"
+	fi
+	mv "$TARGET/sbin/start-stop-daemon.REAL" "$TARGET/sbin/start-stop-daemon"
+	rm -f "$TARGET/usr/sbin/policy-rc.d"
+
+	echo \
+"# Workaround for Linuxulator missing mremap(2) support; without it,
+# apt(8) fails like this:
+# E: Dynamic MMap ran out of room. Please increase the size of APT::Cache-Start.
+APT::Cache-Start 251658240;" >> "$TARGET/etc/apt/apt.conf.d/00freebsd"
+
+	progress $bases $bases CONFBASE "Configuring base system"
+	info BASESUCCESS "Base system installed successfully."
+}
+
+#+end_src
+
+make the scripts executable
+
+#+begin_src sh
+chmod +x lunar mantic
+#+end_src
+
+copy the scripts to the debootstrap scripts directory
+
+#+begin_src sh
+sudo cp lunar mantic /usr/local/share/debootstrap/scripts
+#+end_src
+
 *** Install Ubuntu 22.04 into /compat/ubuntu:
 
 #+begin_src sh
-sudo debootstrap --arch=amd64 --no-check-gpg jammy /compat/ubuntu
+sudo debootstrap --arch=amd64 --no-check-gpg mantic /compat/ubuntu http://archive.ubuntu.com/ubuntu/
 #+end_src
 
 *** Restart Ubuntu service to make sure everything is properly mounted:
 
 #+begin_src sh
 sudo service ubuntu restart
-#+end_src
-
-*** fix permissions
-
-list /compat/ubuntu
-
-#+begin_src sh
-ls -l /compat/ubuntu
-#+end_src
-
-ouput showing the symlinks
-
-#+begin_example
-lrwxr-xr-x   1 root wheel   7 10 Feb 20:59 bin -> usr/bin
-lrwxr-xr-x   1 root wheel   7 10 Feb 20:59 lib -> usr/lib
-lrwxr-xr-x   1 root wheel   9 10 Feb 20:59 lib32 -> usr/lib32
-lrwxr-xr-x   1 root wheel   9 10 Feb 20:59 lib64 -> usr/lib64
-lrwxr-xr-x   1 root wheel  10 10 Feb 20:59 libx32 -> usr/libx32
-lrwxr-xr-x   1 root wheel   8 10 Feb 20:59 sbin -> usr/sbin
-#+end_example
-
-full path for symlinks
-
-#+begin_example
-/compat/ubuntu/usr/bin
-/compat/ubuntu/usr/lib
-/compat/ubuntu/usr/lib32
-/compat/ubuntu/usr/lib64
-/compat/ubuntu/usr/libx32
-/compat/ubuntu/usr/sbin
-#+end_example
-
-**** find files with 700 permissions
-
-#+begin_src sh
-find /compat/ubuntu/usr/ -perm -700
-#+end_src
-
-echo the files that will be operated on
-to make sure the find and exec commands are operating on the correct files
-
-#+begin_src sh
-find /compat/ubuntu/usr/ -type f -perm -700 -exec echo '{}' \;
-#+end_src
-
-change the permissions from 700 to 755
-
-#+begin_src sh
-sudo find /compat/ubuntu/usr/ -type f -perm -700 -exec chmod 755 '{}' \;
-#+end_src
-
-**** find files with 600 permissions
-
-on the host
-
-#+begin_src sh
-find /compat/ubuntu/lib/x86_64-linux-gnu -perm -600
-#+end_src
-
-in the chroot
-
-#+begin_src sh
-find /lib/x86_64-linux-gnu -perm -600
-#+end_src
-
-echo the files that will be operated on
-to make sure the find and exec commands are operating on the correct files
-
-#+begin_src sh
-find /compat/ubuntu/lib/x86_64-linux-gnu -type f -perm -600 -exec echo '{}' \;
-#+end_src
-
-change the permissions from 600 to 644
-
-#+begin_src sh
-sudo find /compat/ubuntu/lib/x86_64-linux-gnu -type f -perm -600 -exec chmod 644 '{}' \;
-#+end_src
-
-**** fix symlink permissions
-
-
-
-*** Fix broken symlink:
-
-maybe not needed
-
-#+begin_src sh
-cd /compat/ubuntu/lib64/ && rm ./ld-linux-x86-64.so.2 ; ln -s ../lib/x86_64-linux-gnu/ld-2.31.so ld-linux-x86-64.so.2
-#+end_src
-
-*** chroot settings
-
-#+begin_src sh
-sudo sysctl security.bsd.unprivileged_chroot=1
-#+end_src
-
-#+begin_src sh
-chroot -n /compat/ubuntu /bin/bash
 #+end_src
 
 *** Chroot into your Linux environment:
@@ -351,24 +550,17 @@ add more repos
 #+end_example
 
 #+begin_example
-deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic main restricted universe multiverse
+deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic-updates main restricted universe multiverse
+deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic-security main restricted universe multiverse
 #+end_example
 
 *** apt update
 
-install gnupg
-
-#+begin_src sh
-sudo apt install gnupg
-#+end_src
-
 make sure you are chrooted with sudo
---allow-insecure-repositories is needed on jammy
 
 #+begin_src sh
-apt update --allow-insecure-repositories
+apt update
 #+end_src
 
 upgrade
@@ -423,16 +615,13 @@ dpkg-reconfigure locales
 
 *** Install required programs:
 
+install the shell our user is going to use
+
 #+begin_src sh
-apt install pulseaudio zsh
+apt install zsh
 #+end_src
 
 *** copy user and group
-
-#+begin_example
-groups: cannot find name for group ID 1001
-groups: cannot find name for group ID 47
-#+end_example
 
 check your user and group on freebsd
 
@@ -451,15 +640,6 @@ copy user from freebsd /etc/passwd to /compat/ubuntu/etc/passwd
 #+begin_example
 djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/usr/local/bin/zsh
 #+end_example
-
-copy group from freebsd //etc/group to /compat/ubuntu/etc/
-
-#+begin_example
-djwilcox:*:1001:
-#+end_example
-
-in this case we need to copy the user with the uid of 1001 from the passwd file,
-and the group with a id of 47 from the group file
 
 we also need to check that the shell path is correct
 change zsh path to /bin/zsh
@@ -489,32 +669,7 @@ chroot path
 djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/bin/zsh
 #+end_src
 
-freebsd group
-
-#+begin_src sh
-djwilcox:*:1001:
-realtime:*:47:djwilcox
-#+end_src
-
-ubuntu group
-
-host path
-
-#+begin_example
-/compat/ubuntu/etc/group
-#+end_example
-
-chroot path
-
-#+begin_example
-/etc/group
-#+end_example
-
-
-#+begin_src conf
-djwilcox:*:1001:
-realtime:*:47:djwilcox
-#+end_src
++end_src
 
 *** add user to groups
 
@@ -525,23 +680,37 @@ usermod -a -G sudo djwilcox
 usermod -a -G dip djwilcox
 usermod -a -G plugdev djwilcox
 usermod -a -G users djwilcox
+usermod -a -G video djwilcox
 #+end_src
 
-*** chown home directory
+*** sudo set up
+
+edit the sudoers file
 
 #+begin_src sh
-chown djwilcox:djwilcox /home/djwilcox
+visudo
 #+end_src
 
-*** chroot with and without sudo
-
-chroot without sudo
+add your user to the sudoers file
 
 #+begin_src sh
-chroot -n /compat/ubuntu /bin/bash
+djwilcox ALL=(ALL:ALL) ALL
 #+end_src
 
-with sudo
+*** passwd
+
+create a passwd for your user
+
+as root
+
+#+begin_src sh
+passwd djwilcox
+#+end_src
+
+passwd
+ubuntu
+
+*** switch to out user with su
 
 #+begin_src sh
 sudo chroot /compat/ubuntu /bin/bash
