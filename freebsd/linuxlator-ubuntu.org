@@ -775,10 +775,6 @@ install build-essential for gcc
 sudo apt install build-essential
 #+end_src
 
-*** cuda
-
-[[https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html]]
-
 *** install the nvidia driver
 
 need to check if this is correct
@@ -796,6 +792,10 @@ sudo ./NVIDIA-Linux-x86_64-535.146.02.run \
 do we need to blacklist any other drivers  
 
 install missing packages
+
+*** cuda
+
+[[https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html]]
 
 *** Install xorriso and fakeroot
 
