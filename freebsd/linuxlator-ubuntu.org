@@ -767,10 +767,10 @@ su - djwilcox
 
 [[https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html]]
 
-Verify the system has a CUDA-capable GPU  
-Verify the system is running a supported version of Linux  
-Verify the system has build tools such as make, gcc installed  
-Verify the system has correct Linux kernel headers  
+Verify the system has a CUDA-capable GPU.
+Verify the system is running a supported version of Linux.
+Verify the system has build tools such as make, gcc installed.
+Verify the system has correct Linux kernel headers.
 
 *** cuda
 
