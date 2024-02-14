@@ -727,6 +727,16 @@ su - djwilcox
 
 da vinci resolve install on ubuntu with nvidia graphics
 
+*** nvidia download
+
+download the linux version matching the version on the freebsd host
+
+[[https://www.nvidia.com/Download/Find.aspx?lang=en-us]]
+
+download link for NVIDIA GeForce GTX 1650
+
+[[https://www.nvidia.com/download/driverResults.aspx/216728/en-us/]]
+
 *** Install xorriso and fakeroot
 
 + install fakeroot and xorriso for makeresolvedeb
