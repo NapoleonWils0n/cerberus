@@ -763,6 +763,19 @@ replace djwilcox with your username
 su - djwilcox
 #+end_src
 
+*** nvidia Pre-Installation Requirements
+
+[[https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html]]
+
+Verify the system has a CUDA-capable GPU
+Verify the system is running a supported version of Linux
+Verify the system has build tools such as make, gcc installed
+Verify the system has correct Linux kernel headers
+
+*** cuda
+
+[[https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html]]
+
 *** install the nvidia driver
 
 need to check if this is correct
