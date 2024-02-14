@@ -763,6 +763,24 @@ replace djwilcox with your username
 su - djwilcox
 #+end_src
 
+*** install the nvidia driver
+
+need to check if this is correct
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-535.146.02.run \
+--install-compat32-libs \
+--no-nvidia-modprobe --no-backup --no-kernel-module \
+--no-x-check --no-nouveau-check \
+--no-cc-version-check --no-kernel-module-source \
+--no-check-for-alternate-installs \
+--install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+note
+do we need to blacklist any other drivers
+install missing packages
+
 *** Install xorriso and fakeroot
 
 + install fakeroot and xorriso for makeresolvedeb
