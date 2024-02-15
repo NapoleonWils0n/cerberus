@@ -933,13 +933,13 @@ this will take about an hour
 **** install the da vinci resolve deb file
 
 #+begin_src sh
-dpkg -i davinci-resolve_18.6.4-mrd1.6.4_amd64.deb 
+sudo dpkg -i davinci-resolve_18.6.5-mrd1.6.4_amd64.deb 
 #+end_src
 
 or
 
 #+begin_src sh
-apt install davinci-resolve_18.6.4-mrd1.6.4_amd64.deb
+sudo apt install davinci-resolve_18.6.5-mrd1.6.4_amd64.deb
 #+end_src
 
 **** desktop launcher
