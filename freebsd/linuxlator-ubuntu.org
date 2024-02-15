@@ -942,7 +942,172 @@ or
 sudo apt install davinci-resolve_18.6.5-mrd1.6.4_amd64.deb
 #+end_src
 
-**** desktop launcher
+*** wayland 
+**** wayland packages
+
+#+begin_src sh
+sudo apt install libinput-tools wayland-protocols qtwayland5
+#+end_src
+
+packages that may need to be installed 
+
+#+begin_example
+libwlroots11 libwlroots-dev libxkbcommon0
+#+end_example
+
+**** wayland environment
+
+we need to set an enviormental variable for wayland in our shell config
+
+***** zshrc
+
+#+begin_src sh
+# ~/.zshrc
+
+# ssh zsh fix
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+
+# variables for PS3 prompt
+newline=$'\n'
+yesmaster='Yes Master ? '
+
+# PS3 prompt function
+function zle-line-init zle-keymap-select {
+    PS1="[%n@%M %~]${newline}${yesmaster}"
+    zle reset-prompt
+}
+
+# run PS3 prompt function
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# set terminal window title to program name
+case $TERM in
+  (*xterm* | xterm-256color)
+    function precmd {
+      print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+    }
+    function preexec {
+      printf "\033]0;%s\a" "$1"
+    }
+  ;;
+esac
+
+# Fix bugs when switching modes
+bindkey -v # vi mode
+bindkey "^?" backward-delete-char
+bindkey "^u" backward-kill-line
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^k" kill-line
+
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+# Set/unset  shell options
+setopt notify globdots pushdtohome cdablevars autolist
+setopt recexact longlistjobs
+setopt autoresume histignoredups pushdsilent noclobber
+setopt autopushd pushdminus extendedglob rcquotes mailwarning
+setopt histignorealldups sharehistory
+#setopt auto_cd
+cdpath=($HOME)
+unsetopt bgnice autoparamslash
+
+# Completion Styles
+
+# list of completers to use
+zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
+
+# allow one error for every three characters typed in approximate completer
+zstyle -e ':completion:*:approximate:*' max-errors \
+    'reply=( $(( ($#PREFIX+$#SUFFIX)/3 )) numeric )'
+    
+# insert all expansions for expand completer
+zstyle ':completion:*:expand:*' tag-order all-expansions
+
+# formatting and messages
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*' group-name ''
+
+#eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+
+# match uppercase from lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# offer indexes before parameters in subscripts
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+# Filename suffixes to ignore during completion (except after rm command)
+zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
+    '*?.old' '*?.pro' '.hidden'
+
+# ignore completion functions (until the _ignored completer)
+zstyle ':completion:*:functions' ignored-patterns '_*'
+
+# kill - red, green, blue
+zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34'
+
+# list optiones colour, white + cyan
+zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
+
+# zsh autocompletion for sudo and doas
+zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin /home/djwilcox/bin
+
+# rehash commands
+zstyle ':completion:*' rehash true
+
+# highlighting
+#source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=cyan,underline
+#ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
+#ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
+#ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+#ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+#+end_src
+
+***** zshenv
+
+#+begin_src sh
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
+
+# firefox
+#export MOZ_ENABLE_WAYLAND=1
+
+# qt5
+#export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORM=wayland
+#+end_src
+
+***** copy zsh config to the chroot
+
+#+begin_src sh
+cp .zshrc .zshenv /compat/ubuntu/home/djwilcox
+#+end_src
+
+** desktop launcher
+*** desktop launcher
 
 davinci resolve desktop entry 
 
@@ -950,7 +1115,7 @@ davinci resolve desktop entry
 ls /usr/share/applications/davinci-resolve.desktop
 #+end_src
 
-**** davinci resolve desktop entry 
+*** davinci resolve desktop entry 
 
 davinci-resolve.desktop
 
@@ -969,7 +1134,7 @@ StartupNotify=true
 Categories=AudioVideo
 #+end_src
 
-***** freebsd desktop entry
+**** freebsd desktop entry
 
 #+begin_example
 ~/.local/share/applications/davinci-resolve.desktop
@@ -988,7 +1153,7 @@ StartupNotify=true
 Categories=AudioVideo
 #+end_src
 
-***** linux-resolve
+**** linux-resolve
 
 freebsd host
 
@@ -1033,7 +1198,7 @@ make the script executable
 sudo chmod +x /usr/local/bin/linux-resolve
 #+end_src
 
-***** resolve-wrapper
+**** resolve-wrapper
 
 create the resolve-wrapper script in the chroot
 
@@ -1059,41 +1224,6 @@ make the resolve-wrapper script executable
 
 #+begin_src sh
 chmod +x /usr/local/bin/resolve-wrapper
-#+end_src
-
-*** wayland 
-**** wayland packages
-
-#+begin_src sh
-libinput
-wayland
-wlroots 
-xkbcommon
-wayland-protocols 
-pkg-config 
-#+end_src
-
-**** wayland environment
-
-Since Wayland does not initiate any Xorg related files,
-GDM and KDE Plasma source systemd user environment variables instead. 
-
-**** create the environment.d directory
-
-#+begin_src sh
-mkdir -p ~/.config/environment.d
-#+end_src
-
-**** create the envvars.conf file
-
-#+begin_src sh
-touch ~/.config/environment.d/envvars.conf
-#+end_src
-
-**** add the variables to the envvars.conf file
-
-#+begin_src conf
-QT_QPA_PLATFORM=wayland
 #+end_src
 
 *** Exit chroot:
