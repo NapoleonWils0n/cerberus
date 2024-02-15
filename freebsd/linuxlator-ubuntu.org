@@ -887,13 +887,13 @@ tar zxvf makeresolvedeb_1.6.4_multi.sh.tar.gz
 copy the resolve.run to the chroot home directory
 
 #+begin_src sh
-sudo cp -rv /home/djwilcox/downloads/DaVinci_Resolve_18.6.4_Linux.run /compat/ubuntu/home/djwilcox
+cp -rv DaVinci_Resolve_18.6.4_Linux.run /compat/ubuntu/home/djwilcox
 #+end_src
 
 copy the resolve.run to the chroot home directory
 
 #+begin_src sh
-sudo cp -rv /home/djwilcox/downloads/makeresolvedeb_1.6.4_multi.sh /compat/ubuntu/home/djwilcox
+cp -rv makeresolvedeb_1.6.4_multi.sh /compat/ubuntu/home/djwilcox
 #+end_src
 
 **** makeresolvedeb create deb file
@@ -904,11 +904,22 @@ make sure you have chrooted into ubuntu by running
 sudo chroot /compat/ubuntu /bin/bash
 #+end_src
 
-switch to home in the chroot
-replace djwilcox with your username
+switch to out user in the chroot
 
 #+begin_src sh
-cd home/djwilcox
+su - djwilcox
+#+end_src
+
+install zip
+
+#+begin_src sh
+sudo apt install zip
+#+end_src
+
+unzip the resolve zip
+
+#+begin_src sh
+unzip DaVinci_Resolve_18.6.5_Linux.zip
 #+end_src
 
 then run makeresolvedeb
