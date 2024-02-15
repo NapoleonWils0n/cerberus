@@ -1113,7 +1113,19 @@ check for missing libraies using ldd
 on the freebsd host run ldd and the path to the resolve binary in the chroot
 
 #+begin_src sh
-ldd /compat/ubuntu/opt/resolve/bin/resolve > ~/Desktop/ldd-resolve
+ldd /compat/ubuntu/opt/resolve/bin/resolve > ldd-resolve
+#+end_src
+
+grep for 'not found'
+
+#+begin_src sh
+ldd /compat/ubuntu/opt/resolve/bin/resolve | grep 'not found' > ldd-notfound
+#+end_src
+
+search for the missing libraries
+
+#+begin_src sh
+sudo find /compat/ubuntu -name libpthread.so.0
 #+end_src
 
 *** libmap.conf
