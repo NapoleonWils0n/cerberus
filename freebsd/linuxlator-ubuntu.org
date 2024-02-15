@@ -925,7 +925,7 @@ unzip DaVinci_Resolve_18.6.5_Linux.zip
 then run makeresolvedeb
 
 #+begin_src sh
-./makeresolvedeb_1.6.4_multi.sh DaVinci_Resolve_18.6.4_Linux.run
+./makeresolvedeb_1.6.4_multi.sh DaVinci_Resolve_18.6.5_Linux.run
 #+end_src
 
 this will take about an hour
