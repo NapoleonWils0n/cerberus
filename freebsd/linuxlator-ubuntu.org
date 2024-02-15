@@ -1106,6 +1106,20 @@ export QT_QPA_PLATFORM=wayland
 cp .zshrc .zshenv /compat/ubuntu/home/djwilcox
 #+end_src
 
+** ldd resolve
+
+check for missing libraies using ldd
+
+on the freebsd host run ldd and the path to the resolve binary in the chroot
+
+#+begin_src sh
+ldd /compat/ubuntu/opt/resolve/bin/resolve > ~/Desktop/ldd-resolve
+#+end_src
+
+*** libmap.conf
+
+[[https://vermaden.wordpress.com/2019/03/21/fix-broken-dependency-on-freebsd/]]
+
 ** desktop launcher
 *** desktop launcher
 
@@ -1155,13 +1169,7 @@ Categories=AudioVideo
 
 **** linux-resolve
 
-freebsd host
-
-#+begin_example
-sudo vi /usr/local/bin/linux-resolve
-#+end_example
-
-linux-resolve
+linux-resolve script
 
 #+begin_src sh
 #!/bin/sh
@@ -1192,19 +1200,23 @@ export RESOLVE_WRAPPER="`readlink -f "$0"`"
 /compat/ubuntu/usr/local/bin/resolve-wrapper "$@"
 #+end_src
 
+freebsd host
+
 make the script executable
 
 #+begin_src sh
-sudo chmod +x /usr/local/bin/linux-resolve
+chmod +x linux-resolve
 #+end_src
+
+copy the script to /usr/local/bin
+
+#+begin_example
+sudo cp linux-resolve /usr/local/bin/
+#+end_example
 
 **** resolve-wrapper
 
-create the resolve-wrapper script in the chroot
-
-#+begin_src sh
-vi /usr/local/bin/resolve-wrapper
-#+end_src
+create the resolve-wrapper script
 
 resolve-wrapper
 
@@ -1223,8 +1235,20 @@ exec -a "$0" "$RESOLVE_PATH" "$@"
 make the resolve-wrapper script executable
 
 #+begin_src sh
-chmod +x /usr/local/bin/resolve-wrapper
+chmod +x resolve-wrapper
 #+end_src
+
+copy the script to into the chroot from the freebsd host
+
+#+begin_src sh
+sudo cp resolve-wrapper /compat/ubuntu/usr/local/bin/ 
+#+end_src
+
+ubuntu path
+
+#+begin_example
+/usr/local/bin/resolve-wrapper
+#+end_example
 
 *** Exit chroot:
 
