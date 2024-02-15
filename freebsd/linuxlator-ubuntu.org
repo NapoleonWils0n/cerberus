@@ -777,7 +777,19 @@ sudo apt install build-essential
 
 *** install the nvidia driver
 
-need to check if this is correct
+chmod 
+
+#+begin_src sh
+chmod +x NVIDIA-Linux-x86_64-535.146.02.run
+#+end_src
+
+single line
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-535.146.02.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+multi line
 
 #+begin_src sh
 sudo ./NVIDIA-Linux-x86_64-535.146.02.run \
@@ -788,10 +800,6 @@ sudo ./NVIDIA-Linux-x86_64-535.146.02.run \
 --no-check-for-alternate-installs \
 --install-libglvnd --skip-depmod --no-systemd
 #+end_src
-
-do we need to blacklist any other drivers  
-
-install missing packages
 
 *** cuda
 
@@ -807,35 +815,10 @@ sudo apt install fakeroot xorriso
 
 *** nvidia-cuda-toolkit
 
-+ install the nvidia-driver, nvidia-cuda-toolkit
++ install the nvidia-cuda-toolkit
 
 #+begin_src sh
-sudo apt install nvidia-driver-535 nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
-#+end_src
-
-purge driver
-
-#+begin_src sh
-apt purge nvidia-driver-535 nvidia-cuda-toolkit
-#+end_src
-
-autoremove
-
-#+begin_src sh 
-apt autoremove
-#+end_src
-
-dist upgrade
-
-#+begin_src sh
-apt install update-manager-core
-do-release-upgrade
-#+end_src
-
-allow-insecure-repositories
-
-#+begin_src sh
-apt update --allow-insecure-repositories
+sudo apt install nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
 #+end_src
 
 *** blacklist Nouveau nvidia driver
