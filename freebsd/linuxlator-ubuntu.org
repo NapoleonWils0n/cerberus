@@ -942,6 +942,12 @@ or
 sudo apt install davinci-resolve_18.6.5-mrd1.6.4_amd64.deb
 #+end_src
 
+**** qt
+
+#+begin_src sh
+sudo apt install adwaita-qt
+#+end_src
+
 *** wayland 
 **** wayland packages
 
@@ -952,8 +958,16 @@ sudo apt install libinput-tools wayland-protocols qtwayland5
 packages that may need to be installed 
 
 #+begin_example
-libwlroots11 libwlroots-dev libxkbcommon0
+sudo apt install libwlroots11 libwlroots-dev libxkbcommon0
 #+end_example
+
+**** create the xdg runtime directory, change the user and set the permissions
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/1001
+sudo chown -R djwilcox:1001 /var/run/user/1001
+sudo chmod 700 /var/run/user/1001
+#+end_src
 
 **** wayland environment
 
@@ -1139,17 +1153,18 @@ vi resolve.conf
 add the following code
 
 #+begin_src conf
-[compat/ubuntu/opt/resolve/bin/resolve]
-libOpenCL.so.1   /compat/ubuntu/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
-libbz2.so.1      /compat/ubuntu/lib/x86_64-linux-gnu/libbz2.so.1
-libc.so.6        /compat/ubuntu/lib/x86_64-linux-gnu/libc.so.6
-libcrypt.so.1    /compat/ubuntu/lib/x86_64-linux-gnu/libcrypt.so.1
-libdl.so.2       /compat/ubuntu/lib/x86_64-linux-gnu/libdl.so.2
-libm.so.6        /compat/ubuntu/lib/x86_64-linux-gnu/libm.so.6
-libpthread.so.0  /compat/ubuntu/lib/x86_64-linux-gnu/libpthread.so.0
-libresolv.so.2   /compat/ubuntu/lib/x86_64-linux-gnu/libresolv.so.2
-libudev.so.1     /compat/ubuntu/usr/lib/x86_64-linux-gnu/libudev.so.1
-libz.so.1        /compat/ubuntu/lib/x86_64-linux-gnu/libz.so.1
+[/compat/ubuntu/opt/resolve/bin/resolve]
+libOpenCL.so.1        /compat/ubuntu/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
+libbz2.so.1           /compat/ubuntu/lib/x86_64-linux-gnu/libbz2.so.1
+libc.so.6             /compat/ubuntu/lib/x86_64-linux-gnu/libc.so.6
+libcrypt.so.1         /compat/ubuntu/lib/x86_64-linux-gnu/libcrypt.so.1
+libdl.so.2            /compat/ubuntu/lib/x86_64-linux-gnu/libdl.so.2
+libm.so.6             /compat/ubuntu/lib/x86_64-linux-gnu/libm.so.6
+libpthread.so.0       /compat/ubuntu/lib/x86_64-linux-gnu/libpthread.so.0
+libresolv.so.2        /compat/ubuntu/lib/x86_64-linux-gnu/libresolv.so.2
+libudev.so.1          /compat/ubuntu/usr/lib/x86_64-linux-gnu/libudev.so.1
+libz.so.1             /compat/ubuntu/lib/x86_64-linux-gnu/libz.so.1
+ld-linux-x86-64.so.2  /compat/ubuntu/lib64/ld-linux-x86-64.so.2
 #+end_src
 
 copy the resolve.conf to /usr/local/etc/libmap.d
