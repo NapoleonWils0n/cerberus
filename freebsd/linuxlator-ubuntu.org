@@ -1155,7 +1155,7 @@ libz.so.1        /compat/ubuntu/lib/x86_64-linux-gnu/libz.so.1
 copy the resolve.conf to /usr/local/etc/libmap.d
 
 #+begin_src sh
-sudo cp resolve.conf /usr/local/etc/libmap.d
+sudo cp resolve.conf /usr/local/etc/libmap.d/
 #+end_src
 
 ** desktop launcher
