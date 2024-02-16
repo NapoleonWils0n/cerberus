@@ -1128,12 +1128,12 @@ search for the missing libraries
 sudo find /compat/ubuntu -name libpthread.so.0
 #+end_src
 
-*** libmap.conf
+*** resolve.conf
 
 create the libmap.conf file
 
 #+begin_src sh
-vi libmap.conf
+vi resolve.conf
 #+end_src
 
 add the following code
@@ -1152,10 +1152,10 @@ libudev.so.1     /compat/ubuntu/usr/lib/x86_64-linux-gnu/libudev.so.1
 libz.so.1        /compat/ubuntu/lib/x86_64-linux-gnu/libz.so.1
 #+end_src
 
-copy the libmap.conf to //etc/libmap.conf/
+copy the resolve.conf to /usr/local/etc/libmap.d
 
 #+begin_src sh
-sudo cp libmap.conf /etc
+sudo cp resolve.conf /usr/local/etc/libmap.d
 #+end_src
 
 ** desktop launcher
