@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* mount iso on freebsd
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+mount the iso at /mnt
+
+#+begin_src sh
+mount -t cd9660 /dev/`mdconfig -f input.iso` /mnt
+#+end_src
