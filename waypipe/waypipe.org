@@ -1,0 +1,44 @@
+#+STARTUP: content
+* waypipe
+** links
+
+[[https://gitlab.freedesktop.org/mstoeckl/waypipe]]
+
+[[https://forum.sailfishos.org/t/fun-with-remote-wayland-waypipe/16997]]
+** waypipe install
+
+freebsd
+
+#+begin_src sh
+sudo pkg install waypipe
+#+end_src
+
+ubuntu
+
+#+begin_src sh
+sudo apt install waypipe
+#+end_src
+
+** waypipe socket
+
+freebsd
+
+create the client socket in the ubuntu chroot tmp directory
+from the freebsd host
+
+#+begin_src sh
+waypipe --socket /compat/ubuntu/tmp/waypipe.sock client &
+#+end_src
+
+ubuntu chroot
+
+#+begin_src sh
+waypipe --socket /tmp/waypipe.sock server qt5ct
+#+end_src
+
+kill
+
+#+begin_src sh
+kill %1
+rm /tmp/waypipe.sock
+#+end_src

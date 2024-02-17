@@ -669,8 +669,6 @@ chroot path
 djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/bin/zsh
 #+end_src
 
-+end_src
-
 *** add user to groups
 
 #+begin_src sh
@@ -1118,6 +1116,12 @@ export QT_QPA_PLATFORM=wayland
 
 #+begin_src sh
 cp .zshrc .zshenv /compat/ubuntu/home/djwilcox
+#+end_src
+
+***** waypipe
+
+#+begin_src sh
+sudo apt install waypipe
 #+end_src
 
 ** ldd resolve
