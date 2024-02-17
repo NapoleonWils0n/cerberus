@@ -1,7 +1,5 @@
 #+STARTUP: content
 * whisper
-
-[[https://github.com/openai/whisper]]
 ** openai whisper github
 
 [[https://github.com/openai/whisper]]
