@@ -31,6 +31,7 @@ waypipe --socket /compat/ubuntu/tmp/waypipe.sock client &
 #+end_src
 
 ubuntu chroot
+create the server socket that matches the same path as the client socket in the tmp directory
 
 #+begin_src sh
 waypipe --socket /tmp/waypipe.sock server qt5ct
