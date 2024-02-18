@@ -956,6 +956,30 @@ sudo apt install davinci-resolve_18.6.5-mrd1.6.4_amd64.deb
 sudo apt install adwaita-qt
 #+end_src
 
+**** lib fix
+
+#+begin_src sh
+cd /opt/resolve/libs
+sudo mv libglib-2.0.so.0 libglib-2.0.so.0.bak
+sudo cp /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 /opt/resolve/libs/
+#+end_src
+
+#+begin_src sh
+sudo apt install liblog4cxx-dev
+#+end_src
+
+**** gpu dummy-uvm.so
+
+enable the gpu in the chroot
+
+in the ubuntu chroot
+
+#+begin_src sh
+mkdir -p ~/.config/gpu
+cp dummy-uvm.so ~/.config/gpu
+LD_PRELOAD=/home/djwilcox/.config/gpu/dummy-uvm.so
+#+end_src
+
 *** wayland 
 **** wayland packages
 
