@@ -950,13 +950,13 @@ or
 sudo apt install davinci-resolve_18.6.5-mrd1.6.4_amd64.deb
 #+end_src
 
-**** qt
+*** qt
 
 #+begin_src sh
-sudo apt install adwaita-qt
+sudo apt install adwaita-qt qt5ct 
 #+end_src
 
-**** lib fix
+*** lib fix
 
 #+begin_src sh
 cd /opt/resolve/libs
@@ -968,7 +968,7 @@ sudo cp /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 /opt/resolve/libs/
 sudo apt install liblog4cxx-dev
 #+end_src
 
-**** gpu dummy-uvm.so
+*** gpu dummy-uvm.so
 
 enable the gpu in the chroot
 
@@ -980,11 +980,19 @@ cp dummy-uvm.so ~/.config/gpu
 LD_PRELOAD=/home/djwilcox/.config/gpu/dummy-uvm.so
 #+end_src
 
+*** x11
+
+on ubuntu in the chroot
+
+#+begin_src sh
+sudo apt install xorg xserver-xorg xserver-xorg-core
+#+end_src
+
 *** wayland 
 **** wayland packages
 
 #+begin_src sh
-sudo apt install libinput-tools wayland-protocols qtwayland5
+sudo apt install libinput-tools wayland-protocols qtwayland5 qt6-wayland wayland-utils 
 #+end_src
 
 packages that may need to be installed 
@@ -1138,12 +1146,16 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
-# firefox
-#export MOZ_ENABLE_WAYLAND=1
+# dummy-uvm.so for access to the gpu
+export LD_PRELOAD=/home/djwilcox/.config/gpu/dummy-uvm.so
 
 # qt5
-#export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORMTHEME=qt5ct
 export QT_QPA_PLATFORM=wayland
+
+# wayland
+#export XDG_SESSION_TYPE=wayland
+#export WAYLAND_DISPLAY=wayland-0
 #+end_src
 
 ***** copy zsh config to the chroot
@@ -1152,7 +1164,7 @@ export QT_QPA_PLATFORM=wayland
 cp .zshrc .zshenv /compat/ubuntu/home/djwilcox
 #+end_src
 
-*** waypipe
+** waypipe
 
 freebsd
 
@@ -1166,7 +1178,7 @@ ubuntu
 sudo apt install waypipe
 #+end_src
 
-**** waypipe socket
+*** waypipe socket
 
 freebsd
 
