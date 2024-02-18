@@ -1133,7 +1133,7 @@ sudo apt install waypipe
 freebsd
 
 create the client socket in the ubuntu chroot tmp directory
-from the freebsd host
+from the freebsd host as your regular user, ie not as root
 
 #+begin_src sh
 waypipe --socket /compat/ubuntu/tmp/waypipe.sock client &
@@ -1141,13 +1141,24 @@ waypipe --socket /compat/ubuntu/tmp/waypipe.sock client &
 
 ubuntu chroot
 
-start waypipe socket
+create the server socket that matches the same path as the client socket in the tmp directory
+and specify an application to launch as the last argument to the command
+
+again run the command as your user in the chroot, not as root
+and because you can map id of your user on freebsd to the user in the chroot they can both access the socket
+without any permission issues
 
 #+begin_src sh
 waypipe --socket /tmp/waypipe.sock server /opt/resolve/bin/resolve
 #+end_src
 
-kill
+list jobs
+
+#+begin_src sh
+jobs
+#+end_src
+
+kill the waypipe job
 
 #+begin_src sh
 kill %1
