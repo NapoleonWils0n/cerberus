@@ -1141,6 +1141,8 @@ waypipe --socket /compat/ubuntu/tmp/waypipe.sock client &
 
 ubuntu chroot
 
+start waypipe socket
+
 #+begin_src sh
 waypipe --socket /tmp/waypipe.sock server /opt/resolve/bin/resolve
 #+end_src
@@ -1151,6 +1153,26 @@ kill
 kill %1
 rm /tmp/waypipe.sock
 #+end_src
+
+***** davinci resolve error
+
+#+begin_example
+/opt/resolve/bin/resolve: error while loading shared libraries: libc++.so.1: cannot open shared object file: No such file or directory
+#+end_example
+
+[[https://aur.archlinux.org/packages/davinci-resolve-studio?o=130&O=20]]
+
+The missing symbol (_ZTVNSt3__14__fs10filesystem16filesystem_errorE) is part of libc++.so.1 which is present in the install but not within the /opt/resolve/libs path.
+
+It can be found in /opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/ or /opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/. Copy or link it from there to /opt/resolve/libs or start resolve with an LD_PRELOAD.
+
+LD_PRELOAD=/opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libc++.so.1 /opt/resolve/bin/resolve
+
+#+begin_example
+/opt/resolve/libs/libc++.so.1
+/opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libc++.so.1
+/opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libc++.so.1
+#+end_example
 
 ** desktop launcher
 *** desktop launcher
