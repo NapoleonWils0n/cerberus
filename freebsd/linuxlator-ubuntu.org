@@ -618,7 +618,7 @@ dpkg-reconfigure locales
 install the shell our user is going to use
 
 #+begin_src sh
-apt install zsh
+apt install zsh pulseaudio
 #+end_src
 
 *** copy user and group
@@ -664,9 +664,22 @@ chroot path
 /etc/passwd
 #+end_example
 
-
 #+begin_src sh
 djwilcox:*:1001:1001:Daniel J Wilcox:/home/djwilcox:/bin/zsh
+#+end_src
+
+copy the group from freebsd to ubuntu
+
+freebsd /etc/group
+
+#+begin_src conf
+djwilcox:*:1001:
+#+end_src
+
+ubuntu /etc/group
+
+#+begin_src conf
+djwilcox:*:1001:
 #+end_src
 
 *** add user to groups
@@ -679,6 +692,7 @@ usermod -a -G dip djwilcox
 usermod -a -G plugdev djwilcox
 usermod -a -G users djwilcox
 usermod -a -G video djwilcox
+usermod -a -G audio djwilcox
 #+end_src
 
 *** sudo set up
