@@ -1149,13 +1149,14 @@ export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 # dummy-uvm.so for access to the gpu
 export LD_PRELOAD=/home/djwilcox/.config/gpu/dummy-uvm.so
 
+# wayland
+export XDG_SESSION_TYPE=wayland
+export WAYLAND_DISPLAY=wayland-0
+export DISPLAY=:0
+
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
-export QT_QPA_PLATFORM=wayland
-
-# wayland
-#export XDG_SESSION_TYPE=wayland
-#export WAYLAND_DISPLAY=wayland-0
+export QT_QPA_PLATFORM=xcb
 #+end_src
 
 ***** copy zsh config to the chroot
@@ -1176,6 +1177,28 @@ ubuntu
 
 #+begin_src sh
 sudo apt install waypipe
+#+end_src
+
+*** xhost
+
+not sure if xhost is needed
+
+install xhost on freebsd
+
+#+begin_src sh
+sudo pkg install xhost
+#+end_src
+
+To provide access to an application running with sudo or su to the graphical server (aka your X session aka your computer screen), open a terminal and type as your normal user: 
+
+#+begin_src sh
+xhost +SI:localuser:"$(whoami)"
+#+end_src
+
+To get things back to normal, with controlled access to the X screen:
+
+#+begin_src sh
+xhost -
 #+end_src
 
 *** waypipe socket
@@ -1234,142 +1257,6 @@ LD_PRELOAD=/opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libc++.so.1 /opt/re
 /opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libc++.so.1
 /opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libc++.so.1
 #+end_example
-
-** desktop launcher
-*** desktop launcher
-
-davinci resolve desktop entry 
-
-#+begin_src sh
-ls /usr/share/applications/davinci-resolve.desktop
-#+end_src
-
-*** davinci resolve desktop entry 
-
-davinci-resolve.desktop
-
-#+begin_src conf
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Type=Application
-Name=DaVinci Resolve
-Path=/opt/resolve
-Exec=/opt/resolve/bin/resolve
-Icon=/opt/resolve/graphics/DV_Resolve.png
-Terminal=false
-MimeType=application/x-resolveproj;
-StartupNotify=true
-Categories=AudioVideo
-#+end_src
-
-**** freebsd desktop entry
-
-#+begin_example
-~/.local/share/applications/davinci-resolve.desktop
-#+end_example
-
-#+begin_src conf
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Type=Application
-Name=DaVinci Resolve
-Exec=/usr/local/bin/linux-resolve
-Terminal=false
-MimeType=application/x-resolveproj;
-StartupNotify=true
-Categories=AudioVideo
-#+end_src
-
-**** linux-resolve
-
-linux-resolve script
-
-#+begin_src sh
-#!/bin/sh
-
-get_pa_sock_path()
-{
-	PA_SOCK_PATH=$(sockstat | awk -v me=$(whoami) -F'[ \t]+' '
-		$1 == me && $2 == "pulseaudio" && $6 ~ /native/ {
-			print $6;
-			exit 0
-		}'
-	)
-}
-
-get_pa_sock_path
-if [ ! -S "$PA_SOCK_PATH" ]; then
-	while killall pulseaudio; do
-		sleep 0.5
-	done
-	pulseaudio --start
-	get_pa_sock_path
-fi
-[ -S "$PA_SOCK_PATH" ] && export PULSE_SERVER=unix:$PA_SOCK_PATH
-
-# Let the wrapped binary know that it has been run through the wrapper:
-export RESOLVE_WRAPPER="`readlink -f "$0"`"
-
-/compat/ubuntu/usr/local/bin/resolve-wrapper "$@"
-#+end_src
-
-freebsd host
-
-make the script executable
-
-#+begin_src sh
-chmod +x linux-resolve
-#+end_src
-
-copy the script to /usr/local/bin
-
-#+begin_example
-sudo cp linux-resolve /usr/local/bin/
-#+end_example
-
-**** resolve-wrapper
-
-create the resolve-wrapper script
-
-resolve-wrapper
-
-#+begin_src sh
-#!/compat/ubuntu/bin/bash
-#
-#
-export RESOLVE_PATH="/opt/resolve/bin/resolve"
-export RESOLVE_WRAPPER="$(readlink -f "$0")"
-#export LD_LIBRARY_PATH=/usr/local/steam-utils/lib64/fakeudev
-#export LD_PRELOAD=/usr/local/
-#export LIBGL_DRI3_DISABLE=1
-exec -a "$0" "$RESOLVE_PATH" "$@"
-#+end_src
-
-make the resolve-wrapper script executable
-
-#+begin_src sh
-chmod +x resolve-wrapper
-#+end_src
-
-copy the script to into the chroot from the freebsd host
-
-#+begin_src sh
-sudo cp resolve-wrapper /compat/ubuntu/usr/local/bin/ 
-#+end_src
-
-ubuntu path
-
-#+begin_example
-/usr/local/bin/resolve-wrapper
-#+end_example
-
-*** Exit chroot:
-
-#+begin_src sh
-exit
-#+end_src
 
 ** linuxulator delete
 
