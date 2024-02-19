@@ -3,6 +3,8 @@
 
 ** with-glibc-shim
 
+editing the with-glibc-shim file is no longer neccesary as the typo has been fixed
+
 https://github.com/shkhln/libc6-shim/commit/1a4333055abd778081d71c9c11675afed152c64e
 
 #+begin_src sh
