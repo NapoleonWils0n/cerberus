@@ -618,7 +618,7 @@ dpkg-reconfigure locales
 install the shell our user is going to use
 
 #+begin_src sh
-apt install zsh pulseaudio
+apt install zsh pulseaudio ffmpeg
 #+end_src
 
 *** copy user and group
@@ -1167,76 +1167,23 @@ export QT_QPA_PLATFORM=xcb
 cp .zshrc .zshenv /compat/ubuntu/home/djwilcox
 #+end_src
 
-** waypipe
+** run davinci resolve on xwayland
 
-freebsd
-
-#+begin_src sh
-sudo pkg install waypipe
-#+end_src
-
-ubuntu
+create the xwayland window on freebsd
 
 #+begin_src sh
-sudo apt install waypipe
+Xwayland :01
 #+end_src
 
-*** waypipe socket
+in the chroots ~/.zshenv
 
-freebsd
-
-create the client socket in the tmp directory
-from the freebsd host as your regular user, ie not as root
+export the display
 
 #+begin_src sh
-waypipe --socket /tmp/waypipe.sock client &
+export DISPLAY=:1
 #+end_src
 
-ubuntu chroot
-
-create the server socket that matches the same path as the client socket in the tmp directory
-and specify an application to launch as the last argument to the command
-
-again run the command as your user in the chroot, not as root
-and because you can map id of your user on freebsd to the user in the chroot they can both access the socket
-without any permission issues
-
-#+begin_src sh
-waypipe --socket /tmp/waypipe.sock server /opt/resolve/bin/resolve
-#+end_src
-
-list jobs
-
-#+begin_src sh
-jobs
-#+end_src
-
-kill the waypipe job
-
-#+begin_src sh
-kill %1
-rm /tmp/waypipe.sock
-#+end_src
-
-***** davinci resolve error
-
-#+begin_example
-/opt/resolve/bin/resolve: error while loading shared libraries: libc++.so.1: cannot open shared object file: No such file or directory
-#+end_example
-
-[[https://aur.archlinux.org/packages/davinci-resolve-studio?o=130&O=20]]
-
-The missing symbol (_ZTVNSt3__14__fs10filesystem16filesystem_errorE) is part of libc++.so.1 which is present in the install but not within the /opt/resolve/libs path.
-
-It can be found in /opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/ or /opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/. Copy or link it from there to /opt/resolve/libs or start resolve with an LD_PRELOAD.
-
-LD_PRELOAD=/opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libc++.so.1 /opt/resolve/bin/resolve
-
-#+begin_example
-/opt/resolve/libs/libc++.so.1
-/opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libc++.so.1
-/opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libc++.so.1
-#+end_example
+open resolve in the chroot and it will be displayed in the xwayland window on freebsd
 
 ** linuxulator delete
 
