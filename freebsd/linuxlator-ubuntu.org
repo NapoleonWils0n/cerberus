@@ -1148,6 +1148,8 @@ export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
 # dummy-uvm.so for access to the gpu
 export LD_PRELOAD=/home/djwilcox/.config/gpu/dummy-uvm.so
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
 
 # wayland
 export XDG_SESSION_TYPE=wayland
@@ -1179,37 +1181,15 @@ ubuntu
 sudo apt install waypipe
 #+end_src
 
-*** xhost
-
-not sure if xhost is needed
-
-install xhost on freebsd
-
-#+begin_src sh
-sudo pkg install xhost
-#+end_src
-
-To provide access to an application running with sudo or su to the graphical server (aka your X session aka your computer screen), open a terminal and type as your normal user: 
-
-#+begin_src sh
-xhost +SI:localuser:"$(whoami)"
-#+end_src
-
-To get things back to normal, with controlled access to the X screen:
-
-#+begin_src sh
-xhost -
-#+end_src
-
 *** waypipe socket
 
 freebsd
 
-create the client socket in the ubuntu chroot tmp directory
+create the client socket in the tmp directory
 from the freebsd host as your regular user, ie not as root
 
 #+begin_src sh
-waypipe --socket /compat/ubuntu/tmp/waypipe.sock client &
+waypipe --socket /tmp/waypipe.sock client &
 #+end_src
 
 ubuntu chroot
