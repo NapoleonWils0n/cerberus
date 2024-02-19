@@ -1154,7 +1154,7 @@ export __GLX_VENDOR_LIBRARY_NAME=nvidia
 # wayland
 export XDG_SESSION_TYPE=wayland
 export WAYLAND_DISPLAY=wayland-0
-export DISPLAY=:0
+export DISPLAY=:1
 
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
