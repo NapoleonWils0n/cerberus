@@ -693,6 +693,8 @@ usermod -a -G plugdev djwilcox
 usermod -a -G users djwilcox
 usermod -a -G video djwilcox
 usermod -a -G audio djwilcox
+usermod -a -G pulse djwilcox
+usermod -a -G pulse-access djwilcox
 #+end_src
 
 *** sudo set up
@@ -721,6 +723,20 @@ passwd djwilcox
 
 passwd
 ubuntu
+
+*** hosts
+
+edit the hosts file in the chroot and add your hostname
+
+#+begin_src sh
+sudo vi /etc/hosts
+#+end_src
+
+add the hostname to stop errors when using sudo saying couldnt resolve hostname
+
+#+begin_src conf
+127.0.0.1       pollux
+#+end_src
 
 *** switch to out user with su
 
