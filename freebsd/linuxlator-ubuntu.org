@@ -1315,7 +1315,27 @@ autospawn = no
 pulseaudio --start --daemonize=yes
 #+end_src
 
-** run davinci resolve on xwayland
+** X11
+
+create the Xephyr window on freebsd
+
+1920x1080 
+
+#+begin_src sh
+Xephyr -br -ac -noreset -screen 1920x1080 :1
+#+end_src
+
+in the chroots ~/.zshenv
+
+export the display
+
+#+begin_src sh
+export DISPLAY=:1
+#+end_src
+
+open resolve in the chroot and it will be displayed in the xwayland window on freebsd
+
+** Xwayland
 
 create the xwayland window on freebsd
 
