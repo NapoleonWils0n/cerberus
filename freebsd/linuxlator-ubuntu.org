@@ -1,10 +1,38 @@
-#+STARTUP: content
+#+STARTUP: show2levels
 * linuxlator ubuntu
 ** ubuntu
 *** Install needed packages on freebsd
 
 #+begin_src sh
 sudo pkg install debootstrap 
+#+end_src
+
+*** doas
+
+install doas so we enter the chroot without being prompted for a password
+
+#+begin_src sh
+sudo pkg install doas
+#+end_src
+
+doas.conf location
+
+#+begin_example
+/usr/local/etc/doas.conf
+#+end_example
+
+doas.conf
+
+#+begin_src conf
+# permit user
+permit keepenv :djwilcox
+
+# chroot
+permit nopass :djwilcox cmd chroot
+
+# root as root
+permit nopass keepenv root as root
+
 #+end_src
 
 *** ubuntu rc.d script 
