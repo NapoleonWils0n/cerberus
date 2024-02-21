@@ -1317,6 +1317,12 @@ pulseaudio --start --daemonize=yes
 
 ** X11
 
+install Xephyr
+
+#+begin_src sh
+sudo pkg install Xephyr
+#+end_src
+
 create the Xephyr window on freebsd
 
 1920x1080 
