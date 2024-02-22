@@ -1191,7 +1191,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
 # dummy-uvm.so for access to the gpu
-export LD_PRELOAD=/home/djwilcox/.config/gpu/dummy-uvm.so
+export LD_PRELOAD="$HOME/.config/gpu/dummy-uvm.so"
 export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 
