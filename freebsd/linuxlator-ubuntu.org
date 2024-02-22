@@ -1439,6 +1439,16 @@ Categories=AudioVideo
 
 ** linuxulator delete
 
+disable ubuntu
+
+#+begin_src sh
+sudo sysrc ubuntu_enable="NO"
+#+end_src
+
+reboot to make sure the linux mounts are unmounted
+
+delete the /compat/ubuntu directory
+
 #+begin_src sh
 sudo rm -rxv /compat/ubuntu
 #+end_src
