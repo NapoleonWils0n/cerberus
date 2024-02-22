@@ -1,0 +1,8 @@
+#+STARTUP: content
+* wlr-randr
+
+#+begin_src sh
+sudo pkg install wlr-randr
+#+end_src
+
+
