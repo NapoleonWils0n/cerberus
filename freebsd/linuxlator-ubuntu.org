@@ -1357,6 +1357,86 @@ export DISPLAY=:1
 
 open resolve in the chroot and it will be displayed in the xwayland window on freebsd
 
+** davinci resolve launcher
+*** freebsd
+**** resolve
+
+freebsd path to script
+
+#+begin_example
+/usr/local/bin/resolve
+#+end_example
+
+resolve script
+
+#+begin_src sh
+#!/bin/sh
+
+# start pulseaudio
+pulseaudio --start --daemonize
+
+# sleep
+sleep 1
+
+# create the xwayland window
+Xwayland -host-grab -fullscreen -geometry 1920x1080 :01 &
+
+# chroot with doas
+doas chroot /compat/ubuntu /usr/local/bin/wrapper
+#+end_src
+
+*** ubuntu
+**** wrapper-resolve
+
+freebsd path to script in the chroot
+
+#+begin_example
+/compat/ubuntu/usr/local/bin/wrapper-resolve
+#+end_example
+
+chroot path
+
+#+begin_example
+/usr/local/bin/wrapper-resolve
+#+end_example
+
+wrapper-resolve script
+
+#+begin_src sh
+#!/bin/bash
+
+# switch to our user
+su djwilcox -c '/opt/resolve/bin/resolve' 2>/dev/null
+#+end_src
+
+*** desktop entry
+
+copy the desktop entry to
+
+#+begin_example
+~/.local/share/applications
+#+end_example
+
+#+begin_src sh
+cp davinci-resolve.desktop ~/.local/share/applications
+#+end_src
+
+davinci resolve desktop entry for freebsd
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=DaVinci Resolve
+Exec=/usr/local/bin/resolve
+Icon=/compat/ubuntu/opt/resolve/graphics/DV_Resolve.png
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
 ** linuxulator delete
 
 #+begin_src sh
