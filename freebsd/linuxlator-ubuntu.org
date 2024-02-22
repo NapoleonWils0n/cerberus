@@ -1181,7 +1181,7 @@ zstyle ':completion:*' rehash true
 
 # Path
 typeset -U PATH path
-path=("$path[@]")
+path=("/opt/resolve/bin" "$path[@]")
 export PATH
 
 # xdg directories
