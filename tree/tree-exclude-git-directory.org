@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* tree exclude git directory
+
+#+begin_src sh
+tree -aI .git
+#+end_src
