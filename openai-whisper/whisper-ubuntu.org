@@ -1,0 +1,41 @@
+#+STARTUP: content
+* whisper ubuntu
+** whisper github
+
+[[https://github.com/openai/whisper]]
+
+** packages to install on ubuntu
+
+#+begin_src sh
+sudo apt install python3-pip python3-venv
+#+end_src
+
+** Create a virtual environment 
+
+#+begin_src sh
+python3 -m venv ~/.venv/whisper
+#+end_src
+
+** activate the environment
+
+#+begin_src sh
+source ~/.venv/whisper/bin/activate
+#+end_src
+
+** torch install
+
+#+begin_src sh
+pip3 install torch
+#+end_src
+
+** whisper install
+
+#+begin_src sh
+pip3 install openai-whisper
+#+end_src
+
+** deactivate
+
+#+begin_src sh
+deactivate
+#+end_src
