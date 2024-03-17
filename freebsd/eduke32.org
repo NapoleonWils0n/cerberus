@@ -1,0 +1,83 @@
+#+STARTUP: content
+* eduke32 freebsd 
+** eduke32 website
+
+[[https://www.eduke32.com/]]
+
+[[https://wiki.eduke32.com/wiki/Installation_and_configuration]]
+
+** eduke32 package install
+
+#+begin_src sh
+sudo pkg install eduke32
+#+end_src
+
+** duke nukem files
+
+[[https://archive.org/details/Duke3dAtomicEdition]]
+
+#+begin_src sh
+wget 'https://archive.org/download/Duke3dAtomicEdition/Duke3d%20Atomic%20Edition.rar'
+#+end_src
+
+** unrar install
+
+#+begin_src sh
+sudo pkg install unrar
+#+end_src
+
+** unrar Duke3d Atomic Edition.rar
+
+create the eduke32 directory
+
+#+begin_src sh
+mkdir -p eduke32-rar
+#+end_src
+
+move the rar file into the eduke32 directory
+
+#+begin_src sh
+mv Duke3d\ Atomic\ Edition.rar eduke32-rar
+#+end_src
+
+change directory into the eduke32 directory
+
+#+begin_src sh
+cd eduke32-rar
+#+end_src
+
+unrar the rar file
+
+#+begin_src sh
+unrar e Duke3d\ Atomic\ Edition.rar
+#+end_src
+
+** create the eduke32 directory in your config directory
+
+#+begin_src sh
+mkdir -p ~/.config/eduke32
+#+end_src
+
+** copy files
+
+copy the DUKE3D.GRP and DUKE.RTS files from the eduke32-rar directory into the config eduke32 directory
+
+make sure the filenames are lowercased
+
++ DUKE3D.GRP
+
+#+begin_src sh
+cp DUKE3D.GRP ~/.config/eduke32/duke3d.grp
+#+end_src
+
++ DUKE.RTS
+
+#+begin_src sh
+cp DUKE.RTS ~/.config/eduke32/duke.rts
+#+end_src
+
+** run eduke32
+
+#+begin_src sh
+eduke32
+#+end_src
