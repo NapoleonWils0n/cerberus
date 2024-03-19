@@ -1,0 +1,24 @@
+#+STARUP: content
+* sox and virtual oss
+
+record desktop audio on freebsd with sox and virtual oss
+
+** virtual oss
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+virtual oss
+
+#+begin_src sh
+virtual_oss -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp
+#+end_src
+
+** sox
+
+#+begin_src sh
+sox -r 48k -b 16 -v 0.99 -t oss /dev/dsp -t wav out.wav
+#+end_src
