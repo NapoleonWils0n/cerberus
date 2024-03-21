@@ -972,6 +972,26 @@ mkdir -p /home/djwilcox
 chown djwilcox:djwilcox djwilcox
 #+end_src
 
+*** Couldnt resolve hostname fix
+
+Add the your hostname from freebsd to the hosts file in the ubuntu chroot \\
+to stop errors when using sudo saying couldnt resolve hostname
+
+Path to the hosts in the chroot
+
+#+begin_example
+/etc/hosts
+#+end_example
+
+hosts
+
+#+begin_src conf
+127.0.0.1       hostname
+#+end_src
+
+# Horizontal Rule
+-----
+
 *** Switch to out user with su
 
 switch to your user in the chroot \\
