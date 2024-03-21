@@ -1,0 +1,1070 @@
+#+STARTUP: content
+* freebsd jails
+** links
+*** freebsd handbook - jails
+
+[[https://docs.freebsd.org/en/books/handbook/jails/]]
+
+*** freebsd wiki - Jailing GUI Applications
+
+[[https://wiki.freebsd.org/JailingGUIApplications]]
+
+*** vermaden - Secure Containerized Browser
+
+[[https://vermaden.wordpress.com/2021/12/15/secure-containerized-browser/]]
+
+*** linux jail
+
+[[https://forums.freebsd.org/threads/running-google-chrome-in-a-dedicated-linux-jail.85491/#post-596720]]
+
+[[https://github.com/msimerson/Mail-Toaster-6/wiki/Linux-Jails]]
+
+*** jails gpu
+
+[[https://forums.freebsd.org/threads/assign-gpu-graphics-card-to-jail.89780/]]
+
+#+begin_example
+/etc/jail.conf.d/workstation.conf
+#+end_example
+
+#+begin_src sh
+devfs_ruleset="210";
+#+end_src
+
+#+begin_example
+/etc/devfs.rules
+#+end_example
+
+#+begin_src sh
+[jail_devfs=210]
+add path 'dri*' unhide
+add path 'drm*' unhide
+add path 'dsp*' unhideadd path 'mixer*' unhide
+add path 'speaker*' unhide
+#+end_src
+
+** jail config
+
+To start jails when the system boots
+
+enable jails
+
+#+begin_src sh
+sudo sysrc jail_enable="YES"
+sudo sysrc jail_parallel_start="YES"
+sudo sysrc jail_list="ubuntu"
+#+end_src
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+#+begin_src conf
+jail_enable="YES"
+jail_parallel_start="YES"
+jail_list="ubuntu"
+#+end_src
+
+With jail_parallel_start, all configured jails will be started in the background.
+
+** Setting Up the Jail Directory Tree
+*** zroot/jails
+
+create the zroot/jails zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails
+sudo zfs set mountpoint=/usr/local/jails zroot/jails
+#+end_src
+
+*** zroot/jails/linux
+
+create the zroot/jails/linux zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails/linux
+sudo zfs set mountpoint=/usr/local/jails/linux zroot/jails/linux
+#+end_src
+
+*** zroot/jails/linux/ubuntu
+
+create the zroot/jails/linux/ubuntu zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails/linux/ubuntu
+sudo zfs set mountpoint=/usr/local/jails/linux/ubuntu zroot/jails/linux/ubuntu
+#+end_src
+
+** Create the mount points for Ubuntu
+
+Create necessary mount points for the Ubuntu jail
+
+#+begin_example
+/usr/local/jails/linux/ubuntu
+#+end_example
+
+#+begin_src sh
+sudo mkdir -p {/usr/local/jails/linux/ubuntu/dev/fd,/usr/local/jails/linux/ubuntu/dev/shm,/usr/local/jails/linux/ubuntu/home,/usr/local/jails/linux/ubuntu/tmp,/usr/local/jails/linux/ubuntu/proc,/usr/local/jails/linux/ubuntu/sys}
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Mantic
+
+#+begin_example
+/usr/local/share/debootstrap/scripts/mantic
+#+end_example
+
+
+mantic and lunar script
+
+#+begin_src sh
+case $ARCH in
+    amd64|i386)
+	case $SUITE in
+	    gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|utopic|vivid|wily|yakkety|zesty)
+	        default_mirror http://old-releases.ubuntu.com/ubuntu
+	        ;;
+	    ,*)
+	        default_mirror http://archive.ubuntu.com/ubuntu
+	        ;;
+	esac
+	;;
+    sparc)
+	case $SUITE in
+	    gutsy)
+	        default_mirror http://old-releases.ubuntu.com/ubuntu
+	        ;;
+	    ,*)
+	        default_mirror http://ports.ubuntu.com/ubuntu-ports
+	        ;;
+	esac
+	;;
+    ,*)
+	default_mirror http://ports.ubuntu.com/ubuntu-ports
+	;;
+esac
+mirror_style release
+download_style apt
+finddebs_style from-indices
+variants - buildd fakechroot minbase
+keyring /usr/local/share/keyrings/ubuntu-archive-keyring.gpg
+
+if doing_variant fakechroot; then
+    test "$FAKECHROOT" = "true" || error 1 FAKECHROOTREQ "This variant requires fakechroot environment to be started"
+fi
+
+case $ARCH in
+    alpha|ia64) LIBC="libc6.1" ;;
+    kfreebsd-*) LIBC="libc0.1" ;;
+    hurd-*)     LIBC="libc0.3" ;;
+    ,*)          LIBC="libc6" ;;
+esac
+
+case $SUITE in
+    gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy|hirsute) ;;
+    ,*)
+	# impish+ will use zstd compression, check if supported
+	dpkg_zstd="$(dpkg-deb --help 2>/dev/null | grep ' zstd,' || :)"
+	if [ -z "$EXTRACTOR_OVERRIDE" ] && [ -z "$dpkg_zstd" ]; then
+	    info CHOSENEXTRACTOR "%s uses zstd compression, setting --extractor=ar option" "$SUITE"
+	    export EXTRACTOR_OVERRIDE=ar
+	fi
+	;;
+esac
+
+work_out_debs () {
+    required="$(get_debs Priority: required)"
+
+    if doing_variant - || doing_variant fakechroot; then
+	#required="$required $(get_debs Priority: important)"
+	#  ^^ should be getting debconf here somehow maybe
+	base="$(get_debs Priority: important)"
+    elif doing_variant buildd; then
+	base="apt build-essential"
+    elif doing_variant minbase; then
+	base="apt"
+    fi
+
+    if doing_variant fakechroot; then
+	# ldd.fake needs binutils
+	required="$required binutils"
+    fi
+
+    case $MIRRORS in
+	https://*)
+	    case "$CODENAME" in
+		gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty)
+		    base="$base apt-transport-https ca-certificates"
+		    ;;
+		,*)
+		    base="$base ca-certificates"
+		    ;;
+	    esac
+	    ;;
+    esac
+
+    # do not install usrmerge in fresh bootstraps
+    # but do print it for germinate to accept it into minimal
+    if [ "$WHAT_TO_DO" = "finddebs printdebs kill_target" ]; then
+	case "$CODENAME" in
+	    # "merged-usr" blacklist for past releases
+	    gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy)
+	    ;;
+	    hirsute)
+		# keep hirsute buildd chroots split-usr to allow for escape hatch
+		if ! doing_variant buildd; then
+		    if [ -z "$MERGED_USR" ] || [ "$MERGED_USR" = "yes" ]; then
+			base="$base usrmerge"
+		    fi
+		fi
+		;;
+	    ,*)
+		# all future series post hirsute use merged-usr in buildd chroots too
+		if [ -z "$MERGED_USR" ] || [ "$MERGED_USR" = "yes" ]; then
+		    base="$base usrmerge"
+		fi
+		;;
+	esac
+    fi
+}
+
+first_stage_install () {
+    case "$CODENAME" in
+	# "merged-usr" blacklist for past releases
+	gutsy|hardy|intrepid|jaunty|karmic|lucid|lunar|mantic|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic)
+	    [ -z "$MERGED_USR" ] && MERGED_USR="no"
+	    ;;
+	disco|eoan|focal|groovy)
+	    # see https://bugs.debian.org/838388
+	    EXTRACT_DEB_TAR_OPTIONS="$EXTRACT_DEB_TAR_OPTIONS -k"
+	    ;;
+	hirsute)
+	    # keep hirsute buildd chroots split-usr to allow for escape hatch
+	    if [ -z "$MERGED_USR" ]; then
+		if doing_variant buildd; then
+		    MERGED_USR="no"
+		else
+		    MERGED_USR="yes"
+		fi
+	    fi
+	    # see https://bugs.debian.org/838388
+	    EXTRACT_DEB_TAR_OPTIONS="$EXTRACT_DEB_TAR_OPTIONS -k"
+	    ;;
+	,*)
+	    # all future series post hirsute use merged-usr in buildd chroots too
+	    [ -z "$MERGED_USR" ] && MERGED_USR="yes"
+	    # see https://bugs.debian.org/838388
+	    EXTRACT_DEB_TAR_OPTIONS="$EXTRACT_DEB_TAR_OPTIONS -k"
+	    ;;
+    esac
+
+    setup_merged_usr
+    extract $required
+
+    mkdir -p "$TARGET/var/lib/dpkg"
+    : >"$TARGET/var/lib/dpkg/status"
+    : >"$TARGET/var/lib/dpkg/available"
+
+    setup_etc
+    if [ ! -e "$TARGET/etc/fstab" ]; then
+	echo '# UNCONFIGURED FSTAB FOR BASE SYSTEM' > "$TARGET/etc/fstab"
+	chown 0:0 "$TARGET/etc/fstab"; chmod 644 "$TARGET/etc/fstab"
+    fi
+
+    setup_devices
+
+    if doing_variant fakechroot || [ "$CONTAINER" = "docker" ]; then
+	setup_proc_symlink
+    fi
+}
+
+second_stage_install () {
+    in_target /bin/true
+
+    setup_dynamic_devices
+
+    x_feign_install () {
+	local pkg="$1"
+	local deb="$(debfor $pkg)"
+	local ver="$(in_target dpkg-deb -f "$deb" Version)"
+
+	mkdir -p "$TARGET/var/lib/dpkg/info"
+
+	echo \
+            "Package: $pkg
+Version: $ver
+Maintainer: unknown
+Status: install ok installed" >> "$TARGET/var/lib/dpkg/status"
+
+	touch "$TARGET/var/lib/dpkg/info/${pkg}.list"
+    }
+
+    x_feign_install dpkg
+
+    x_core_install () {
+	smallyes '' | in_target dpkg --force-depends --install $(debfor "$@")
+    }
+
+    p () {
+	baseprog="$(($baseprog + ${1:-1}))"
+    }
+
+    if ! doing_variant fakechroot; then
+	setup_proc
+	in_target /sbin/ldconfig
+    fi
+
+    DEBIAN_FRONTEND=noninteractive
+    DEBCONF_NONINTERACTIVE_SEEN=true
+    export DEBIAN_FRONTEND DEBCONF_NONINTERACTIVE_SEEN
+
+    baseprog=0
+    bases=7
+
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #1
+    info INSTCORE "Installing core packages..."
+
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #2
+    ln -sf mawk "$TARGET/usr/bin/awk"
+    x_core_install base-passwd
+    x_core_install base-files
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #3
+    x_core_install dpkg
+
+    if [ ! -e "$TARGET/etc/localtime" ]; then
+	ln -sf /usr/share/zoneinfo/UTC "$TARGET/etc/localtime"
+    fi
+
+    if doing_variant fakechroot; then
+	install_fakechroot_tools
+    fi
+
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #4
+    x_core_install $LIBC
+
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #5
+    x_core_install perl-base
+
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #6
+    rm "$TARGET/usr/bin/awk"
+    x_core_install mawk
+
+    p; progress $baseprog $bases INSTCORE "Installing core packages" #7
+    if doing_variant -; then
+	x_core_install debconf
+    fi
+
+    baseprog=0
+    bases=$(set -- $required; echo $#)
+
+    info UNPACKREQ "Unpacking required packages..."
+
+    exec 7>&1
+
+    smallyes '' |
+	(repeatn 5 in_target_failmsg UNPACK_REQ_FAIL_FIVE "Failure while unpacking required packages.  This will be attempted up to five times." "" \
+		 dpkg --status-fd 8 --force-depends --unpack $(debfor $required) 8>&1 1>&7 || echo EXITCODE $?) |
+	dpkg_progress $baseprog $bases UNPACKREQ "Unpacking required packages" UNPACKING
+
+    info CONFREQ "Configuring required packages..."
+
+    if doing_variant fakechroot && [ -e "$TARGET/var/lib/dpkg/info/initscripts.postinst" ]
+    then
+	# fix initscripts postinst (no mounting possible, and wrong if condition)
+	sed -i '/dpkg.*--compare-versions/ s/\<lt\>/lt-nl/' "$TARGET/var/lib/dpkg/info/initscripts.postinst"
+    fi
+
+    echo \
+        "#!/bin/sh
+exit 101" > "$TARGET/usr/sbin/policy-rc.d"
+    chmod 755 "$TARGET/usr/sbin/policy-rc.d"
+
+    mv "$TARGET/sbin/start-stop-daemon" "$TARGET/sbin/start-stop-daemon.REAL"
+    echo \
+        "#!/bin/sh
+echo
+echo \"Warning: Fake start-stop-daemon called, doing nothing\"" > "$TARGET/sbin/start-stop-daemon"
+    chmod 755 "$TARGET/sbin/start-stop-daemon"
+
+    if [ -x "$TARGET/sbin/initctl" ]; then
+	mv "$TARGET/sbin/initctl" "$TARGET/sbin/initctl.REAL"
+	echo \
+            "#!/bin/sh
+if [ \"\$1\" = version ]; then exec /sbin/initctl.REAL \"\$@\"; fi
+echo
+echo \"Warning: Fake initctl called, doing nothing\"" > "$TARGET/sbin/initctl"
+	chmod 755 "$TARGET/sbin/initctl"
+    fi
+
+    setup_dselect_method apt
+
+    smallyes '' |
+	(in_target_failmsg CONF_REQ_FAIL "Failure while configuring required packages." "" \
+		           dpkg --status-fd 8 --configure --pending --force-configure-any --force-depends 8>&1 1>&7 || echo EXITCODE $?) |
+	dpkg_progress $baseprog $bases CONFREQ "Configuring required packages" CONFIGURING
+
+    baseprog=0
+    bases="$(set -- $base; echo $#)"
+
+    info UNPACKBASE "Unpacking the base system..."
+
+    setup_available $required $base
+    done_predeps=
+    while predep=$(get_next_predep); do
+	# We have to resolve dependencies of pre-dependencies manually because
+	# dpkg --predep-package doesn't handle this.
+	predep=$(without "$(without "$(resolve_deps $predep)" "$required")" "$done_predeps")
+	# XXX: progress is tricky due to how dpkg_progress works
+	# -- cjwatson 2009-07-29
+	# This step sometimes fails due to some missing functionality in Linuxulator.  Just ignore it.
+	set +e
+	p; smallyes '' |
+	    in_target dpkg --force-overwrite --force-confold --skip-same-version --install $(debfor $predep)
+	rc=$?
+	base=$(without "$base" "$predep")
+	done_predeps="$done_predeps $predep"
+
+	if [ $rc != 0 ]; then
+	    warning FREEBSD_00 "Applying FreeBSD-specific workaround..."
+	    # ... for "Failed to mount /etc/machine-id: Bad address" with Focal.
+	    in_target truncate -s0 /var/lib/dpkg/info/systemd.postinst
+	    in_target dpkg --configure systemd
+	fi
+	set -e
+    done
+
+    if [ -n "$base" ]; then
+	smallyes '' |
+	    (repeatn 5 in_target_failmsg INST_BASE_FAIL_FIVE "Failure while installing base packages.  This will be re-attempted up to five times." "" \
+		     dpkg --status-fd 8 --force-overwrite --force-confold --skip-same-version --unpack $(debfor $base) 8>&1 1>&7 || echo EXITCODE $?) |
+	    dpkg_progress $baseprog $bases UNPACKBASE "Unpacking base system" UNPACKING
+
+	info CONFBASE "Configuring the base system..."
+
+	# This step sometimes fails due to some missing functionality in Linuxulator.  Just ignore it.
+	set +e
+	smallyes '' |
+	    (repeatn 5 in_target_failmsg CONF_BASE_FAIL_FIVE "Failure while configuring base packages.  This will be re-attempted up to five times." "" \
+		     dpkg --status-fd 8 --force-confold --skip-same-version --configure -a 8>&1 1>&7 || echo EXITCODE $?) |
+	    dpkg_progress $baseprog $bases CONFBASE "Configuring base system" CONFIGURING
+	set -e
+    fi
+
+    if [ -x "$TARGET/sbin/initctl.REAL" ]; then
+	mv "$TARGET/sbin/initctl.REAL" "$TARGET/sbin/initctl"
+    fi
+    mv "$TARGET/sbin/start-stop-daemon.REAL" "$TARGET/sbin/start-stop-daemon"
+    rm -f "$TARGET/usr/sbin/policy-rc.d"
+
+    echo \
+        "# Workaround for Linuxulator missing mremap(2) support; without it,
+# apt(8) fails like this:
+# E: Dynamic MMap ran out of room. Please increase the size of APT::Cache-Start.
+APT::Cache-Start 251658240;" >> "$TARGET/etc/apt/apt.conf.d/00freebsd"
+
+    progress $bases $bases CONFBASE "Configuring base system"
+    info BASESUCCESS "Base system installed successfully."
+}
+
+#+end_src
+
+*** debootstrap install Ubuntu
+
+Use debootstrap with the Mantic script we created earlier as well the url
+
+#+begin_example
+http://archive.ubuntu.com/ubuntu/
+#+end_example
+
+to the Ubuntu archive with Lunar and Mantic and install 
+Ubuntu into this location on Freebsd
+
+#+begin_example
+/usr/local/jails/linux/ubuntu
+#+end_example
+
+debootstrap Ubuntu Mantic
+
+#+begin_src sh
+sudo debootstrap --arch=amd64 --no-check-gpg mantic /usr/local/jails/linux/ubuntu http://archive.ubuntu.com/ubuntu/
+#+end_src
+
+# Horizontal Rule
+-----
+
+** /etc/jail.conf
+
+create the /etc/jail.conf file if it doesn't exist
+
+#+begin_example
+/etc/jail.conf
+#+end_example
+
+add the following code to the jail.conf file to include \\
+files with a .conf extension in the /etc/jail.conf.d/ directory
+ 
+#+begin_src conf
+# startup/logging
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.consolelog = "/var/log/jail_console_${name}.log";
+
+# permissions
+allow.raw_sockets;
+exec.clean;
+mount.devfs;
+#+end_src
+
+** /etc/jail.conf.d/ubuntu.conf
+
+#+begin_src sh
+ubuntu {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    devfs_ruleset=4;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    persist;
+    mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
+}
+#+end_src
+
+** rc.conf
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+#+begin_src sh
+sudo sysrc cloned_interfaces="lo1"
+sudo sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
+#+end_src
+
+#+begin_src conf
+cloned_interfaces="lo1"
+ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
+#+end_src
+
+** pf.conf
+
+#+begin_src sh
+/etc/pf.conf:
+#+end_src
+
+#+begin_src conf
+#=========================================================================#
+# variables, macro and tables                                             #
+#=========================================================================#
+
+int_if="ue0" # usb to ethernet adaptor
+#int_if="bge0" # thunderbolt to ethernet adaptor
+#int_if="wlan0" # ralink usb wifi
+vpn_if="tun0" # vpn interface
+all_networks="0.0.0.0/0"
+vpn_network="$vpn_if:network"
+tcp_services = "{ ntp, 6881 }" # tcp services - torrent
+udp_services = "{ ntp, 6882 }" # udp services - torrent
+icmp_types = "{ echoreq, unreach }"
+tcp_state="flags S/SA keep state"
+udp_state="keep state"
+
+#table <internet> { $all_networks, !self, !$int_if:network } # internet
+#table <lan> { $int_if:network, !self }                      # lan network
+table <myself> { self }                                     # self
+table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
+	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
+	 	   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
+	 	   203.0.113.0/24 }                         # broken networks
+
+#=========================================================================#
+# global policy                                                           #
+#=========================================================================#
+
+set block-policy drop
+set loginterface $int_if
+set fingerprints "/etc/pf.os"
+set skip on lo0
+scrub in all fragment reassemble no-df max-mss 1440
+# nat jail
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+
+#=========================================================================#
+# block                                                                   #
+#=========================================================================#
+
+block log all # block log all
+block return out quick inet6 all tag IPV6 # block ipv6 
+block in quick inet6 all tag IPV6 # block ipv6
+
+# block broken networks - turned off for synergy
+# block in quick from { <martians> no-route urpf-failed } to any tag BAD_PACKET
+
+#=========================================================================#
+# anchors                                                                 #
+#=========================================================================#
+
+# emerging threats - anchor
+#anchor "emerging-threats"
+#load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
+
+# openvpn - anchor
+anchor "openvpn"
+
+#=========================================================================#
+# traffic tag                                                             #
+#=========================================================================#
+
+# icmp
+pass inet proto icmp all icmp-type $icmp_types keep state tag ICMP
+
+# Allow the tcp and udp services defined in the macros at the top of the file
+pass in on $int_if inet proto tcp from any to ($int_if) port $tcp_services $tcp_state tag TCP_IN
+pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_state tag UDP_IN
+
+# outbound traffic
+block out on $int_if all
+pass out quick on $int_if all modulate state
+#+end_src
+
+** getpwnam
+
+#+begin_src sh
+sudo cat passwd | sed -r 's/(:[x|*]:)([0-9]+:[0-9]+:)/:*:\2:0:0:/g' > master.passwd
+#+end_src
+
+#+begin_src sh
+sudo pwd_mkdb -d ./ -p master.passwd
+#+end_src
+
+** fstab
+
+#+begin_src conf
+devfs           /usr/local/jails/linux/ubuntu/dev      devfs           rw                      0       0
+tmpfs           /usr/local/jails/linux/ubuntu/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0
+fdescfs         /usr/local/jails/linux/ubuntu/dev/fd   fdescfs         rw,linrdlnk             0       0
+linprocfs       /usr/local/jails/linux/ubuntu/proc     linprocfs       rw                      0       0
+linsysfs        /usr/local/jails/linux/ubuntu/sys      linsysfs        rw                      0       0
+/tmp            /usr/local/jails/linux/ubuntu/tmp      nullfs          rw                      0       0
+#+end_src
+
+** jail start
+
+start the ubuntu jail
+
+#+begin_src sh
+sudo service jail onestart ubuntu
+#+end_src
+
+check the jail is running
+
+#+begin_src sh
+sudo jls
+#+end_src
+
+** enter jail
+
+#+begin_src sh
+sudo jexec ubuntu /bin/bash
+#+end_src
+
+** ubuntu set up
+
+Use doas to chroot into Ubuntu as root without a password
+
+#+begin_src sh
+doas chroot /compat/ubuntu /bin/bash
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Set correct timezone inside your chroot
+
+You will now be logged in as root inside the chroot
+
+#+begin_src sh
+printf "%b\n" "0.0 0 0.0\n0\nUTC" > /etc/adjtime
+#+end_src
+
+Install sudo
+
+#+begin_src sh
+apt install sudo
+#+end_src
+
+For some reason sudo is necessary here, otherwise it fails.
+
+Run dpkg-reconfigure tzdata with sudo
+
+#+begin_src sh
+sudo dpkg-reconfigure tzdata 
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Fix APT package manager
+
+Run the following command as root
+
+#+begin_src sh
+printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Enable more repositories:
+
+Edit the apt sources.list and add more repositories \\
+[trusted=yes] is needed for lunar and mantic
+
+Freebsd path to the sources.list in the chroot
+
+#+begin_example
+/compat/ubuntu/etc/apt/sources.list
+#+end_example
+
+Path to the sources.list in the chroot
+
+#+begin_example
+/etc/apt/sources.list
+#+end_example
+
+sources.list
+
++ [[file:compat/ubuntu/etc/apt/sources.list][sources.list]] 
+
+Path to the sources.list file in this repository
+
+#+begin_example
+davinci-resolve-freebsd/compat/ubuntu/etc/apt/sources.list
+#+end_example
+
+Copy the source.list from the freebsd host to the ubuntu chroot
+
+#+begin_src sh
+sudo cp davinci-resolve-freebsd/compat/ubuntu/etc/apt/sources.list /compat/ubuntu/etc/apt/sources.list
+#+end_src
+
++ sources.list code
+
+#+begin_src conf
+deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic main restricted universe multiverse
+deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic-updates main restricted universe multiverse
+deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic-security main restricted universe multiverse
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** apt update
+
+Run the following commands as root to update and upgrade Ubuntu
+
+#+begin_src sh
+apt update
+#+end_src
+
+Upgrade
+
+#+begin_src sh
+apt upgrade 
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Set locale
+
+Freebsd path to the locale in the chroot
+
+#+begin_src sh
+/compat/ubuntu/etc/default/locale
+#+end_src
+
+Path to the locale in the chroot
+
+#+begin_src sh
+/etc/default/locale
+#+end_src
+
++ [[file:compat/ubuntu/etc/default/locale][locale]]
+
+Path to locale in this repository
+
+#+begin_example
+davinci-resolve-freebsd/compat/ubuntu/etc/default/locale
+#+end_example
+
+Change the locale file to match your locale
+
+Run the following commands as root
+
+locale-gen
+
+#+begin_src sh
+locale-gen
+#+end_src
+
+dpkg-reconfigure locales
+
+#+begin_src sh
+dpkg-reconfigure locales
+#+end_src
+
++ locale code
+
+#+begin_src sh
+LANG=en_GB.UTF-8
+LANGUAGE=
+LC_CTYPE="en_GB.UTF-8"
+LC_NUMERIC="en_GB.UTF-8"
+LC_TIME="en_GB.UTF-8"
+LC_COLLATE=C
+LC_MONETARY="en_GB.UTF-8"
+LC_MESSAGES="en_GB.UTF-8"
+LC_PAPER="en_GB.UTF-8"
+LC_NAME="en_GB.UTF-8"
+LC_ADDRESS="en_GB.UTF-8"
+LC_TELEPHONE="en_GB.UTF-8"
+LC_MEASUREMENT="en_GB.UTF-8"
+LC_IDENTIFICATION="en_GB.UTF-8"
+LC_ALL=
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Shell install
+
+Install the shell our user is going to use \\
+it must match the shell set in the ubuntu /etc/passwd file which we will set up 
+
+Run the following command as root
+
+#+begin_src sh
+apt install zsh pulseaudio 
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Copy user and group from Freebsd to Ubuntu
+
+The Linuxulator will create a nullfs mount for home in the chroot that is already set to out username
+
+So if we user useradd to create a user with our username it will give you an error that the home directory already exists
+
+We can just copy the settings for our user from Freebsd passwd file
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+to the passwd file on Ubuntu
+
+#+begin_example
+/compat/ubuntu/etc/passwd
+#+end_example
+
+**** Freebsd /etc/passwd 
+
+#+begin_example
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_example
+
+We also need to check that the shell path is correct \\
+change zsh path to /bin/zsh in the chroot
+
+Freebsd passwd
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_src
+
+**** ubuntu passwd
+
+Host path
+
+#+begin_example
+/compat/ubuntu/etc/passwd
+#+end_example
+
+Chroot path
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/djwilcox:/bin/zsh
+#+end_src
+
+Check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+Output
+
+#+begin_src sh
+uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+**** copy the group from freebsd to ubuntu
+
+Freebsd /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+Ubuntu /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Add user to groups in the chroot
+
+Add the user we created to groups in the chroot \\
+replace username with the username you created
+
+Run the following command as root
+
+#+begin_src sh
+usermod -a -G adm username
+usermod -a -G cdrom username
+usermod -a -G sudo username
+usermod -a -G dip username
+usermod -a -G plugdev username
+usermod -a -G users username
+usermod -a -G video username
+usermod -a -G audio username
+usermod -a -G pulse username
+usermod -a -G pulse-access username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** sudo set up
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** passwd
+
+Create a passwd for your user, replace username with your username
+
+Run the following command as root
+
+#+begin_src sh
+passwd username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Couldnt resolve hostname fix
+
+Add the your hostname from freebsd to the hosts file in the ubuntu chroot \\
+to stop errors when using sudo saying couldnt resolve hostname
+
+Freebsd path to the hosts in the chroot
+
+#+begin_example
+/compat/ubuntu/etc/hosts
+#+end_example
+
+Path to the hosts in the chroot
+
+#+begin_example
+/etc/hosts
+#+end_example
+
+hosts
+
+#+begin_src conf
+127.0.0.1       hostname
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Switch to out user with su
+
+#+begin_src sh
+doas chroot /compat/ubuntu /bin/bash
+#+end_src
+
+Switch to your user in the chroot \\
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Build essential
+
+Verify the system has build tools such as make, gcc installed  
+
+Install build-essential for gcc
+
+#+begin_src sh
+sudo apt install build-essential
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** ffmpeg install
+
+#+begin_src sh
+sudo apt install ffmpeg
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Nvidia-cuda-toolkit
+
+Install the nvidia-cuda-toolkit
+
+#+begin_src sh
+sudo apt install nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
+#+end_src
+
+# Horizontal Rule
+-----
