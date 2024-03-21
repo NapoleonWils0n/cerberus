@@ -677,16 +677,6 @@ sudo jexec ubuntu /bin/bash
 #+end_src
 
 ** ubuntu set up
-
-Use doas to chroot into Ubuntu as root without a password
-
-#+begin_src sh
-doas chroot /compat/ubuntu /bin/bash
-#+end_src
-
-# Horizontal Rule
------
-
 *** Set correct timezone inside your chroot
 
 You will now be logged in as root inside the chroot
