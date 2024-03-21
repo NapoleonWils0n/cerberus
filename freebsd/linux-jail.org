@@ -730,22 +730,6 @@ Path to the sources.list in the chroot
 /etc/apt/sources.list
 #+end_example
 
-sources.list
-
-+ [[file:compat/ubuntu/etc/apt/sources.list][sources.list]] 
-
-Path to the sources.list file in this repository
-
-#+begin_example
-davinci-resolve-freebsd/compat/ubuntu/etc/apt/sources.list
-#+end_example
-
-Copy the source.list from the freebsd host to the ubuntu chroot
-
-#+begin_src sh
-sudo cp davinci-resolve-freebsd/compat/ubuntu/etc/apt/sources.list /compat/ubuntu/etc/apt/sources.list
-#+end_src
-
 + sources.list code
 
 #+begin_src conf
@@ -756,6 +740,12 @@ deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic-security main restric
 
 # Horizontal Rule
 -----
+
+*** resolv.conf
+
+#+begin_src sh
+echo nameserver 8.8.8.8 > /etc/resolv.conf
+#+end_src
 
 *** apt update
 
