@@ -512,9 +512,9 @@ exec.stop = "/bin/sh /etc/rc.shutdown";
 exec.consolelog = "/var/log/jail_console_${name}.log";
 
 # permissions
-allow.raw_sockets;
-exec.clean;
-mount.devfs;
+#allow.raw_sockets;
+#exec.clean;
+#mount.devfs;
 #+end_src
 
 ** /etc/jail.conf.d/ubuntu.conf
@@ -524,6 +524,11 @@ ubuntu {
     # hostname/path
     host.hostname = "${name}";
     path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    mount.devfs;
 
     # permissions
     devfs_ruleset=4;
@@ -654,6 +659,7 @@ fdescfs         /usr/local/jails/linux/ubuntu/dev/fd   fdescfs         rw,linrdl
 linprocfs       /usr/local/jails/linux/ubuntu/proc     linprocfs       rw                      0       0
 linsysfs        /usr/local/jails/linux/ubuntu/sys      linsysfs        rw                      0       0
 /tmp            /usr/local/jails/linux/ubuntu/tmp      nullfs          rw                      0       0
+/home           /usr/local/jails/linux/ubuntu/home     nullfs          rw                      0       0
 #+end_src
 
 ** jail start
@@ -741,7 +747,7 @@ deb [trusted=yes] http://archive.ubuntu.com/ubuntu/ mantic-security main restric
 # Horizontal Rule
 -----
 
-*** resolv.conf
+*** dns nameserver
 
 #+begin_src sh
 echo nameserver 8.8.8.8 > /etc/resolv.conf
@@ -766,27 +772,9 @@ apt upgrade
 
 *** Set locale
 
-Freebsd path to the locale in the chroot
-
-#+begin_src sh
-/compat/ubuntu/etc/default/locale
-#+end_src
-
-Path to the locale in the chroot
-
 #+begin_src sh
 /etc/default/locale
 #+end_src
-
-+ [[file:compat/ubuntu/etc/default/locale][locale]]
-
-Path to locale in this repository
-
-#+begin_example
-davinci-resolve-freebsd/compat/ubuntu/etc/default/locale
-#+end_example
-
-Change the locale file to match your locale
 
 Run the following commands as root
 
@@ -974,39 +962,19 @@ passwd username
 # Horizontal Rule
 -----
 
-*** Couldnt resolve hostname fix
+*** create the home username directory
 
-Add the your hostname from freebsd to the hosts file in the ubuntu chroot \\
-to stop errors when using sudo saying couldnt resolve hostname
-
-Freebsd path to the hosts in the chroot
-
-#+begin_example
-/compat/ubuntu/etc/hosts
-#+end_example
-
-Path to the hosts in the chroot
-
-#+begin_example
-/etc/hosts
-#+end_example
-
-hosts
-
-#+begin_src conf
-127.0.0.1       hostname
+#+begin_src sh
+mkdir -p /home/djwilcox
 #+end_src
 
-# Horizontal Rule
------
+#+begin_src sh
+chown djwilcox:djwilcox djwilcox
+#+end_src
 
 *** Switch to out user with su
 
-#+begin_src sh
-doas chroot /compat/ubuntu /bin/bash
-#+end_src
-
-Switch to your user in the chroot \\
+switch to your user in the chroot \\
 replace username with your username
 
 #+begin_src sh
