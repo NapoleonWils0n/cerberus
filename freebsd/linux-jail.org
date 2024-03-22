@@ -531,7 +531,7 @@ ubuntu {
     mount.devfs;
 
     # permissions
-    devfs_ruleset=4;
+    devfs_ruleset=7;
 
     # network
     ip4.addr="lo1|10.10.0.5/24";
@@ -540,6 +540,24 @@ ubuntu {
     persist;
     mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
 }
+#+end_src
+
+** devfs.rules
+
+#+begin_example
+/etc/devfs.rules
+#+end_example
+
+#+begin_src conf
+[devfs_ruleset=7]
+add include $devfsrules_hide_all
+add include $devfsrules_unhide_basic
+add include $devfsrules_unhide_login
+add path 'mixer*' unhide
+add path 'dsp*' unhide
+add path 'dri*' unhide
+add path 'drm*' unhide
+add path 'speaker*' unhide
 #+end_src
 
 ** rc.conf
