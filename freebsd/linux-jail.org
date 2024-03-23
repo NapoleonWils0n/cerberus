@@ -21,6 +21,10 @@
 
 *** jails gpu
 
+[[https://www.bsdstore.ru/en/xorg_in_jail.html]]
+
+[[https://forums.freebsd.org/threads/is-it-possible-to-allow-jail-to-use-host-gpu.82442/]]
+
 [[https://forums.freebsd.org/threads/assign-gpu-graphics-card-to-jail.89780/]]
 
 #+begin_example
@@ -1044,12 +1048,217 @@ sudo apt install ffmpeg
 # Horizontal Rule
 -----
 
+*** Nvidia driver install
+
+chmod the Nvidia run file
+
+#+begin_src sh
+chmod +x NVIDIA-Linux-x86_64-535.146.02.run
+#+end_src
+
+Install the Nvidia driver
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-535.146.02.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+# Horizontal Rule
+-----
+
 *** Nvidia-cuda-toolkit
 
 Install the nvidia-cuda-toolkit
 
 #+begin_src sh
 sudo apt install nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 initramfs-tools
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Blacklist Nouveau Nvidia driver
+
+#+begin_example
+/etc/modprobe.d/blacklist-nvidia-nouveau.conf
+#+end_example
+
+#+begin_src sh
+sudo mkdir -p /etc/modprobe.d
+#+end_src
+
+Copy the blacklist-nvidia-nouveau.conf file from the repository to the chroot
+
++ blacklist-nvidia-nouveau.conf code
+
+#+begin_src conf
+blacklist nouveau
+options nouveau modeset=0
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** update-initramfs
+
+#+begin_src sh
+sudo update-initramfs -u
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Wayland install
+**** Wayland packages
+
+Install some wayland packages and the wlroot compositor
+
+#+begin_src sh
+sudo apt install libinput-tools wayland-protocols libwlroots11 libwlroots-dev libxkbcommon0 qtwayland5 qt6-wayland wayland-utils adwaita-qt qt5ct
+#+end_src
+
+# Horizontal Rule
+-----
+
+**** Create the XDG_RUNTIME_DIR directory in the chroot
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/"$(id -u)"
+#+end_src
+
+Chown the directory 
+
+#+begin_src sh
+sudo chown -R "${USER}":"$(id -u)" /var/run/user/"$(id -u)"
+#+end_src
+
+Chmod the directory
+
+#+begin_src sh
+sudo chmod 700 /var/run/user/"$(id -u)"
+#+end_src
+
+# Horizontal Rule
+-----
+
+**** Wayland environment
+
+We need to set some enviormental variables in our shell config
+
++ [[file:compat/ubuntu/home/username/.zshrc][zshrc]]
+
+Copy the zshrc config from this reposiory to the chroot
+
+#+begin_src sh
+cp davinci-resolve-freebsd/compat/ubuntu/home/username/.zshrc /compat/ubuntu/home/"${USER}"
+#+end_src
+
++ [[file:compat/ubuntu/home/username/.zshenv][zshenv]]
+
+Copy the zshenv config from this reposiory to the chroot
+
+#+begin_src sh
+cp davinci-resolve-freebsd/compat/ubuntu/home/username/.zshenv /compat/ubuntu/home/"${USER}"
+#+end_src
+
+***** zshrc
+
+We create a blank .zshrc file \\
+otherwise zsh will complain that theres is no config file
+
++ ~/.zshrc code
+
+#+begin_src sh
+# ~/.zshrc
+
+# add your zsh code below
+#+end_src
+
+***** zshenv
+
+shell path
+
+Set the shell path to include resolve bin directory \\
+this allows us to type resolve
+
+#+begin_example
+resolve
+#+end_example
+
+Instead of the full path to open Davinci Resolve in the chroot
+
+#+begin_example
+/opt/resolve/bin/resolve
+#+end_example
+
+Export the XDG directories \\
+remember to create the XDG_RUNTIME_DIR directory
+
+LD_PRELOAD is used to load the so file
+
+#+begin_src conf
+export LD_PRELOAD="$HOME/.config/gpu/dummy-uvm.so"
+#+end_src
+
+You need to export some variables for Nvidia \\
+otherwise you won't be able to drag a clip into the tim and you will get a error saying gpu is full
+
+#+begin_src conf
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+#+end_src
+
+Export DISPLAY so application use the Xwayland window on the host
+
+#+begin_src conf
+export DISPLAY=:1
+#+end_src
+
+
+Davinci Resolve is a native Wayland application \\
+so we need to set the QT_QPA_PLATFORM to xcb
+
+#+begin_src conf
+export QT_QPA_PLATFORM=xcb
+#+end_src
+
++ ~/.zshenv code
+
+#+begin_src conf
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("/opt/resolve/bin" "$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
+
+# dummy-uvm.so for access to the gpu
+export LD_PRELOAD="$HOME/.config/gpu/dummy-uvm.so"
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+# export display
+export DISPLAY=:1
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORM=xcb
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** X11 install
+
+X11 install on Ubuntu in the chroot
+
+#+begin_src sh
+sudo apt install xorg xserver-xorg xserver-xorg-core
 #+end_src
 
 # Horizontal Rule

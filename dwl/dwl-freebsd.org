@@ -507,15 +507,15 @@ Updating customizations after new release
 When the time comes to update your customizations after a new release of dwm or when the dwm repository contains a commit fixing some bug, you first pull the new upstream changes into the master branch
 
 #+BEGIN_SRC sh
-git checkout master
+git checkout origin
 git pull
 #+END_SRC
 
 Then rebase your customization branch on top of the master branch
 
 #+BEGIN_SRC sh
-git checkout my_dwl
-git rebase --preserve-merges master
+git checkout patch
+git rebase --rebase-merges master
 #+END_SRC
 
 The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
@@ -580,8 +580,8 @@ git pull
 Then rebase your customization branch on top of the master branch
 
 #+BEGIN_SRC sh
-git checkout my_dwm
-git rebase --preserve-merges master
+git checkout patch
+git rebase --rebase-merges origin
 #+END_SRC
 
 The --preserve-merges option ensures that you don't have to resolve conflicts which you have already resolved while performing merges again.
