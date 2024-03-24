@@ -57,6 +57,8 @@ enable jails
 sudo sysrc jail_enable="YES"
 sudo sysrc jail_parallel_start="YES"
 sudo sysrc jail_list="ubuntu"
+sudo sysrc cloned_interfaces="lo1"
+sudo sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 #+end_src
 
 #+begin_example
@@ -67,6 +69,8 @@ sudo sysrc jail_list="ubuntu"
 jail_enable="YES"
 jail_parallel_start="YES"
 jail_list="ubuntu"
+cloned_interfaces="lo1"
+ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 #+end_src
 
 With jail_parallel_start, all configured jails will be started in the background.
@@ -532,8 +536,11 @@ ubuntu {
     # permissions
     allow.raw_sockets;
     exec.clean;
-    mount.devfs;
-    allow.sysvipc;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
 
     # permissions
     devfs_ruleset=7;
@@ -542,7 +549,6 @@ ubuntu {
     ip4.addr="lo1|10.10.0.5/24";
 
     # mount
-    persist;
     mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
 }
 #+end_src
@@ -564,22 +570,6 @@ add path 'dri*' unhide
 add path 'drm*' unhide
 add path 'nvidia*' unhide
 add path 'speaker*' unhide
-#+end_src
-
-** rc.conf
-
-#+begin_example
-/etc/rc.conf
-#+end_example
-
-#+begin_src sh
-sudo sysrc cloned_interfaces="lo1"
-sudo sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
-#+end_src
-
-#+begin_src conf
-cloned_interfaces="lo1"
-ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 #+end_src
 
 ** pf.conf
