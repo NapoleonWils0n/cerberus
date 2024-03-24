@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* wayfire move window to display
+
+super shift and o
+
+#+begin_example
+super + shift + o
+#+end_example

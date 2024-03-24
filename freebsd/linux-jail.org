@@ -55,6 +55,8 @@ enable jails
 
 #+begin_src sh
 sudo sysrc jail_enable="YES"
+sudo sysrc jail_parallel_start="YES"
+sudo sysrc jail_list="ubuntu"
 #+end_src
 
 #+begin_example
@@ -63,6 +65,8 @@ sudo sysrc jail_enable="YES"
 
 #+begin_src conf
 jail_enable="YES"
+jail_parallel_start="YES"
+jail_list="ubuntu"
 #+end_src
 
 With jail_parallel_start, all configured jails will be started in the background.
