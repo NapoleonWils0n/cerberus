@@ -7,7 +7,7 @@
 ** packages to install on ubuntu
 
 #+begin_src sh
-sudo apt install python3-pip python3-venv
+sudo apt install python3-pip python3-venv ffmpeg
 #+end_src
 
 ** Create a virtual environment 
