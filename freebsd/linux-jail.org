@@ -1433,7 +1433,7 @@ export __GLX_VENDOR_LIBRARY_NAME=nvidia
 Export DISPLAY so application use the Xwayland window on the host
 
 #+begin_src conf
-export DISPLAY=:1
+export DISPLAY=:0.0
 #+end_src
 
 
