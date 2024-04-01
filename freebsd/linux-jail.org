@@ -262,6 +262,15 @@ ubuntu {
 /etc/pf.conf:
 #+end_src
 
+nat for jail
+
+#+begin_src sh
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+#+end_src
+
+full pf.conf example
+
 #+begin_src conf
 #=========================================================================#
 # variables, macro and tables                                             #
