@@ -9,9 +9,9 @@ Features
 #+begin_quote
 Nvidia and Cuda enabled
 
-Audio routed from the chroot to the host using a pulseaudio socket for zero latency
+Audio routed from the jail to the host using a pulseaudio socket for zero latency
 
-Video directory from the Freebsd host mounted inside the home directory in the chroot
+Video directory from the Freebsd host mounted inside the home directory in the jail
 
 Opened using a Desktop entry on Freebsd 
 #+end_quote
@@ -38,13 +38,6 @@ Clone this repository by running the following command
 #+begin_src sh
 git clone https://github.com/NapoleonWils0n/davinci-resolve-freebsd-jail.git
 #+end_src
-
-# Horizontal Rule
------
-
-*** Tree listing
-
-Tree list of the DaVinci Resolve Freebsd git repository
 
 # Horizontal Rule
 -----
@@ -76,7 +69,7 @@ shim init
 
 *** debootstrap install
 
-Install debootstrap which we use to create an ubuntu chroot on freebsd
+Install debootstrap which we use to create an ubuntu jail on freebsd
 
 [[https://wiki.debian.org/Debootstrap][Debootstrap - Debian Wiki]]
 
@@ -93,29 +86,13 @@ sudo pkg install debootstrap
 
 [[https://man.freebsd.org/cgi/man.cgi?query=doas.conf&sektion=5&format=html][doas.conf man page]]
 
-Install doas so we enter the chroot without being prompted for a password
+Install doas so we enter the jail without being prompted for a password
 
 #+begin_src sh
 sudo pkg install doas
 #+end_src
 
 Edit the doas.conf file and change username to your username on freebsd
-
-Path to the doas.conf on freebsd
-
-#+begin_example
-/usr/local/etc/doas.conf
-#+end_example
-
-doas.conf
-
-+ [[file:freebsd/usr/local/etc/doas.conf][doas.conf]]
-
-Path to doas.conf in this repository
-
-#+begin_example
-davinci-resolve-freebsd-jail/freebsd/usr/local/etc/doas.conf
-#+end_example
 
 + doas.conf code
 
@@ -124,7 +101,7 @@ davinci-resolve-freebsd-jail/freebsd/usr/local/etc/doas.conf
 permit keepenv :username
 
 # jail
-permit nopass :djwilcox cmd jexec
+permit nopass :username cmd jexec
 
 # root as root
 permit nopass keepenv root as root
@@ -372,25 +349,11 @@ sudo service linux start
 
 *** Ubuntu rc.d script 
 
-Ubuntu script
-
-+ [[file:freebsd/usr/local/etc/rc.d/ubuntu][ubuntu]]
-
-Path to ubuntu script in this repository
-
-#+begin_example
-davinci-resolve-freebsd-jail/freebsd/usr/local/etc/rc.d/ubuntu
-#+end_example
-
-Copy the ubuntu script from the repository to
+Copy the ubuntu script to
 
 #+begin_example
 /usr/local/etc/rc.d/
 #+end_example
-
-#+begin_src sh
-sudo cp davinci-resolve-freebsd-jail/freebsd/usr/local/etc/rc.d/ubuntu /usr/local/etc/rc.d/
-#+end_src
 
 Make the script executable
 
@@ -930,7 +893,7 @@ doas jexec ubuntu /bin/bash
 ** Ubuntu set up
 *** Set correct timezone inside the jail
 
-You will now be logged in as root inside the chroot
+You will now be logged in as root inside the jail
 
 #+begin_src sh
 printf "%b\n" "0.0 0 0.0\n0\nUTC" > /etc/adjtime
@@ -969,13 +932,13 @@ printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
 Edit the apt sources.list and add more repositories \\
 [trusted=yes] is needed for lunar and mantic
 
-Freebsd path to the sources.list in the chroot
+Freebsd path to the sources.list in the jail
 
 #+begin_example
 /compat/ubuntu/etc/apt/sources.list
 #+end_example
 
-Path to the sources.list in the chroot
+Path to the sources.list in the jail
 
 #+begin_example
 /etc/apt/sources.list
@@ -1074,10 +1037,6 @@ apt install zsh pulseaudio
 
 *** Copy user and group from Freebsd to Ubuntu
 
-The Linuxulator will create a nullfs mount for home in the chroot that is already set to out username
-
-So if we user useradd to create a user with our username it will give you an error that the home directory already exists
-
 We can just copy the settings for our user from Freebsd passwd file
 
 #+begin_example
@@ -1087,7 +1046,7 @@ We can just copy the settings for our user from Freebsd passwd file
 to the passwd file on Ubuntu
 
 #+begin_example
-/compat/ubuntu/etc/passwd
+/usr/local/jails/linux/ubuntu/etc/passwd
 #+end_example
 
 **** Freebsd /etc/passwd 
@@ -1097,7 +1056,7 @@ username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
 #+end_example
 
 We also need to check that the shell path is correct \\
-change zsh path to /bin/zsh in the chroot
+change zsh path to /bin/zsh in the jail
 
 Freebsd passwd
 
@@ -1110,10 +1069,10 @@ username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
 Host path
 
 #+begin_example
-/compat/ubuntu/etc/passwd
+/usr/local/jails/linux/ubuntu/etc/passwd
 #+end_example
 
-Chroot path
+jail path
 
 #+begin_example
 /etc/passwd
@@ -1152,9 +1111,9 @@ username:*:1001:
 # Horizontal Rule
 -----
 
-*** Add user to groups in the chroot
+*** Add user to groups in the jail
 
-Add the user we created to groups in the chroot \\
+Add the user we created to groups in the jail \\
 replace username with the username you created
 
 Run the following command as root
@@ -1219,10 +1178,10 @@ chown djwilcox:djwilcox djwilcox
 
 *** Couldnt resolve hostname fix
 
-Add the your hostname from freebsd to the hosts file in the ubuntu chroot \\
+Add the your hostname from freebsd to the hosts file in the ubuntu jail \\
 to stop errors when using sudo saying couldnt resolve hostname
 
-Path to the hosts in the chroot
+Path to the hosts in the jail
 
 #+begin_example
 /etc/hosts
@@ -1239,7 +1198,7 @@ hosts
 
 *** Switch to out user with su
 
-switch to your user in the chroot \\
+switch to your user in the jail \\
 replace username with your username
 
 #+begin_src sh
@@ -1309,7 +1268,7 @@ sudo apt install nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 in
 sudo mkdir -p /etc/modprobe.d
 #+end_src
 
-Copy the blacklist-nvidia-nouveau.conf file from the repository to the chroot
+Copy the blacklist-nvidia-nouveau.conf file from the repository to the jail
 
 + blacklist-nvidia-nouveau.conf code
 
@@ -1342,7 +1301,7 @@ sudo apt install libinput-tools wayland-protocols libwlroots11 libwlroots-dev li
 # Horizontal Rule
 -----
 
-**** Create the XDG_RUNTIME_DIR directory in the chroot
+**** Create the XDG_RUNTIME_DIR directory in the jail
 
 #+begin_src sh
 sudo mkdir -p /var/run/user/"$(id -u)"
@@ -1369,18 +1328,18 @@ We need to set some enviormental variables in our shell config
 
 + [[file:compat/ubuntu/home/username/.zshrc][zshrc]]
 
-Copy the zshrc config from this reposiory to the chroot
+Copy the zshrc config from this reposiory to the jail
 
 #+begin_src sh
-cp davinci-resolve-freebsd/compat/ubuntu/home/username/.zshrc /compat/ubuntu/home/"${USER}"
+cp davinci-resolve-freebsd-jail/ubuntu/home/username/.zshrc /compat/ubuntu/home/"${USER}"
 #+end_src
 
 + [[file:compat/ubuntu/home/username/.zshenv][zshenv]]
 
-Copy the zshenv config from this reposiory to the chroot
+Copy the zshenv config from this reposiory to the jail
 
 #+begin_src sh
-cp davinci-resolve-freebsd/compat/ubuntu/home/username/.zshenv /compat/ubuntu/home/"${USER}"
+cp davinci-resolve-freebsd-jail/ubuntu/home/username/.zshenv /compat/ubuntu/home/"${USER}"
 #+end_src
 
 ***** zshrc
@@ -1407,7 +1366,7 @@ this allows us to type resolve
 resolve
 #+end_example
 
-Instead of the full path to open Davinci Resolve in the chroot
+Instead of the full path to open Davinci Resolve in the jail
 
 #+begin_example
 /opt/resolve/bin/resolve
@@ -1466,7 +1425,7 @@ export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 
 # export display
-export DISPLAY=:1
+export DISPLAY=:0.0
 
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
@@ -1478,7 +1437,7 @@ export QT_QPA_PLATFORM=xcb
 
 *** X11 install
 
-X11 install on Ubuntu in the chroot
+X11 install on Ubuntu in the jail
 
 #+begin_src sh
 sudo apt install xorg xserver-xorg xserver-xorg-core
@@ -1513,10 +1472,10 @@ you will then need to register on the site with an email address
 Once you have submitted the form the Davinci Resolve zip file will start to download, \\
 the zip file has a file size of 2.4 gigabytes so may take an hour or so to download
 
-Copy the Davinci Resolve zip into the home directory in the chroot
+Copy the Davinci Resolve zip into the home directory in the jail
 
-You dont need to use sudo to copy files in the home directory in the chroot \\
-because we have the same user with the same id in the chroot as on the host
+You dont need to use sudo to copy files in the home directory in the jail \\
+because we have the same user with the same id in the jail as on the host
 
 #+begin_src sh
 cp -rv DaVinci_Resolve_18.6.4_Linux.zip /usr/local/jails/linux/ubuntu/home/"${USER}"
@@ -1531,10 +1490,10 @@ On the Freebsd host download the makeresolvedeb script
 
 [[https://www.danieltufvesson.com/makeresolvedeb][makeresolvedeb]]
 
-Copy the makeresolvedeb_1.6.4_multi.sh.tar.gz from the freebsd host to the home directory in the chroot \\
+Copy the makeresolvedeb_1.6.4_multi.sh.tar.gz from the freebsd host to the home directory in the jail \\
 
 #+begin_src sh
-cp -rv makeresolvedeb_1.6.4_multi.sh.tar.gz /compat/ubuntu/home/"${USER}"
+cp -rv makeresolvedeb_1.6.4_multi.sh.tar.gz /usr/local/jails/linux/ubuntu/home/"${USER}"
 #+end_src
 
 # Horizontal Rule
@@ -1542,13 +1501,13 @@ cp -rv makeresolvedeb_1.6.4_multi.sh.tar.gz /compat/ubuntu/home/"${USER}"
 
 *** makeresolvedeb create deb file
 
-Make sure you have chrooted into ubuntu by running
+Make sure you have entered the jail by running
 
 #+begin_src sh
-doas chroot /compat/ubuntu /bin/bash
+doas jexec ubuntu /bin/bash
 #+end_src
 
-Switch to out user in the chroot, \\
+Switch to out user in the jail, \\
 replace username with your username
 
 #+begin_src sh
@@ -1598,7 +1557,7 @@ sudo apt install davinci-resolve_18.6.5-mrd1.6.4_amd64.deb
 
 *** libglib-2.0.so.0 fix
 
-Change directory in the chroot to the resolve libs directory
+Change directory in the jail to the resolve libs directory
 
 #+begin_src sh
 cd /opt/resolve/libs
@@ -1610,7 +1569,7 @@ Rename libglib-2.0.so.0 to libglib-2.0.so.0.bak
 sudo mv libglib-2.0.so.0 libglib-2.0.so.0.bak
 #+end_src
 
-Copy the libglib-2.0.so.0 from the chroot system lib directory to the resolve libs directory
+Copy the libglib-2.0.so.0 from the jail system lib directory to the resolve libs directory
 
 #+begin_src sh
 sudo cp /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0 /opt/resolve/libs/
@@ -1631,7 +1590,7 @@ sudo apt install liblog4cxx-dev
 
 Use the pulseaudio default.pa config file to create a pulseaudio socket in the /tmp directory
 
-The /tmp directory is mounted in the jail and allows us to route the audio from the chroot to the host
+The /tmp directory is mounted in the jail and allows us to route the audio from the jail to the host
 
 + [[file:freebsd/home/username/.config/pulse/default.pa][default.pa]]
 
@@ -1653,7 +1612,7 @@ cp davinci-resolve-freebsd-jail/freebsd/home/username/.config/pulse/default.pa "
 # include default.pa and override
 .include /usr/local/etc/pulse/default.pa
 
-# chroot
+# jail
 .ifexists module-esound-protocol-unix.so
 load-module module-esound-protocol-unix
 .endif
@@ -1785,7 +1744,7 @@ Copy the script to the jail
 sudo cp davinci-resolve-freebsd-jail/ubuntu/usr/local/bin/wrapper-resolve /compat/ubuntu/usr/local/bin
 #+end_src
 
-Freebsd path to wrapper-resolve in the chroot
+Freebsd path to wrapper-resolve in the jail
 
 #+begin_example
 /usr/local/jails/ubuntu/usr/local/bin/wrapper-resolve
@@ -1848,7 +1807,7 @@ shift $((OPTIND-1))
 # switch to our user in the choot and start resolve
 #===============================================================================
 
-# change username below to the name of the user in the chroot
+# change username below to the name of the user in the jail
 su "${username}" -c '/opt/resolve/bin/resolve' 2>/dev/null
 #+end_src
 
@@ -1915,7 +1874,7 @@ vfs.usermount=1
 #+end_src
 
 Mount the Video directory from the Freebsd host inside the home directory in the jail, \\
-this allows us to access the Video on directory on the Freebsd host from within the chroot with Davinci Resolve
+this allows us to access the Video on directory on the Freebsd host from within the jail with Davinci Resolve
 
 That means we can import and export footage from Davinci Resolve from the Video directory on the Freebsd, \\
 rather than copying files from the host to the jail
@@ -1949,7 +1908,7 @@ Edit your fstab on the Freebsd host and set the mount point
 + fstab code
 
 #+begin_src conf
-# mount the video directory from the host to the chroot,
+# mount the video directory from the host to the jail,
 # change username to your username
 /home/username/video           /usr/local/jails/linux/ubuntu/home/username/video     nullfs          rw,noauto                      0       0
 #+end_src
@@ -1963,7 +1922,7 @@ Mount the video directory in the jail
 mount /usr/local/jails/linux/ubuntu/home/"${USER}"/video
 #+end_src
 
-Unmount the video directory in the chroot
+Unmount the video directory in the jail
 
 #+begin_src sh
 umount /usr/local/jails/linux/ubuntu/home/"${USER}"/video
