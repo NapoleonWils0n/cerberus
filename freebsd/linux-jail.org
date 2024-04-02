@@ -197,7 +197,7 @@ create the /etc/jail.conf file if it doesn't exist
 
 add the following code to the jail.conf file to include \\
 files with a .conf extension in the /etc/jail.conf.d/ directory
- 
+
 #+begin_src conf
 # startup/logging
 exec.start = "/bin/sh /etc/rc";
@@ -206,6 +206,16 @@ exec.consolelog = "/var/log/jail_console_${name}.log";
 #+end_src
 
 ***** /etc/jail.conf.d/ubuntu.conf
+
+create the /etc/jail.conf.d/ directory
+
+#+begin_src sh
+sudo mkdir -p /etc/jail.conf.d/
+#+end_src
+
+#+begin_example
+/etc/jail.conf.d/ubuntu.conf
+#+end_example
 
 #+begin_src sh
 ubuntu {
