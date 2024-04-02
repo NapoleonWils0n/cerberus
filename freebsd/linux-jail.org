@@ -945,7 +945,7 @@ Edit the apt sources.list and add more repositories \\
 Freebsd path to the sources.list in the jail
 
 #+begin_example
-/compat/ubuntu/etc/apt/sources.list
+/usr/local/jails/linux/ubuntu/etc/apt/sources.list
 #+end_example
 
 Path to the sources.list in the jail
@@ -1335,22 +1335,6 @@ sudo chmod 700 /var/run/user/"$(id -u)"
 **** Wayland environment
 
 We need to set some enviormental variables in our shell config
-
-+ [[file:compat/ubuntu/home/username/.zshrc][zshrc]]
-
-Copy the zshrc config from this reposiory to the jail
-
-#+begin_src sh
-cp davinci-resolve-freebsd-jail/ubuntu/home/username/.zshrc /compat/ubuntu/home/"${USER}"
-#+end_src
-
-+ [[file:compat/ubuntu/home/username/.zshenv][zshenv]]
-
-Copy the zshenv config from this reposiory to the jail
-
-#+begin_src sh
-cp davinci-resolve-freebsd-jail/ubuntu/home/username/.zshenv /compat/ubuntu/home/"${USER}"
-#+end_src
 
 ***** zshrc
 
