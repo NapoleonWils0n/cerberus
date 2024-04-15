@@ -1,0 +1,26 @@
+#+STARTUP: showall
+* destroy jail
+
+Destroying a jail is not as simple as stopping the jail using service(8) and removing the jail directory and /etc/jail.conf entry.
+
+FreeBSD takes system security very seriously. For this reason there are certain files that not even the root user can delete. This functionality is known as File Flags.
+
+The first step is to stop the desired jail executing the following command:
+
+#+begin_src sh
+sudo service jail stop ubuntu
+#+end_src
+
+The second step is to remove these flags with chflags(1) by executing the following command, in which classic is the name of the jail to remove:
+
+#+begin_src sh
+sudo chflags -R 0 /usr/local/jails/linux/ubuntu
+#+end_src
+
+The third step is to delete the directory where the jail was:
+
+#+begin_src sh
+sudo rm -rxv /usr/local/jails/linux/ubuntu
+#+end_src
+
+Finally, it will be necessary to remove the jail entry in /etc/jail.conf or in jail.conf.d.
