@@ -1,0 +1,44 @@
+#+STARTUP: content
+* memory
+** login.conf
+
+#+begin_example
+/etc/login.conf
+#+end_example
+
+#+begin_src conf
+default:\
+	:passwd_format=sha512:\
+	:copyright=/etc/COPYRIGHT:\
+	:welcome=/var/run/motd:\
+	:setenv=BLOCKSIZE=K:\
+	:mail=/var/mail/$:\
+	:path=/sbin /bin /usr/sbin /usr/bin /usr/local/sbin /usr/local/bin ~/bin:\
+	:nologin=/var/run/nologin:\
+	:cputime=unlimited:\
+	:datasize=unlimited:\
+	:stacksize=unlimited:\
+	:memorylocked=unlimited:\
+	:memoryuse=unlimited:\
+	:filesize=unlimited:\
+	:coredumpsize=unlimited:\
+	:openfiles=unlimited:\
+	:maxproc=unlimited:\
+	:sbsize=unlimited:\
+	:vmemoryuse=unlimited:\
+	:swapuse=unlimited:\
+	:pseudoterminals=unlimited:\
+	:kqueues=unlimited:\
+	:umtxp=unlimited:\
+	:priority=0:\
+	:ignoretime@:\
+	:umask=022:\
+	:charset=UTF-8:\
+	:lang=C.UTF-8:
+#+end_src
+
+** cap_mkdb
+
+#+begin_src sh
+sudo cap_mkdb /etc/login.conf
+#+end_src
