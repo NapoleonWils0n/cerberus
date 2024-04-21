@@ -1,0 +1,10 @@
+#+STARTUP: content
+* emacs dired cannot create directory
+
+emacs dired cannot create directory using autocompletion
+
+fix press c + j
+
+#+begin_example
+c + j
+#+end_example
