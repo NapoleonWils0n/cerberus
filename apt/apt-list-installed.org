@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* apt list installed
+
+#+begin_src sh
+apt list --installed > installed.txt
+#+end_src
