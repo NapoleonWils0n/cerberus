@@ -94,47 +94,11 @@ copy config.def.h to config.h
 cp config.def.h config.h
 #+END_SRC
 
-add config.h with git
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'copied config.def.h to config.h'
-#+END_SRC
-
-make any changes to config.h and then commit the changes
-
-#+BEGIN_SRC sh
-vi config.h
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -a
-#+END_SRC
-
 ** make file
 
 #+begin_src sh
 sed -i'' -e s/_POSIX_C_SOURCE=200809L/_XOPEN_SOURCE=700/ Makefile
 #+end_src
-
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'makefile'
-#+END_SRC
 
 ** xwayland
 
@@ -177,18 +141,6 @@ static const struct xkb_rule_names xkb_rules = {
 };
 #+end_src
 
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'keyboard xkb'
-#+END_SRC
-
 ** modkey
 
 set the modkey to the super key
@@ -198,18 +150,6 @@ set the modkey to the super key
 #define MODKEY WLR_MODIFIER_LOGO
 #+end_src
 
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'modkey'
-#+END_SRC
-
 ** terminal and launcher
 
 #+begin_src c
@@ -217,18 +157,6 @@ git commit -m 'modkey'
 static const char *termcmd[] = { "alacritty", NULL };
 static const char *menucmd[] = { "tofi-drun", NULL };
 #+end_src
-
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'terminal and application launcher'
-#+END_SRC
 
 ** firefox and mpv
 
@@ -242,18 +170,6 @@ static const Rule rules[] = {
 	{ "mpv",  NULL,           0,            1,           0 },
 };
 #+end_src
-
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'firefox and mpv'
-#+END_SRC
 
 ** emacs and keyboard shortcuts
 
@@ -297,18 +213,6 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
 #+end_src
 
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'emacs'
-#+END_SRC
-
 ** libinput scroll
 
 #+begin_src c
@@ -319,18 +223,6 @@ LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE
 static const enum libinput_config_accel_profile accel_profile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
 static const double accel_speed = 1.0;
 #+end_src
-
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'libinput'
-#+END_SRC
 
 ** media keys
 
@@ -350,18 +242,6 @@ static const Key keys[] = {
 	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
 	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
 #+end_src
-
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'media keys'
-#+END_SRC
 
 ** wlrctl cursor
 *** wlrctl install
@@ -385,18 +265,6 @@ static const char *cursorright[]    = { "/usr/local/bin/wlrctl",   "pointer", "m
 	{ MODKEY,                    XKB_KEY_comma,      spawn,          {.v = cursorleft} },
 	{ MODKEY,                    XKB_KEY_period,     spawn,          {.v = cursorright} },
 #+end_src
-
-*** commit the changes
-
-#+BEGIN_SRC sh
-git add .
-#+END_SRC
-
-commit the changes
-
-#+BEGIN_SRC sh
-git commit -m 'cursor'
-#+END_SRC
 
 ** merge changes into master branch
 
