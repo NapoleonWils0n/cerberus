@@ -41,8 +41,107 @@ Build dependencies:
 ** packages install
 
 #+begin_src sh
-sudo pkg install evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots libxkbcommon xcb-util-wm
+sudo pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots libxkbcommon xcb-util-wm
 #+end_src
+
+** drivers
+*** dell xps 15 2019
+
+#+begin_SRC sh
+sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils
+#+END_SRC
+
+we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+#+begin_src sh
+sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
+#+end_src
+
+or manually edit the config file
+
+#+BEGIN_SRC sh
+sudo vi /etc/rc.conf
+#+END_SRC
+
+then add the code below to /etc/rc.conf
+
+#+BEGIN_SRC sh
+kld_list="i915kms nvidia-modeset nvidia-drm linux linux64"
+#+END_SRC
+
+*** macbook air 2011 
+
+#+begin_SRC sh
+sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
+#+END_SRC
+
+use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
+
+we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+#+begin_src sh
+sudo sysrc kld_list="i915kms"
+#+end_src
+
+or manually edit the config file
+
+#+BEGIN_SRC sh
+sudo vi /etc/rc.conf
+#+END_SRC
+
+then add the code below to /etc/rc.conf
+
+#+BEGIN_SRC sh
+kld_list="i915kms"
+#+END_SRC
+
+** wayland
+*** create the xdg runtime directory, change the user and set the permissions
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/1001
+sudo chown -R djwilcox:wheel /var/run/user/1001
+sudo chmod 700 /var/run/user/1001
+#+end_src
+
+*** set the runtime dir in the console
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+*** set the runtime dir in your zshrc config
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+export the XDG_RUNTIME_DIR
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+*** fstab
+
+Add procfs to /etc/fstab with this line
+
+#+begin_src sh
+proc /proc procfs rw 0 0
+#+end_src
+
+The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
+
+#+begin_src sh
+sudo sysrc seatd_enable="YES"
+sudo sysrc dbus_enable="YES"
+#+end_src
+
+[[https://docs.freebsd.org/en/books/handbook/wayland/]]
+
+[[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop.85930/]]
+
+[[https://forums.freebsd.org/threads/sway-and-wayland.83682/]]
 
 ** dwlb
 

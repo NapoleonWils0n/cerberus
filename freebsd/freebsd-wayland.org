@@ -38,7 +38,7 @@ xz -dv FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
 dd the image to a usb drive
 
 #+begin_src sh
-sudo dd if=FreeBSD-14.0-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=sync
+sudo dd if=FreeBSD-14.0-RELEASE-amd64-memstick.img of=/dev/da0 bs=1M conv=sync
 #+end_src
 
 ** root on zfs
