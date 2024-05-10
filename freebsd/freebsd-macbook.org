@@ -634,7 +634,7 @@ cd /Applications/smcFanControl.app/Contents/Resources
 dump the smc stats to a text file on the desktop
 
 #+BEGIN_SRC sh
-type ./smc -l
+./smc -l
 #+END_SRC
 
 ** bless freebsd efi partition
