@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* dconf reset
+
+dconf reset settings to default
+
+#+begin_src sh
+dconf reset -f /
+#+end_src

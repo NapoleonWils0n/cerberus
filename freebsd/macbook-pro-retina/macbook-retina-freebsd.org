@@ -1,0 +1,1885 @@
+#+STARTUP: content
+* macbook pro retina freebsd
+** freebsd install
+*** iso download
+
+download the memstick.img.xz to install on a usb stick
+
+#+begin_src sh
+wget https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/14.0/FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
+#+end_src
+
+download the checksum
+
+#+begin_src sh
+wget https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/14.0/CHECKSUM.SHA512-FreeBSD-14.0-RELEASE-amd64
+#+end_src
+
+Verify the checksum 
+
+#+begin_src sh
+sha512sum -c CHECKSUM.SHA512-FreeBSD-14.0-RELEASE-amd64 FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
+#+end_src
+
+*** writing image file to usb stick
+
+extract the xz file
+
+#+begin_src sh
+xz -dv FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
+#+end_src
+
+dd the image to a usb drive
+
+#+begin_src sh
+sudo dd if=FreeBSD-14.0-RELEASE-amd64-memstick.img of=/dev/da0 bs=1M conv=sync
+#+end_src
+
+*** boot from usb
+
+turn the mac off 
+
+plug in the usb stick press the power button \\
+and then hold down alt and then select the freebsd efi boot \\
+by pressing the right arrow on the keyboard
+
+the efi boot is orange
+
+*** keymap
+
+Select United Kingdom (Macbook) by pressing space 
+
+then test the keymap by selecting
+
+#+begin_quote
+Test uk.macbook.kbd keymap
+#+end_quote
+
+continue with the keymap by selecting
+
+#+begin_quote
+Continue with uk.macbook.kbd
+#+end_quote
+
+*** set hostname
+
+set the hostname for the computer
+
+macbook
+
+*** distribution select
+
+choose optional system components to install
+
+install ports and src
+
+#+begin_example
+ports Ports tree
+src   System source tree
+#+end_example
+
+press the down arrow on the keyboard and then press space to select ports and src \\
+then press return
+
+*** partitioning
+
+select
+
+Auto (ZFS)
+
+*** zfs configuration
+
+set the following options by pressing space
+
+encrypt discs
+
+encrypt swap
+
+swap size 8gig
+
+freebsd installer partition scheme
+for apple hardware choose gpt (bios+uefi)
+
+then select Pool Tye/Disk \\
+select stripe and select your disk
+
+then select install and select yes in the next screen
+
+*** passphrase
+
+enter a passphrase for the zfs encryption
+
+*** create root password
+
+create a password for the root user
+
+*** network configuration
+
+select your network interface
+
+configure ipv4
+
+use dhcp
+
+dont enable ipv6
+
+*** resolver configuration
+
+accept the defaults
+
+*** select local or utc
+
+set the clock by pressing yes
+
+*** time zone selector
+
+select number 8 Europe
+
+*** countries in Europe
+
+select number 49 United Kingdom
+
+*** confirmation
+
+does the abbreviation BST look reasonable
+
+select yes
+
+*** time and date
+
+select set date
+
+select set time
+
+*** system configuration
+
+select the following options
+
+#+begin_example
+unbound
+moused
+ntpd
+ntpd_sync_on_start
+powerd
+#+end_example
+
+deselect the following option
+
+#+begin_example
+sshd
+#+end_example
+
+*** system hardening
+
+choose system security hardening options
+
+select all the options
+
+*** add user account
+
+would you like to add new users to the system now
+
+select yes
+
+
+add the new user to wheel operator and video groups
+
+*** final configuration
+
+select exit
+
+*** manual configuration
+
+select no
+
+*** complete
+
+select reboot
+
+unplug the usb stick after freebsd has finished syncing the vnodes
+
+** login and configuration
+
+enter the geli password to decrypt the drive and then login
+
+*** bootstrap the system
+
+To bootstrap the system switch to root with su
+
+#+begin_src sh
+su
+#+end_src
+
+enter the admin password and then bootstrap pkg
+
+#+BEGIN_SRC sh
+/usr/sbin/pkg
+#+END_SRC
+
+press y to install pkg
+
+*** sudo
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+install sudo 
+
+#+BEGIN_SRC sh
+pkg install sudo
+#+END_SRC
+
+edit /etc/sudoers
+
+#+BEGIN_SRC sh
+visudo
+#+END_SRC
+
+add your user to the sudoers file, replace username with your username
+
+#+BEGIN_SRC sh
+username   ALL=(ALL:ALL) ALL
+#+END_SRC
+
+*** drivers
+
+#+begin_SRC sh
+sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
+#+END_SRC
+
+use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
+
+we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+#+begin_src sh
+sudo sysrc kld_list+="i915kms"
+#+end_src
+
+or manually edit the config file
+
+#+BEGIN_SRC sh
+sudo vi /etc/rc.conf
+#+END_SRC
+
+then add the code below to /etc/rc.conf
+
+#+BEGIN_SRC sh
+kld_list="i915kms"
+#+END_SRC
+
+*** wayland
+
+#+begin_src sh
+sudo pkg install wayland wayland-protocols seatd qt5ct qt5-wayland 
+#+end_src
+
+**** create the xdg runtime directory, change the user and set the permissions
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/1001
+sudo chown -R djwilcox:wheel /var/run/user/1001
+sudo chmod 700 /var/run/user/1001
+#+end_src
+
+**** set the runtime dir in the console
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+**** set the runtime dir in your zshrc config
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+export the XDG_RUNTIME_DIR
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+**** fstab
+
+Add procfs to /etc/fstab with this line
+
+#+begin_src sh
+proc /proc procfs rw 0 0
+#+end_src
+
+The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
+
+#+begin_src sh
+sudo sysrc seatd_enable="YES"
+sudo sysrc dbus_enable="YES"
+#+end_src
+
+*** zfs home datasets
+**** boot into single user mode
+
+at the boot screen press 2 to boot into single user mode
+
+enter the root password at the prompt
+
+**** mount home directory
+
+we need to mount /root as read write  
+we do this by setting readonly to off
+
+#+BEGIN_SRC sh
+zfs set readonly=off zroot
+#+END_SRC
+
+mount our home directory
+
+#+begin_src sh
+zfs mount -a
+#+end_src
+
+**** move your home directory
+
+we need to move our home directory because when we create the home username dataset
+it will be mounted over our current home directory
+
+change directory into the home directory
+
+#+begin_src sh
+cd /home
+#+end_src
+
+list the directories in home
+
+#+begin_src sh
+ls
+#+end_src
+
+you should now see your home directory
+move your home directory to a new name like username-bak
+
+replace djwilcox with your username
+
+#+begin_src sh
+mv djwilcox bak-djwilcox
+#+end_src
+
+**** create the zfs datasets
+
+list datasets
+
+#+begin_src sh
+zfs list
+#+end_src
+
+create the main dataset under zpool
+
+#+BEGIN_SRC sh
+zfs create zroot/home/djwilcox
+zfs create zroot/home/djwilcox/desktop
+zfs create zroot/home/djwilcox/documents
+zfs create zroot/home/djwilcox/downloads
+zfs create zroot/home/djwilcox/git
+zfs create zroot/home/djwilcox/music
+zfs create zroot/home/djwilcox/pictures
+zfs create zroot/home/djwilcox/video
+zfs create zroot/home/djwilcox/torrents
+#+END_SRC
+
+**** copy directories to zfs datasets
+
+check the zfs dataset is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
+copy files from bak-username home directory to the dataset \\
+replace djwilcox with your username
+
+#+BEGIN_SRC sh
+cp -Rpv /home/bak-djwilcox/ /home/djwilcox
+#+END_SRC
+
+copy the directories from bak-dir into the new datasets
+
+we use the -R option for recursive copy  
+and the -p option to keep the permissions of the files and directorys  
+and the -v option for verbose
+
+**** change mount point permisions
+
+change the permission on the mountpoint if needed
+
+#+BEGIN_SRC sh
+chown -R djwilcox:djwilcox /home/djwilcox/desktop
+chown -R djwilcox:djwilcox /home/djwilcox/documents
+chown -R djwilcox:djwilcox /home/djwilcox/downloads
+chown -R djwilcox:djwilcox /home/djwilcox/git
+chown -R djwilcox:djwilcox /home/djwilcox/music
+chown -R djwilcox:djwilcox /home/djwilcox/pictures
+chown -R djwilcox:djwilcox /home/djwilcox/torrents
+chown -R djwilcox:djwilcox /home/djwilcox/video
+#+END_SRC
+
++ chmod the permissions to 700
+
+#+BEGIN_SRC sh
+chmod 700 /home/djwilcox/desktop
+chmod 700 /home/djwilcox/documents
+chmod 700 /home/djwilcox/downloads
+chmod 700 /home/djwilcox/git
+chmod 700 /home/djwilcox/music
+chmod 700 /home/djwilcox/pictures
+chmod 700 /home/djwilcox/torrents
+chmod 700 /home/djwilcox/video
+#+END_SRC
+
+**** exit single user mode
+
+exit single user by typing exit
+
+login into your user account and check everything work
+then you can delete the back of your home directory in /home and the bak-dir directory
+
+*** zsh shell install
+**** zsh packages
+
+#+BEGIN_SRC sh
+sudo pkg install zsh zsh-completions zsh-syntax-highlighting
+#+END_SRC
+
+**** change the shell to zsh
+
+#+BEGIN_SRC sh
+chsh -s /usr/local/bin/zsh
+#+END_SRC
+
+**** zshrc
+
+#+begin_example
+~/.zshrc
+#+end_example
+
+#+begin_src sh
+# zshrc config
+#+end_src
+
+**** zshenv
+
+#+begin_example
+~/.zshenv
+#+end_example
+
+#+begin_src sh
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# ssh-add
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# vi mode
+export KEYTIMEOUT=1
+
+# mpd host variable for mpc
+export MPD_HOST="/home/djwilcox/.config/mpd/socket"
+
+# dark theme needed for handbrake
+export GTK_THEME=Adwaita-dark:dark
+#+end_src
+
+*** build custom kernel
+**** asmc add macbook air entries
+
+Change directory into the asmc directory you checked out with subversion
+
+#+BEGIN_SRC sh
+cd /usr/src/sys/dev/asmc/
+#+END_SRC
+
+Back up asmc.c and asmcvar.h  
+and add .bak extension
+
+#+BEGIN_SRC sh
+cp asmc.c{,.bak}
+#+END_SRC
+
+#+BEGIN_SRC sh
+cp asmcvar.h{,.bak}
+#+END_SRC
+
+edit /usr/src/sys/dev/asmc/asmc.c
+
+#+BEGIN_SRC sh
+sudo vim /usr/src/sys/dev/asmc/asmc.c
+#+END_SRC
+
+add new entry for macbook pro retina
+
+#+BEGIN_SRC c
+{
+  "MacBookPro12,1", "Apple SMC MacBook Pro (Retina, 13-inch, Early 2015)",
+  ASMC_SMS_FUNCS_DISABLED, ASMC_FAN_FUNCS2, ASMC_LIGHT_FUNCS,
+  ASMC_MBP114_TEMPS, ASMC_MBP114_TEMPNAMES, ASMC_MBP114_TEMPDESCS
+},
+
+#+END_SRC
+
+edit /usr/src/sys/dev/asmc/asmcvar.h
+
+#+BEGIN_SRC sh
+sudo vim /usr/src/sys/dev/asmc/asmcvar.h
+#+END_SRC
+
+add the smc stats we dumped from the mac, you need to add NULL to the end of the array
+
+#+BEGIN_SRC c
+#define ASMC_MBP114_TEMPS	{ "TB0T", "TB1T", "TB2T", "TA0P", "TC0C", \
+                                  "TC0P", "TC1C", "Th1H", "THSP", "TM0P", \
+                                  "TPCD", "Ts0P", "Ts1P", "Tw0P", NULL }
+
+#define ASMC_MBP114_TEMPNAMES	{ "TB0T", "TB1T", "TB2T", "TA0P", "TC0C", \
+                                  "TC0P", "TC1C", "Th1H", "THSP", "TM0P", \
+                                  "TPCD", "Ts0P", "Ts1P", "Tw0P", NULL }
+
+#define ASMC_MBP114_TEMPDESCS	{ "TB0T", "TB1T", "TB2T", "TA0P", "TC0C", \
+                                  "TC0P", "TC1C", "Th1H", "THSP", "TM0P", \
+                                  "TPCD", "Ts0P", "Ts1P", "Tw0P", NULL }
+#+END_SRC
+
+After editing the asmc files we can now build the custom kernel
+
+**** build generic kernel and modules
+
+Switch to root
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+**** building a custom kernel
+
+Do not make edits to GENERIC. Instead, copy the file to a different name and make edits to the copy. The convention is to use a name with all capital letters. When maintaining multiple FreeBSD machines with different hardware, it is a good idea to name it after the machine's hostname. This example creates a copy, named MYKERNEL, of the GENERIC configuration file for the amd64 architecture:
+
+change into the /usr/src/sys/amd64/conf directory
+
+#+BEGIN_SRC sh
+cd /usr/src/sys/amd64/conf
+#+END_SRC
+
+***** copy the GENERIC file to MYKERENL
+
+#+BEGIN_SRC sh
+cp GENERIC MYKERNEL
+#+END_SRC
+
+***** edit the MYKERNEL file with vi
+
+#+BEGIN_SRC sh
+vi MYKERNEL
+#+END_SRC
+
+add the code below to the MYKEREL file,  
+this will include the GENERIC kernel using the include option,  
+and use the ident option to change the identity name to the name of your custom kernel which is the same as the name of the file.
+which in this case is MYKEREL
+
+#+BEGIN_SRC sh
+cpu     HAMMER
+include GENERIC
+ident MYKERNEL
+#+END_SRC
+
+An include directive is available for use in configuration files. This allows another configuration file to be included in the current one, making it easy to maintain small changes relative to an existing file. If only a small number of additional options or drivers are required, this allows a delta to be maintained with respect to GENERIC, as seen in this example:
+
+Using this method, the local configuration file expresses local differences from a GENERIC kernel. As upgrades are performed, new features added to GENERIC will also be added to the local kernel unless they are specifically prevented using nooptions or nodevice.
+
+***** Change to the /usr/src directory
+
+#+BEGIN_SRC sh
+cd /usr/src
+#+END_SRC
+
+***** Compile the new kernel by specifying the name of the custom kernel configuration file:
+
+#+BEGIN_SRC sh
+make buildkernel KERNCONF=MYKERNEL
+#+END_SRC
+
+Install the new kernel associated with the specified kernel configuration file. This command will copy the new kernel to /boot/kernel/kernel and save the old kernel to /boot/kernel.old/kernel:
+
+#+BEGIN_SRC sh
+make installkernel KERNCONF=MYKERNEL
+#+END_SRC
+
+Shutdown the system and reboot into the new kernel. 
+
+***** keyboard backlight
+
++ keyboard backlight on
+
+#+BEGIN_SRC sh
+sysctl dev.asmc.0.light.control:255
+#+END_SRC
+
++ keyboard backlight off
+
+#+BEGIN_SRC sh
+sysctl dev.asmc.0.light.control:0
+#+END_SRC
+	
+*** poudriere
+**** chromium install
+
+#+begin_src sh
+sudo pkg install chromium
+#+end_src
+
+**** linux enable
+
+#+begin_src sh
+sudo sysrc linux_enable="YES"
+sudo service linux start
+#+end_src
+
+**** tmpfs and nullfs
+
+make sure you have switched to root
+
+enable tmpfs and nullfs in loader.conf
+then use kldload to load them
+
+#+begin_src sh
+sysrc -f /boot/loader.conf nullfs_load=YES
+kldload -n nullfs
+sysrc -f /boot/loader.conf tmpfs_load=YES
+kldload -n tmpfs
+#+end_src
+
+**** fstab
+
+Some programs need linprocfs mounted on /compat/linux/proc.
+Add the following line to /etc/fstab:
+
+#+begin_src conf
+linprocfs   /compat/linux/proc	linprocfs	rw	0	0
+#+end_src
+
+Then run "mount /compat/linux/proc".
+
+#+begin_src sh
+sudo mount /compat/linux/proc
+#+end_src
+
+Some programs need linsysfs mounted on /compat/linux/sys.
+Add the following line to /etc/fstab:
+
+#+begin_src conf
+linsysfs    /compat/linux/sys	linsysfs	rw	0	0
+#+end_src
+
+Then run "mount /compat/linux/sys".
+
+#+begin_src sh
+sudo mount /compat/linux/sys
+#+end_src
+
+**** foreign-cdm
+
+#+begin_src sh
+sudo pkg install foreign-cdm
+#+end_src
+
+**** poudriere
+
+switch to root using either sudo or doas
+
++ switch to root using sudo 
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
++ or use doas to switch to root
+
+#+BEGIN_SRC sh
+doas su
+#+END_SRC
+
+**** Create an SSL Certificate and Key
+
+When we build packages with poudriere, we want to be able to sign them with a private key. This will ensure all of our machines that the packages created are legitimate and that nobody is intercepting the connection to the build machine to serve malicious packages.
+
+To start off, we will create a directory structure for our key and certificate. Since all of our optional software configuration takes place within the /usr/local/etc directory, and because other software uses the /usr/local/etc/ssl location, this is where we will place our files.
+
+We will ensure that we have an ssl directory that contains two subdirectories called keys and certs.
+
+all command must be run as root
+
+#+BEGIN_SRC sh
+mkdir -p /usr/local/etc/ssl/keys
+mkdir -p /usr/local/etc/ssl/certs
+#+END_SRC
+
+Our private key, which must be kept secret, will be placed in the keys directory. This will be used to sign the packages that we will be creating. Keeping this secure is essential to ensuring that our packages are not being tampered with. We can lock down the directory so that users without root or sudo privileges will be unable to interact with the directory or its contents:
+
+#+BEGIN_SRC sh
+chmod 0600 /usr/local/etc/ssl/keys
+#+END_SRC
+
+The certs directory will contain our publicly available certificate created with the key. As such, we can leave the default permissions on that directory.
+
+Next, we will generate a 4096 bit key called poudriere.key, and place it in our keys directory by typing:
+
+#+BEGIN_SRC sh
+openssl genrsa -out /usr/local/etc/ssl/keys/poudriere.key 4096
+#+END_SRC
+
+After the key is generated, we can create a public cert from it by typing:
+
+#+BEGIN_SRC sh
+openssl rsa -in /usr/local/etc/ssl/keys/poudriere.key -pubout -out /usr/local/etc/ssl/certs/poudriere.cert
+#+END_SRC
+
+We now have the SSL components we need to sign packages and verify the signatures. Later on, we will configure our clients to use the generated certificate for package verification.
+
+**** poudriere install
+
+#+BEGIN_SRC sh
+pkg install poudriere
+#+END_SRC
+
+**** create the distfiles directory
+
+#+BEGIN_SRC sh
+mkdir -p /usr/ports/distfiles
+#+END_SRC
+
+edit the poudriere.conf file
+
+#+BEGIN_SRC sh
+vi /usr/local/etc/poudriere.conf
+#+END_SRC
+
+change the poudriere.conf so it looks like this
+
+#+BEGIN_SRC sh
+# Poudriere can optionally use ZFS for its ports/jail storage. For
+# ZFS define ZPOOL, otherwise set NO_ZFS=yes
+# 
+#### ZFS
+# The pool where poudriere will create all the filesystems it needs
+# poudriere will use ${ZPOOL}/${ZROOTFS} as its root
+#
+# You need at least 7GB of free space in this pool to have a working
+# poudriere.
+#
+ZPOOL=zroot
+
+### NO ZFS
+# To not use ZFS, define NO_ZFS=yes
+#NO_ZFS=yes
+
+# root of the poudriere zfs filesystem, by default /poudriere
+ZROOTFS=/poudriere
+
+# the host where to download sets for the jails setup
+# You can specify here a host or an IP
+# replace _PROTO_ by http or ftp
+# replace _CHANGE_THIS_ by the hostname of the mirrors where you want to fetch
+# by default: ftp://ftp.freebsd.org
+#
+# Also note that every protocols supported by fetch(1) are supported here, even
+# file:///
+# Suggested: https://download.FreeBSD.org
+FREEBSD_HOST=https://download.FreeBSD.org
+
+# By default the jails have no /etc/resolv.conf, you will need to set
+# RESOLV_CONF to a file on your hosts system that will be copied has
+# /etc/resolv.conf for the jail, except if you don't need it (using an http
+# proxy for example)
+RESOLV_CONF=/etc/resolv.conf
+
+# The directory where poudriere will store jails and ports
+BASEFS=/usr/local/poudriere
+
+# The directory where the jail will store the packages and logs
+# by default a zfs filesystem will be created and set to
+# ${BASEFS}/data
+#
+#POUDRIERE_DATA=${BASEFS}/data
+
+# Use portlint to check ports sanity
+USE_PORTLINT=no
+
+# When building packages, a memory device can be used to speedup the build.
+# Only one of MFSSIZE or USE_TMPFS is supported. TMPFS is generally faster
+# and will expand to the needed amount of RAM. MFS is a slower since it
+# uses UFS and several abstraction layers.
+
+# If set WRKDIRPREFIX will be mdmfs of the given size (mM or gG)
+#MFSSIZE=4G
+
+# Use tmpfs(5)
+# This can be a space-separated list of options:
+# wrkdir    - Use tmpfs(5) for port building WRKDIRPREFIX
+# data      - Use tmpfs(5) for poudriere cache/temp build data
+# localbase - Use tmpfs(5) for LOCALBASE (installing ports for packaging/testing)
+# all       - Run the entire build in memory, including builder jails.
+# yes       - Enables tmpfs(5) for wrkdir and data
+# no        - Disable use of tmpfs(5)
+# EXAMPLE: USE_TMPFS="wrkdir data"
+USE_TMPFS=yes
+
+# How much memory to limit tmpfs size to for *each builder* in GiB
+# (default: none)
+#TMPFS_LIMIT=8
+
+# How much memory to limit jail processes to for *each builder*
+# in GiB (default: none)
+#MAX_MEMORY=8
+
+# How many file descriptors to limit each jail process to (default: 1024)
+# This can also be set per PKGBASE, such as MAX_FILES_RStudio=2048.
+# Package names with hyphens (-) should be replaced with underscores (_).
+#MAX_FILES=1024
+
+# If set the given directory will be used for the distfiles
+# This allows to share the distfiles between jails and ports tree
+# If this is "no", poudriere must be supplied a ports tree that already has
+# the required distfiles.
+DISTFILES_CACHE=/usr/ports/distfiles
+
+# If set the ports tree marked to use git will use the defined
+# mirror (default: git.FreeBSD.org/port.git)
+#
+# Example to use github mirror:
+#GIT_BASEURL=https://github.com/freebsd/freebsd-src.git
+
+# If set the source tree marked to use git will use the defined
+# mirror (default: git.FreeBSD.org/src.git)
+#
+# Example to use github mirror:
+#GIT_PORTSURL=https://github.com/freebsd/freebsd-ports.git
+
+# If set the ports tree or source tree marked to use svn will use the defined
+# mirror (default: svn.FreeBSD.org)
+# The SSL fingerprints are published here:
+# https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/svn.html#svn-mirrors
+#SVN_HOST=svn.FreeBSD.org
+
+# Automatic OPTION change detection
+# When bulk building packages, compare the options from kept packages to
+# the current options to be built. If they differ, the existing package
+# will be deleted and the port will be rebuilt.
+# Valid options: yes, no, verbose
+# verbose will display the old and new options
+CHECK_CHANGED_OPTIONS=verbose
+
+# Automatic Dependency change detection
+# When bulk building packages, compare the dependencies from kept packages to
+# the current dependencies for every port. If they differ, the existing package
+# will be deleted and the port will be rebuilt. This helps catch changes such
+# as DEFAULT_RUBY_VERSION, PERL_VERSION, WITHOUT_X11 that change dependencies
+# for many ports.
+# Valid options: yes, no
+# Default: yes
+CHECK_CHANGED_DEPS=yes
+
+# Consider bad dependency lines on the wrong PKGNAME as fatal.
+# For example:
+#    BUILD_DEPENDS=  p5-List-MoreUtils>=0:lang/p5-List-MoreUtils
+# If this port's PKGNAME were really "List-MoreUtils" then it would
+# not be recorded into the resulting package.  The next build with
+# CHECK_CHANGED_DEPS enabled would consider it a "new dependency"
+# since it is in the port but not in the package.  This is usually
+# a warning but can be made fatal instead by enabling this option.
+# Default: no
+#BAD_PKGNAME_DEPS_ARE_FATAL=yes
+
+# Path to the RSA key to sign the PKG repo with. See pkg-repo(8)
+# This produces a repo that supports SIGNATURE_TYPE=PUBKEY
+# Default: not set
+PKG_REPO_SIGNING_KEY=/usr/local/etc/ssl/keys/poudriere.key
+
+# Command to sign the PKG repo with. See pkg-repo(8)
+# This produces a repo that supports SIGNATURE_TYPE=FINGERPRINTS
+# Default: not set
+#SIGNING_COMMAND=ssh signing-server sign.sh
+
+# Repo signing command execution context
+# If SIGNING_COMMAND is set, run pkg-repo(8) on the host?
+#   no  -   Run in the jail
+#   yes -   Run on the host
+# Default: no
+#PKG_REPO_FROM_HOST=yes
+
+# ccache support. Supply the path to your ccache cache directory.
+# It will be mounted into the jail and be shared among all jails.
+# It is recommended that extra ccache configuration be done with
+# ccache -o rather than from the environment.
+#CCACHE_DIR=/var/cache/ccache
+
+# Static ccache support from host.  This uses the existing
+# ccache from the host in the build jail.  This is useful for
+# using ccache+memcached which cannot easily be bootstrapped
+# otherwise.  The path to the PREFIX where ccache was installed
+# must be used here, and ccache must have been built statically.
+# Note also that ccache+memcached will require network access
+# which is normally disabled.  Separately setting RESTRICT_NETWORKING=no
+# may be required for non-localhost memcached servers.
+#CCACHE_STATIC_PREFIX=/usr/local
+
+# The jails normally only allow network access during the 'make fetch'
+# phase.  This is a security restriction to prevent random things
+# ran during a build from accessing the network.  Disabling this
+# is not advised.  ALLOW_NETWORKING_PACKAGES may be used to allow networking
+# for a subset of packages only.
+#RESTRICT_NETWORKING=yes
+#ALLOW_NETWORKING_PACKAGES="npm-foo"
+
+# parallel build support.
+#
+# By default poudriere uses hw.ncpu to determine the number of builders.
+# You can override this default by changing PARALLEL_JOBS here, or
+# by specifying the -J flag to bulk/testport.
+#
+# Example to define PARALLEL_JOBS to one single job
+# PARALLEL_JOBS=1
+
+# How many jobs should be used for preparing the build? These tend to
+# be more IO bound and may be worth tweaking. Default: PARALLEL_JOBS * 1.25
+# PREPARE_PARALLEL_JOBS=1
+
+
+# If set, failed builds will save the WRKDIR to ${POUDRIERE_DATA}/wrkdirs
+# SAVE_WRKDIR=yes
+
+# Choose the default format for the workdir packing: could be tar,tgz,tbz,txz,tzst
+# default is tbz
+# WRKDIR_ARCHIVE_FORMAT=tbz
+
+# Disable Linux support
+# NOLINUX=yes
+
+# By default poudriere sets FORCE_PACKAGE
+# To disable it (useful when building public packages):
+# NO_FORCE_PACKAGE=yes
+
+# By default poudriere sets PACKAGE_BUILDING
+# To disable it:
+# NO_PACKAGE_BUILDING=yes
+
+# If you are using a proxy define it here:
+# export HTTP_PROXY=bla
+# export FTP_PROXY=bla
+#
+# Cleanout the restricted packages
+# NO_RESTRICTED=yes
+
+# By default MAKE_JOBS is disabled to allow only one process per cpu
+# Use the following to allow it anyway
+# ALLOW_MAKE_JOBS=yes
+
+# List of packages that will always be allowed to use MAKE_JOBS
+# regardless of ALLOW_MAKE_JOBS. This is useful for allowing ports
+# which holdup the rest of the queue to build more quickly.
+#ALLOW_MAKE_JOBS_PACKAGES="pkg ccache py*"
+
+# Timestamp every line of build logs
+# Default: no
+#TIMESTAMP_LOGS=no
+
+# URL where your POUDRIERE_DATA/logs are hosted
+# This will be used for giving URL hints to the HTML output when
+# scheduling and starting builds
+#URL_BASE=http://yourdomain.com/poudriere/
+
+
+# This defines the max time (in seconds) that a command may run for a build
+# before it is killed for taking too long. Default: 86400
+#MAX_EXECUTION_TIME=86400
+
+# This defines the time (in seconds) before a command is considered to
+# be in a runaway state for having no output on stdout. Default: 7200
+#NOHANG_TIME=7200
+
+
+# The repository is updated atomically if set yes. This leaves the
+# repository untouched until the build completes. This involves using
+# hardlinks and symlinks. The operations are fast, but can be intrusive
+# for remote syncing or backups.
+# Recommended to always keep on.
+# Default: yes
+#ATOMIC_PACKAGE_REPOSITORY=yes
+
+# When using ATOMIC_PACKAGE_REPOSITORY, commit the packages if some
+# packages fail to build. Ignored ports are considered successful.
+# This can be set to 'no' to only commit the packages once no failures
+# are encountered.
+# Default: yes
+#COMMIT_PACKAGES_ON_FAILURE=yes
+
+# Keep older package repositories. This can be used to rollback a system
+# or to bisect issues by changing the repository to one of the older
+# versions and reinstalling everything with `pkg upgrade -f`
+# ATOMIC_PACKAGE_REPOSITORY is required for this.
+# Default: no
+#KEEP_OLD_PACKAGES=no
+
+# How many old package repositories to keep with KEEP_OLD_PACKAGES
+# Default: 5
+#KEEP_OLD_PACKAGES_COUNT=5
+
+# Make testing errors fatal.
+# If set to 'no', ports with test failure will be marked as failed but still
+# packaged to permit testing dependent ports (useful for bulk -t -a)
+# Default: yes
+#PORTTESTING_FATAL=yes
+
+# Define the building jail hostname to be used when building the packages
+# Some port/packages hardcode the hostname of the host during build time
+# This is a necessary setup for reproducible builds.
+#BUILDER_HOSTNAME=pkg.FreeBSD.org
+
+# Define to get a predictable timestamp on the ports tree
+# This is a necessary setup for reproducible builds.
+#PRESERVE_TIMESTAMP=yes
+
+# Define to yes to build and stage as a regular user
+# Default: yes, unless CCACHE_DIR is set and CCACHE_DIR_NON_ROOT_SAFE is not
+# set.  Note that to use ccache with BUILD_AS_NON_ROOT you will need to
+# use a non-shared CCACHE_DIR that is only built by PORTBUILD_USER and chowned
+# to that user.  Then set CCACHE_DIR_NON_ROOT_SAFE to yes.
+#BUILD_AS_NON_ROOT=no
+
+# Define to the username to build as when BUILD_AS_NON_ROOT is yes.
+# Default: nobody (uid PORTBUILD_UID)
+#PORTBUILD_USER=nobody
+
+# Define to the uid to use for PORTBUILD_USER if the user does not
+# already exist in the jail.
+# Default: 65532
+#PORTBUILD_UID=65534
+
+# Define pkgname globs to boost priority for
+# Default: none
+#PRIORITY_BOOST="pypy openoffice*"
+
+# Define format for buildnames
+# Default: %Y-%m-%d_%Hh%Mm%Ss
+# ISO8601:
+#BUILDNAME_FORMAT="%FT%T%z"
+
+# Define format for build duration times
+# Default: %H:%M:%S
+#DURATION_FORMAT="%H:%M:%S"
+
+# Use colors when in a TTY
+# Default: yes
+#USE_COLORS=yes
+
+# Only build what is requested. Do not rebuild build deps if nothing requested
+# depends on them. This can create an inconsistent repository if you often
+# build one-off packages but expect the repository to stay consistent.
+# Defaut: yes
+#TRIM_ORPHANED_BUILD_DEPS=yes
+
+# A list of directories to exclude from leftover and filesystem violation
+# mtree checks.  Ccache is used here as an example but is already
+# excluded by default.  There is no need to add it here unless a
+# special configuration is used where it is a problem.
+# Default: none
+#LOCAL_MTREE_EXCLUDES="/usr/obj /var/tmp/ccache"
+
+# Set to hosted to use the /data directory instead of inline style HTML
+# Default: inline
+#HTML_TYPE="hosted"
+
+# Set to track remaining ports in the HTML interface.  This can slow down
+# processing of the queue slightly, especially for bulk -a builds.
+# Default: no
+#HTML_TRACK_REMAINING=yes
+#+END_SRC
+
+**** Creating the Build Environment
+
+#+BEGIN_SRC sh
+poudriere jail -c -j freebsd_14-0x64 -v 14.0-RELEASE
+#+END_SRC
+
+This will take awhile to complete, so be patient.  
+When you are finished, you can see the installed jail by typing:
+
+#+BEGIN_SRC sh
+poudriere jail -l
+#+END_SRC
+
+Once you have a jail created, we will have to install a ports tree. It is possible to maintain multiple ports trees in order to serve different development needs. We will be installing a single ports tree that our jail can utilize.
+
+We can use the -p flag to name our ports tree. We will call our tree "HEAD" as it accurately summarizes the use of this tree (the "head" or most up-to-date point of the tree). We will be updating it regularly to match the most current version of the ports tree available:
+
+#+BEGIN_SRC sh
+poudriere ports -c -p HEAD
+#+END_SRC
+
+Again, this procedure will take awhile because the entire ports tree must be fetched and extracted. When it is finished, we can view our ports tree by typing:
+
+#+BEGIN_SRC sh
+poudriere ports -l
+#+END_SRC
+
+**** license
+
+Accepting all possible licenses is also a good idea.
+
+#+begin_src sh
+echo DISABLE_LICENSES=yes >> /usr/local/etc/poudriere.d/make.conf
+#+end_src
+
+**** Creating a Port Building List and Setting Port Options
+
+We will be creating a list of ports that we can pass directly to the command.  
+
+#+BEGIN_SRC sh
+vi /usr/local/etc/poudriere.d/port-list 
+#+END_SRC
+
+The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
+
+important create a new line after adding the code below
+
+#+BEGIN_SRC sh
+www/linux-widevine-cdm
+
+#+END_SRC
+
+**** Building the Ports
+
+Now, we are finally ready to start building ports.
+
+The last thing we need to do is ensure that both our jail and ports tree are up-to-date. This probably won't be an issue the first time you build ports since we just created both the ports tree and the jail, but it is good to get in the habit to do this each time you run a build.
+
+To update your jail, type:
+
+#+BEGIN_SRC sh
+poudriere jail -u -j freebsd_14-0x64
+#+END_SRC
+
+To update your ports tree, type:
+
+#+BEGIN_SRC sh
+poudriere ports -u -p HEAD
+#+END_SRC
+
+Once that is complete, we can kick off the bulk build process.
+
+#+BEGIN_SRC sh
+poudriere bulk -j freebsd_14-0x64 -p HEAD -f /usr/local/etc/poudriere.d/port-list
+#+END_SRC
+
+This will start up a number of workers (depending on your poudriere.conf file or the number of CPUs available) and begin building the ports.
+
+At any time during the build process, you can get information about the progress by holding the CTRL key and hitting t:
+
+#+BEGIN_SRC sh
+CTRL-t
+#+END_SRC
+
+**** Configuring pkg Clients to Use a Poudriere Repository
+	
+Now that you have packages built and a repository configured to serve your packages, you can configure your clients to use your the server as the source of their packages.
+Configuring the Build Server to Use Its Own Package Repo
+
+We can begin by configuring the build server to use the packages it has been building.
+
+First, we need to make a directory to hold our repository configuration files:
+
+#+BEGIN_SRC sh
+mkdir -p /usr/local/etc/pkg/repos
+#+END_SRC
+
+Inside this directory, we can create our repository configuration file. It must end in .conf, so we will call it poudriere.conf to reflect its purpose:
+
+#+BEGIN_SRC sh
+vi /usr/local/etc/pkg/repos/poudriere.conf
+#+END_SRC
+
+We will define the repository name as poudriere once again. Inside the definition, we will point to the location on disk where our packages are stored. This should be a directory that combines your jail name and port tree name with a dash. Check your filesystem to be certain. We will also set up signature validation of our packages by pointing to the certificate we created.
+
+In the end, your file should look something like this:
+
+#+BEGIN_SRC conf
+Poudriere: {
+    url: "file:///usr/local/poudriere/data/packages/freebsd_14-0x64-HEAD"
+    mirror_type: "srv",
+    signature_type: "pubkey",
+    pubkey: "/usr/local/etc/ssl/certs/poudriere.cert",
+    enabled: yes,
+    priority: 100
+}
+#+END_SRC
+
+At this point, you need to make a decision. If you want to prefer your compiled packages and fall back on the packages provided by the main FreeBSD repositories, you can set a priority here, telling it to prefer packages out of this repository. This will cause our local repository to take priority over the official repositories.
+
+Keep in mind that mixing packages in this way can have some complicated consequences. If the official repositories have a package version that is higher than your local repository version, your compiled package may be replaced by the generic one from the official repositories (until you rebuild with poudriere and reinstall with pkg). Also, the official packages may assume that dependent packages are built in a certain way and may not function when mixed with your custom packages.
+
+If you choose to mix these two package sources, be prepared to carefully audit each install to ensure that you are not accidentally causing undesirable behavior.
+
+To mix packages, add a priority setting to your repository definition, specifying that the local repo has a higher precedence
+
+**** pkg update
+
+make sure you have switched to root
+Update the repo info:
+
+#+begin_src sh
+pkg update -f
+#+end_src
+
+install
+
+#+begin_src sh
+pkg install linux-widevine-cdm
+#+end_src
+
+**** chromium ozone and wayland
+
+Since version 97, native Wayland support in Chromium can be enabled with the following flags [6]:
+
+#+begin_src sh
+chrome --ozone-platform-hint=auto
+#+end_src
+
+If this doesn't work, e.g. on version 106 under Weston, then use:
+
+#+begin_src sh
+chrome --ozone-platform=wayland
+#+end_src
+
+you can set the wayland option using the using a desktop entry
+
+copy the chromium-browser.desktop which is used in application launchers
+
+#+begin_src sh
+cp /usr/local/share/applications/chromium-browser.desktop ~/.local/share/applications
+#+end_src
+
+edit chromium-browser.desktop you just copied in the local share application directory in your home
+
+#+begin_src sh
+vi ~/.local/share/applications/chromium-browser.desktop
+#+end_src
+
+edit the Exec line and set the option to start chromium using wayland
+
+#+begin_src conf
+Exec=chrome --ozone-platform=wayland %U
+#+end_src
+
+the final desktop entry should look like this
+
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=chrome --ozone-platform=wayland %U
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
+***** check widevine drm is working
+
+in the url bar in chromium add the following url to show the chromium flags
+
+#+begin_src conf
+chrome://flags
+#+end_src
+
+if you scroll to the bottom of the page
+
+#+begin_src conf
+Cdm Storage Database
+Start to use the CdmStorageDatabase to store data alongside the MediaLicenseDatabase. If disabled, we will not use CdmStorage* at all, even in MediaLicense* code. – Mac, Windows, Linux, ChromeOS, Fuchsia, Lacros
+
+#cdm-storage-database
+
+Default
+
+Cdm Storage Database Migration
+Use the Cdm Storage Database over the MediaLicenseDatabase for Cdm storage operations. – Mac, Windows, Linux, ChromeOS, Fuchsia, Lacros
+
+#cdm-storage-database-migration
+
+Default
+#+end_src
+
+*** beadm install
+
+#+BEGIN_SRC sh
+pkg install beadm
+#+END_SRC
+
+See which boot environments you have.
+
+#+BEGIN_SRC sh
+beadm list
+#+END_SRC
+
+The only boot environment is named default. Under active, N means the environment is active now.  
+An R means the environment will be active on reboot.
+
+check the current version of freebsd with uname
+
+#+BEGIN_SRC sh
+uname -s
+#+END_SRC
+
+check for an update
+
+#+BEGIN_SRC sh
+freebsd-update fetch
+#+END_SRC
+
+The updates have been downloaded but still haven’t been installed.  
+I will prepare a boot environment just in case after installing them something breaks
+
+**** create new boot environment
+
+run the beadm commands as root
+
+#+BEGIN_SRC sh
+beadm create 14.0-p6
+#+END_SRC
+
+list the boot environments
+
+#+BEGIN_SRC sh
+beadm list
+#+END_SRC
+
+Activate the new boot environment.
+
+#+BEGIN_SRC sh
+beadm activate 14.0-p6
+#+END_SRC
+
+list the boot environments
+
+#+BEGIN_SRC sh
+beadm list
+#+END_SRC
+
+While the default environment has an N, indicating it’s active now,
+the 14.0-p6 environment has an R, so it will be active after a reboot.
+
+Reboot. After the reboot, you’ll see the new environment is running.
+
+***** install updates in new boot environment
+
+install update in new boot environment
+
+#+BEGIN_SRC sh
+freebsd-update install
+#+END_SRC
+
+reboot and run freebsd-update install again
+
+#+BEGIN_SRC sh
+freebsd-update install
+#+END_SRC
+
+check for package updates
+
+#+BEGIN_SRC sh
+pkg update
+pkg upgrade
+#+END_SRC
+
+create a zfs snapshot
+
+#+BEGIN_SRC sh
+zfs snapshot -r zroot@14.0-p6
+#+END_SRC
+
+*** ttys
+
+single user mode require root password
+
+change single user mode to requite root password
+change setting from secure to insecure to require root password
+
+edit /etc/ttys
+
+#+BEGIN_SRC sh
+sudo vi /etc/ttys
+#+END_SRC
+
+change the settings to insecure
+
+#+BEGIN_SRC sh
+console none unknown off insecure
+#+END_SRC
+
+** applications
+** mpd
+
+#+begin_src sh
+sudo pkg install musicpd musicpc
+#+end_src
+
+create the mpd playlists directory
+
+#+begin_src sh
+mkdir -p ~/.config/mpd/playlists
+#+end_src
+
+touch files
+
+#+begin_src sh
+touch ~/.config/mpd/{mpd.db,mpd.log,mpd.pid,mpdstate,sticker.sql,socket}
+#+end_src
+
+** mixertui
+
+Audio Mixer with a Terminal User Interface
+
+*** Message from sysctlinfo-kmod-20221211:
+
+To use this interface, make sure that you have loaded the sysctlinfo kernel
+module, by doing
+
+#+begin_src sh
+sudo kldload sysctlinfo
+#+end_src
+
+use sysrc to add sysctlinfo_load="YES" to /boot/loader.conf
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf sysctlinfo_load="YES"
+#+end_src
+
+or by manually your /boot/loader.conf
+
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
+
+then add sysctlinfo_load="YES" to loader.conf
+
+#+begin_src conf
+sysctlinfo_load="YES"
+#+end_src
+
+*** Message from sysctlbyname-improved-kmod-20221211:
+
+To use the sysctl.entryidinputbyname sysctl node and the sysctlbyname_improved
+function, make sure that you have loaded the sysctlbyname_improved kernel
+module, by doing
+
+#+begin_src sh
+sudo kldload sysctlbyname_improved
+#+end_src
+
+use sysrc to add sysctlbyname_improved="YES" to /boot/loader.conf
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf sysctlbyname_improved="YES"
+#+end_src
+
+or by manually your /boot/loader.conf
+
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
+
+then add sysctlbyname_improved to loader.conf
+
+#+begin_src conf
+sysctlbyname_improved="YES"
+#+end_src
+
+** ext2fs
+
+enable ext2fs with sysrc
+
+#+begin_src sh
+sudo sysrc kld_list="ext2fs"
+#+end_src
+
+or edit your /etc/rc.conf manually
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+enable ext2fs by adding the following code to your rc.conf
+
+#+begin_src conf
+kld_list="ext2fs"
+#+end_src
+
+To load as a kernel loadable module:
+
+#+begin_src sh
+sudo kldload ext2fs
+#+end_src
+
+To mount a ext2fs volume located on /dev/ada1s1:
+
+#+begin_src sh
+mount -t ext2fs /dev/ada1s1 /mnt/usb
+#+end_src
+
+** mount drives devfs rules
+	
+add user to operator group
+
+#+begin_src sh
+sudo pw groupmod operator -m djwilcox
+#+end_src
+
+Edit /etc/devfs.rules to allow the operator group to be able to read and write the device:
+
+#+begin_src sh
+sudo vi /etc/devfs.rules
+#+end_src
+
+/etc/devfs.rules
+
+
+#+begin_src sh
+[localrules=5]
+add path 'da*' mode 0660 group operator
+#+end_src
+
+Then edit /etc/rc.conf to enable the devfs.rules(5) ruleset:
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+#+begin_src sh
+devfs_system_ruleset="localrules"
+#+end_src
+
+or use sysrc instead
+
+#+begin_src sh
+sudo sysrc devfs_system_ruleset="localrules"
+#+end_src
+
+Next allow regular user to mount file system:
+
+#+begin_src sh
+sudo vi /etc/sysctl.conf
+#+end_src
+
+#+begin_src sh
+vfs.usermount=1
+#+end_src
+
+Also execute sysctl to make the update available now:
+
+#+begin_src sh
+sudo sysctl vfs.usermount=1
+#+end_src
+
+vfs.usermount: 0 -> 1
+
+Create a directory which a regular use can mount to:
+
+#+begin_src sh
+sudo mkdir -p /mnt/usb
+#+end_src
+
+change the permission so your user own the directory with chown
+replace username with your username
+
+#+begin_src sh
+sudo chown username:username /mnt/usb
+#+end_src
+
+** virtual_oss audiofor obs
+
+virtual oss to record sndio audio in obs studio
+
+#+begin_src sh
+sudo pkg install virtual_oss
+#+end_src
+
+*** cuse boot loader.conf
+
+add cuse_load="YES" loader.conf using sysrc
+
+#+begin_src sh
+sudo sysrc -f /boot/loader.conf cuse_load="YES"
+#+end_src
+
+or edit loader.conf with vi
+
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
+
+and add the following code
+
+#+begin_src conf
+cuse_load="YES"
+#+end_src
+
+load cuse
+
+#+begin_src sh
+sudo kldload cuse
+#+end_src
+
+*** rc.conf
+
+enable virtual_oss and sndiod in your rc.conf using sysrc
+
+#+begin_src sh
+sudo sysrc virtual_oss_enable="YES"
+sudo sysrc sndiod_enable="YES"
+#+end_src
+
+or manually edit your /etc/rc/.conf
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+add the following code to your /etc/rc.conf
+
+#+begin_src conf
+# virtual oss
+virtual_oss_enable="NO"
+# sndiod audio
+sndiod_enable="YES"
+#+end_src
+
+*** virtual oss
+
+create a loopback device on /dev/dsp to record desktop audio
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+edit you /boot/loader.conf
+
+#+begin_src sh
+vi /boot/loader.conf
+#+end_src
+
+and add the following code
+
+#+begin_src conf
+# virtual oss - start with: sudo sysrc onestart virtual_oss 
+virtual_oss_enable="NO"
+#+end_src
+
+start virtual_oss
+
+#+begin_src sh
+sudo service virtual_oss onestart 
+#+end_src
+
+replace dsp0 with you device
+
+#+begin_src sh
+virtual_oss -S -C 2 -c 2 -r 48000 -b 16 -s 1024 -f /dev/dsp0 -w vdsp.wav -l dsp
+#+end_src
+
+*** obs
+
+under sources click add select
+
+Audio Input Capture
+
+in the properties window set DSP to Custom
+
+and the Custom DSP Path to
+
+#+begin_example
+/dev/dsp
+#+end_example
+
+** obs studio
+*** xdg runtime directory
+
+make sure to set up the xdg runtime directory as described earlier
+
+*** dmesg
+
+After logging in run dmesg as root to make sure the device is recognised
+
+#+BEGIN_SRC sh
+# dmesg
+#+END_SRC
+
+*** check dsp devices
+
+Check /dev/dsp* for the device
+
+#+BEGIN_SRC sh
+ls /dev/dsp*
+#+END_SRC
+
+in my case my mic is listed as /dev/dsp2
+
+*** unmute the mic
+
+Un mute the volume for the devices mixer,
+the mixer number for dsp2 will be mixer2
+
+#+BEGIN_SRC sh
+mixer -f /dev/mixer2 mic.volume=100:100
+#+END_SRC
+
+*** pavucontrol
+
+obs uses pulse audio so install pavucontrol to adjust the volume
+
+#+begin_src sh
+sudo pkg install pavucontrol
+#+end_src
+
+*** pulseaudio
+
+obs studio use pulseaudio so we need to start pulseaudio before opening obs studio,
+otherwise the mic wont show up 
+
++ start pulse audio
+
+#+BEGIN_SRC sh
+pulseaudio --start
+#+END_SRC
+
++ stop pulseaudio
+
+#+BEGIN_SRC sh
+pulseaudio --kill
+#+END_SRC
+
+** emacs
+
+#+begin_src sh
+sudo pkg install emacs-devel tree-sitter cantarell-fonts
+#+end_src
+
+remove the eln-cache and restart if needed
+
+#+begin_src sh
+rm -rf ~/.config/emacs/eln-cache
+#+end_src
+
+** serial
+
+MacBook Pro 13.3" - Early 2015
+CO2R459BFVH5
+
+MacBook Pro (Retina, 13-inch, Early 2015)
+Model Identifier: MacBookPro12,1
+Part Numbers: MF839xx/A, MF840xx/A, MF841xx/A, MF843xx/A
+Newest compatible operating system: macOS Monterey
+Tech Specs: MacBook Pro (Retina, 13-inch, Early 2015)
+User Guide: MacBook Pro (Retina, 13-inch, Early 2015) 
+
+** asmc
+*** asmc.c
+#+begin_src c
+{
+  "MacBookPro12,1", "Apple SMC MacBook Pro (Retina, 13-inch, Early 2015)",
+  ASMC_SMS_FUNCS_DISABLED, ASMC_FAN_FUNCS2, ASMC_LIGHT_FUNCS,
+  ASMC_MBP114_TEMPS, ASMC_MBP114_TEMPNAMES, ASMC_MBP114_TEMPDESCS
+},
+
+#+end_src
+*** asmcvar.h
+
+#+begin_src c
+#define ASMC_MBP114_TEMPS	{ "TB0T", "TB1T", "TB2T", "TA0P", "TC0C", \
+                                  "TC0P", "TC1C", "Th1H", "THSP", "TM0P", \
+                                  "TPCD", "Ts0P", "Ts1P", "Tw0P", NULL }
+
+#define ASMC_MBP114_TEMPNAMES	{ "TB0T", "TB1T", "TB2T", "TA0P", "TC0C", \
+                                  "TC0P", "TC1C", "Th1H", "THSP", "TM0P", \
+                                  "TPCD", "Ts0P", "Ts1P", "Tw0P", NULL }
+
+#define ASMC_MBP114_TEMPDESCS	{ "TB0T", "TB1T", "TB2T", "TA0P", "TC0C", \
+                                  "TC0P", "TC1C", "Th1H", "THSP", "TM0P", \
+                                  "TPCD", "Ts0P", "Ts1P", "Tw0P", NULL }
+
+#+end_src
+
+*** smc
+
+#+begin_src conf
+  TA0P  [sp78]  38.500 (bytes 26 80)
+  TB0T  [sp78]  33.297 (bytes 21 4c)
+  TB1T  [sp78]  33.297 (bytes 21 4c)
+  TB2T  [sp78]  30.398 (bytes 1e 66)
+  TBXT  [sp78]  33.297 (bytes 21 4c)
+  TC0C  [sp78]  46.000 (bytes 2e 00)
+  TC0E  [sp78]  52.727 (bytes 34 ba)
+  TC0F  [sp78]  53.980 (bytes 35 fb)
+  TC0P  [sp78]  45.500 (bytes 2d 80)
+  TC1C  [sp78]  46.000 (bytes 2e 00)
+  TCFC  [ui16]  32 (bytes 00 20)
+  TCGC  [sp78]  47.000 (bytes 2f 00)
+  TCSA  [sp78]  0.000 (bytes 00 00)
+  TCXC  [sp78]  47.781 (bytes 2f c8)
+  TH0A  [sp78]  39.625 (bytes 27 a0)
+  TH0B  [sp78]  38.625 (bytes 26 a0)
+  TH0C  [sp78]  38.625 (bytes 26 a0)
+  TH0F  [sp78]  -44.328 (bytes d3 ac)
+  TH0R  [sp78]  -45.375 (bytes d2 a0)
+  TH0V  [sp78]  37.793 (bytes 25 cb)
+  TH0a  [sp78]  39.625 (bytes 27 a0)
+  TH0b  [sp78]  38.625 (bytes 26 a0)
+  TH0c  [sp78]  38.625 (bytes 26 a0)
+  TH0x  [sp78]  38.625 (bytes 26 a0)
+  THSP  [sp78]  -127.000 (bytes 81 00)
+  TM0P  [sp78]  42.750 (bytes 2a c0)
+  TMLB  [sp78]  -127.000 (bytes 81 00)
+  TPCD  [sp78]  45.000 (bytes 2d 00)
+  TW0P  [sp78]  -127.000 (bytes 81 00)
+  Th1H  [sp78]  39.875 (bytes 27 e0)
+  Ts0P  [sp78]  29.812 (bytes 1d d0)
+  Ts0S  [sp78]  37.684 (bytes 25 af)
+  Ts1P  [sp78]  29.750 (bytes 1d c0)
+  Ts1S  [sp78]  37.543 (bytes 25 8b)
+  Ts2S  [sp78]  35.805 (bytes 23 ce)
+#+end_src
+** links
+
+[[https://forums.freebsd.org/threads/asmc-create-new-entry-for-macbook-air-4-1.60406/]]
+
+[[https://forums.freebsd.org/threads/success-installing-freebsd-13-0-on-macbook-pro-5-5.80458/]]
+
+[[https://forums.freebsd.org/threads/what-controls-the-window-icon-size-vlc-and-others.81109/]]
+
+[[https://www.reddit.com/r/freebsd/comments/4ufu92/can_anyone_explain_to_me_how_i_can_add_my_own/]]
+
