@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* pkg install prime list from text file
+** export pkg prime list
+
+#+begin_src sh
+pkg prime-list > pkg-prime-list.txt
+#+end_src
+
+** import pkg prime list and install packages
+
+#+begin_src sh
+sudo pkg install $(cat pkg-prime-list.txt)
+#+end_src
