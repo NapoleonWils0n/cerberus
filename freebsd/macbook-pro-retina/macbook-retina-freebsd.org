@@ -244,79 +244,6 @@ add your user to the sudoers file, replace username with your username
 username   ALL=(ALL:ALL) ALL
 #+END_SRC
 
-*** drivers
-
-#+begin_SRC sh
-sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
-#+END_SRC
-
-use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
-
-we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
-
-#+begin_src sh
-sudo sysrc kld_list+="i915kms"
-#+end_src
-
-or manually edit the config file
-
-#+BEGIN_SRC sh
-sudo vi /etc/rc.conf
-#+END_SRC
-
-then add the code below to /etc/rc.conf
-
-#+BEGIN_SRC sh
-kld_list="i915kms"
-#+END_SRC
-
-*** wayland
-
-#+begin_src sh
-sudo pkg install wayland wayland-protocols seatd qt5ct qt5-wayland 
-#+end_src
-
-**** create the xdg runtime directory, change the user and set the permissions
-
-#+begin_src sh
-sudo mkdir -p /var/run/user/1001
-sudo chown -R djwilcox:wheel /var/run/user/1001
-sudo chmod 700 /var/run/user/1001
-#+end_src
-
-**** set the runtime dir in the console
-
-#+begin_src sh
-export XDG_RUNTIME_DIR=/var/run/user/`id -u`
-#+end_src
-
-**** set the runtime dir in your zshrc config
-
-#+begin_src sh
-vi ~/.zshrc
-#+end_src
-
-export the XDG_RUNTIME_DIR
-
-#+begin_src sh
-export XDG_RUNTIME_DIR=/var/run/user/`id -u`
-#+end_src
-
-**** fstab
-
-Add procfs to /etc/fstab with this line
-
-#+begin_src sh
-proc /proc procfs rw 0 0
-#+end_src
-
-The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
-
-#+begin_src sh
-sudo sysrc seatd_enable="YES"
-sudo sysrc dbus_enable="YES"
-#+end_src
-
 *** zfs home datasets
 **** boot into single user mode
 
@@ -329,9 +256,9 @@ enter the root password at the prompt
 we need to mount /root as read write  
 we do this by setting readonly to off
 
-#+BEGIN_SRC sh
+#+begin_src sh
 zfs set readonly=off zroot
-#+END_SRC
+#+end_src
 
 mount our home directory
 
@@ -399,12 +326,11 @@ copy files from bak-username home directory to the dataset \\
 replace djwilcox with your username
 
 #+BEGIN_SRC sh
-cp -Rpv /home/bak-djwilcox/ /home/djwilcox
+cp -pv /home/bak-djwilcox/.[^.]* /home/djwilcox
 #+END_SRC
 
 copy the directories from bak-dir into the new datasets
 
-we use the -R option for recursive copy  
 and the -p option to keep the permissions of the files and directorys  
 and the -v option for verbose
 
@@ -413,19 +339,13 @@ and the -v option for verbose
 change the permission on the mountpoint if needed
 
 #+BEGIN_SRC sh
-chown -R djwilcox:djwilcox /home/djwilcox/desktop
-chown -R djwilcox:djwilcox /home/djwilcox/documents
-chown -R djwilcox:djwilcox /home/djwilcox/downloads
-chown -R djwilcox:djwilcox /home/djwilcox/git
-chown -R djwilcox:djwilcox /home/djwilcox/music
-chown -R djwilcox:djwilcox /home/djwilcox/pictures
-chown -R djwilcox:djwilcox /home/djwilcox/torrents
-chown -R djwilcox:djwilcox /home/djwilcox/video
+chown -R djwilcox:djwilcox /home/djwilcox
 #+END_SRC
 
 + chmod the permissions to 700
 
 #+BEGIN_SRC sh
+chmod 700 /home/djwilcox
 chmod 700 /home/djwilcox/desktop
 chmod 700 /home/djwilcox/documents
 chmod 700 /home/djwilcox/downloads
@@ -443,13 +363,176 @@ exit single user by typing exit
 login into your user account and check everything work
 then you can delete the back of your home directory in /home and the bak-dir directory
 
-*** zsh shell install
-**** zsh packages
+*** kld_list
 
-#+BEGIN_SRC sh
-sudo pkg install zsh zsh-completions zsh-syntax-highlighting
-#+END_SRC
+#+begin_src sh
+sudo sysrc kld_list+="i915kms linux linux64 ext2fs mac_priority fusefs"
+#+end_src
 
+*** kldload
+
+#+begin_src sh
+sudo kldload linux linux64
+#+end_src
+
+*** pkg install pkg-prime-list.txt
+
+#+begin_src sh
+sudo pkg install $(cat pkg-prime-list.txt)
+#+end_src
+
+pkg-prime-list.txt
+
+#+begin_src conf
+ImageMagick7
+abook
+adwaita-qt5
+adwaita-qt6
+alacritty
+apg
+aria2
+aspell
+bat
+beadm
+cantarell-fonts
+chromium
+debootstrap
+dictd
+dnscrypt-proxy2
+doas
+drm-kmod
+dwlb
+emacs-devel
+en-aspell
+evdev-proto
+fd-find
+firacode
+firefox
+foreign-cdm
+fzf
+git
+gmake
+gnome-themes-extra
+gtk-arc-themes
+hs-pandoc
+kanshi
+libinput
+libnotify
+libva-intel-driver
+libva-utils
+libvdpau-va-gl
+libxkbcommon
+lynx
+mixertui
+mpv
+mpv-mpris
+musicpc
+musicpd
+mutt
+ncmpc
+noto-emoji
+oath-toolkit
+openvpn
+pavucontrol
+pkg
+pkgconf
+playerctl
+poudriere
+py39-csvkit
+py39-pip
+py39-virtualenv
+qjackctl
+qt5-style-plugins
+qt5-wayland
+qt5ct
+qt6-wayland
+ripgrep
+ripgrep-all
+rsync
+seatd
+socat
+sox
+sudo
+swaybg
+swayidle
+swaylock-effects
+tmux
+tofi
+translate-shell
+transmission-gtk
+transmission-utils
+tree
+ts
+unrar
+virtual_oss
+w3m
+wayland-protocols
+wayland-utils
+wdisplays
+weechat
+wev
+wl-clipboard
+wlogout
+wlr-randr
+wlr-which-key
+wlrctl
+wlrobs
+wlroots
+xcb-util-wm
+xdg-desktop-portal-wlr
+yt-dlp
+zathura
+zathura-pdf-mupdf
+zip
+zsh
+zsh-completions
+zsh-syntax-highlighting
+
+#+end_src
+
+*** wayland
+**** create the xdg runtime directory, change the user and set the permissions
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/"$(id -u)"
+sudo chown -R "${USER}":wheel /var/run/user/"$(id -u)"
+sudo chmod 700 /var/run/user/"$(id -u)"
+#+end_src
+
+**** set the runtime dir in the console
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+**** set the runtime dir in your zshrc config
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+export the XDG_RUNTIME_DIR
+
+#+begin_src sh
+export XDG_RUNTIME_DIR=/var/run/user/`id -u`
+#+end_src
+
+**** fstab
+
+Add procfs to /etc/fstab with this line
+
+#+begin_src sh
+proc /proc procfs rw 0 0
+#+end_src
+
+The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
+
+#+begin_src sh
+sudo sysrc seatd_enable="YES"
+sudo sysrc dbus_enable="YES"
+#+end_src
+
+*** zsh shell
 **** change the shell to zsh
 
 #+BEGIN_SRC sh
@@ -1333,11 +1416,7 @@ Use the Cdm Storage Database over the MediaLicenseDatabase for Cdm storage opera
 Default
 #+end_src
 
-*** beadm install
-
-#+BEGIN_SRC sh
-pkg install beadm
-#+END_SRC
+*** beadm
 
 See which boot environments you have.
 
@@ -1357,7 +1436,7 @@ uname -s
 check for an update
 
 #+BEGIN_SRC sh
-freebsd-update fetch
+sudo freebsd-update fetch
 #+END_SRC
 
 The updates have been downloaded but still haven’t been installed.  
@@ -1421,31 +1500,7 @@ create a zfs snapshot
 zfs snapshot -r zroot@14.0-p6
 #+END_SRC
 
-*** ttys
-
-single user mode require root password
-
-change single user mode to requite root password
-change setting from secure to insecure to require root password
-
-edit /etc/ttys
-
-#+BEGIN_SRC sh
-sudo vi /etc/ttys
-#+END_SRC
-
-change the settings to insecure
-
-#+BEGIN_SRC sh
-console none unknown off insecure
-#+END_SRC
-
-** applications
 ** mpd
-
-#+begin_src sh
-sudo pkg install musicpd musicpc
-#+end_src
 
 create the mpd playlists directory
 
@@ -1544,6 +1599,36 @@ To load as a kernel loadable module:
 sudo kldload ext2fs
 #+end_src
 
+create mount point
+
+#+begin_src sh
+sudo mkdir -p /mnt/usb
+#+end_src
+
+chown the mount point to our user
+
+#+begin_src sh
+sudo chown "${USER}":"${USER}" /mnt/usb
+#+end_src
+
+list drives
+
+#+begin_src sh
+geom disk list
+#+end_src
+
+list /dev
+
+#+begin_src sh
+ls -l /dev/da1
+#+end_src
+
+output
+
+#+begin_example
+/dev/da1s1
+#+end_example
+
 To mount a ext2fs volume located on /dev/ada1s1:
 
 #+begin_src sh
@@ -1565,7 +1650,6 @@ sudo vi /etc/devfs.rules
 #+end_src
 
 /etc/devfs.rules
-
 
 #+begin_src sh
 [localrules=5]
@@ -1620,13 +1704,6 @@ sudo chown username:username /mnt/usb
 #+end_src
 
 ** virtual_oss audiofor obs
-
-virtual oss to record sndio audio in obs studio
-
-#+begin_src sh
-sudo pkg install virtual_oss
-#+end_src
-
 *** cuse boot loader.conf
 
 add cuse_load="YES" loader.conf using sysrc
@@ -1727,10 +1804,6 @@ and the Custom DSP Path to
 #+end_example
 
 ** obs studio
-*** xdg runtime directory
-
-make sure to set up the xdg runtime directory as described earlier
-
 *** dmesg
 
 After logging in run dmesg as root to make sure the device is recognised
@@ -1783,19 +1856,7 @@ pulseaudio --start
 pulseaudio --kill
 #+END_SRC
 
-** emacs
-
-#+begin_src sh
-sudo pkg install emacs-devel tree-sitter cantarell-fonts
-#+end_src
-
-remove the eln-cache and restart if needed
-
-#+begin_src sh
-rm -rf ~/.config/emacs/eln-cache
-#+end_src
-
-** serial
+** mac serial
 
 MacBook Pro 13.3" - Early 2015
 CO2R459BFVH5
@@ -1807,7 +1868,7 @@ Newest compatible operating system: macOS Monterey
 Tech Specs: MacBook Pro (Retina, 13-inch, Early 2015)
 User Guide: MacBook Pro (Retina, 13-inch, Early 2015) 
 
-** asmc
+** asmc settings
 *** asmc.c
 #+begin_src c
 {
@@ -1873,13 +1934,3 @@ User Guide: MacBook Pro (Retina, 13-inch, Early 2015)
   Ts1S  [sp78]  37.543 (bytes 25 8b)
   Ts2S  [sp78]  35.805 (bytes 23 ce)
 #+end_src
-** links
-
-[[https://forums.freebsd.org/threads/asmc-create-new-entry-for-macbook-air-4-1.60406/]]
-
-[[https://forums.freebsd.org/threads/success-installing-freebsd-13-0-on-macbook-pro-5-5.80458/]]
-
-[[https://forums.freebsd.org/threads/what-controls-the-window-icon-size-vlc-and-others.81109/]]
-
-[[https://www.reddit.com/r/freebsd/comments/4ufu92/can_anyone_explain_to_me_how_i_can_add_my_own/]]
-
