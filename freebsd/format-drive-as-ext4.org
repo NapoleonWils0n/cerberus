@@ -1,0 +1,34 @@
+#+STARTUP: content
+* freebsd format drive as ext4
+** e2fsprogs-core
+
+install e2fsprogs-core
+
+#+begin_src sh
+doas pkg install e2fsprogs-core
+#+end_src
+
+** dmesg
+
+plug in the drive and run dmesg to find the drive name
+
+#+begin_src sh
+doas dmesg
+#+end_src
+
+the drive is listed as da0
+
+** wipe drive and format as ext4
+
+#+begin_src sh
+gpart destroy -F da0
+gpart create -s gpt da0
+gpart add -t linux-data da0
+mkfs.ext4 /dev/da0p1
+#+end_src
+
+** mount ext4 drive
+
+#+begin_src sh
+mount -t ext2fs /dev/da0p1 /mnt/usb
+#+end_src
