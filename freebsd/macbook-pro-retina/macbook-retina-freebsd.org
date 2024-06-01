@@ -1500,6 +1500,33 @@ create a zfs snapshot
 zfs snapshot -r zroot@14.0-p6
 #+END_SRC
 
+*** device.hints for audio
+
+add write permissions to the device.hints file
+
+#+begin_src sh
+sudo chmod +w /boot/device.hints
+#+end_src
+
+device hints for speaker and headphones
+
+#+begin_example
+/boot/device.hints
+#+end_example
+
+#+begin_src conf
+hint.hdac.1.cad0.nid18.config="as=2 seq=0 device=Speaker"
+hint.hdac.1.cad0.nid24.config="as=2 seq=0 device=Speaker"
+hint.hdac.1.cad0.nid16.config="as=4 seq=15 device=Headphones"
+hint.hdaa.1.gpio_config="0=set"
+#+end_src
+
+remove write permissions to the device.hints file
+
+#+begin_src sh
+sudo chmod -w /boot/device.hints
+#+end_src
+
 ** mpd
 
 create the mpd playlists directory
