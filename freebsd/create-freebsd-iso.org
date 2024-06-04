@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* freebsd create iso
+
+#+begin_src sh
+git clone https://github.com/mmatuska/mfsbsd
+cd mfsbsd
+fetch https://download.freebsd.org/releases/amd64/14.1-RELEASE/kernel.txz
+fetch https://download.freebsd.org/releases/amd64/14.1-RELEASE/base.txz
+make iso BASE=./ RELEASE=14.1-RELEASE ARCH=amd64
+#+end_src
