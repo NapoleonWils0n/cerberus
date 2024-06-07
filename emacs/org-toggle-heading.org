@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* org toggle heading
+
+Convert headings to normal text, or items or text to headings
+
+bound by default to
+
+#+begin_example
+C-c *
+#+end_example
