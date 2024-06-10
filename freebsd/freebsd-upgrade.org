@@ -1,0 +1,86 @@
+#+STARTUP: content
+* freebsd upgrade
+** beadm
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+beadm create
+
+#+BEGIN_SRC sh
+beadm create 14.1
+#+END_SRC
+
+list the boot environments
+
+#+BEGIN_SRC sh
+beadm list
+#+END_SRC
+
+Activate the new boot environment.
+
+#+BEGIN_SRC sh
+beadm activate 14.1
+#+END_SRC
+
+reboot
+
+#+begin_src sh
+reboot
+#+end_src
+
+** upgrade
+
+fetch and install latest upgrades
+
+#+begin_src sh
+freebsd-update fetch
+freebsd-update install
+#+end_src
+
+upgrade to 14.1
+
+#+begin_src sh
+freebsd-update -r 14.1-RELEASE upgrade
+#+end_src
+
+install
+
+#+begin_src sh
+freebsd-update install
+#+end_src
+
+reboot
+
+#+begin_src sh
+shutdown -r now
+#+end_src
+
+install
+
+#+begin_src sh
+freebsd-update install
+#+end_src
+
+failed
+
+#+begin_src sh
+rm -rf /var/db/freebsd-update/*
+#+end_src
+
+** poudriere
+
+delete jail
+
+#+begin_src sh
+poudriere jail -d -C all -j freebsd_14-0x64
+#+end_src
+
+** beadm destroy
+
+#+begin_src sh
+beadm destroy -F 14.0-p6
+#+end_src
