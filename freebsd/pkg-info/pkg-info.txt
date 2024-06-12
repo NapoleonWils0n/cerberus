@@ -8,7 +8,6 @@ adwaita-qt6-1.4.2              Adwaita theme for Qt applications
 alacritty-0.13.2               GPU-accelerated terminal emulator
 aom-3.8.2                      AV1 reference encoder/decoder
 apg-1.2.0_2,1                  Automated Password Generator written in Go
-appres-1.0.5_1                 Program to list application's resources
 archlinux-keyring-20231222     Arch Linux PGP keyring
 archlinux-pacman-6.0.2_1       Package manager from Arch Linux
 argp-standalone-1.5.0          Standalone version of arguments parsing functions from GLIBC
@@ -23,7 +22,6 @@ basu-0.2.1                     sd-bus library, extracted from systemd
 bat-0.23.0_12                  Clone of cat with syntax highlighting
 beadm-1.3.5_1                  Solaris-like utility to manage Boot Environments on ZFS
 binutils-2.40_5,1              GNU binary tools
-bitmap-1.1.1                   Bitmap editor and converter utilities for X
 boehm-gc-8.2.6                 Garbage collection and memory leak detection for C and C++
 boehm-gc-threaded-8.2.6        Garbage collection and memory leak detection for C and C++
 boost-libs-1.84.0              Free portable C++ libraries (without Boost.Python)
@@ -77,47 +75,15 @@ ffnvcodec-headers-12.0.16.1    FFmpeg version of Nvidia Codec SDK headers
 fftw3-3.3.10_5                 Fast C routines to compute the Discrete Fourier Transform
 fftw3-float-3.3.10_5           Fast Discrete Fourier Transform (Single Precision C Routines)
 firacode-6.2                   Monospaced font with programming ligatures derived from Fira
-firefox-126.0.1,2              Web browser based on the browser portion of Mozilla
+firefox-127.0_1,2              Web browser based on the browser portion of Mozilla
 flac-1.4.3_1,1                 Free lossless audio codec
 fluidsynth-2.3.4               Real-time software synthesizer based on the SoundFont 2 specifications
-font-adobe-100dpi-1.0.3_4      X.Org Adobe 100dpi font
-font-adobe-75dpi-1.0.3_4       X.Org Adobe 75dpi font
-font-adobe-utopia-100dpi-1.0.4_4 X.Org Adobe Utopia 100dpi font
-font-adobe-utopia-75dpi-1.0.4_4 X.Org Adobe Utopia 75dpi font
-font-adobe-utopia-type1-1.0.4_4 X.Org Adobe Utopia Type1 font
-font-alias-1.0.4               X.Org Font aliases
-font-arabic-misc-1.0.3_4       X.Org miscellaneous Arabic fonts
-font-bh-100dpi-1.0.3_4         X.Org Bigelow Holmes 100dpi font
-font-bh-75dpi-1.0.3_4          X.Org Bigelow Holmes 75dpi font
-font-bh-lucidatypewriter-100dpi-1.0.3_4 X.Org Bigelow Holmes Lucida TypeWriter 100dpi font
-font-bh-lucidatypewriter-75dpi-1.0.3_4 X.Org Bigelow Holmes Lucida TypeWriter 75dpi font
 font-bh-ttf-1.0.3_5            X.Org Bigelow & Holmes TTF font
-font-bh-type1-1.0.3_4          X.Org Bigelow Holmes Type1 font
-font-bitstream-100dpi-1.0.3_4  X.Org Bitstream Vera 100dpi font
-font-bitstream-75dpi-1.0.3_4   X.Org Bitstream Vera 75dpi font
-font-bitstream-type1-1.0.3_4   X.Org Bitstream Vera Type1 font
-font-cronyx-cyrillic-1.0.3_4   X.Org Cronyx Cyrillic font
-font-cursor-misc-1.0.3_4       X.Org miscellaneous Cursor fonts
-font-daewoo-misc-1.0.3_4       X.Org miscellaneous Daewoo fonts
-font-dec-misc-1.0.3_4          X.Org miscellaneous Dec fonts
-font-ibm-type1-1.0.3_4         X.Org IBM Type1 font
-font-isas-misc-1.0.3_4         X.Org miscellaneous ISAS fonts
-font-jis-misc-1.0.3_4          X.Org miscellaneous JIS fonts
-font-micro-misc-1.0.3_4        X.Org miscellaneous Micro fonts
-font-misc-cyrillic-1.0.3_4     X.Org miscellaneous Cyrillic font
 font-misc-ethiopic-1.0.4       X.Org miscellaneous Ethiopic font
 font-misc-meltho-1.0.3_5       X.Org miscellaneous Meltho font
-font-misc-misc-1.1.2_4         X.Org miscellaneous Misc fonts
-font-mutt-misc-1.0.3_4         X.Org miscellaneous Mutt fonts
-font-schumacher-misc-1.1.2_4   X.Org miscellaneous Schumacher fonts
-font-screen-cyrillic-1.0.4_4   X.Org Screen Cyrillic font
-font-sony-misc-1.0.3_4         X.Org miscellaneous Sony fonts
-font-sun-misc-1.0.3_4          X.Org miscellaneous Sun fonts
-font-winitzki-cyrillic-1.0.3_4 X.Org Winitzki Cyrillic font
-font-xfree86-type1-1.0.4_4     X.Org XFree86 Type1 font
 fontconfig-2.15.0_2,1          XML-based font configuration API for X Windows
 foreign-cdm-20231217_3         CDM agent for Chromium
-freebsd-release-manifests-20240525 FreeBSD release manifests
+freebsd-release-manifests-20240531 FreeBSD release manifests
 freeglut-3.2.1                 Open source implementation of GLUT library
 freetype2-2.13.2               Free and portable TrueType font rendering engine
 fribidi-1.0.13_1               Free Implementation of the Unicode Bidirectional Algorithm
@@ -133,7 +99,7 @@ gettext-runtime-0.22.5         GNU gettext runtime libraries and programs
 ghostscript10-10.03.0_1        PostScript and PDF interpreter
 giflib-5.2.1_1                 Tools and library routines for working with GIF images
 girara-0.4.2                   GTK3 Interface Library for Zathura PDF Viewer
-git-2.45.1                     Distributed source code management tool 
+git-2.45.2_1                   Distributed source code management tool 
 glib-2.80.2,2                  Some useful routines of C programming (current stable version)
 glib-networking-2.78.0         Network-related giomodules for glib
 glibmm-2.66.6,1                C++ interfaces for glib2
@@ -179,7 +145,6 @@ highway-1.1.0                  Performance-portable, length-agnostic SIMD with r
 hs-pandoc-3.1.12.3             Conversion between markup formats
 http-parser-2.9.4              HTTP request/response parser written in C
 hwdata-0.382,1                 Database of IDs used in PCI, PNP and USB devices
-iceauth-1.0.8_3                ICE authority file utility for X
 icu-74.2_1,1                   International Components for Unicode (from IBM)
 indexinfo-0.3.1                Utility to regenerate the GNU info page index
 inih-58                        Simple .INI file parser written in C
@@ -190,42 +155,36 @@ jansson-2.14                   C library for encoding, decoding, and manipulatin
 jbig2dec-0.20_1                Decoder implementation of the JBIG2 image compression format
 jbigkit-2.1_2                  Lossless compression for bi-level images such as scanned pages, faxes
 jpeg-turbo-3.0.2               SIMD-accelerated JPEG codec which replaces libjpeg
+jq-1.7.1                       Lightweight and flexible command-line JSON processor
 json-glib-1.8.0                JSON (RFC 4627) interface for Glib
 jsoncpp-1.9.5                  JSON reader and writer library for C++
 kanshi-1.6.0                   Dynamic display configuration for Wayland
 labwc-0.7.2                    Wayland stacking compositor
 lame-3.100_5                   Fast MP3 encoder kit
 lcms2-2.16_1                   Accurate, fast, and small-footprint color management engine
-libFS-1.0.8_1                  The FS library
 libGLU-9.0.2_2                 OpenGL utility library
 libICE-1.1.0_2,1               Inter Client Exchange library for X11
 libSM-1.2.3_1,1                Session Management library for X11
 libX11-1.8.7_1,1               X11 library
 libXScrnSaver-1.2.4_1          The XScrnSaver library
 libXau-1.0.9_1                 Authentication Protocol library for X11
-libXaw-1.0.14_1,2              X Athena Widgets library
 libXcomposite-0.4.6_1,1        X Composite extension library
 libXcursor-1.2.2               X client-side cursor loading library
 libXdamage-1.1.6               X Damage extension library
 libXdmcp-1.1.5                 X Display Manager Control Protocol library
 libXext-1.3.6,1                X11 Extension library
 libXfixes-6.0.0_1              X Fixes extension library
-libXfont-1.5.4_3,2             X font library
 libXfont2-2.0.5_1              X font library
 libXft-2.3.7_1                 Client-sided font API for X applications
 libXi-1.8_1,1                  X Input extension library
 libXinerama-1.1.4_3,1          X11 Xinerama library
 libXmu-1.1.4,1                 X Miscellaneous Utilities libraries
-libXpm-3.5.17_1                X Pixmap library
 libXpresent-1.0.0_1            X Present Extension library
 libXrandr-1.5.2_1              X Resize and Rotate extension library
 libXrender-0.9.10_2            X Render extension library
-libXres-1.2.2_1                X Resource usage library
 libXt-1.3.0,1                  X Toolkit library
 libXtst-1.2.3_3                X Test extension
 libXv-1.0.12_1,1               X Video Extension library
-libXvMC-1.0.14                 X Video Extension Motion Compensation library
-libXxf86dga-1.1.6_1            X DGA Extension
 libXxf86vm-1.1.4_4             X Vidmode Extension
 libao-1.2.0_7                  Portable audio output library
 libarchive-3.7.2_2,1           Library to create and read several streaming archive formats
@@ -334,7 +293,7 @@ libva-utils-2.21.0             Collection of tests and utilities for VAAPI
 libvdpau-1.5                   VDPAU wrapper and tracing library
 libvdpau-va-gl-0.4.2_5         VDPAU driver with OpenGL/VAAPI backend
 libvorbis-1.3.7_2,3            Audio compression codec library
-libvpx-1.14.0                  VP8/VP9 reference encoder/decoder
+libvpx-1.14.1                  VP8/VP9 reference encoder/decoder
 libwacom-1.5_1                 Adds tablet support to libinput
 libwmf-0.2.13_2                Tools and library for converting Microsoft WMF (windows metafile)
 libx264-0.164.3095             H.264/MPEG-4 AVC Video Encoding (Library)
@@ -362,7 +321,6 @@ lmdb-0.9.32,1                  OpenLDAP Lightning Memory-Mapped Database
 lua53-5.3.6_1                  Powerful, efficient, lightweight, embeddable scripting language
 lua54-5.4.6_1                  Powerful, efficient, lightweight, embeddable scripting language
 luajit-devel-2.1.0.20231112_1  Just-In-Time Compiler for Lua
-luit-20240102_1                Locale and ISO 2022 support for Unicode terminals
 lynx-2.8.9.1_2,1               Non-graphical, text-based World-Wide Web client
 lzo2-2.10_1                    Portable speedy, lossless data compression library
 mailutils-3.17                 Utilities, daemons, and filters for processing e-mail
@@ -394,7 +352,7 @@ noto-sans-symbols2-2.008       Google Noto Sans Symbols 2
 noto-serif-basic-2.013         Google Noto Serif (Basic)
 npth-1.6                       New GNU Portable Threads
 nspr-4.35                      Platform-neutral API for system level and libc like functions
-nss-3.99                       Libraries to support development of security-enabled applications
+nss-3.100                      Libraries to support development of security-enabled applications
 nvidia-driver-550.54.14        NVidia graphics card binary drivers for hardware OpenGL rendering
 nvidia-drm-515-kmod-550.54.14_1 NVIDIA DRM Kernel Module
 nvidia-settings-535.146.02_1   Display Control Panel for X NVidia driver
@@ -484,7 +442,7 @@ py39-pysocks-1.7.1             Python SOCKS module
 py39-python-slugify-8.0.4      Slugify application that handles unicode
 py39-pytimeparse-1.1.8         Small Python module to parse various kinds of time expressions
 py39-pyudev-0.22.0             Pure Python libudev binding
-py39-requests-2.31.0           Python HTTP for Humans
+py39-requests-2.32.2           Python HTTP for Humans
 py39-setuptools-63.1.0_1       Python packages installer
 py39-six-1.16.0                Python 2 and 3 compatibility utilities
 py39-sqlalchemy20-2.0.29       Python SQL toolkit and Object Relational Mapper 2.0.x
@@ -531,12 +489,9 @@ rust-1.77.0                    Language with a focus on memory safety and concur
 sdl2-2.30.2                    Cross-platform multimedia development API
 sdl2_mixer-2.6.3_1             Sample multi-channel audio mixer library
 seatd-0.8.0_1                  Minimal seat management daemon and universal library
-sessreg-1.1.2_1                Manage utmp/wtmp entries for non-init X clients
-setxkbmap-1.3.2_1              Set the keyboard using the X Keyboard Extension
 shaderc-2024.0                 GLSL/HLSL to SPIR-V shader compiler
 shared-mime-info-2.2_2         MIME types database from the freedesktop.org project
 slurp-1.5.0_1                  Select a region in a Wayland compositor
-smproxy-1.0.6_1                Session Manager Proxy
 sndio-1.9.0                    Small audio and MIDI framework from the OpenBSD project
 socat-1.8.0.0_3                Multipurpose relay and more
 sox-14.4.2.20210509_4          SOund eXchange - universal sound sample translator
@@ -566,7 +521,6 @@ transmission-utils-4.0.5_1     Transmission BitTorrent client
 tree-2.1.1_1                   Display a tree-view of directories with optional color or HTML output
 tree-sitter-0.22.2             Incremental parser generator
 ts-1.0.2_1                     Serial task spooler
-twm-1.0.12_1                   Tab Window Manager for the X Window System
 twolame-0.4.0_4                MPEG Audio Layer 2 encoder
 ubuntu-keyring-2021.03.26      GPG keys for Ubuntu package signature verification
 uchardet-0.0.8_1               Universal charset detection library
@@ -601,12 +555,7 @@ wlr-which-key-0.1.3_1          Keymap manager for wlroots-based compositors
 wlrctl-0.2.2_1                 Utility for miscellaneous wlroots extensions
 wlrobs-1.1_3                   Wayland screen capture plugin for obs-studio
 wlroots-0.17.3                 Modular Wayland compositor library
-x11perf-1.6.1_1                X11 server performance test program
 x265-3.5_1                     H.265/High Efficiency Video Coding (HEVC) format
-xauth-1.1.3                    X authority file utility
-xbacklight-1.2.3_1             Program to adjust backlight brightness
-xbitmaps-1.1.2                 X.Org bitmaps data
-xcalc-1.1.2_1                  Scientific calculator for X
 xcb-util-0.4.1,1               Module with libxcb/libX11 extension/replacement libraries
 xcb-util-cursor-0.1.3          XCB cursor library
 xcb-util-errors-1.0.1          Pretty-print XCB codes
@@ -614,67 +563,21 @@ xcb-util-image-0.4.1           Port of Xlib's XImage and XShmImage functions
 xcb-util-keysyms-0.4.1         Standard X key constants and conversion to/from keycodes
 xcb-util-renderutil-0.3.10     Convenience functions for the Render extension
 xcb-util-wm-0.4.2              Framework for window manager implementation
-xclock-1.0.9_1                 Analog and digital clock for X
-xcmsdb-1.0.5_1                 Device Color Characterization utility for X
-xconsole-1.0.8_1               Monitor system console messages with X
-xcursor-themes-1.0.6           X.org cursors themes
-xcursorgen-1.0.8_1             Create an X cursor file from a collection of PNG images
 xdg-desktop-portal-1.18.3      Portal frontend service for Flatpak
 xdg-desktop-portal-wlr-0.7.1   xdg-desktop-portal backend for wlroots
 xdg-utils-1.1.3_4              Tools to allow all applications to integrate with the free desktop
-xdpyinfo-1.3.2_5               Display information utility for X
-xdriinfo-1.0.6_5               Query configuration information of DRI drivers
 xephyr-21.1.13,1               X.Org X server and related programs
-xev-1.2.6                      Print contents of X events
-xf86-input-keyboard-1.9.0_6    X.Org keyboard input driver
-xf86-input-libinput-1.3.0_1    X.Org libinput input driver
-xf86-input-mouse-1.9.3_5       X.Org mouse input driver
-xf86-video-scfb-0.0.7_2        X.Org syscons display driver
-xf86-video-vesa-2.5.0_3        X.Org vesa display driver
-xf86dga-1.0.3_2                Test program for the XFree86-DGA extension
-xgamma-1.0.7_1                 Gamma correction through the X server
-xgc-1.0.5_1                    X graphics demo
 xhost-1.0.8_1                  Server access control program for X
-xinit-1.4.2_1,1                X Window System initializer
-xinput-1.6.3_1                 Very useful utility for configuring and testing XInput devices
 xkbcomp-1.4.7                  Compile XKB keyboard description
-xkbevd-1.1.4_1                 XKB event daemon
-xkbutils-1.0.6                 XKB utility demos
 xkeyboard-config-2.41_4        X Keyboard Configuration Database
-xkill-1.0.5_1                  Utility for killing a client by its X resource
-xlsatoms-1.1.4_1               List interned atoms defined on a server
-xlsclients-1.1.5_1             List client applications running on a display
-xmessage-1.0.7                 Display message or query in a X window
 xmlsec1-1.3.2_1                XML Security Library
-xmodmap-1.0.10_1               Utility for modifying keymaps and pointer button mappings in X
-xorg-7.7_3                     X.Org complete distribution metaport
-xorg-apps-7.7_4                X.org apps meta-port
-xorg-docs-1.7.2_1,1            X.org documentation files
-xorg-drivers-7.7_7             X.org drivers meta-port
-xorg-fonts-7.7_1               X.org fonts meta-port
-xorg-fonts-100dpi-7.7          X.Org 100dpi bitmap fonts
-xorg-fonts-75dpi-7.7           X.Org 75dpi bitmap fonts
-xorg-fonts-cyrillic-7.7        X.Org Cyrillic bitmap fonts
-xorg-fonts-miscbitmaps-7.7     X.Org miscellaneous bitmap fonts
 xorg-fonts-truetype-7.7_1      X.Org TrueType fonts
-xorg-fonts-type1-7.7           X.Org Type1 fonts
-xorg-libraries-7.7_5           X.org libraries meta-port
 xorg-server-21.1.13,1          X.Org X server and related programs
 xorgproto-2023.2               X Window System unified protocol definitions
-xpr-1.2.0                      Utility for printing an X window dump
 xprop-1.2.7                    Property displayer for X
 xrandr-1.5.2_1                 Primitive command line interface to the RandR extension
-xrdb-1.2.1_1                   X server resource database utility
-xrefresh-1.1.0                 Refresh all or part of an X screen
 xset-1.2.5_1                   User preference utility for X
-xsetroot-1.1.2_1               Root window parameter setting utility for X
-xterm-390                      Terminal emulator for the X Window System
-xtrans-1.4.0_1                 Abstract network code for X
-xvinfo-1.1.5_1                 Print out X-Video extension adaptor information
 xwayland-23.2.7,1              X11 server as Wayland client
-xwd-1.0.8_1                    Dump an image of an X window
-xwininfo-1.1.5_1               Window information utility for X
-xwud-1.0.5_1                   Image displayer for X
 xxhash-0.8.2_1                 Extremely fast non-cryptographic hash algorithm
 yt-dlp-2024.03.10              Command-line program for downloading videos from various platforms
 zathura-0.5.2_3                Customizable lightweight pdf viewer

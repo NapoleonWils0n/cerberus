@@ -37,6 +37,7 @@ gtar
 gtk-arc-themes
 handbrake
 hs-pandoc
+jq
 kanshi
 labwc
 libc6-shim
@@ -116,7 +117,6 @@ wlroots
 xdg-desktop-portal-wlr
 xephyr
 xhost
-xorg
 xrandr
 yt-dlp
 zathura
