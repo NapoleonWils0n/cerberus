@@ -461,6 +461,12 @@ If you wish to reconfigure the options for your ports in the future, you can re-
 # poudriere options -c -j freebsd_14-0x64 -p HEAD -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
+bulk build with no user input
+
+#+BEGIN_SRC sh
+# poudriere bulk -j freebsd_14-0x64 -p HEAD -f /usr/local/etc/poudriere.d/port-list
+#+END_SRC
+
 *** Building the Ports
 
 Now, we are finally ready to start building ports.
