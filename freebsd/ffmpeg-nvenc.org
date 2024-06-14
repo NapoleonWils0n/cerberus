@@ -4,3 +4,8 @@
 #+begin_src sh
 nv-sglrun ffmpeg -i input.mp4 -c:v hevc_nvenc -c:a aac output.mp4
 #+end_src
+
+#+begin_src sh
+nv-sglrun ffmpeg -y -vsync 0 -hwaccel cuda -hwaccel_output_format cuda \
+-i input.mp4 -c:a copy -c:v hevc_nvenc -b:v 5M output.mp4
+#+end_src
