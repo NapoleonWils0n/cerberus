@@ -1,0 +1,78 @@
+<playercorefactory>
+ <players>
+   <player name="save url" type="ExternalPlayer" audio="true" video="true">
+	<filename>printf</filename>
+     <args>"%s\n" "{0}" > "$HOME/Desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt"</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="play" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilferplay"</filename>
+     <args>-i "{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+   <player name="record video" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>  
+   <player name="record video - 30 minutes" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 00:30:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 1 hour" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 01:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 2 hours" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 02:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 3 hours" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 03:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>  
+   <player name="record audio - 30 minutes" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 00:30:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 1 hour" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 01:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 2 hours" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 02:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 3 hours" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 03:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+ </players>
+ <rules action="overwrite">
+   <rule protocols="nfs|smb" player="dvdplayer"></rule>
+   <rule internetstream="true" player="play"></rule>
+   <!-- change the default player below -->
+
+   <!-- uncomment to make play the default player
+    <rule video="true" player="play"></rule>
+   -->
+   
+   <!-- uncomment to make record the default player
+    <rule video="true" player="record"></rule>
+   -->
+   
+ </rules>
+</playercorefactory>

@@ -1,0 +1,132 @@
+#+STARTUP: content
+* kodi freebsd
+** kodi install
+
+#+begin_src sh
+doas pkg install kodi kodi-addon-inputstream.adaptive
+#+end_src
+
+** pilfer
+
+#+begin_src sh
+doas pkg install py39-virtualenv
+#+end_src
+*** Create a virtual environment 
+
+#+begin_src sh
+python3 -m venv ~/.venv/pilfer
+#+end_src
+
+*** activate the environment
+
+#+begin_src sh
+source ~/.venv/pilfer/bin/activate
+#+end_src
+
+*** install package
+
+#+begin_src sh
+pip install --use-pep517 git+https://github.com/NapoleonWils0n/pilfer.git
+#+end_src
+
+*** upgrade package
+
+#+begin_src sh
+pip install --use-pep517 --upgrade git+https://github.com/NapoleonWils0n/pilfer.git
+#+end_src
+
+activate the virtual environment
+
+#+begin_src sh
+source ~/.venv/pilfer/bin/activate
+#+end_src
+
+*** deactivate
+
+#+begin_src sh
+deactivate
+#+end_src
+
+** playercorefactory.xml
+
+#+begin_src xml
+<playercorefactory>
+ <players>
+   <player name="save url" type="ExternalPlayer" audio="true" video="true">
+	<filename>printf</filename>
+     <args>"%s\n" "{0}" > "$HOME/Desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt"</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="play" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilferplay"</filename>
+     <args>-i "{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+   <player name="record video" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>  
+   <player name="record video - 30 minutes" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 00:30:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 1 hour" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 01:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 2 hours" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 02:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 3 hours" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 03:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>  
+   <player name="record audio - 30 minutes" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 00:30:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 1 hour" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 01:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 2 hours" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 02:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 3 hours" type="ExternalPlayer" audio="true" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 03:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+ </players>
+ <rules action="overwrite">
+   <rule protocols="nfs|smb" player="dvdplayer"></rule>
+   <rule internetstream="true" player="play"></rule>
+   <!-- change the default player below -->
+
+   <!-- uncomment to make play the default player
+    <rule video="true" player="play"></rule>
+   -->
+   
+   <!-- uncomment to make record the default player
+    <rule video="true" player="record"></rule>
+   -->
+   
+ </rules>
+</playercorefactory>
+
+#+end_src
