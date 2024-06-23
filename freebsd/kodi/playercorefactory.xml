@@ -5,11 +5,6 @@
      <args>"%s\n" "{0}" > "$HOME/Desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt"</args>
      <hidexbmc>false</hidexbmc>
    </player>
-   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
-	<filename>"/usr/local/bin/mpv"</filename>
-     <args>-i "{0}"</args>
-     <hidexbmc>true</hidexbmc>
-   </player>  
    <player name="play" type="ExternalPlayer" audio="false" video="true">
 	<filename>"$HOME/.venv/pilfer/bin/pilferplay"</filename>
      <args>-i "{0}"</args>
