@@ -68,8 +68,16 @@ su
 
 replace dsp0 with you device
 
+rate 48000
+
 #+begin_src sh
 virtual_oss -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp
+#+end_src
+
+rate 44100
+
+#+begin_src sh
+virtual_oss -Q 0 -C 2 -c 2 -r 44100 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp
 #+end_src
 
 ctrl c to stop

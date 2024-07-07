@@ -55,8 +55,16 @@ use the freebsd mixer or mixertui to set the mic input level to 100%
 
 ** run jackd 
 
+rate 48000
+
 #+begin_src sh
 jackd -R -d oss -r 48000 -C /dev/dsp3 -P /dev/dsp1
+#+end_src
+
+rate 44100
+
+#+begin_src sh
+jackd -R -d oss -r 44100 -C /dev/dsp3 -P /dev/dsp1
 #+end_src
 
 ** obs studio add Jack Input Client
