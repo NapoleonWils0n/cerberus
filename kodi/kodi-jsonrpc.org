@@ -1,0 +1,20 @@
+#+STARTUP: content
+* kodi jsonrpc
+** play pause
+
+#+begin_src sh
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.PlayPause","params":{"playerid":1}}'
+#+end_src
+
+** player open
+*** url
+
+#+begin_src sh
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.Open","params": {"item": { "file": "https://www.youtube.com/watch?v=ME4r4D3U-2k" } }}'
+#+end_src
+
+*** plugin
+
+#+begin_src sh
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.Open","params": {"item": { "file": "plugin://plugin.video.youtube/play/?video_id=Jy0DTu4BF6Q" } }}'
+#+end_src
