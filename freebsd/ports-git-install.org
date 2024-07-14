@@ -1,0 +1,66 @@
+#+STARTUP: content
+* Installing the Ports Collection
+
+[[https://docs.freebsd.org/en/books/handbook/ports/]]
+
+Before an application can be compiled using a port, the Ports Collection must first be installed. If it was not installed during the installation of FreeBSD, use one of the following methods to install it:
+
+If more control over the ports tree is needed or if local changes need to be maintained, or if running FreeBSD-CURRENT, Git can be used to obtain the Ports Collection. Refer to the Git Primer for a detailed description of Git.
+
+We add --depth 1 to the git command line to clone the tree without obtaining the commit history, which saves time and is acceptable for most users. If you have your own changes to the ports tree, or need the history for any reason, omit the --depth 1 argument below.
+
+** zfs destroy old ports
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+destroy the zroot/usr/ports and recreate it
+
+#+begin_src sh
+zfs destroy -R zroot/usr/ports
+zfs create zroot/usr/ports
+zfs set mountpoint=/usr/ports zroot/usr/ports
+#+end_src
+
+** git install
+
+git must be installed before it can be used to check out the ports tree.
+
+#+begin_src sh
+sudo pkg install git
+#+end_src
+
+** checkout head
+
+Check out a copy of the HEAD branch of the ports tree:
+
+#+begin_src sh
+sudo git clone --depth 1 https://git.FreeBSD.org/ports.git /usr/ports
+#+end_src
+
+** checkout quarterly
+
+Or, check out a copy of a quarterly branch:
+
+#+begin_src sh
+sudo git clone --depth 1 https://git.FreeBSD.org/ports.git -b 2023Q1 /usr/ports
+#+end_src
+
+** update
+
+As needed, update /usr/ports after the initial Git checkout:
+
+#+begin_src sh
+sudo git -C /usr/ports pull
+#+end_src
+
+** switch to a different quarterly branch
+
+As needed, switch /usr/ports to a different quarterly branch:
+
+#+begin_src sh
+sudo git -C /usr/ports switch 2023Q1
+#+end_src
