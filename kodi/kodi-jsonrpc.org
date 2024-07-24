@@ -1,26 +1,30 @@
 #+STARTUP: content
+#+PROPERTY: header-args :results silent :noweb yes
 * kodi jsonrpc
-** play pause
+** play url
 
 #+begin_src sh
-curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.PlayPause","params":{"playerid":1}}'
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.Open","params": {"item": { "file": "plugin://plugin.video.youtube/play/?video_id='${url}'" } }}' 2>/dev/null
 #+end_src
 
-** player open
-*** url
+** open window
 
 #+begin_src sh
-curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.Open","params": {"item": { "file": "https://www.youtube.com/watch?v=ME4r4D3U-2k" } }}'
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "GUI.ActivateWindow","id":1,"params": { "window":"home" }}'
 #+end_src
 
-*** plugin
+** open addon
 
 #+begin_src sh
-curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Player.Open","params": {"item": { "file": "plugin://plugin.video.youtube/play/?video_id=Jy0DTu4BF6Q" } }}'
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params": { "addonid":"plugin.video.youtube" },"id":"1"}'
 #+end_src
 
-** input enter
+** switch to channel
 
 #+begin_src sh
-curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "id": 1, "method": "Input.Select"}' 2>/dev/null
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":  { "wait":false,"addonid":"plugin.video.youtube","params": ["/channel/UCzbwOixfdDkOEl4c2Gy1Xow"] }, "id":"1"}' 2>/dev/null
 #+end_src
+
+
+
+

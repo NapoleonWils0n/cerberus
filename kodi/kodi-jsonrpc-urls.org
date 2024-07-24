@@ -1,0 +1,23 @@
+#+STARTUP: content
+#+PROPERTY: header-args :results silent :noweb yes 
+* noweb code block
+#+NAME: noweb-block
+#+begin_src sh
+curl -X POST -H "content-type:application/json" http://kodi:kodi@127.0.0.1:8080/jsonrpc -d '{"jsonrpc": "2.0", "method": "Addons.ExecuteAddon","params":  { "wait":false,"addonid":"plugin.video.youtube","params": ["/channel/'${url}'"] }, "id":"1"}' 2>/dev/null   
+#+end_src
+
+* kodi youtube channels
+** nufc
+*** magpie channel
+#+NAME: magpie
+#+HEADER: :var url="UCzbwOixfdDkOEl4c2Gy1Xow" :noweb yes 
+#+BEGIN_SRC sh 
+<<noweb-block>>
+#+end_src
+
+*** roobenstein
+#+NAME: roobenstein
+#+HEADER: :var url="UC2WTz3aJZ65nN3p5_LMJAzg" :noweb yes 
+#+BEGIN_SRC sh 
+<<noweb-block>>
+#+end_src

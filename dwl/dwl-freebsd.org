@@ -177,8 +177,10 @@ make edits and commit them one by one
 
 ** movestack 
 
+[[https://codeberg.org/dwl/dwl-patches/src/branch/main/patches/movestack]]
+
 #+begin_src sh
-wget https://codeberg.org/dwl/dwl-patches/raw/branch/main/movestack/movestack.patch
+wget https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/movestack/movestack.patch
 #+end_src
 
 #+begin_src sh

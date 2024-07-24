@@ -1,0 +1,6 @@
+#+STARTUP: overview
+* pkg delete installed packages
+
+#+begin_src sh
+pkg delete -a
+#+end_src
