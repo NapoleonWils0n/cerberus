@@ -387,8 +387,16 @@ change into the dwm directory
 cd dwl
 #+END_SRC
 
+make for xwayland
+
 #+begin_src sh
 gmake CC=cc CFLAGS+='-std=c11' XWAYLAND="-DXWAYLAND" XLIBS="xcb xcb-icccm"
+#+end_src
+
+make without xwayland
+
+#+begin_src sh
+gmake CC=cc CFLAGS+='-std=c11'
 #+end_src
 
 https://forums.freebsd.org/threads/building-dwl-fails-with-c99-illegal-option-p.92040/
