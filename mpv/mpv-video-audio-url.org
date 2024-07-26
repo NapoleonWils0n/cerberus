@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* mpv video audio url
+
+#+begin_src sh
+mpv {video_url} --audio-file={audio_url}
+#+end_src
