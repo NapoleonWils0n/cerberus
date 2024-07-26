@@ -20,8 +20,10 @@ static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You ca
 /* logging */
 static int log_level = WLR_ERROR;
 
+/* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */
+	/* examples: */
 	{ "mpv",  NULL,           0,       1,           0 },
 };
 
@@ -34,6 +36,10 @@ static const Layout layouts[] = {
 };
 
 /* monitors */
+/* (x=-1, y=-1) is reserved as an "autoconfigure" monitor position indicator
+ * WARNING: negative values other than (-1, -1) cause problems with Xwayland clients
+ * https://gitlab.freedesktop.org/xorg/xserver/-/issues/899
+*/
 /* NOTE: ALWAYS add a fallback rule, even if you are completely sure it won't be used */
 static const MonitorRule monrules[] = {
 	/* name       mfact  nmaster scale layout       rotate/reflect                x    y */
@@ -152,7 +158,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
-	{ MODKEY,                    XKB_KEY_s,          togglefullscreen, {0} },
+	{ MODKEY,                    XKB_KEY_s,         togglefullscreen, {0} },
 	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },

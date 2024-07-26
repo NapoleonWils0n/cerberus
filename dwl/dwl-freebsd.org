@@ -223,6 +223,33 @@ XWAYLAND = -DXWAYLAND
 XLIBS = xcb xcb-icccm
 #+end_src
 
+** dwl.c focus
+
+
+dwl.c change line 606 from
+
+#+begin_src c
+case WLR_BUTTON_PRESSED:
+#+end_src
+
+to
+
+#+begin_src c
+case WL_POINTER_BUTTON_STATE_PRESSED:
+#+end_src
+
+change Line 627 from 
+
+#+begin_src c
+case WLR_BUTTON_RELEASED:
+#+end_src
+
+to
+
+#+begin_src c
+case WL_POINTER_BUTTON_STATE_RELEASED:
+#+end_src
+
 ** keyboard set up
 
 config.h

@@ -4,19 +4,24 @@
 include config.mk
 
 # flags for compiling
-DWLCPPFLAGS = -I. -DWLR_USE_UNSTABLE -D_XOPEN_SOURCE=700 -DVERSION=\"$(VERSION)\" $(XWAYLAND)
-DWLDEVCFLAGS = -g -pedantic -Wall -Wextra -Wdeclaration-after-statement -Wno-unused-parameter -Wshadow -Wunused-macros\
-	-Werror=strict-prototypes -Werror=implicit -Werror=return-type -Werror=incompatible-pointer-types -Wfloat-conversion
+DWLCPPFLAGS = -I. -DWLR_USE_UNSTABLE -D_XOPEN_SOURCE=700 \
+	-DVERSION=\"$(VERSION)\" $(XWAYLAND)
+DWLDEVCFLAGS = -g -pedantic -Wall -Wextra -Wdeclaration-after-statement \
+	-Wno-unused-parameter -Wshadow -Wunused-macros -Werror=strict-prototypes \
+	-Werror=implicit -Werror=return-type -Werror=incompatible-pointer-types \
+	-Wfloat-conversion
 
 # CFLAGS / LDFLAGS
 PKGS      = wlroots wayland-server xkbcommon libinput $(XLIBS)
 DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CFLAGS)
-LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` $(LIBS)
+LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` -lm $(LIBS)
 
 all: dwl
 dwl: dwl.o util.o
-	$(CC) dwl.o util.o $(LDLIBS) $(LDFLAGS) $(DWLCFLAGS) -o $@
-dwl.o: dwl.c config.mk config.h client.h cursor-shape-v1-protocol.h pointer-constraints-unstable-v1-protocol.h wlr-layer-shell-unstable-v1-protocol.h xdg-shell-protocol.h
+	$(CC) dwl.o util.o $(DWLCFLAGS) $(LDFLAGS) $(LDLIBS) -o $@
+dwl.o: dwl.c client.h config.h config.mk cursor-shape-v1-protocol.h \
+	pointer-constraints-unstable-v1-protocol.h wlr-layer-shell-unstable-v1-protocol.h \
+	wlr-output-power-management-unstable-v1-protocol.h xdg-shell-protocol.h
 util.o: util.c util.h
 
 # wayland-scanner is a tool which generates C headers and rigging for Wayland
@@ -34,6 +39,9 @@ pointer-constraints-unstable-v1-protocol.h:
 wlr-layer-shell-unstable-v1-protocol.h:
 	$(WAYLAND_SCANNER) server-header \
 		protocols/wlr-layer-shell-unstable-v1.xml $@
+wlr-output-power-management-unstable-v1-protocol.h:
+	$(WAYLAND_SCANNER) server-header \
+		protocols/wlr-output-power-management-unstable-v1.xml $@
 xdg-shell-protocol.h:
 	$(WAYLAND_SCANNER) server-header \
 		$(WAYLAND_PROTOCOLS)/stable/xdg-shell/xdg-shell.xml $@
@@ -45,8 +53,8 @@ clean:
 
 dist: clean
 	mkdir -p dwl-$(VERSION)
-	cp -R LICENSE* Makefile CHANGELOG.md README.md client.h config.def.h\
-		config.mk protocols dwl.1 dwl.c util.c util.h dwl.desktop\
+	cp -R LICENSE* Makefile CHANGELOG.md README.md client.h config.def.h \
+		config.mk protocols dwl.1 dwl.c util.c util.h dwl.desktop \
 		dwl-$(VERSION)
 	tar -caf dwl-$(VERSION).tar.gz dwl-$(VERSION)
 	rm -rf dwl-$(VERSION)
@@ -62,8 +70,9 @@ install: dwl
 	cp -f dwl.desktop $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
 	chmod 644 $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/dwl $(DESTDIR)$(MANDIR)/man1/dwl.1 $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
+	rm -f $(DESTDIR)$(PREFIX)/bin/dwl $(DESTDIR)$(MANDIR)/man1/dwl.1 \
+		$(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
 
 .SUFFIXES: .c .o
 .c.o:
-	$(CC) $(CPPFLAGS) $(DWLCFLAGS) -c $<
+	$(CC) $(CPPFLAGS) $(DWLCFLAGS) -o $@ -c $<
