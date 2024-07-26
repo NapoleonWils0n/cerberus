@@ -344,12 +344,6 @@ static const Key keys[] = {
 	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
 #+end_src
 
-** sloppy focus
-
-#+begin_src c
-static const int sloppyfocus               = 0;  /* focus follows mouse */
-#+end_src
-
 ** wlrctl cursor
 *** wlrctl install
 
