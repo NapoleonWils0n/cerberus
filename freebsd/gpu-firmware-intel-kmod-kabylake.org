@@ -1,0 +1,8 @@
+#+STARTUP: overview
+* gpu-firmware-intel-kmod-kabylake
+
+need for dell xps 15
+
+#+begin_src sh
+doas pkg install gpu-firmware-intel-kmod-kabylake
+#+end_src
