@@ -1,3 +1,4 @@
+Bento4
 ImageMagick7
 abook
 adwaita-qt5
@@ -31,6 +32,7 @@ fzf
 git
 gmake
 gnome-themes-extra
+gpu-firmware-intel-kmod-kabylake
 gstreamer1-plugins-opus
 gstreamer1-vaapi
 gtar
@@ -39,6 +41,8 @@ handbrake
 hs-pandoc
 jq
 kanshi
+kodi
+kodi-addon-inputstream.adaptive
 labwc
 libc6-shim
 libnotify
