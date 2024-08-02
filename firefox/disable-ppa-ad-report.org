@@ -1,0 +1,10 @@
+#+STARTUP: content
+* disable ppa
+
+With a tip of the proverbial hat to the Tor project, to disable it ahead of time in an existing browser profile: go into about:config, add a new preference of type boolean with the name dom.private-attribution.submission.enabled, and set its value to false.
+
+Correspondingly, if you want to disable it by default, the proper user.js (or similar file, such as one in Debian’s /etc/firefox-esr directory) incantation would be:
+
+#+begin_src js
+user_pref("dom.private-attribution.submission.enabled", false);
+#+end_src
