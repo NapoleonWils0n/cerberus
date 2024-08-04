@@ -1,0 +1,5 @@
+// swap sterling and numbersign
+partial modifier_keys
+xkb_symbols "swap_sterling_numbersign" {
+    key <AE03> { [ 3, numbersign, sterling ] };
+};

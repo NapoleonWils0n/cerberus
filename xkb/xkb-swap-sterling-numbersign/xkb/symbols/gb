@@ -1,0 +1,6 @@
+// swap sterling and numbersign
+default partial alphanumeric_keys 
+xkb_symbols "swap_sterling_numbersign" {
+    name[Group1]= "swap_sterling_numbersign - Mac";
+    key <AE03> { [ 3, numbersign, sterling ] };
+};

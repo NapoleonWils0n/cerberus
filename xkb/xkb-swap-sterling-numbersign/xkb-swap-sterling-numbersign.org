@@ -1,0 +1,140 @@
+#+STARTUP: content
+* xkb swap sterling and numbersign
+
+swap the sterling and numbersign keys on a gb mac keyboard layout
+
+default layout
+
+#+begin_example
+pressing Shift + 3 = £
+pressing Alt + 3 = #
+#+end_example
+
+change the keys so pressing shift and 3 ouputs # instead of £
+
+#+begin_example
+pressing Shift + 3 = #
+pressing Alt + 3 = £
+#+end_example
+
+** xkb directory
+
+create the ~/.config/xkb directory and sub directories
+
+#+begin_src sh
+mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
+#+end_src
+
+xkb directory stucture
+
+#+begin_example
+/home/djwilcox/.config/xkb
+├── compat
+├── keycodes
+├── rules
+│   ├── evdev
+│   └── evdev.xml
+├── symbols
+│   ├── custom
+│   └── gb
+└── types
+
+6 directories, 4 files
+#+end_example
+
+** rules
+*** evdev
+
+#+NAME: evdev
+#+begin_src conf
+! option = symbols
+  custom:swap_sterling_numbersign = +custom(swap_sterling_numbersign)
+
+! include %S/evdev
+#+end_src
+
+*** evdev.xml
+
+#+NAME: evdev.xml
+#+begin_src xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>gb</name>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>swap_sterling_numbersign</name>
+            <shortDescription>swap_sterling_numbersign</shortDescription>
+            <description>GB(swap_sterling_numbersign)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>custom</name>
+        <description>custom options</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>custom:swap_sterling_numbersign</name>
+          <description>swap sterling and numbersign</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>
+#+end_src
+
+** symbols
+*** custom
+
+#+NAME: custom
+#+begin_src conf
+// swap sterling and numbersign
+partial modifier_keys
+xkb_symbols "swap_sterling_numbersign" {
+    key <AE03> { [ 3, numbersign, sterling ] };
+};
+#+end_src
+
+*** gb
+
+#+NAME: gb
+#+begin_src conf
+// swap sterling and numbersign
+default partial alphanumeric_keys 
+xkb_symbols "swap_sterling_numbersign" {
+    name[Group1]= "swap_sterling_numbersign - Mac";
+    key <AE03> { [ 3, numbersign, sterling ] };
+};
+#+end_src
+
+** xkb options
+
+#+begin_src conf
+custom:swap_sterling_numbersign
+#+end_src
+
+dwl config.h
+
+#+begin_src c
+static const struct xkb_rule_names xkb_rules = {
+	/* can specify fields: rules, model, layout, variant, options */
+	/* example:
+	.options = "ctrl:nocaps",
+	*/
+	.layout = "gb",
+	.model = "104",
+	.options = "ctrl:swap_lalt_lctl,custom:swap_sterling_numbersign,caps:none",
+	.rules = "evdev",
+	.variant = "mac",
+};
+#+end_src

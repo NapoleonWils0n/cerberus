@@ -1,0 +1,4 @@
+! option = symbols
+  custom:swap_sterling_numbersign = +custom(swap_sterling_numbersign)
+
+! include %S/evdev

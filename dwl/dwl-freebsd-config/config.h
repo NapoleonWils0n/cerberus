@@ -58,7 +58,7 @@ static const struct xkb_rule_names xkb_rules = {
 	*/
 	.layout = "gb",
 	.model = "104",
-	.options = "ctrl:swap_lalt_lctl,caps:none",
+	.options = "ctrl:swap_lalt_lctl,custom:swap_sterling_numbersign,caps:none",
 	.rules = "evdev",
 	.variant = "mac",
 };
