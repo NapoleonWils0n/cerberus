@@ -1,0 +1,6 @@
+#+STARTUP: content
+* emacs search and replace
+
+#+begin_example
+/%s/search/replace/g
+#+end_example
