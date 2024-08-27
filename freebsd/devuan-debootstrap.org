@@ -1,0 +1,79 @@
+#+STARTUP: content
+* devuan debootstrap jail
+
+[[https://antranigv.am/posts/2023/08/freebsd-jail-devuan-linux-openrc/]]
+
+To bootstrap the Devuan system, we need debootstrap.
+
+Specifically, debootstrap that ships with Devuan Chimaera.
+We can start by installing debootstrap from ports/packages, and then we can modify the rest.
+
+** debootstrap install
+
+#+begin_src sh
+sudo pkg install debootstrap
+#+end_src
+
+** devuan debootstrap 
+
+Now we need to fetch Devuan’s debootstrap, extract it, put some files into our debootstrap and set some symbolic links.
+
+#+begin_src sh
+# Path might change over time, check https://pkginfo.devuan.org/ for the exact link
+fetch http://deb.devuan.org/merged/pool/DEVUAN/main/d/debootstrap/debootstrap_1.0.137devuan1_all.deb
+
+# .deb files are messy, make a directory
+mkdir debootstrap_devuan
+mv debootstrap_1.0.137devuan1_all.deb debootstrap_devuan/
+cd debootstrap_devuan/
+tar xf debootstrap_1.0.123+devuan3_all.deb
+tar xf data.tar.gz
+
+# We need chimaera (latest, symlink) and ceres (origin)
+cp usr/share/debootstrap/scripts/ceres usr/share/debootstrap/scripts/chimaera /usr/local/share/debootstrap/scripts
+#+end_src
+
+** debootstrap
+
+#+begin_src sh
+debootstrap --no-check-gpg --arch=amd64 chimaera /usr/local/jails/linux/devuan http://pkgmaster.devuan.org/merged/
+#+end_src
+
+** chroot to fix error
+
+The installation should start now but at some point there, we’ll get the following error:
+
+#+begin_example
+I: Configuring libpam-runtime...
+I: Configuring login...
+I: Configuring util-linux...
+I: Configuring mount...
+I: Configuring sysvinit-core...
+W: Failure while configuring required packages.
+W: See /usr/local/jails/devuan0/debootstrap/debootstrap.log for details (possibly the package package is at fault
+#+end_example
+
+We just need to chroot inside, fix this manually and install OpenRC
+
+#+begin_src sh
+chroot /usr/local/jails/linux/devuan /bin/bash
+# Fix base packages
+dpkg --force-depends -i /var/cache/apt/archives/*.deb
+# Set Cache-Start
+echo "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00chroot
+# Install OpenRC
+apt update
+apt install openrc
+#+end_src
+
+** passwd
+
+We just need to create a password database file that the jail(8) command uses internally.
+
+#+begin_src sh
+cd /usr/local/jails/linux/devuan/etc/
+echo "root::0:0::0:0:username &:/root:/bin/bash" > master.passwd
+pwd_mkdb -d ./ -p master.passwd
+# Restore the Linux passwd file
+cp passwd- passwd
+#+end_src
