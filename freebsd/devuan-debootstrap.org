@@ -26,7 +26,7 @@ fetch http://deb.devuan.org/merged/pool/DEVUAN/main/d/debootstrap/debootstrap_1.
 mkdir debootstrap_devuan
 mv debootstrap_1.0.137devuan1_all.deb debootstrap_devuan/
 cd debootstrap_devuan/
-tar xf debootstrap_1.0.123+devuan3_all.deb
+tar xf debootstrap_1.0.137devuan1_all.deb
 tar xf data.tar.gz
 
 # We need chimaera (latest, symlink) and ceres (origin)
