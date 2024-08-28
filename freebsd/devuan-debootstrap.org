@@ -30,13 +30,69 @@ tar xf debootstrap_1.0.137devuan1_all.deb
 tar xf data.tar.gz
 
 # We need chimaera (latest, symlink) and ceres (origin)
-cp usr/share/debootstrap/scripts/ceres usr/share/debootstrap/scripts/chimaera /usr/local/share/debootstrap/scripts
+sudo cp usr/share/debootstrap/scripts/ceres usr/share/debootstrap/scripts/daedalus /usr/local/share/debootstrap/scripts
+#+end_src
+
+** zroot/jails/linux/debian
+
+create the zroot/jails/linux/debian zfs dataset and set the mountpoint
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+create the zfs pool for devuan and set the mountpoint
+
+#+begin_src sh
+zfs create zroot/jails/linux/devuan
+zfs set mountpoint=/usr/local/jails/linux/devuan zroot/jails/linux/devuan
+#+end_src
+
+** Create the mount points for devuan
+
+Create necessary mount points for the devuan jail
+
+#+begin_example
+/usr/local/jails/linux/devuan
+#+end_example
+
+#+begin_src sh
+sudo mkdir -p {/usr/local/jails/linux/devuan/dev/fd,/usr/local/jails/linux/devuan/dev/shm,/usr/local/jails/linux/devuan/home,/usr/local/jails/linux/devuan/tmp,/usr/local/jails/linux/devuan/proc,/usr/local/jails/linux/devuan/sys}
+#+end_src
+
+# Horizontal Rule
+-----
+
+** devuan jail fstab
+
+#+begin_src sh
+sudo mkdir -p /usr/local/jails/linux/devuan/etc
+#+end_src
+
+#+begin_example
+/usr/local/jails/linux/devuan/etc/fstab
+#+end_example
+
+#+begin_src conf
+# fstab
+devfs           /usr/local/jails/linux/devuan/dev      devfs           rw                      0       0
+tmpfs           /usr/local/jails/linux/devuan/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0
+fdescfs         /usr/local/jails/linux/devuan/dev/fd   fdescfs         rw,linrdlnk             0       0
+linprocfs       /usr/local/jails/linux/devuan/proc     linprocfs       rw                      0       0
+linsysfs        /usr/local/jails/linux/devuan/sys      linsysfs        rw                      0       0
+/tmp            /usr/local/jails/linux/devuan/tmp      nullfs          rw                      0       0
+/home           /usr/local/jails/linux/devuan/home     nullfs          rw                      0       0
+# uncomment the line below for the xdg runtime directory for wayland, change djwilcox to your username
+# create the directory before uncomment the line below
+#/var/run/xdg/djwilcox /usr/local/jails/linux/devuan/run/user/1001  nullfs rw                      0       0
 #+end_src
 
 ** debootstrap
 
 #+begin_src sh
-debootstrap --no-check-gpg --arch=amd64 chimaera /usr/local/jails/linux/devuan http://pkgmaster.devuan.org/merged/
+sudo debootstrap --arch=amd64 --no-check-gpg daedalus /usr/local/jails/linux/devuan http://pkgmaster.devuan.org/merged/
 #+end_src
 
 ** chroot to fix error
@@ -56,11 +112,62 @@ W: See /usr/local/jails/devuan0/debootstrap/debootstrap.log for details (possibl
 We just need to chroot inside, fix this manually and install OpenRC
 
 #+begin_src sh
-chroot /usr/local/jails/linux/devuan /bin/bash
+sudo chroot /usr/local/jails/linux/devuan /bin/bash
 # Fix base packages
 dpkg --force-depends -i /var/cache/apt/archives/*.deb
 # Set Cache-Start
-echo "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00chroot
+echo "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
+#+end_src
+
+*** getpwnam
+
+#+begin_src sh
+cd /usr/local/jails/linux/devuan/etc
+#+end_src
+
+switch to root
+
+#+begin_src sh
+su -m
+#+end_src
+
+#+begin_src sh
+cat passwd | sed -r 's/(:[x|*]:)([0-9]+:[0-9]+:)/:*:\2:0:0:/g' > master.passwd
+#+end_src
+
+#+begin_src sh
+pwd_mkdb -d ./ -p master.passwd
+#+end_src
+
+*** jail start
+
+start the ubuntu jail
+
+#+begin_src sh
+doas service jail onestart devuan
+#+end_src
+
+check the jail is running
+
+#+begin_src sh
+doas jls
+#+end_src
+
+*** enter jail
+
+#+begin_src sh
+doas jexec devuan /bin/bash
+#+end_src
+
+*** dns nameserver
+
+#+begin_src sh
+echo nameserver 8.8.8.8 > /etc/resolv.conf
+#+end_src
+
+*** openrc
+
+#+begin_src sh
 # Install OpenRC
 apt update
 apt install openrc
