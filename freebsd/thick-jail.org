@@ -551,7 +551,7 @@ sysctl net.local.stream.sendspace=65536
 *** packages
 
 #+begin_src sh
-sudo pkg install kde6-devel konsole pipewire wireplumber
+sudo pkg install kde6-devel konsole pipewire wireplumber dolphin
 #+end_src
 
 *** start kde
