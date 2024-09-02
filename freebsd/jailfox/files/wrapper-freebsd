@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# wrapper-freebsd
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# script usage
+$(basename "$0") -u ${USER}"
+exit 2
+}
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':a:h' opt
+do
+  case ${opt} in
+     a) app="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+#===============================================================================
+# run the application in the jail
+#===============================================================================
+
+# start pulseaudio
+#pulseaudio --start --daemonize 2>/dev/null
+
+# doas jexec into ubuntu and run the wrapper script to start the application
+doas jexec classic /usr/local/bin/wrapper-jail \
+-u "${USER}" \
+-d "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" \
+-a "${app}"
