@@ -388,7 +388,7 @@ pkg install wayland wayland-protocols seatd qt5ct qt5-wayland
 *** seatd
 
 #+begin_src sh
-sysrc sysrc seatd_enable=YES
+sudo sysrc seatd_enable=YES
 #+end_src
 
 *** dbus
