@@ -686,3 +686,4 @@ Exec=firefox -new-window
 Name=Open a New Private Window
 Exec=firefox -private-window
 #+end_src
+
