@@ -658,7 +658,7 @@ shift $((OPTIND-1))
 # switch to our user in the jail and start the application
 #===============================================================================
 
-su "${username}" -c "${dbus} ${app}" 2>/dev/null
+su "${username}" -c "${dbus} ${app} ${@}" 2>/dev/null
 #+end_src
 
 *** jailfox.desktop
