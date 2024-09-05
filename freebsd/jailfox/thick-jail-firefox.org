@@ -160,7 +160,14 @@ classic {
     ip4.addr="lo1|10.10.0.5/24";
 
     # mount
-    mount.fstab="/usr/local/jails/containers/classic/etc/fstab";
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+    # mount the download directory from the host to the jail after creating it
+    #mount += "/home/username/downloads $path/home/username/downloads  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    #mount += "/var/run/xdg/username $path/var/run/xdg/username  nullfs rw            0       0";
 }
 #+end_src
 
@@ -335,7 +342,9 @@ pkg install sudo
 visudo
 #+END_SRC
 
-*** add your user to the sudoers file, replace username with your username
+*** add your user to the sudoers file 
+
+replace username with your username
 
 #+BEGIN_SRC sh
 username   ALL=(ALL:ALL) ALL
@@ -403,7 +412,9 @@ sysrc dbus_enable=YES
 su - djwilcox
 #+end_src
 
-** create the xdg runtime directory, change the user and set the permissions
+** create the xdg runtime directory
+
+create the xdg runtime directory, change the user and set the permissions
 
 #+begin_src sh
 sudo mkdir -p /var/run/xdg/"${USER}"
@@ -476,25 +487,6 @@ exit
 su - djwilcox
 #+end_src
 
-** freebsd jail fstab
-
-#+begin_example
-/usr/local/jails/containers/classic/etc/fstab
-#+end_example
-
-#+begin_src conf
-# fstab
-devfs           /usr/local/jails/containers/classic/dev      devfs           rw                      0       0
-tmpfs           /usr/local/jails/containers/classic/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0
-#fdescfs         /usr/local/jails/containers/classic/dev/fd   fdescfs         rw,linrdlnk             0       0
-#linprocfs       /usr/local/jails/containers/classic/proc     linprocfs       rw                      0       0
-#linsysfs        /usr/local/jails/containers/classic/sys      linsysfs        rw                      0       0
-/tmp            /usr/local/jails/containers/classic/tmp      nullfs          rw                      0       0
-/home           /usr/local/jails/containers/classic/home     nullfs          rw                      0       0
-# uncomment the line below for the xdg runtime directory for wayland
-/var/run/xdg/djwilcox /usr/local/jails/containers/classic/var/run/xdg/djwilcox  nullfs rw                      0       0
-#+end_src
-
 ** locale
 
 #+begin_src sh
@@ -548,7 +540,27 @@ sudo pkg install noto-basic noto-emoji
 #+end_src
 
 ** jailfox
-*** wrapper-freebsd
+*** host
+**** bin
+
+#+begin_example
+~/bin
+#+end_example
+
+***** firefox
+
+#+begin_src sh
+#!/bin/sh
+
+# exit if no arguments passed to script
+[ $# -gt 0 ] || exit 1
+
+# run the wrapper-freebsd script
+wrapper-freebsd -a firefox "${@}"
+
+#+end_src
+
+***** wrapper-freebsd
 
 #+begin_src sh
 #!/bin/sh
@@ -605,8 +617,84 @@ doas jexec classic /usr/local/bin/wrapper-jail \
 -a "${app}" \
 "${@}"
 #+end_src
+**** desktop entries
 
-*** wrapper-jail
+#+begin_example
+~/.local/share/applications
+#+end_example
+
+***** firefox.desktop
+
+change exec line
+
+from
+
+#+begin_src conf
+Exec=firefox %U
+#+end_src
+
+to
+
+#+begin_src conf
+Exec=/usr/local/lib/firefox/firefox %U
+#+end_src
+
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=Firefox
+Comment=Browse the World Wide Web
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=/usr/local/lib/firefox/firefox %U
+Terminal=false
+Type=Application
+Icon=firefox
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+Actions=NewWindow;NewPrivateWindow;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=firefox -new-window
+
+[Desktop Action NewPrivateWindow]
+Name=Open a New Private Window
+Exec=firefox -private-window
+
+#+end_src
+
+***** jailfox.desktop
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=Jailfox
+Comment=Browse the World Wide Web
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=sh -c 'wrapper-freebsd -a firefox %U'
+Terminal=false
+Type=Application
+Icon=firefox
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+Actions=NewWindow;NewPrivateWindow;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=firefox -new-window
+
+[Desktop Action NewPrivateWindow]
+Name=Open a New Private Window
+Exec=firefox -private-window
+#+end_src
+
+*** jail
+**** wrapper-jail
 
 #+begin_src sh
 #!/bin/sh
@@ -661,30 +749,22 @@ shift $((OPTIND-1))
 su "${username}" -c "${dbus} ${app} ${@}" 2>/dev/null
 #+end_src
 
-*** jailfox.desktop
+** firefox oss audio
 
-#+begin_src conf
-[Desktop Entry]
-Version=1.0
-Name=Jailfox
-Comment=Browse the World Wide Web
-GenericName=Web Browser
-Keywords=Internet;WWW;Browser;Web;Explorer
-Exec=sh -c 'wrapper-freebsd -a firefox %U'
-Terminal=false
-Type=Application
-Icon=firefox
-Categories=GNOME;GTK;Network;WebBrowser;
-MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
-StartupNotify=true
-Actions=NewWindow;NewPrivateWindow;
+To force a specific backend open
 
-[Desktop Action NewWindow]
-Name=Open a New Window
-Exec=firefox -new-window
+#+begin_example
+about:config
+#+end_example
 
-[Desktop Action NewPrivateWindow]
-Name=Open a New Private Window
-Exec=firefox -private-window
-#+end_src
+and create
 
+#+begin_example
+media.cubeb.backend
+#+end_example
+
+set the option to string and
+
+#+begin_example
+oss
+#+end_example
