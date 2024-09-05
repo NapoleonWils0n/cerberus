@@ -602,7 +602,8 @@ shift $((OPTIND-1))
 doas jexec classic /usr/local/bin/wrapper-jail \
 -u "${USER}" \
 -d "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" \
--a "${app}"
+-a "${app}" \
+"${@}"
 #+end_src
 
 *** wrapper-jail
