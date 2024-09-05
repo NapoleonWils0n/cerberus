@@ -693,6 +693,39 @@ Name=Open a New Private Window
 Exec=firefox -private-window
 #+end_src
 
+**** mimeapps.list
+
+#+begin_example
+~/.config/mimeapps.list
+#+end_example
+
+#+begin_src conf
+[Default Applications]
+x-scheme-handler/http=jailfox.desktop
+x-scheme-handler/https=jailfox.desktop
+x-scheme-handler/chrome=jailfox.desktop
+text/html=jailfox.desktop
+application/x-extension-htm=jailfox.desktop
+application/x-extension-html=jailfox.desktop
+application/x-extension-shtml=jailfox.desktop
+application/xhtml+xml=jailfox.desktop
+application/x-extension-xhtml=jailfox.desktop
+application/x-extension-xht=jailfox.desktop
+
+[Added Associations]
+x-scheme-handler/http=jailfox.desktop;
+x-scheme-handler/https=jailfox.desktop;
+x-scheme-handler/chrome=jailfox.desktop;
+text/html=jailfox.desktop;
+application/x-extension-htm=jailfox.desktop;
+application/x-extension-html=jailfox.desktop;
+application/x-extension-shtml=jailfox.desktop;
+application/xhtml+xml=jailfox.desktop;
+application/x-extension-xhtml=jailfox.desktop;
+application/x-extension-xht=jailfox.desktop;
+
+#+end_src
+
 *** jail
 **** wrapper-jail
 
