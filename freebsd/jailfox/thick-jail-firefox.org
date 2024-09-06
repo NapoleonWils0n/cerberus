@@ -560,6 +560,23 @@ wrapper-freebsd -a firefox "${@}"
 
 #+end_src
 
+***** sheel config
+
+#+begin_example
+~/.zshenv
+#+end_example
+
+set the shell path to include your bin directory 
+
+#+begin_src conf
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
+export PATH
+#+end_src
+
 ***** wrapper-freebsd
 
 #+begin_src sh
