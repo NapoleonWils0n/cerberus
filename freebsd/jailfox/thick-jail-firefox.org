@@ -13,7 +13,7 @@ enable jails
 #+begin_src sh
 sudo sysrc jail_enable="YES"
 sudo sysrc jail_parallel_start="YES"
-sudo sysrc jail_list="freebsd"
+sudo sysrc jail_list="classic"
 sudo sysrc cloned_interfaces="lo1"
 sudo sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 #+end_src
@@ -24,8 +24,8 @@ sudo sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 
 #+begin_src conf
 jail_enable="YES"
-jail_parallel_start="YES"
-jail_list="freebsd"
+#jail_parallel_start="YES"
+#jail_list="classic"
 cloned_interfaces="lo1"
 ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 #+end_src
@@ -126,7 +126,7 @@ With the files copied, the next thing to do is update to the latest patch level 
 #+begin_src sh
 freebsd-update -b /usr/local/jails/containers/classic/ fetch install
 #+end_src
-** /etc/jail.conf.d/freebsd.conf
+** /etc/jail.conf.d/classic.conf
 
 create the /etc/jail.conf.d/ directory
 
@@ -135,7 +135,7 @@ sudo mkdir -p /etc/jail.conf.d/
 #+end_src
 
 #+begin_example
-/etc/jail.conf.d/freebsd.conf
+/etc/jail.conf.d/classic.conf
 #+end_example
 
 #+begin_src sh
@@ -397,7 +397,7 @@ pkg install wayland wayland-protocols seatd qt5ct qt5-wayland
 *** seatd
 
 #+begin_src sh
-sudo sysrc seatd_enable=YES
+sysrc seatd_enable=YES
 #+end_src
 
 *** dbus
@@ -463,10 +463,9 @@ export QT_QPA_PLATFORM=wayland
 export GDK_BACKEND=wayland
 
 # consolekit       
-export LIBSEAT_BACKEND=consolekit2
+#export LIBSEAT_BACKEND=consolekit2
 
 # dbus
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/tmp/dbus-3SJelgeDnM,guid=d0e2921cb5be83879f6a319666d30fca
 #+end_src
 
 *** chsh
@@ -560,7 +559,7 @@ wrapper-freebsd -a firefox "${@}"
 
 #+end_src
 
-***** sheel config
+***** shell config
 
 #+begin_example
 ~/.zshenv
