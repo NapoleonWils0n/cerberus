@@ -1,0 +1,150 @@
+#+STARTUP: showall
+* rocky linux
+** links
+
+[[https://docs.rockylinux.org/guides/interoperability/import_rocky_to_wsl/]]
+
+[[https://docs.rockylinux.org/guides/installation/]]
+
+** zroot/jails/linux/rocky
+
+create the zroot/jails/linux/rocky zfs dataset and set the mountpoint
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+#+begin_src sh
+zfs create zroot/jails/linux/rocky
+zfs set mountpoint=/usr/local/jails/linux/rocky zroot/jails/linux/rocky
+#+end_src
+
+** /etc/jail.conf.d/rocky.conf
+
+create the /etc/jail.conf.d/ directory
+
+#+begin_src sh
+sudo mkdir -p /etc/jail.conf.d/
+#+end_src
+
+#+begin_example
+/etc/jail.conf.d/rocky.conf
+#+end_example
+
+
+#+begin_src sh
+rocky {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
+
+    # permissions
+    devfs_ruleset=7;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    # mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
+    mount += "linprocfs       $path/proc     linprocfs       rw                      0       0";
+    mount += "linsysfs        $path/sys      linsysfs        rw                      0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+
+    # mount the video directory from the host to the jail after creating it
+    #mount += "/home/username/video $path/home/username/video  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    #mount += "/var/run/xdg/djwilcox $path/run/user/1001  nullfs rw            0       0";
+}
+#+end_src
+
+** rocky container
+
+rocky 9 minimal 
+
+#+begin_src sh
+fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Minimal.latest.x86_64.tar.xz'
+#+end_src
+
+#+begin_src sh
+fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Base.latest.x86_64.tar.xz'
+#+end_src
+
+** tar xz
+
+#+begin_src sh
+tar xvf Rocky-9-Container-Minimal.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
+#+end_src
+
+** start the jail
+
+#+begin_src sh
+doas service jail onestart rocky
+#+end_src
+
+#+begin_src sh
+doas jexec rocky /bin/bash
+#+end_src
+
+** resolv.conf
+
+#+begin_src sh
+sudo echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
+#+end_src
+
+** microdnf
+
+#+begin_src sh
+microdnf update
+#+end_src
+
+** destroy jail
+
+#+begin_src sh
+doas service jail onestop rocky
+#+end_src
+
+#+begin_src sh
+su
+#+end_src
+
+#+begin_src sh
+chflags -R 0 /usr/local/jails/linux/rocky
+#+end_src
+
+shutdown and restart so mount points are unmount
+
+#+begin_src sh
+sudo shutdown -p now
+#+end_src
+
+#+begin_src sh
+su
+#+end_src
+
+#+begin_src sh
+rm -rf /usr/local/jails/linux/rocky
+#+end_src
+
+#+begin_src sh
+zfs destroy -R zroot/jails/linux/rocky
+#+end_src
+
+#+begin_src sh
+rm -rf /usr/local/jails/linux/rocky
+#+end_src
+
