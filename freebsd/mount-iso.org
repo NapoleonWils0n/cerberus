@@ -10,5 +10,5 @@ su
 mount the iso at /mnt
 
 #+begin_src sh
-mount -t cd9660 /dev/`mdconfig -f input.iso` /mnt
+mount -t cd9660 /dev/"$(mdconfig -f input.iso)" /mnt
 #+end_src
