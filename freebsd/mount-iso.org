@@ -12,3 +12,10 @@ mount the iso at /mnt
 #+begin_src sh
 mount -t cd9660 /dev/"$(mdconfig -f input.iso)" /mnt
 #+end_src
+
+umount /mnt
+
+#+begin_src sh
+umount /mnt
+#+end_src
+
