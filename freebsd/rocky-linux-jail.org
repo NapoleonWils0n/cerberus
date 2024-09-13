@@ -1,12 +1,128 @@
 #+STARTUP: showall
-* rocky linux
-** links
+* Rocky Linux Jail
+** Freebsd 
+*** Freebsd Nvidia and Cuda
 
-[[https://docs.rockylinux.org/guides/interoperability/import_rocky_to_wsl/]]
+Make sure Nvidia and Cuda is set up on the Freebsd host
 
-[[https://docs.rockylinux.org/guides/installation/]]
+#+begin_src sh
+sudo pkg install nvidia-driver linux-nvidia-libs libc6-shim libvdpau-va-gl libva-nvidia-driver
+#+end_src
 
-** zroot/jails/linux/rocky
+run nv-sglrun nvidia-smi
+
+#+begin_src sh
+nv-sglrun nvidia-smi
+#+end_src
+
+nv-sglrun nvidia-smi output
+
+#+begin_example
+shim init
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.146.02             Driver Version: 535.146.02   CUDA Version: 12.2     |
+#+end_example
+
+# Horizontal Rule
+-----
+
+*** doas install
+
+[[https://man.freebsd.org/cgi/man.cgi?query=doas.conf&sektion=5&format=html][doas.conf man page]]
+
+Install doas so we enter the jail without being prompted for a password
+
+#+begin_src sh
+sudo pkg install doas
+#+end_src
+
+Edit the doas.conf file and change username to your username on freebsd
+
+Path to the doas.conf on freebsd
+
+#+begin_example
+/usr/local/etc/doas.conf
+#+end_example
+
++ doas.conf code
+
+#+begin_src conf
+# permit user
+permit keepenv :username
+
+# jail
+permit nopass :username cmd jexec
+
+# root as root
+permit nopass keepenv root as root
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** freebsd devfs.rules
+
+#+begin_example
+/etc/devfs.rules
+#+end_example
+
+devfs.rules
+
+#+begin_src conf
+[jail=7]
+add include $devfsrules_hide_all
+add include $devfsrules_unhide_basic
+add include $devfsrules_unhide_login
+add path 'mixer*' unhide
+add path 'dsp*' unhide
+add path 'dri*' unhide
+add path 'drm*' unhide
+add path 'nvidia*' unhide
+add path 'speaker*' unhide
+#+end_src
+
+after adding the devfs rules reboot
+
+*** jail config
+
+enable jails
+
+#+begin_src sh
+sudo sysrc jail_enable="YES"
+sudo sysrc cloned_interfaces="lo1"
+sudo sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
+#+end_src
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+#+begin_src conf
+jail_enable="YES"
+cloned_interfaces="lo1"
+ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
+#+end_src
+
+**** Setting Up the Jail Directory Tree
+***** zroot/jails
+
+create the zroot/jails zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails
+sudo zfs set mountpoint=/usr/local/jails zroot/jails
+#+end_src
+
+***** zroot/jails/linux
+
+create the zroot/jails/linux zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails/linux
+sudo zfs set mountpoint=/usr/local/jails/linux zroot/jails/linux
+#+end_src
+
+***** zroot/jails/linux/rocky
 
 create the zroot/jails/linux/rocky zfs dataset and set the mountpoint
 
@@ -21,7 +137,27 @@ zfs create zroot/jails/linux/rocky
 zfs set mountpoint=/usr/local/jails/linux/rocky zroot/jails/linux/rocky
 #+end_src
 
-** /etc/jail.conf.d/rocky.conf
+***** /etc/jail.conf
+
+create the /etc/jail.conf file if it doesn't exist
+
+#+begin_example
+/etc/jail.conf
+#+end_example
+
+add the following code to the jail.conf file to include \\
+files with a .conf extension in the /etc/jail.conf.d/ directory
+
++ [[file:freebsd/etc/jail.conf][jail.conf]]
+ 
+#+begin_src conf
+# startup/logging
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.consolelog = "/var/log/jail_console_${name}.log";
+#+end_src
+
+***** /etc/jail.conf.d/rocky.conf
 
 create the /etc/jail.conf.d/ directory
 
@@ -33,6 +169,7 @@ sudo mkdir -p /etc/jail.conf.d/
 /etc/jail.conf.d/rocky.conf
 #+end_example
 
+rocky.conf
 
 #+begin_src sh
 rocky {
@@ -56,7 +193,6 @@ rocky {
     ip4.addr="lo1|10.10.0.5/24";
 
     # mount
-    # mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
     mount += "devfs           $path/dev      devfs           rw                      0       0";
     mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
     mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
@@ -72,7 +208,142 @@ rocky {
 }
 #+end_src
 
-** rocky container
+*** pf.conf
+
+#+begin_src sh
+/etc/pf.conf:
+#+end_src
+
+nat for jail
+
+#+begin_src sh
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+#+end_src
+
+full pf.conf example
+
+#+begin_src conf
+#=========================================================================#
+# variables, macro and tables                                             #
+#=========================================================================#
+
+int_if="ue0" # usb to ethernet adaptor
+#int_if="bge0" # thunderbolt to ethernet adaptor
+#int_if="wlan0" # ralink usb wifi
+vpn_if="tun0" # vpn interface
+all_networks="0.0.0.0/0"
+vpn_network="$vpn_if:network"
+tcp_services = "{ ntp, 6881 }" # tcp services - torrent
+udp_services = "{ ntp, 6882 }" # udp services - torrent
+icmp_types = "{ echoreq, unreach }"
+tcp_state="flags S/SA keep state"
+udp_state="keep state"
+
+#table <internet> { $all_networks, !self, !$int_if:network } # internet
+#table <lan> { $int_if:network, !self }                      # lan network
+table <myself> { self }                                     # self
+table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
+	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
+	 	   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
+	 	   203.0.113.0/24 }                         # broken networks
+
+#=========================================================================#
+# global policy                                                           #
+#=========================================================================#
+
+set block-policy drop
+set loginterface $int_if
+set fingerprints "/etc/pf.os"
+set skip on lo0
+scrub in all fragment reassemble no-df max-mss 1440
+# nat jail
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+
+#=========================================================================#
+# block                                                                   #
+#=========================================================================#
+
+block log all # block log all
+block return out quick inet6 all tag IPV6 # block ipv6 
+block in quick inet6 all tag IPV6 # block ipv6
+
+# block broken networks - turned off for synergy
+# block in quick from { <martians> no-route urpf-failed } to any tag BAD_PACKET
+
+#=========================================================================#
+# anchors                                                                 #
+#=========================================================================#
+
+# emerging threats - anchor
+#anchor "emerging-threats"
+#load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
+
+# openvpn - anchor
+anchor "openvpn"
+
+#=========================================================================#
+# traffic tag                                                             #
+#=========================================================================#
+
+# icmp
+pass inet proto icmp all icmp-type $icmp_types keep state tag ICMP
+
+# Allow the tcp and udp services defined in the macros at the top of the file
+pass in on $int_if inet proto tcp from any to ($int_if) port $tcp_services $tcp_state tag TCP_IN
+pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_state tag UDP_IN
+
+# outbound traffic
+block out on $int_if all
+pass out quick on $int_if all modulate state
+#+end_src
+
+*** Start linux
+
+Use sysrc to set linux_enable="YES" in your /etc/rc.conf
+
+#+begin_src sh
+sudo sysrc linux_enable="YES"
+#+end_src
+
+or you can edit your
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+start linux
+
+#+begin_src sh
+sudo service linux start
+#+end_src
+
+**** fstab add proc
+
+edit your fstab and add proc
+
+#+begin_example
+/etc/fstab
+#+end_example
+
+fstab
+
+#+begin_src conf
+proc            /proc                   procfs          rw      0       0
+#+end_src
+
+# Horizontal Rule
+-----
+
+** Rocky Linux
+*** links
+
+[[https://docs.rockylinux.org/guides/interoperability/import_rocky_to_wsl/]]
+
+[[https://docs.rockylinux.org/guides/installation/]]
+
+*** Rocky linux container mininal
 
 rocky 9 minimal 
 
@@ -80,23 +351,25 @@ rocky 9 minimal
 fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Minimal.latest.x86_64.tar.xz'
 #+end_src
 
+rocky 9 base 
+
 #+begin_src sh
 fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Base.latest.x86_64.tar.xz'
 #+end_src
 
-** tar xz
+*** tar xz
 
 #+begin_src sh
 tar xvf Rocky-9-Container-Minimal.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
 #+end_src
 
-** resolv.conf
+*** resolv.conf
 
 #+begin_src sh
 sudo echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
 #+end_src
 
-** start the jail
+*** start the jail
 
 #+begin_src sh
 doas service jail onestart rocky
@@ -106,13 +379,13 @@ doas service jail onestart rocky
 doas jexec rocky /bin/bash
 #+end_src
 
-** microdnf
+*** microdnf
 
 #+begin_src sh
 microdnf update
 #+end_src
 
-** destroy jail
+*** destroy jail
 
 #+begin_src sh
 doas service jail onestop rocky
