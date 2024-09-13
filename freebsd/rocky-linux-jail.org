@@ -90,6 +90,12 @@ fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Bas
 tar xvf Rocky-9-Container-Minimal.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
 #+end_src
 
+** resolv.conf
+
+#+begin_src sh
+sudo echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
+#+end_src
+
 ** start the jail
 
 #+begin_src sh
@@ -98,12 +104,6 @@ doas service jail onestart rocky
 
 #+begin_src sh
 doas jexec rocky /bin/bash
-#+end_src
-
-** resolv.conf
-
-#+begin_src sh
-sudo echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
 #+end_src
 
 ** microdnf
