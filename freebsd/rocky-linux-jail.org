@@ -410,10 +410,6 @@ su
 #+end_src
 
 #+begin_src sh
-rm -rf /usr/local/jails/linux/rocky
-#+end_src
-
-#+begin_src sh
 zfs destroy -R zroot/jails/linux/rocky
 #+end_src
 
