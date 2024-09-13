@@ -148,7 +148,7 @@ create the /etc/jail.conf file if it doesn't exist
 add the following code to the jail.conf file to include \\
 files with a .conf extension in the /etc/jail.conf.d/ directory
 
-+ [[file:freebsd/etc/jail.conf][jail.conf]]
++ jail.conf
  
 #+begin_src conf
 # startup/logging
