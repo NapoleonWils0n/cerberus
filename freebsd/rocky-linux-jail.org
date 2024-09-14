@@ -379,6 +379,52 @@ doas jexec rocky /bin/bash
 dnf update
 #+end_src
 
+*** dnf config-manager
+
+#+begin_src sh
+dnf install 'dnf-command(config-manager)'
+#+end_src
+
+*** crb
+
+Enable the CodeReady Linux Builder (CRB) repository. The CRB repository contains extra libraries and developer tools. This repository is available on Rocky Linux 9 but is disabled by default.
+
+#+begin_src sh
+dnf config-manager --set-enabled crb
+#+end_src
+
+check crb status
+
+#+begin_src sh
+/usr/bin/crb status
+#+end_src
+
+*** epel-release
+
+Install the package for the Extra Packages for Enterprise Linux (EPEL) repository. EPEL is a Fedora project full of helpful applications for enterprise users. It includes packages like Python, Perl, Ruby, ImageMagick, and Chromium browser builds. (Please note that this package requires the CRB libraries in the previous step.)
+
+#+begin_src sh
+dnf -y install epel-release
+#+end_src
+
+*** Install RPM Fusion Free Repository.
+
+#+begin_src sh
+dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
+#+end_src
+
+*** Install RPM Fusion Non-Free Repository.
+
+#+begin_src sh
+dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm -y
+#+end_src
+
+*** Next, verify the installation with the following command:
+
+#+begin_src sh
+dnf repolist | grep rpmfusion
+#+end_src
+
 *** destroy jail
 
 #+begin_src sh
