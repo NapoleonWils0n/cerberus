@@ -431,6 +431,22 @@ dnf repolist | grep rpmfusion
 dnf groupupdate core --allowerasing
 #+end_src
 
+*** dnf.conf
+
+#+begin_src sh
+vi /etc/dnf/dnf.conf
+#+end_src
+
+#+begin_src sh
+max_parallel_downloads=5
+#+end_src
+
+*** dnf update
+
+#+begin_src sh
+dnf update
+#+end_src
+
 *** codecs
 
 [[https://rpmfusion.org/Howto/Multimedia]]
@@ -441,13 +457,13 @@ This will allows the application using the gstreamer framework to play others re
 The following command will install the complements multimedia packages needed by gstreamer enabled applications:
 
 #+begin_src sh
-sudo dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 #+end_src
 
 The following command will install the sound-and-video complement packages needed by some applications:
 
 #+begin_src sh
-sudo dnf groupupdate sound-and-video
+dnf groupupdate sound-and-video
 #+end_src
 
 
