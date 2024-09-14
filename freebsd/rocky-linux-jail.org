@@ -410,13 +410,13 @@ dnf -y install epel-release
 *** Install RPM Fusion Free Repository.
 
 #+begin_src sh
-dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
+dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
 #+end_src
 
 *** Install RPM Fusion Non-Free Repository.
 
 #+begin_src sh
-dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm -y
+dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
 #+end_src
 
 *** Next, verify the installation with the following command:
@@ -465,7 +465,6 @@ The following command will install the sound-and-video complement packages neede
 #+begin_src sh
 dnf groupupdate sound-and-video
 #+end_src
-
 
 *** destroy jail
 
