@@ -778,7 +778,13 @@ sudo dnf install intel-media-driver.x86_64
 *** fuse
 
 #+begin_src sh
-sudo dnf install fuse.x86_64 fuse-devel.x86_64
+sudo dnf install fuse fuse-devel fuse3 fuse3-devel fakeroot squashfuse squashfuse-devel
+#+end_src
+
+*** davinci resolve run
+
+#+begin_src sh
+
 #+end_src
 
 *** destroy jail
