@@ -425,6 +425,32 @@ dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonf
 dnf repolist | grep rpmfusion
 #+end_src
 
+*** dnf groupupdate core
+
+#+begin_src sh
+dnf groupupdate core --allowerasing
+#+end_src
+
+*** codecs
+
+[[https://rpmfusion.org/Howto/Multimedia]]
+Install additional codec
+
+This will allows the application using the gstreamer framework to play others restricted codecs:
+
+The following command will install the complements multimedia packages needed by gstreamer enabled applications:
+
+#+begin_src sh
+sudo dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+#+end_src
+
+The following command will install the sound-and-video complement packages needed by some applications:
+
+#+begin_src sh
+sudo dnf groupupdate sound-and-video
+#+end_src
+
+
 *** destroy jail
 
 #+begin_src sh
