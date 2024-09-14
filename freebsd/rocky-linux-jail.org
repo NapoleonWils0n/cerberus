@@ -784,7 +784,7 @@ sudo dnf install fuse fuse-devel fuse3 fuse3-devel fakeroot squashfuse squashfus
 *** davinci resolve run
 
 #+begin_src sh
-
+sudo ./DaVinci_Resolve_19.0_Linux.run --appimage-extract
 #+end_src
 
 *** destroy jail
