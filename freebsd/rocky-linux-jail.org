@@ -613,6 +613,150 @@ su - username
 sudo dnf groupinstall "Development Tools"
 #+end_src
 
+*** ffmpeg install
+
+#+begin_src sh
+sudo dnf install ffmpeg
+#+end_src
+
+*** Create the XDG_RUNTIME_DIR directory
+
+Create the XDG_RUNTIME_DIR directory in the jail
+
+#+begin_src sh
+sudo mkdir -p /run/user/"$(id -u)"
+#+end_src
+
+Chown the directory 
+
+#+begin_src sh
+sudo chown -R "${USER}":"$(id -u)" /run/user/"$(id -u)"
+#+end_src
+
+Chmod the directory
+
+#+begin_src sh
+sudo chmod 700 /run/user/"$(id -u)"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** stop the jail and edit the jail config
+
+exit the jail 
+
+#+begin_src sh
+exit
+exit
+#+end_src
+
+stop the rocky jail
+
+#+begin_src sh
+doas service jail onestop rocky
+#+end_src
+
+edit the ubuntu.conf jail config and uncomment the video and xdg directories
+
+#+begin_example
+/etc/jail.conf.d/rocky.conf
+#+end_example
+
+#+begin_src sh
+rocky {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
+
+    # permissions
+    devfs_ruleset=7;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
+    mount += "linprocfs       $path/proc     linprocfs       rw                      0       0";
+    mount += "linsysfs        $path/sys      linsysfs        rw                      0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+
+    # mount the video directory from the host to the jail after creating it
+    mount += "/home/username/video $path/home/username/video  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    mount += "/var/run/xdg/djwilcox $path/run/user/1001  nullfs rw            0       0";
+}
+#+end_src
+
+*** start the rocky jail
+
+#+begin_src sh
+doas service jail onestart rocky
+#+end_src
+
+enter the jail
+
+#+begin_src sh
+doas jexec rocky /bin/sh
+#+end_src
+
+switch to our user 
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+*** Nvidia download
+
+Download the linux version matching the version on the freebsd host \\
+the version must match exactly or it won't work
+
+[[https://www.nvidia.com/Download/Find.aspx?lang=en-us]]
+
+Download link for 535.146.02 
+
+[[https://www.nvidia.com/download/driverResults.aspx/216728/en-us/]]
+
+Download link for 550.54.14
+
+[[https://www.nvidia.com/download/driverResults.aspx/218826/en-us/]]
+
+# Horizontal Rule
+-----
+
+*** Nvidia driver install
+
+on the freebsd host move the nvidia installer to the video directory
+which should be mounted in the jail, so you can cd to the video directory in the jail and install the driver
+
+chmod the Nvidia run file
+
+#+begin_src sh
+chmod +x NVIDIA-Linux-x86_64-550.54.14.run
+#+end_src
+
+Install the Nvidia driver
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-550.54.14.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+# Horizontal Rule
+-----
+
 *** destroy jail
 
 #+begin_src sh
