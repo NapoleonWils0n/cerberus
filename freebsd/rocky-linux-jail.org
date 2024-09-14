@@ -757,6 +757,30 @@ sudo ./NVIDIA-Linux-x86_64-550.54.14.run --install-compat32-libs --no-nvidia-mod
 # Horizontal Rule
 -----
 
+*** qt5ct
+
+#+begin_src sh
+sudo dnf install qt5ct
+#+end_src
+
+*** mesa
+
+#+begin_src sh
+sudo dnf install mesa-dri-drivers.x86_64 mesa-libGLU.x86_64
+#+end_src
+
+*** intel-media-driver
+
+#+begin_src sh
+sudo dnf install intel-media-driver.x86_64 
+#+end_src
+
+*** fuse
+
+#+begin_src sh
+sudo dnf install fuse.x86_64 fuse-devel.x86_64
+#+end_src
+
 *** destroy jail
 
 #+begin_src sh
