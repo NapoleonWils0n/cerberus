@@ -607,6 +607,12 @@ su - username
 # Horizontal Rule
 -----
 
+*** development tools
+
+#+begin_src sh
+sudo dnf groupinstall "Development Tools"
+#+end_src
+
 *** destroy jail
 
 #+begin_src sh
