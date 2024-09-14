@@ -501,12 +501,12 @@ Freebsd passwd
 username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
 #+end_src
 
-**** ubuntu passwd
+**** rocky passwd
 
 Host path
 
 #+begin_example
-/usr/local/jails/linux/ubuntu/etc/passwd
+/usr/local/jails/linux/rocky/etc/passwd
 #+end_example
 
 jail path
@@ -531,7 +531,7 @@ Output
 uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
 #+end_src
 
-**** copy the group from freebsd to ubuntu
+**** copy the group from freebsd to rocky
 
 Freebsd /etc/group
 
@@ -543,6 +543,65 @@ Ubuntu /etc/group
 
 #+begin_src conf
 username:*:1001:
+#+end_src
+
+# Horizontal Rule
+-----
+
+**** sudo install
+
+#+begin_src sh
+dnf install sudo
+#+end_src
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+# Horizontal Rule
+-----
+
+**** groups
+
+#+begin_src sh
+usermod -a -G adm username
+usermod -a -G cdrom username
+usermod -a -G users username
+usermod -a -G video username
+usermod -a -G audio username
+usermod -a -G pipewire username
+#+end_src
+
+*** passwd
+
+Create a passwd for your user, replace username with your username
+
+Run the following command as root
+
+#+begin_src sh
+passwd username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Switch to out user with su
+
+switch to your user in the jail \\
+replace username with your username
+
+#+begin_src sh
+su - username
 #+end_src
 
 # Horizontal Rule
