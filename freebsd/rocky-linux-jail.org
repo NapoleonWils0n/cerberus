@@ -450,8 +450,8 @@ dnf update
 *** codecs
 
 [[https://rpmfusion.org/Howto/Multimedia]]
-Install additional codec
 
+Install additional codec
 This will allows the application using the gstreamer framework to play others restricted codecs:
 
 The following command will install the complements multimedia packages needed by gstreamer enabled applications:
@@ -464,6 +464,12 @@ The following command will install the sound-and-video complement packages neede
 
 #+begin_src sh
 dnf groupupdate sound-and-video
+#+end_src
+
+*** zsh install
+
+#+begin_src sh
+dnf install zsh
 #+end_src
 
 *** destroy jail
