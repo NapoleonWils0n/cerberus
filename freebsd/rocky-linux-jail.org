@@ -472,6 +472,82 @@ dnf groupupdate sound-and-video
 dnf install zsh
 #+end_src
 
+*** Copy user and group from Freebsd to Rocky Linux
+
+We can just copy the settings for our user from Freebsd passwd file
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+to the passwd file on rocky
+
+#+begin_example
+/usr/local/jails/linux/ubuntu/etc/passwd
+#+end_example
+
+**** Freebsd /etc/passwd 
+
+#+begin_example
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_example
+
+We also need to check that the shell path is correct \\
+change zsh path to /bin/zsh in the jail
+
+Freebsd passwd
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_src
+
+**** ubuntu passwd
+
+Host path
+
+#+begin_example
+/usr/local/jails/linux/ubuntu/etc/passwd
+#+end_example
+
+jail path
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/djwilcox:/bin/zsh
+#+end_src
+
+Check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+Output
+
+#+begin_src sh
+uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+**** copy the group from freebsd to ubuntu
+
+Freebsd /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+Ubuntu /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+# Horizontal Rule
+-----
+
 *** destroy jail
 
 #+begin_src sh
