@@ -343,13 +343,7 @@ proc            /proc                   procfs          rw      0       0
 
 [[https://docs.rockylinux.org/guides/installation/]]
 
-*** Rocky linux container mininal
-
-rocky 9 minimal 
-
-#+begin_src sh
-fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Minimal.latest.x86_64.tar.xz'
-#+end_src
+*** Rocky linux container base
 
 rocky 9 base 
 
@@ -360,7 +354,7 @@ fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Bas
 *** tar xz
 
 #+begin_src sh
-tar xvf Rocky-9-Container-Minimal.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
+tar xvf Rocky-9-Container-Base.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
 #+end_src
 
 *** resolv.conf
@@ -379,10 +373,10 @@ doas service jail onestart rocky
 doas jexec rocky /bin/bash
 #+end_src
 
-*** microdnf
+*** dnf update
 
 #+begin_src sh
-microdnf update
+dnf update
 #+end_src
 
 *** destroy jail
