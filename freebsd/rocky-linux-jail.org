@@ -464,6 +464,7 @@ The following command will install the sound-and-video complement packages neede
 
 #+begin_src sh
 dnf groupupdate sound-and-video
+sudo dnf groupupdate Multimedia
 #+end_src
 
 *** zsh install
@@ -809,6 +810,18 @@ sudo squashfs-root/AppRun
 This will install DaVinci Resolve on this computer
 Do you wish to continue? (y/n): y
 #+end_example
+
+*** fix
+
+#+begin_src sh
+sudo dnf install libva-intel-driver mesa-libGLU libcurl libcurl-devel --allowerasing
+#+end_src
+
+ 
+
+log4cxx: No appender could be found for logger (GPU).
+log4cxx: Please initialize the log4cxx system properly.
+C
 
 *** destroy jail
 
