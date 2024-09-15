@@ -766,7 +766,7 @@ sudo dnf install qt5ct
 *** mesa
 
 #+begin_src sh
-sudo dnf install mesa-dri-drivers.x86_64 mesa-libGLU.x86_64
+sudo dnf install mesa-dri-drivers mesa-libGLU
 #+end_src
 
 *** intel-media-driver
@@ -786,6 +786,29 @@ sudo dnf install fuse fuse-devel fuse3 fuse3-devel fakeroot squashfuse squashfus
 #+begin_src sh
 sudo ./DaVinci_Resolve_19.0_Linux.run --appimage-extract
 #+end_src
+
+*** install missing packages
+
+#+begin_src sh
+sudo dnf install apr apr-util libglvnd-opengl libxkbcommon-x11 mtdev xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm
+#+end_src
+
+*** wayland qt
+
+#+begin_src sh
+sudo dnf install libinput wayland-utils wayland-protocols-devel libxkbcommon qt5 adwaita-qt5 qt5ct
+#+end_src
+
+*** AppRun
+
+#+begin_src sh
+sudo squashfs-root/AppRun
+#+end_src
+
+#+begin_example
+This will install DaVinci Resolve on this computer
+Do you wish to continue? (y/n): y
+#+end_example
 
 *** destroy jail
 
