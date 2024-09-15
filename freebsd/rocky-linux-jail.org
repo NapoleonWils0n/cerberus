@@ -817,6 +817,59 @@ Do you wish to continue? (y/n): y
 sudo dnf install libva-intel-driver mesa-libGLU libcurl libcurl-devel --allowerasing
 #+end_src
 
+*** libBlackmagicRawAPI.so
+
+#+begin_example
+/opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so: cannot open shared object file: No such file or directory
+/opt/resolve/bin/libBlackmagicRawAPI.so: cannot open shared object file: No such file or directory
+#+end_example
+
+#+begin_src sh
+ls /opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so
+#+end_src
+
+#+begin_example
+ls: cannot access '/opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so': No such file or directory
+#+end_example
+
+#+begin_src sh
+ls /opt/resolve/bin/libBlackmagicRawAPI.so
+#+end_src
+
+#+begin_example
+ls: cannot access '/opt/resolve/bin/libBlackmagicRawAPI.so': No such file or directory
+#+end_example
+
+#+begin_src sh
+sudo find squashfs-root -name 'libBlackmagicRawAPI.so'
+#+end_src
+
+#+begin_example
+squashfs-root/libs/libBlackmagicRawAPI.so
+squashfs-root/BlackmagicRAWPlayer/BlackmagicRawAPI/libBlackmagicRawAPI.so
+squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so
+#+end_example
+
+#+begin_src sh
+sudo cp squashfs-root/libs/libBlackmagicRawAPI.so /opt/resolve/libs/libBlackmagicRawAPI.so
+#+end_src
+
+#+begin_src sh
+sudo cp squashfs-root/BlackmagicRAWPlayer/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libBlackmagicRawAPI.so
+#+end_src
+
+#+begin_src sh
+sudo cp squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so
+#+end_src
+
+#+begin_src sh
+sudo cp squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so
+#+end_src
+
+#+begin_src sh
+sudo cp squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/bin/libBlackmagicRawAPI.so
+#+end_src
+
 *** destroy jail
 
 #+begin_src sh
