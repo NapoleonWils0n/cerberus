@@ -791,7 +791,7 @@ sudo ./DaVinci_Resolve_19.0_Linux.run --appimage-extract
 *** install missing packages
 
 #+begin_src sh
-sudo dnf install apr apr-util libglvnd-opengl libxkbcommon-x11 mtdev xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm libxcrypt-compat
+sudo dnf install apr apr-util libglvnd-opengl libxkbcommon-x11 mtdev xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm libxcrypt-compat log4c
 #+end_src
 
 *** wayland qt
@@ -816,12 +816,6 @@ Do you wish to continue? (y/n): y
 #+begin_src sh
 sudo dnf install libva-intel-driver mesa-libGLU libcurl libcurl-devel --allowerasing
 #+end_src
-
- 
-
-log4cxx: No appender could be found for logger (GPU).
-log4cxx: Please initialize the log4cxx system properly.
-C
 
 *** destroy jail
 
