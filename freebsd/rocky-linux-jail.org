@@ -354,13 +354,13 @@ fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Bas
 *** tar xz
 
 #+begin_src sh
-tar xvf Rocky-9-Container-Base.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
+doas tar xvfp Rocky-9-Container-Base.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
 #+end_src
 
 *** resolv.conf
 
 #+begin_src sh
-sudo echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
+doas echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
 #+end_src
 
 *** start the jail
@@ -393,18 +393,18 @@ Enable the CodeReady Linux Builder (CRB) repository. The CRB repository contains
 dnf config-manager --set-enabled crb
 #+end_src
 
-check crb status
-
-#+begin_src sh
-/usr/bin/crb status
-#+end_src
-
 *** epel-release
 
 Install the package for the Extra Packages for Enterprise Linux (EPEL) repository. EPEL is a Fedora project full of helpful applications for enterprise users. It includes packages like Python, Perl, Ruby, ImageMagick, and Chromium browser builds. (Please note that this package requires the CRB libraries in the previous step.)
 
 #+begin_src sh
 dnf -y install epel-release
+#+end_src
+
+check crb status
+
+#+begin_src sh
+/usr/bin/crb status
 #+end_src
 
 *** Install RPM Fusion Free Repository.
@@ -463,8 +463,8 @@ dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKi
 The following command will install the sound-and-video complement packages needed by some applications:
 
 #+begin_src sh
-dnf groupupdate sound-and-video
-sudo dnf groupupdate Multimedia
+#dnf groupupdate sound-and-video
+dnf groupupdate Multimedia
 #+end_src
 
 *** zsh install
@@ -549,29 +549,6 @@ username:*:1001:
 # Horizontal Rule
 -----
 
-**** sudo install
-
-#+begin_src sh
-dnf install sudo
-#+end_src
-
-Run the following command as root
-
-Edit the sudoers file with visudo
-
-#+begin_src sh
-visudo
-#+end_src
-
-Add your user to the sudoers file, change username to your username
-
-#+begin_src sh
-username ALL=(ALL:ALL) ALL
-#+end_src
-
-# Horizontal Rule
------
-
 **** groups
 
 #+begin_src sh
@@ -596,6 +573,29 @@ passwd username
 # Horizontal Rule
 -----
 
+*** sudo install
+
+#+begin_src sh
+dnf install sudo
+#+end_src
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+# Horizontal Rule
+-----
+
 *** Switch to out user with su
 
 switch to your user in the jail \\
@@ -612,6 +612,7 @@ su - username
 
 #+begin_src sh
 sudo dnf groupinstall "Development Tools"
+sudo dnf groupupdate "Development Tools"
 #+end_src
 
 *** ffmpeg install
@@ -758,30 +759,6 @@ sudo ./NVIDIA-Linux-x86_64-550.54.14.run --install-compat32-libs --no-nvidia-mod
 # Horizontal Rule
 -----
 
-*** qt5ct
-
-#+begin_src sh
-sudo dnf install qt5ct
-#+end_src
-
-*** mesa
-
-#+begin_src sh
-sudo dnf install mesa-dri-drivers mesa-libGLU
-#+end_src
-
-*** intel-media-driver
-
-#+begin_src sh
-sudo dnf install intel-media-driver.x86_64 
-#+end_src
-
-*** fuse
-
-#+begin_src sh
-sudo dnf install fuse fuse-devel fuse3 fuse3-devel fakeroot squashfuse squashfuse-devel
-#+end_src
-
 *** davinci resolve run
 
 #+begin_src sh
@@ -791,16 +768,38 @@ sudo ./DaVinci_Resolve_19.0_Linux.run --appimage-extract
 *** install missing packages
 
 #+begin_src sh
-sudo dnf install apr apr-util libglvnd-opengl libxkbcommon-x11 mtdev xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm libxcrypt-compat log4c
+sudo dnf install apr apr-util libglvnd-opengl libxkbcommon-x11 mesa-libGLU mtdev xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm libxcrypt-compat log4c
 #+end_src
 
 *** wayland qt
 
 #+begin_src sh
-sudo dnf install libinput wayland-utils wayland-protocols-devel libxkbcommon qt5 adwaita-qt5 qt5ct
+sudo dnf install qt5 adwaita-qt5
+#+end_src
+
+not used
+
+#+begin_src sh
+sudo dnf install libinput wayland-utils wayland-protocols-devel libxkbcommon qt5 adwaita-qt5 qt5ct qt5-qtwayland qt6-qtwayland
 #+end_src
 
 *** AppRun
+
+jail ~/.zshenv
+
+make sure wayland is enabled
+
+#+begin_src conf
+  # wayland - uncomment to use wayland
+  export WAYLAND_DISPLAY=wayland-0
+  export QT_QPA_PLATFORM=wayland
+  export GDK_BACKEND=wayland
+
+  # x11 - comment out to use wayland
+  #export DISPLAY=unix:0
+  #export QT_QPA_PLATFORM=xcb
+  #export GDK_BACKEND=x11
+#+end_src
 
 #+begin_src sh
 sudo squashfs-root/AppRun
@@ -811,63 +810,17 @@ This will install DaVinci Resolve on this computer
 Do you wish to continue? (y/n): y
 #+end_example
 
+after installing resolve
+comment out wayland and uncomment xwayland
+
 *** fix
 
 #+begin_src sh
-sudo dnf install libva-intel-driver mesa-libGLU libcurl libcurl-devel --allowerasing
-#+end_src
-
-*** libBlackmagicRawAPI.so
-
-#+begin_example
-/opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so: cannot open shared object file: No such file or directory
-/opt/resolve/bin/libBlackmagicRawAPI.so: cannot open shared object file: No such file or directory
-#+end_example
-
-#+begin_src sh
-ls /opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so
-#+end_src
-
-#+begin_example
-ls: cannot access '/opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so': No such file or directory
-#+end_example
-
-#+begin_src sh
-ls /opt/resolve/bin/libBlackmagicRawAPI.so
-#+end_src
-
-#+begin_example
-ls: cannot access '/opt/resolve/bin/libBlackmagicRawAPI.so': No such file or directory
-#+end_example
-
-#+begin_src sh
-sudo find squashfs-root -name 'libBlackmagicRawAPI.so'
-#+end_src
-
-#+begin_example
-squashfs-root/libs/libBlackmagicRawAPI.so
-squashfs-root/BlackmagicRAWPlayer/BlackmagicRawAPI/libBlackmagicRawAPI.so
-squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so
-#+end_example
-
-#+begin_src sh
-sudo cp squashfs-root/libs/libBlackmagicRawAPI.so /opt/resolve/libs/libBlackmagicRawAPI.so
-#+end_src
-
-#+begin_src sh
-sudo cp squashfs-root/BlackmagicRAWPlayer/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/BlackmagicRAWPlayer/BlackmagicRawAPI/libBlackmagicRawAPI.so
-#+end_src
-
-#+begin_src sh
-sudo cp squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so
-#+end_src
-
-#+begin_src sh
-sudo cp squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/bin/BlackmagicRawAPI/libBlackmagicRawAPI.so
-#+end_src
-
-#+begin_src sh
-sudo cp squashfs-root/BlackmagicRAWSpeedTest/BlackmagicRawAPI/libBlackmagicRawAPI.so /opt/resolve/bin/libBlackmagicRawAPI.so
+cd /opt/resolve/libs
+sudo mkdir -p disabled-libs
+sudo mv libglib* disabled-libs
+sudo mv libgio* disabled-libs
+sudo mv libgmodule* disabled-libs
 #+end_src
 
 *** destroy jail
