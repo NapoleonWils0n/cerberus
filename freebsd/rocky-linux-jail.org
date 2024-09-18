@@ -353,14 +353,22 @@ fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Bas
 
 *** tar xz
 
+rocky 9
+
 #+begin_src sh
 doas tar xvfp Rocky-9-Container-Base.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
 #+end_src
 
 *** resolv.conf
 
+switch to root
+
 #+begin_src sh
-doas echo 'nameserver 8.8.8.8' > /usr/local/jails/linux/rocky/etc/resolv.conf
+su
+#+end_src
+
+#+begin_src sh
+echo 'nameserver 8.8.8.8' >> /usr/local/jails/linux/rocky/etc/resolv.conf
 #+end_src
 
 *** start the jail
@@ -766,6 +774,8 @@ sudo ./DaVinci_Resolve_19.0_Linux.run --appimage-extract
 #+end_src
 
 *** install missing packages
+
+rocky 9
 
 #+begin_src sh
 sudo dnf install apr apr-util libglvnd-opengl libxkbcommon-x11 mesa-libGLU mtdev xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm libxcrypt-compat log4c
