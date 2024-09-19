@@ -81,7 +81,11 @@ add path 'nvidia*' unhide
 add path 'speaker*' unhide
 #+end_src
 
-after adding the devfs rules reboot
+restart the devfs service
+
+#+begin_src sh
+doas service devfs restart
+#+end_src
 
 *** jail config
 
@@ -371,6 +375,20 @@ su
 echo 'nameserver 8.8.8.8' >> /usr/local/jails/linux/rocky/etc/resolv.conf
 #+end_src
 
+*** edit group in jail
+
+#+begin_src sh
+vi /usr/local/jails/linux/rocky/etc/group
+#+end_src
+
+#+begin_src sh
+root:x:0:
+#+end_src
+
+#+begin_src sh
+root:x:0:wheel
+#+end_src
+
 *** start the jail
 
 #+begin_src sh
@@ -566,6 +584,17 @@ usermod -a -G users username
 usermod -a -G video username
 usermod -a -G audio username
 usermod -a -G pipewire username
+usermod -a -G wheel username
+#+end_src
+
+exit and relogin for the changes to take affect
+
+#+begin_src sh
+exit
+#+end_src
+
+#+begin_src sh
+su - username
 #+end_src
 
 *** passwd
@@ -769,8 +798,14 @@ sudo ./NVIDIA-Linux-x86_64-550.54.14.run --install-compat32-libs --no-nvidia-mod
 
 *** davinci resolve run
 
+unzip
+
 #+begin_src sh
-sudo ./DaVinci_Resolve_19.0_Linux.run --appimage-extract
+unzip DaVinci_Resolve_19.0.1_Linux.zip
+#+end_src
+
+#+begin_src sh
+sudo ./DaVinci_Resolve_19.0.1_Linux.run --appimage-extract
 #+end_src
 
 *** install missing packages
