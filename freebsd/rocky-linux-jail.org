@@ -70,9 +70,7 @@ devfs.rules
 
 #+begin_src conf
 [jail=7]
-add include $devfsrules_hide_all
-add include $devfsrules_unhide_basic
-add include $devfsrules_unhide_login
+add include $devfsrules_jail
 add path 'mixer*' unhide
 add path 'dsp*' unhide
 add path 'dri*' unhide
@@ -597,6 +595,18 @@ exit
 su - username
 #+end_src
 
+#+begin_example
+/etc/group
+#+end_example
+
+#+begin_src conf
+wheel:*:0:root,djwilcox
+video:x:44:djwilcox
+#root:x:0:
+#wheel:x:10:
+#video:x:39:
+#+end_src
+
 *** passwd
 
 Create a passwd for your user, replace username with your username
@@ -825,7 +835,7 @@ sudo dnf install qt5 adwaita-qt5
 not used
 
 #+begin_src sh
-sudo dnf install libinput wayland-utils wayland-protocols-devel libxkbcommon qt5 adwaita-qt5 qt5ct qt5-qtwayland qt6-qtwayland
+sudo dnf install libinput wayland-utils wayland-protocols-devel libxkbcommon qt5 adwaita-qt5 qt5ct qt5-qtwayland qt6-qtwayland ocl-icd-devel
 #+end_src
 
 *** AppRun
