@@ -820,6 +820,12 @@ sudo ./DaVinci_Resolve_19.0.1_Linux.run --appimage-extract
 
 *** install missing packages
 
+kernel-modules for the i915 driver
+
+#+begin_src sh
+sudo dnf install kernel-modules
+#+end_src
+
 rocky 9
 
 #+begin_src sh
