@@ -786,6 +786,14 @@ Download link for 550.54.14
 # Horizontal Rule
 -----
 
+*** kernerl-modules install
+
+kernel-modules for the i915 driver
+
+#+begin_src sh
+sudo dnf install kernel-modules
+#+end_src
+
 *** Nvidia driver install
 
 on the freebsd host move the nvidia installer to the video directory
@@ -819,12 +827,6 @@ sudo ./DaVinci_Resolve_19.0.1_Linux.run --appimage-extract
 #+end_src
 
 *** install missing packages
-
-kernel-modules for the i915 driver
-
-#+begin_src sh
-sudo dnf install kernel-modules
-#+end_src
 
 rocky 9
 
