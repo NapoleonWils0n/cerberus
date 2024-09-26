@@ -876,12 +876,6 @@ Do you wish to continue? (y/n): y
 after installing resolve
 comment out wayland and uncomment xwayland
 
-*** pulseaudio
-
-#+begin_src sh
-sudo dnf install pulseaudio pulseaudio-utils alsa-plugins-pulseaudio
-#+end_src
-
 ** Pulseaudio set up 
 *** Freebsd
 **** default.pa
@@ -909,6 +903,19 @@ load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
 -----
 
 *** rocky linux
+
+make sure pipewire-pulse isnt installed as it will conflict with pulseaudio
+
+#+begin_src sh
+sudo dnf remove pipewire-pulse
+#+end_src
+
+install pulseaudio and alsa-plugins-pulseaudio
+
+#+begin_src sh
+sudo dnf install pulseaudio pulseaudio-utils alsa-plugins-pulseaudio
+#+end_src
+
 **** client.conf
 
 client.conf path in the jail
