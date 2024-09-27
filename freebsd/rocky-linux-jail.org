@@ -968,7 +968,137 @@ default-server = /tmp/pulseaudio.socket
 # Horizontal Rule
 -----
 
-*** destroy jail
+** Davinci Resolve Desktop entry
+*** Freebsd
+**** resolve script
+
+Freebsd script to launch Davinci Resolve from a Linux Jail
+
+#+begin_src sh
+/usr/local/bin/resolve
+#+end_src
+
++ resolve code
+  
+#+begin_src sh
+#!/bin/sh
+
+# resolve
+# Freebsd script to launch Davinci Resolve from a Linux Jail
+
+# start pulseaudio
+pulseaudio --start --daemonize 2>/dev/null
+
+# doas jexec into rocky and run the wrapper script to start resolve
+doas jexec rocky /usr/local/bin/wrapper-resolve \
+-d "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" \
+-u "${USER}"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** rocky
+**** wrapper-resolve
+
+Freebsd path to wrapper-resolve in the jail
+
+#+begin_example
+/usr/local/jails/rocky/usr/local/bin/wrapper-resolve
+#+end_example
+
+Path to wrapper-resolve in the jail
+
+#+begin_example
+/usr/local/bin/wrapper-resolve
+#+end_example
+
++ wrapper-resolve code
+
+#+begin_src sh
+#!/bin/bash
+
+#===============================================================================
+# wrapper-resolve
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# script usage
+$(basename "$0") -u ${USER}"
+exit 2
+}
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':u:d:h' opt
+do
+  case ${opt} in
+     u) username="${OPTARG}";;
+     d) dbus="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# switch to our user in the jail and start resolve
+#===============================================================================
+
+su "${username}" -c "${dbus} /opt/resolve/bin/resolve" 2>/dev/null
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** davinci-resolve.desktop
+
+On the freebsd host copy the davinci-resolve.desktop to
+
+#+begin_example
+~/.local/share/applications
+#+end_example
+
+davinci-resolve.desktop
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=DaVinci Resolve
+Exec=/usr/local/bin/resolve-wrapper
+Icon=/usr/local/jails/linux/rocky/opt/resolve/graphics/DV_Resolve.png
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
+# Horizontal Rule
+-----
+
+** destroy jail
 
 #+begin_src sh
 doas service jail onestop rocky
