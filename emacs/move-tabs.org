@@ -1,0 +1,35 @@
+#+STARTUP: content
+* emacs move tabs
+** emacs manual tabs
+
+[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Tab-Bars.html]]
+
+Move the current tab one position to the right (tab-move). With a positive numeric argument n, move it that many positions to the right; with a negative argument −n, move it n positions to the left. 
+
+** move tab right
+
+move tab one position to the right
+
+#+begin_example
+C-x t m
+#+end_example
+
+move tab two positions to the right
+
+#+begin_example
+C-u +1 C-x t m
+#+end_example
+
+** move tab left
+
+move tab one position to the left
+
+#+begin_example
+C-u -1 C-x t m
+#+end_example
+
+move tab two positions to the left
+
+#+begin_example
+C-u -2 C-x t m
+#+end_example
