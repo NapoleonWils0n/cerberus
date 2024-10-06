@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* eject drive
+
+umount da0 at /mnt/usb
+
+#+begin_src sh
+doas umount /mnt/usb
+#+end_src
+
+#+begin_src sh
+doas camcontrol eject da0
+#+end_src
