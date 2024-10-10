@@ -1,0 +1,186 @@
+#+STARTUP: content
+* rocky conda
+** whisperx
+
+[[https://github.com/m-bain/whisperX]]
+
+** conda install
+
+#+begin_src sh
+sudo dnf install conda
+#+end_src
+
+** Create Python3.10 environment
+
+#+begin_src sh
+conda create --name whisperx python=3.10
+#+end_src
+
+run conda init for your shell
+
+#+begin_src sh
+conda init zsh
+#+end_src
+
+exit out of the shell
+
+#+begin_src sh
+exit
+#+end_src
+
+** zshenv
+
+#+begin_src conf
+# ~/.zshenv
+
+# for ZSH
+case "$OSTYPE" in
+  freebsd*)
+  # Path
+  typeset -U PATH path
+  path=("$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR=/var/run/xdg/"${USER}"
+
+  # wayland - uncomment to use wayland
+  export WAYLAND_DISPLAY=wayland-0
+  export QT_QPA_PLATFORM=wayland
+  export GDK_BACKEND=wayland
+  ;;
+  linux*)
+  typeset -U PATH path
+  path=("/opt/resolve/bin" "/bin" "/usr/bin" "$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR="/run/user/`id -u`"
+
+  # dummy-uvm.so for access to the gpu
+  export LD_PRELOAD="${HOME}"/.config/gpu/dummy-uvm.so
+  export __NV_PRIME_RENDER_OFFLOAD=1
+  export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+  # wayland - uncomment to use wayland
+  #export WAYLAND_DISPLAY=wayland-0
+  #export QT_QPA_PLATFORM=wayland
+  #export GDK_BACKEND=wayland
+
+  # x11 - comment out to use wayland
+  export DISPLAY=unix:0
+  export QT_QPA_PLATFORM=xcb
+  export GDK_BACKEND=x11
+  ;;
+esac
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+#+end_src
+
+** zshrc
+
+#+begin_src conf
+# ~/.zshrc
+
+# add your zshrc code below
+
+# for ZSH
+case "$OSTYPE" in
+  freebsd*)
+  ;;
+  linux*)
+  # >>> conda initialize >>>
+  # !! Contents within this block are managed by 'conda init' !!
+  __conda_setup="$('/usr/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+      eval "$__conda_setup"
+  else
+      if [ -f "/usr/etc/profile.d/conda.sh" ]; then
+          . "/usr/etc/profile.d/conda.sh"
+      else
+          export PATH="/usr/bin:$PATH"
+      fi
+  fi
+  unset __conda_setup
+  # <<< conda initialize <<<
+  ;;
+esac
+#+end_src
+
+** log back in
+
+#+begin_src sh
+su - username
+#+end_src
+
+** activate whisperx
+
+#+begin_src sh
+conda activate whisperx
+#+end_src
+
+** Install PyTorch, e.g. for Linux and Windows CUDA11.8:
+
+#+begin_src sh
+conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+#+end_src
+
+#+begin_src sh
+conda uninstall pytorch-cuda=11.8
+#+end_src
+
+#+begin_src sh
+conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=12.4 -c pytorch -c nvidia 
+#+end_src
+
+#+begin_src sh
+conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia 
+#+end_src
+
+#+begin_src sh
+conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
+#+end_src
+
+** git install
+
+#+begin_src sh
+sudo dnf install git
+#+end_src
+
+** Install this repo
+
+#+begin_src sh
+pip install git+https://github.com/m-bain/whisperx.git
+#+end_src
+
+If already installed, update package to most recent commit
+
+#+begin_src sh
+pip install git+https://github.com/m-bain/whisperx.git --upgrade
+#+end_src
+
+** hugginface
+
+To enable Speaker Diarization, include your Hugging Face access token (read) that you can generate from Here after the --hf_token argument and accept the user agreement for the following models: Segmentation and Speaker-Diarization-3.1 (if you choose to use Speaker-Diarization 2.x, follow requirements here instead.)
+
+[[https://huggingface.co/settings/tokens]]
+
+** update torch
+
+[[https://github.com/m-bain/whisperX/issues/854]]
+
+#+begin_src sh
+pip install -U torch torchaudio 
+#+end_src
+
+** conda deactivate
+
+#+begin_src sh
+conda deactivate
+#+end_src
