@@ -1,11 +1,11 @@
 #+STARTUP: show2levels
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-* Freebsd macbook install
+* Freebsd Wayland
 
-+ [[freebsd root dotfiles][https://github.com/NapoleonWils0n/freebsd-root]]
-+ [[freebsd dotfiles][https://github.com/NapoleonWils0n/freebsd-dotfiles]]
-+ [[freebsd home bin][https://github.com/NapoleonWils0n/freebsd-bin]]
++ [[freebsd root dotfiles][https://github.com/NapoleonWils0n/freebsd-root-xps]]
++ [[freebsd dotfiles][https://github.com/NapoleonWils0n/freebsd-dotfiles-xps]]
++ [[freebsd home bin][https://github.com/NapoleonWils0n/freebsd-bin-xps]]
 
 ** download freebsd 
 
@@ -180,32 +180,6 @@ kld_list="i915kms"
 
 #+begin_src sh
 sudo pkg install wayland wayland-protocols seatd qt5ct qt5-wayland 
-#+end_src
-
-*** create the xdg runtime directory, change the user and set the permissions
-
-#+begin_src sh
-sudo mkdir -p /var/run/user/1001
-sudo chown -R djwilcox:wheel /var/run/user/1001
-sudo chmod 700 /var/run/user/1001
-#+end_src
-
-*** set the runtime dir in the console
-
-#+begin_src sh
-export XDG_RUNTIME_DIR=/var/run/user/`id -u`
-#+end_src
-
-*** set the runtime dir in your zshrc config
-
-#+begin_src sh
-vi ~/.zshrc
-#+end_src
-
-export the XDG_RUNTIME_DIR
-
-#+begin_src sh
-export XDG_RUNTIME_DIR=/var/run/user/`id -u`
 #+end_src
 
 *** fstab
