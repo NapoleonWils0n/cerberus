@@ -96,32 +96,6 @@ kld_list="i915kms"
 #+END_SRC
 
 ** wayland
-*** create the xdg runtime directory, change the user and set the permissions
-
-#+begin_src sh
-sudo mkdir -p /var/run/user/1001
-sudo chown -R djwilcox:wheel /var/run/user/1001
-sudo chmod 700 /var/run/user/1001
-#+end_src
-
-*** set the runtime dir in the console
-
-#+begin_src sh
-export XDG_RUNTIME_DIR=/var/run/user/`id -u`
-#+end_src
-
-*** set the runtime dir in your zshrc config
-
-#+begin_src sh
-vi ~/.zshrc
-#+end_src
-
-export the XDG_RUNTIME_DIR
-
-#+begin_src sh
-export XDG_RUNTIME_DIR=/var/run/user/`id -u`
-#+end_src
-
 *** fstab
 
 Add procfs to /etc/fstab with this line
@@ -221,6 +195,8 @@ DATADIR = $(PREFIX)/share
 # Uncomment to build XWayland support
 XWAYLAND = -DXWAYLAND
 XLIBS = xcb xcb-icccm
+
+CC = gcc
 #+end_src
 
 ** dwl.c focus
