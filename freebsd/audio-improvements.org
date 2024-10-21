@@ -1,0 +1,24 @@
+#+STARTUP: content
+* freebsd audio improvements
+
+[[https://www.youtube.com/watch?v=9xIGfs6Bqpo]]
+
+#+begin_example
+/etc/sysctl.conf
+#+end_example
+
+#+begin_src sh
+hw.snd.latency=0
+kern.timecounter.alloweddeviation=0
+hw.usb.uaudio.buffer_ms=2
+#+end_src
+
+sysctl hw.snd.latency=0
+default 2
+
+doas sysctl kern.timecounter.alloweddeviation=0
+default 5
+
+hw.usb.uaudio.buffer_ms=2
+default 4
+
