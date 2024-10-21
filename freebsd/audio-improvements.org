@@ -1,11 +1,16 @@
-#+STARTUP: content
+#+STARTUP: showall
 * freebsd audio improvements
+** youtube bsd talk
 
 [[https://www.youtube.com/watch?v=9xIGfs6Bqpo]]
+
+** edit your sysctl.conf
 
 #+begin_example
 /etc/sysctl.conf
 #+end_example
+
+set the following option
 
 #+begin_src sh
 hw.snd.latency=0
@@ -13,12 +18,23 @@ kern.timecounter.alloweddeviation=0
 hw.usb.uaudio.buffer_ms=2
 #+end_src
 
+** sysctl read values
+
+hw.snd.latency - default 2
+
+#+begin_src sh
 sysctl hw.snd.latency=0
-default 2
+#+end_src
 
-doas sysctl kern.timecounter.alloweddeviation=0
-default 5
+kern.timecounter.alloweddeviation - default 5
 
-hw.usb.uaudio.buffer_ms=2
-default 4
+#+begin_src sh
+sysctl kern.timecounter.alloweddeviation=0
+#+end_src
+
+hw.usb.uaudio.buffer_ms - default 4
+
+#+begin_src sh
+sysctl hw.usb.uaudio.buffer_ms=2
+#+end_src
 
