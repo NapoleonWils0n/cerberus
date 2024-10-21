@@ -91,7 +91,7 @@ ctrl c to stop
 #+begin_src sh
 virtual_oss_enable="YES"
 virtual_oss_configs="dsp"
-virtual_oss_dsp="-T /dev/sndstat -S -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp -t vdsp.ctl"
+virtual_oss_dsp="-T /dev/sndstat -S -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp -t dsp.ctl"
 # sndiod audio
 sndiod_enable="YES"
 #+end_src
@@ -101,13 +101,13 @@ sndiod_enable="YES"
 speakers
 
 #+begin_src sh
-virtual_oss_cmd /dev/vdsp.ctl -P /dev/dsp0
+virtual_oss_cmd /dev/dsp.ctl -P /dev/dsp0
 #+end_src
 
 headphones
 
 #+begin_src sh
-virtual_oss_cmd /dev/vdsp.ctl -P /dev/dsp1
+virtual_oss_cmd /dev/dsp.ctl -P /dev/dsp1
 #+end_src
 
 ** obs
