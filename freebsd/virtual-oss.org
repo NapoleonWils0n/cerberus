@@ -71,16 +71,44 @@ replace dsp0 with you device
 rate 48000
 
 #+begin_src sh
-virtual_oss -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp
+virtual_oss -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp -t vdsp.ctl
 #+end_src
 
 rate 44100
 
 #+begin_src sh
-virtual_oss -Q 0 -C 2 -c 2 -r 44100 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp
+virtual_oss -Q 0 -C 2 -c 2 -r 44100 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp -t vdsp.ctl
 #+end_src
 
 ctrl c to stop
+
+** virtual_oss rc.conf
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+#+begin_src sh
+virtual_oss_enable="YES"
+virtual_oss_configs="dsp"
+virtual_oss_dsp="-T /dev/sndstat -S -Q 0 -C 2 -c 2 -r 48000 -b 16 -s 1024 -P /dev/dsp1 -R /dev/null -w vdsp.wav -l dsp -t vdsp.ctl"
+# sndiod audio
+sndiod_enable="YES"
+#+end_src
+
+** virtual_oss_cmd
+
+speakers
+
+#+begin_src sh
+virtual_oss_cmd /dev/vdsp.ctl -P /dev/dsp0
+#+end_src
+
+headphones
+
+#+begin_src sh
+virtual_oss_cmd /dev/vdsp.ctl -P /dev/dsp1
+#+end_src
 
 ** obs
 
