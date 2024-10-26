@@ -7,16 +7,16 @@
 [[https://cgit.freebsd.org/ports/tree/Mk/bsd.default-versions.mk#n90]]
 
 [[https://docs.freebsd.org/en/books/handbook/linuxemu/#linux-userlands]]
-** linux enable no
-
-#+begin_src sh
-doas sysrc linux_enable="NO"
-#+end_src
-
 ** linux stop
 
 #+begin_src sh
 doas service linux stop
+#+end_src
+
+** linux enable no
+
+#+begin_src sh
+doas sysrc linux_enable="NO"
 #+end_src
 
 ** remove linux_base-c7
@@ -28,6 +28,10 @@ doas pkg remove linux_base-c7
 ** reboot
 
 reboot to unmount the compat driectories
+
+#+begin_src sh
+sudo reboot
+#+end_src
 
 ** move /compat/linux
 
@@ -50,10 +54,42 @@ make sure there are no linux mountpoint defined in your fstab
 doas sysrc linux_enable="YES"
 #+end_src
 
+** start linux
+
+#+begin_src sh
+doas kldload linux
+#+end_src
+
+#+begin_src sh
+doas service linux onestart
+#+end_src
+
 ** linux_base-rl9
 
 #+begin_src sh
 doas pkg install linux_base-rl9 linux-rl9-devtools
+#+end_src
+
+** poudriere make
+
+#+begin_example
+/usr/local/etc/poudriere.d/make.conf
+#+end_example
+
+#+begin_src conf
+DISABLE_LICENSES=yes
+DEFAULT_VERSIONS+= linux=rl9
+#+end_src
+
+** port-list
+
+#+begin_example
+/usr/local/etc/poudriere.d/port-list
+#+end_example
+
+#+begin_src sh
+www/linux-widevine-cdm
+www/foreign-cdm
 #+end_src
 
 ** pkg remove linux-widevine-cdm
