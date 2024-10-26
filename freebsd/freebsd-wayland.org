@@ -1814,7 +1814,7 @@ PKG_REPO_SIGNING_KEY=/usr/local/etc/ssl/keys/poudriere.key
 *** Creating the Build Environment
 
 #+BEGIN_SRC sh
-poudriere jail -c -j freebsd_14-0x64 -v 14.0-RELEASE
+poudriere jail -c -j freebsd_14-0x64 -v 14.1-RELEASE
 #+END_SRC
 
 This will take awhile to complete, so be patient.  
