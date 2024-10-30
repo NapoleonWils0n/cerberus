@@ -1,0 +1,1027 @@
+#+STARTUP: content
+* oracular jail
+** ubuntu base
+
+[[https://cdimage.ubuntu.com/ubuntu-base/releases/24.10/release/]]
+
+[[https://cdimage.ubuntu.com/ubuntu-base/releases/24.10/release/ubuntu-base-24.10-base-amd64.tar.gz]]
+
+download ubuntu base
+
+#+begin_src sh
+fetch 'https://cdimage.ubuntu.com/ubuntu-base/releases/24.10/release/ubuntu-base-24.10-base-amd64.tar.gz'
+#+end_src
+
+** Setting Up the Jail Directory Tree
+*** zroot/jails
+
+create the zroot/jails zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails
+sudo zfs set mountpoint=/usr/local/jails zroot/jails
+#+end_src
+
+*** zroot/jails/linux
+
+create the zroot/jails/linux zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails/linux
+sudo zfs set mountpoint=/usr/local/jails/linux zroot/jails/linux
+#+end_src
+
+*** zroot/jails/linux/ubuntu
+
+create the zroot/jails/linux/ubuntu zfs dataset and set the mountpoint
+
+#+begin_src sh
+sudo zfs create zroot/jails/linux/ubuntu
+sudo zfs set mountpoint=/usr/local/jails/linux/ubuntu zroot/jails/linux/ubuntu
+#+end_src
+
+*** /etc/jail.conf
+
+create the /etc/jail.conf file if it doesn't exist
+
+#+begin_example
+/etc/jail.conf
+#+end_example
+
+add the following code to the jail.conf file to include \\
+files with a .conf extension in the /etc/jail.conf.d/ directory
+
++ [[file:freebsd/etc/jail.conf][jail.conf]]
+ 
+#+begin_src conf
+# startup/logging
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.consolelog = "/var/log/jail_console_${name}.log";
+#+end_src
+
+*** /etc/jail.conf.d/ubuntu.conf
+
+create the /etc/jail.conf.d/ directory
+
+#+begin_src sh
+sudo mkdir -p /etc/jail.conf.d/
+#+end_src
+
+#+begin_example
+/etc/jail.conf.d/ubuntu.conf
+#+end_example
+
++ [[file:freebsd/etc/jail.conf.d/ubuntu.conf][ubuntu.conf]]
+
+#+begin_src sh
+ubuntu {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
+
+    # permissions
+    devfs_ruleset=7;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    # mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
+    mount += "linprocfs       $path/proc     linprocfs       rw                      0       0";
+    mount += "linsysfs        $path/sys      linsysfs        rw                      0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+
+    # mount the video directory from the host to the jail after creating it
+    #mount += "/home/username/video $path/home/username/video  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    #mount += "/var/run/xdg/djwilcox $path/run/user/1001  nullfs rw            0       0";
+}
+#+end_src
+
+** extract tar
+
+#+begin_src sh
+doas tar xvfp ubuntu-base-24.10-base-amd64.tar.gz -C /usr/local/jails/linux/ubuntu
+#+end_src
+
+** getpwnam
+
+#+begin_src sh
+cd /usr/local/jails/linux/ubuntu/etc
+#+end_src
+
+switch to root
+
+#+begin_src sh
+su -m
+#+end_src
+
+#+begin_src sh
+cat passwd | sed -r 's/(:[x|*]:)([0-9]+:[0-9]+:)/:*:\2:0:0:/g' > master.passwd
+#+end_src
+
+#+begin_src sh
+pwd_mkdb -d ./ -p master.passwd
+#+end_src
+
+** jail start
+
+start the ubuntu jail
+
+#+begin_src sh
+doas service jail onestart ubuntu
+#+end_src
+
+check the jail is running
+
+#+begin_src sh
+doas jls
+#+end_src
+
+** enter jail
+
+#+begin_src sh
+doas jexec ubuntu /bin/bash
+#+end_src
+
+** Ubuntu set up
+*** dns nameserver
+
+#+begin_src sh
+echo nameserver 8.8.8.8 > /etc/resolv.conf
+#+end_src
+
+*** Fix APT package manager
+
+Run the following command as root
+
+#+begin_src sh
+printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Set correct timezone inside the jail
+
+You will now be logged in as root inside the jail
+
+#+begin_src sh
+printf "%b\n" "0.0 0 0.0\n0\nUTC" > /etc/adjtime
+#+end_src
+
+*** Couldnt resolve hostname fix
+
+#+begin_src sh
+apt install vim-tiny
+#+end_src
+
+Add your hostname from the jail to the hosts file in the ubuntu jail \\
+to stop errors when using sudo saying couldnt resolve hostname
+
+Path to the hosts in the jail
+
+#+begin_example
+vi /etc/hosts
+#+end_example
+
+hosts
+
+#+begin_src conf
+127.0.0.1       hostname
+#+end_src
+
+#+begin_src conf
+127.0.0.1       localhost
+127.0.0.1       ubuntu
+::1             localhost ip6-localhost ip6-loopback
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Install sudo
+
+#+begin_src sh
+apt install sudo
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** apt update
+
+Run the following commands as root to update and upgrade Ubuntu
+
+#+begin_src sh
+apt update
+#+end_src
+
+Upgrade
+
+#+begin_src sh
+apt upgrade 
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** ping
+
+#+begin_src sh
+apt install iputils-ping
+#+end_src
+
+*** Set locale
+
+install locales
+
+#+begin_src sh
+apt install locales
+#+end_src
+
+#+begin_src sh
+vi /etc/default/locale
+#+end_src
+
++ locale code
+
+#+begin_src sh
+LANG=en_GB.UTF-8
+LANGUAGE=
+LC_CTYPE="en_GB.UTF-8"
+LC_NUMERIC="en_GB.UTF-8"
+LC_TIME="en_GB.UTF-8"
+LC_COLLATE=C
+LC_MONETARY="en_GB.UTF-8"
+LC_MESSAGES="en_GB.UTF-8"
+LC_PAPER="en_GB.UTF-8"
+LC_NAME="en_GB.UTF-8"
+LC_ADDRESS="en_GB.UTF-8"
+LC_TELEPHONE="en_GB.UTF-8"
+LC_MEASUREMENT="en_GB.UTF-8"
+LC_IDENTIFICATION="en_GB.UTF-8"
+LC_ALL=
+#+end_src
+
+Run the following commands as root
+
+locale-gen
+
+#+begin_src sh
+locale-gen
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Shell install
+
+Install the shell our user is going to use \\
+it must match the shell set in the ubuntu /etc/passwd file which we will set up 
+
+Run the following command as root
+
+#+begin_src sh
+apt install zsh 
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Copy user and group from Freebsd to Ubuntu
+
+We can just copy the settings for our user from Freebsd passwd file
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+to the passwd file on Ubuntu
+
+#+begin_example
+/usr/local/jails/linux/ubuntu/etc/passwd
+#+end_example
+
+**** Freebsd /etc/passwd 
+
+#+begin_example
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_example
+
+We also need to check that the shell path is correct \\
+change zsh path to /bin/zsh in the jail
+
+Freebsd passwd
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_src
+
+**** ubuntu passwd
+
+Host path
+
+#+begin_example
+/usr/local/jails/linux/ubuntu/etc/passwd
+#+end_example
+
+jail path
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/djwilcox:/bin/zsh
+#+end_src
+
+Check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+Output
+
+#+begin_src sh
+uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+**** copy the group from freebsd to ubuntu
+
+Freebsd /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+Ubuntu /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Add user to groups in the jail
+
+Add the user we created to groups in the jail \\
+replace username with the username you created
+
+Run the following command as root
+
+#+begin_src sh
+usermod -a -G adm username
+usermod -a -G cdrom username
+usermod -a -G sudo username
+usermod -a -G dip username
+usermod -a -G plugdev username
+usermod -a -G users username
+usermod -a -G video username
+usermod -a -G audio username
+#+end_src
+
+edit the jails group file
+
+#+begin_example
+vi /etc/group
+#+end_example
+
+comment out the root entry and create a new wheel entry, replace username with your username
+
+#+begin_src conf
+wheel:*:0:root,username
+#root:x:0:
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** sudo set up
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** passwd
+
+Create a passwd for your user, replace username with your username
+
+Run the following command as root
+
+#+begin_src sh
+passwd username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** create the home username directory
+
+change username to your username
+
+#+begin_src sh
+mkdir -p /home/username
+#+end_src
+
+#+begin_src sh
+chown username:username username
+#+end_src
+
+*** Couldnt resolve hostname fix
+
+Add your hostname from the jail to the hosts file in the ubuntu jail \\
+to stop errors when using sudo saying couldnt resolve hostname
+
+Path to the hosts in the jail
+
+#+begin_example
+vi /etc/hosts
+#+end_example
+
+hosts
+
+#+begin_src conf
+127.0.0.1       hostname
+#+end_src
+
+#+begin_src conf
+127.0.0.1       localhost
+127.0.0.1       ubuntu
+::1             localhost ip6-localhost ip6-loopback
+ff02::1         ip6-allnodes
+ff02::2         ip6-allrouters
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Switch to out user with su
+
+switch to your user in the jail \\
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Build essential
+
+Verify the system has build tools such as make, gcc installed  
+
+Install build-essential for gcc
+
+#+begin_src sh
+sudo apt install build-essential
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** apt-utils
+
+#+begin_src sh
+sudo apt install apt-utils
+#+end_src
+
+*** ffmpeg install
+
+#+begin_src sh
+sudo apt install ffmpeg
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** fix
+
+[[https://superuser.com/questions/1803992/getting-this-error-failed-to-take-etc-passwd-lock-invalid-argument#comment2829160_1803992]]
+
+#+begin_src sh
+sudo mv /var/lib/dpkg/info /var/lib/dpkg/info_silent
+sudo mkdir /var/lib/dpkg/info
+sudo apt-get update
+sudo apt-get -f install
+sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_silent
+sudo rm -rf /var/lib/dpkg/info
+sudo mv /var/lib/dpkg/info_silent /var/lib/dpkg/info
+sudo apt-get update
+sudo apt-get upgrade
+#+end_src
+
+*** ffmpeg install
+
+#+begin_src sh
+sudo apt install ffmpeg
+#+end_src
+
+*** user-dirs.dirs
+
+create directories in the home directory
+
+#+begin_src sh
+mkdir -p "${HOME}"/{desktop,documents,downloads,video}
+#+end_src
+
+set the xdg directories to the directories we just created
+
+#+begin_src sh
+vi ~/.config/user-dirs.dirs
+#+end_src
+
+#+begin_src sh
+enabled=False
+XDG_DESKTOP_DIR="$HOME/desktop"
+XDG_DOCUMENTS_DIR="$HOME/documents"
+XDG_DOWNLOAD_DIR="$HOME/downloads"
+XDG_VIDEOS_DIR="$HOME/video"
+#+end_src
+
+*** Create the XDG_RUNTIME_DIR directory
+
+Create the XDG_RUNTIME_DIR directory in the jail
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/"$(id -u)"
+#+end_src
+
+Chown the directory 
+
+#+begin_src sh
+sudo chown -R "${USER}":"$(id -u)" /var/run/user/"$(id -u)"
+#+end_src
+
+Chmod the directory
+
+#+begin_src sh
+sudo chmod 700 /var/run/user/"$(id -u)"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** stop the jail and edit the jail config
+
+exit the jail 
+
+#+begin_src sh
+exit
+exit
+#+end_src
+
+stop the ubuntu jail
+
+#+begin_src sh
+doas service jail onestop ubuntu
+#+end_src
+
+edit the ubuntu.conf jail config and uncomment the video and xdg directories
+
+#+begin_example
+/etc/jail.conf.d/ubuntu.conf
+#+end_example
+
+#+begin_src sh
+ubuntu {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
+
+    # permissions
+    devfs_ruleset=7;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    # mount.fstab="/usr/local/jails/linux/ubuntu/etc/fstab";
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
+    mount += "linprocfs       $path/proc     linprocfs       rw                      0       0";
+    mount += "linsysfs        $path/sys      linsysfs        rw                      0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+
+    # mount the video directory from the host to the jail after creating it
+    mount += "/home/username/video $path/home/username/video  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    mount += "/var/run/xdg/djwilcox $path/run/user/1001  nullfs rw            0       0";
+}
+#+end_src
+
+*** start the ubuntu jail
+
+#+begin_src sh
+doas service jail onestart ubuntu
+#+end_src
+
+enter the jail
+
+#+begin_src sh
+doas jexec ubuntu /bin/sh
+#+end_src
+
+switch to our user 
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+*** Nvidia download
+
+Download the linux version matching the version on the freebsd host \\
+the version must match exactly or it won't work
+
+[[https://www.nvidia.com/Download/Find.aspx?lang=en-us]]
+
+Download link for 535.146.02 
+
+[[https://www.nvidia.com/download/driverResults.aspx/216728/en-us/]]
+
+Download link for 550.54.14
+
+[[https://www.nvidia.com/download/driverResults.aspx/218826/en-us/]]
+
+# Horizontal Rule
+-----
+
+*** modprobe
+
+#+begin_src sh
+sudo apt install kmod
+#+end_src
+
+*** Nvidia driver install
+
+on the freebsd host move the nvidia installer to the video directory
+which should be mounted in the jail, so you can cd to the video directory in the jail and install the driver
+
+chmod the Nvidia run file
+
+#+begin_src sh
+chmod +x NVIDIA-Linux-x86_64-550.54.14.run
+#+end_src
+
+Install the Nvidia driver
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-550.120.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** pulseaudio 
+
+#+begin_src sh
+apt install pulseaudio 
+#+end_src
+
+#+begin_src sh
+sudo usermod -a -G pulse username
+sudo usermod -a -G pulse-access username
+#+end_src
+
+*** Nvidia-cuda-toolkit
+
+Install the nvidia-cuda-toolkit
+
+#+begin_src sh
+sudo apt install nvidia-cuda-toolkit ocl-icd-opencl-dev libglu1-mesa libfuse2 
+#+end_src
+
+not used
+
+#+begin_src sh
+initramfs-tools
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Blacklist Nouveau Nvidia driver
+
+#+begin_src sh
+sudo mkdir -p /etc/modprobe.d
+#+end_src
+
+Copy the blacklist-nvidia-nouveau.conf file from the repository to the jail
+
+#+begin_example
+sudo vi /etc/modprobe.d/blacklist-nvidia-nouveau.conf
+#+end_example
+
++ blacklist-nvidia-nouveau.conf code
+
+#+begin_src conf
+blacklist nouveau
+options nouveau modeset=0
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** update-initramfs
+
+#+begin_src sh
+sudo update-initramfs -u
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** wayland packages
+
+#+begin_src sh
+sudo apt install libinput-tools wayland-protocols libwlroots11 libwlroots-dev libxkbcommon0 qtwayland5 qt6-wayland wayland-utils adwaita-qt qt5ct libnvidia-egl-wayland1
+#+end_src
+
+*** zsh shell config
+
+We need to set some enviormental variables in our shell config
+
++ [[file:ubuntu/home/username/.zshrc][zshrc]]
+
+Copy the zshrc config from this reposiory to the jail
+
+#+begin_src sh
+cp davinci-resolve-freebsd-jail/ubuntu/home/username/.zshrc /usr/local/jails/linux/ubuntu/home/"${USER}"
+#+end_src
+
++ [[file:ubuntu/home/username/.zshenv][zshenv]]
+
+Copy the zshenv config from this reposiory to the jail
+
+#+begin_src sh
+cp davinci-resolve-freebsd-jail/ubuntu/home/username/.zshenv /usr/local/jails/linux/ubuntu/home/"${USER}"
+#+end_src
+
+***** zshrc
+
+We create a blank .zshrc file \\
+otherwise zsh will complain that theres is no config file
+
++ ~/.zshrc code
+
+#+begin_src sh
+# ~/.zshrc
+
+# add your zsh code below
+#+end_src
+
+***** zshenv
+
+shell path
+
+Set the shell path to include resolve bin directory \\
+this allows us to type resolve
+
+#+begin_example
+resolve
+#+end_example
+
+Instead of the full path to open Davinci Resolve in the jail
+
+#+begin_example
+/opt/resolve/bin/resolve
+#+end_example
+
++ ~/.zshenv code
+
+#+begin_src conf
+# ~/.zshenv
+
+# for ZSH
+case "$OSTYPE" in
+  freebsd*)
+  # Path
+  typeset -U PATH path
+  path=("$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR=/var/run/xdg/"${USER}"
+
+  # wayland - uncomment to use wayland
+  export WAYLAND_DISPLAY=wayland-0
+  export QT_QPA_PLATFORM=wayland
+  export GDK_BACKEND=wayland
+
+  # x11 - comment out to use wayland
+  #export DISPLAY=unix:0
+  #export QT_QPA_PLATFORM=xcb
+  #export GDK_BACKEND=x11
+  ;;
+  linux*)
+  typeset -U PATH path
+  path=("/opt/resolve/bin" "$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR="/run/user/`id -u`"
+
+  # dummy-uvm.so for access to the gpu
+  export LD_PRELOAD="${HOME}"/.config/gpu/dummy-uvm.so:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0:/usr/lib/x86_64-linux-gnu/libgio-2.0.so:/usr/lib/x86_64-linux-gnu/libgmodule-2.0.so
+  export __NV_PRIME_RENDER_OFFLOAD=1
+  export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+  # wayland - uncomment to use wayland
+  #export WAYLAND_DISPLAY=wayland-0
+  #export QT_QPA_PLATFORM=wayland
+  #export GDK_BACKEND=wayland
+
+  # x11 - comment out to use wayland
+  export DISPLAY=unix:0
+  export QT_QPA_PLATFORM=xcb
+  export GDK_BACKEND=x11
+  ;;
+esac
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** xorriso and fakeroot install
+
+Install fakeroot and xorriso for makeresolvedeb
+
+#+begin_src sh
+sudo apt install fakeroot xorriso 
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Davinci Resolve download
+
+On the Freebsd host
+
+Go to the Davinci Resolve website and click the \\
+"Davinci Resolve Free Download Now" link
+
+[[https://www.blackmagicdesign.com/products/davinciresolve/][Davinci Resolve]]
+
+then click the Linux download link for either the Free version or the paid Studio version \\
+you will then need to register on the site with an email address
+
+Once you have submitted the form the Davinci Resolve zip file will start to download, \\
+the zip file has a file size of 2.4 gigabytes so may take an hour or so to download
+
+Copy the Davinci Resolve zip from your downloads folder to your video directory
+which is mounted in the jail
+
+# Horizontal Rule
+-----
+
+*** makeresolvedeb download
+
+On the Freebsd host download the makeresolvedeb script
+
+[[https://www.danieltufvesson.com/makeresolvedeb][makeresolvedeb]]
+
+Copy the makeresolvedeb_1.6.4_multi.sh.tar.gz from the freebsd host to the home directory in the jail \\
+
+#+begin_src sh
+cp -rv makeresolvedeb_1.6.4_multi.sh.tar.gz /usr/local/jails/linux/ubuntu/home/"${USER}"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** makeresolvedeb create deb file
+
+Make sure you have entered the jail by running
+
+#+begin_src sh
+doas jexec ubuntu /bin/bash
+#+end_src
+
+Switch to out user in the jail, \\
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+Install zip
+
+#+begin_src sh
+sudo apt install zip
+#+end_src
+
+Unzip the resolve zip
+
+#+begin_src sh
+unzip DaVinci_Resolve_19.0_Linux.zip
+#+end_src
+
+Extract the makeresolvedeb.tar.gz file
+
+#+begin_src sh
+tar zxvf makeresolvedeb_1.7.2_multi.sh.tar.gz
+#+end_src  
+
+then run makeresolvedeb
+
+#+begin_src sh
+./makeresolvedeb_1.7.2_multi.sh DaVinci_Resolve_19.0.1_Linux.run
+#+end_src
+
+This may take about an hour
+
+*** Install liblog4cxx-dev
+
+#+begin_src sh
+sudo apt install liblog4cxx-dev
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** DaVinci Resolve deb install
+
+#+begin_src sh
+sudo dpkg -i davinci-resolve_19.0.1-mrd1.7.2_amd64.deb 
+#+end_src
+
+or
+
+#+begin_src sh
+sudo apt install davinci-resolve_19.0.1-mrd1.7.2_amd64.deb
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** reinstall nvidia to fix lib error
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-550.120.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+
+*** wayland packages
+
+#+begin_src sh
+sudo apt install libinput-tools wayland-protocols libxkbcommon0 qtwayland5 qt6-wayland wayland-utils adwaita-qt qt5ct libnvidia-egl-wayland1
+#+end_src
+
+*** libc6
+
+#+begin_src sh
+sudo apt install libc6 
+#+end_src
+
