@@ -1,6 +1,7 @@
 #+STARTUP: content
 * oracular jail
-** ubuntu base
+** freebsd
+*** ubuntu base
 
 [[https://cdimage.ubuntu.com/ubuntu-base/releases/24.10/release/]]
 
@@ -12,8 +13,8 @@ download ubuntu base
 fetch 'https://cdimage.ubuntu.com/ubuntu-base/releases/24.10/release/ubuntu-base-24.10-base-amd64.tar.gz'
 #+end_src
 
-** Setting Up the Jail Directory Tree
-*** zroot/jails
+*** Setting Up the Jail Directory Tree
+**** zroot/jails
 
 create the zroot/jails zfs dataset and set the mountpoint
 
@@ -22,7 +23,7 @@ sudo zfs create zroot/jails
 sudo zfs set mountpoint=/usr/local/jails zroot/jails
 #+end_src
 
-*** zroot/jails/linux
+**** zroot/jails/linux
 
 create the zroot/jails/linux zfs dataset and set the mountpoint
 
@@ -31,7 +32,7 @@ sudo zfs create zroot/jails/linux
 sudo zfs set mountpoint=/usr/local/jails/linux zroot/jails/linux
 #+end_src
 
-*** zroot/jails/linux/ubuntu
+**** zroot/jails/linux/ubuntu
 
 create the zroot/jails/linux/ubuntu zfs dataset and set the mountpoint
 
@@ -40,7 +41,7 @@ sudo zfs create zroot/jails/linux/ubuntu
 sudo zfs set mountpoint=/usr/local/jails/linux/ubuntu zroot/jails/linux/ubuntu
 #+end_src
 
-*** /etc/jail.conf
+**** /etc/jail.conf
 
 create the /etc/jail.conf file if it doesn't exist
 
@@ -60,7 +61,7 @@ exec.stop = "/bin/sh /etc/rc.shutdown";
 exec.consolelog = "/var/log/jail_console_${name}.log";
 #+end_src
 
-*** /etc/jail.conf.d/ubuntu.conf
+**** /etc/jail.conf.d/ubuntu.conf
 
 create the /etc/jail.conf.d/ directory
 
@@ -112,33 +113,13 @@ ubuntu {
 }
 #+end_src
 
-** extract tar
+*** extract tar
 
 #+begin_src sh
 doas tar xvfp ubuntu-base-24.10-base-amd64.tar.gz -C /usr/local/jails/linux/ubuntu
 #+end_src
 
-** getpwnam
-
-#+begin_src sh
-cd /usr/local/jails/linux/ubuntu/etc
-#+end_src
-
-switch to root
-
-#+begin_src sh
-su -m
-#+end_src
-
-#+begin_src sh
-cat passwd | sed -r 's/(:[x|*]:)([0-9]+:[0-9]+:)/:*:\2:0:0:/g' > master.passwd
-#+end_src
-
-#+begin_src sh
-pwd_mkdb -d ./ -p master.passwd
-#+end_src
-
-** jail start
+*** jail start
 
 start the ubuntu jail
 
@@ -152,7 +133,7 @@ check the jail is running
 doas jls
 #+end_src
 
-** enter jail
+*** enter jail
 
 #+begin_src sh
 doas jexec ubuntu /bin/bash
@@ -744,41 +725,10 @@ initramfs-tools
 # Horizontal Rule
 -----
 
-*** Blacklist Nouveau Nvidia driver
-
-#+begin_src sh
-sudo mkdir -p /etc/modprobe.d
-#+end_src
-
-Copy the blacklist-nvidia-nouveau.conf file from the repository to the jail
-
-#+begin_example
-sudo vi /etc/modprobe.d/blacklist-nvidia-nouveau.conf
-#+end_example
-
-+ blacklist-nvidia-nouveau.conf code
-
-#+begin_src conf
-blacklist nouveau
-options nouveau modeset=0
-#+end_src
-
-# Horizontal Rule
------
-
-*** update-initramfs
-
-#+begin_src sh
-sudo update-initramfs -u
-#+end_src
-
-# Horizontal Rule
------
-
 *** wayland packages
 
 #+begin_src sh
-sudo apt install libinput-tools wayland-protocols libwlroots11 libwlroots-dev libxkbcommon0 qtwayland5 qt6-wayland wayland-utils adwaita-qt qt5ct libnvidia-egl-wayland1
+sudo apt install libinput-tools wayland-protocols libxkbcommon0 qtwayland5 qt6-wayland wayland-utils adwaita-qt qt5ct libnvidia-egl-wayland1
 #+end_src
 
 *** zsh shell config
@@ -1012,16 +962,209 @@ sudo apt install davinci-resolve_19.0.1-mrd1.7.2_amd64.deb
 sudo ./NVIDIA-Linux-x86_64-550.120.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
 #+end_src
 
-
-*** wayland packages
-
-#+begin_src sh
-sudo apt install libinput-tools wayland-protocols libxkbcommon0 qtwayland5 qt6-wayland wayland-utils adwaita-qt qt5ct libnvidia-egl-wayland1
-#+end_src
-
 *** libc6
 
 #+begin_src sh
 sudo apt install libc6 
 #+end_src
 
+** Pulseaudio set up 
+*** Freebsd
+**** default.pa
+
+#+begin_example
+~/.config/pulse/default.pa
+#+end_example
+
++ default.pa code
+
+#+begin_src conf
+#!/usr/local/bin/pulseaudio -nF
+
+# include default.pa and override
+.include /usr/local/etc/pulse/default.pa
+
+# jail
+.ifexists module-esound-protocol-unix.so
+load-module module-esound-protocol-unix
+.endif
+load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Ubuntu
+**** client.conf
+
+#+begin_example
+~/.config/pulse/client.conf
+#+end_example
+
++ client.conf code
+
+#+begin_src conf
+# This file is part of PulseAudio.
+#
+# PulseAudio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# PulseAudio is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with PulseAudio; if not, see <http://www.gnu.org/licenses/>.
+
+## Configuration file for PulseAudio clients. See pulse-client.conf(5) for
+## more information. Default values are commented out.  Use either ; or # for
+## commenting.
+
+; default-sink = oss_output.dsp1
+; default-source =
+default-server = /tmp/pulseaudio.socket
+; default-dbus-server =
+
+; autospawn = yes
+; daemon-binary = /usr/local/bin/pulseaudio
+; extra-arguments = --log-target=syslog
+
+; cookie-file =
+
+; enable-shm = yes
+; shm-size-bytes = 0 # setting this 0 will use the system-default, usually 64 MiB
+
+; auto-connect-localhost = no
+; auto-connect-display = no
+
+#+end_src
+
+# Horizontal Rule
+-----
+
+** Davinci Resolve Desktop entry
+*** Freebsd
+**** resolve script
+
+#+begin_src sh
+/usr/local/bin/resolve
+#+end_src
+
++ resolve code
+  
+#+begin_src sh
+#!/bin/sh
+
+# resolve
+# Freebsd script to launch Davinci Resolve from a Linux Jail
+
+# start pulseaudio
+pulseaudio --start --daemonize 2>/dev/null
+
+# doas jexec into ubuntu and run the wrapper script to start resolve
+doas jexec ubuntu /usr/local/bin/wrapper-resolve \
+-d "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" \
+-u "${USER}"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Ubuntu
+**** wrapper-resolve
+
+#+begin_example
+/usr/local/jails/ubuntu/usr/local/bin/wrapper-resolve
+#+end_example
+
+Path to wrapper-resolve in the jail
+
+#+begin_example
+/usr/local/bin/wrapper-resolve
+#+end_example
+
++ wrapper-resolve code
+
+#+begin_src sh
+#!/bin/bash
+
+#===============================================================================
+# wrapper-resolve
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# script usage
+$(basename "$0") -u ${USER}"
+exit 2
+}
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':u:d:h' opt
+do
+  case ${opt} in
+     u) username="${OPTARG}";;
+     d) dbus="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# switch to our user in the jail and start resolve
+#===============================================================================
+
+su "${username}" -c "${dbus} /opt/resolve/bin/resolve" 2>/dev/null
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** davinci-resolve.desktop
+
+#+begin_example
+~/.local/share/applications
+#+end_example
+
+davinci-resolve.desktop
+
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=Application
+Name=DaVinci Resolve
+Exec=/usr/local/bin/resolve-wrapper
+Icon=/usr/local/jails/linux/ubuntu/opt/resolve/graphics/DV_Resolve.png
+Terminal=false
+MimeType=application/x-resolveproj;
+StartupNotify=true
+Categories=AudioVideo
+#+end_src
+
+# Horizontal Rule
+-----
