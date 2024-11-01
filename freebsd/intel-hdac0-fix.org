@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* intel hdac0 fix
+
+fix for hdac0 errors on intel
+
+#+begin_example
+/boot/loader.conf 
+#+end_example
+
+#+begin_src conf
+compat.linuxkpi.i915_disable_power_well="0"
+#+end_src
