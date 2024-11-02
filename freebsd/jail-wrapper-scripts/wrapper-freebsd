@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# wrapper-freebsd
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# script usage
+$(basename "$0") -j jail -a application -p on
+-p on = enable audio on the freebsd host for the jail
+"
+exit 2
+}
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':j:a:p:h' opt
+do
+  case ${opt} in
+     j) jail="${OPTARG}";;
+     a) app="${OPTARG}";;
+     p) audio="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+#===============================================================================
+# start audio if -p on option is specified
+#===============================================================================
+
+# default audio off
+audio_default="off"
+
+# start audio
+audio () {
+pulseaudio --start --daemonize 2>/dev/null
+}
+
+# check if pulseaudio should be started
+case "${audio:=${audio_default}}" in
+    on) audio;;
+    off) echo 'off';;
+    *) usage;;
+esac
+
+
+#===============================================================================
+# doas jexec into the jail and run the wrapper script to start the application
+#===============================================================================
+
+doas jexec "${jail}" \
+/usr/local/bin/wrapper-jail \
+-u "${USER}" \
+-d "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" \
+-a "${app}" \
+"$@"
