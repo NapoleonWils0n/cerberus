@@ -67,7 +67,7 @@ doas service linux onestart
 ** linux_base-rl9
 
 #+begin_src sh
-doas pkg install linux_base-rl9 linux-nvidia-libs
+doas pkg install linux_base-rl9
 #+end_src
 
 ** poudriere make
