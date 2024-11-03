@@ -915,19 +915,19 @@ sudo apt install zip
 Unzip the resolve zip
 
 #+begin_src sh
-unzip DaVinci_Resolve_19.0_Linux.zip
+unzip DaVinci_Resolve_19.0.2_Linux.zip
 #+end_src
 
 Extract the makeresolvedeb.tar.gz file
 
 #+begin_src sh
-tar zxvf makeresolvedeb_1.7.2_multi.sh.tar.gz
+tar zxvf makeresolvedeb_1.7.3_multi.sh.tar.gz
 #+end_src  
 
 then run makeresolvedeb
 
 #+begin_src sh
-./makeresolvedeb_1.7.2_multi.sh DaVinci_Resolve_19.0.1_Linux.run
+./makeresolvedeb_1.7.3_multi.sh DaVinci_Resolve_19.0.2_Linux.run
 #+end_src
 
 This may take about an hour
@@ -944,13 +944,13 @@ sudo apt install liblog4cxx-dev
 *** DaVinci Resolve deb install
 
 #+begin_src sh
-sudo dpkg -i davinci-resolve_19.0.1-mrd1.7.2_amd64.deb 
+sudo dpkg -i davinci-resolve_19.0.2-mrd1.7.2_amd64.deb 
 #+end_src
 
 or
 
 #+begin_src sh
-sudo apt install davinci-resolve_19.0.1-mrd1.7.2_amd64.deb
+sudo apt install davinci-resolve_19.0.2-mrd1.7.2_amd64.deb
 #+end_src
 
 # Horizontal Rule
@@ -1047,54 +1047,115 @@ default-server = /tmp/pulseaudio.socket
 
 ** Davinci Resolve Desktop entry
 *** Freebsd
-**** resolve script
+**** wrapper-freebsd script
 
 #+begin_src sh
-/usr/local/bin/resolve
+/usr/local/bin/wrapper-freebsd
 #+end_src
 
-+ resolve code
++ wrapper-freebsd code
   
 #+begin_src sh
 #!/bin/sh
 
-# resolve
-# Freebsd script to launch Davinci Resolve from a Linux Jail
+# wrapper-freebsd
 
-# start pulseaudio
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# script usage
+$(basename "$0") -j jail -a application -p on
+-p on = enable audio on the freebsd host for the jail
+"
+exit 2
+}
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':j:a:p:h' opt
+do
+  case ${opt} in
+     j) jail="${OPTARG}";;
+     a) app="${OPTARG}";;
+     p) audio="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+#===============================================================================
+# start audio if -p on option is specified
+#===============================================================================
+
+# default audio off
+audio_default="off"
+
+# start audio
+audio () {
 pulseaudio --start --daemonize 2>/dev/null
+}
 
-# doas jexec into ubuntu and run the wrapper script to start resolve
-doas jexec ubuntu /usr/local/bin/wrapper-resolve \
+# check if pulseaudio should be started
+case "${audio:=${audio_default}}" in
+    on) audio;;
+    off) echo 'off';;
+    ,*) usage;;
+esac
+
+
+#===============================================================================
+# doas jexec into the jail and run the wrapper script to start the application
+#===============================================================================
+
+doas jexec "${jail}" \
+/usr/local/bin/wrapper-jail \
+-u "${USER}" \
 -d "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS}" \
--u "${USER}"
+-a "${app}" \
+"$@"
 #+end_src
 
 # Horizontal Rule
 -----
 
 *** Ubuntu
-**** wrapper-resolve
+**** wrapper-jail
 
 #+begin_example
-/usr/local/jails/ubuntu/usr/local/bin/wrapper-resolve
+/usr/local/jails/ubuntu/usr/local/bin/wrapper-jail
 #+end_example
 
 Path to wrapper-resolve in the jail
 
 #+begin_example
-/usr/local/bin/wrapper-resolve
+/usr/local/bin/wrapper-jail
 #+end_example
 
-+ wrapper-resolve code
++ wrapper-jail code
 
 #+begin_src sh
-#!/bin/bash
+#!/bin/sh
 
 #===============================================================================
-# wrapper-resolve
+# wrapper-jail
 #===============================================================================
-
 
 #===============================================================================
 # script usage
@@ -1121,11 +1182,12 @@ exit 2
 # getopts check the options passed to the script
 #===============================================================================
 
-while getopts ':u:d:h' opt
+while getopts ':u:d:a:h' opt
 do
   case ${opt} in
      u) username="${OPTARG}";;
      d) dbus="${OPTARG}";;
+     a) app="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
      :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
@@ -1135,10 +1197,10 @@ shift $((OPTIND-1))
 
 
 #===============================================================================
-# switch to our user in the jail and start resolve
+# switch to our user in the jail and start the application
 #===============================================================================
 
-su "${username}" -c "${dbus} /opt/resolve/bin/resolve" 2>/dev/null
+su "${username}" -c "${dbus} ${app} ${@}" 2>/dev/null
 #+end_src
 
 # Horizontal Rule
@@ -1158,7 +1220,7 @@ Version=1.0
 Encoding=UTF-8
 Type=Application
 Name=DaVinci Resolve
-Exec=/usr/local/bin/resolve-wrapper
+Exec=/usr/local/bin/wrapper-freebsd -j 'ubuntu' -a 'export __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia; resolve' -p 'on'
 Icon=/usr/local/jails/linux/ubuntu/opt/resolve/graphics/DV_Resolve.png
 Terminal=false
 MimeType=application/x-resolveproj;
