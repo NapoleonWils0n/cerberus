@@ -57,7 +57,7 @@ pulseaudio --start --daemonize 2>/dev/null
 # check if pulseaudio should be started
 case "${audio:=${audio_default}}" in
     on) audio;;
-    off) echo 'off';;
+    off) ;;
     *) usage;;
 esac
 
