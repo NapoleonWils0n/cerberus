@@ -1,0 +1,109 @@
+#+STARTUP: content
+* carla jack obs studio
+** carla 
+
+#+begin_src sh
+doas pkg install carla
+#+end_src
+
+** calf
+
+#+begin_src sh
+doas pkg install calf-lv2
+#+end_src
+
+** Invada-studio-plugins-lv2
+
+#+begin_src sh
+doas pkg install Invada-studio-plugins-lv2
+#+end_src
+
+** obs oss audio
+*** freebsd realtime
+
+[[https://vermaden.wordpress.com/2023/03/02/freebsd-home-audio-studio/]]
+
+Add mac_priority to /etc/rc.conf file and load the mac_priority kernel module.
+
+#+begin_src sh
+sudo sysrc kld_list+="mac_priority"
+#+end_src
+
+kldload mac_priority
+
+#+begin_src sh
+sudo kldload mac_priority
+#+end_src
+
+Then add yourself to realtime group.
+replace username with your username
+
+#+begin_src sh
+sudo pw groupmod realtime -m username
+#+end_src
+
+check you have been added to the realtime group
+
+#+begin_src sh
+grep realtime /etc/group 
+#+end_src
+
+*** install jack
+
+#+begin_src sh
+sudo pkg install audio/jack
+#+end_src
+
+/etc/rc.conf
+
+#+begin_src conf
+jackd_enable="NO"
+jackd_user="djwilcox"
+jackd_rtprio="YES"
+#+end_src
+
+*** install qjackctl
+
+#+begin_src sh
+sudo pkg install qjackctl
+#+end_src
+
+*** freebsd mic set up
+
+use the freebsd mixer or mixertui to set the mic input level to 100%
+
+*** jackd 
+**** record and monitor playback
+
+#+begin_example
+-r rate 48000
+-d audio backend oss
+-C capture device
+-P playback device
+#+end_example
+
+#+begin_src sh
+jackd -R -d oss -r 48000 -C /dev/dsp3 -P /dev/dsp1
+#+end_src
+
+**** record and dont monitor playback
+
+#+begin_example
+-r rate 48000
+-d audio backend oss
+-C capture device
+-P playback device
+#+end_example
+
+#+begin_src sh
+jackd -R -d oss -r 48000 -C /dev/dsp3
+#+end_src
+
+*** obs studio add Jack Input Client
+
+open obs studio and under the sources click the plus button
+and add a Jack Input Client
+
+*** start qjackctl
+
+start qjackctl patch the audio
