@@ -1,35 +1,5 @@
 #+STARTUP: content
 * carla jack obs studio
-** carla 
-
-#+begin_src sh
-doas pkg install carla
-#+end_src
-
-** calf
-
-[[https://calf-studio-gear.org/]]
-
-#+begin_src sh
-doas pkg install calf-lv2
-#+end_src
-
-** Invada-studio-plugins-lv2
-
-[[https://github.com/falkTX/invada-studio-plugins-lv2]]
-
-#+begin_src sh
-doas pkg install Invada-studio-plugins-lv2
-#+end_src
-
-** x42-plugins-lv2
-
-[[https://x42-plugins.com/x42/x42-eq]]
-
-#+begin_src sh
-doas pkg install x42-plugins-lv2
-#+end_src
-
 ** obs oss audio
 *** freebsd realtime
 
@@ -118,3 +88,42 @@ and add a Jack Input Client
 *** start qjackctl
 
 start qjackctl patch the audio
+** carla 
+
+#+begin_src sh
+doas pkg install carla
+#+end_src
+
+** plugins
+*** calf-lv2
+
+[[https://calf-studio-gear.org/]]
+
+#+begin_src sh
+doas pkg install calf-lv2
+#+end_src
+
+*** Invada-studio-plugins-lv2
+
+[[https://github.com/falkTX/invada-studio-plugins-lv2]]
+
+#+begin_src sh
+doas pkg install Invada-studio-plugins-lv2
+#+end_src
+
+*** x42-plugins-lv2
+
+[[https://x42-plugins.com/x42/x42-eq]]
+
+#+begin_src sh
+doas pkg install x42-plugins-lv2
+#+end_src
+
+*** Lsp-plugins-lv2
+
+[[https://lsp-plug.in/]]
+
+#+begin_src sh
+doas pkg install lsp-plugins-lv2
+#+end_src
+
