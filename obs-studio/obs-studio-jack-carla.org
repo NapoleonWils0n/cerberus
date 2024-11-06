@@ -127,3 +127,26 @@ doas pkg install x42-plugins-lv2
 doas pkg install lsp-plugins-lv2
 #+end_src
 
+*** noise-suppression-for-voice
+
+[[https://github.com/werman/noise-suppression-for-voice]]
+
+#+begin_src sh
+doas pkg install noise-suppression-for-voice-lv2
+#+end_src
+
+*** rnnoise
+
+[[https://github.com/xiph/rnnoise]]
+
+#+begin_src sh
+doas pkg install rnnoise
+#+end_src
+
+*** rnnoise-nu
+
+[[https://github.com/GregorR/rnnoise-nu]]
+
+#+begin_src sh
+doas pkg install rnnoise-nu
+#+end_src
