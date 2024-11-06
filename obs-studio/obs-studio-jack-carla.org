@@ -8,14 +8,26 @@ doas pkg install carla
 
 ** calf
 
+[[https://calf-studio-gear.org/]]
+
 #+begin_src sh
 doas pkg install calf-lv2
 #+end_src
 
 ** Invada-studio-plugins-lv2
 
+[[https://github.com/falkTX/invada-studio-plugins-lv2]]
+
 #+begin_src sh
 doas pkg install Invada-studio-plugins-lv2
+#+end_src
+
+** x42-plugins-lv2
+
+[[https://x42-plugins.com/x42/x42-eq]]
+
+#+begin_src sh
+doas pkg install x42-plugins-lv2
 #+end_src
 
 ** obs oss audio
@@ -92,7 +104,6 @@ jackd -R -d oss -r 48000 -C /dev/dsp3 -P /dev/dsp1
 -r rate 48000
 -d audio backend oss
 -C capture device
--P playback device
 #+end_example
 
 #+begin_src sh
