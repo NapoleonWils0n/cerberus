@@ -95,14 +95,6 @@ doas pkg install carla
 #+end_src
 
 ** plugins
-*** calf-lv2
-
-[[https://calf-studio-gear.org/]]
-
-#+begin_src sh
-doas pkg install calf-lv2
-#+end_src
-
 *** Invada-studio-plugins-lv2
 
 [[https://github.com/falkTX/invada-studio-plugins-lv2]]
