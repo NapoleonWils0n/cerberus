@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* mogrify reduce jpg
+
+#+begin_src sh
+mkdir -p converted
+#+end_src
+
+#+begin_src sh
+mogrify -path converted -strip -quality 50% *.jpeg
+#+end_src
