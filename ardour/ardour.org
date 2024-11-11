@@ -1,0 +1,174 @@
+#+STARTUP: content
+* ardour
+** obs oss audio
+*** freebsd realtime
+
+[[https://vermaden.wordpress.com/2023/03/02/freebsd-home-audio-studio/]]
+
+Add mac_priority to /etc/rc.conf file and load the mac_priority kernel module.
+
+#+begin_src sh
+sudo sysrc kld_list+="mac_priority"
+#+end_src
+
+kldload mac_priority
+
+#+begin_src sh
+sudo kldload mac_priority
+#+end_src
+
+Then add yourself to realtime group.
+replace username with your username
+
+#+begin_src sh
+sudo pw groupmod realtime -m username
+#+end_src
+
+check you have been added to the realtime group
+
+#+begin_src sh
+grep realtime /etc/group 
+#+end_src
+
+*** install jack
+
+#+begin_src sh
+sudo pkg install audio/jack
+#+end_src
+
+/etc/rc.conf
+
+#+begin_src conf
+jackd_enable="NO"
+jackd_user="djwilcox"
+jackd_rtprio="YES"
+#+end_src
+
+*** install qjackctl
+
+#+begin_src sh
+sudo pkg install qjackctl
+#+end_src
+
+*** freebsd mic set up
+
+use the freebsd mixer or mixertui to set the mic input level to 100%
+
+*** jackd 
+**** record and monitor playback
+
+#+begin_example
+-r rate 48000
+-d audio backend oss
+-C capture device
+-P playback device
+#+end_example
+
+#+begin_src sh
+jackd -R -d oss -r 48000 -C /dev/dsp3 -P /dev/dsp1
+#+end_src
+
+**** record and dont monitor playback
+
+#+begin_example
+-r rate 48000
+-d audio backend oss
+-C capture device
+#+end_example
+
+#+begin_src sh
+jackd -R -d oss -r 48000 -C /dev/dsp3
+#+end_src
+
+*** obs studio add Jack Input Client
+
+open obs studio and under the sources click the plus button
+and add a Jack Input Client
+
+*** start qjackctl
+
+start qjackctl patch the audio
+** ardour install
+
+#+begin_src sh
+doas pkg install ardour
+#+end_src
+
+*** harvid
+
+#+begin_src sh
+doas pkg install harvid
+#+end_src
+
+*** xjadeo
+
+[[https://xjadeo.sourceforge.net/main.html]]
+
+[[https://sourceforge.net/projects/xjadeo/]]
+
+#+begin_src sh
+doas pkg install xcb
+#+end_src
+
+#+begin_src sh
+./configure
+make
+#+end_src
+
+** plugins
+*** Invada-studio-plugins-lv2
+
+[[https://github.com/falkTX/invada-studio-plugins-lv2]]
+
+#+begin_src sh
+doas pkg install Invada-studio-plugins-lv2
+#+end_src
+
+*** x42-plugins-lv2
+
+[[https://x42-plugins.com/x42/x42-eq]]
+
+#+begin_src sh
+doas pkg install x42-plugins-lv2
+#+end_src
+
+*** Lsp-plugins-lv2
+
+[[https://lsp-plug.in/]]
+
+#+begin_src sh
+doas pkg install lsp-plugins-lv2
+#+end_src
+
+*** noise-suppression-for-voice
+
+[[https://github.com/werman/noise-suppression-for-voice]]
+
+#+begin_src sh
+doas pkg install noise-suppression-for-voice-lv2
+#+end_src
+
+*** rnnoise
+
+[[https://github.com/xiph/rnnoise]]
+
+#+begin_src sh
+doas pkg install rnnoise
+#+end_src
+
+*** rnnoise-nu
+
+[[https://github.com/GregorR/rnnoise-nu]]
+
+#+begin_src sh
+doas pkg install rnnoise-nu
+#+end_src
+
+** plugin order
+
+noise reduction
+noise gate
+16 band eq
+multiband compressor
+compressor
+limiter
