@@ -1,39 +1,83 @@
 #+STARTUP: content
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-
 * broadcom wifi freebsd
+** build generic kernel and modules
 
-Build custom WIFI kernel
+Switch to root
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+Do not make edits to GENERIC. Instead, copy the file to a different name and make edits to the copy. The convention is to use a name with all capital letters. When maintaining multiple FreeBSD machines with different hardware, it is a good idea to name it after the machine's hostname. This example creates a copy, named MYKERNEL, of the GENERIC configuration file for the amd64 architecture:
+
+change into the /usr/src/sys/amd64/conf directory
+
+#+BEGIN_SRC sh
+cd /usr/src/sys/amd64/conf
+#+END_SRC
+
+*** copy the GENERIC file to WIFI
+
+#+BEGIN_SRC sh
+cp GENERIC WIFI
+#+END_SRC
+
+*** edit the WIFI file
+
+#+begin_example
+/usr/src/sys/amd64/conf/WIFI
+#+end_example
+
+#+BEGIN_SRC sh
+vi WIFI
+#+END_SRC
+
+add the code below to the WIFI file,  
+this will include the GENERIC kernel using the include option,  
+and use the ident option to change the identity name to the name of your custom kernel which is the same as the name of the file.
 
 #+BEGIN_SRC sh
 include GENERIC
 ident WIFI
-
-device bwn
-device bhnd
-device bhndb
-device bhndb_pci
-device bcma
-device siba
-device gpio
-#device wlan
-#device wlan_amrr
-#device firmware
 #+END_SRC
 
-** build and install the kernel
+An include directive is available for use in configuration files. This allows another configuration file to be included in the current one, making it easy to maintain small changes relative to an existing file. If only a small number of additional options or drivers are required, this allows a delta to be maintained with respect to GENERIC, as seen in this example:
+
+Using this method, the local configuration file expresses local differences from a GENERIC kernel. As upgrades are performed, new features added to GENERIC will also be added to the local kernel unless they are specifically prevented using nooptions or nodevice.
+
+*** Compile the new kernel
+
+Change to the /usr/src directory
 
 #+BEGIN_SRC sh
-# make -j 2 buildkernel KERNCONF=WIFI
-# make -j 2 installkernel KERNCONF=WIFI
+cd /usr/src
 #+END_SRC
+
+compile the WIFI kernel
+
+#+BEGIN_SRC sh
+make buildkernel KERNCONF=WIFI
+#+END_SRC
+
+Install the new kernel associated with the specified kernel configuration file. This command will copy the new kernel to /boot/kernel/kernel and save the old kernel to /boot/kernel.old/kernel:
+
+#+BEGIN_SRC sh
+make installkernel KERNCONF=WIFI
+#+END_SRC
+
+Shutdown the system and reboot into the new kernel. 
+
+** install net/bwn-firmware-kmod
 
 use poudriere to build the net/bwn-firmware-kmod port
 
 #+BEGIN_SRC sh
 net/bwn-firmware-kmod
 #+END_SRC
+
+** load driver
 
 To load the driver as a module at boot, add the following lines to loader.conf
 
