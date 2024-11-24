@@ -1,5 +1,8 @@
 #+STARTUP: content
 * broadcom wifi freebsd
+
+Macbook Air 2011 with Broadcom BCM43224 wifi working a lagg failover
+
 ** install net/bwn-firmware-kmod
 
 use poudriere to build the net/bwn-firmware-kmod port
