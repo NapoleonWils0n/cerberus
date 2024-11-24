@@ -611,6 +611,45 @@ edit your rc.conf
 /etc/rc.conf
 #+end_example
 
+*** standard wifi connection
+
+you can use either DHCP or SYNDHCP with ifconfig_wlan0
+
+**** dhcp
+
+#+begin_src conf
+wlans_bwn0="wlan0"
+ifconfig_wlan0="WPA DHCP"
+#+end_src
+
+**** syndhcp
+
+#+begin_src conf
+wlans_bwn0="wlan0"
+ifconfig_wlan0="WPA SYNDHCP"
+#+end_src
+
+*** lagg failover
+
+create a lagg failover device between ethenet and wifi
+
+change ifconfig_ue0 to the name of your ethernet device
+
+and change "ether 04:0c:ce:d5:b0:ae"
+to the wlan0 mac address of the wifi card which you can find with ifconfig
+
+#+begin_src sh
+ifconfig
+#+end_src
+
+it will be listed under wlan0 and look like this 
+
+#+begin_src conf
+wlan0: flags=1008843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST,LOWER_UP> metric 0 mtu 1500
+        options=0
+        ether 04:0c:ce:d5:b0:ae
+#+end_src
+
 and add the following options
 
 #+begin_src conf
@@ -721,7 +760,6 @@ make installkernel KERNCONF=WIFI
 Shutdown the system and reboot into the new kernel. 
 
 ** wifi
-
 *** scan for networks
 
 #+begin_src sh
@@ -741,7 +779,7 @@ psk="Komplexxxxx---xxxxx"
 }
 #+END_SRC
 
-*** connect
+*** connect to wifi
 
 run wpa_supplicant with the network interface and path to the config
 
@@ -754,7 +792,6 @@ Once you're sure it's working, you can run it in the background, by adding the -
 #+begin_src sh
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
 #+end_src
-
 
 ** dhclient
 
