@@ -666,20 +666,6 @@ create_args_wlan0="country US regdomain FCC"
 ifconfig_lagg0="up laggproto failover laggport ue0 laggport wlan0 DHCP"
 #+end_src
 
-** pf.conf
-
-edit your pf.conf
-
-#+begin_example
-/etc/pf.conf
-#+end_example
-
-set int_if to lagg0
-
-#+begin_src conf
-int_if="lagg0" # lagg0 failover
-#+end_src
-
 ** build the custom kernel
 
 Switch to root
@@ -761,6 +747,20 @@ make installkernel KERNCONF=WIFI
 #+END_SRC
 
 Shutdown the system and reboot into the new kernel. 
+
+** pf.conf
+
+edit your pf.conf
+
+#+begin_example
+/etc/pf.conf
+#+end_example
+
+set int_if to lagg0
+
+#+begin_src conf
+int_if="lagg0" # lagg0 failover
+#+end_src
 
 ** wifi
 *** scan for networks
