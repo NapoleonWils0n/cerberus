@@ -746,8 +746,6 @@ Install the new kernel associated with the specified kernel configuration file. 
 make installkernel KERNCONF=WIFI
 #+END_SRC
 
-Shutdown the system and reboot into the new kernel. 
-
 ** pf.conf
 
 edit your pf.conf
@@ -761,6 +759,10 @@ set int_if to lagg0
 #+begin_src conf
 int_if="lagg0" # lagg0 failover
 #+end_src
+
+** reboot
+
+Shutdown the system and reboot into the new kernel. 
 
 ** wifi
 *** scan for networks
