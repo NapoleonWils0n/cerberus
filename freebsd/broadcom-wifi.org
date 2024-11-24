@@ -2,7 +2,7 @@
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
 * broadcom wifi freebsd
-** build generic kernel and modules
+** build custom kernel
 
 Switch to root
 
@@ -10,7 +10,8 @@ Switch to root
 sudo su
 #+END_SRC
 
-Do not make edits to GENERIC. Instead, copy the file to a different name and make edits to the copy. The convention is to use a name with all capital letters. When maintaining multiple FreeBSD machines with different hardware, it is a good idea to name it after the machine's hostname. This example creates a copy, named MYKERNEL, of the GENERIC configuration file for the amd64 architecture:
+Do not make edits to GENERIC.
+Instead, copy the file to a different name and make edits to the copy. 
 
 change into the /usr/src/sys/amd64/conf directory
 
@@ -38,10 +39,24 @@ add the code below to the WIFI file,
 this will include the GENERIC kernel using the include option,  
 and use the ident option to change the identity name to the name of your custom kernel which is the same as the name of the file.
 
-#+BEGIN_SRC sh
-include GENERIC
-ident WIFI
+#+BEGIN_SRC conf
+cpu         HAMMER
+include     GENERIC
+ident       WIFI
 #+END_SRC
+
+search for bwn and uncomment the device bwn line 
+it should be line 297
+
+#+begin_src conf
+device    bwn			# Broadcom BCM43xx wireless NICs.
+#+end_src
+
+at the end of the file add the following options
+
+#+begin_src conf
+options    BWN_GPL_PHY   
+#+end_src
 
 An include directive is available for use in configuration files. This allows another configuration file to be included in the current one, making it easy to maintain small changes relative to an existing file. If only a small number of additional options or drivers are required, this allows a delta to be maintained with respect to GENERIC, as seen in this example:
 
@@ -77,34 +92,47 @@ use poudriere to build the net/bwn-firmware-kmod port
 net/bwn-firmware-kmod
 #+END_SRC
 
-** load driver
+** loader.conf
 
-To load the driver as a module at boot, add the following lines to loader.conf
+#+begin_example
+/boot/loader.conf
+#+end_example
 
+#+begin_src conf
+# broadcom wifi
 hw.bwn_pci.preferred="1"
-if_bwn_pci_load="YES
 bwn_v4_ucode_load="YES"
 bwn_v4_n_ucode_load="YES"
 bwn_v4_lp_ucode_load="YES"
-
-
-#+BEGIN_SRC sh
-if_bwn_load="YES"
-bwn_v4_ucode_load="YES"
-bwn_v4_n_ucode_load="YES"
 wlan_wep_load="YES"
 wlan_ccmp_load="YES"
 wlan_tkip_load="YES"
-#+END_SRC
+#+end_src
 
-/etc/rc.conf 
+** rc.conf
 
-#+BEGIN_SRC sh
+#+begin_src conf
+# laggo failover device - bwn
+# ethernet mac address set to wifi mac address
+ifconfig_ue0="ether 04:0c:ce:d5:b0:ae"
+cloned_interfaces="lagg0"
 wlans_bwn0="wlan0"
-ifconfig_wlan0="WPA SYNCDHCP"
-#+END_SRC
+ifconfig_wlan0="WPA"
+create_args_wlan0="country US regdomain FCC"
+ifconfig_lagg0="up laggproto failover laggport ue0 laggport wlan0 DHCP"
+#+end_src
 
+** pf.conf
+
+#+begin_src conf
+int_if="lagg0" # lagg0 failover
+#+end_src
+
+** wpa_supplicant.conf
+
+#+begin_example
 /etc/wpa_supplicant.conf
+#+end_example
 
 #+BEGIN_SRC sh
 network={
