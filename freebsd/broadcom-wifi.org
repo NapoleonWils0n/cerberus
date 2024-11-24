@@ -754,6 +754,18 @@ edit your pf.conf
 /etc/pf.conf
 #+end_example
 
+*** wlan0
+
+if you want to use a standard wifi connection 
+set int_if to wlan0
+
+#+begin_src conf
+int_if="wlan0" # lagg0 failover
+#+end_src
+
+*** lagg0
+
+if you want to use the lagg failover device 
 set int_if to lagg0
 
 #+begin_src conf
