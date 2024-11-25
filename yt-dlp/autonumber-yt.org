@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* yt-dlp autonumber
+
+where input is a text files of urls to download
+
+#+begin_src sh
+yt-dlp -o '%(autonumber)s-%(title)s.%(ext)s' -a input
+#+end_src
