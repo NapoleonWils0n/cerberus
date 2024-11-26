@@ -1,0 +1,70 @@
+#+STARTUP: showall
+* lagg failover external wifi card
+** loader.conf
+
+#+begin_example
+/boot/loader.conf
+#+end_example
+
+#+begin_src conf
+# ralink wifi
+if_run_load="YES"
+runfw_load="YES"
+wlan_wep_load="YES"
+wlan_ccmp_load="YES"
+wlan_tkip_load="YES"
+#+end_src
+
+reboot to load the changes
+
+** rc.conf
+
+find the wifi card ether address
+
+#+begin_src sh
+ifconfig
+#+end_src
+
+create a lagg failover device between ethenet and wifi
+
+change ifconfig_ue0 to the name of your ethernet device
+
+and change "ether 00:c0:ca:32:9c:f4"
+to the wlan0 mac address of the wifi card which you can find with ifconfig
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+#+begin_src conf
+# laggo failover device
+# ethernet mac address set to wifi mac address
+ifconfig_ue0="ether 00:c0:ca:32:9c:f4"
+wlans_run0="wlan0"
+ifconfig_wlan0="WPA"
+create_args_wlan0="country GB"
+cloned_interfaces="lagg0"
+ifconfig_lagg0="up laggproto failover laggport ue0 laggport wlan0 DHCP"
+#+end_src
+
+** pf.conf
+
+#+begin_example
+/etc/pf.conf
+#+end_example
+
+#+begin_src conf
+int_if="lagg0" # lagg0 failove
+#+end_src
+
+** wifi without ethernet plugged in
+
+wifi should work automatically without the ethernet cable plugged in
+
+** ethernet without wifi plugged in
+
+if you are ethernet without the wifi card plugged in then you need to restart netif
+
+#+begin_src sh
+doas service netif restart
+#+end_src
