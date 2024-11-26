@@ -1,0 +1,19 @@
+#+STARTUP: content
+* wpa_passphrase
+** scan for networks
+
+#+begin_src sh
+ifconfig wlan0 list scan
+#+end_src
+
+** wpa_passphrase
+
+#+begin_src sh
+wpa_passphrase "ssid" "password" | doas tee /etc/wpa_supplicant.conf
+#+end_src
+
+** wlan0 restart
+
+#+begin_src sh
+doas service netif restart wlan0
+#+end_src
