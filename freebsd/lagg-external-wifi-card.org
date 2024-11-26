@@ -2,9 +2,9 @@
 * lagg failover external wifi card
 ** loader.conf
 
-#+begin_example
-/boot/loader.conf
-#+end_example
+#+begin_src sh
+sudo vi /boot/loader.conf
+#+end_src
 
 #+begin_src conf
 # ralink wifi
@@ -17,13 +17,19 @@ wlan_tkip_load="YES"
 
 reboot to load the changes
 
-** rc.conf
+** get the wifi card ether address
+
+#+begin_src sh
+sudo ifconfig wlan0 create wlandev run0
+#+end_src
 
 find the wifi card ether address
 
 #+begin_src sh
 ifconfig
 #+end_src
+
+** rc.conf
 
 create a lagg failover device between ethenet and wifi
 
@@ -32,9 +38,9 @@ change ifconfig_ue0 to the name of your ethernet device
 and change "ether 00:c0:ca:32:9c:f4"
 to the wlan0 mac address of the wifi card which you can find with ifconfig
 
-#+begin_example
-/etc/rc.conf
-#+end_example
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
 
 #+begin_src conf
 # laggo failover device
@@ -49,13 +55,19 @@ ifconfig_lagg0="up laggproto failover laggport ue0 laggport wlan0 DHCP"
 
 ** pf.conf
 
-#+begin_example
-/etc/pf.conf
-#+end_example
+edit your pf and change the int_if to lagg0
+
+#+begin_src sh
+sudo vi /etc/pf.conf
+#+end_src
 
 #+begin_src conf
 int_if="lagg0" # lagg0 failove
 #+end_src
+
+** reboot
+
+reboot to pick up the changes
 
 ** wifi without ethernet plugged in
 
