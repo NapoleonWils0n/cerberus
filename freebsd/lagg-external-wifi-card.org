@@ -51,6 +51,7 @@ ifconfig_wlan0="WPA"
 create_args_wlan0="country GB"
 cloned_interfaces="lagg0"
 ifconfig_lagg0="up laggproto failover laggport ue0 laggport wlan0 DHCP"
+laggpf_enable="YES"
 #+end_src
 
 ** pf.conf
@@ -78,5 +79,56 @@ wifi should work automatically without the ethernet cable plugged in
 if you are ethernet without the wifi card plugged in then you need to restart netif
 
 #+begin_src sh
-doas service netif restart
+doas service netif restart lagg0
+doas service pf restart
+#+end_src
+
+** laggpf rc.d script
+
+#+begin_src sh
+sudo vi /usr/local/etc/rc.d/laggpf
+#+end_src
+
+#+begin_src conf
+#!/bin/sh
+
+# PROVIDE: laggpf
+# REQUIRE: devd pf routing
+# KEYWORD: nojail
+
+. /etc/rc.subr
+
+name=laggpf
+desc="Wait for network devices or the network being up"
+rcvar=laggpf_enable 
+
+start_cmd="${name}_start"
+stop_cmd=":"
+
+load_rc_config $name 
+: ${laggpf_enable:=no} 
+: ${laggpf_msg="Nothing started."} 
+
+laggpf_start()
+{
+    service netif restart lagg0
+    service pf restart
+}
+
+run_rc_command "$1"
+
+#+end_src
+
+#+begin_src sh
+sudo chmod +x /usr/local/etc/rc.d/laggpf
+#+end_src
+
+rc.conf
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+#+begin_src conf
+laggpf_enable="YES"
 #+end_src

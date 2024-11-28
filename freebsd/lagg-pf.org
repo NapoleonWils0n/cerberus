@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* lagg pf restart
+
+#+begin_src sh
+doas service netif restart lagg0
+doas service pf restart
+#+end_src
