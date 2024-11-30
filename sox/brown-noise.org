@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* sox play brown noise
+
+#+begin_src sh
+play -n synth brownnoise
+#+end_src
