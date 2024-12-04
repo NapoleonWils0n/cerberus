@@ -1,0 +1,102 @@
+#+STARTUP: content
+* bhyve
+** packages
+
+#+begin_src sh
+doas pkg install bhyve-firmware grub2-bhyve edk2-bhyve
+#+end_src
+
+** zfs dataset
+
+#+begin_src sh
+doas zfs create -o mountpoint=/vm zroot/vm
+doas zfs create -o mountpoint=/vm/iso zroot/vm/iso
+#+end_src
+
+** rc.conf
+
+#+begin_src sh
+doas sysrc kld_list+=vmm
+doas sysrc vm_enable=YES
+doas sysrc vm_dir="zfs:zroot/vm"
+#+end_src
+
+** ifconfig
+
+#+begin_src sh
+doas ifconfig tap0 create
+doas sysctl net.link.tap.up_on_open=1
+doas ifconfig bridge0 create
+doas ifconfig bridge0 addm lagg0 addm tap0
+doas ifconfig bridge0 up
+#+end_src
+
+#+begin_src sh
+doas echo "net.link.tap.up_on_open=1" >> /etc/sysctl.conf
+#+end_src
+
+config
+
+#+begin_src conf
+# laggo failover device
+# ethernet mac address set to wifi mac address
+ifconfig_ue0="ether 78:2b:46:ee:27:a3"
+wlans_iwlwifi0="wlan0"
+ifconfig_wlan0="WPA"
+create_args_wlan0="country GB"
+cloned_interfaces="lagg0 lo1"
+ifconfig_lagg0="up laggproto failover laggport ue0 laggport wlan0 DHCP"
+#+end_src
+
+** fetch iso
+
+#+begin_src sh
+cd /vm/iso
+#+end_src
+
+#+begin_src sh
+doas fetch 'https://download.freebsd.org/releases/ISO-IMAGES/14.2/FreeBSD-14.2-RELEASE-amd64-bootonly.iso'
+#+end_src
+
+** truncate img
+
+#+begin_src sh
+doas truncate -s 16G freebsd14.img
+#+end_src
+
+** start the vm
+
+#+begin_src sh
+doas sh /usr/share/examples/bhyve/vmrun.sh -c 1 -m 1024M -t tap0 -d freebsd14.img \
+-i -I FreeBSD-14.2-RELEASE-amd64-bootonly.iso freebsd
+#+end_src
+
+#+begin_src sh
+sh /usr/share/examples/bhyve/vmrun.sh -c 4 -m 1024M -t tap0 -d freebsd14.img freebsd
+#+end_src
+** links
+
+[[https://docs.freebsd.org/en/books/handbook/virtualization/#virtualization-host-bhyve]]
+
+[[https://vermaden.wordpress.com/2023/08/18/freebsd-bhyve-virtualization/]]
+
+[[https://www.tumfatig.net/2024/freebsd-bhyve-hypervisor-to-run-openbsd-virtual-machines/]]
+
+[[https://forums.freebsd.org/threads/a-solid-howto-with-bhyve-on-freebsd-14-and-windows-11.92236/]]
+
+[[https://wiki.freebsd.org/chengcui/install_FreeBSD13_VM_via_bhyve]]
+
+[[https://wiki.freebsd.org/chengcui/install_Ubuntu22.04_VM_via_bhyve]]
+
+[[https://klarasystems.com/articles/from-0-to-bhyve-on-freebsd-13-1/]]
+
+[[https://www.netscylla.com/blog/2021/06/11/FreeBSD-and-Bhyve.html]]
+
+[[https://blog.kykvit.com/article/virtualization/freeBSD_bhyve_wireless_NAT]]
+
+[[https://omussell.github.io/bhyve-vm-creation/]]
+
+[[https://www.ateamsystems.com/tech-blog/howto-windows-10-bhyve-w-freebsd-11/]]
+
+[[https://news.ycombinator.com/item?id=37170683]]
+
