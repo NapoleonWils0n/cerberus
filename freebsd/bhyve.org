@@ -74,6 +74,25 @@ doas sh /usr/share/examples/bhyve/vmrun.sh -c 1 -m 1024M -t tap0 -d freebsd14.im
 #+begin_src sh
 sh /usr/share/examples/bhyve/vmrun.sh -c 4 -m 1024M -t tap0 -d freebsd14.img freebsd
 #+end_src
+
+** copy vmrun.sh to bin
+
+#+begin_src sh
+cp /usr/share/examples/bhyve/vmrun.sh "${HOME}"/bin
+#+end_src
+
+change permissions
+
+#+begin_src sh
+chmod +uwx "${HOME}"/bin/vmrun.sh
+#+end_src
+
+** start the vm
+
+#+begin_src sh
+doas sh ~/bin/vmrun.sh -c 4 -m 1024M -t tap0 -d /vm/iso/freebsd14.img freebsd
+#+end_src
+
 ** links
 
 [[https://docs.freebsd.org/en/books/handbook/virtualization/#virtualization-host-bhyve]]
