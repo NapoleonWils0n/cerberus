@@ -1,0 +1,103 @@
+#+STARTUP: content
+* zfs dataset share with nfs
+** resources
+
+[[https://docs.freebsd.org/en/books/handbook/network-servers/#network-nfs]]
+
+[[https://forums.freebsd.org/threads/nfsv4-etc-exports-syntax-and-overall-docs.23526/]]
+
+[[https://forums.FreeBSD.org/threads/nfs-server-and-user-mapping.51122/post-286524]]
+
+[[https://forums.freebsd.org/threads/enabling-nfsv4.90927/]]
+
+[[https://www.server-world.info/en/note?os=FreeBSD_14&p=nfs&f=2]]
+
+[[https://vermaden.wordpress.com/2023/07/01/nfsv4-server-inside-freebsd-vnet-jail/]]
+
+** setup
+*** host
+**** sysrc
+
+#+begin_src sh
+doas sysrc nfs_server_enable=YES
+doas sysrc nfsv4_server_only=YES
+doas sysrc nfs_server_flags="-t"
+#+end_src
+
+**** manually edit rc.conf
+
+#+begin_src sh
+sudo vi /etc/rc.conf
+#+end_src
+
+#+begin_src conf
+nfs_server_enable=YES
+nfsv4_server_only=YES
+nfs_server_flags="-t"
+#+end_src
+
+*** exports
+
+#+begin_src sh
+sudo vi /etc/exports
+#+end_src
+
+#+begin_src conf
+V4: / 192.168.1.141
+
+/var/run/xdg/djwilcox -maproot=root -alldirs 192.168.1.141
+#+end_src
+
+*** sysctl
+
+#+begin_src sh
+doas sysctl vfs.nfs.enable_uidtostring=1
+doas sysctl vfs.nfsd.enable_stringtouid=1
+#+end_src
+
+#+begin_src sh
+sudo vi /etc/sysctl.conf
+#+end_src
+
+#+begin_src conf
+vfs.nfs.enable_uidtostring=1
+vfs.nfsd.enable_stringtouid=1
+#+end_src
+
+*** Start the NFS server: 
+
+#+begin_src sh
+doas service nfsd start
+#+end_src
+
+*** client set up
+
+#+begin_src sh
+sudo sysctl vfs.nfs.enable_uidtostring=1
+#+end_src
+
+#+begin_src sh
+sudo vi /etc/sysctl.conf
+#+end_src
+
+#+begin_src conf
+vfs.nfs.enable_uidtostring=1
+#+end_src
+
+To enable NFS clients, set this option in each client’s /etc/rc.conf:
+
+#+begin_src conf
+sudo sysrc nfs_client_enable="YES"
+#+end_src
+
+Then, run this command on each NFS client:
+
+#+begin_src sh
+sudo service nfsclient start
+#+end_src
+
+The client now has everything it needs to mount a remote file system. In these examples, the server’s name is server and the client’s name is client. To mount /home on server to the /mnt mount point on client:
+
+#+begin_src sh
+sudo mount -o nfsv4 192.168.1.131:/var/run/xdg/djwilcox /var/run/xdg/djwilcox
+#+end_src

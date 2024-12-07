@@ -93,6 +93,12 @@ chmod +uwx "${HOME}"/bin/vmrun.sh
 doas sh ~/bin/vmrun.sh -c 4 -m 1024M -t tap0 -d /vm/iso/freebsd14.img freebsd
 #+end_src
 
+** adduser
+
+#+begin_src sh
+adduser
+#+end_src
+
 ** links
 
 [[https://docs.freebsd.org/en/books/handbook/virtualization/#virtualization-host-bhyve]]
