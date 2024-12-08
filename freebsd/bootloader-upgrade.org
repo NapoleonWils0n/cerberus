@@ -1,0 +1,14 @@
+#+STARTUP: content
+* bootloader upgrade
+
+[[https://forums.freebsd.org/threads/loader-needs-to-be-updated-14-stable.94857/]]
+
+user: root
+Mount the efi partition, it's probably already in fstab and getting mounted on /boot/efi. But if you have multiple disks you will have to mount each individual disk separately.
+
+Do this on the running system, preferably before or right after the zpool upgrade command to upgrade the pools. Or update the boot code right after an update/upgrade of the OS.
+
+#+begin_src sh
+cp /boot/loader.efi /boot/efi/efi/freebsd/loader.efi
+cp /boot/loader.efi /boot/efi/efi/boot/bootx64.efi
+#+end_src
