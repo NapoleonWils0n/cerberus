@@ -1,0 +1,150 @@
+#+STARTUP: content
+* emacs build ubuntu
+** git clone emacs
+
+#+begin_src sh
+git clone git://git.sv.gnu.org/emacs.git
+#+end_src
+
+** change directory in the emacs directory
+
+#+begin_src sh
+cd emacs
+#+end_src
+
+** packages
+*** build essential
+
+#+begin_src sh
+sudo apt install build-essential
+#+end_src
+
+*** images packages install
+
+libpng 
+
+#+begin_src sh
+sudo apt install xaw3dg xaw3dg-dev libpng-dev zlib1g libjpeg-turbo8 libjpeg-dev libtiff6 libtiff-dev libgif7 libgif-dev librsvg2-2 librsvg2-dev libwebp7 libwebp-dev imagemagick libmagick++-dev 
+#+end_src
+
+*** emacs packages install
+
+#+begin_src sh
+sudo apt install gcc-11 g++-11 autoconf libgnutls28-dev libgmp-dev libgtk-3-dev libjansson4 libjansson-dev libgccjit0 libgccjit-14-dev libmpc-dev libmpfr-dev libncurses-dev texinfo libwebkit2gtk-4.1-0 libwebkit2gtk-4.1-dev
+#+end_src
+
+*** tree-sitter packages
+
+install tree-sitter
+
+#+begin_src sh
+sudo apt install libtree-sitter0 libtree-sitter-dev tree-sitter-cli
+#+end_src
+
+** autogen
+
+Set CC and CXX environment variables to inform the Emacs configuration script as to the location of gcc,
+otherwise it fails to find libgccjit
+
+#+begin_src sh
+export CC=/usr/bin/gcc && export CXX=/usr/bin/gcc
+#+end_src
+
+run autogen
+
+#+begin_src sh
+./autogen.sh
+#+end_src
+
+** configure 
+
+#+begin_src sh
+./configure --help
+#+end_src
+
+run configure
+
+#+begin_src sh
+./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg --with-tiff --with-xft --with-xpm --with-gpm=no --with-imagemagick --with-x-toolkit=yes --with-modules --with-native-compilation --with-pgtk --with-tree-sitter --without-pop --prefix=/usr/local
+#+end_src
+
+** make  
+
+#+begin_src sh
+make -j$(nproc)
+#+end_src
+
+** check native comp is working
+
+run emacs
+
+#+begin_src sh
+src/emacs -Q
+#+end_src
+
+check native comp is working
+
+#+begin_src emacs-lisp
+(native-comp-available-p)
+#+end_src
+
+** install 
+
+#+begin_src sh
+sudo make install
+#+end_src
+
+** tree-sitter
+
+require treesit, then run M-x treesit-install-language-grammar bash
+set sh-mode to use bash-ts-mode
+
+add the following to your emacs init.el
+
+#+begin_src emacs-lisp
+(require 'treesit)
+
+;; M-x treesit-install-language-grammar bash
+(add-to-list
+ 'treesit-language-source-alist
+ '(bash "https://github.com/tree-sitter/tree-sitter-bash.git"))
+
+;; sh-mode use bash-ts-mode
+(add-to-list 'major-mode-remap-alist
+             '(sh-mode . bash-ts-mode))
+#+end_src
+
+
+Now check if Emacs is built with tree-sitter library
+
+#+begin_src emacs-lisp
+(treesit-available-p)
+#+end_src
+
+*** tree-sitter links
+
+[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html]]
+
+[[https://emacs-tree-sitter.github.io/languages/]]
+
+[[https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter]]
+
+[[https://github.com/orgs/tree-sitter/repositories]]
+
+[[https://www.nathanfurnal.xyz/posts/building-tree-sitter-langs-emacs/]]
+
+** init.el
+
+To compile elc files as needed, in a deferred/async manner, add to your init.el the following.
+
+The default configuration uses at most half of the cores for asynchronous compilation, this can be configured with the comp-async-jobs-number variable.
+
+#+begin_src emacs-lisp
+(when (fboundp 'native-compile-async)
+  (setq comp-deferred-compilation t
+        comp-deferred-compilation-black-list '("/mu4e.*\\.el$")))
+#+end_src
+
+** resources
+
+[[https://gist.github.com/abidanBrito/2b5e447f191bb6bb70c9b6fe6f9e7956]]
