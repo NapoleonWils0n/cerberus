@@ -1,4 +1,5 @@
 Bento4
+Carla
 ImageMagick7
 abook
 adwaita-qt5
@@ -7,8 +8,10 @@ alacritty
 apg
 archlinux-keyring
 archlinux-pacman
+ardour
 aria2
 aspell
+aubio
 bat
 beadm
 cantarell-fonts
@@ -27,12 +30,13 @@ fd-find
 ffmpeg
 firacode
 firefox
-foreign-cdm
 fzf
 git
 gmake
 gnome-themes-extra
+gpsbabel
 gpu-firmware-intel-kmod-kabylake
+gstreamer1-libav
 gstreamer1-plugins-opus
 gstreamer1-vaapi
 gtar
@@ -45,13 +49,15 @@ kodi
 kodi-addon-inputstream.adaptive
 labwc
 libc6-shim
+libheif
 libnotify
+libqrencode
 libva-intel-driver
 libva-nvidia-driver
 libva-utils
 libvdpau-va-gl
 linux-nvidia-libs
-linux-widevine-cdm
+lsp-plugins-lv2
 lynx
 mixertui
 mpv
@@ -60,6 +66,7 @@ musicpc
 musicpd
 mutt
 ncmpc
+noise-suppression-for-voice-lv2
 noto-basic
 noto-emoji
 nvidia-driver
@@ -71,6 +78,8 @@ openvpn
 pavucontrol
 pkg
 playerctl
+poppler
+poppler-utils
 poudriere
 py39-csvkit
 py39-pip
@@ -103,6 +112,7 @@ ts
 unrar
 urlview
 virtual_oss
+vlc
 w3m
 wayland-protocols
 wayland-utils
@@ -111,6 +121,7 @@ wdisplays
 weechat
 wev
 wget2
+wireplumber
 wl-clipboard
 wlogout
 wlr-randr
