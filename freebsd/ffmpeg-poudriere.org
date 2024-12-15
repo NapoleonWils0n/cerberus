@@ -423,7 +423,7 @@ Again, this procedure will take awhile because the entire ports tree must be fet
 Accepting all possible licenses is also a good idea.
 
 #+begin_src sh
-sudo vi /usr/local/etc/poudriere.d/make.conf
+doas vi /usr/local/etc/poudriere.d/make.conf
 #+end_src
 
 #+begin_src makefile
@@ -550,17 +550,172 @@ Update the repo info:
 # pkg update
 #+END_SRC
 
-*** pkg update
+** installing ffmpeg from poudriere
+*** ffmpeg isnt installed
 
-make sure you have switched to root
-Update the repo info:
+if you dont have ffmpeg already installed on your system
 
-#+begin_src sh
-pkg update -f
-#+end_src
-
-install
+run pkg update
 
 #+begin_src sh
-pkg install ffmpeg
+doas pkg update 
 #+end_src
+
+then run pkg upgrade
+
+#+begin_src sh
+doas pkg upgrade
+#+end_src
+
+pkg search ffmpeg
+
+#+begin_src sh
+pkg search ffmpeg
+#+end_src
+
+make a note of the ffmpeg version built by poudriere
+
+#+begin_src sh
+ffmpeg-6.1.2_6,1               Realtime audio/video encoder/converter and streaming server
+#+end_src
+
+install ffmpeg
+
+#+begin_src sh
+doas pkg install ffmpeg-6.1.2_6,1
+#+end_src
+
+*** ffmpeg is already installed
+
+if you already have ffmpeg installed then you have to uninstall it,
+and then install the version of ffmpeg built with poudriere
+
+**** ffmpeg uninstall
+
+uninstalling ffmpeg will also remove any packages that depend on ffmpeg
+
+so you have remove ffmpeg and all the packages that depend on it,
+then install the new version of ffmpeg and reinstall all the packages that were removed
+
+#+begin_src sh
+pkg remove ffmpeg
+#+end_src
+
+on my system removing ffmpeg will also remove the following packages
+
+#+begin_src conf
+Installed packages to be REMOVED:
+        ImageMagick7: 7.1.1.26_5
+        ardour: 8.6.0_2
+        aubio: 0.4.9_5
+        ffmpeg: 6.1.2_4,1
+        firefox: 133.0.3,2
+        gstreamer1-libav: 1.24.8
+        handbrake: 1.7.2_1
+        kodi: 21.0_4
+        kodi-addon-inputstream.adaptive: 21.5.4
+        libheif: 1.18.2_1
+        mpv: 0.39.0,1
+        mpv-mpris: 1.1
+        musicpd: 0.23.16
+        obs-studio: 30.2.3
+        vlc: 3.0.21_7,4
+        waypipe: 0.9.2
+        wlrobs: 1.1_3
+        yt-dlp: 2024.09.27
+
+Number of packages to be removed: 18
+#+end_src
+
+**** create boot env
+
+#+begin_src sh
+doas beadm create 14.2-ffmpeg
+#+end_src
+
+**** activate the new boot env
+
+#+begin_src sh
+doas beadm activate 14.2-ffmpeg
+#+end_src
+
+**** create a snapshot
+
+#+begin_src sh
+doas zfs snapshot -r zroot@15-12-2024-ffmpeg
+#+end_src
+
+**** export a list of packages
+
+#+begin_src sh
+pkg prime-list > pkg-prime-list.txt
+pkg info > pkg-list.txt
+#+end_src
+
+**** create a script to reinstall the packages that will be uninstalled 
+
+#+begin_src sh
+vi package-list.sh
+#+end_src
+
+#+begin_src sh
+#!/bin/sh
+
+pkg install ffmpeg-6.1.2_6,1 ImageMagick7 ardour aubio firefox gstreamer1-libav handbrake kodi kodi-addon-inputstream.adaptive \
+libheif mpv mpv-mpris musicpd obs-studio vlc waypipe wlrobs yt-dlp
+#+end_src
+
+**** boot into the new boot env
+
+boot into the new beadm boot env and log in at the tty
+but dont log into the desktop
+
+**** uninstall the old ffmpeg
+
+#+begin_src sh
+doas pkg remove ffmpeg
+#+end_src
+
+which will remove all these packages on my system
+
+#+begin_src conf
+Installed packages to be REMOVED:
+        ImageMagick7: 7.1.1.26_5
+        ardour: 8.6.0_2
+        aubio: 0.4.9_5
+        ffmpeg: 6.1.2_4,1
+        firefox: 133.0.3,2
+        gstreamer1-libav: 1.24.8
+        handbrake: 1.7.2_1
+        kodi: 21.0_4
+        kodi-addon-inputstream.adaptive: 21.5.4
+        libheif: 1.18.2_1
+        mpv: 0.39.0,1
+        mpv-mpris: 1.1
+        musicpd: 0.23.16
+        obs-studio: 30.2.3
+        vlc: 3.0.21_7,4
+        waypipe: 0.9.2
+        wlrobs: 1.1_3
+        yt-dlp: 2024.09.27
+
+Number of packages to be removed: 18
+#+end_src
+
+**** install the new version of ffmpeg and reinstall the removed packages
+
+using the script we made in an earlier step
+
+#+begin_src sh
+doas ./package-list.sh
+#+end_src
+
+**** reboot
+
+#+begin_src sh
+doas shutdown -r now
+#+end_src
+
+**** ffmpeg from poudriere is now installed
+
+ffmpeg built with poudriere will now be installed
