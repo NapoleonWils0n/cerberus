@@ -34,6 +34,12 @@ ffmpeg -re -i input.mp4 -c copy -f mpegts "srt://192.168.1.131:6882?pkt_size"
 mpv 'srt://192.168.1.131:6882?mode=listener&latency=10000&timeout=5000000'
 #+end_src
 
+** srt-live-transmit listener
+
+#+begin_src sh
+srt-live-transmit 'srt://192.168.1.131:6882?mode=listener&latency=10000&timeout=5000000' file://con | mpv --fs -
+#+end_src
+
 ** ubuntu
 
 #+begin_src sh
