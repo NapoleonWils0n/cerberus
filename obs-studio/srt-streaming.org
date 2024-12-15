@@ -1,0 +1,41 @@
+#+STARTUP: content
+* srt
+** resources 
+
+[[https://www.youtube.com/watch?v=eDgZ-IqvCJc&t=685s]]
+
+[[https://obsproject.com/kb/srt-protocol-streaming-guide]]
+
+[[https://srtlab.github.io/srt-cookbook/apps/ffmpeg.html]]
+
+[[https://ffmpeg.org/ffmpeg-protocols.html#srt]]
+
+** obs listener
+
+#+begin_src sh
+srt://192.168.1.131:6882?mode=listener&latency=10000&timeout=5000000
+#+end_src
+
+** obs caller
+
+#+begin_src sh
+srt://192.168.1.131:6882?mode=caller&timeout=5000000&transtype=live
+#+end_src
+
+** ffmpeg caller
+
+#+begin_src sh
+ffmpeg -re -i input.mp4 -c copy -f mpegts "srt://192.168.1.131:6882?pkt_size"
+#+end_src
+
+** mpv listener
+
+#+begin_src sh
+mpv 'srt://192.168.1.131:6882?mode=listener&latency=10000&timeout=5000000'
+#+end_src
+
+** ubuntu
+
+#+begin_src sh
+sudo apt install srt-tools
+#+end_src
