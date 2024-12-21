@@ -1,0 +1,226 @@
+#+STARTUP: content
+* podman freebsd
+** resources
+
+[[https://podman.io/docs/installation#installing-on-freebsd-140]]
+
+** podman install
+
+There's also a podman-suite meta package that will pull additional packages for you (buildah, skopeo).
+
+#+begin_src sh
+doas pkg install podman-suite
+#+end_src
+
+** fstab
+
+To properly support Podman's container restart policy, conmon needs fdescfs(5) to be mounted on /dev/fd.
+
+If /dev/fd is not already mounted:
+
+#+begin_src sh
+doas mount -t fdescfs fdesc /dev/fd
+#+end_src
+
+To make it permanent, add the following line to /etc/fstab:
+
+#+begin_src sh
+doas vi /etc/fstab
+#+end_src
+
+#+begin_src conf
+fdesc   /dev/fd         fdescfs         rw      0       0
+#+end_src
+
+** networking
+
+Container networking relies on NAT to allow container network packets out to the host's network. This requires a PF firewall to perform the translation. A simple example is included - to use it:
+
+#+begin_src sh
+cp /usr/local/etc/containers/pf.conf.sample .
+#+end_src
+
+pf.conf.sample
+
+#+begin_src conf
+# Change these to the interface(s) with the default route
+v4egress_if = "ix0"
+v6egress_if = "ix0"
+
+nat on $v4egress_if inet from <cni-nat> to any -> ($v4egress_if)
+nat on $v6egress_if inet6 from <cni-nat> to !ff00::/8 -> ($v6egress_if)
+
+rdr-anchor "cni-rdr/*"
+nat-anchor "cni-rdr/*"
+table <cni-nat>
+#+end_src
+
+Edit /etc/pf.conf and set v4egress_if, v6egress_if variables to your network interface(s)s
+
+The sample PF configuration includes support for port redirections. These are implemented as redirect rules in anchors nested under cni-rdr.
+
+Redirect rules will work if the destination address is localhost (e.g. 127.0.0.1 or ::1) - to enable this, the following line must be included in your /etc/pf.conf:
+
+#+begin_src conf
+nat-anchor "cni-rdr/*"
+#+end_src
+
+#+begin_src sh
+doas vi /etc/fstab
+#+end_src
+
+#+begin_src conf
+#=========================================================================#
+# variables, macro and tables                                             #
+#=========================================================================#
+
+int_if="lagg0" # lagg0 failover
+# podman
+v4egress_if = "lagg0"
+v6egress_if = "lagg0"
+vpn_if="tun0" # vpn interface
+all_networks="0.0.0.0/0"
+vpn_network="$vpn_if:network"
+# 6881, 6882 = transmission. , 22000, 21025 = syncthing
+tcp_services = "{ ntp, 6881, 22000 }" # tcp services - torrent
+udp_services = "{ ntp, 6882, 21025 }" # udp services - torrent
+#nfs_services = "{ 2049 }" # 2049 = nfs
+icmp_types = "{ echoreq, unreach }"
+tcp_state="flags S/SA keep state"
+udp_state="keep state"
+
+#table <internet> { $all_networks, !self, !$int_if:network } # internet
+table <lan> { $int_if:network, !self }                      # lan network
+table <myself> { self }                                     # self
+table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
+	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
+	 	   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
+	 	   203.0.113.0/24 }                         # broken networks
+
+#=========================================================================#
+# global policy                                                           #
+#=========================================================================#
+
+set block-policy drop
+set loginterface $int_if
+set fingerprints "/etc/pf.os"
+set skip on lo0
+scrub in all fragment reassemble no-df max-mss 1440
+# nat jail
+nat on $int_if from {lo1:network} to any -> ($int_if)
+# podman nat
+nat on $v4egress_if inet from <cni-nat> to any -> ($v4egress_if)
+nat on $v6egress_if inet6 from <cni-nat> to !ff00::/8 -> ($v6egress_if)
+# podman anchor
+rdr-anchor "cni-rdr/*"
+nat-anchor "cni-rdr/*"
+table <cni-nat>
+antispoof log quick for { lo $int_if } label "block_spoofing"
+
+#=========================================================================#
+# block                                                                   #
+#=========================================================================#
+
+block log all # block log all
+block return out quick inet6 all tag IPV6 # block ipv6 
+block in quick inet6 all tag IPV6 # block ipv6
+
+
+#=========================================================================#
+# anchors                                                                 #
+#=========================================================================#
+
+# openvpn - anchor
+anchor "openvpn"
+
+#=========================================================================#
+# traffic tag                                                             #
+#=========================================================================#
+
+# icmp
+pass inet proto icmp all icmp-type $icmp_types keep state tag ICMP
+
+# Allow the tcp and udp services defined in the macros at the top of the file
+pass in on $int_if inet proto tcp from any to ($int_if) port $tcp_services $tcp_state tag TCP_IN
+pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_state tag UDP_IN
+
+# outbound traffic
+block out on $int_if all
+pass out quick on $int_if all modulate state
+#+end_src
+
+** zfs
+
+#+begin_src sh
+doas zfs create -o mountpoint=/var/db/containers zroot/containers
+#+end_src
+
+** podman enable
+
+Podman can restart containers after a host is rebooted. To enable this, use:
+
+#+begin_src sh
+doas sysrc podman_enable=YES
+#+end_src
+
+** doas podman set up
+
+set up doas so you can can run podman without being prompted for a password
+
+#+begin_src sh
+doas vi 
+#+end_src
+
+change username to your username
+
+#+begin_src conf
+# podman
+permit nopass :username cmd podman
+#+end_src
+
+** podman test
+
+run the hello workd podmand container
+
+#+begin_src sh
+doas podman run --rm docker.io/dougrabson/hello
+#+end_src
+
+** podman message
+
+Message from podman-5.1.1_7:
+
+The FreeBSD port of the Podman container engine is experimental and should be
+used for evaluation and testing purposes only.
+
+#+begin_src sh
+doas podman run --rm docker.io/dougrabson/hello
+#+end_src
+
+start the container with a restart policy:
+
+#+begin_src sh
+doas podman run -d --restart=always myimage
+#+end_src
+
+It is possible to run many Linux container images using FreeBSD's Linux emulation:
+
+#+begin_src sh
+doas sysrc linux_enable=YES
+doas service linux start
+doas podman run --rm --os=linux alpine cat /etc/os-release | head -1
+#+end_src
+
+NAME="Alpine Linux"
+
+Message from podman-suite-20240605:
+
+Optionally, to host your own image registry, or to
+create cross-platform images, install in addition:
+
+#+begin_src sh
+doas pkg install sysutils/docker-registry
+doas pkg install emulators/qemu-user-static
+#+end_src
+
+
