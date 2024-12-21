@@ -4,12 +4,14 @@
 
 [[https://podman.io/docs/installation#installing-on-freebsd-140]]
 
+[[https://docs.skunkwerks.at/s/fUiAmi4pE#]]
+
 ** podman install
 
 There's also a podman-suite meta package that will pull additional packages for you (buildah, skopeo).
 
 #+begin_src sh
-doas pkg install podman-suite
+doas pkg install podman-suite emulators/qemu-user-static
 #+end_src
 
 ** fstab
@@ -155,6 +157,12 @@ pass out quick on $int_if all modulate state
 doas zfs create -o mountpoint=/var/db/containers zroot/containers
 #+end_src
 
+** sysctl
+
+#+begin_src sh
+doas sysctl net.pf.filter_local=1
+#+end_src
+
 ** podman enable
 
 Podman can restart containers after a host is rebooted. To enable this, use:
@@ -184,6 +192,26 @@ run the hello workd podmand container
 
 #+begin_src sh
 doas podman run --rm docker.io/dougrabson/hello
+#+end_src
+
+** podman search
+
+#+begin_src sh
+doas vi /usr/local/etc/containers/registries.conf
+#+end_src
+
+#+begin_src sh
+unqualified-search-registries=["hub.docker.com", "docker.io", "quay.io"]
+#+end_src
+
+** alpine
+
+#+begin_src sh
+doas podman run --rm --os=linux alpine cat /etc/os-release | head -1
+#+end_src
+
+#+begin_src sh
+doas podman run -it docker.io/library/alpine /bin/sh
 #+end_src
 
 ** podman message
