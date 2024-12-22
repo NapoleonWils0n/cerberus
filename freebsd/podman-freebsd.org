@@ -201,7 +201,7 @@ doas vi /usr/local/etc/containers/registries.conf
 #+end_src
 
 #+begin_src sh
-unqualified-search-registries=["hub.docker.com", "docker.io", "quay.io"]
+unqualified-search-registries=["docker.io", "quay.io"]
 #+end_src
 
 ** alpine
@@ -212,6 +212,39 @@ doas podman run --rm --os=linux alpine cat /etc/os-release | head -1
 
 #+begin_src sh
 doas podman run -it docker.io/library/alpine /bin/sh
+#+end_src
+
+** docker hub
+
+create an account on docker hub
+
+[[https://hub.docker.com]]
+
+you need to login into docker.io
+which is a bit confusing
+
+#+begin_src sh
+doas podman login docker.io
+#+end_src
+
+enter your name and password at the prompt
+
+** hugginface
+
+create an account on hugginface and create a token
+
+[[https://huggingface.co/]]
+
+** whisperx
+
+[[https://hub.docker.com/r/thomasvvugt/whisperx]]
+
+replace huggin-face-token with your hugginface token
+
+change -v /path/to/audio_files
+
+#+begin_src sh
+doas podman run -it --rm --gpus all -v /path/to/audio_files:/app thomasvvugt/whisperx:cuda118 recording.mp3 --batch_size 8 --diarize --hf_token huggin-face-token
 #+end_src
 
 ** podman message
