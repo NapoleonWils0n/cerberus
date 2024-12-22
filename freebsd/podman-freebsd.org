@@ -235,20 +235,6 @@ create an account on hugginface and create a token
 
 [[https://huggingface.co/]]
 
-** whisperx
-
-[[https://hub.docker.com/r/thomasvvugt/whisperx]]
-
-replace huggin-face-token with your hugginface token
-
-change -v /path/to/audio_files
-
-recording.mp3 is the input file which should be in the /path/to/audio_files
-
-#+begin_src sh
-doas podman run -it --rm --gpus all -v /path/to/audio_files:/app thomasvvugt/whisperx:cuda118 recording.mp3 --batch_size 8 --diarize --hf_token huggin-face-token
-#+end_src
-
 ** podman message
 
 Message from podman-5.1.1_7:
