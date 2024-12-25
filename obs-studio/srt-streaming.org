@@ -2,8 +2,6 @@
 * srt
 ** resources 
 
-[[https://www.youtube.com/watch?v=eDgZ-IqvCJc&t=685s]]
-
 [[https://obsproject.com/kb/srt-protocol-streaming-guide]]
 
 [[https://srtlab.github.io/srt-cookbook/apps/ffmpeg.html]]
