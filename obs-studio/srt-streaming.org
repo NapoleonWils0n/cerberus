@@ -22,18 +22,6 @@ srt://192.168.1.131:6882?mode=listener&latency=1000&timeout=5000000
 srt://192.168.1.131:6882?mode=caller&timeout=5000000&transtype=live
 #+end_src
 
-** ffmpeg caller
-
-#+begin_src sh
-ffmpeg -re -i input.mp4 -c copy -f mpegts "srt://192.168.1.131:6882?pkt_size"
-#+end_src
-
-** mpv listener
-
-#+begin_src sh
-mpv 'srt://192.168.1.131:6882?mode=listener&latency=1000&timeout=5000000'
-#+end_src
-
 ** srt-live-transmit listener
 
 #+begin_src sh
@@ -42,6 +30,14 @@ srt-live-transmit 'srt://192.168.1.131:6882?mode=listener&latency=1000&timeout=5
 
 ** ubuntu
 
+srt-tools
+
 #+begin_src sh
-sudo apt install srt-tools
+sudo apt install srt-tools 
+#+end_src
+
+intel vaapi
+
+#+begin_src sh
+sudo apt install intel-media-va-driver-non-free
 #+end_src
