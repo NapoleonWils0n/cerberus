@@ -65,7 +65,7 @@ run autogen
 run configure
 
 #+begin_src sh
-./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg --with-tiff --with-xft --with-xpm --with-gpm=no --with-imagemagick --with-x-toolkit=yes --with-modules --with-native-compilation --with-pgtk --with-tree-sitter --without-pop --prefix=/usr/local
+./configure --with-dbus --with-gif --with-jpeg --with-png --with-rsvg --with-tiff --with-xft --with-xpm --with-gpm=no --with-imagemagick --with-modules --with-native-compilation --with-pgtk --with-tree-sitter --without-pop --prefix=/usr/local
 #+end_src
 
 ** make  
