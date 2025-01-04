@@ -128,7 +128,6 @@ and hot-swap to it for playback in virtual_oss(8):
 mixer -d pcm3 -V /dev/vdsp.ctl:play
 #+end_src
 
-
 ** obs
 
 under sources click add select
