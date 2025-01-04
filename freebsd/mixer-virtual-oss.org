@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* mixer and virtual oss
+
+Suppose virtual_oss(8) is running with /dev/vdsp.ctl as its control
+device, and pcm1 as the playback device.
+
+Change the default device to pcm3,
+and hot-swap to it for playback in virtual_oss(8):
+
+#+begin_src sh
+mixer -d pcm3 -V /dev/vdsp.ctl:play
+#+end_src
