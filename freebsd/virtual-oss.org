@@ -8,6 +8,7 @@ virtual oss to record sndio audio in obs studio
 #+begin_src sh
 sudo pkg install virtual_oss
 #+end_src
+
 ** cuse boot loader.conf
 
 add cuse_load="YES" loader.conf using sysrc
