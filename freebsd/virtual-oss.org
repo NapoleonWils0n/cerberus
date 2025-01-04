@@ -98,6 +98,12 @@ sndiod_enable="YES"
 
 ** virtual_oss_cmd
 
+the issue with using the virtual_oss_cmd 
+is that it doesnt work with the multimedia keys
+
+so its better to use the mixer command instead
+see next section
+
 speakers
 
 #+begin_src sh
@@ -109,6 +115,19 @@ headphones
 #+begin_src sh
 virtual_oss_cmd /dev/vdsp.ctl -P /dev/dsp1
 #+end_src
+
+** mixer virtual oss
+
+Suppose virtual_oss(8) is running with /dev/vdsp.ctl as its control
+device, and pcm1 as the playback device.
+
+Change the default device to pcm3,
+and hot-swap to it for playback in virtual_oss(8):
+
+#+begin_src sh
+mixer -d pcm3 -V /dev/vdsp.ctl:play
+#+end_src
+
 
 ** obs
 
