@@ -214,6 +214,275 @@ doas podman run --rm --os=linux --net=host alpine cat /etc/os-release | head -1
 doas podman run --os=linux --net=host -it docker.io/library/alpine /bin/sh
 #+end_src
 
+** ubuntu
+
+#+begin_src sh
+doas podman pull --os=linux docker.io/library/ubuntu:latest
+#+end_src
+
+#+begin_src sh
+doas podman run --os=linux --net=host -it docker.io/library/ubuntu:latest /bin/bash
+#+end_src
+
+*** Fix APT package manager
+
+Run the following command as root
+
+#+begin_src sh
+printf "APT::Cache-Start 251658240;" > /etc/apt/apt.conf.d/00aptitude
+#+end_src
+
+*** install ping
+
+#+begin_src sh
+apt install iputils-ping
+#+end_src
+
+*** vim-tiny
+
+#+begin_src sh
+apt install vim-tiny
+#+end_src
+
+*** Set locale
+
+#+begin_src sh
+vi /etc/default/locale
+#+end_src
+
++ locale code
+
+#+begin_src sh
+LANG=en_GB.UTF-8
+LANGUAGE=
+LC_CTYPE="en_GB.UTF-8"
+LC_NUMERIC="en_GB.UTF-8"
+LC_TIME="en_GB.UTF-8"
+LC_COLLATE=C
+LC_MONETARY="en_GB.UTF-8"
+LC_MESSAGES="en_GB.UTF-8"
+LC_PAPER="en_GB.UTF-8"
+LC_NAME="en_GB.UTF-8"
+LC_ADDRESS="en_GB.UTF-8"
+LC_TELEPHONE="en_GB.UTF-8"
+LC_MEASUREMENT="en_GB.UTF-8"
+LC_IDENTIFICATION="en_GB.UTF-8"
+LC_ALL=
+#+end_src
+
+*** Shell install
+
+Install the shell our user is going to use \\
+it must match the shell set in the ubuntu /etc/passwd file which we will set up 
+
+Run the following command as root
+
+#+begin_src sh
+apt install zsh 
+#+end_src
+
+*** Copy user and group from Freebsd to Ubuntu
+
+We can just copy the settings for our user from Freebsd passwd file
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+to the passwd file on Ubuntu
+
+#+begin_example
+/usr/local/jails/linux/ubuntu/etc/passwd
+#+end_example
+
+**** Freebsd /etc/passwd 
+
+#+begin_example
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_example
+
+We also need to check that the shell path is correct \\
+change zsh path to /bin/zsh in the jail
+
+Freebsd passwd
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_src
+
+**** ubuntu passwd
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/djwilcox:/bin/zsh
+#+end_src
+
+Check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+Output
+
+#+begin_src sh
+uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+**** copy the group from freebsd to ubuntu
+
+Freebsd /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+Ubuntu /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+**** create the home directory
+
+#+begin_src sh
+mkdir -p /home/djwilcox
+#+end_src
+
+**** chown
+
+#+begin_src sh
+chown -R djwilcox:djwilcox /home/djwilcox
+#+end_src
+
+*** passwd
+
+#+begin_src sh
+passwd djwilcox
+#+end_src
+
+*** sudo set up
+
+#+begin_src sh
+apt install sudo
+#+end_src
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** zshenv
+
+#+begin_src conf
+# ~/.zshenv
+
+# for ZSH
+case "$OSTYPE" in
+  freebsd*)
+  # Path
+  typeset -U PATH path
+  path=("$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR=/var/run/xdg/"${USER}"
+
+  # wayland - uncomment to use wayland
+  export WAYLAND_DISPLAY=wayland-0
+  export QT_QPA_PLATFORM=wayland
+  export GDK_BACKEND=wayland
+  ;;
+  linux*)
+  typeset -U PATH path
+  path=("/opt/resolve/bin" "/bin" "/usr/bin" "$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR="/run/user/`id -u`"
+
+  # dummy-uvm.so for access to the gpu
+  #export LD_PRELOAD="${HOME}"/.config/gpu/dummy-uvm.so
+
+  # wayland - uncomment to use wayland
+  export WAYLAND_DISPLAY=wayland-0
+  export QT_QPA_PLATFORM=wayland
+  export GDK_BACKEND=wayland
+
+  # x11 - comment out to use wayland
+  #export DISPLAY=:0
+  #export QT_QPA_PLATFORM=xcb
+  #export GDK_BACKEND=x11
+  ;;
+esac
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+#+end_src
+
+*** Create the XDG_RUNTIME_DIR directory
+
+#+begin_src sh
+sudo mkdir -p /var/run/user/"$(id -u)"
+#+end_src
+
+Chown the directory 
+
+#+begin_src sh
+sudo chown -R "${USER}":"$(id -u)" /var/run/user/"$(id -u)"
+#+end_src
+
+Chmod the directory
+
+#+begin_src sh
+sudo chmod 700 /var/run/user/"$(id -u)"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** fix
+
+[[https://superuser.com/questions/1803992/getting-this-error-failed-to-take-etc-passwd-lock-invalid-argument#comment2829160_1803992]]
+
+#+begin_src sh
+sudo mv /var/lib/dpkg/info /var/lib/dpkg/info_silent
+sudo mkdir /var/lib/dpkg/info
+sudo apt-get update
+sudo apt-get -f install
+sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_silent
+sudo rm -rf /var/lib/dpkg/info
+sudo mv /var/lib/dpkg/info_silent /var/lib/dpkg/info
+sudo apt-get update
+sudo apt-get upgrade
+#+end_src
+
+*** mount
+
+#+begin_src sh
+doas podman run --os=linux --net=host -v /var/run/xdg/djwilcox:/var/run/user/1001 -it docker.io/library/ubuntu:latest /bin/bash
+#+end_src
+
 ** docker hub
 
 create an account on docker hub
