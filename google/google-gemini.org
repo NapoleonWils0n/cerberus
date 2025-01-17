@@ -1,0 +1,96 @@
+#+STARTUP: content
+* google gemini
+** maps
+*** google map
+
+#+begin_example
+create a google map showing st johns gate in london
+#+end_example
+
+*** google map csv
+
+#+begin_example
+create a csv file with the location of st johns gate london
+#+end_example
+
+#+begin_example
+create a csv file with the address, latitude and longitude of st johns gate london
+#+end_example
+
+#+begin_example
+create a csv file with the address, latitude and longitude of st johns gate london, and a short description
+#+end_example
+
+#+begin_example
+create a csv file with the address, latitude and longitude of st johns gate london and the charterhouse
+#+end_example
+
+#+begin_example
+create a csv file with the address, latitude and longitude and a short description of st johns gate london and the charterhouse
+#+end_example
+
+*** google map kml
+
+#+begin_example
+create a kml file with the location of st johns gate london
+#+end_example
+
+*** google map chart
+
+#+begin_example
+create a chart showing the best pubs near st pauls london
+#+end_example
+
+** youtube
+
+#+begin_example
+show me the section of this video https://www.youtube.com/watch?v=vmEKGDd07oI about almiron
+#+end_example
+
+#+begin_example
+give me a link to the time in this video 'https://www.youtube.com/watch?v=vmEKGDd07oI' about almiron
+#+end_example
+
+#+begin_example
+give me a summary of this video https://www.youtube.com/watch?v=vmEKGDd07oI
+#+end_example
+
+#+begin_example
+give me timestamps to the key moments in this video https://www.youtube.com/watch?v=vmEKGDd07oI
+#+end_example
+
+#+begin_example
+show me the section of this video https://www.youtube.com/watch?v=vmEKGDd07oI about almiron with a link to the section with a timestamp
+#+end_example
+
+#+begin_example
+key moments in this video https://www.youtube.com/watch?v=VS2qu4g4cHs
+#+end_example
+
+#+begin_example
+timestamps for the key moments in this video https://www.youtube.com/watch?v=VS2qu4g4cHs
+#+end_example
+
+#+begin_example
+timestamps for the key moments in this video https://www.youtube.com/watch?v=VS2qu4g4cHs and replace "The Youtuber" in the response with Roobenstein
+#+end_example
+
+#+begin_example
+create links with timestamps for the key moments in this video 'https://www.youtube.com/watch?v=VS2qu4g4cHs' and replace "The Youtuber" in the response with Roobenstein
+#+end_example
+
+#+begin_example
+create links with timestamps for the key moments in this video 'https://www.youtube.com/watch?v=vmEKGDd07oI' and replace "The Youtuber" in the response with Matty
+#+end_example
+
+#+begin_example
+create links with timestamps for the key moments in this video 'https://www.youtube.com/watch?v=vmEKGDd07oI' and replace "The Youtuber" in the response with the name of the channel
+#+end_example
+
+#+begin_example
+create urls links with timestamps to the key moments in this video https://www.youtube.com/watch?v=vmEKGDd07oI and then replace "The Youtuber" in the response with the name of the channel
+#+end_example
+
+#+begin_example
+give me a summary of this video https://www.youtube.com/watch?v=vmEKGDd07oI
+#+end_example

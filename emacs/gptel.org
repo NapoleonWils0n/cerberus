@@ -1,0 +1,50 @@
+#+STARTUP: content
+* gptel
+** resources
+
+[[https://github.com/karthink/gptel]]
+
+** init.el
+
+#+begin_src sh
+vi ~/.config/emacs/init.el
+#+end_src
+
+#+begin_src elisp
+;; ----------------------------------------------------------------------------------
+;; gptel
+;; ----------------------------------------------------------------------------------
+
+(require 'auth-source)
+(add-to-list 'auth-sources (expand-file-name ".authinfo" user-emacs-directory))
+
+(require 'gptel)
+(require 'gptel-curl)
+(require 'gptel-transient)
+(require 'gptel-gemini)
+
+
+(setq-default gptel-default-mode 'org-mode
+              gptel-post-response-functions #'gptel-end-of-response
+              gptel-model 'gemini-1.5-flash
+              gptel-backend (gptel-make-gemini "Gemini"
+                              :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                              :stream t))
+
+
+;; display Gemini and Buffer List in same window
+(add-to-list 'display-buffer-alist
+   '("^*Gemini*" display-buffer-same-window))
+#+end_src
+
+** authinfo
+
+[[https://aistudio.google.com/app/apikey]]
+
+#+begin_src 
+vi ~/.config/emacs/.authinfo
+#+end_src
+
+#+begin_src conf
+machine generativelanguage.googleapis.com password token
+#+end_src
