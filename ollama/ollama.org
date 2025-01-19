@@ -1,0 +1,81 @@
+#+STARTUP: content
+* ollama
+** install
+
+#+begin_src sh
+doas pkg install ollama
+#+end_src
+
+** run ollama
+
+To run ollama, plese open 2 terminals.
+
+1. In the first terminal, please run:
+
+#+begin_src sh
+OLLAMA_NUM_PARALLEL=1 OLLAMA_DEBUG=1 LLAMA_DEBUG=1 ollama start
+#+end_src   
+
+2. In the second terminal pull the model you want to install
+
+** deepseek-coder
+
+[[https://ollama.com/library/deepseek-coder]]
+
+*** pull 
+
+#+begin_src sh
+ollama pull deepseek-coder
+#+end_src
+
+*** run
+
+#+begin_src sh
+ollama run deepseek-coder
+#+end_src
+
+** mistral
+
+[[https://ollama.com/library/mistral]]
+
+*** pull 
+
+#+begin_src sh
+ollama pull mistral
+#+end_src
+
+*** run
+
+#+begin_src sh
+ollama run mistral:latest
+#+end_src
+
+** zephyr
+
+[[https://ollama.com/library/zephyr]]
+
+*** pull 
+
+#+begin_src sh
+ollama pull zephyr
+#+end_src
+
+*** run
+
+#+begin_src sh
+ollama run zephyr
+#+end_src
+
+** kill the ollama server
+
+check if ollama is running
+
+#+begin_src sh
+pgrep ollama
+#+end_src
+
+kill ollama
+
+#+begin_src sh
+pkill ollama
+#+end_src
