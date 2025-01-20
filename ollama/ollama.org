@@ -18,49 +18,66 @@ OLLAMA_NUM_PARALLEL=1 OLLAMA_DEBUG=1 LLAMA_DEBUG=1 ollama start
 
 2. In the second terminal pull the model you want to install
 
-** deepseek-coder
+** models
+*** deepseek-r1
+
+[[https://ollama.com/library/deepseek-r1:7b]]
+
+**** pull 
+
+#+begin_src sh
+ollama pull deepseek-r1:7b
+#+end_src
+
+**** run
+
+#+begin_src sh
+ollama run deepseek-r1:7b
+#+end_src
+
+*** deepseek-coder
 
 [[https://ollama.com/library/deepseek-coder]]
 
-*** pull 
+**** pull 
 
 #+begin_src sh
 ollama pull deepseek-coder
 #+end_src
 
-*** run
+**** run
 
 #+begin_src sh
 ollama run deepseek-coder
 #+end_src
 
-** mistral
+*** mistral
 
 [[https://ollama.com/library/mistral]]
 
-*** pull 
+**** pull 
 
 #+begin_src sh
 ollama pull mistral
 #+end_src
 
-*** run
+**** run
 
 #+begin_src sh
 ollama run mistral:latest
 #+end_src
 
-** zephyr
+*** zephyr
 
 [[https://ollama.com/library/zephyr]]
 
-*** pull 
+**** pull 
 
 #+begin_src sh
 ollama pull zephyr
 #+end_src
 
-*** run
+**** run
 
 #+begin_src sh
 ollama run zephyr
