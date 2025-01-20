@@ -66,19 +66,6 @@ ollama pull zephyr
 ollama run zephyr
 #+end_src
 
-** codellama
-*** pull
-
-#+begin_src sh
-ollama pull codellama
-#+end_src
-
-*** run
-
-#+begin_src sh
-ollama run codellama
-#+end_src
-
 ** kill the ollama server
 
 check if ollama is running
