@@ -1,0 +1,210 @@
+#+STARTUP: content
+* google search
+** Boolean Operators
+
+To perform advanced queries, it is necessary to understand the Boolean operators
+AND, OR, and NOT.
+
+The plus symbol (+) forces the inclusion of the word that follows it
+
+Another common Boolean operator is NOT. Functionally the opposite of the AND
+operator, the NOT operator excludes a word from a search.
+The best way to use this operator is to preface a search word with the minus sign (–). 
+
+A less common and sometimes more confusing Boolean operator is OR.The OR
+operator, represented by the pipe symbol ( | )or simply the word OR in uppercase letters,
+instructs Google to locate either one term or another in a query
+
+Google’s cut-and-dried approach to combining Boolean operators is still very confusing
+to the reader. Fortunately, Google is not offended (or affected by) parenthesis.The previous
+query can also be submitted as
+intext:(password | passcode) intext:(username | userid | user) ﬁletype:csv
+
+** operators
+
+#+begin_example
++ intitle, allintitle 
++ inurl, allinurl
++ location
++ allintext
++ site
++ link
++ inanchor
++ daterange
++ cache
++ info
++ related
++ author
++ deﬁne
+#+end_example
+
+** search
+*** location
+
+[[https://www.google.com/search?q=location++%22barbican%22]]
+
+**** url enncoded
+
+#+begin_example
+https://www.google.com/search?q=location++%22barbican%22
+#+end_example
+
+**** unencoded
+
+#+begin_example
+https://www.google.com/search?q=location++"barbican"
+#+end_example
+
+**** google base search
+
+#+begin_example
+https://www.google.com/search?q=
+#+end_example
+
+**** query
+
+url encoded
+
+#+begin_example
+location++%22barbican%22
+#+end_example
+
+unencoded
+
+#+begin_example
+location++"barbican"
+#+end_example
+
+*** news
+
+[[https://www.google.com/search?q=location++%22barbican%22&tbm=nws]]
+
+**** url enncoded
+
+#+begin_example
+https://www.google.com/search?q=location++%22barbican%22&tbm=nws
+#+end_example
+
+**** unencoded
+
+#+begin_example
+https://www.google.com/search?q=location++"barbican"&tbm=nws
+#+end_example
+
+**** google base search
+
+#+begin_example
+https://www.google.com/search?q=
+#+end_example
+
+**** query
+
+url encoded
+
+#+begin_example
+location++%22barbican%22
+#+end_example
+
+unencoded
+
+#+begin_example
+location++"barbican"
+#+end_example
+
++ search google news
+
+#+begin_example
+&tbm=nws
+#+end_example
+
+*** images
+
+[[https://www.google.com/search?q=location++%22barbican%22&udm=2]]
+
+**** url enncoded
+
+#+begin_example
+https://www.google.com/search?q=location++%22barbican%22&udm=2
+#+end_example
+
+**** unencoded
+
+#+begin_example
+https://www.google.com/search?q=location++"barbican"&udm=2
+#+end_example
+
+**** google base search
+
+#+begin_example
+https://www.google.com/search?q=
+#+end_example
+
+**** query
+
+url encoded
+
+#+begin_example
+location++%22barbican%22
+#+end_example
+
+unencoded
+
+#+begin_example
+location++"barbican"
+#+end_example
+
++ images
+
+#+begin_example
+&udm=2
+#+end_example
+
+*** maps
+
+[[https://www.google.com/maps/search/barbican]]
+
+#+begin_example
+https://www.google.com/maps/search/barbican
+#+end_example
+
+*** video
+
+[[https://www.google.com/search?q=location++%22barbican%22&udm=7]]
+
+**** url enncoded
+
+#+begin_example
+https://www.google.com/search?q=location++%22barbican%22&udm=7
+#+end_example
+
+**** unencoded
+
+#+begin_example
+https://www.google.com/search?q=location++"barbican"&udm=7
+#+end_example
+
+**** google base search
+
+#+begin_example
+https://www.google.com/search?q=
+#+end_example
+
+**** query
+
+url encoded
+
+#+begin_example
+location++%22barbican%22
+#+end_example
+
+unencoded
+
+#+begin_example
+location++"barbican"
+#+end_example
+
++ search google video
+
+#+begin_example
+&udm=7
+#+end_example
