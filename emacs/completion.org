@@ -6,6 +6,10 @@
 M-TAB
 #+end_example
 
+#+begin_example
+M-C-i
+#+end_example
+
 [[https://orgmode.org/manual/Completion.html]]
 
 Complete word at point.
