@@ -1,0 +1,97 @@
+:PROPERTIES:
+:GPTEL_MODEL: deepseek-r1:7b
+:GPTEL_BACKEND: Ollama
+:GPTEL_SYSTEM: You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.
+:GPTEL_BOUNDS: ((1463 . 5329))
+:END:
+
+*** prepend this url https://www.google.com/maps/@?api=1&map_action=pano&viewpoint= to each line of the text below which are a list of latitude and longitude coordinates. dont modify the url or the input text, dont encode the url and dont try and write a script. output each line of input with the url prepended as plain text with each result on a new line
+:PROPERTIES:
+:GPTEL_TOPIC: prepend-this-url-https://www.google.com/maps/@?api
+:END:
+
+51.532490,-0.111180
+51.5304533,-0.1130917
+51.523601,-0.116237
+51.523470,-0.106450
+51.522866,-0.105414
+51.525067,-0.112352
+51.52812,-0.1105
+51.5258212,-0.10932600
+51.524889,-0.10897900
+51.5226,-0.11047
+51.525637,-0.10408470
+51.5246523,-0.1059067
+51.52649,-0.10453
+51.5233028,-0.1039121
+51.518313,-0.10325600
+51.522976,-0.10568400
+51.522026,-0.10273400
+51.528154,-0.109509
+51.531480,-0.105850
+51.528947,-0.108932
+51.529444,-0.106111
+51.5196434,-0.1062413
+51.518695,-0.100613
+51.525833,-0.10776500
+51.51888,-0.09967
+51.51784,-0.10027
+51.523560,-0.105706
+51.522827,-0.103296
+51.5223,-0.1091
+51.521305,-0.10000400
+51.522814,-0.10663800
+51.520907,-0.10318340
+51.525371,-0.10746750
+51.525213,-0.10672500
+51.524762,-0.114056
+51.521124,-0.10512890
+51.5212426,-0.1063348
+
+
+<think>
+Okay, so the user has given me a task where I need to prepend a specific URL to each line of text containing latitude and longitude coordinates. Let's break this down.
+
+First, the URL they provided is https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=. I notice that it uses placeholders for the viewpoint parameters, which are exactly what the coordinates provide—latitude and longitude. So, each line of the input text has these two numbers, which should replace the viewpoint part.
+
+Looking at the input, there's a block of properties with some lines containing coordinates separated by commas. My job is to take each coordinate pair, remove any existing viewpoint parameters (if present), and add the URL before each pair.
+
+Wait, but in this case, all the lines are just plain numbers without any other text, so I don't have to worry about existing viewpoints. It's straightforward: prepend the URL to each line as is.
+
+I also need to make sure that I don't modify the URL or the input text at all. The output should be each coordinate line prefixed with the URL, and each result on a new line without any additional text or encoding.
+
+Hmm, so for example, taking the first coordinate "51.532490,-0.111180", I just need to add the URL before it, making sure there's no space between the URL and the first digit of the latitude.
+
+I should also ensure that each modified line is on its own new line without any extra spaces or formatting. Since the user doesn't want a script or extra code, just plain text with each coordinate line prefixed correctly.
+
+Alright, so I'll go through each line in the input and prepend the URL to it, ensuring each one ends up on a separate line as required.
+</think>
+
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.532490,-0.111180
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5304533,-0.1130917
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.523601,-0.116237
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.523470,-0.106450
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.522866,-0.105414
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.525067,-0.112352
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.52812,-0.1105
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5258212,-0.10932600
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.524889,-0.10897900
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5226,-0.11047
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.525637,-0.10408470
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5246523,-0.1059067
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.52649,-0.10453
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5233028,-0.1039121
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.518313,-0.10325600
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.522976,-0.10568400
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.522026,-0.10273400
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.528154,-0.109509
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.531480,-0.105850
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.528947,-0.108932
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5246523,-0.1059067
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.528154,-0.109509
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.531480,-0.105850
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.528947,-0.108932
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.52649,-0.10453
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=51.5233028,-0.1039121
+
+
