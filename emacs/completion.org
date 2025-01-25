@@ -24,12 +24,6 @@ After ‘#+’, complete the special keywords like ‘TYP_TODO’ or file-specif
 After ‘STARTUP’ keyword, complete startup items.
 When point is anywhere else, complete dictionary words using Ispell. 
 
-** ispell complete word
-
-#+begin_example
-C-M-i
-#+end_example
-
 ** hippie expand
 
 #+begin_example
