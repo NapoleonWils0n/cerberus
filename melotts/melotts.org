@@ -1,0 +1,111 @@
+#+STARTUP: content
+* melotts
+** rust install
+
+#+begin_src sh
+sudo apt install git build-essential curl pkg-config libssl-dev
+#+end_src
+
+#+begin_src sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
+
+This tutorial uses the default option 1. 
+
+Next, run the following command to add the Rust toolchain directory to the PATH environment variable:
+
+#+begin_src sh
+source $HOME/.cargo/env
+#+end_src
+
+Verify the Rust installation by requesting the version:
+
+#+begin_src sh
+rustc --version
+#+end_src
+
+** zshenv
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+#+begin_src conf
+typeset -U PATH path
+path=( "$HOME/.cargo/bin" "/bin" "/usr/bin" "$path[@]")
+export PATH
+#+end_src
+
+** miniconda
+
+[[https://docs.anaconda.com/miniconda/install/#quick-command-line-install]]
+
+#+begin_src sh
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+#+end_src
+
+activate miniconda
+
+#+begin_src sh
+source ~/miniconda3/bin/activate
+#+end_src
+
+create the python env
+
+#+begin_src sh
+conda create -n melotts python=3.10 --yes
+conda activate melotts
+python --version
+#+end_src
+
+** git clone MeloTTS
+
+#+begin_src sh
+git clone https://github.com/myshell-ai/MeloTTS.git
+cd MeloTTS
+#+end_src
+
+** melotss install
+
+#+begin_src sh
+pip install -e .
+python -m unidic download
+#+end_src
+
+** melo command line
+
+this step will download additonal packages
+
+#+begin_src sh
+melo "Text to read" output.wav
+#+end_src
+
+** melo-ui
+
+this step will download additonal packages
+
+#+begin_src sh
+melo-ui
+#+end_src
+
+** conda deactivate melotts
+
+#+begin_src sh
+conda deactivate melotts
+#+end_src
+
+** conda remove melotts
+
+#+begin_src sh
+conda remove -n melotts --all
+#+end_src
+
+** mecab install
+
+#+begin_src sh
+sudo apt install mecab libmecab-dev
+#+end_src
+
