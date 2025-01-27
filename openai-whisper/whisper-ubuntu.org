@@ -4,6 +4,24 @@
 
 [[https://github.com/openai/whisper]]
 
+** miniconda
+
+[[https://docs.anaconda.com/miniconda/install/#quick-command-line-install]]
+
+#+begin_src sh
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+#+end_src
+
+activate miniconda
+
+#+begin_src sh
+source ~/miniconda3/bin/activate
+#+end_src
+
+
 ** whisperx conda install
 
 #+begin_src sh
@@ -13,3 +31,9 @@ conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c n
 pip install whisperx
 #+end_src
 
+** usage
+
+#+begin_src sh
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate whisperx
+#+end_src
