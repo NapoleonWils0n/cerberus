@@ -72,7 +72,7 @@ doas echo "net.inet.ip.forwarding=1" >> /etc/sysctl.conf
 doas cp -a /usr/local/share/examples/vm-bhyve /vm/.templates
 #+end_src
 
-** doas
+*** doas
 
 edit doas.conf and add a rule for the vm command
 
