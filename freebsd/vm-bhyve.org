@@ -110,6 +110,8 @@ doas vm create -t ubuntu -s 40G myubuntu
 
 ** vm install
 
+use the -f option to run the vm in the current terminal
+
 #+begin_src sh
 doas vm install -f myubuntu ubuntu-24.04.1-live-server-amd64.iso
 #+end_src
