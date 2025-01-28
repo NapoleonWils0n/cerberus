@@ -24,7 +24,7 @@ doas pkg install bhyve-firmware grub2-bhyve edk2-bhyve vm-bhyve-devel
 
 #+begin_src sh
 doas zfs create -o mountpoint=/vm zroot/vm
-doas zfs create -o mountpoint=/vm/iso zroot/vm/.iso
+doas zfs create -o mountpoint=/vm/.iso zroot/vm/iso
 #+end_src
 
 ** rc.conf
@@ -43,16 +43,24 @@ kldload vmm nmdm
 
 ** networking
 
+gateway enable
+
+#+begin_src sh
+doas sysrc gateway_enable=YES
+#+end_src
+
 sysctl 
 
 #+begin_src sh
 doas sysctl net.link.tap.up_on_open=1
+doas sysctl net.inet.ip.forwarding=1
 #+end_src
 
 set option permanently
 
 #+begin_src sh
 doas echo "net.link.tap.up_on_open=1" >> /etc/sysctl.conf
+doas echo "net.inet.ip.forwarding=1" >> /etc/sysctl.conf
 #+end_src
 
 ** copy vm-bhyve config into places
