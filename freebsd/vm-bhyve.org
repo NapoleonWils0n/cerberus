@@ -1,0 +1,115 @@
+#+STARTUP: content
+* byhve linux
+** resource
+
+[[https://github.com/churchers/vm-bhyve]]
+
+[[https://vermaden.wordpress.com/2023/08/18/freebsd-bhyve-virtualization/]]
+
+[[https://i-bsd.com/freebsd-vm-bhyve-linux/]]
+
+[[https://wiki.freebsd.org/chengcui/install_Ubuntu22.04_VM_via_bhyve]]
+
+[[https://www.cyberciti.biz/faq/how-to-install-linux-vm-on-freebsd-using-bhyve-and-zfs/]]
+
+[[https://www.davd.io/install-ubuntu-on-freebsd-with-bhyve/]]
+
+** packages
+
+#+begin_src sh
+doas pkg install bhyve-firmware grub2-bhyve edk2-bhyve vm-bhyve-devel
+#+end_src
+
+** zfs dataset
+
+#+begin_src sh
+doas zfs create -o mountpoint=/vm zroot/vm
+doas zfs create -o mountpoint=/vm/iso zroot/vm/iso
+#+end_src
+
+** rc.conf
+
+#+begin_src sh
+doas sysrc kld_list+="vmm nmdm"
+doas sysrc vm_enable=YES
+doas sysrc vm_dir="zfs:zroot/vm"
+#+end_src
+
+** kldload
+
+#+begin_src sh
+kldload vmm nmdm
+#+end_src
+
+** networking
+
+sysctl 
+
+#+begin_src sh
+doas sysctl net.link.tap.up_on_open=1
+#+end_src
+
+set option permanently
+
+#+begin_src sh
+doas echo "net.link.tap.up_on_open=1" >> /etc/sysctl.conf
+#+end_src
+
+** copy vm-bhyve config into places
+
+#+begin_src sh
+doas cp -a /usr/local/share/examples/vm-bhyve /vm/.templates
+#+end_src
+
+** doas
+
+edit doas.conf and add a rule for the vm command
+
+#+begin_src sh
+doas vi /usr/local/etc/doas.conf
+#+end_src
+
+#+begin_src conf
+# vm-bhyve
+permit nopass :djwilcox cmd vm
+#+end_src
+
+** service vm start
+
+#+begin_src sh
+doas service vm start
+#+end_src
+
+** vm init
+
+#+begin_src sh
+doas vm init
+#+end_src
+
+** networking
+
+#+begin_src sh
+doas vm switch create public
+doas vm switch add public lagg0
+#+end_src
+
+** fetch iso
+
+i found the vm iso command stopped downloading the iso part way through,
+so instead i used fetch to download the iso
+
+#+begin_src sh
+doas fetch -o /vm/iso/ubuntu-24.04.1-live-server-amd64.iso 'https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso'
+#+end_src
+
+** vm create
+
+#+begin_src sh
+doas vm create -t ubuntu -s 40G myubuntu
+#+end_src
+
+** vm install
+
+#+begin_src sh
+doas vm install -f myubuntu ubuntu-24.04.1-live-server-amd64.iso
+#+end_src
