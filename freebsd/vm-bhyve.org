@@ -105,7 +105,7 @@ doas fetch -o /vm/iso/ubuntu-24.04.1-live-server-amd64.iso 'https://releases.ubu
 ** vm create
 
 #+begin_src sh
-doas vm create -t ubuntu -s 40G myubuntu
+doas vm create -t ubuntu -s 40G ubuntu
 #+end_src
 
 ** vm install
@@ -113,5 +113,5 @@ doas vm create -t ubuntu -s 40G myubuntu
 use the -f option to run the vm in the current terminal
 
 #+begin_src sh
-doas vm install -f myubuntu ubuntu-24.04.1-live-server-amd64.iso
+doas vm install -f ubuntu ubuntu-24.04.1-live-server-amd64.iso
 #+end_src
