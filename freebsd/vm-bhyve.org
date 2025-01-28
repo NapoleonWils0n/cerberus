@@ -24,7 +24,7 @@ doas pkg install bhyve-firmware grub2-bhyve edk2-bhyve vm-bhyve-devel
 
 #+begin_src sh
 doas zfs create -o mountpoint=/vm zroot/vm
-doas zfs create -o mountpoint=/vm/iso zroot/vm/iso
+doas zfs create -o mountpoint=/vm/iso zroot/vm/.iso
 #+end_src
 
 ** rc.conf
@@ -99,7 +99,31 @@ i found the vm iso command stopped downloading the iso part way through,
 so instead i used fetch to download the iso
 
 #+begin_src sh
-doas fetch -o /vm/iso/ubuntu-24.04.1-live-server-amd64.iso 'https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso'
+doas fetch -o /vm/.iso/ubuntu-24.04.1-live-server-amd64.iso 'https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso'
+#+end_src
+
+** find number of cpu's
+
+find the number of cpu's
+
+#+begin_src sh
+sysctl kern.sched.topology_spec
+#+end_src
+
+** vm config
+
+#+begin_src sh
+doas vi /vm/.templates/ubuntu.conf
+#+end_src
+
+#+begin_src conf
+loader="grub"
+cpu=6
+memory=10G
+network0_type="virtio-net"
+network0_switch="public"
+disk0_type="virtio-blk"
+disk0_name="disk0.img"
 #+end_src
 
 ** vm create
