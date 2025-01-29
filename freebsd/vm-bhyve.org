@@ -136,21 +136,7 @@ grub_run_partition="2"
 grub_run_dir="/grub"
 #+end_src
 
-*** vm create
-
-#+begin_src sh
-doas vm create -t ubuntu -s 40G ubuntu
-#+end_src
-
-** vm install
-
-use the -f option to run the vm in the current terminal
-
-#+begin_src sh
-doas vm install -f ubuntu ubuntu-24.04.1-live-server-amd64.iso
-#+end_src
-
-** uefi notes
+*** uefi notes
 
 You can use UEFI and add uefi_vars="yes" with Debian and it will work, no need to edit partition locations. On Ubuntu uefi variables aren't needed but it doesn't hurt.
 
@@ -169,3 +155,17 @@ disk0_dev="sparse-zvol"
 disk0_type="virtio-blk"
 uefi_vars="yes"
 #+end_src
+*** vm create
+
+#+begin_src sh
+doas vm create -t ubuntu -s 40G ubuntu
+#+end_src
+
+** vm install
+
+use the -f option to run the vm in the current terminal
+
+#+begin_src sh
+doas vm install -f ubuntu ubuntu-24.04.1-live-server-amd64.iso
+#+end_src
+
