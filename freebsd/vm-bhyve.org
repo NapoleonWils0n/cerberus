@@ -155,6 +155,7 @@ disk0_dev="sparse-zvol"
 disk0_type="virtio-blk"
 uefi_vars="yes"
 #+end_src
+
 *** vm create
 
 #+begin_src sh
