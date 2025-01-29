@@ -132,7 +132,7 @@ doas vi /vm/.templates/ubuntu.conf
 #+begin_src conf
 loader="grub"
 cpu=6
-memory=10G
+memory=8G
 network0_type="virtio-net"
 network0_switch="public"
 disk0_type="virtio-blk"
