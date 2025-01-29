@@ -149,3 +149,23 @@ use the -f option to run the vm in the current terminal
 #+begin_src sh
 doas vm install -f ubuntu ubuntu-24.04.1-live-server-amd64.iso
 #+end_src
+
+** uefi notes
+
+You can use UEFI and add uefi_vars="yes" with Debian and it will work, no need to edit partition locations. On Ubuntu uefi variables aren't needed but it doesn't hurt.
+
+#+begin_src conf
+loader="uefi"
+cpu=4
+memory=4096M
+network0_type="virtio-net"
+network0_switch="public"
+graphics="yes"
+xhci_mouse="yes"
+graphics_res="1600x900"
+zfs_zvol_opts="volblocksize=128k"
+disk0_name="disk0"
+disk0_dev="sparse-zvol"
+disk0_type="virtio-blk"
+uefi_vars="yes"
+#+end_src
