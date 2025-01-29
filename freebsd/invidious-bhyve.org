@@ -144,41 +144,6 @@ use the -f option to run the vm in the current terminal
 doas vm install -f invidious ubuntu-24.04.1-live-server-amd64.iso
 #+end_src
 
-** vm start
-
-#+begin_src sh
-doas vm start invidious
-#+end_src
-
-console
-
-#+begin_src sh
-doas vm console invidious
-#+end_src
-
-press return and enter your username and password
-
-** vm destroy
-
-#+begin_src sh
-doas vm stop invidious
-doas vm destroy invidious
-#+end_src
-
-alternative method
-
-#+begin_src sh
-ls /dev/vmm
-#+end_src
-
-#+begin_src sh
-crw-------  1 root wheel 0x202 29 Jan 19:41 invidious
-#+end_src
-
-#+begin_src sh
-doas bhyvectl --vm=invidious --destroy
-#+end_src
-
 ** ubuntu
 *** podman
 
@@ -362,8 +327,28 @@ podman-compose up
 
 *** login
 
+open your browser to the address of invidious
+
+[[http://192.168.1.151:3000]]
+
 select login and add a user name and password
-on the next screen add in the time from the clock
+
+on the next screen you have to complete a captcha
+by adding the time shown in the clock
+
+*** invidious vm start
+
+#+begin_src sh
+doas vm start invidious
+#+end_src
+
+console
+
+#+begin_src sh
+doas vm console invidious
+#+end_src
+
+press return and enter your username and password
 
 *** start invidious
 
@@ -387,4 +372,25 @@ podman-compose down
 podman-compose pull
 podman-compose up -d
 podman image prune -f
+#+end_src
+
+*** vm destroy
+
+#+begin_src sh
+doas vm stop invidious
+doas vm destroy invidious
+#+end_src
+
+alternative method
+
+#+begin_src sh
+ls /dev/vmm
+#+end_src
+
+#+begin_src sh
+crw-------  1 root wheel 0x202 29 Jan 19:41 invidious
+#+end_src
+
+#+begin_src sh
+doas bhyvectl --vm=invidious --destroy
 #+end_src
