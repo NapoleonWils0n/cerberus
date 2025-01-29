@@ -6,13 +6,6 @@
 
 [[https://vermaden.wordpress.com/2023/08/18/freebsd-bhyve-virtualization/]]
 
-[[https://i-bsd.com/freebsd-vm-bhyve-linux/]]
-
-[[https://wiki.freebsd.org/chengcui/install_Ubuntu22.04_VM_via_bhyve]]
-
-[[https://www.cyberciti.biz/faq/how-to-install-linux-vm-on-freebsd-using-bhyve-and-zfs/]]
-
-[[https://www.davd.io/install-ubuntu-on-freebsd-with-bhyve/]]
 ** vm-bhyve setup
 *** packages
 
