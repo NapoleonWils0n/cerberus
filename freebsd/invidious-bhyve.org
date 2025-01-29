@@ -1,0 +1,386 @@
+#+STARTUP: content
+* invidious bhyve
+** vm-bhyve setup
+*** packages
+
+#+begin_src sh
+doas pkg install bhyve-firmware grub2-bhyve edk2-bhyve vm-bhyve-devel
+#+end_src
+
+*** zfs dataset
+
+#+begin_src sh
+doas zfs create -o mountpoint=/vm zroot/vm
+doas zfs create -o mountpoint=/vm/.iso zroot/vm/iso
+doas zfs create -o mountpoint=/vm/.templates zroot/vm/templates
+#+end_src
+
+*** rc.conf
+
+#+begin_src sh
+doas sysrc kld_list+="vmm nmdm"
+doas sysrc vm_enable=YES
+doas sysrc vm_dir="zfs:zroot/vm"
+#+end_src
+
+*** kldload
+
+only needed if you havent rebooted, and not needed after that
+
+#+begin_src sh
+kldload vmm nmdm
+#+end_src
+
+*** networking
+
+gateway enable
+
+#+begin_src sh
+doas sysrc gateway_enable=YES
+#+end_src
+
+sysctl 
+
+#+begin_src sh
+doas sysctl net.link.tap.up_on_open=1
+doas sysctl net.inet.ip.forwarding=1
+#+end_src
+
+set option permanently
+
+#+begin_src sh
+doas echo "net.link.tap.up_on_open=1" >> /etc/sysctl.conf
+doas echo "net.inet.ip.forwarding=1" >> /etc/sysctl.conf
+#+end_src
+
+*** copy vm-bhyve config
+
+#+begin_src sh
+doas cp -a /usr/local/share/examples/vm-bhyve /vm/.templates
+#+end_src
+
+*** doas
+
+edit doas.conf and add a rule for the vm command
+
+#+begin_src sh
+doas vi /usr/local/etc/doas.conf
+#+end_src
+
+#+begin_src conf
+# vm-bhyve
+permit nopass :djwilcox cmd vm
+#+end_src
+
+** vm-bhyve start
+*** service vm start
+
+#+begin_src sh
+doas service vm start
+#+end_src
+
+*** vm init
+
+#+begin_src sh
+doas vm init
+#+end_src
+
+*** networking
+
+#+begin_src sh
+doas vm switch create public
+doas vm switch add public lagg0
+#+end_src
+
+** vm-bhyve create
+*** fetch iso
+
+i found the vm iso command stopped downloading the iso part way through,
+so instead i used fetch to download the iso
+
+#+begin_src sh
+doas fetch -o /vm/.iso/ubuntu-24.04.1-live-server-amd64.iso 'https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso'
+#+end_src
+
+*** find number of cpu's
+
+find the number of cpu's
+
+#+begin_src sh
+sysctl kern.sched.topology_spec
+#+end_src
+
+*** vm config
+
+#+begin_src sh
+doas vi /vm/.templates/invidious.conf
+#+end_src
+
+#+begin_src conf
+loader="grub"
+cpu=4
+memory=4G
+network0_type="virtio-net"
+network0_switch="public"
+disk0_type="virtio-blk"
+disk0_name="disk0.img"
+grub_run_partition="2"
+grub_run_dir="/grub"
+#+end_src
+
+*** vm create
+
+#+begin_src sh
+doas vm create -t invidious -s 60G invidious
+#+end_src
+
+** vm install
+
+use the -f option to run the vm in the current terminal
+
+#+begin_src sh
+doas vm install -f invidious ubuntu-24.04.1-live-server-amd64.iso
+#+end_src
+
+** vm start
+
+#+begin_src sh
+doas vm start invidious
+#+end_src
+
+console
+
+#+begin_src sh
+doas vm console invidious
+#+end_src
+
+press return and enter your username and password
+
+** vm destroy
+
+#+begin_src sh
+doas vm stop invidious
+doas vm destroy invidious
+#+end_src
+
+alternative method
+
+#+begin_src sh
+ls /dev/vmm
+#+end_src
+
+#+begin_src sh
+crw-------  1 root wheel 0x202 29 Jan 19:41 invidious
+#+end_src
+
+#+begin_src sh
+doas bhyvectl --vm=invidious --destroy
+#+end_src
+
+** ubuntu
+*** podman
+
+#+begin_src sh
+sudo apt install git podman podman-compose pwgen
+#+end_src
+
+*** youtube-trusted-session-generator
+
+[[https://github.com/iv-org/youtube-trusted-session-generator]]
+
+#+begin_src sh
+podman run quay.io/invidious/youtube-trusted-session-generator
+#+end_src
+
+*** clone the invidious repository
+
+#+begin_src sh
+git clone https://github.com/iv-org/invidious.git
+#+end_src
+
+change directory in the invidious repository
+
+#+begin_src sh
+cd invidious
+#+end_src
+
+*** edit docker-compose.yml
+
+edit docker-compose.yml
+
+#+begin_src sh
+vi docker-compose.yml
+#+end_src
+
+set vi paste
+
+#+begin_src sh
+:set paste
+#+end_src
+
+paste in the following
+
+#+begin_src conf
+version: "3"
+services:
+
+  invidious:
+    image: quay.io/invidious/invidious:latest
+    # image: quay.io/invidious/invidious:latest-arm64 # ARM64/AArch64 devices
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      # Please read the following file for a comprehensive list of all available
+      # configuration options and their associated syntax:
+      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: kemal
+          password: kemal
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        signature_server: inv_sig_helper:12999
+        visitor_data: CHANGE_ME
+        po_token: CHANGE_ME
+        # external_port:
+        # domain:
+        # https_only: false
+        # statistics_enabled: false
+        hmac_key: "CHANGE_ME!!"
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/trending || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    depends_on:
+      - invidious-db
+
+  inv_sig_helper:
+    image: quay.io/invidious/inv-sig-helper:latest
+    init: true
+    command: ["--tcp", "0.0.0.0:12999"]
+    environment:
+      - RUST_LOG=info
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+  invidious-db:
+    image: docker.io/library/postgres:14
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./config/sql:/config/sql
+      - ./docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
+    environment:
+      POSTGRES_DB: invidious
+      POSTGRES_USER: kemal
+      POSTGRES_PASSWORD: kemal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+
+volumes:
+  postgresdata:
+#+end_src
+
+*** change the ip address
+
+find the lan address of the vm
+
+#+begin_src sh
+ip a
+#+end_src
+
+change the following section from 127.0.0.1
+
+#+begin_src yml
+    ports:
+      - "127.0.0.1:3000:3000"
+#+end_src
+
+to the vm lan ip
+
+#+begin_src yml
+    ports:
+      - "192.168.1.151:3000:3000"
+#+end_src
+
+*** change the following options
+
+#+begin_src yaml
+        hmac_key: "CHANGE_ME!!"
+        visitor_data: CHANGE_ME
+        po_token: CHANGE_ME
+#+end_src
+
+add the visitor_data and po_token you created earlier with the youtube-trusted-session-generator
+
+You must set a random generated value for the parameter hmac_key:!
+On Linux you can generate it using the command
+
+#+begin_src sh
+pwgen 20 1
+#+end_src
+
+pwgen output
+
+#+begin_example
+Ees6vou2IekaipeiCeib
+#+end_example
+
+#+begin_src yaml
+        hmac_key: Ees6vou2IekaipeiCeib
+#+end_src
+
+turn of paste mode in vi
+
+#+begin_src sh
+:set nopaste
+#+end_src
+
+*** podman-compose
+
+make sure you are in the invidious git repository and run podman-compose up
+
+#+begin_src sh
+podman-compose up
+#+end_src
+
+*** login
+
+select login and add a user name and password
+on the next screen add in the time from the clock
+
+*** start invidious
+
+change directory into the invidious git repository
+
+#+begin_src sh 
+podman-compose up -d
+#+end_src
+
+*** stop invidious
+
+change directory into the invidious git repository
+
+#+begin_src sh 
+podman-compose down
+#+end_src
+
+*** update
+
+#+begin_src sh
+podman-compose pull
+podman-compose up -d
+podman image prune -f
+#+end_src
