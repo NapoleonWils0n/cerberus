@@ -87,6 +87,8 @@ doas vm init
 
 *** networking
 
+replace laggo with your network device
+
 #+begin_src sh
 doas vm switch create public
 doas vm switch add public lagg0
