@@ -194,6 +194,8 @@ sudo apt install git podman podman-compose pwgen
 podman run quay.io/invidious/youtube-trusted-session-generator
 #+end_src
 
+copy the tokens
+
 *** clone the invidious repository
 
 #+begin_src sh
