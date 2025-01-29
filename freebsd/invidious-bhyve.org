@@ -366,7 +366,7 @@ change directory into the invidious git repository
 podman-compose down
 #+end_src
 
-*** update
+*** update invidious
 
 #+begin_src sh
 podman-compose pull
