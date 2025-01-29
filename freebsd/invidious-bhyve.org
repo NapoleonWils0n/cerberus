@@ -28,7 +28,7 @@ doas sysrc vm_dir="zfs:zroot/vm"
 only needed if you havent rebooted, and not needed after that
 
 #+begin_src sh
-kldload vmm nmdm
+doas kldload vmm nmdm
 #+end_src
 
 *** networking
