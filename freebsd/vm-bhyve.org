@@ -6,6 +6,8 @@
 
 [[https://vermaden.wordpress.com/2023/08/18/freebsd-bhyve-virtualization/]]
 
+[[https://github.com/churchers/vm-bhyve/issues/550#issuecomment-2216341398]]
+
 ** vm-bhyve setup
 *** packages
 
