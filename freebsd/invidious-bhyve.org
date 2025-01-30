@@ -396,3 +396,9 @@ crw-------  1 root wheel 0x202 29 Jan 19:41 invidious
 #+begin_src sh
 doas bhyvectl --vm=invidious --destroy
 #+end_src
+
+*** podman remove all containers
+
+#+begin_src sh
+podman rmi $(podman images -qa) -f
+#+end_src
