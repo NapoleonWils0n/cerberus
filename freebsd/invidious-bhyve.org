@@ -402,3 +402,7 @@ doas bhyvectl --vm=invidious --destroy
 #+begin_src sh
 podman rmi $(podman images -qa) -f
 #+end_src
+
+#+begin_src sh
+podman system prune --all --force && podman rmi --all --force
+#+end_src
