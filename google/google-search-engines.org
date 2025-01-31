@@ -1,0 +1,117 @@
+#+STARTUP: content
+* google search engines
+** Firefox
+
+open about:config in the Firefox address bar
+
+#+begin_example
+about:config
+#+end_example
+
+enter the following text
+
+#+begin_example
+browser.urlbar.update2.engineAliasRefresh
+#+end_example
+
+and set it to true if it isnt already set
+
+** Google Web
+
+Search Engine Name
+
+#+begin_example
+Google Web
+#+end_example
+
+Engine URL, use %s in place of the search term
+
+#+begin_example
+https://www.google.com/search?q=%s&udm=14
+#+end_example
+
+Alias
+
+#+begin_example
+@web
+#+end_example
+
+** Google Images
+
+Search Engine Name
+
+#+begin_example
+Google Images
+#+end_example
+
+Engine URL, use %s in place of the search term
+
+#+begin_example
+https://www.google.com/search?q=%s&udm=2
+#+end_example
+
+Alias
+
+#+begin_example
+@images
+#+end_example
+
+** Google Video
+
+Search Engine Name
+
+#+begin_example
+Google Video
+#+end_example
+
+Engine URL, use %s in place of the search term
+
+#+begin_example
+https://www.google.com/search?q=%s&udm=7
+#+end_example
+
+Alias
+
+#+begin_example
+@video
+#+end_example
+
+** Google Forums
+
+Search Engine Name
+
+#+begin_example
+Google Forums
+#+end_example
+
+Engine URL, use %s in place of the search term
+
+#+begin_example
+https://www.google.com/search?q=%s&udm=18
+#+end_example
+
+Alias
+
+#+begin_example
+@forums
+#+end_example
+
+** Freebsd Forums
+
+Search Engine Name
+
+#+begin_example
+Freebsd Forums
+#+end_example
+
+Engine URL, use %s in place of the search term
+
+#+begin_example
+https://forums.freebsd.org/search/426937/?q=%s&o=date
+#+end_example
+
+Alias
+
+#+begin_example
+@freebsd
+#+end_example
