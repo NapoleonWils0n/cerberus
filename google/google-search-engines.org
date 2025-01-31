@@ -107,7 +107,7 @@ Freebsd Forums
 Engine URL, use %s in place of the search term
 
 #+begin_example
-https://forums.freebsd.org/search/426937/?q=%s&o=date
+https://forums.freebsd.org/search?q=%s&o=date
 #+end_example
 
 Alias
