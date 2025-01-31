@@ -8,5 +8,5 @@
   <Developer>NapoleonWils0n</Developer>
   <InputEncoding>UTF-8</InputEncoding>
   <moz:SearchForm>https://forums.freebsd.org/search/426915/?q={searchTerms}&o=date</moz:SearchForm>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://raw.githubusercontent.com/NapoleonWils0n/cerberus/refs/heads/master/openseach/freebsd-forums/opensearch.xml"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://raw.githubusercontent.com/NapoleonWils0n/cerberus/refs/heads/master/opensearch/freebsd-forum/opensearch.xml"/>
 </OpenSearchDescription>
