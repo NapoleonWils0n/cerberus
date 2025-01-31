@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+    <ShortName>Freebsd</ShortName>
+    <Description>Search the Freebsd Forum</Description>
+  <Url type="text/html" method="get" template="https://www.youtube.com/feeds/videos.xml?channel_id={searchTerms}"/>
+    <Image height="16" width="16" type="image/vnd.microsoft.icon">https://forums.freebsd.org/favicon.ico</Image>
+  <Developer>NapoleonWils0n</Developer>
+  <InputEncoding>UTF-8</InputEncoding>
+  <moz:SearchForm>https://forums.freebsd.org/search/426915/?q={searchTerms}&o=date</moz:SearchForm>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://raw.githubusercontent.com/NapoleonWils0n/cerberus/refs/heads/master/openseach/freebsd-forums/opensearch.xml"/>
+</OpenSearchDescription>
