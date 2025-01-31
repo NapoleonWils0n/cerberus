@@ -590,6 +590,25 @@ doas pkg install ffmpeg-6.1.2_6,1
 if you already have ffmpeg installed then you have to uninstall it,
 and then install the version of ffmpeg built with poudriere
 
+1 - clean the package cache
+
+#+begin_src sh
+doas pkg clean -a
+#+end_src
+
+2 - force install of new version of ffmpeg
+
+#+begin_src sh
+sudo pkg install -f ffmpeg
+#+end_src
+
+3 - force the install of everything that depends on ffmpeg
+
+#+begin_src sh
+doas pkg install -f $(pkg query '%rn' ffmpeg)
+#+end_src
+
+*** alternate method to reinstall ffmpeg
 **** ffmpeg uninstall
 
 uninstalling ffmpeg will also remove any packages that depend on ffmpeg
