@@ -83,6 +83,22 @@ ollama pull mistral
 ollama run mistral:latest
 #+end_src
 
+*** qwen2.5
+
+[[https://ollama.com/library/qwen2.5:7b]]
+
+**** pull 
+
+#+begin_src sh
+ollama pull qwen2.5:7b
+#+end_src
+
+**** run
+
+#+begin_src sh
+ollama run qwen2.5:7b
+#+end_src
+
 *** zephyr
 
 [[https://ollama.com/library/zephyr]]
