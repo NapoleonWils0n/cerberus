@@ -2,7 +2,7 @@
 * whisper ubuntu
 ** whisper github
 
-[[https://github.com/openai/whisper]]
+[[https://github.com/m-bain/whisperX]]
 
 ** miniconda
 
