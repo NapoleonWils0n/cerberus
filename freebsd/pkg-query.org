@@ -1,0 +1,21 @@
+#+STARTUP: content
+* pkg query
+** query
+
+#+begin_src sh
+pkg query '%Ok : %Ov' ffmpeg
+#+end_src
+
+** rquery
+
+#+begin_src sh
+pkg rquery '%Ok : %Ov' ffmpeg
+#+end_src
+
+That will tell you what options were set on the installed package (pkg-query(8)) and the remote package (pkg-rquery(8)). The cached catalog has to be up to date (pkg-update(8)) but that usually happens automatically anyway.
+
+** diff query rquery 
+
+#+begin_src sh
+diff <(pkg query '%Ok : %Ov' ffmpeg) <(pkg rquery '%Ok : %Ov' ffmpeg) > diff.txt
+#+end_src
