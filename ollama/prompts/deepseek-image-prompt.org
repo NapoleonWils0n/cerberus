@@ -258,8 +258,33 @@ The occupation of the charcter
 **** Location
 ***** Time of day 
 
-what time of day is it
-for example
+Here’s a list of daytime periods with descriptions of lighting conditions:
+
+#+begin_example
+1. Dawn ( Sunrise)
+   - Soft, filtered sunlight filtering through clouds and trees. Hues are warm and slightly golden.
+
+2. Early Morning
+   - Similar to dawn but later in the morning. Still has soft, diffused light with some shadows forming.
+
+3. Mid-Morning
+   - Sunlight is brighter and warmer as the sun peaks above the horizon. Shadows are shorter but still present.
+
+4. Morning ( Midday)
+   - Brightest part of the day, direct sunlight fills open spaces. Can get shaded at midday depending on location.
+
+5. Afternoon ( Late Morning)
+   - Sunlight is consistent and warm with longer shadows as the sun starts to set.
+
+6. Evening ( Early Evening)
+   - Sunlight becomes cooler as the sun sets, casting long shadows. The sky often turns deep orange or pink.
+
+7. Evening
+   - As evening progresses, the light softens further, turning golden and amber, creating beautiful "golden hour" lighting.
+
+8. Twilight ( Late Evening)
+   - The sky is darkened, with a cool, gray or blue hue due to scattered sunlight.
+#+end_example
 
 ***** Indoors
 
@@ -273,6 +298,41 @@ If the scene is outside what is the weather like
 **** Camera
 ***** Camera position
 ***** Camera angle
+
+Here's a comprehensive list of camera angles in photography, along with their descriptions:
+
+#+begin_example
+1. Square Composition: A straight-on shot without tilting or moving the camera.
+
+2. Low Angle: Shots from below eye level, making subjects look down, adding drama.
+
+3. High Angle: Shots from above eye level, making subjects look up.
+
+4. Wide Shot: Captures a broad field of view, encompassing more space.
+
+5. Panoramic View: A wide shot spanning 180 degrees horizontally.
+
+6. Curvilinear Perspective: Diagonal tilt creates effects like converging train tracks.
+
+7. Perspective Distortion: Proportions altered to enhance stretching or compression.
+
+8. Over-the-Shoulder Shot: Used in portrait work for an extra element without moving the subject.
+
+9. Wide Eye Shot: Uses distortion to create artistic emphasis on a subject.
+
+10. Tilted Angle (Left/Right): Camera tilts left or right from the subject line, creating directional interest.
+
+11. Diamonds & Bubbles: Diagonal lines draw attention to specific objects.
+
+12. Averted Gaze: Camera faces the background, suggesting the subject is looking away.
+
+13. Open View: A wide shot focusing on detail without a particular subject point.
+
+14. Aerial Shot: High above ground for bird's eye views, possibly using tilt instead of height.
+
+15. Extreme Wide Angle: Expands field width with distortion, adding visual impact.
+#+end_example
+
 **** Lighting
 ***** Lighting direction
 ***** Kind of lighting
