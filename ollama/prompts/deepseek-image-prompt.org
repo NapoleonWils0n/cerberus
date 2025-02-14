@@ -332,8 +332,6 @@ Here’s a list of daytime periods with descriptions of lighting conditions:
    - The sky is darkened, with a cool, gray or blue hue due to scattered sunlight.
 #+end_example
 
-***** Lighting direction
-***** Kind of lighting
 **** Characters action in the scene
 
 What action is the character doing in the scene
