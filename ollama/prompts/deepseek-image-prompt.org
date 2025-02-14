@@ -1,3 +1,4 @@
+#+STARTUP: content
 :PROPERTIES:
 :GPTEL_MODEL: deepseek-r1:7b
 :GPTEL_BACKEND: Ollama
