@@ -103,6 +103,10 @@ different examples of height of a person
 
 ***** Build
 
+#+begin_example
+Build:
+#+end_example
+
 Here’s a list of common descriptions for human body types and builds, along with brief explanations:
 
 #+begin_example
@@ -120,6 +124,10 @@ Here’s a list of common descriptions for human body types and builds, along wi
 #+end_example
 
 ***** Male Hair styles
+
+#+begin_example
+Male hair:
+#+end_example
 
 Here's a concise list of common male hairstyles with brief descriptions:
 
@@ -150,6 +158,10 @@ also male hair can be parted on the left, center or right
 
 ***** Female hair styles
 
+#+begin_example
+Female hair:
+#+end_example
+
 Some examples of female hair styles
 
 #+begin_example
@@ -174,7 +186,11 @@ Some examples of female hair styles
 10. Unique Styles: Such as Updos with jewels or Statement headwear for a bold finish.
 #+end_example
 
-***** Hair colours
+***** Hair colour
+
+#+begin_example
+Hair colour:
+#+end_example
 
 examples of different hair colours
 
@@ -193,6 +209,10 @@ examples of different hair colours
 #+end_example
 
 ***** Eye colour
+
+#+begin_example
+Eye colour:
+#+end_example
 
 Here’s a list of common human eye colors along with brief descriptions:
 
@@ -220,6 +240,10 @@ Here’s a list of common human eye colors along with brief descriptions:
 
 ***** Skin Tone
 
+#+begin_example
+Skin tone:
+#+end_example
+
 Skin tone is influenced by genetics, environment, and other factors, rather than being directly tied to ethnicity. However, there are general variations in skin tones across different populations:
 
 #+begin_example
@@ -235,6 +259,10 @@ Skin tone is influenced by genetics, environment, and other factors, rather than
 #+end_example
 
 ***** Male Facial Hair
+
+#+begin_example
+Male facial hair:
+#+end_example
 
 example of different types of male facial hair
 
@@ -253,12 +281,18 @@ example of different types of male facial hair
 *** Scene
 **** Location
 ***** Indoors
-
-if the scene is indoors what type of space is it
-
 ****** Lighting
-***** Outside
+
+#+begin_example
+indoor-lighting:
+#+end_example
+
+***** Outdoors
 ****** Lighting
+
+#+begin_example
+outdoor-lighting:
+#+end_example
 
 Here’s a list of daytime periods with descriptions of lighting conditions:
 
@@ -289,6 +323,10 @@ Here’s a list of daytime periods with descriptions of lighting conditions:
 #+end_example
 
 **** Camera angle
+
+#+begin_example
+Camera-angle:
+#+end_example
 
 Here's a comprehensive list of camera angles in photography, along with their descriptions:
 
