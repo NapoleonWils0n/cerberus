@@ -72,7 +72,8 @@ Occupation: Architecture
 
 **** Description
 
-A general discription of the character
+A general discription of the character including age, gender, appearance,
+occupation and whaat they are doing at a particular location
 
 #+begin_example
 Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
@@ -83,6 +84,10 @@ Description: A 35-year-old woman with shoulder-length brown hair and glasses. Sh
 The physical appearance of the character including the following attribute's
 
 ***** Height
+
+#+begin_example
+Height:
+#+end_example
 
 different examples of height of a person
 
