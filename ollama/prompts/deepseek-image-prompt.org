@@ -108,7 +108,7 @@ Here’s a list of common descriptions for human body types and builds, along wi
 6. Average Build: A balanced composition of muscle mass, bone density, and body fat typical for their height.
 #+end_example
 
-***** Male Hair style's
+***** Male Hair styles
 
 Here's a concise list of common male hairstyles with brief descriptions:
 
@@ -134,6 +134,9 @@ Here's a concise list of common male hairstyles with brief descriptions:
 10. Taper Fade: Shorter hair near ears tapering into longer lines behind, offering a stylish contrast between edgy front and sleek back.
 #+end_example
 
+note as men age their hair starts to turn gray,
+thin and recede
+
 ***** Female hair styles
 
 Some examples of female hair styles
@@ -158,6 +161,24 @@ Some examples of female hair styles
 9. Pads: Sleek, modern options that can be shaped for thickness, thinness, or layered effects.
 
 10. Unique Styles: Such as Updos with jewels or Statement headwear for a bold finish.
+#+end_example
+
+***** Hair colours
+
+examples of different hair colours
+
+#+begin_example
+1. Black: natural dark color
+
+2. Brown: from melanogaster genes (darker than blonde)
+
+3. Blonde: light to very light
+
+4. Red: dark or light ruby
+
+5. Gray: various shades depending on age
+
+6. Silver/Grayish: lighter with grays
 #+end_example
 
 ***** Eye colour
