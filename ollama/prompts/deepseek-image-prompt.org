@@ -49,7 +49,7 @@ starting at one and incrementing for each character
 for example:
 
 #+begin_example
-0
+Index: 1
 #+end_example
 
 *** Character
@@ -59,17 +59,7 @@ The name of the character
 for example:
 
 #+begin_example
-John Smith
-#+end_example
-
-**** Gender
-
-The gender of the character
-for example:
-
-#+begin_example
-Male
-Female
+Name: John Smith
 #+end_example
 
 **** Physical appearance
@@ -252,7 +242,11 @@ a handbag, a bag, rucksuck or umbrella
 
 **** Occupation
 
-The occupation of the charcter
+The occupation of the character
+
+#+begin_example
+Occupation: Architecture
+#+end_example
 
 *** Scene
 **** Location
