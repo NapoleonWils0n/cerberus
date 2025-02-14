@@ -1,0 +1,125 @@
+:PROPERTIES:
+:GPTEL_MODEL: deepseek-r1:7b
+:GPTEL_BACKEND: Ollama
+:GPTEL_SYSTEM: You are a large language model and a writing assistant. Respond concisely.
+:GPTEL_BOUNDS: 
+:END:
+
+* Here is a task i would like you to perform
+
+under the heading "input to process" is a list of 20 fictional characters,
+which will be used as text prompts with Microsoft Designer to create images of the characters using artificial intelligence
+
+** Task description
+
+for each of the 20 characters below based on the "Description" text field output the input in the same format and then write an additional detailed sentence on its own line called "Appearance:" describing their facial expression and features in depth, posture and demeanor and append it to the input text.
+
+In the "Appearance:" text field include details about their facial features, skin tone, nose, mouth, colour of the their eyes,
+and appearance of their skin
+
+go through each of the 20 fictional charcters one by one and ouput a response as described above,
+each response should be unique to the character
+
+*** input format
+
+here is an example of the input for one characters which consists of 4 fields of text each on their own line,
+Index:, Name:, Occupation: and Description.
+
+#+begin_example
+Index: 1
+Name: Emma Carter
+Occupation: Interior Designer
+Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
+#+end_example
+
+*** output format
+
+the output format should contain an extra text field on its own line called "Apperance:"
+after the Index:, Name:, Occupation: and Description: text fields
+
+output the reponse in the following format,
+and each line should not have any extra characters added before the text field in the response
+
+** Character Name
+*** Index
+
+The index of the character,
+starting at one and incrementing for each character
+
+for example:
+
+#+begin_example
+0
+#+end_example
+
+*** Character
+**** Name
+
+The name of the character
+for example:
+
+#+begin_example
+John Smith
+#+end_example
+
+**** Gender
+
+The gender of the character
+for example:
+
+#+begin_example
+Male or Female
+#+end_example
+
+**** Physical appearance
+
+The physical appearance of the character including
+
+***** Height
+***** Build
+***** Hair style
+***** Eye colour
+***** Skin Tone
+***** Facial Hair
+**** Clothes
+
+The clothes the character is wearing
+
+***** Accessories
+
+Clothing accessories the character might be holding
+for example:
+
+a handbag, a bag, rucksuck or umbrella
+
+**** Occupation
+
+The occupation of the charcter
+
+*** Scene
+**** Location
+***** Time of day 
+
+what time of day is it
+for example
+
+***** Indoors
+
+if the scene is indoors what type of space is it
+
+***** Outside
+****** Weather
+
+If the scene is outside what is the weather like
+
+**** Camera
+***** Camera position
+***** Camera angle
+**** Lighting
+***** Lighting direction
+***** Kind of lighting
+**** Characters action in the scene
+
+What action is the character doing in the scene
+
+**** Characters position in the scene
