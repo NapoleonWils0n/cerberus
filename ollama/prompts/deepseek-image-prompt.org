@@ -68,19 +68,156 @@ The gender of the character
 for example:
 
 #+begin_example
-Male or Female
+Male
+Female
 #+end_example
 
 **** Physical appearance
 
-The physical appearance of the character including
+The physical appearance of the character including the following attribute's
 
 ***** Height
+
+different examples of height of a person
+
+#+begin_example
+1. Average Height (5'4" to 5'9"): Most people fall within this range. It represents the general average height for adults globally.
+
+2. Tall (5'9" to 6'0"): This is considered above average and often associated with certain cultures or breeds.
+
+3. Very Tall (6'1" to 6'4"): This is significantly taller than average, often seen in families with genetic height advantages.
+
+4. Extremely Tall (Over 6'4" to 7'): These individuals are extremely rare and typically fall into specific ethnic or familial backgrounds.
+#+end_example
+
 ***** Build
-***** Hair style
+
+Here’s a list of common descriptions for human body types and builds, along with brief explanations:
+
+#+begin_example
+1. Overweight: A person who is heavier than average body weight, often carrying excess fat or muscle.
+
+2. Underweight: A person who weighs below average, possibly due to low muscle mass, low body fat, or excessive loss of body fat.
+
+3. Athletic Build: A lean and muscular body type with well-defined muscles and a smaller frame but high stamina and strength.
+
+4. Large Build (Fat)": A person with a broader frame, more body fat, and full, rounded features due to genetics, diet, or lifestyle habits.
+
+5. Small Build (Slim)": A person who is skinnier, taller, and has less body fat, often appearing graceful and aerodynamic.
+
+6. Average Build: A balanced composition of muscle mass, bone density, and body fat typical for their height.
+#+end_example
+
+***** Male Hair style's
+
+Here's a concise list of common male hairstyles with brief descriptions:
+
+#+begin_example
+1. Undercut: A close-cut style where hair is trimmed near the scalp but farther from ears or face, giving an edgy look.
+
+2. Buzzcut: Extremely short cuts over the entire head, typically around 4-6 inches, offering a trendy and clean appearance.
+
+3. Chpole: Shorter on top, cut behind ears with volume at the nape for a stylish, slightly harsher vibe.
+
+4. Back-combed: Hair pulled back in one piece and combed backwards, tapering near the nape for an edgy vintage or cowboy look.
+
+5. Undercut Chpole: A mix of short sidecuts near ears and longer backstyle behind neck for a unique, modern aesthetic.
+
+6. Crew Cut: Very short cut to the scalp with neat styling, often using product for texture and simplicity.
+
+7. Cropped Undercut: Short line from ear to nape on both sides with longer hair behind, creating contrast and volume.
+
+8. Buzzback: A slightly longer buzz than a standard buzzcut, keeping some length at the front for a modern edge.
+
+9. Boxing: Hair cut straight across scalp, adding layers underneath for volume and unique shape, often styled with texture products.
+
+10. Taper Fade: Shorter hair near ears tapering into longer lines behind, offering a stylish contrast between edgy front and sleek back.
+#+end_example
+
+***** Female hair styles
+
+Some examples of female hair styles
+
+#+begin_example
+1. Bob: A short, neatly cut hairstyle that can be straight, curly, or wavy depending on personal preference. It’s sleek and modern.
+
+2. Pics: A popular choice with a side-swept fringe for a casual yet chic look.
+
+3. Bun: Can be low, high, half, or even a mono bun for edgy styling.
+
+4. Updo: Includes styles like buns, French braids, chignons, and can incorporate twists or curls.
+
+5. Wigs: Offer natural-looking options or synthetic alternatives for convenience.
+
+6. Curls: Can be simple or elaborate, depending on the length and curl style desired.
+
+7. Bangs: Add volume and edginess to any hairstyle.
+
+8. Labs (Lobes): A youthful look with various cuts like 50/50 splits or (shoulder-length) styles.
+
+9. Pads: Sleek, modern options that can be shaped for thickness, thinness, or layered effects.
+
+10. Unique Styles: Such as Updos with jewels or Statement headwear for a bold finish.
+#+end_example
+
 ***** Eye colour
+
+Here’s a list of common human eye colors along with brief descriptions:
+
+#+begin_example
+1. Brown Eyes: The most common eye color globally. It can range from fair (light brown) to dark (ocher or deep brown), often reflecting skin tone.
+
+2. Blue Eyes: One of the rarest natural eye colors, typically found in individuals who are carriers of a recessive genetic trait. Blue eyes may also appear greenish-yellow if exposed to bright light or during sunrise.
+
+3. Green Eyes: Another rare eye color, often caused by a mutation in the /autosomal recessive/ gene called /gaia/. Green eyes can look flecked with gold under certain lighting conditions.
+
+4. Gray Eyes: Found in individuals who are either naturally predisposed to it or have their optic nerve injured (retinitis). Gray eyes can also result from age-related cataracts, which cloud the lens of the eye.
+
+5. Hazel Eyes: A lighter gray-green or brown hue, often described as warm and inviting. It is less common than brown or blue but can appear in individuals with specific genetic makeup.
+
+6. amber eyes: A shade of brown that appears warmer than honey or caramel. It’s not as common as brown but can be found in some populations.
+
+7. Brown-Hued Gray (Tinted Gray): This mix of brown and gray gives the appearance of slightly flecked grays, often seen in individuals who are naturally predisposed to gray eyes with a touch of warmth.
+
+8. Opaque Black Eyes: Pure black without any flecks or hints of other colors, often associated with darker skin tones.
+
+9. Pecan Brown Eyes (Golden-Brown): A warm brown that resembles the outer layer of pecans in nuts—warm, inviting, and often associated with certain populations.
+
+10. Sable Gray Eyes: Deeply pigmented gray resembling a lamb’s wool or dead leaves, typically found in individuals with fair skin tones.
+#+end_example
+
 ***** Skin Tone
-***** Facial Hair
+
+Skin tone is influenced by genetics, environment, and other factors, rather than being directly tied to ethnicity. However, there are general variations in skin tones across different populations:
+
+#+begin_example
+1. Light Skin: Often associated with darker-skinned individuals from Africa or the Middle East.
+
+2. Fair Skin: Typically linked to lighter-skinned populations like Europe, East Asia, or Australia.
+
+3. Olive Complexion: A warm, golden-yellow tone found in some Middle Eastern and Mediterranean populations.
+
+4. Brown Skin: Common among African descendants, particularly in regions with significant indigenous populations.
+
+5. Black Skin: Found in West Africa and parts of the diaspora.
+#+end_example
+
+***** Male Facial Hair
+
+example of different types of male facial hair
+
+#+begin_example
+1. Goatee/Facial Hair: A neat trim with stubble or minimal beard.
+
+2. Beard: A longer and fuller style, often styled as straight, curly, or bushy.
+
+3. Moustache: Similar to a beard but shorter, styled in various shapes
+
+4  Stubble: is a common style of facial hair for men, typically consisting of soft, trimmed short hair or stubble
+
+5  Clean-shaven: A close, neatly trimmed face without stubble or beard.
+#+end_example
+
 **** Clothes
 
 The clothes the character is wearing
