@@ -260,10 +260,37 @@ The occupation of the charcter
 
 if the scene is indoors what type of space is it
 
+****** Lighting
 ***** Outside
-****** Weather
+****** Lighting
 
-If the scene is outside what is the weather like
+Here’s a list of daytime periods with descriptions of lighting conditions:
+
+#+begin_example
+1. Dawn ( Sunrise)
+   - Soft, filtered sunlight filtering through clouds and trees. Hues are warm and slightly golden.
+
+2. Early Morning
+   - Similar to dawn but later in the morning. Still has soft, diffused light with some shadows forming.
+
+3. Mid-Morning
+   - Sunlight is brighter and warmer as the sun peaks above the horizon. Shadows are shorter but still present.
+
+4. Morning ( Midday)
+   - Brightest part of the day, direct sunlight fills open spaces. Can get shaded at midday depending on location.
+
+5. Afternoon ( Late Morning)
+   - Sunlight is consistent and warm with longer shadows as the sun starts to set.
+
+6. Evening ( Early Evening)
+   - Sunlight becomes cooler as the sun sets, casting long shadows. The sky often turns deep orange or pink.
+
+7. Evening
+   - As evening progresses, the light softens further, turning golden and amber, creating beautiful "golden hour" lighting.
+
+8. Twilight ( Late Evening)
+   - The sky is darkened, with a cool, gray or blue hue due to scattered sunlight.
+#+end_example
 
 **** Camera angle
 
@@ -299,37 +326,6 @@ Here's a comprehensive list of camera angles in photography, along with their de
 14. Aerial Shot: High above ground for bird's eye views, possibly using tilt instead of height.
 
 15. Extreme Wide Angle: Expands field width with distortion, adding visual impact.
-#+end_example
-
-**** Lighting
-***** Time of day 
-
-Here’s a list of daytime periods with descriptions of lighting conditions:
-
-#+begin_example
-1. Dawn ( Sunrise)
-   - Soft, filtered sunlight filtering through clouds and trees. Hues are warm and slightly golden.
-
-2. Early Morning
-   - Similar to dawn but later in the morning. Still has soft, diffused light with some shadows forming.
-
-3. Mid-Morning
-   - Sunlight is brighter and warmer as the sun peaks above the horizon. Shadows are shorter but still present.
-
-4. Morning ( Midday)
-   - Brightest part of the day, direct sunlight fills open spaces. Can get shaded at midday depending on location.
-
-5. Afternoon ( Late Morning)
-   - Sunlight is consistent and warm with longer shadows as the sun starts to set.
-
-6. Evening ( Early Evening)
-   - Sunlight becomes cooler as the sun sets, casting long shadows. The sky often turns deep orange or pink.
-
-7. Evening
-   - As evening progresses, the light softens further, turning golden and amber, creating beautiful "golden hour" lighting.
-
-8. Twilight ( Late Evening)
-   - The sky is darkened, with a cool, gray or blue hue due to scattered sunlight.
 #+end_example
 
 **** Characters action in the scene
