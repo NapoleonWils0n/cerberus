@@ -5,7 +5,6 @@
 :GPTEL_SYSTEM: You are a large language model and a writing assistant. Respond concisely.
 :GPTEL_BOUNDS: 
 :END:
-
 * Here is a task i would like you to perform
 
 under the heading "input to process" is a list of 20 fictional characters,
