@@ -284,14 +284,14 @@ example of different types of male facial hair
 ****** Lighting
 
 #+begin_example
-indoor-lighting:
+Indoor lighting:
 #+end_example
 
 ***** Outdoors
 ****** Lighting
 
 #+begin_example
-outdoor-lighting:
+Outdoor lighting:
 #+end_example
 
 Here’s a list of daytime periods with descriptions of lighting conditions:
@@ -325,7 +325,7 @@ Here’s a list of daytime periods with descriptions of lighting conditions:
 **** Camera angle
 
 #+begin_example
-Camera-angle:
+Camera angle:
 #+end_example
 
 Here's a comprehensive list of camera angles in photography, along with their descriptions:
