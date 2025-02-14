@@ -266,8 +266,7 @@ if the scene is indoors what type of space is it
 If the scene is outside what is the weather like
 
 **** Camera
-***** Camera position
-***** Camera angle
+***** Camera angles
 
 Here's a comprehensive list of camera angles in photography, along with their descriptions:
 
