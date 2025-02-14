@@ -62,6 +62,22 @@ for example:
 Name: John Smith
 #+end_example
 
+**** Occupation
+
+The occupation of the character
+
+#+begin_example
+Occupation: Architecture
+#+end_example
+
+**** Description
+
+A general discription of the character
+
+#+begin_example
+Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
+#+end_example
+
 **** Physical appearance
 
 The physical appearance of the character including the following attribute's
@@ -227,25 +243,6 @@ example of different types of male facial hair
 4  Stubble: is a common style of facial hair for men, typically consisting of soft, trimmed short hair or stubble
 
 5  Clean-shaven: A close, neatly trimmed face without stubble or beard.
-#+end_example
-
-**** Clothes
-
-The clothes the character is wearing
-
-***** Accessories
-
-Clothing accessories the character might be holding
-for example:
-
-a handbag, a bag, rucksuck or umbrella
-
-**** Occupation
-
-The occupation of the character
-
-#+begin_example
-Occupation: Architecture
 #+end_example
 
 *** Scene
