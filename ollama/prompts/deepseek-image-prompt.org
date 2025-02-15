@@ -36,13 +36,14 @@ Description: A 35-year-old woman with shoulder-length brown hair and glasses. Sh
 
 *** Output format
 
-the output format should contain an extra text field on its own line called "Apperance:"
+the output format should contain extra text fields on their own lines,
 after the Index:, Name:, Occupation: and Description: text fields
 
 output the reponse in the following format,
 and each line should not have any extra characters added before the text field in the response
 
-this is a list of all the variables for the character
+this is a list of all the text fields for the character in the output format,
+including the items found in the input format
 
 #+begin_example
 Index: 
