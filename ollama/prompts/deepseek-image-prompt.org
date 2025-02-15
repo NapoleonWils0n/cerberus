@@ -8,7 +8,7 @@
 * Here is a task i would like you to perform
 
 under the heading "input to process" is a list of 20 fictional characters,
-which will be used as text prompts with Microsoft Designer to create images of the characters using artificial intelligence
+which will be used as text prompts to create images of the characters using artificial intelligence
 
 ** Task description
 
