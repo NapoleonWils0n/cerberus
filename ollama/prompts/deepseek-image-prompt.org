@@ -5,7 +5,9 @@
 :GPTEL_SYSTEM: You are a large language model and a writing assistant. Respond concisely.
 :GPTEL_BOUNDS: 
 :END:
-* Here is a task i would like you to perform
+* Creating text prompts to generate images with Artificial Intelligence
+
+Here is a task i would like you to perform
 
 under the heading "input to process" is a list of 20 fictional characters,
 which will be used as text prompts to create images of the characters using artificial intelligence
