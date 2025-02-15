@@ -22,7 +22,7 @@ and appearance of their skin
 go through each of the 20 fictional charcters one by one and ouput a response as described above,
 each response should be unique to the character
 
-*** input format
+*** Input format
 
 here is an example of the input for one characters which consists of 4 fields of text each on their own line,
 Index:, Name:, Occupation: and Description.
@@ -34,13 +34,35 @@ Occupation: Interior Designer
 Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
 #+end_example
 
-*** output format
+*** Output format
 
 the output format should contain an extra text field on its own line called "Apperance:"
 after the Index:, Name:, Occupation: and Description: text fields
 
 output the reponse in the following format,
 and each line should not have any extra characters added before the text field in the response
+
+this is a list of all the variables for the character
+
+#+begin_example
+Index: 
+Name: 
+Occupation: 
+Description: 
+Gender:
+Age:
+Height:
+Build:
+Hair colour:
+Male hair:
+Female hair:
+Eye colour:
+Skin tone:
+Male facial hair:
+Indoor lighting:
+Outdoor lighting:
+Camera angle:
+#+end_example
 
 ** Character Name
 *** Index
@@ -137,6 +159,28 @@ Here’s a list of common descriptions for human body types and builds, along wi
 6. Average Build: A balanced composition of muscle mass, bone density, and body fat typical for their height.
 #+end_example
 
+***** Hair colour
+
+#+begin_example
+Hair colour:
+#+end_example
+
+examples of different hair colours
+
+#+begin_example
+1. Black: natural dark color
+
+2. Brown: from melanogaster genes (darker than blonde)
+
+3. Blonde: light to very light
+
+4. Red: dark or light ruby
+
+5. Gray: various shades depending on age
+
+6. Silver/Grayish: lighter with grays
+#+end_example
+
 ***** Male Hair styles
 
 #+begin_example
@@ -198,28 +242,6 @@ Some examples of female hair styles
 9. Pads: Sleek, modern options that can be shaped for thickness, thinness, or layered effects.
 
 10. Unique Styles: Such as Updos with jewels or Statement headwear for a bold finish.
-#+end_example
-
-***** Hair colour
-
-#+begin_example
-Hair colour:
-#+end_example
-
-examples of different hair colours
-
-#+begin_example
-1. Black: natural dark color
-
-2. Brown: from melanogaster genes (darker than blonde)
-
-3. Blonde: light to very light
-
-4. Red: dark or light ruby
-
-5. Gray: various shades depending on age
-
-6. Silver/Grayish: lighter with grays
 #+end_example
 
 ***** Eye colour
