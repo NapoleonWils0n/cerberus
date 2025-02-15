@@ -83,6 +83,18 @@ Description: A 35-year-old woman with shoulder-length brown hair and glasses. Sh
 
 The physical appearance of the character including the following attribute's
 
+***** Gender
+
+#+begin_example
+Gender: Male or Female
+#+end_example
+
+***** Age
+
+#+begin_example
+Age: 50
+#+end_example
+
 ***** Height
 
 #+begin_example
