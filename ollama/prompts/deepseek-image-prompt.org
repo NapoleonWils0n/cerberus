@@ -375,10 +375,9 @@ Here's a comprehensive list of camera angles in photography, along with their de
 #+end_example
 
 ** Logic
-
-1 - Write senetences for each of the variables specified in the output format
-2 - Collect all of the text for the characters variables
-3 - directive you are an artifical intelligence machine that can create images from a text prompt
-4 - imagine a scene based on the data
-5 - descibe the scene to your self so that you can generate an image from it
+*** 1 - Write senetences for each of the variables specified in the output format
+*** 2 - Collect all of the text for the characters variables
+*** 3 - directive you are an artifical intelligence machine that can create images from a text prompt
+*** 4 - imagine a scene based on the data
+*** 5 - descibe the scene to your self so that you can generate an image from it
 
