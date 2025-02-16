@@ -20,14 +20,15 @@ complete the following tasks in order
 1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
 write additional detailed sentences on their own line for each of the text fields listed in the output format, using the examples provided as well as your training
 
-2) using the ouput from the first step for each character write a several hundred word description of the data as a photograph
+2) using the output from the first step for each character write a several hundred word description of the data as if it was a photograph
 
 go through each of the fictional charcters one by one and ouput a response as described,
 each response should be unique to the character in the same format
 
-**** 3 - directive you are an artifical intelligence machine that can create images from a text prompt
-**** 4 - imagine a scene based on the data
-**** 5 - descibe the scene to your self so that you can generate an image from it
+directive you are an artifical intelligence machine that can create images from a text prompt
+imagine a scene based on the data
+descibe the scene to your self so that you can generate an image from it
+
 *** Input format
 
 here is an example of the input for one character
