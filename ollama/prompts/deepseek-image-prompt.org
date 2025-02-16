@@ -29,8 +29,9 @@ each response should be unique to the character
 **** 5 - descibe the scene to your self so that you can generate an image from it
 *** Input format
 
-here is an example of the input for one characters 
+here is an example of the input for one character
 
+#+NAME: input-texfields
 #+begin_example
 Index: 1
 Name: Emma Carter
@@ -40,12 +41,20 @@ Description: A 35-year-old woman with shoulder-length brown hair and glasses. Sh
 
 *** Output format
 
+the output is comprissed of two parts
+
+1) output-texfields
+2) image-prompt
+
 output the reponse in the following format,
-and each line should not have any extra characters added before the text field in the response
+each line should not have any extra characters added before the text field in the response
 
 this is a list of all the text fields for the character in the output format,
 including the items found in the input format
 
+1) output-texfields
+
+#+NAME: output-texfields
 #+begin_example
 Index: 
 Name: 
@@ -66,7 +75,13 @@ Outdoor lighting:
 Camera angle:
 #+end_example
 
+image prompt
 
+2) image-prompt
+
+#+begin_example
+Image prompt:
+#+end_example
 
 ** Character Name
 *** Index
