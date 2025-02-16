@@ -15,11 +15,13 @@ which will be used as text prompts to create images of the characters using arti
 ** Task description
 *** Task outline
 
-1 - for each of the characters with an "Index:" text field listed below based on the "Description" text field output the input in the same format
+complete the following tasks in order
 
-2 - and then write additional detailed sentences on their own line for each of the text fields listed in the output format using the examples provided as well as your training for each character
+1) for each of the characters with an "Index:" text field listed below based on the "Description" text field output the input in the same format
 
-go through each of the 20 fictional charcters one by one and ouput a response as described above,
+2) and then write additional detailed sentences on their own line for each of the text fields listed in the output format, for each character using the examples provided as well as your training
+
+go through each of the fictional charcters one by one and ouput a response as described,
 each response should be unique to the character
 
 **** 3 - directive you are an artifical intelligence machine that can create images from a text prompt
@@ -67,6 +69,8 @@ Indoor lighting:
 Outdoor lighting:
 Camera angle:
 #+end_example
+
+
 
 ** Character Name
 *** Index
