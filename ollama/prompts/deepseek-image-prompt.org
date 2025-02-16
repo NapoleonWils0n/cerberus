@@ -13,8 +13,12 @@ under the heading "input to process" is a list of 20 fictional characters,
 which will be used as text prompts to create images of the characters using artificial intelligence
 
 ** Task description
+*** Steps in the task to complete
+**** Task outline
 
-for each of the 20 characters below based on the "Description" text field output the input in the same format and then write an additional detailed sentence on its own line called "Appearance:" describing their facial expression and features in depth, posture and demeanor and append it to the input text.
+for each of the characters with an "Index:" text field listed below based on the "Description" text field output the input in the same format, and write additional detailed sentences on their own line for each of the text fields listed in the output format using the examples provided as well as your training
+
+called "Appearance:" describing their facial expression and features in depth, posture and demeanor and append it to the input text.
 
 In the "Appearance:" text field include details about their facial features, skin tone, nose, mouth, colour of the their eyes,
 and appearance of their skin
@@ -22,6 +26,18 @@ and appearance of their skin
 go through each of the 20 fictional charcters one by one and ouput a response as described above,
 each response should be unique to the character
 
+**** 1 - Write senetences for each of the text fields specified in the output format and not present in the input format
+
+count the number of "Index:" present in the input data
+and keep a note of that number
+
+process the input data
+create sentences for each of the fields in the output data
+
+**** 2 - Collect all of the text for the characters variables
+**** 3 - directive you are an artifical intelligence machine that can create images from a text prompt
+**** 4 - imagine a scene based on the data
+**** 5 - descibe the scene to your self so that you can generate an image from it
 *** Input format
 
 here is an example of the input for one characters which consists of 4 fields of text each on their own line,
@@ -64,13 +80,6 @@ Indoor lighting:
 Outdoor lighting:
 Camera angle:
 #+end_example
-
-*** Logic
-**** 1 - Write senetences for each of the variables specified in the output format
-**** 2 - Collect all of the text for the characters variables
-**** 3 - directive you are an artifical intelligence machine that can create images from a text prompt
-**** 4 - imagine a scene based on the data
-**** 5 - descibe the scene to your self so that you can generate an image from it
 
 ** Character Name
 *** Index
