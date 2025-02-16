@@ -29,8 +29,7 @@ each response should be unique to the character
 **** 5 - descibe the scene to your self so that you can generate an image from it
 *** Input format
 
-here is an example of the input for one characters which consists of 4 fields of text each on their own line,
-Index:, Name:, Occupation: and Description.
+here is an example of the input for one characters 
 
 #+begin_example
 Index: 1
@@ -40,9 +39,6 @@ Description: A 35-year-old woman with shoulder-length brown hair and glasses. Sh
 #+end_example
 
 *** Output format
-
-the output format should contain extra text fields on their own lines,
-after the Index:, Name:, Occupation: and Description: text fields
 
 output the reponse in the following format,
 and each line should not have any extra characters added before the text field in the response
