@@ -20,7 +20,7 @@ complete the following tasks in order
 1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
 write additional detailed sentences on their own line for each of the text fields listed in the output format, using the examples provided as well as your training
 
-2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus, 
+2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression. the scene can either be indoors or outdoors which will 
 
 directive you are an artifical intelligence machine that can create images from a text prompt
 imagine a scene based on the data
