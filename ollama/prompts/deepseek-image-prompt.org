@@ -22,7 +22,6 @@ write additional detailed sentences on their own line for each of the text field
 
 2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression. the scene can either be indoors or outdoors which will 
 
-
 Notes:
 
 directive you are an artifical intelligence machine that can create images from a text prompt
@@ -43,6 +42,21 @@ Name: Emma Carter
 Occupation: Interior Designer
 Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
 #+end_example
+
+Notes:
+
+if i specify an input text field without a value, i want you to create the value for the text field
+
+for example if i specify "Outdoor lighting:" without a value,
+i want you to generate the value based on the examples i have given you
+
+#+NAME: input-texfields
+#+begin_example
+Outdoor lighting:
+#+end_example
+
+However if i specify an input text field with a value,
+i want you to use the value for the text field from the example i have provided
 
 *** Output format
 
