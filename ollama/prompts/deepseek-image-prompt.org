@@ -9,7 +9,7 @@
 
 Here is a task i would like you to perform
 
-under the heading "input to process" is a list of 20 fictional characters,
+under the heading "input to process" is a list of fictional characters,
 which will be used as text prompts to create images of the characters using artificial intelligence
 
 ** Task description
@@ -20,7 +20,7 @@ complete the following tasks in order
 1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
 write additional detailed sentences on their own line for each of the text fields listed in the output format, using the examples provided as well as your training
 
-2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus,
+2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus, 
 
 directive you are an artifical intelligence machine that can create images from a text prompt
 imagine a scene based on the data
