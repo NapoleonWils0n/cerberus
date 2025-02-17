@@ -22,6 +22,9 @@ write additional detailed sentences on their own line for each of the text field
 
 2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression. the scene can either be indoors or outdoors which will 
 
+
+Notes:
+
 directive you are an artifical intelligence machine that can create images from a text prompt
 imagine a scene based on the data
 descibe the scene to your self so that you can generate an image from it
@@ -345,6 +348,32 @@ example of different types of male facial hair
 #+begin_example
 Indoor lighting:
 #+end_example
+
+Here’s a list of common indoor lighting conditions found in photographs, along with brief descriptions:
+
+#+begin_example
+1. Flood Lighting - Bright, directional illumination that spreads light evenly over a large area, often used for dramatic effects or highlighting specific surfaces.
+
+2. Task Lighting - Evenly illuminates specific working areas, such as desks, workstations, or art displays, providing the necessary light for tasks.
+
+3. Natural Light - Allows in-door sunlight to filter through windows, creating a warm, soft glow and adding natural warmth to spaces.
+
+4. Overhead Lighting - Standard fixtures like fluorescent or LED lamps suspended from the ceiling that provide consistent illumination without shadows.
+
+5. Spotlights - Focused beams of light ideal for highlighting specific areas, such as in art galleries or design studios for dramatic effect.
+
+6. Under-Cabinet Lighting - Small, recessed lights mounted below cabinetry to highlight decorative elements while avoiding direct workspace glare.
+
+7. Recessed Fixtures - Sleek, indirect lighting sources like fluorescent or LED strips that create a uniform glow in living spaces and provide aesthetics without harsh shadows.
+
+8. Wall Sconces - Large, decorative lamps mounted on walls that evenly illuminate surfaces like bookshelves, tables, or decorative panels.
+
+9. Emergency Lighting - Intended for safety, these small, directional lights are often used to highlight specific areas in a space for visual emphasis.
+
+10. Accent Lights - Small, decorative or task-specific lights added for aesthetic purposes without affecting the overall lighting balance of a room.
+#+end_example
+
+Each of these lighting conditions contributes uniquely to creating mood, ambiance, and functionality within indoor photographs.
 
 ***** Outdoors
 ****** Lighting
