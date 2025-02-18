@@ -55,8 +55,29 @@ Camera angle:
 complete the following tasks in order
 
 1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
-write additional detailed sentences on their own line for each of the text fields listed in the "Output format",
-using the examples provided as well as your training
+write additional detailed sentences on their own line for each of the items listed in the "Output format"
+
+you need to process the following items
+
+#+begin_example
+Index: 
+Name: 
+Occupation: 
+Description: 
+Gender:
+Age:
+Height:
+Build:
+Hair colour:
+Male hair:
+Female hair:
+Eye colour:
+Skin tone:
+Male facial hair:
+Indoor lighting:
+Outdoor lighting:
+Camera angle:
+#+end_example
 
 2) if the characters "Gender:" is Male you should write descriptions for the "Male hair:" and "Male facial hair:"
 
@@ -87,22 +108,16 @@ Male facial hair:
 4) you should decide if the location is indoors in which case you should write a description which includes "Indoor lighting:",
    or if its outdoors in which case you should write a description which includes "Outdoor lighting:"
 
-5) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene.
-
-6) The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression.
+5) The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression.
    
-7) if its not specified in the description if the scene is indoors or outdoor, you choose and then describe the lighting condition using the examples from "Indoor lighting:" or "Outdoor lighting:"
+6) if its not specified in the description if the scene is indoors or outdoor, you choose and then describe the lighting condition using the examples from "Indoor lighting:" or "Outdoor lighting:"
 
-8) go through each of the fictional charcters one by one and ouput a response as described,
+7) go through each of the fictional charcters one by one and ouput a response as described,
 each response should be unique to the character and each character should be in their own scene without any of the other characters
 
-9) output the response in "org mode" formatting not markdown
+8) write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt
 
-the task is to create a detailed description of each character 
-
-directive you are an artifical intelligence machine that can create images from a text prompt
-imagine a scene based on the data
-descibe the scene to your self so that you can generate an image from it
+output the response in "org mode" formatting not markdown
 
 ** Character Name
 *** Index
