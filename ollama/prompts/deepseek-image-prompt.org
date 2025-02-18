@@ -7,35 +7,14 @@
 :END:
 * Creating text prompts to generate images with Artificial Intelligence
 
-Here is a task i would like you to perform
-
-under the heading "input to process" is a list of fictional characters,
-which will be used as text prompts to create images of the characters using artificial intelligence
+Here is a task i would like you to perform under the heading "input to process"
+is a list of fictional characters i want you to process according to rules i will explain
 
 ** Task description
-*** Task outline
-
-complete the following tasks in order
-
-1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
-write additional detailed sentences on their own line for each of the text fields listed in the output format, using the examples provided as well as your training
-
-2) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene. The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression. the scene can either be indoors or outdoors which will 
-
-Notes:
-
-directive you are an artifical intelligence machine that can create images from a text prompt
-imagine a scene based on the data
-descibe the scene to your self so that you can generate an image from it
-
-go through each of the fictional charcters one by one and ouput a response as described,
-each response should be unique to the character
-
 *** Input format
 
 here is an example of the input for one character
 
-#+NAME: input-texfields
 #+begin_example
 Index: 1
 Name: Emma Carter
@@ -43,32 +22,7 @@ Occupation: Interior Designer
 Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
 #+end_example
 
-Notes:
-
-if i specify an input text field without a value, i want you to create the value for the text field
-
-for example if i specify "Outdoor lighting:" without a value,
-i want you to generate the value based on the examples i have given you
-
-#+NAME: input-texfields
-#+begin_example
-Outdoor lighting:
-#+end_example
-
-However if i specify an input text field with a value,
-i want you to use the value for the text field from the example i have provided
-
-#+NAME: input-texfields
-#+begin_example
-Outdoor lighting: Dawn
-#+end_example
-
 *** Output format
-
-the output is comprissed of two parts
-
-1) output-texfields
-2) image-prompt
 
 output the reponse in the following format,
 each line should not have any extra characters added before the text field in the response
@@ -76,9 +30,6 @@ each line should not have any extra characters added before the text field in th
 this is a list of all the text fields for the character in the output format,
 including the items found in the input format
 
-1) output-texfields
-
-#+NAME: output-texfields
 #+begin_example
 Index: 
 Name: 
@@ -99,15 +50,59 @@ Outdoor lighting:
 Camera angle:
 #+end_example
 
-image prompt
+*** Task outline
 
-this is an example of the image-prompt formatting without any data
+complete the following tasks in order
 
-2) image-prompt
+1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
+write additional detailed sentences on their own line for each of the text fields listed in the "Output format",
+using the examples provided as well as your training
+
+2) if the characters "Gender:" is Male you should write descriptions for the "Male hair:" and "Male facial hair:"
 
 #+begin_example
-Image prompt:
+Male hair:
+Male facial hair:
 #+end_example
+
+but not "Female hair:"
+
+#+begin_example
+Female hair:
+#+end_example
+
+3) if the characters "Gender:" is Female you should write descriptions for the "Female hair:"
+
+#+begin_example
+Female hair:
+#+end_example
+
+but not "Male hair:" and "Male facial hair:"
+
+#+begin_example
+Male hair:
+Male facial hair:
+#+end_example
+
+4) you should decide if the location is indoors in which case you should write a description which includes "Indoor lighting:",
+   or if its outdoors in which case you should write a description which includes "Outdoor lighting:"
+
+5) using the output text fields from the first step as a basis for each character write a several hundred word description of the data as a photographic scene.
+
+6) The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression.
+   
+7) if its not specified in the description if the scene is indoors or outdoor, you choose and then describe the lighting condition using the examples from "Indoor lighting:" or "Outdoor lighting:"
+
+8) go through each of the fictional charcters one by one and ouput a response as described,
+each response should be unique to the character and each character should be in their own scene without any of the other characters
+
+9) output the response in "org mode" formatting not markdown
+
+the task is to create a detailed description of each character 
+
+directive you are an artifical intelligence machine that can create images from a text prompt
+imagine a scene based on the data
+descibe the scene to your self so that you can generate an image from it
 
 ** Character Name
 *** Index
@@ -134,6 +129,31 @@ Name: John Smith
 **** Occupation
 
 The occupation of the character
+
+example list of occupations
+
+#+begin_example
+Interior Designer
+International Furniture Manufacturer
+Unemployed
+Architecture Student
+Sustainability Advocate
+Local Pub Owner
+Emerging Product Designer
+Tech Entrepreneur
+Family Visitor
+International Journalist
+Architect
+Art Enthusiast
+Retired Engineer
+Shop worker
+Local Design Student
+Freelance Photographer
+Boutique Owner
+Historian
+#+end_example
+
+for example
 
 #+begin_example
 Occupation: Architecture
@@ -468,4 +488,17 @@ Here's a comprehensive list of camera angles in photography, along with their de
 
 15. Extreme Wide Angle: Expands field width with distortion, adding visual impact.
 #+end_example
+
+* input to process
+
+Index: 1
+Name: Emma Carter
+Occupation: Interior Designer
+Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
+Outdoor lighting:
+
+Index: 2
+Name: Marco Rossi
+Occupation: International Furniture Manufacturer
+Description: A 42-year-old Italian man with neatly combed dark hair and a tailored navy suit. He’s holding a tablet and gesturing toward a modular furniture display in an exhibition space, with international brand logos in the background.
 
