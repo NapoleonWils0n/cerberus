@@ -115,7 +115,7 @@ Male facial hair:
 7) go through each of the fictional charcters one by one and ouput a response as described,
 each response should be unique to the character and each character should be in their own scene without any of the other characters
 
-8) write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt
+8) write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt, which should start with the words "Create a photo realistic image of "
 
 output the response in "org mode" formatting not markdown
 
