@@ -58,6 +58,11 @@ Outdoor lighting:
 However if i specify an input text field with a value,
 i want you to use the value for the text field from the example i have provided
 
+#+NAME: input-texfields
+#+begin_example
+Outdoor lighting: Dawn
+#+end_example
+
 *** Output format
 
 the output is comprissed of two parts
