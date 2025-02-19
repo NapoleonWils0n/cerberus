@@ -6,7 +6,6 @@
 :GPTEL_BOUNDS: 
 :END:
 * Creating text prompts to generate images with Artificial Intelligence
-
 Here is a task i would like you to perform under the heading "input to process"
 is a list of fictional characters i want you to process according to rules i will explain
 
@@ -113,9 +112,11 @@ Male facial hair:
 6) if its not specified in the description if the scene is indoors or outdoor, you choose and then describe the lighting condition using the examples from "Indoor lighting:" or "Outdoor lighting:"
 
 7) go through each of the fictional charcters one by one and ouput a response as described,
-each response should be unique to the character and each character should be in their own scene without any of the other characters
+each response should be unique to the character
 
-8) write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt, which should start with the words "Create a photo realistic image of "
+8) important each character should be in their own scene without any of the other characters
+
+9) write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt, which should start with the words "Create a photo realistic image of "
 
 output the response in "org mode" formatting not markdown
 
@@ -510,10 +511,98 @@ Index: 1
 Name: Emma Carter
 Occupation: Interior Designer
 Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
-Outdoor lighting:
 
 Index: 2
 Name: Marco Rossi
 Occupation: International Furniture Manufacturer
 Description: A 42-year-old Italian man with neatly combed dark hair and a tailored navy suit. He’s holding a tablet and gesturing toward a modular furniture display in an exhibition space, with international brand logos in the background.
 
+Index: 3
+Name: Sarah Johnson
+Occupation: Unemployed
+Description: A 28-year-old woman with short blonde hair wearing casual attire (jeans, sneakers, and a graphic T-shirt). She’s holding a reusable coffee cup while browsing an outdoor design installation in Clerkenwell Green.
+
+Index: 4
+Name: David Singh 
+Occupation: Architecture Student
+Description: A 21-year-old South Asian man with curly hair, wearing a hoodie and backpack. He’s sketching on an iPad while sitting on steps near the Platform venue showcasing emerging talent.
+
+Index: 5
+Name: Hannah Green
+Occupation: Sustainability Advocate
+Description: A 39-year-old woman with long red hair tied back in a ponytail. She wears eco-friendly clothing (linen shirt, organic cotton trousers) and carries a tote bag with sustainability slogans. She’s admiring an exhibit of biodegradable materials at Light.
+
+Index: 6
+Name: Tom Baker
+Occupation: Local Pub Owner
+Description: A 50-year-old man with graying hair and a beard, dressed in a checkered shirt and apron. He’s standing behind the bar of his pub near St John’s Square, serving drinks to festival-goers.
+
+Index: 7
+Name: Priya Patel
+Occupation: Emerging Product Designer
+Description: A 30-year-old South Asian woman with sleek black hair tied in a bun. She wears smart-casual clothing (blazer over a blouse) and is presenting her ergonomic office furniture at Platform. Her booth features clean, modern designs.
+
+Index: 8
+Name: James O’Connor
+Occupation: Tech Entrepreneur
+Description: A 45-year-old man with short-cropped gray hair wearing smart-casual attire (blazer over jeans). He’s holding a prototype of a smart home device while discussing its features at Project.
+
+Index: 9
+Name: Lucy Evans
+Occupation: Family Visitor
+Description: A 38-year-old mother with shoulder-length brown hair wearing casual clothing (a denim jacket over a floral dress). She’s holding her young child’s hand while exploring an interactive installation at Spa Fields.
+
+Index: 10
+Name: Ahmed Khalil
+Occupation: International Journalist
+Description: A 40-year-old Middle Eastern man with short black hair and glasses, wearing business-casual attire (button-up shirt and slacks). He’s taking notes on his tablet while photographing exhibits at Design Fields.
+
+Index: 11
+Name: Alice Turner
+Occupation: Architect
+Description: A 34-year-old woman with dark brown hair tied in a low bun, dressed in tailored trousers and a black blazer. She’s examining architectural models at The Charterhouse or sketching near Finsbury Health Centre.
+
+Index: 12
+Name: Tom Davies
+Occupation: Local Pub Owner
+Description: A 50-year-old man with salt-and-pepper hair wearing rolled-up sleeves and an apron over his shirt. He’s seen chatting with patrons outside his pub near Smithfield Market.
+
+Index: 13
+Name: Priya Sharma
+Occupation: Art Enthusiast
+Description: A 29-year-old woman with curly black hair wearing colorful, bohemian-style clothing (patterned scarf, flowing skirt). She’s holding a sketchpad while admiring illustrations at the Quentin Blake Centre for Illustration.
+
+Index: 14
+Name: James O’Connor
+Occupation: Retired Engineer
+Description: A 65-year-old man with gray hair wearing a cardigan over a collared shirt. He’s inspecting historical machinery at The Postal Museum or standing thoughtfully near Bevin Court.
+
+Index: 15
+Name: Lucy Evans
+Occupation: Shop worker
+A 38-year-old woman wearing casual attire (jeans and sneakers) in Spa Fields or enjoying food from Exmouth Market stalls.
+
+Index: 16
+Name: Daniel Wong
+Occupation: Local Design Student
+Description: A 22-year-old East Asian man with short black hair wearing headphones around his neck, dressed in streetwear (hoodie and sneakers). He’s sketching on his laptop near Platform or exploring Bevin Court for inspiration.
+
+Index: 17
+Name: Olivia Bennett
+Occupation: Co-working Space Manager
+Description: A 40-year-old woman with blonde hair tied back in a ponytail, dressed in business-casual attire (blouse and tailored trousers). She’s browsing furniture designs at The Goldsmiths’ Centre or sipping coffee at Exmouth Market.
+
+Index: 18
+Name: Ahmed Khalil
+Occupation: Freelance Photographer
+Description: A 45-year-old man with short black hair wearing casual attire (cargo pants and a utility jacket). He has a camera slung around his neck as he photographs installations at The Charterhouse or Smithfield Market.
+
+Index: 19
+Name: Sophie Taylor
+Occupation: Boutique Owner
+Description: A 32-year-old woman with wavy auburn hair wearing stylish but practical clothing (jumpsuit and flats). She’s carrying shopping bags from Exmouth Market while browsing exhibits at The Goldsmiths’ Centre.
+
+Index: 20
+Name: Henry Clarke
+Occupation: Historian
+Description: A 58-year-old man with silver-gray hair wearing glasses, tweed jacket, and scarf. He’s reading an informational plaque at The Museum of the Order of St John or walking through Clerkenwell Green reflecting on its history.
