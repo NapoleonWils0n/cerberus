@@ -120,6 +120,8 @@ each response should be unique to the character
 
 output the response in "org mode" formatting not markdown
 
+you goal is to write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt, which should start with the words "Create a photo realistic image of "
+
 ** Character Name
 *** Index
 
