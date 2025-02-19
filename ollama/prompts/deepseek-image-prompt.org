@@ -1,10 +1,10 @@
-#+STARTUP: content
 :PROPERTIES:
 :GPTEL_MODEL: deepseek-r1:7b
 :GPTEL_BACKEND: Ollama
 :GPTEL_SYSTEM: You are a large language model and a writing assistant. Respond concisely.
-:GPTEL_BOUNDS: 
+:GPTEL_BOUNDS: ((19663 . 25170))
 :END:
+
 * Creating text prompts to generate images with Artificial Intelligence
 Here is a task i would like you to perform under the heading "input to process"
 is a list of fictional characters i want you to process according to rules i will explain
@@ -544,67 +544,51 @@ Name: Priya Patel
 Occupation: Emerging Product Designer
 Description: A 30-year-old South Asian woman with sleek black hair tied in a bun. She wears smart-casual clothing (blazer over a blouse) and is presenting her ergonomic office furniture at Platform. Her booth features clean, modern designs.
 
-Index: 8
-Name: James O’Connor
-Occupation: Tech Entrepreneur
-Description: A 45-year-old man with short-cropped gray hair wearing smart-casual attire (blazer over jeans). He’s holding a prototype of a smart home device while discussing its features at Project.
 
-Index: 9
-Name: Lucy Evans
-Occupation: Family Visitor
-Description: A 38-year-old mother with shoulder-length brown hair wearing casual clothing (a denim jacket over a floral dress). She’s holding her young child’s hand while exploring an interactive installation at Spa Fields.
+<think>
+Alright, so I need to figure out how to create an image description for each of these seven people based on their names, occupations, and descriptions. The user provided examples from "soft, filtered sunlight" and camera angles, but now they want a more detailed scene description.
 
-Index: 10
-Name: Ahmed Khalil
-Occupation: International Journalist
-Description: A 40-year-old Middle Eastern man with short black hair and glasses, wearing business-casual attire (button-up shirt and slacks). He’s taking notes on his tablet while photographing exhibits at Design Fields.
+First, I'll go through each person one by one. For each, I need to think about the setting where they're located because that affects the lighting and composition. All these people are mentioned in relation to Clerkenwell Design Week or similar events, so it's likely an outdoor or semi-outdoor setting with modern architecture.
 
-Index: 11
-Name: Alice Turner
-Occupation: Architect
-Description: A 34-year-old woman with dark brown hair tied in a low bun, dressed in tailored trousers and a black blazer. She’s examining architectural models at The Charterhouse or sketching near Finsbury Health Centre.
+Starting with Emma Carter: She's an interior designer standing near a furniture installation. I should describe her outfit as chic and minimalist, noting details like her glasses and the sketchbook she's holding. The lighting here would be filtered through trees and clouds, so it's soft but maybe a bit warm due to the time of day.
 
-Index: 12
-Name: Tom Davies
-Occupation: Local Pub Owner
-Description: A 50-year-old man with salt-and-pepper hair wearing rolled-up sleeves and an apron over his shirt. He’s seen chatting with patrons outside his pub near Smithfield Market.
+Next is Marco Rossi: He's an international furniture manufacturer in an exhibition space. His dark hair is neatly combed, and he's holding a tablet. The display has modular furniture with brand logos. The lighting here could be consistent and warm since it's an indoor setup but maybe slightly diffused because it's an exhibit.
 
-Index: 13
-Name: Priya Sharma
-Occupation: Art Enthusiast
-Description: A 29-year-old woman with curly black hair wearing colorful, bohemian-style clothing (patterned scarf, flowing skirt). She’s holding a sketchpad while admiring illustrations at the Quentin Blake Centre for Illustration.
+Sarah Johnson is unemployed and browsing an outdoor design installation while wearing casual clothes. Her blonde hair is short, and she's holding a reusable coffee cup. Since she's outdoors, the lighting would likely be filtered through trees or maybe overcast, giving her a warm yet neutral look.
 
-Index: 14
-Name: James O’Connor
-Occupation: Retired Engineer
-Description: A 65-year-old man with gray hair wearing a cardigan over a collared shirt. He’s inspecting historical machinery at The Postal Museum or standing thoughtfully near Bevin Court.
+David Singh is an architecture student sketching on an iPad by a platform. His curly hair is in place, and he’s near steps. The lighting from the steps could create soft shadows or diffused light, adding to his creative process.
 
-Index: 15
-Name: Lucy Evans
-Occupation: Shop worker
-A 38-year-old woman wearing casual attire (jeans and sneakers) in Spa Fields or enjoying food from Exmouth Market stalls.
+Hannah Green works in sustainability advocacy and admires biodegradable materials at an exhibit. She's wearing eco-friendly clothing with long red hair. Her presence here might bring a warm and intentional look due to her engagement with the exhibit.
 
-Index: 16
-Name: Daniel Wong
-Occupation: Local Design Student
-Description: A 22-year-old East Asian man with short black hair wearing headphones around his neck, dressed in streetwear (hoodie and sneakers). He’s sketching on his laptop near Platform or exploring Bevin Court for inspiration.
+Tom Baker is a pub owner serving drinks near St John’s Square, which suggests he's inside but close to a bar area. The lighting would likely be from pendant lights or the display of drinks, maybe midday hours so it's well-lit but not too harsh.
 
-Index: 17
-Name: Olivia Bennett
-Occupation: Co-working Space Manager
-Description: A 40-year-old woman with blonde hair tied back in a ponytail, dressed in business-casual attire (blouse and tailored trousers). She’s browsing furniture designs at The Goldsmiths’ Centre or sipping coffee at Exmouth Market.
+Lastly, Priya Patel is an emerging product designer presenting at Platform with modern ergonomic furniture. She's in a clean space with smart-casual clothing. The lighting here could be sharp and defined due to her booth being a display area.
 
-Index: 18
-Name: Ahmed Khalil
-Occupation: Freelance Photographer
-Description: A 45-year-old man with short black hair wearing casual attire (cargo pants and a utility jacket). He has a camera slung around his neck as he photographs installations at The Charterhouse or Smithfield Market.
+Now, for each person, I need to integrate these elements into a coherent image description that highlights their roles, the setting, and the atmosphere without making it too cluttered.
+</think>
 
-Index: 19
-Name: Sophie Taylor
-Occupation: Boutique Owner
-Description: A 32-year-old woman with wavy auburn hair wearing stylish but practical clothing (jumpsuit and flats). She’s carrying shopping bags from Exmouth Market while browsing exhibits at The Goldsmiths’ Centre.
+Here are detailed image descriptions for each of the seven individuals based on their context:
 
-Index: 20
-Name: Henry Clarke
-Occupation: Historian
-Description: A 58-year-old man with silver-gray hair wearing glasses, tweed jacket, and scarf. He’s reading an informational plaque at The Museum of the Order of St John or walking through Clerkenwell Green reflecting on its history.
+1. *Emma Carter*:
+Create a photo realistic image of Emma is an interior designer standing near a modern furniture installation at Clerkenwell Design Week. She wears a chic, minimalist outfit consisting of a black turtleneck and beige trousers, with her glasses resting on her temple. Holding a sketchbook and a fabric swatch in one hand, she has long, shoulder-length brown hair that complements her stylish appearance. The lighting is soft and warm, filtered through the trees and branches overhead, creating a soothing yet intentional atmosphere.
+
+2. *Marco Rossi*:
+Create a photo realistic image of Marco is an international furniture manufacturer wearing a neatly combed dark hairstyle and a tailored navy suit. Standing in an exhibition space, he holds a tablet in one hand and gestures toward a modular furniture display adorned with international brand logos. The lighting here is consistent but slightly diffused due to the nature of the exhibit setup.
+
+3. *Sarah Johnson*:
+Create a photo realistic image of Sarah, an unemployed individual, is browsing an outdoor design installation while wearing casual attire—jeans, sneakers, and a graphic T-shirt. She holds a reusable coffee cup in one hand. The lighting here is filtered through trees or overcast light, creating a warm yet neutral atmosphere that suits her relaxed demeanor.
+
+4. *David Singh*:
+Create a photo realistic image of David is an architecture student sitting on steps near the Platform venue. His curly hair is neatly in place as he sketches on his iPad. The soft lighting from the steps adds depth to his scene, enhancing the creative process and giving a touch of warmth.
+
+5. *Hannah Green*:
+Create a photo realistic image of Hannah is a sustainability advocate wearing eco-friendly clothing—linen shirt and organic cotton trousers—with long red hair tied back in a ponytail. She admires an exhibit of biodegradable materials at an outdoor setup. The lighting here is warm, with scattered natural light creating a serene yet intentional atmosphere that reflects her focus on sustainability.
+
+6. *Tom Baker*:
+Create a photo realistic image of Tom is a local pub owner with graying hair and a beard. Wearing a checkered shirt and apron, he stands near the bar of his pub in St John’s Square. The lighting here is sharp but not harsh, likely from pendant lights or the display of drinks, creating a welcoming yet focused atmosphere.
+
+7. *Priya Patel*:
+Create a photo realistic image of Priya is an emerging product designer standing in her clean, modern booth at Platform. Wearing smart-casual clothing—a white blouse over a black hoodie—she presents ergonomic furniture. The lighting here is sharp and defined due to the display area, creating a professional yet engaging atmosphere.
+
+Each description captures their individual context, role, and the setting they're in, providing a vivid visual understanding of each scene.
+
