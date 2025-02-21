@@ -2,510 +2,43 @@
 :GPTEL_MODEL: deepseek-r1:7b
 :GPTEL_BACKEND: Ollama
 :GPTEL_SYSTEM: You are a large language model and a writing assistant. Respond concisely.
-:GPTEL_BOUNDS: ((19663 . 25170))
+:GPTEL_BOUNDS: ((5452 . 10291) (10350 . 10794) (10853 . 11271) (11272 . 11273) (11330 . 13811))
 :END:
 
-* Creating text prompts to generate images with Artificial Intelligence
-Here is a task i would like you to perform under the heading "input to process"
-is a list of fictional characters i want you to process according to rules i will explain
+* create an image description for each of the characters
 
-** Task description
-*** Input format
+based on their names, occupations, and descriptions,
+write a detailed description of the scene including the description with lighting and camera angles.
 
-here is an example of the input for one character
+you goal is to write a detailed description for each character as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt.
 
-#+begin_example
-Index: 1
-Name: Emma Carter
-Occupation: Interior Designer
-Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
-#+end_example
+For each, think about the setting where they're located because that affects the lighting and composition.
 
-*** Output format
+Now, for each person, I need to integrate these elements into a coherent image description that highlights their roles, the setting, and the atmosphere without making it too cluttered.
 
-output the reponse in the following format,
-each line should not have any extra characters added before the text field in the response
-
-this is a list of all the text fields for the character in the output format,
-including the items found in the input format
-
-#+begin_example
-Index: 
-Name: 
-Occupation: 
-Description: 
-Gender:
-Age:
-Height:
-Build:
-Hair colour:
-Male hair:
-Female hair:
-Eye colour:
-Skin tone:
-Male facial hair:
-Indoor lighting:
-Outdoor lighting:
-Camera angle:
-#+end_example
-
-*** Task outline
-
-complete the following tasks in order
-
-1) for each of the characters with an "Index:" text field listed below, based on the "Description" text field 
-write additional detailed sentences on their own line for each of the items listed in the "Output format"
-
-you need to process the following items
-
-#+begin_example
-Index: 
-Name: 
-Occupation: 
-Description: 
-Gender:
-Age:
-Height:
-Build:
-Hair colour:
-Male hair:
-Female hair:
-Eye colour:
-Skin tone:
-Male facial hair:
-Indoor lighting:
-Outdoor lighting:
-Camera angle:
-#+end_example
-
-2) if the characters "Gender:" is Male you should write descriptions for the "Male hair:" and "Male facial hair:"
-
-#+begin_example
-Male hair:
-Male facial hair:
-#+end_example
-
-but not "Female hair:"
-
-#+begin_example
-Female hair:
-#+end_example
-
-3) if the characters "Gender:" is Female you should write descriptions for the "Female hair:"
-
-#+begin_example
-Female hair:
-#+end_example
-
-but not "Male hair:" and "Male facial hair:"
-
-#+begin_example
-Male hair:
-Male facial hair:
-#+end_example
-
-4) you should decide if the location is indoors in which case you should write a description which includes "Indoor lighting:",
+1. you should decide if the location is indoors in which case you should write a description which includes "Indoor lighting:",
    or if its outdoors in which case you should write a description which includes "Outdoor lighting:"
 
-5) The composition of the scene should have the character as the main focus, so you need to write a detailed description of the charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression.
+2. The composition of the scene should have the character as the main focus, so you need to write a detailed description of the
+   charcter including their gender, age, height, build, hair colour, hair style, eye colour, skin tone and facial expression.
    
-6) if its not specified in the description if the scene is indoors or outdoor, you choose and then describe the lighting condition using the examples from "Indoor lighting:" or "Outdoor lighting:"
+3. if its not specified in the description if the scene is indoors or outdoor, you choose and then describe the lighting condition
+   using the examples from "Indoor lighting:" or "Outdoor lighting:"
 
-7) go through each of the fictional charcters one by one and ouput a response as described,
-each response should be unique to the character
+4. go through each of the fictional charcters one by one and ouput a response as described,
+   each response should be unique to the character
 
-8) important each character should be in their own scene without any of the other characters
+5. important each character should be in their own scene without any of the other characters
 
-9) write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt, which should start with the words "Create a photo realistic image of "
+Okay, so I need to create detailed image descriptions for each of these fictional characters based on their names, occupations, and descriptions, followed by a coherent scene description with lighting and camera angles.
 
-output the response in "org mode" formatting not markdown
+First, I should go through each index one by one.
 
-you goal is to write a several hundred word description of the data as a photographic scene that can be used by artifical intelligence machine that can create images from a text prompt, which should start with the words "Create a photo realistic image of "
+For each character, I need to extract relevant details like age, gender, hair color, clothing style, accessories, and setting.
 
-** Character Name
-*** Index
+Then, determine if the location is indoors or outdoors, as that affects lighting and composition and include a detailed description of the lighting and camera angles.
 
-The index of the character,
-starting at one and incrementing for each character
-
-for example:
-
-#+begin_example
-Index: 1
-#+end_example
-
-*** Character
-**** Name
-
-The name of the character
-for example:
-
-#+begin_example
-Name: John Smith
-#+end_example
-
-**** Occupation
-
-The occupation of the character
-
-example list of occupations
-
-#+begin_example
-Interior Designer
-International Furniture Manufacturer
-Unemployed
-Architecture Student
-Sustainability Advocate
-Local Pub Owner
-Emerging Product Designer
-Tech Entrepreneur
-Family Visitor
-International Journalist
-Architect
-Art Enthusiast
-Retired Engineer
-Shop worker
-Local Design Student
-Freelance Photographer
-Boutique Owner
-Historian
-#+end_example
-
-for example
-
-#+begin_example
-Occupation: Architecture
-#+end_example
-
-**** Description
-
-A general discription of the character including age, gender, appearance,
-occupation and whaat they are doing at a particular location
-
-#+begin_example
-Description: A 35-year-old woman with shoulder-length brown hair and glasses. She wears a chic, minimalist outfit (black turtleneck, beige trousers) and carries a sketchbook and fabric swatches. She’s standing near a modern furniture installation at Clerkenwell Design Week.
-#+end_example
-
-**** Physical appearance
-
-The physical appearance of the character including the following attribute's
-
-***** Gender
-
-#+begin_example
-Gender: Male or Female
-#+end_example
-
-***** Age
-
-#+begin_example
-Age: 50
-#+end_example
-
-***** Height
-
-#+begin_example
-Height:
-#+end_example
-
-different examples of height of a person
-
-#+begin_example
-1. Average Height (5'4" to 5'9"): Most people fall within this range. It represents the general average height for adults globally.
-
-2. Tall (5'9" to 6'0"): This is considered above average and often associated with certain cultures or breeds.
-
-3. Very Tall (6'1" to 6'4"): This is significantly taller than average, often seen in families with genetic height advantages.
-
-4. Extremely Tall (Over 6'4" to 7'): These individuals are extremely rare and typically fall into specific ethnic or familial backgrounds.
-#+end_example
-
-***** Build
-
-#+begin_example
-Build:
-#+end_example
-
-Here’s a list of common descriptions for human body types and builds, along with brief explanations:
-
-#+begin_example
-1. Overweight: A person who is heavier than average body weight, often carrying excess fat or muscle.
-
-2. Underweight: A person who weighs below average, possibly due to low muscle mass, low body fat, or excessive loss of body fat.
-
-3. Athletic Build: A lean and muscular body type with well-defined muscles and a smaller frame but high stamina and strength.
-
-4. Large Build (Fat)": A person with a broader frame, more body fat, and full, rounded features due to genetics, diet, or lifestyle habits.
-
-5. Small Build (Slim)": A person who is skinnier, taller, and has less body fat, often appearing graceful and aerodynamic.
-
-6. Average Build: A balanced composition of muscle mass, bone density, and body fat typical for their height.
-#+end_example
-
-***** Hair colour
-
-#+begin_example
-Hair colour:
-#+end_example
-
-examples of different hair colours
-
-#+begin_example
-1. Black: natural dark color
-
-2. Brown: from melanogaster genes (darker than blonde)
-
-3. Blonde: light to very light
-
-4. Red: dark or light ruby
-
-5. Gray: various shades depending on age
-
-6. Silver/Grayish: lighter with grays
-#+end_example
-
-***** Male Hair styles
-
-#+begin_example
-Male hair:
-#+end_example
-
-Here's a concise list of common male hairstyles with brief descriptions:
-
-#+begin_example
-1. Undercut: A close-cut style where hair is trimmed near the scalp but farther from ears or face, giving an edgy look.
-
-2. Buzzcut: Extremely short cuts over the entire head, typically around 4-6 inches, offering a trendy and clean appearance.
-
-3. Chpole: Shorter on top, cut behind ears with volume at the nape for a stylish, slightly harsher vibe.
-
-4. Back-combed: Hair pulled back in one piece and combed backwards, tapering near the nape for an edgy vintage or cowboy look.
-
-5. Undercut Chpole: A mix of short sidecuts near ears and longer backstyle behind neck for a unique, modern aesthetic.
-
-6. Crew Cut: Very short cut to the scalp with neat styling, often using product for texture and simplicity.
-
-7. Cropped Undercut: Short line from ear to nape on both sides with longer hair behind, creating contrast and volume.
-
-8. Buzzback: A slightly longer buzz than a standard buzzcut, keeping some length at the front for a modern edge.
-
-9. Boxing: Hair cut straight across scalp, adding layers underneath for volume and unique shape, often styled with texture products.
-
-10. Taper Fade: Shorter hair near ears tapering into longer lines behind, offering a stylish contrast between edgy front and sleek back.
-#+end_example
-
-note as men age their hair starts to turn gray, thin and recede
-also male hair can be parted on the left, center or right
-
-***** Female hair styles
-
-#+begin_example
-Female hair:
-#+end_example
-
-Some examples of female hair styles
-
-#+begin_example
-1. Bob: A short, neatly cut hairstyle that can be straight, curly, or wavy depending on personal preference. It’s sleek and modern.
-
-2. Pics: A popular choice with a side-swept fringe for a casual yet chic look.
-
-3. Bun: Can be low, high, half, or even a mono bun for edgy styling.
-
-4. Updo: Includes styles like buns, French braids, chignons, and can incorporate twists or curls.
-
-5. Wigs: Offer natural-looking options or synthetic alternatives for convenience.
-
-6. Curls: Can be simple or elaborate, depending on the length and curl style desired.
-
-7. Bangs: Add volume and edginess to any hairstyle.
-
-8. Labs (Lobes): A youthful look with various cuts like 50/50 splits or (shoulder-length) styles.
-
-9. Pads: Sleek, modern options that can be shaped for thickness, thinness, or layered effects.
-
-10. Unique Styles: Such as Updos with jewels or Statement headwear for a bold finish.
-#+end_example
-
-***** Eye colour
-
-#+begin_example
-Eye colour:
-#+end_example
-
-Here’s a list of common human eye colors along with brief descriptions:
-
-#+begin_example
-1. Brown Eyes: The most common eye color globally. It can range from fair (light brown) to dark (ocher or deep brown), often reflecting skin tone.
-
-2. Blue Eyes: One of the rarest natural eye colors, typically found in individuals who are carriers of a recessive genetic trait. Blue eyes may also appear greenish-yellow if exposed to bright light or during sunrise.
-
-3. Green Eyes: Another rare eye color, often caused by a mutation in the /autosomal recessive/ gene called /gaia/. Green eyes can look flecked with gold under certain lighting conditions.
-
-4. Gray Eyes: Found in individuals who are either naturally predisposed to it or have their optic nerve injured (retinitis). Gray eyes can also result from age-related cataracts, which cloud the lens of the eye.
-
-5. Hazel Eyes: A lighter gray-green or brown hue, often described as warm and inviting. It is less common than brown or blue but can appear in individuals with specific genetic makeup.
-
-6. amber eyes: A shade of brown that appears warmer than honey or caramel. It’s not as common as brown but can be found in some populations.
-
-7. Brown-Hued Gray (Tinted Gray): This mix of brown and gray gives the appearance of slightly flecked grays, often seen in individuals who are naturally predisposed to gray eyes with a touch of warmth.
-
-8. Opaque Black Eyes: Pure black without any flecks or hints of other colors, often associated with darker skin tones.
-
-9. Pecan Brown Eyes (Golden-Brown): A warm brown that resembles the outer layer of pecans in nuts—warm, inviting, and often associated with certain populations.
-
-10. Sable Gray Eyes: Deeply pigmented gray resembling a lamb’s wool or dead leaves, typically found in individuals with fair skin tones.
-#+end_example
-
-***** Skin Tone
-
-#+begin_example
-Skin tone:
-#+end_example
-
-Skin tone is influenced by genetics, environment, and other factors, rather than being directly tied to ethnicity. However, there are general variations in skin tones across different populations:
-
-#+begin_example
-1. Light Skin: Often associated with darker-skinned individuals from Africa or the Middle East.
-
-2. Fair Skin: Typically linked to lighter-skinned populations like Europe, East Asia, or Australia.
-
-3. Olive Complexion: A warm, golden-yellow tone found in some Middle Eastern and Mediterranean populations.
-
-4. Brown Skin: Common among African descendants, particularly in regions with significant indigenous populations.
-
-5. Black Skin: Found in West Africa and parts of the diaspora.
-#+end_example
-
-***** Male Facial Hair
-
-#+begin_example
-Male facial hair:
-#+end_example
-
-example of different types of male facial hair
-
-#+begin_example
-1. Goatee/Facial Hair: A neat trim with stubble or minimal beard.
-
-2. Beard: A longer and fuller style, often styled as straight, curly, or bushy.
-
-3. Moustache: Similar to a beard but shorter, styled in various shapes
-
-4  Stubble: is a common style of facial hair for men, typically consisting of soft, trimmed short hair or stubble
-
-5  Clean-shaven: A close, neatly trimmed face without stubble or beard.
-#+end_example
-
-*** Scene
-**** Location
-***** Indoors
-****** Lighting
-
-#+begin_example
-Indoor lighting:
-#+end_example
-
-Here’s a list of common indoor lighting conditions found in photographs, along with brief descriptions:
-
-#+begin_example
-1. Flood Lighting - Bright, directional illumination that spreads light evenly over a large area, often used for dramatic effects or highlighting specific surfaces.
-
-2. Task Lighting - Evenly illuminates specific working areas, such as desks, workstations, or art displays, providing the necessary light for tasks.
-
-3. Natural Light - Allows in-door sunlight to filter through windows, creating a warm, soft glow and adding natural warmth to spaces.
-
-4. Overhead Lighting - Standard fixtures like fluorescent or LED lamps suspended from the ceiling that provide consistent illumination without shadows.
-
-5. Spotlights - Focused beams of light ideal for highlighting specific areas, such as in art galleries or design studios for dramatic effect.
-
-6. Under-Cabinet Lighting - Small, recessed lights mounted below cabinetry to highlight decorative elements while avoiding direct workspace glare.
-
-7. Recessed Fixtures - Sleek, indirect lighting sources like fluorescent or LED strips that create a uniform glow in living spaces and provide aesthetics without harsh shadows.
-
-8. Wall Sconces - Large, decorative lamps mounted on walls that evenly illuminate surfaces like bookshelves, tables, or decorative panels.
-
-9. Emergency Lighting - Intended for safety, these small, directional lights are often used to highlight specific areas in a space for visual emphasis.
-
-10. Accent Lights - Small, decorative or task-specific lights added for aesthetic purposes without affecting the overall lighting balance of a room.
-#+end_example
-
-Each of these lighting conditions contributes uniquely to creating mood, ambiance, and functionality within indoor photographs.
-
-***** Outdoors
-****** Lighting
-
-#+begin_example
-Outdoor lighting:
-#+end_example
-
-Here’s a list of daytime periods with descriptions of lighting conditions:
-
-#+begin_example
-1. Dawn ( Sunrise)
-   - Soft, filtered sunlight filtering through clouds and trees. Hues are warm and slightly golden.
-
-2. Early Morning
-   - Similar to dawn but later in the morning. Still has soft, diffused light with some shadows forming.
-
-3. Mid-Morning
-   - Sunlight is brighter and warmer as the sun peaks above the horizon. Shadows are shorter but still present.
-
-4. Morning ( Midday)
-   - Brightest part of the day, direct sunlight fills open spaces. Can get shaded at midday depending on location.
-
-5. Afternoon ( Late Morning)
-   - Sunlight is consistent and warm with longer shadows as the sun starts to set.
-
-6. Evening ( Early Evening)
-   - Sunlight becomes cooler as the sun sets, casting long shadows. The sky often turns deep orange or pink.
-
-7. Evening
-   - As evening progresses, the light softens further, turning golden and amber, creating beautiful "golden hour" lighting.
-
-8. Twilight ( Late Evening)
-   - The sky is darkened, with a cool, gray or blue hue due to scattered sunlight.
-#+end_example
-
-**** Camera angle
-
-#+begin_example
-Camera angle:
-#+end_example
-
-Here's a comprehensive list of camera angles in photography, along with their descriptions:
-
-#+begin_example
-1. Square Composition: A straight-on shot without tilting or moving the camera.
-
-2. Low Angle: Shots from below eye level, making subjects look down, adding drama.
-
-3. High Angle: Shots from above eye level, making subjects look up.
-
-4. Wide Shot: Captures a broad field of view, encompassing more space.
-
-5. Panoramic View: A wide shot spanning 180 degrees horizontally.
-
-6. Curvilinear Perspective: Diagonal tilt creates effects like converging train tracks.
-
-7. Perspective Distortion: Proportions altered to enhance stretching or compression.
-
-8. Over-the-Shoulder Shot: Used in portrait work for an extra element without moving the subject.
-
-9. Wide Eye Shot: Uses distortion to create artistic emphasis on a subject.
-
-10. Tilted Angle (Left/Right): Camera tilts left or right from the subject line, creating directional interest.
-
-11. Diamonds & Bubbles: Diagonal lines draw attention to specific objects.
-
-12. Averted Gaze: Camera faces the background, suggesting the subject is looking away.
-
-13. Open View: A wide shot focusing on detail without a particular subject point.
-
-14. Aerial Shot: High above ground for bird's eye views, possibly using tilt instead of height.
-
-15. Extreme Wide Angle: Expands field width with distortion, adding visual impact.
-#+end_example
+the output response for each character be at least 100 words long and must be as paragraph
 
 * input to process
 
@@ -544,51 +77,165 @@ Name: Priya Patel
 Occupation: Emerging Product Designer
 Description: A 30-year-old South Asian woman with sleek black hair tied in a bun. She wears smart-casual clothing (blazer over a blouse) and is presenting her ergonomic office furniture at Platform. Her booth features clean, modern designs.
 
+Index: 8
+Name: James O’Connor
+Occupation: Tech Entrepreneur
+Description: A 45-year-old man with short-cropped gray hair wearing smart-casual attire (blazer over jeans). He’s holding a prototype of a smart home device while discussing its features at Project.
+
+Index: 9
+Name: Lucy Evans
+Occupation: Family Visitor
+Description: A 38-year-old mother with shoulder-length brown hair wearing casual clothing (a denim jacket over a floral dress). She’s holding her young child’s hand while exploring an interactive installation at Spa Fields.
+
+Index: 10
+Name: Ahmed Khalil
+Occupation: International Journalist
+Description: A 40-year-old Middle Eastern man with short black hair and glasses, wearing business-casual attire (button-up shirt and slacks). He’s taking notes on his tablet while photographing exhibits at Design Fields.
+
+
 
 <think>
-Alright, so I need to figure out how to create an image description for each of these seven people based on their names, occupations, and descriptions. The user provided examples from "soft, filtered sunlight" and camera angles, but now they want a more detailed scene description.
+Okay, so I've been given this task to create detailed image descriptions for ten fictional characters based on their names, occupations, and descriptions. Each description needs to include specifics like gender, age, hair color, clothing style, accessories, setting, lighting conditions, and camera angles. The goal is to help an AI generate images that fit these prompts accurately.
 
-First, I'll go through each person one by one. For each, I need to think about the setting where they're located because that affects the lighting and composition. All these people are mentioned in relation to Clerkenwell Design Week or similar events, so it's likely an outdoor or semi-outdoor setting with modern architecture.
+Starting with the first character, Emma Carter, who's an interior designer. She's 35, with shoulder-length brown hair and glasses. Her outfit is chic and minimalist—black turtleneck and beige trousers. She's near a modern furniture installation during Clerkenwell Design Week. Since this sounds like an outdoor event, I should go with Outdoor lighting: natural sunlight filtering through trees. The camera angle could be low to emphasize her presence.
 
-Starting with Emma Carter: She's an interior designer standing near a furniture installation. I should describe her outfit as chic and minimalist, noting details like her glasses and the sketchbook she's holding. The lighting here would be filtered through trees and clouds, so it's soft but maybe a bit warm due to the time of day.
+Next up is Marco Rossi, an international furniture manufacturer in his 40s. He has neatly combed dark hair and a tailored navy suit. He's holding a tablet and gesturing at a modular display. Considering this is likely an exhibition space, Outdoor lighting: soft sunlight from arched lamps makes sense. The camera should be positioned slightly lower to show his detailed gestures.
 
-Next is Marco Rossi: He's an international furniture manufacturer in an exhibition space. His dark hair is neatly combed, and he's holding a tablet. The display has modular furniture with brand logos. The lighting here could be consistent and warm since it's an indoor setup but maybe slightly diffused because it's an exhibit.
+Sarah Johnson is described as unemployed, 28, with short blonde hair in casual attire—jeans and sneakers. She's browsing an outdoor design installation while holding a reusable coffee cup. Since it's an outdoor setting, Outdoor lighting: filtered daylight would look natural here. The camera angle should be from below to make her look at eye level.
 
-Sarah Johnson is unemployed and browsing an outdoor design installation while wearing casual clothes. Her blonde hair is short, and she's holding a reusable coffee cup. Since she's outdoors, the lighting would likely be filtered through trees or maybe overcast, giving her a warm yet neutral look.
+David Singh is an architecture student, 21, with curly hair wearing a hoodie and backpack. He's sketching on an iPad while sitting near steps at a Platform venue. The lighting could be natural indoors, so Indoor lighting: soft white light filtering through windows. The camera should focus on his focused expression.
 
-David Singh is an architecture student sketching on an iPad by a platform. His curly hair is in place, and he’s near steps. The lighting from the steps could create soft shadows or diffused light, adding to his creative process.
+Hannah Green works as a sustainability advocate, 39, with long red hair in a ponytail wearing eco-friendly clothes and a tote with slogans. She's admiring biodegradable materials at an exhibit. Indoors makes sense here; lighting could be soft natural light. Camera angle slightly from above to show her admiring the display.
 
-Hannah Green works in sustainability advocacy and admires biodegradable materials at an exhibit. She's wearing eco-friendly clothing with long red hair. Her presence here might bring a warm and intentional look due to her engagement with the exhibit.
+Tom Baker is a local pub owner, 50, with graying hair and a beard in a checkered shirt and apron near the bar at St John’s Square. He's serving drinks. Indoors, with lighting as natural as possible, maybe filtered daylight. Camera angle should capture him tending to his customers.
 
-Tom Baker is a pub owner serving drinks near St John’s Square, which suggests he's inside but close to a bar area. The lighting would likely be from pendant lights or the display of drinks, maybe midday hours so it's well-lit but not too harsh.
+Priya Patel is an emerging product designer, 30, with sleek black hair tied in a bun wearing smart-casual clothes and presenting her designs at Platform. She’s discussing her ergonomic furniture. Indoors with soft lighting; camera slightly lower to focus on the booth.
 
-Lastly, Priya Patel is an emerging product designer presenting at Platform with modern ergonomic furniture. She's in a clean space with smart-casual clothing. The lighting here could be sharp and defined due to her booth being a display area.
+James O’Connor is a tech entrepreneur, 45, with short-cropped gray hair in smart-casual attire holding a smart home device prototype. He's discussing its features at Project. Indoors, soft natural light from windows—camera angle from eye level focusing on his detailed discussion.
 
-Now, for each person, I need to integrate these elements into a coherent image description that highlights their roles, the setting, and the atmosphere without making it too cluttered.
+Lucy Evans is a family visitor, 38, wearing casual clothing while holding her child’s hand exploring an installation. Indoors with filtered daylight, camera slightly above ground to capture the interactive aspect.
+
+Lastly, Ahmed Khalil is an international journalist, 40, in business-casual attire taking notes while photographing exhibits at Design Fields. Indoors with soft lighting; camera angle from his shoulder level focusing on his detailed notes.
+
+I need to ensure each character's description is unique and focused, without any overlap with others. Also, the scenes should highlight their roles and the atmosphere of where they're located. Each scene needs to be detailed enough for AI image generation but concise.
 </think>
 
-Here are detailed image descriptions for each of the seven individuals based on their context:
+*Index: 1 - Emma Carter*
 
-1. *Emma Carter*:
-Create a photo realistic image of Emma is an interior designer standing near a modern furniture installation at Clerkenwell Design Week. She wears a chic, minimalist outfit consisting of a black turtleneck and beige trousers, with her glasses resting on her temple. Holding a sketchbook and a fabric swatch in one hand, she has long, shoulder-length brown hair that complements her stylish appearance. The lighting is soft and warm, filtered through the trees and branches overhead, creating a soothing yet intentional atmosphere.
+- *Character:* Emma Carter (35)
+- *Gender/Age:* Female / 35
+- *Hair/Cloth:* Shoulder-length brown hair, glasses, chic minimalist outfit including a black turtleneck and beige trousers. Holding sketchbook and fabric swatches.
 
-2. *Marco Rossi*:
-Create a photo realistic image of Marco is an international furniture manufacturer wearing a neatly combed dark hairstyle and a tailored navy suit. Standing in an exhibition space, he holds a tablet in one hand and gestures toward a modular furniture display adorned with international brand logos. The lighting here is consistent but slightly diffused due to the nature of the exhibit setup.
+*Scene Description:*
+Set at Clerkenwell Design Week, Emma stands near a modern furniture installation. The scene is captured with *Outdoor lighting:* natural sunlight filtering through trees, casting warm shadows. The camera angle is slightly lower, emphasizing her composed expression as she interacts with the exhibit.
 
-3. *Sarah Johnson*:
-Create a photo realistic image of Sarah, an unemployed individual, is browsing an outdoor design installation while wearing casual attire—jeans, sneakers, and a graphic T-shirt. She holds a reusable coffee cup in one hand. The lighting here is filtered through trees or overcast light, creating a warm yet neutral atmosphere that suits her relaxed demeanor.
+---
 
-4. *David Singh*:
-Create a photo realistic image of David is an architecture student sitting on steps near the Platform venue. His curly hair is neatly in place as he sketches on his iPad. The soft lighting from the steps adds depth to his scene, enhancing the creative process and giving a touch of warmth.
+*Index: 2 - Marco Rossi*
 
-5. *Hannah Green*:
-Create a photo realistic image of Hannah is a sustainability advocate wearing eco-friendly clothing—linen shirt and organic cotton trousers—with long red hair tied back in a ponytail. She admires an exhibit of biodegradable materials at an outdoor setup. The lighting here is warm, with scattered natural light creating a serene yet intentional atmosphere that reflects her focus on sustainability.
+- *Character:* Marco Rossi (42)
+- *Gender/Age:* Male / 42
+- *Hair/Cloth:* Neatly combed dark hair, tailored navy suit. Holding a tablet and gesturing at modular displays.
 
-6. *Tom Baker*:
-Create a photo realistic image of Tom is a local pub owner with graying hair and a beard. Wearing a checkered shirt and apron, he stands near the bar of his pub in St John’s Square. The lighting here is sharp but not harsh, likely from pendant lights or the display of drinks, creating a welcoming yet focused atmosphere.
+*Scene Description:*
+Set in an exhibition space likely part of an international furniture event. The lighting is soft from arched lamps. The camera angle slightly lower to highlight his gestures, with him appearing focused and detailed.
 
-7. *Priya Patel*:
-Create a photo realistic image of Priya is an emerging product designer standing in her clean, modern booth at Platform. Wearing smart-casual clothing—a white blouse over a black hoodie—she presents ergonomic furniture. The lighting here is sharp and defined due to the display area, creating a professional yet engaging atmosphere.
+---
 
-Each description captures their individual context, role, and the setting they're in, providing a vivid visual understanding of each scene.
+*Index: 3 - Sarah Johnson*
 
+create a photo realistic image of the following character
+
+- *Character:* Sarah Johnson (28)
+- *Gender/Age:* Female / 28
+- *Hair/Cloth:* Short blonde hair in a ponytail, casual attire including jeans and sneakers. Holding a reusable coffee cup.
+
+*Scene Description:*
+Set outdoors at an interactive installation during Clerkenwell Design Week. Lighting is filtered daylight from the sun. The camera slightly above ground captures her relaxed interaction with the display.
+
+---
+
+*Index: 4 - David Singh*
+
+create a photo realistic image of the following character
+
+- *Character:* David Singh (21)
+- *Gender/Age:* Male / 21
+- *Hair/Cloth:* Curly hair, wearing a hoodie and backpack while sketching on an iPad. Sitting near steps at Platform venue.
+
+*Scene Description:*
+ Indoors with soft natural light from windows. The camera angle is slightly lower to capture his focused expression as he sketches, emphasizing the architectural details around him.
+
+---
+
+*Index: 5 - Hannah Green*
+
+create a photo realistic image of the following character
+
+- *Character:* Hannah Green (39)
+- *Gender/Age:* Female / 39
+- *Hair/Cloth:* Long red hair in a ponytail, eco-friendly clothes and a tote with slogans without any text. Admiring biodegradable materials.
+
+*Scene Description:*
+ Indoors with soft natural light from windows. The camera slightly above ground to capture her admiring perspective of the exhibit, making her interaction dynamic and engaging.
+
+---
+
+*Index: 6 - Tom Baker*
+
+- *Character:* Tom Baker (50)
+- *Gender/Age:* Male / 50
+- *Hair/Cloth:* Gray hair and beard, wearing a checkered shirt and apron near a bar at St John’s Square.
+
+*Scene Description:*
+ Indoors with natural filtered daylight. The camera angle from the ground captures him tending to his customers, capturing the cozy setting of his local pub.
+
+---
+
+*Index: 7 - Priya Patel*
+
+- *Character:* Priya Patel (30)
+- *Gender/Age:* Female / 30
+- *Hair/Cloth:* Sleek black hair in a bun, smart-casual clothes while presenting ergonomic furniture designs.
+
+*Scene Description:*
+ Indoors with soft natural light from windows. The camera slightly lower to capture her dynamic presentation at Platform, highlighting the booth and her interaction details.
+
+---
+
+*Index: 8 - James O’Connor*
+
+- *Character:* James O’Connor (45)
+- *Gender/Age:* Male / 45
+- *Hair/Cloth:* Short-cropped gray hair, smart-casual attire holding a smart home device prototype. Discussing its features.
+
+*Scene Description:*
+ Indoors with soft natural light from windows. The camera angle slightly below eye level to focus on his detailed discussion and the technology around him.
+
+---
+
+*Index: 9 - Lucy Evans*
+
+- *Character:* Lucy Evans (38)
+- *Gender/Age:* Female / 38
+- *Hair/Cloth:* Short blonde hair, casual clothing while holding her child’s hand. Exploring an interactive installation.
+
+*Scene Description:*
+ Indoors with filtered daylight from windows. The camera slightly above ground to capture her family interaction and the engaging exhibit around her.
+
+---
+
+*Index: 10 - Ahmed Khalil*
+
+- *Character:* Ahmed Khalil (40)
+- *Gender/Age:* Male / 40
+- *Hair/Cloth:* Short black hair, business-casual attire while taking notes. photographing exhibits at Design Fields.
+
+*Scene Description:*
+ Indoors with soft natural light from windows. The camera angle slightly below eye level to focus on his detailed note-taking and focused posture.
+
+---
+
+Each scene is designed to capture the essence of each character's role and their setting, providing a clear visual for AI image generation.
+
+*** 
