@@ -1,0 +1,453 @@
+#+STARTUP: show2levels
+* DaVinci Resolve Freebsd
+** Freebsd
+*** Freebsd Nvidia and Cuda
+
+Make sure Nvidia and Cuda is set up on the Freebsd host
+
+#+begin_src sh
+sudo pkg install nvidia-driver linux-nvidia-libs libc6-shim libvdpau-va-gl libva-nvidia-driver
+#+end_src
+
+run nv-sglrun nvidia-smi
+
+#+begin_src sh
+nv-sglrun nvidia-smi
+#+end_src
+
+nv-sglrun nvidia-smi output
+
+#+begin_example
+shim init
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.14              Driver Version: 550.54.14      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+#+end_example
+
+# Horizontal Rule
+-----
+
+** Rocky Linux
+*** Create the Linuxulator mount points for rocky
+
+Create necessary mount points for the rocky Linuxulator chroot in 
+
+#+begin_example
+/compat/rocky
+#+end_example
+
+#+begin_src sh
+doas mkdir -p {/compat/rocky/dev/fd,/compat/rocky/dev/shm,/compat/rocky/home,/compat/rocky/tmp,/compat/rocky/proc,/compat/rocky/sys}
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Rocky linux container base tar
+
+rocky 9 base 
+
+#+begin_src sh
+fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Base.latest.x86_64.tar.xz'
+#+end_src
+
+*** tar xz
+
+rocky 9
+
+#+begin_src sh
+doas tar xvfp Rocky-9-Container-Base.latest.x86_64.tar.xz -C /compat/rocky
+#+end_src
+
+*** fstab add proc
+
+edit your fstab and add proc
+
+#+begin_example
+/etc/fstab
+#+end_example
+
+fstab
+
+#+begin_src conf
+proc            /proc                   procfs          rw      0       0
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Rocky rc.d script 
+
+Copy the rocky script from the repository to
+
+#+begin_src sh
+doas cp rocky /usr/local/etc/rc.d/
+#+end_src
+
+Make the script executable
+
+#+begin_src sh
+doas chmod +x /usr/local/etc/rc.d/rocky
+#+end_src
+
++ rocky code
+
+#+begin_src sh
+#!/bin/sh
+#
+# PROVIDE: rocky
+# REQUIRE: archdep mountlate
+# KEYWORD: nojail
+#
+# This is a modified version of /etc/rc.d/linux
+# Based on the script by mrclksr:
+# https://github.com/mrclksr/linux-browser-installer/blob/main/rc.d/ubuntu.in
+#
+. /etc/rc.subr
+
+name="rocky"
+desc="Enable rocky chroot, and Linux ABI"
+rcvar="rocky_enable"
+start_cmd="${name}_start"
+stop_cmd=":"
+
+unmounted()
+{
+    [ `stat -f "%d" "$1"` == `stat -f "%d" "$1/.."` -a \
+      `stat -f "%i" "$1"` != `stat -f "%i" "$1/.."` ]
+}
+
+rocky_start()
+{
+    local _emul_path _tmpdir
+
+    load_kld -e 'linux(aout|elf)' linux
+    case `sysctl -n hw.machine_arch` in
+    amd64)
+        load_kld -e 'linux64elf' linux64
+        ;;
+    esac
+    if [ -x /compat/rocky/sbin/ldconfigDisabled ]; then
+        _tmpdir=`mktemp -d -t linux-ldconfig`
+        /compat/rocky/sbin/ldconfig -C ${_tmpdir}/ld.so.cache
+        if ! cmp -s ${_tmpdir}/ld.so.cache /compat/rocky/etc/ld.so.cache; then
+            cat ${_tmpdir}/ld.so.cache > /compat/rocky/etc/ld.so.cache
+        fi
+        rm -rf ${_tmpdir}
+    fi
+
+    # Linux uses the pre-pts(4) tty naming scheme.
+    load_kld pty
+
+    # Handle unbranded ELF executables by defaulting to ELFOSABI_LINUX.
+    if [ `sysctl -ni kern.elf64.fallback_brand` -eq "-1" ]; then
+        sysctl kern.elf64.fallback_brand=3 > /dev/null
+    fi
+
+    if [ `sysctl -ni kern.elf32.fallback_brand` -eq "-1" ]; then
+        sysctl kern.elf32.fallback_brand=3 > /dev/null
+    fi
+    sysctl compat.linux.emul_path=/compat/rocky
+
+    _emul_path="/compat/rocky"
+    unmounted "${_emul_path}/dev" && (mount -o nocover -t devfs devfs "${_emul_path}/dev" || exit 1)
+    unmounted "${_emul_path}/dev/fd" && (mount -o nocover,linrdlnk -t fdescfs fdescfs "${_emul_path}/dev/fd" || exit 1)
+    unmounted "${_emul_path}/dev/shm" && (mount -o nocover,mode=1777 -t tmpfs tmpfs "${_emul_path}/dev/shm" || exit 1)
+    unmounted "${_emul_path}/home" && (mount -t nullfs /home "${_emul_path}/home" || exit 1)
+    unmounted "${_emul_path}/proc" && (mount -o nocover -t linprocfs linprocfs "${_emul_path}/proc" || exit 1)
+    unmounted "${_emul_path}/sys" && (mount -o nocover -t linsysfs linsysfs "${_emul_path}/sys" || exit 1)
+    unmounted "${_emul_path}/tmp" && (mount -t nullfs /tmp "${_emul_path}/tmp" || exit 1)
+    unmounted /dev/fd && (mount -o nocover -t fdescfs fdescfs /dev/fd || exit 1)
+    unmounted /proc && (mount -o nocover -t procfs procfs /proc || exit 1)
+    true
+}
+
+load_rc_config $name
+run_rc_command "$1"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Stop linux if its running
+
+If you have centos installed in
+
+#+begin_example
+/compat/linux
+#+end_example
+
+You need to stop it before starting rocky \\
+because you can only run instance of the linuxulator at a time
+
+If you don't have a linux install in /compat/linux you can skip this step
+
+Stop linux
+
+#+begin_src sh
+doas service linux stop
+#+end_src
+
+Use sysrc to set linux_enable="NO" in your /etc/rc.conf
+
+#+begin_src sh
+doas sysrc linux_enable="NO"
+#+end_src
+
+or you can edit your
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+and set linux_enable to NO
+
+#+begin_src conf
+linux_enable="NO"
+#+end_src
+
+
+# Horizontal Rule
+-----
+*** reboot
+
+Reboot so the linux mount points are unmounted
+
+#+begin_src sh
+doas shutdown -r now
+#+end_src
+
+*** Enable the rocky service
+
+Use sysrc to set rocky_enable="YES" in your /etc/rc.conf
+
+#+begin_src sh
+doas sysrc rocky_enable="YES"
+#+end_src
+
+or you can edit your
+
+#+begin_example
+/etc/rc.conf
+#+end_example
+
+and set rocky_enable to YES
+
+#+begin_src conf
+rocky_enable="YES"
+#+end_src
+
+Start the rocky service
+
+#+begin_src sh
+doas service rocky start
+#+end_src
+
+Check everything is mounted
+
+#+begin_src sh
+mount
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Chroot into your Linux environment:
+
+#+begin_src sh
+doas chroot /compat/rocky /bin/bash
+#+end_src
+
+*** dnf update
+
+#+begin_src sh
+dnf update
+#+end_src
+
+*** dnf config-manager
+
+#+begin_src sh
+dnf install 'dnf-command(config-manager)'
+#+end_src
+
+*** crb
+
+Enable the CodeReady Linux Builder (CRB) repository. The CRB repository contains extra libraries and developer tools. This repository is available on Rocky Linux 9 but is disabled by default.
+
+#+begin_src sh
+dnf config-manager --set-enabled crb
+#+end_src
+
+*** epel-release
+
+Install the package for the Extra Packages for Enterprise Linux (EPEL) repository. EPEL is a Fedora project full of helpful applications for enterprise users. It includes packages like Python, Perl, Ruby, ImageMagick, and Chromium browser builds. (Please note that this package requires the CRB libraries in the previous step.)
+
+#+begin_src sh
+dnf -y install epel-release
+#+end_src
+
+check crb status
+
+#+begin_src sh
+/usr/bin/crb status
+#+end_src
+
+*** development tools
+
+#+begin_src sh
+dnf groupinstall "Development Tools"
+dnf groupupdate "Development Tools"
+#+end_src
+
+*** dummy-uvm
+
+in rocky linux chroot
+
+#+begin_src sh
+wget https://gist.githubusercontent.com/shkhln/40ef290463e78fb2b0000c60f4ad797e/raw/f640983249607e38af405c95c457ce4afc85c608/uvm_ioctl_override.c
+#+end_src
+
+#+begin_src sh
+cc -m64 -std=c99 -Wall -ldl -fPIC -shared -o dummy-uvm.so uvm_ioctl_override.c
+#+end_src
+
+#+begin_src sh
+mkdir -p ~/.config/gpu
+cp dummy-uvm.so ~/.config/gpu
+#+end_src
+
+*** Copy user and group from Freebsd to Rocky Linux
+
+We can just copy the settings for our user from Freebsd passwd file
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+**** Freebsd /etc/passwd 
+
+#+begin_example
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_example
+
+We also need to change the shell path to use bash in the chroot
+
+Freebsd passwd
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_src
+
+**** rocky passwd
+
+rocky chroot path
+
+#+begin_src sh
+vi /etc/passwd
+#+end_src
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/djwilcox:/bin/bash
+#+end_src
+
+Check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+Output
+
+#+begin_src sh
+uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+**** copy the group from freebsd to rocky
+
+Freebsd /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+Ubuntu /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+# Horizontal Rule
+-----
+
+**** groups
+
+#+begin_src sh
+usermod -a -G adm username
+usermod -a -G cdrom username
+usermod -a -G users username
+usermod -a -G video username
+usermod -a -G audio username
+usermod -a -G pipewire username
+usermod -a -G wheel username
+#+end_src
+
+exit and relogin for the changes to take affect
+
+#+begin_src sh
+exit
+#+end_src
+
+#+begin_src sh
+su - username
+#+end_src
+
+#+begin_example
+/etc/group
+#+end_example
+
+#+begin_src conf
+wheel:*:0:root,djwilcox
+video:x:44:djwilcox
+#root:x:0:
+#wheel:x:10:
+#video:x:39:
+#+end_src
+
+*** sudo install
+
+#+begin_src sh
+dnf install sudo
+#+end_src
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+*** passwd for new user
+
+#+begin_src sh
+passwd username
+#+end_src
+
+*** Switch to out user with su
+
+switch to your user in the jail \\
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+# Horizontal Rule
+-----
+
