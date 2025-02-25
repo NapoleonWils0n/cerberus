@@ -42,16 +42,6 @@ cp dummy-uvm.so ~/.config/gpu
 LD_PRELOAD="${HOME}/.config/gpu/dummy-uvm.so"
 #+end_src
 
-** git clone ComfyUI
-
-#+begin_src sh
-git clone https://github.com/comfyanonymous/ComfyUI.git
-#+end_src
-
-#+begin_src sh
-cd CofmyUI
-#+end_src
-
 ** miniconda
 
 [[https://docs.anaconda.com/miniconda/install/#quick-command-line-install]]
@@ -90,6 +80,16 @@ conda activate comfyenv
 conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
 #+end_src
 
+** git clone ComfyUI
+
+#+begin_src sh
+git clone https://github.com/comfyanonymous/ComfyUI.git
+#+end_src
+
+#+begin_src sh
+cd CofmyUI
+#+end_src
+
 ** pip install requirements
 
 #+begin_src sh
@@ -108,7 +108,8 @@ conda activate comfyui
 #+end_src
 
 #+begin_src sh
-python3 -c 'import torch; print(torch.cuda.is_available())'
+python -c 'import torch; print(torch.cuda.is_available())'
+LD_PRELOAD="${HOME}/.config/gpu/dummy-uvm.so" python -c 'import torch; print(torch.cuda.is_available())'
 #+end_src
 
 ** run
@@ -125,16 +126,16 @@ https://github.com/comfyanonymous/ComfyUI?tab=readme-ov-file
 
 [[https://docs.comfy.org/get_started/manual_install#nvidia]]
 
-** conda deactivate comfyui
+** conda deactivate comfyenv
 
 #+begin_src sh
 conda deactivate 
 #+end_src
 
-** conda remove comfyui
+** conda remove comfyenv
 
 #+begin_src sh
-conda remove -n compfyui --all
+conda remove -n comfyenv --all
 #+end_src
 
 ** uvm
