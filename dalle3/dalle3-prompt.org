@@ -1,0 +1,315 @@
+#+STARTUP: content
+* dalle 3 prompt
+* prompt format
+
+#+begin_example
+Title: [Desired Image Name]  
+Style: [Realistic | Abstract | Cartoon | Etc.]  
+Context: [Short description of the scene or object to be depicted]
+Including elements: [List of objects/components to include in the image (e.g., "A wooden boat on a calm sea", "A glowing cityscape under starry night", etc.)]  
+Additional Notes: [Any extra details, such as lighting, color palette, artistic style, or other preferences.]
+#+end_example
+
+* options
+
+#+begin_example
+Title: 
+   - Title of the image
+
+Size:  
+   - Choose from predefined sizes (e.g., 512x512, 768x1024) or custom dimensions.
+
+Style:
+   - Realistic, oil-palette, pencil-sketch, cartoon, anime, abstract, hyper-realistic, 3D-rendered, etc.
+
+Mood:  
+   - Serene, vibrant, mysterious, dark, light-hearted, chaotic, calm, etc.
+
+Atmospheric Effects:  
+   - Glowing stars, mist-covered landscape, smoke-filled sky, halide effects, etc.
+
+Weather Conditions:  
+   - Rainy sky, stormy weather, sunny day, snowy landscape, foggy terrain, etc.
+
+Dynamic Elements:  
+   - Movement in the background (e.g., flowing water), animals in motion, birds flying, etc.
+
+Artistic Style Details:  
+   - Oil-palette effect, pencil sketch with shading, cartoon-style with outlines only, etc.
+
+Color Palette:  
+   - Neutral colors, warm tones, cool tones, vibrant hues, monochrome, etc.
+
+Lighting:  
+   - Sunrise, sunset, moonlight, starry night, halide light, etc.
+
+Depth of Field:  
+    - Blur effect for distant elements (e.g., mountains in the distance).
+
+Perspective:  
+    - Wide-angle view, close-up, bird's-eye view, ground-level shot.
+
+Composition Techniques:  
+    - Rule of thirds, symmetrical layout, asymmetrical balance, leading lines, etc.
+
+Texture:  
+    - Smooth, rough, bumpy, metallic, glass-like, stone, etc.
+
+Specific Objects or Subjects:  
+    - Include specific elements like trees, mountains, forests, animals, buildings, vehicles, etc.
+
+Context:
+    - A tranquil forest with a sun setting over a meadow.
+
+Including elements:
+    - A towering oak tree, a small stream winding through the terrain, golden hour lighting, mist-covered mountains in the distance.
+
+Additional Notes:
+    - Soft warm colors, peaceful atmosphere.
+
+Age:
+    - To specify if the person is young or mature.
+
+Hair Color:
+    - Different colors like black, brown, blonde, etc.
+
+Eye Color:
+    - Common colors such as blue, brown, green, etc.
+
+Skin Tone:
+    - Lighter or darker skin tones.
+
+Face Shape:
+    - Whether it's oval, diamond, heart-shaped, etc.
+
+Facial Features:
+    - Specific features like dimples, scars, glasses.
+
+Clothes and Accessories:
+    - Types of clothing and accessories.
+
+Style:
+    - Formal, casual, vintage, modern.
+
+Camera Angles:
+    - Wide-angle, close-up, bird’s-eye view.
+
+Lighting:
+    - Soft lighting, harsh shadows, natural sunlight.
+
+Setting Details:
+    - Specific locations like beach, mountain, cityscape.
+
+Additional Context:
+    - Time of day (daylight, evening), time zone to affect timezone details.
+#+end_example
+
+* dalle 3 images
+** Title
+
+#+begin_example
+Title: 
+   - Title of the image
+#+end_example
+
+** Person Description
+
+#+begin_example
+Age: Specific or general description (young, elderly).
+- Example:
+Age: "A 30-year-old woman with a confident demeanor."
+
+
+Hair Color and Style:
+- Example: 
+Hair Color and Style: "Black hair in a straight bun; her roots are silver."
+
+
+Eye Color:
+- Example:
+Eye Color: "Brown eyes with a piercing gaze."
+
+
+Skin Tone:
+- Example: "Golden skin with sun-kissed undertones."
+Skin Tone: "Golden skin with sun-kissed undertones."
+
+
+Facial Features:
+- Example: 
+Facial Features: "Full lips with a subtleSmile; noticeable dimples on the sides of her nose."
+
+
+Clothing and Accessories:
+- Example: 
+Clothing and Accessories: "A elegant black dress with intricate embroidery, matching heels, and a handbag on her arm."
+
+Style (Apparel Style):
+- Example: "Stylish casual wear reflecting modern minimalism."
+Style: 
+
+Additional Details:
+ Example: "Her neck has visible tattoos; she carries a coffee cup resting on the table."
+#+end_example
+
+---
+
+** Scene Description
+
+#+begin_example
+Location: Specific or general.
+ Example: "A futuristic cityscape at sunset with towering skyscrapers and neon lights."
+
+Surrounding Elements:
+ Example: "Modern interior of a sleek apartment filled with high-end furniture, candles, and artwork."
+
+Time of Day:
+ Example: "Dawn, capturing the vibrant colors of sunrise."
+
+Seasons:
+ Example: "A snowy valley during winter, with a soft frost on the trees."
+
+Time Zone (optional for lighting effects):
+ Example: "Beijing time to capture accurate sunrise/sunset times."
+#+end_example
+
+---
+
+** Lighting
+
+#+begin_example
+Natural Light Source*:
+ Example: "Sunrise over mountains and fields casting soft golden tones."
+Artificial Light Source*:
+ Example: "A bright red LED light in a modern laboratory."
+Light Direction*:
+ Example: "Natural light from the left creating depth and contrast."
+Modifications*:
+ Example: "Polarized sunglasses to reduce glare."
+#+end_example
+
+---
+
+** Camera Angles
+
+#+begin_example
+Viewing Angle*:
+ - Example: "A wide-angle shot capturing the entire landscape."
+
+Perspective*:
+ - Example: "An upward angle highlighting vibrant colors in an abstract painting."
+
+Focal Length*:
+ - Example: "Telephoto lens to emphasize intimacy and emotion."
+
+Camera Angle*: Choose how you want the camera to frame the person.
+    - Example: "A wide-angle shot capturing the entire beach."
+    - Example: "A close-up of her smiling face with long lashes."
+
+Composition*: Arrange elements in the scene for emphasis.
+    - Example: "A bird's-eye view of a bustling cityscape with skyscrapers glowing under neon lights."
+#+end_example
+
+---
+
+** Time-Related Details
+
+#+begin_example
+*Time of Day*: Specific time (e.g., "midnight," "noon").
+  - Example: "The first light of dawn, capturing the soft glow of a forest."
+
+*Seasonal Phases*:
+  - Example: "A beautiful sunset in autumn with golden and deep-red hues."
+
+*Day/Night Cycle*:
+  - Example: "A transition from day to night with subtle cloud contrasts."
+
+*Time Zone*: Optionally specify time zones if they affect sunrise/sunset times.
+  - Example: "Beijing time to get accurate lighting and shadows for a morning scene."
+#+end_example
+
+---
+
+** Style and Context
+
+#+begin_example
+- *Style*: Specific art style requested (e.g., realistic, hyper-realistic).
+  - Example: "Realistic Hyper-Photorealistic Style."
+- *Context*:
+  - Example: "A serene garden in the mountains at midday, filled with blooming flowers and birds flying overhead."
+#+end_example
+---
+
+** Additional Artistic Touches
+- *Reflections*: Including surfaces like water or glass.
+  - Example: "Silently watching reflections on a calm lake."
+- *Depth of Field*:
+  - Example: "Out of focus bokeh effect blurring the background slightly."
+- *Shadows*:
+  - Example: "Strong shadows created by heavy cloud cover."
+- *Highlighting Details*:
+  - Example: "Fine details of a rare butterfly species."
+
+---
+
+** Pose and Movement
+- *Posture*: Sitting, standing, leaning.
+  - Example: "A serene pose in the middle of a lush forest."
+- *Facing Direction*:
+  - Example: "Facing towards a distant mountain range."
+- *Movement*: Standing still or in motion (e.g., walking away from a viewpoint).
+
+---
+
+** Cultural and Historical References
+- *Cultural Theme*: Specific to cultural elements.
+  - Example: "A traditional Japanese tea house during cherry blossom season."
+
+---
+
+** Accessories
+- *Jewelry*:
+  - Example: "A delicate silver necklace with a blue sapphire gemstone."
+- *Hats and Headwear*:
+  - Example: "An elegant fedora resting on her head in a cozy living room."
+- *Other Accessories*: Watch, bracelet, bag.
+
+---
+
+** Reflections and Symmetry
+- *Reflection Style*: Including mirrors or water.
+  - Example: "A calm lake reflecting the symmetrical mountains."
+
+---
+
+** Lighting Modifiers
+- *Color Temperature*: Achieving specific lighting effects.
+  - Example: "Candlelight creating a warm, cozy ambiance."
+- *Fog Effect*:
+  - Example: "Indoor lighting with fog to create a mysterious and eerie atmosphere."
+
+---
+
+** Advanced Artistic Styles
+- *Hyper-Photorealistic*: For super detailed realism.
+- *2D Realism*: Achieving photorealism without full 3D animation.
+
+---
+
+** Background Elements
+- *Setting*: Specific background settings (e.g., forest, cityscape).
+  - Example: "A serene mountain valley with snow-capped peaks."
+- *Background Objects*:
+  - Example: "An armchair on a rustic wooden bench in an open field."
+
+---
+
+** Weather Conditions
+- *Day/Night*: Specific weather at certain times.
+  - Example: "Cloudy morning with mist and low-hanging fog."
+- *Precipitation*:
+  - Example: "Rain showers creating dark, gloomy tones."
+
+---
+
+
