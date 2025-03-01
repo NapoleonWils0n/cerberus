@@ -193,6 +193,25 @@ Light Direction: "Natural light from the left creating depth and contrast."
 Modifications: "Polarized sunglasses to reduce glare."
 #+end_example
 
+*** Lighting description prompt
+**** list with examples
+
+#+begin_example
+Natural Light Source: "Sunrise over mountains and fields casting soft golden tones."
+Artificial Light Source: "A bright red LED light in a modern laboratory."
+Light Direction: "Natural light from the left creating depth and contrast."
+Modifications: "Polarized sunglasses to reduce glare."
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Natural Light Source:
+Artificial Light Source:
+Light Direction:
+Modifications:
+#+end_example
+
 ** Camera Angles
 *** Viewing Angle:
 
