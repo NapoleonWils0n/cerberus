@@ -12,6 +12,7 @@ Additional Notes: [Any extra details, such as lighting, color palette, artistic 
 
 * options
 
+#+begin_example
 Title: 
    - Title of the image
 
@@ -101,6 +102,7 @@ Setting Details:
 
 Additional Context:
     - Time of day (daylight, evening), time zone to affect timezone details.
+#+end_example
 
 * dalle 3 images
 ** Title:
