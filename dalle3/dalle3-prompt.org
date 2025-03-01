@@ -126,19 +126,33 @@ Age: Specific or general description (young, elderly).
 Age: "A 30-year-old woman with a confident demeanor."
 #+end_example
 
+*** Hair Color and Style:
+
+- Example: 
+
+#+begin_example
+Hair Color and Style: "Black hair in a straight bun; her roots are silver."
+#+end_example
+
+*** Eye Color:
+
+- Example:
+
+#+begin_example
+Eye Color: "Brown eyes with a piercing gaze."
+#+end_example
+
+*** Skin Tone:
+
+- Example: 
+
+#+begin_example
+Skin Tone: "Golden skin with sun-kissed undertones."
+#+end_example
+
 *** data
 
 #+begin_example
-Hair Color and Style:
-- Example: 
-Hair Color and Style: "Black hair in a straight bun; her roots are silver."
-
-
-Eye Color:
-- Example:
-Eye Color: "Brown eyes with a piercing gaze."
-
-
 Skin Tone:
 - Example: "Golden skin with sun-kissed undertones."
 Skin Tone: "Golden skin with sun-kissed undertones."
