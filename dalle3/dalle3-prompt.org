@@ -78,11 +78,18 @@ Additional Details: "Her neck has visible tattoos; she carries a coffee cup rest
 #+end_example
 
 ** Scene Description
+*** Location: 
+
+Specific or general.
+
+Example:
 
 #+begin_example
-Location: Specific or general.
- Example: "A futuristic cityscape at sunset with towering skyscrapers and neon lights."
+Location: "A futuristic cityscape at sunset with towering skyscrapers and neon lights."
+#+end_example
 
+
+#+begin_example
 Surrounding Elements:
  Example: "Modern interior of a sleek apartment filled with high-end furniture, candles, and artwork."
 
