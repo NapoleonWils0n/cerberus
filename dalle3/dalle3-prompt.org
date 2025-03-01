@@ -360,6 +360,21 @@ Style: "Realistic Hyper-Photorealistic Style."
 Context: "A serene garden in the mountains at midday, filled with blooming flowers and birds flying overhead."
 #+end_example
 
+*** Style and context prompt
+**** list with examples
+
+#+begin_example
+Style: "Realistic Hyper-Photorealistic Style."
+Context: "A serene garden in the mountains at midday, filled with blooming flowers and birds flying overhead."
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Style:
+Context:
+#+end_example
+
 ** Additional Artistic Touches
 - *Reflections*: Including surfaces like water or glass.
   - Example: "Silently watching reflections on a calm lake."
