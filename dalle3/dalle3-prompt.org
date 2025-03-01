@@ -1,99 +1,4 @@
 #+STARTUP: content
-* dalle 3 prompt
-* options
-
-#+begin_example
-Title: 
-   - Title of the image
-
-Size:  
-   - Choose from predefined sizes (e.g., 512x512, 768x1024) or custom dimensions.
-
-Style:
-   - Realistic, oil-palette, pencil-sketch, cartoon, anime, abstract, hyper-realistic, 3D-rendered, etc.
-
-Mood:  
-   - Serene, vibrant, mysterious, dark, light-hearted, chaotic, calm, etc.
-
-Atmospheric Effects:  
-   - Glowing stars, mist-covered landscape, smoke-filled sky, halide effects, etc.
-
-Weather Conditions:  
-   - Rainy sky, stormy weather, sunny day, snowy landscape, foggy terrain, etc.
-
-Dynamic Elements:  
-   - Movement in the background (e.g., flowing water), animals in motion, birds flying, etc.
-
-Artistic Style Details:  
-   - Oil-palette effect, pencil sketch with shading, cartoon-style with outlines only, etc.
-
-Color Palette:  
-   - Neutral colors, warm tones, cool tones, vibrant hues, monochrome, etc.
-
-Lighting:  
-   - Sunrise, sunset, moonlight, starry night, halide light, etc.
-
-Depth of Field:  
-    - Blur effect for distant elements (e.g., mountains in the distance).
-
-Perspective:  
-    - Wide-angle view, close-up, bird's-eye view, ground-level shot.
-
-Composition Techniques:  
-    - Rule of thirds, symmetrical layout, asymmetrical balance, leading lines, etc.
-
-Texture:  
-    - Smooth, rough, bumpy, metallic, glass-like, stone, etc.
-
-Specific Objects or Subjects:  
-    - Include specific elements like trees, mountains, forests, animals, buildings, vehicles, etc.
-
-Context:
-    - A tranquil forest with a sun setting over a meadow.
-
-Including elements:
-    - A towering oak tree, a small stream winding through the terrain, golden hour lighting, mist-covered mountains in the distance.
-
-Additional Notes:
-    - Soft warm colors, peaceful atmosphere.
-
-Age:
-    - To specify if the person is young or mature.
-
-Hair Color:
-    - Different colors like black, brown, blonde, etc.
-
-Eye Color:
-    - Common colors such as blue, brown, green, etc.
-
-Skin Tone:
-    - Lighter or darker skin tones.
-
-Face Shape:
-    - Whether it's oval, diamond, heart-shaped, etc.
-
-Facial Features:
-    - Specific features like dimples, scars, glasses.
-
-Clothes and Accessories:
-    - Types of clothing and accessories.
-
-Style:
-    - Formal, casual, vintage, modern.
-
-Camera Angles:
-    - Wide-angle, close-up, bird’s-eye view.
-
-Lighting:
-    - Soft lighting, harsh shadows, natural sunlight.
-
-Setting Details:
-    - Specific locations like beach, mountain, cityscape.
-
-Additional Context:
-    - Time of day (daylight, evening), time zone to affect timezone details.
-#+end_example
-
 * dalle 3 images
 ** Title:
 
@@ -330,4 +235,98 @@ Composition*: Arrange elements in the scene for emphasis.
 
 ---
 
+
+* options
+
+#+begin_example
+Title: 
+   - Title of the image
+
+Size:  
+   - Choose from predefined sizes (e.g., 512x512, 768x1024) or custom dimensions.
+
+Style:
+   - Realistic, oil-palette, pencil-sketch, cartoon, anime, abstract, hyper-realistic, 3D-rendered, etc.
+
+Mood:  
+   - Serene, vibrant, mysterious, dark, light-hearted, chaotic, calm, etc.
+
+Atmospheric Effects:  
+   - Glowing stars, mist-covered landscape, smoke-filled sky, halide effects, etc.
+
+Weather Conditions:  
+   - Rainy sky, stormy weather, sunny day, snowy landscape, foggy terrain, etc.
+
+Dynamic Elements:  
+   - Movement in the background (e.g., flowing water), animals in motion, birds flying, etc.
+
+Artistic Style Details:  
+   - Oil-palette effect, pencil sketch with shading, cartoon-style with outlines only, etc.
+
+Color Palette:  
+   - Neutral colors, warm tones, cool tones, vibrant hues, monochrome, etc.
+
+Lighting:  
+   - Sunrise, sunset, moonlight, starry night, halide light, etc.
+
+Depth of Field:  
+    - Blur effect for distant elements (e.g., mountains in the distance).
+
+Perspective:  
+    - Wide-angle view, close-up, bird's-eye view, ground-level shot.
+
+Composition Techniques:  
+    - Rule of thirds, symmetrical layout, asymmetrical balance, leading lines, etc.
+
+Texture:  
+    - Smooth, rough, bumpy, metallic, glass-like, stone, etc.
+
+Specific Objects or Subjects:  
+    - Include specific elements like trees, mountains, forests, animals, buildings, vehicles, etc.
+
+Context:
+    - A tranquil forest with a sun setting over a meadow.
+
+Including elements:
+    - A towering oak tree, a small stream winding through the terrain, golden hour lighting, mist-covered mountains in the distance.
+
+Additional Notes:
+    - Soft warm colors, peaceful atmosphere.
+
+Age:
+    - To specify if the person is young or mature.
+
+Hair Color:
+    - Different colors like black, brown, blonde, etc.
+
+Eye Color:
+    - Common colors such as blue, brown, green, etc.
+
+Skin Tone:
+    - Lighter or darker skin tones.
+
+Face Shape:
+    - Whether it's oval, diamond, heart-shaped, etc.
+
+Facial Features:
+    - Specific features like dimples, scars, glasses.
+
+Clothes and Accessories:
+    - Types of clothing and accessories.
+
+Style:
+    - Formal, casual, vintage, modern.
+
+Camera Angles:
+    - Wide-angle, close-up, bird’s-eye view.
+
+Lighting:
+    - Soft lighting, harsh shadows, natural sunlight.
+
+Setting Details:
+    - Specific locations like beach, mountain, cityscape.
+
+Additional Context:
+    - Time of day (daylight, evening), time zone to affect timezone details.
+#+end_example
 
