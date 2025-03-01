@@ -150,23 +150,25 @@ Eye Color: "Brown eyes with a piercing gaze."
 Skin Tone: "Golden skin with sun-kissed undertones."
 #+end_example
 
+*** Facial Features:
+
+- Example: 
+
+#+begin_example
+Facial Features: "Full lips with a subtleSmile; noticeable dimples on the sides of her nose."
+#+end_example
+
+*** Clothing and Accessories:
+
+- Example: 
+
+#+begin_example
+Clothing and Accessories: "A elegant black dress with intricate embroidery, matching heels, and a handbag on her arm."
+#+end_example
+
 *** data
 
 #+begin_example
-Skin Tone:
-- Example: "Golden skin with sun-kissed undertones."
-Skin Tone: "Golden skin with sun-kissed undertones."
-
-
-Facial Features:
-- Example: 
-Facial Features: "Full lips with a subtleSmile; noticeable dimples on the sides of her nose."
-
-
-Clothing and Accessories:
-- Example: 
-Clothing and Accessories: "A elegant black dress with intricate embroidery, matching heels, and a handbag on her arm."
-
 Style (Apparel Style):
 - Example: "Stylish casual wear reflecting modern minimalism."
 Style: 
