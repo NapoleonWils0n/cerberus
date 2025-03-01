@@ -376,70 +376,107 @@ Context:
 #+end_example
 
 ** Additional Artistic Touches
-- *Reflections*: Including surfaces like water or glass.
-  - Example: "Silently watching reflections on a calm lake."
-- *Depth of Field*:
-  - Example: "Out of focus bokeh effect blurring the background slightly."
-- *Shadows*:
-  - Example: "Strong shadows created by heavy cloud cover."
-- *Highlighting Details*:
-  - Example: "Fine details of a rare butterfly species."
+*** Reflections:
 
----
+Including surfaces like water or glass.
+
+- Example:
+
+#+begin_example
+Reflections: "Silently watching reflections on a calm lake."
+#+end_example
+
+*** Depth of Field:
+
+- Example:
+
+#+begin_example
+Depth of Field: "Out of focus bokeh effect blurring the background slightly."
+#+end_example
+
+*** Shadows:
+
+- Example:
+
+#+begin_example
+Shadows: "Strong shadows created by heavy cloud cover."
+#+end_example
+
+*** Highlighting Details:
+
+- Example:
+
+#+begin_example
+Highlighting Details: "Fine details of a rare butterfly species."
+#+end_example
+
+*** Additional Artistic Touches prompt
+
+**** list with examples
+
+#+begin_example
+Reflections: "Silently watching reflections on a calm lake."
+Depth of Field: "Out of focus bokeh effect blurring the background slightly."
+Shadows: "Strong shadows created by heavy cloud cover."
+Highlighting Details: "Fine details of a rare butterfly species."
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Reflections:
+Depth of Field:
+Shadows:
+Highlighting Details:
+#+end_example
 
 ** Pose and Movement
+
 - *Posture*: Sitting, standing, leaning.
   - Example: "A serene pose in the middle of a lush forest."
 - *Facing Direction*:
   - Example: "Facing towards a distant mountain range."
 - *Movement*: Standing still or in motion (e.g., walking away from a viewpoint).
 
----
-
 ** Cultural and Historical References
+
 - *Cultural Theme*: Specific to cultural elements.
   - Example: "A traditional Japanese tea house during cherry blossom season."
 
----
-
 ** Accessories
+
 - *Jewelry*:
   - Example: "A delicate silver necklace with a blue sapphire gemstone."
 - *Hats and Headwear*:
   - Example: "An elegant fedora resting on her head in a cozy living room."
 - *Other Accessories*: Watch, bracelet, bag.
 
----
-
 ** Reflections and Symmetry
+
 - *Reflection Style*: Including mirrors or water.
   - Example: "A calm lake reflecting the symmetrical mountains."
 
----
-
 ** Lighting Modifiers
+
 - *Color Temperature*: Achieving specific lighting effects.
   - Example: "Candlelight creating a warm, cozy ambiance."
 - *Fog Effect*:
   - Example: "Indoor lighting with fog to create a mysterious and eerie atmosphere."
 
----
-
 ** Advanced Artistic Styles
+
 - *Hyper-Photorealistic*: For super detailed realism.
 - *2D Realism*: Achieving photorealism without full 3D animation.
 
----
-
 ** Background Elements
+
 - *Setting*: Specific background settings (e.g., forest, cityscape).
   - Example: "A serene mountain valley with snow-capped peaks."
 - *Background Objects*:
   - Example: "An armchair on a rustic wooden bench in an open field."
 
----
-
 ** Weather Conditions
+
 - *Day/Night*: Specific weather at certain times.
   - Example: "Cloudy morning with mist and low-hanging fog."
 - *Precipitation*:
