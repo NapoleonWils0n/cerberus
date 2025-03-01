@@ -476,9 +476,19 @@ Movement:
 #+end_example
 
 ** Cultural and Historical References
+*** Cultural Theme:
 
-- *Cultural Theme*: Specific to cultural elements.
-  - Example: "A traditional Japanese tea house during cherry blossom season."
+Specific to cultural elements.
+
+- Example:
+
+#+begin_example
+Cultural Theme: "A traditional Japanese tea house during cherry blossom season."
+#+end_example
+
+#+begin_example
+Cultural Theme:
+#+end_example
 
 ** Accessories
 
