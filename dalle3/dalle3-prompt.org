@@ -77,6 +77,33 @@ Style: "Stylish casual wear reflecting modern minimalism."
 Additional Details: "Her neck has visible tattoos; she carries a coffee cup resting on the table."
 #+end_example
 
+*** Person prompt
+**** list with examples
+
+#+begin_example
+Age: "A 30-year-old woman with a confident demeanor."
+Hair Color and Style: "Black hair in a straight bun; her roots are silver."
+Eye Color: "Brown eyes with a piercing gaze."
+Skin Tone: "Golden skin with sun-kissed undertones."
+Facial Features: "Full lips with a subtleSmile; noticeable dimples on the sides of her nose."
+Clothing and Accessories: "A elegant black dress with intricate embroidery, matching heels, and a handbag on her arm."
+Style: "Stylish casual wear reflecting modern minimalism."
+Additional Details: "Her neck has visible tattoos; she carries a coffee cup resting on the table."
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Age:
+Hair Color and Style:
+Eye Color:
+Skin Tone:
+Facial Features:
+Clothing and Accessories:
+Style:
+Additional Details:
+#+end_example
+
 ** Scene Description
 *** Location: 
 
@@ -251,7 +278,6 @@ Style: "Realistic Hyper-Photorealistic Style."
 #+begin_example
 Context: "A serene garden in the mountains at midday, filled with blooming flowers and birds flying overhead."
 #+end_example
-
 
 ** Additional Artistic Touches
 - *Reflections*: Including surfaces like water or glass.
