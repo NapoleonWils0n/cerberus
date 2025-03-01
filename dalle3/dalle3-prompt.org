@@ -108,8 +108,11 @@ Additional Context:
 ** Title:
 
 #+begin_example
-Title: 
-    Title of the image
+Title: Title of the image
+#+end_example
+
+#+begin_example
+Title: A serene forest sunset with golden hour lighting and a gentle mist-covered meadow in the background.
 #+end_example
 
 ** Person Description
