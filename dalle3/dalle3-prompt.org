@@ -173,18 +173,29 @@ Perspective: "An upward angle highlighting vibrant colors in an abstract paintin
 Focal Length: "Telephoto lens to emphasize intimacy and emotion."
 #+end_example
 
+*** Camera Angle:
 
+Choose how you want the camera to frame the person.
+
+- Examples:
 
 #+begin_example
-Camera Angle*: Choose how you want the camera to frame the person.
-    - Example: "A wide-angle shot capturing the entire beach."
-    - Example: "A close-up of her smiling face with long lashes."
-
-Composition*: Arrange elements in the scene for emphasis.
-    - Example: "A bird's-eye view of a bustling cityscape with skyscrapers glowing under neon lights."
+Camera Angle: "A wide-angle shot capturing the entire beach."
 #+end_example
 
----
+#+begin_example
+Camera Angle: "A close-up of her smiling face with long lashes."
+#+end_example
+
+*** Composition:
+
+Arrange elements in the scene for emphasis.
+
+- Example:
+
+#+begin_example
+Composition: "A bird's-eye view of a bustling cityscape with skyscrapers glowing under neon lights."
+#+end_example
 
 ** Time-Related Details
 
