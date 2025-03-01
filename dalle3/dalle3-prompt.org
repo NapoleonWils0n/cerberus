@@ -131,7 +131,6 @@ Natural Light Source: "Sunrise over mountains and fields casting soft golden ton
 Artificial Light Source: "A bright red LED light in a modern laboratory."
 #+end_example
 
-
 *** Light Direction:
 
 - Example: 
@@ -140,7 +139,6 @@ Artificial Light Source: "A bright red LED light in a modern laboratory."
 Light Direction: "Natural light from the left creating depth and contrast."
 #+end_example
 
-
 *** Modifications:
 
 - Example: 
@@ -148,7 +146,6 @@ Light Direction: "Natural light from the left creating depth and contrast."
 #+begin_example
 Modifications: "Polarized sunglasses to reduce glare."
 #+end_example
-
 
 ** Camera Angles
 
@@ -269,9 +266,6 @@ Composition*: Arrange elements in the scene for emphasis.
   - Example: "Cloudy morning with mist and low-hanging fog."
 - *Precipitation*:
   - Example: "Rain showers creating dark, gloomy tones."
-
----
-
 
 * options
 
