@@ -1,5 +1,5 @@
 #+STARTUP: content
-* dalle 3 images
+* dalle 3 image prompt
 ** Title:
 
 Title: Title of the image
