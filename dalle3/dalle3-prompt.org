@@ -1,15 +1,5 @@
 #+STARTUP: content
 * dalle 3 prompt
-* prompt format
-
-#+begin_example
-Title: [Desired Image Name]  
-Style: [Realistic | Abstract | Cartoon | Etc.]  
-Context: [Short description of the scene or object to be depicted]
-Including elements: [List of objects/components to include in the image (e.g., "A wooden boat on a calm sea", "A glowing cityscape under starry night", etc.)]  
-Additional Notes: [Any extra details, such as lighting, color palette, artistic style, or other preferences.]
-#+end_example
-
 * options
 
 #+begin_example
