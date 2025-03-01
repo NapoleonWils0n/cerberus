@@ -148,7 +148,6 @@ Modifications: "Polarized sunglasses to reduce glare."
 #+end_example
 
 ** Camera Angles
-
 *** Viewing Angle:
 
 - Example: 
@@ -198,32 +197,61 @@ Composition: "A bird's-eye view of a bustling cityscape with skyscrapers glowing
 #+end_example
 
 ** Time-Related Details
+*** Time of Day:
+
+Specific time (e.g., "midnight," "noon").
+
+- Example: 
 
 #+begin_example
-*Time of Day*: Specific time (e.g., "midnight," "noon").
-  - Example: "The first light of dawn, capturing the soft glow of a forest."
-
-*Seasonal Phases*:
-  - Example: "A beautiful sunset in autumn with golden and deep-red hues."
-
-*Day/Night Cycle*:
-  - Example: "A transition from day to night with subtle cloud contrasts."
-
-*Time Zone*: Optionally specify time zones if they affect sunrise/sunset times.
-  - Example: "Beijing time to get accurate lighting and shadows for a morning scene."
+Time of Day: "The first light of dawn, capturing the soft glow of a forest."
 #+end_example
 
----
+*** Seasonal Phases:
+
+- Example: 
+
+#+begin_example
+Seasonal Phases: "A beautiful sunset in autumn with golden and deep-red hues."
+#+end_example
+
+*** Day/Night Cycle:
+
+- Example: 
+
+#+begin_example
+Day/Night Cycle: "A transition from day to night with subtle cloud contrasts."
+#+end_example
+
+*** Time Zone:
+
+Optionally specify time zones if they affect sunrise/sunset times.
+
+- Example: 
+
+#+begin_example
+Time Zone: "Beijing time to get accurate lighting and shadows for a morning scene."
+#+end_example
 
 ** Style and Context
+*** Style:
+
+Specific art style requested (e.g., realistic, hyper-realistic).
+
+- Example: 
 
 #+begin_example
-- *Style*: Specific art style requested (e.g., realistic, hyper-realistic).
-  - Example: "Realistic Hyper-Photorealistic Style."
-- *Context*:
-  - Example: "A serene garden in the mountains at midday, filled with blooming flowers and birds flying overhead."
+Style: "Realistic Hyper-Photorealistic Style."
 #+end_example
----
+
+*** Context:
+
+- Example:
+
+#+begin_example
+Context: "A serene garden in the mountains at midday, filled with blooming flowers and birds flying overhead."
+#+end_example
+
 
 ** Additional Artistic Touches
 - *Reflections*: Including surfaces like water or glass.
