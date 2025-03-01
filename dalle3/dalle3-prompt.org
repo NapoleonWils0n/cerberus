@@ -82,28 +82,37 @@ Additional Details: "Her neck has visible tattoos; she carries a coffee cup rest
 
 Specific or general.
 
-Example:
+- Example:
 
 #+begin_example
 Location: "A futuristic cityscape at sunset with towering skyscrapers and neon lights."
 #+end_example
 
+*** Surrounding Elements:
+
+- Example: 
 
 #+begin_example
-Surrounding Elements:
- Example: "Modern interior of a sleek apartment filled with high-end furniture, candles, and artwork."
-
-Time of Day:
- Example: "Dawn, capturing the vibrant colors of sunrise."
-
-Seasons:
- Example: "A snowy valley during winter, with a soft frost on the trees."
-
-Time Zone (optional for lighting effects):
- Example: "Beijing time to capture accurate sunrise/sunset times."
+Surrounding Elements: "Modern interior of a sleek apartment filled with high-end furniture, candles, and artwork."
 #+end_example
 
----
+*** Time of Day:
+
+-  Example: 
+
+#+begin_example
+Time of Day: "Dawn, capturing the vibrant colors of sunrise."
+#+end_example 
+
+*** Time Zone:
+
+optional for lighting effects
+
+- Example: 
+
+#+begin_example
+Time Zone: "Beijing time to capture accurate sunrise/sunset times."
+#+end_example
 
 ** Lighting
 
