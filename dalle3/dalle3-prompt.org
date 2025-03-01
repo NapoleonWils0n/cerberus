@@ -77,7 +77,7 @@ Style: "Stylish casual wear reflecting modern minimalism."
 Additional Details: "Her neck has visible tattoos; she carries a coffee cup resting on the table."
 #+end_example
 
-*** Person prompt
+*** Person description prompt
 **** list with examples
 
 #+begin_example
