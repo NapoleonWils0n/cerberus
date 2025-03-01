@@ -141,6 +141,25 @@ optional for lighting effects
 Time Zone: "Beijing time to capture accurate sunrise/sunset times."
 #+end_example
 
+*** Scene description prompt
+**** list with examples
+
+#+begin_example
+Location: "A futuristic cityscape at sunset with towering skyscrapers and neon lights."
+Surrounding Elements: "Modern interior of a sleek apartment filled with high-end furniture, candles, and artwork."
+Time of Day: "Dawn, capturing the vibrant colors of sunrise."
+Time Zone: "Beijing time to capture accurate sunrise/sunset times."
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Location:
+Surrounding Elements:
+Time of Day:
+Time Zone:
+#+end_example
+
 ** Lighting
 *** Natural Light Source:
 
