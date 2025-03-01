@@ -109,18 +109,26 @@ Additional Context:
 
 Title: Title of the image
 
+- Example:
+
 #+begin_example
 Title: A serene forest sunset with golden hour lighting and a gentle mist-covered meadow in the background.
 #+end_example
 
 ** Person Description
+*** Age:
+
+Age: Specific or general description (young, elderly).
+
+- Example:
 
 #+begin_example
-Age: Specific or general description (young, elderly).
-- Example:
 Age: "A 30-year-old woman with a confident demeanor."
+#+end_example
 
+*** data
 
+#+begin_example
 Hair Color and Style:
 - Example: 
 Hair Color and Style: "Black hair in a straight bun; her roots are silver."
