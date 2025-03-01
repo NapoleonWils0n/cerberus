@@ -166,15 +166,20 @@ Facial Features: "Full lips with a subtleSmile; noticeable dimples on the sides 
 Clothing and Accessories: "A elegant black dress with intricate embroidery, matching heels, and a handbag on her arm."
 #+end_example
 
-*** data
+*** Style (Apparel Style):
+
+- Example: 
 
 #+begin_example
-Style (Apparel Style):
-- Example: "Stylish casual wear reflecting modern minimalism."
-Style: 
+Style: "Stylish casual wear reflecting modern minimalism."
+#+end_example
 
-Additional Details:
- Example: "Her neck has visible tattoos; she carries a coffee cup resting on the table."
+*** Additional Details:
+
+- Example: 
+
+#+begin_example
+Additional Details: "Her neck has visible tattoos; she carries a coffee cup resting on the table."
 #+end_example
 
 ---
