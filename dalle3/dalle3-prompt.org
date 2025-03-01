@@ -319,6 +319,25 @@ Optionally specify time zones if they affect sunrise/sunset times.
 Time Zone: "Beijing time to get accurate lighting and shadows for a morning scene."
 #+end_example
 
+*** Time zone prompt
+**** list with examples
+
+#+begin_example
+Time of Day: "The first light of dawn, capturing the soft glow of a forest."
+Seasonal Phases: "A beautiful sunset in autumn with golden and deep-red hues."
+Day/Night Cycle: "A transition from day to night with subtle cloud contrasts."
+Time Zone: "Beijing time to get accurate lighting and shadows for a morning scene."
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Time of Day:
+Seasonal Phases:
+Day/Night Cycle:
+Time Zone:
+#+end_example
+
 ** Style and Context
 *** Style:
 
