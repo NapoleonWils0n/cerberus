@@ -411,7 +411,6 @@ Highlighting Details: "Fine details of a rare butterfly species."
 #+end_example
 
 *** Additional Artistic Touches prompt
-
 **** list with examples
 
 #+begin_example
@@ -431,12 +430,50 @@ Highlighting Details:
 #+end_example
 
 ** Pose and Movement
+*** Posture:
 
-- *Posture*: Sitting, standing, leaning.
-  - Example: "A serene pose in the middle of a lush forest."
-- *Facing Direction*:
-  - Example: "Facing towards a distant mountain range."
-- *Movement*: Standing still or in motion (e.g., walking away from a viewpoint).
+Sitting, standing, leaning.
+
+- Example:
+
+#+begin_example
+Posture: "A serene pose in the middle of a lush forest."
+#+end_example
+
+*** Facing Direction:
+
+- Example:
+
+#+begin_example
+Facing Direction: "Facing towards a distant mountain range."
+#+end_example
+
+*** Movement:
+
+Standing still or in motion (e.g., walking away from a viewpoint).
+
+- Example:
+
+#+begin_example
+Movement: walking towards the camera
+#+end_example
+
+*** Pose and Movement prompt
+**** list with examples
+
+#+begin_example
+Posture: "A serene pose in the middle of a lush forest."
+Facing Direction: "Facing towards a distant mountain range."
+Movement: walking towards the camera
+#+end_example
+
+**** list without examples
+
+#+begin_example
+Posture:
+Facing Direction:
+Movement:
+#+end_example
 
 ** Cultural and Historical References
 
