@@ -491,12 +491,31 @@ Cultural Theme:
 #+end_example
 
 ** Accessories
+*** Jewelry:
 
-- *Jewelry*:
-  - Example: "A delicate silver necklace with a blue sapphire gemstone."
-- *Hats and Headwear*:
-  - Example: "An elegant fedora resting on her head in a cozy living room."
-- *Other Accessories*: Watch, bracelet, bag.
+- Example:
+
+#+begin_example
+Jewelry: "A delicate silver necklace with a blue sapphire gemstone."
+#+end_example
+
+*** Hats and Headwear:
+
+- Example:
+
+#+begin_example
+Hats and Headwear: "An elegant fedora resting on her head in a cozy living room."
+#+end_example
+
+*** Other Accessories:
+
+Watch, bracelet, bag.
+
+- Example:
+
+#+begin_example
+Other Accessories:
+#+end_example
 
 ** Reflections and Symmetry
 
