@@ -344,7 +344,7 @@ Time Zone:
 ** Style and Context
 *** Style:
 
-Specific art style requested (e.g., realistic, hyper-realistic).
+Realistic, oil-palette, pencil-sketch, cartoon, anime, abstract, hyper-realistic, 3D-rendered, etc.
 
 - Example: 
 
@@ -603,14 +603,8 @@ Precipitation: "Rain showers creating dark, gloomy tones."
 * options
 
 #+begin_example
-Title: 
-   - Title of the image
-
 Size:  
    - Choose from predefined sizes (e.g., 512x512, 768x1024) or custom dimensions.
-
-Style:
-   - Realistic, oil-palette, pencil-sketch, cartoon, anime, abstract, hyper-realistic, 3D-rendered, etc.
 
 Mood:  
    - Serene, vibrant, mysterious, dark, light-hearted, chaotic, calm, etc.
