@@ -555,21 +555,50 @@ Hyper-Photorealistic: For super detailed realism.
 2D Realism: Achieving photorealism without full 3D animation.
 
 ** Background Elements
+*** Setting:
 
-Setting: Specific background settings (e.g., forest, cityscape).
-  - Example: "A serene mountain valley with snow-capped peaks."
+Specific background settings (e.g., forest, cityscape).
 
+- Example:
+
+#+begin_example
+Setting: "A serene mountain valley with snow-capped peaks."
+#+end_example
+
+#+begin_example
+Setting:
+#+end_example
+
+*** Background Objects:
+
+- Example:
+
+#+begin_example
+Background Objects: "An armchair on a rustic wooden bench in an open field."
+#+end_example
+
+#+begin_example
 Background Objects:
-  - Example: "An armchair on a rustic wooden bench in an open field."
+#+end_example
     
 ** Weather Conditions
+*** Day/Night:
 
-Day/Night: Specific weather at certain times.
+Specific weather at certain times.
 
-  - Example: "Cloudy morning with mist and low-hanging fog."
+- Example:
 
-Precipitation:
-  - Example: "Rain showers creating dark, gloomy tones."
+#+begin_example
+Day/Night: "Cloudy morning with mist and low-hanging fog."
+#+end_example
+
+*** Precipitation:
+
+- Example:
+
+#+begin_example
+Precipitation: "Rain showers creating dark, gloomy tones."
+#+end_example
 
 * options
 
