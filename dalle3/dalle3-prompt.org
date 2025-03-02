@@ -519,33 +519,56 @@ Other Accessories:
 
 ** Reflections and Symmetry
 
-- *Reflection Style*: Including mirrors or water.
-  - Example: "A calm lake reflecting the symmetrical mountains."
+Reflection Style:
+
+Including mirrors or water.
+
+- Example:
+
+#+begin_example
+Reflection Style: "A calm lake reflecting the symmetrical mountains."
+#+end_example
+
+#+begin_example
+Reflection Style:
+#+end_example
 
 ** Lighting Modifiers
+*** Color Temperature:
 
-- *Color Temperature*: Achieving specific lighting effects.
-  - Example: "Candlelight creating a warm, cozy ambiance."
-- *Fog Effect*:
-  - Example: "Indoor lighting with fog to create a mysterious and eerie atmosphere."
+Achieving specific lighting effects.
+
+- Example:
+
+#+begin_example
+Color Temperature: "Candlelight creating a warm, cozy ambiance."
+#+end_example
+
+#+begin_example
+Color Temperature:
+#+end_example
 
 ** Advanced Artistic Styles
 
-- *Hyper-Photorealistic*: For super detailed realism.
-- *2D Realism*: Achieving photorealism without full 3D animation.
+Hyper-Photorealistic: For super detailed realism.
+
+2D Realism: Achieving photorealism without full 3D animation.
 
 ** Background Elements
 
-- *Setting*: Specific background settings (e.g., forest, cityscape).
+Setting: Specific background settings (e.g., forest, cityscape).
   - Example: "A serene mountain valley with snow-capped peaks."
-- *Background Objects*:
-  - Example: "An armchair on a rustic wooden bench in an open field."
 
+Background Objects:
+  - Example: "An armchair on a rustic wooden bench in an open field."
+    
 ** Weather Conditions
 
-- *Day/Night*: Specific weather at certain times.
+Day/Night: Specific weather at certain times.
+
   - Example: "Cloudy morning with mist and low-hanging fog."
-- *Precipitation*:
+
+Precipitation:
   - Example: "Rain showers creating dark, gloomy tones."
 
 * options
