@@ -214,17 +214,15 @@ lively atmosphere of Exmouth Market.
 
 #+begin_example
 Hyper-Photorealistic:
+Location: standing in front of a cozy independent coffee shop in Exmouth Market, London.
+holding a script in one hand and a takeaway coffee cup in the other
 Age: young woman with vibrant and expressive features
 Hair: She has curly brown hair that falls just past her shoulders, framing her face.
 Skin Tone: pale 
 Clothing and Accessories: vintage-inspired outfit,
 perhaps a high-waisted floral skirt paired with a tucked-in band t-shirt and a denim jacket.
 Jewelry: small, silver nose ring adorns her left nostril
-Additional Details: holding a script in one hand and a takeaway coffee cup in the other
-Location: cozy independent coffee shop in Exmouth Market, London.
-Context: The background should hint at the bustling London neighborhood near Angel station,
-with glimpses of Victorian architecture and the lively atmosphere of Exmouth Market.
-Natural Light Source: miday lighting
+Additional Details: Natural Light Source: miday lighting
 Camera Angle: Wide angle
 #+end_example
 
