@@ -323,9 +323,9 @@ Skin Tone: white
 Facial Features: distinguished appearance
 Clothing and Accessories: well-fitted tweed jacket in earthy tones,
 paired with a crisp white shirt and a colorful bow tie and round spectacles perched on his nose.
-Posture: standing in front of a Georgian terrace on Myddelton Square, London
-Location: Georgian terrace on Myddelton Square, London
-Square, with its characteristic symmetrical facades and large sash windows.
+Location: standing in front of a Georgian terrace on Myddelton Square, London.
+The background showcases the elegant Georgian architecture of Myddelton
+Square, with its characteristic symmetrical facades and large sash windows
 Natural Light Source: lighing late afternoon with shadows
 Camera Angle: extreme wide angle 
 #+end_example
@@ -383,13 +383,18 @@ where Abdul lives. He is holding a set of prayer beads in one hand
 
 #+begin_example
 Hyper-Photorealistic:
-Age: 
-Hair: 
-Skin Tone: 
-Facial Features: 
-Clothing and Accessories: 
-Location: 
-Natural Light Source:
+Age: 68-year-old Bangladeshi man
+Hair: Salt-and-pepper beard
+Skin Tone: dark skinned
+Facial Features: His eyes are kind and weathered
+Posture: slightly stooped posture
+Clothing and Accessories: wearing traditional Bangladeshi clothing, including a long,
+loose-fitting kurta in a muted color and a white prayer cap
+Additional Details: holding a set of prayer beads in one hand
+Location: In the background, glimpses of the bustling Exmouth Market can be seen
+standing in front of a modest two-bedroom council flat near Exmouth Market in London
+Natural Light Source: early evening lighting
+Camera Angle: extreme wide angle 
 #+end_example
 
 ** 13. Doris Fletcher
