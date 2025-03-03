@@ -250,13 +250,12 @@ Skin Tone: olive skin
 Facial Features: warm, expressive brown eyes and a friendly smile.
 Clothing and Accessories: wearing crisp white chef's whites 
 Additional Details: Marco's has one hand on the door frame and the other gesturing invitingly.
-Location: He's standing in the doorway of his rustic
+Location: "He's standing in the doorway of his rustic
 trattoria on St.John Street in Clerkenwell, London. The restaurant's
 facade features a red-and-white striped awning and a chalkboard menu.
 Marco's has one hand on the door frame and the other gesturing invitingly.
 In the background, you can see glimpses of a cozy dining room with wooden tables and chairs,
-and the soft glow of pendant lights. The street outside is bustling with
-activity, reflecting the vibrant neighborhood. 
+and the soft glow of pendant lights. The street outside is bustling with activity."
 Natural Light Source: 
 Camera Angle: wide angle capturing the scene
 #+end_example
