@@ -157,11 +157,11 @@ Hair: long, sleek blonde hair that falls past her shoulders.
 Skin Tone: Pale
 Clothing and Accessories: wearing a tailored, dark navy blue suit with a crisp white blouse underneath
 Jewelry: pair of pearl earrings and a delicate gold necklace.
-Posture: standing in front of a modern, glass-fronted building 
-Location: Clerkenwell area of London
-Surrounding Elements: In the background, you can see glimpses of Clerkenwell Green, with its mix of historic and contemporary architecture
+Facial Features: Her facial expression is composed and self-assured, with a hint of a smile.
+Location: standing in front of a modern, glass-fronted building in the Clerkenwell area of London
+Additional Details: holding a leather briefcase in one hand and a smartphone in the other
 Natural Light Source: late afternoon with shadows
-Camera Angle: long shot
+Camera Angle: wide angle
 #+end_example
 
 ** 6. Ahmed Al-Rashid
