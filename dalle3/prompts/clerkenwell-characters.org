@@ -1,0 +1,445 @@
+#+STARTUP: content
+* input to process
+** 1. Olivia Chen
+Name: Olivia Chen
+Occupation: architect
+*Description* A stylish 32-year-old Chinese-British woman standing in a modern,
+open-plan loft apartment. She has short, sleek black hair and wears
+striking, angular eyeglasses. Her outfit consists of minimalist,
+high-end clothing in neutral tones with a tailored black blazer
+over a crisp white shirt, paired with slim-fit trousers. She's holding a
+set of architectural blueprints or a tablet displaying 3D building
+designs.
+
+The background showcases her loft apartment on Clerkenwell Road, with
+large windows offering a view of the London skyline. A drafting table or sleek
+desk with a computer setup hints at her work as an architect.
+On a nearby coffee table, there are design magazines and perhaps a few
+material samples
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: A stylish 32-year-old Chinese-British woman
+Hair: short, sleek black hair
+Clothing and Accessories: minimalist,
+high-end clothing in neutral tones with a tailored black blazer
+over a crisp white shirt, paired with slim-fit trousers.
+Additional Details: holding a set of architectural blueprints 
+Location: The background showcases her loft apartment on Clerkenwell Road, with
+large windows offering a view of the London skyline. A drafting table or sleek
+desk with a computer setup hints at her work as an architect.
+On a nearby coffee table, there are design magazines
+Natural Light Source: natural light coming through the windows
+Camera Angle: Wide angle
+#+end_example
+
+** 2. Amir Patel
+Name: Amir Patel
+Occupation: tech entrepreneur
+Description: Casually dressed in smart casual attire, with a
+well-groomed beard and thick-rimmed glasses
+
+A 45-year-old British-Indian man with a well-groomed beard and
+thick-rimmed glasses. He has a warm, confident smile and intelligent
+eyes. His skin tone is medium brown, and his hair is dark with a few
+silver strands at the temples. Amir is dressed in smart casual attire,
+wearing a crisp white button-down shirt with rolled-up sleeves, paired
+with dark blue jeans and brown leather loafers. He may be holding a
+sleek smartphone or tablet, symbolizing his tech entrepreneurship,
+in a modern office space with glass walls and contemporary furniture.
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 45-year-old British-Indian man
+Hair: hair is dark with a few silver strands at the temples, with a well-groomed beard
+Skin Tone: medium brown
+Clothing and Accessories: smart casual attire, wearing a crisp white button-down shirt with rolled-up sleeves, paired
+with dark blue jeans and brown leather loafers and thick-rimmed glasses
+Additional Details: holding a sleek smartphone or tablet
+Location: modern office space with glass walls
+Surrounding Elements: contemporary furniture
+Natural Light Source: natural light coming through the windows
+Camera Angle: wide angle
+#+end_example
+
+** 3. Sophie O'Brien
+Name: Sophie O'Brien
+Occupation: graphic designer
+Description: A 28-year-old woman with a creative and artistic appearance, suitable
+for a graphic designer. She has shoulder-length hair dyed in soft pastel
+colors, possibly a mix of pale pink and lavender. Her hair is styled in
+a slightly messy, effortless way that suggests a bohemian vibe. 
+Sophie's outfit is an eclectic mix of vintage-inspired pieces. She wears
+a loose-fitting, patterned blouse with a retro 70s-style print, tucked
+into high-waisted, wide-leg jeans.
+
+The background islington a cozy corner of a trendy coffee shop with exposed brick walls
+On the table in front of her, there's an open laptop, along with a sketchbook
+and some colorful markers or pencils to represent her design work.
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 28-year-old woman
+Hair: shoulder-length hair dyed in soft pastel colors, possibly a mix of pale pink and lavender
+Skin Tone: pale
+Clothing and Accessories: loose-fitting, patterned blouse with a retro 70s-style print,
+tucked into high-waisted, wide-leg jeans.
+Location: The background islington a cozy corner of a trendy coffee shop with exposed brick walls
+On the table in front of her, there's an open laptop, along with a sketchbook
+and some colorful markers or pencils to represent her design work.
+Lighting: florescent lighting
+Camera Angle: wide angle
+#+end_example
+
+** 4. Kwame Osei
+Name: Kwame Osei
+Occupation: social worker
+Description: Kind-faced man with salt-and-pepper hair, often seen in
+practical, comfortable clothing
+
+A 52-year-old Ghanaian-British man with a kind, warm face and
+salt-and-pepper hair. He has dark skin and a friendly expression, with
+gentle eyes and smile lines around his mouth. Kwame is wearing
+practical, comfortable clothing suitable for a social worker - a casual
+button-down shirt in a muted color, rolled up at the sleeves, and khaki
+trousers. He may be holding a clipboard or folder
+The background is a council office 
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 52-year-old Ghanaian-British man 
+Hair: salt-and-pepper hair
+Skin Tone: dark skin 
+Clothing and Accessories: casual button-down shirt in a muted color, rolled up at the sleeves, and khaki trousers.
+Location: council office
+Surrounding Elements: office equipment and filing cabinets
+Lighting: overhead florescent lighting
+Camera Angle: Telephoto lens 
+#+end_example
+
+** 5. Emma Fitzgerald
+Name: Emma Fitzgerald
+Description: lawyer
+Description: Polished professional with long blonde hair, typically
+dressed in tailored suits and designer accessories
+
+A 39-year-old British woman with a polished, professional appearance.
+She has long, sleek blonde hair that falls past her shoulders. Emma is
+wearing a tailored, dark navy blue suit with a crisp white blouse
+underneath. The suit jacket is fitted and accentuates her confident
+posture. She's accessorized with a pair of pearl earrings and a delicate
+gold necklace.
+
+Emma is standing in front of a modern, glass-fronted building in the
+Clerkenwell area of London, which represents her law firm's office.
+She's holding a leather briefcase in one hand and a smartphone in the
+other, symbolizing her busy career as a corporate lawyer.
+Her facial expression is composed and self-assured, with a hint of a
+smile.
+
+In the background, you can see glimpses of Clerkenwell Green, with its
+mix of historic and contemporary architecture
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 39-year-old British woman with a polished, professional appearance.
+Hair: long, sleek blonde hair that falls past her shoulders.
+Skin Tone: Pale
+Clothing and Accessories: wearing a tailored, dark navy blue suit with a crisp white blouse underneath
+Jewelry: pair of pearl earrings and a delicate gold necklace.
+Posture: standing in front of a modern, glass-fronted building 
+Location: Clerkenwell area of London
+Surrounding Elements: In the background, you can see glimpses of Clerkenwell Green, with its mix of historic and contemporary architecture
+Natural Light Source: late afternoon with shadows
+Camera Angle: long shot
+#+end_example
+
+** 6. Ahmed Al-Rashid
+Name: Ahmed Al-Rashid
+Occupation: retired watchmaker
+Description: Distinguished older gentleman with silver hair and a
+neatly trimmed mustache, often wearing a waistcoat and pocket watch
+
+A distinguished 63-year-old gentleman with silver hair and a neatly
+trimmed mustache stands in front of a small, quaint watch repair shop on
+Clerkenwell Road in London. He is wearing a classic waistcoat with a
+pocket watch chain visible. The shop's window displays various antique
+timepieces and watchmaking tools.
+
+he holds a magnifying loupe in one hand and a delicate watch movement
+in the other. In the background, glimpses of a local park can be seen.
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: Distinguished older gentleman
+Hair: silver hair and a neatly trimmed mustache
+Skin Tone: indian
+Clothing and Accessories: He is wearing a classic waistcoat with a pocket watch chain visible.
+Additional Details: he holds a magnifying loupe in one hand and a delicate watch movement in the other.
+Location: stands in front of a small, quaint watch repair shop on Clerkenwell Road in London.
+Surrounding Elements: The shop's window displays various antique timepieces and watchmaking tools.
+Natural Light Source: late evening
+Camera Angle: wide angle
+#+end_example
+
+** 7. Zoe Thompson
+Name: Zoe Thompson
+Occupation: barista
+Description: A young woman with vibrant and expressive features, standing in front of
+a cozy independent coffee shop in Exmouth Market, London. She has curly
+brown hair that falls just past her shoulders, framing her face. A
+small, silver nose ring adorns her left nostril, adding a touch of
+edginess to her appearance. Zoe is dressed in a vintage-inspired outfit,
+perhaps a high-waisted floral skirt paired with a tucked-in band t-shirt
+and a denim jacket. 
+
+She could be holding a script in one hand and a takeaway coffee cup in the other
+The background should hint at the bustling London neighborhood
+near Angel station, with glimpses of Victorian architecture and the
+lively atmosphere of Exmouth Market.
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: young woman with vibrant and expressive features
+Hair: She has curly brown hair that falls just past her shoulders, framing her face.
+Skin Tone: pale 
+Clothing and Accessories: vintage-inspired outfit,
+perhaps a high-waisted floral skirt paired with a tucked-in band t-shirt and a denim jacket.
+Jewelry: small, silver nose ring adorns her left nostril
+Additional Details: holding a script in one hand and a takeaway coffee cup in the other
+Location: cozy independent coffee shop in Exmouth Market, London.
+Context: The background should hint at the bustling London neighborhood near Angel station,
+with glimpses of Victorian architecture and the lively atmosphere of Exmouth Market.
+Natural Light Source: miday lighting
+Camera Angle: Wide angle
+#+end_example
+
+** 8. Marco Rossi
+Name: Marco Rossi
+Occupation: restaurateur
+Description: A charismatic 41-year-old Italian man with dark, wavy hair and a
+well-groomed beard. He has warm, expressive brown eyes and a friendly
+smile. Marco is wearing crisp white chef's whites with his name
+embroidered on the chest. He's standing in the doorway of his rustic
+trattoria on St.John Street in Clerkenwell, London. The restaurant's
+facade features a red-and-white striped awning and a chalkboard menu.
+Marco's has one hand on the door frame and the other gesturing invitingly.
+In the background, you can see glimpses of a cozy dining room with wooden tables and chairs,
+and the soft glow of pendant lights. The street outside is bustling with
+activity, reflecting the vibrant neighborhood. 
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: charismatic 41-year-old Italian man
+Hair: dark, wavy hair and a well-groomed beard.
+Skin Tone: olive skin
+Facial Features: warm, expressive brown eyes and a friendly smile.
+Clothing and Accessories: wearing crisp white chef's whites 
+Additional Details: Marco's has one hand on the door frame and the other gesturing invitingly.
+Location: He's standing in the doorway of his rustic trattoria on St.John Street in Clerkenwell, London.
+Setting: The restaurant's facade features a red-and-white striped awning and a chalkboard menu.
+Surrounding Elements: In the background, you can see glimpses of a cozy dining room with wooden tables and chairs,
+and the soft glow of pendant lights. The street outside is bustling with
+activity, reflecting the vibrant neighborhood.
+Natural Light Source: 
+Camera Angle: wide angle capturing the scene
+#+end_example
+
+** 9. Fatima Hassan
+Name: Fatima Hassan
+Occupation: community organizer
+Description: Confident and approachable, wearing colorful hijabs and
+modern, modest clothing
+
+She has a confident and approachable demeanor, with a warm smile and
+expressive eyes. Fatima is wearing a vibrant, colorful hijab that frames
+her face, possibly in shades of blue, orange, or green with intricate
+patterns. Her clothing is modern yet modest, such as a long-sleeved
+blouse or tunic in a complementary color to her hijab, paired with a
+long skirt or loose-fitting trousers.
+
+The background showing a community center or a park-like setting reminiscent of King Square
+Gardens. Fatima could be depicted in action, such as
+speaking to a small group or arranging materials for an event.
+
+she's gesturing while explaining something, or
+leaning in to listen attentively to someone off-camera. 
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 35
+Skin Tone: indian
+Facial Features: warm smile and expressive eyes.
+Clothing and Accessories: wearing a vibrant, colorful hijab that frames
+her face, possibly in shades of blue, orange, or green with intricate patterns. 
+Additional Details: she's gesturing while explaining something
+Location: King Square Gardens, London
+Setting: background showing a community center
+Surrounding Elements: trees and a group of people
+Natural Light Source: sunlight through the tree branches
+Camera Angle: wide angle
+#+end_example
+
+** 10. William Hartley
+Name: William Hartley
+Occupation: retired civil servant
+Description: A 72-year-old dapper gentleman standing in front of a Georgian terrace
+on Myddelton Square, London. He has a distinguished appearance with
+thinning white hair neatly combed and round spectacles perched on his
+nose. William is wearing a well-fitted tweed jacket in earthy tones,
+paired with a crisp white shirt and a colorful bow tie. His posture is
+upright and confident 
+
+In one hand, he holds a vintage pocket watch, symbolizing his passion
+for history. The other hand grasps a walking stick with an ornate silver
+handle. At his feet lies a weathered leather satchel
+
+The background showcases the elegant Georgian architecture of Myddelton
+Square, with its characteristic symmetrical facades and large sash
+windows. A blue plaque is visible on one of the buildings, emphasizing
+the historical significance of the area.
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 72-year-old dapper gentleman
+Hair: thinning white hair neatly combed and 
+Skin Tone: white
+Facial Features: distinguished appearance
+Clothing and Accessories: well-fitted tweed jacket in earthy tones,
+paired with a crisp white shirt and a colorful bow tie and round spectacles perched on his nose.
+Posture: standing in front of a Georgian terrace on Myddelton Square, London
+Location: Georgian terrace on Myddelton Square, London
+Square, with its characteristic symmetrical facades and large sash windows.
+Natural Light Source: lighing late afternoon with shadows
+Camera Angle: extreme wide angle 
+#+end_example
+
+** 11. Margaret Thompson
+Name: Margaret Thompson
+Occupation: retired
+Description: Short grey hair, glasses, often seen wearing comfortable
+cardigans and slacks
+
+a 72-year-old white British woman named Margaret Thompson.
+She has short, neatly styled grey hair and wears rectangular glasses.
+Margaret is dressed in a comfortable, pale blue cardigan over a floral
+print blouse, paired with dark grey slacks. She is seated in a worn but
+cozy armchair in a small, tidy living room of a one-bedroom flat. The
+room has simple furnishings and a few framed photos on the walls,
+suggesting a modest lifestyle. Margaret's hands rest on a walking frame
+positioned in front of her, indicating her mobility issues. Her
+expression is gentle and slightly weary
+The background hints at the Finsbury Estate architecture through a partially visible window. 
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 72-year-old white British woman
+Hair: short, neatly styled grey hair
+Skin Tone: white
+Facial Features: Her expression is gentle and slightly weary
+Clothing and Accessories: dressed in a comfortable, pale blue cardigan over a floral
+print blouse, paired with dark grey slacks.
+Location: She is seated in a worn but
+cozy armchair in a small, tidy living room of a one-bedroom flat. The
+room has simple furnishings and a few framed photos on the walls
+Natural Light Source: light coming through the window
+#+end_example
+
+** 12. Abdul Rahman
+Name: Abdul Rahman
+Occupation: retired
+Description: Salt-and-pepper beard, slightly stooped posture, typically
+wears traditional Bangladeshi clothing
+
+A 68-year-old Bangladeshi man standing in front of a modest two-bedroom
+council flat near Exmouth Market in London. He has a salt-and-pepper
+beard and a slightly stooped posture, giving him a gentle, grandfatherly
+appearance. Abdul is wearing traditional Bangladeshi clothing, including
+a long, loose-fitting kurta in a muted color and a white prayer cap
+(topi). His eyes are kind and weathered
+In the background, glimpses of the bustling
+Exmouth Market can be seen, contrasting with the quiet residential area
+where Abdul lives. He is holding a set of prayer beads in one hand
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 
+Hair: 
+Skin Tone: 
+Facial Features: 
+Clothing and Accessories: 
+Location: 
+Natural Light Source:
+#+end_example
+
+** 13. Doris Fletcher
+Name: Doris Fletcher
+Occupation: retired
+Description: White hair in a neat bun, warm smile, often seen in floral
+dresses and comfortable shoes
+
+She has a warm, inviting smile that lights up her face, showcasing her
+friendly demeanor. Her white hair is neatly styled in a bun, giving her
+a tidy and dignified appearance. Doris is wearing a colorful floral
+dress, typical of her preferred style, which complements her dark skin
+tone. On her feet are a pair of comfortable shoes
+The background hints at a modest,
+ground-floor flat, with a glimpse of the Brunswick Estate visible
+through a window. On a side table, there's a small collection of framed
+family photos and a few prescription medication bottles
+
+** 14. George O'Connor
+Name: George O'Connor
+Description: Thinning white hair, weathered face, usually dressed in
+worn but clean casual clothing
+
+He has thinning white hair and a weathered face with deep wrinkles, reflecting
+his years of outdoor work in construction. His blue eyes appear slightly
+sad and distant, hinting at his struggles with loneliness and mild
+depression. George is dressed in worn but clean casual clothing - a
+faded plaid shirt and khaki trousers. He's sitting by a small window in
+his modest studio flat, located in a council-owned tower block. The room
+behind him is sparsely furnished, emphasizing his solitary lifestyle. On
+a side table, there's a framed photo of a younger George in construction
+worker attire, reminding of his past career. The lighting is soft,
+creating a somewhat melancholic atmosphere that reflects George's
+current emotional state.
+
+** 15. Amina Begum
+Name: Amina Begum
+Occupation: retired
+Description: Petite with a kind face, always wears a hijab and
+traditional Bangladeshi attire
+
+She has a petite frame and a kind, wrinkled face with warm brown eyes. Amina wears a
+colorful hijab that frames her face, tied neatly under her chin. Her
+attire consists of a traditional Bangladeshi salwar kameez - a long,
+loose-fitting tunic over baggy trousers, in vibrant colors and patterns.
+She has a gentle smile and slightly hunched posture due to her age. In
+the background, there's a glimpse of a modest two-bedroom flat with
+simple furnishings, representing her home on the Margery Street Estate.
+Amina is shown holding an English language textbook
