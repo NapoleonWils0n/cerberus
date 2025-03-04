@@ -416,6 +416,8 @@ family photos and a few prescription medication bottles
 
 #+begin_example
 Hyper-Photorealistic:
+Location: modest, ground-floor flat, with the Brunswick Estate visible through a window,
+On a side table, there's a small collection of framed family photos and a few prescription medication bottles
 Age: 70 year old woman
 Hair: Her white hair is neatly styled in a bun, giving her a tidy and dignified appearance.
 Skin Tone: dark skin tone.
@@ -423,8 +425,6 @@ Facial Features: She has a warm, inviting smile that lights up her face,
 showcasing her friendly demeanor. 
 Clothing and Accessories: Doris is wearing a colorful floral dress,
 On her feet are a pair of comfortable shoes
-Location: modest, ground-floor flat, with the Brunswick Estate visible through a window,
-On a side table, there's a small collection of framed family photos and a few prescription medication bottles
 Natural Light Source: light coming through the window
 Camera Angle: wide angle
 #+end_example
