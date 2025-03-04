@@ -479,3 +479,17 @@ She has a gentle smile and slightly hunched posture due to her age. In
 the background, there's a glimpse of a modest two-bedroom flat with
 simple furnishings, representing her home on the Margery Street Estate.
 Amina is shown holding an English language textbook
+
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 
+Hair: 
+Skin Tone: 
+Facial Features: 
+Clothing and Accessories: 
+Location: 
+Lighting: 
+Camera Angle: wide angle
+#+end_example
