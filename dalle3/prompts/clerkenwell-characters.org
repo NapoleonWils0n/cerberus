@@ -429,7 +429,6 @@ Natural Light Source: light coming through the window
 Camera Angle: wide angle
 #+end_example
 
-
 ** 14. George O'Connor
 Name: George O'Connor
 Description: Thinning white hair, weathered face, usually dressed in
