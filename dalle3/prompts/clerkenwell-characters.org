@@ -461,12 +461,9 @@ a faded plaid shirt and khaki trousers.
 Location: He's sitting by a small window in his modest studio flat,
 located in a council-owned tower block.
 The room behind him is sparsely furnished, emphasizing his solitary lifestyle.
-On a side table, there's a framed photo of a younger George in construction
-worker attire, reminding of his past career.
 Lighting: The lighting is soft, creating a somewhat melancholic atmosphere
 Camera Angle: wide angle
 #+end_example
-
 
 ** 15. Amina Begum
 Name: Amina Begum
