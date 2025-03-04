@@ -446,6 +446,28 @@ worker attire, reminding of his past career. The lighting is soft,
 creating a somewhat melancholic atmosphere that reflects George's
 current emotional state.
 
+*** prompt
+
+#+begin_example
+Hyper-Photorealistic:
+Age: 78
+Hair: Thinning white hair
+Skin Tone: white
+Facial Features: weathered face with deep wrinkles, reflecting
+his years of outdoor work in construction. His blue eyes appear slightly
+sad and distant, hinting at his struggles with loneliness and mild depression.
+Clothing and Accessories: dressed in worn but clean casual clothing,
+a faded plaid shirt and khaki trousers.
+Location: He's sitting by a small window in his modest studio flat,
+located in a council-owned tower block.
+The room behind him is sparsely furnished, emphasizing his solitary lifestyle.
+On a side table, there's a framed photo of a younger George in construction
+worker attire, reminding of his past career.
+Lighting: The lighting is soft, creating a somewhat melancholic atmosphere
+Camera Angle: wide angle
+#+end_example
+
+
 ** 15. Amina Begum
 Name: Amina Begum
 Occupation: retired
