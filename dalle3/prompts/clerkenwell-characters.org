@@ -484,12 +484,15 @@ Amina is shown holding an English language textbook
 
 #+begin_example
 Hyper-Photorealistic:
-Age: 
-Hair: 
-Skin Tone: 
-Facial Features: 
-Clothing and Accessories: 
-Location: 
-Lighting: 
+Age: 65
+Skin Tone: Bangladeshi
+Facial Features: kind, wrinkled face with warm brown eyes with a gentle smile 
+Clothing and Accessories: traditional Bangladeshi salwar kameez - a long,
+loose-fitting tunic over baggy trousers, in vibrant colors and patterns.
+Posture: slightly hunched posture due to her age
+Additional Details: holding an English language textbook
+Location: modest two-bedroom flat with simple furnishings,
+representing her home on the Margery Street Estate.
+Lighting: The lighting is soft
 Camera Angle: wide angle
 #+end_example
