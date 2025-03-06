@@ -1,0 +1,89 @@
+#+STARTUP: content
+* searxng podman bhyve
+** resources
+
+[[https://www.youtube.com/watch?v=UBLypfM9U-g]]
+
+[[https://code.dbt3ch.com/jy9PkROF]]
+
+** docker-compose.yaml
+
+create a directory called searxng
+and cd into it
+
+#+begin_src sh
+mkdir -p searxng
+cd searxng
+#+end_src
+
+create the docker-compose.yaml file
+
+#+begin_src sh
+vi docker-compose.yaml
+#+end_src
+
+add the following code to the file
+and change the SEARXNG_BASE_URL to your ip address
+
+#+begin_src yaml
+services:
+  redis:
+    container_name: redis
+    image: docker.io/valkey/valkey:8-alpine
+    command: valkey-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - searxng
+    volumes:
+      - valkey-data:/data
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    networks:
+      - searxng
+    ports:
+      - "8080:8080" #change 8080 as needed, but not 8080
+    volumes:
+      - searxng:/etc/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=http://192.168.1.151:8080/ # change http://192.168.1.151 to your ip
+      - UWSGI_WORKERS=4 #You can change this
+      - UWSGI_THREADS=4 #You can change this
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+networks:
+  searxng:
+
+volumes:
+  valkey-data: #redis storage
+  searxng: #searxng storage
+#+end_src
+
+** podman-compose
+
+#+begin_src sh
+podman-compose up -d
+#+end_src
