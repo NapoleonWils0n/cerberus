@@ -2,6 +2,8 @@
 * searxng jail
 ** install
 
+searxng package doesnt work
+
 #+begin_src sh
 doas pkg install py311-searxng-devel
 #+end_src
@@ -2565,6 +2567,79 @@ we can then start searxng
 
 #+begin_src sh
 doas service searxng start
+#+end_src
+
+** pf.conf
+
+#+begin_src conf
+#=========================================================================#
+# variables, macro and tables                                             #
+#=========================================================================#
+
+int_if="lagg0" # lagg0 failover
+vpn_if="tun0" # vpn interface
+all_networks="0.0.0.0/0"
+vpn_network="$vpn_if:network"
+# 6881, 6882 = transmission. , 22000, 21025 = syncthing
+tcp_services = "{ ntp, 6881, 22000, 8888 }" # tcp services - torrent
+udp_services = "{ ntp, 6882, 21025 }" # udp services - torrent
+#nfs_services = "{ 2049 }" # 2049 = nfs
+icmp_types = "{ echoreq, unreach }"
+tcp_state="flags S/SA keep state"
+udp_state="keep state"
+
+#table <internet> { $all_networks, !self, !$int_if:network } # internet
+table <lan> { $int_if:network, !self }                      # lan network
+table <myself> { self }                                     # self
+
+table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
+	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
+	 	   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
+	 	   203.0.113.0/24 }                         # broken networks
+
+#=========================================================================#
+# global policy                                                           #
+#=========================================================================#
+
+set block-policy drop
+set loginterface $int_if
+set fingerprints "/etc/pf.os"
+set skip on lo0
+scrub in all fragment reassemble no-df max-mss 1440
+# nat jail
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+
+#=========================================================================#
+# block                                                                   #
+#=========================================================================#
+
+#block log all # block log all
+block return out quick inet6 all tag IPV6 # block ipv6 
+block in quick inet6 all tag IPV6 # block ipv6
+
+#=========================================================================#
+# anchors                                                                 #
+#=========================================================================#
+
+# openvpn - anchor
+anchor "openvpn"
+
+#=========================================================================#
+# traffic tag                                                             #
+#=========================================================================#
+
+# icmp
+pass inet proto icmp all icmp-type $icmp_types keep state tag ICMP
+
+# Allow the tcp and udp services defined in the macros at the top of the file
+pass in on $int_if inet proto tcp from any to ($int_if) port $tcp_services $tcp_state tag TCP_IN
+pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_state tag UDP_IN
+
+# outbound traffic
+#block out on $int_if all
+pass out quick on $int_if all modulate state
+
 #+end_src
 
 ** sockstat
