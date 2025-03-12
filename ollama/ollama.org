@@ -51,6 +51,22 @@ ollama pull deepseek-coder
 ollama run deepseek-coder
 #+end_src
 
+*** gemma 3
+
+[[https://ollama.com/library/gemma3]]
+
+**** pull 
+
+#+begin_src sh
+ollama pull gemma3:4b
+#+end_src
+
+**** run
+
+#+begin_src sh
+ollama run gemma3:4b
+#+end_src
+
 *** llama3.2
 
 [[https://ollama.com/library/llama3.2]]
