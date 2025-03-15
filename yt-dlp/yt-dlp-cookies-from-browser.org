@@ -1,0 +1,11 @@
+#+STARTUP: showall
+* yt-dlp cookies from browser
+
+sign into youtube and play and age restricted video
+
+replace firefox with the name of the browser you are signed into youtube with,
+and url with the youtube url
+
+#+begin_src sh
+yt-dlp --cookies-from-browser firefox 'url'
+#+end_src
