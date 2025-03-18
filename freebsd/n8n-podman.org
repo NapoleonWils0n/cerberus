@@ -1,0 +1,11 @@
+#+STARTUP: content
+* n8n podman bhyve
+** n8n podman set up 
+
+#+begin_src sh
+podman volume create n8n_data
+#+end_src
+
+#+begin_src sh
+podman run -it --rm --name n8n -p 192.168.1.151:5678:5678 -v n8n_data:/home/node/.n8n -e N8N_LISTEN_ADDRESS=0.0.0.0 -e N8N_SECURE_COOKIE=false docker.n8n.io/n8nio/n8n
+#+end_src
