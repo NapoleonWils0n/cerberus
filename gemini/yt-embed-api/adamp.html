@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>YouTube Embed with Timestamps</title>
+</head>
+<body>
+
+<div id="player"></div>
+
+<br>
+<a href='javascript:;' onclick="seekToTime(23)">00:23</a><br>
+
+<button onclick="seekToTime(23)">00:23</button><br>
+<button onclick="seekToTime(91)">01:31</button><br>
+<button onclick="seekToTime(146)">02:26</button><br>
+<button onclick="seekToTime(301)">05:01</button><br>
+<button onclick="seekToTime(333)">05:33</button><br>
+<button onclick="seekToTime(420)">07:00</button><br>
+<button onclick="seekToTime(539)">08:59</button><br>
+<button onclick="seekToTime(755)">12:35</button><br>
+<button onclick="seekToTime(1048)">17:28</button><br>
+<button onclick="seekToTime(1088)">18:08</button><br>
+
+<script>
+  // YouTube API script
+  var tag = document.createElement('script');
+  tag.src = "http://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  // YouTube player variable
+  var player;
+
+  // Function to create the player
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: 'oAn0j9BpPa8', // Replace 'VIDEO_ID' with your YouTube video ID
+      events: {
+        'onReady': onPlayerReady
+      }
+    });
+  }
+
+  // Function to start the video
+  function onPlayerReady(event) {
+    // event.target.playVideo(); //Optional Autoplay.
+  }
+
+  // Function to seek to a specific time
+  function seekToTime(seconds) {
+    player.seekTo(seconds, true);
+  }
+</script>
+
+</body>
+</html>
