@@ -11,7 +11,7 @@ doas pkg install mandoc
 #+begin_src sh
 #!/bin/sh
 
-# 2. Create the html_manpages directory and Convert man pages to HTML using mandoc:
+# Create the html_manpages directory and Convert man pages to HTML using mandoc:
 mkdir -p html_manpages
 count=0
 inodes="" # String to store seen inodes
