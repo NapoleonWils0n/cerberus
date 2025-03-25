@@ -46,7 +46,7 @@ doas pkg install texlive-full pandoc
 ** pandoc convert html to pdf
 
 #+begin_src sh
-# 2. Convert each HTML file to PDF using Pandoc:
+# Convert each HTML file to PDF using Pandoc:
 mkdir -p pdf_manpages
 for html_file in html_manpages/*.html; do
   pdf_file="pdf_manpages/$(basename "$html_file" .html).pdf"
