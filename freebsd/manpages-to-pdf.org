@@ -1,0 +1,70 @@
+#+STARTUP: content
+* manpages to pdf
+** mandoc install 
+
+#+begin_src sh
+doas pkg install mandoc
+#+end_src
+
+** convert manpages to html
+
+#+begin_src sh
+#!/bin/sh
+
+# 2. Create the html_manpages directory and Convert man pages to HTML using mandoc:
+mkdir -p html_manpages
+count=0
+inodes="" # String to store seen inodes
+
+find /usr/share/man -type f -name "*.gz" | grep "/man[1-9][a-z]*/" | while read file; do
+  inode=$(stat -f "%i" "$file")
+
+  # Check if inode has been seen
+  if echo "$inodes" | grep -q " $inode "; then
+    # Inode already seen, skip
+    continue
+  fi
+
+  # Inode is unique, add to seen list
+  inodes="$inodes $inode"
+
+  # Generate a unique filename:
+  unique_filename="manpage_$(printf "%08d" $count).html"
+  count=$((count + 1))
+
+  # Convert the man page to HTML:
+  mandoc -Thtml "$file" > "html_manpages/${unique_filename}";
+done
+#+end_src
+
+** textlive-full and pandoc install
+
+#+begin_src sh
+doas pkg install texlive-full pandoc
+#+end_src
+
+** pandoc convert html to pdf
+
+#+begin_src sh
+# 2. Convert each HTML file to PDF using Pandoc:
+mkdir -p pdf_manpages
+for html_file in html_manpages/*.html; do
+  pdf_file="pdf_manpages/$(basename "$html_file" .html).pdf"
+  pandoc -f html "$html_file" -o "$pdf_file"
+done
+#+end_src
+
+** qpdf install
+
+#+begin_src sh
+doas pkg install qpdf
+#+end_src
+
+** qpdf combine pdfs
+
+#+begin_src sh
+# 3. Combine PDF files using qpdf:
+qpdf --empty --pages pdf_manpages/*.pdf -- freebsd_manpages.pdf
+#+end_src
+
+
