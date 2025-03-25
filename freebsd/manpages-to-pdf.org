@@ -63,7 +63,7 @@ doas pkg install qpdf
 ** qpdf combine pdfs
 
 #+begin_src sh
-# 3. Combine PDF files using qpdf:
+# Combine PDF files using qpdf:
 qpdf --empty --pages pdf_manpages/*.pdf -- freebsd_manpages.pdf
 #+end_src
 
