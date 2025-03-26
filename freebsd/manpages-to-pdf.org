@@ -67,4 +67,9 @@ doas pkg install qpdf
 qpdf --empty --pages pdf_manpages/*.pdf -- freebsd_manpages.pdf
 #+end_src
 
+** qpdf split
+
+#+begin_src sh
+qpdf freebsd_manpages.pdf --split-pages=4000 freebsd_manpages_part_%d.pdf
+#+end_src
 
