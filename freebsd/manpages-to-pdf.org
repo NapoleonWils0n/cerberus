@@ -8,8 +8,6 @@ doas pkg install mandoc
 
 ** convert manpages to html
 
-version 1
-
 #+begin_src sh
 #!/bin/sh
 
@@ -35,26 +33,6 @@ find /usr/share/man -type f -name "*.gz" | grep "/man[1-9][a-z]*/" | while read 
   count=$((count + 1))
 
   # Convert the man page to HTML:
-  mandoc -Thtml "$file" > "html_manpages/${unique_filename}";
-done
-#+end_src
-
-version 2
-
-#+begin_src sh
-#!/bin/sh
-
-# Create the html_manpages directory:
-mkdir -p html_manpages
-
-# Find and convert man pages from the source tree:
-count=0
-find /usr/src/share/man -type f -name "*.[1-9]*" | while read file; do
-  # Generate a unique filename:
-  unique_filename="src_manpage_$(printf "%08d" $count).html"
-  count=$((count + 1))
-
-  # Convert the man page to HTML using mandoc:
   mandoc -Thtml "$file" > "html_manpages/${unique_filename}";
 done
 #+end_src
