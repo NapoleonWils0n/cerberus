@@ -1,5 +1,5 @@
 #+STARTUP: show2levels
-* Rocky Linux Linuxulato
+* DaVinci Resolve Freebsd
 ** Freebsd
 *** Freebsd Nvidia and Cuda
 
