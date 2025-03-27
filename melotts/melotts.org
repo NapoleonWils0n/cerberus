@@ -1,111 +1,141 @@
-#+STARTUP: content
-* melotts
+#STARTUP: content
+* mellotts
+** freebsd packages
+
+#+begin_src sh
+doas pkg install py311-pytorch py311-pytorchvideo py311-torchaudio py311-torchvision py311-tokenizers
+#+end_src
+
+#+begin_src sh
+doas pkg install llvm15 cmake gcc
+#+end_src
+
 ** rust install
 
 #+begin_src sh
-sudo apt install git build-essential curl pkg-config libssl-dev
+doas pkg remove rust
 #+end_src
+
+install rust
 
 #+begin_src sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 #+end_src
 
-This tutorial uses the default option 1. 
+and press enter
 
-Next, run the following command to add the Rust toolchain directory to the PATH environment variable:
+To configure your current shell, you need to source
+the corresponding env file under $HOME/.cargo.
+
+This is usually done by running one of the following (note the leading DOT):
+
+# For sh/bash/zsh/ash/dash/pdksh
 
 #+begin_src sh
-source $HOME/.cargo/env
+. "$HOME/.cargo/env"
 #+end_src
 
-Verify the Rust installation by requesting the version:
+#+begin_src sh
+rustup --version
+rustc --version
+cargo --version
+#+end_src
 
 #+begin_src sh
-rustc --version
+rustup update
 #+end_src
 
 ** zshenv
 
 #+begin_src sh
-vi ~/.zshenv
-#+end_src
-
-#+begin_src conf
+# Path
 typeset -U PATH path
-path=( "$HOME/.cargo/bin" "/bin" "/usr/bin" "$path[@]")
+path=("$HOME/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
 export PATH
+
+. "$HOME/.cargo/env"
 #+end_src
 
-** miniconda
-
-[[https://docs.anaconda.com/miniconda/install/#quick-command-line-install]]
+** python venv
 
 #+begin_src sh
-mkdir -p ~/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm ~/miniconda3/miniconda.sh
+python3.11 -m venv --system-site-packages ~/.venv/mellotts
+source ~/.venv/mellotts/bin/activate
+export LLVM_CONFIG=/usr/local/llvm15/bin/llvm-config
 #+end_src
 
-activate miniconda
-
-#+begin_src sh
-source ~/miniconda3/bin/activate
-#+end_src
-
-create the python env
-
-#+begin_src sh
-conda create -n melotts python=3.10 --yes
-conda activate melotts
-python --version
-#+end_src
-
-** git clone MeloTTS
+** mellotts
 
 #+begin_src sh
 git clone https://github.com/myshell-ai/MeloTTS.git
+#+end_src
+
+** requirements
+
+comment out torch and torchaudio in the requirements.txt file
+
+#+begin_src sh
+#torch
+#torchaudio
+cached_path
+transformers==4.27.4
+num2words==0.5.12
+#unidic_lite==1.0.8
+#unidic==1.1.0
+#mecab-python3==1.0.9
+#pykakasi==2.2.1
+#fugashi==1.3.0
+g2p_en==2.1.0
+anyascii==0.3.2
+jamo==0.4.1
+gruut[de,es,fr]==2.2.3
+g2pkk>=0.1.1
+librosa==0.9.1
+pydub==0.25.1
+eng_to_ipa==0.0.2
+inflect==7.0.0
+unidecode==1.3.7
+pypinyin==0.50.0
+cn2an==0.5.22
+jieba==0.42.1
+gradio
+langid==1.1.6
+tqdm
+tensorboard==2.16.2
+loguru==0.7.2
+#+end_src
+
+** mellotts pip
+
+#+begin_src sh
 cd MeloTTS
-#+end_src
-
-** melotss install
-
-#+begin_src sh
 pip install -e .
-python -m unidic download
 #+end_src
-
-** melo command line
-
-this step will download additonal packages
 
 #+begin_src sh
-melo "Text to read" output.wav
+pip install llvmlite
 #+end_src
 
-** melo-ui
+*** tokenizers 
 
-this step will download additonal packages
+find the tokenizers pip cache directory
+
+#+begin_src sh
+find ~/.cache/pip/ -name "*tokenizers*"
+#+end_src
+
+#+begin_src sh
+pip cache purge
+#+end_src
+
+
+#+begin_src sh
+pip uninstall tokenizers
+pip install tokenizers --no-cache-dir
+#+end_src
+
+** webui
 
 #+begin_src sh
 melo-ui
 #+end_src
-
-** conda deactivate melotts
-
-#+begin_src sh
-conda deactivate melotts
-#+end_src
-
-** conda remove melotts
-
-#+begin_src sh
-conda remove -n melotts --all
-#+end_src
-
-** mecab install
-
-#+begin_src sh
-sudo apt install mecab libmecab-dev
-#+end_src
-
