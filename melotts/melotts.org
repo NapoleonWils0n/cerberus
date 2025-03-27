@@ -3,7 +3,7 @@
 ** freebsd packages
 
 #+begin_src sh
-doas pkg install py311-pytorch py311-pytorchvideo py311-torchaudio py311-torchvision py311-tokenizers
+doas pkg install py311-pytorch py311-pytorchvideo py311-torchaudio py311-torchvision 
 #+end_src
 
 #+begin_src sh
@@ -78,7 +78,7 @@ comment out torch and torchaudio in the requirements.txt file
 #torch
 #torchaudio
 cached_path
-transformers==4.27.4
+#transformers==4.27.4
 num2words==0.5.12
 #unidic_lite==1.0.8
 #unidic==1.1.0
