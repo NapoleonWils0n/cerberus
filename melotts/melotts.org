@@ -3,10 +3,6 @@
 ** freebsd packages
 
 #+begin_src sh
-doas pkg install py311-pytorch py311-pytorchvideo py311-torchaudio py311-torchvision 
-#+end_src
-
-#+begin_src sh
 doas pkg install llvm15 cmake gcc
 #+end_src
 
@@ -106,6 +102,13 @@ loguru==0.7.2
 #+end_src
 
 ** mellotts pip
+
+#+begin_src sh
+pip install torch --no-cache-dir
+pip install torchaudio --no-cache-dir
+pip install tokenizers --no-cache-dir
+pip install transformers==4.27.4 --no-cache-dir
+#+end_src
 
 #+begin_src sh
 cd MeloTTS
