@@ -108,8 +108,7 @@ loguru==0.7.2
 ** mellotts pip
 
 #+begin_src sh
-pip install torch --no-cache-dir
-pip install torchaudio --no-cache-dir
+pip install torch torchaudio --no-cache-dir
 pip install tokenizers --no-cache-dir
 pip install transformers==4.27.4 --no-cache-dir
 #+end_src
