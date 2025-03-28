@@ -1,5 +1,53 @@
 #+STARTUP: content
 * melotts ubuntu
+** rust install
+
+install curl 
+
+#+begin_src sh
+sudo apt install curl
+#+end_src
+
+install rust
+
+#+begin_src sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
+
+and press enter
+
+To configure your current shell, you need to source
+the corresponding env file under $HOME/.cargo.
+
+This is usually done by running one of the following (note the leading DOT):
+
+# For sh/bash/zsh/ash/dash/pdksh
+
+#+begin_src sh
+. "$HOME/.cargo/env"
+#+end_src
+
+#+begin_src sh
+rustup --version
+rustc --version
+cargo --version
+#+end_src
+
+#+begin_src sh
+rustup update
+#+end_src
+
+** zshenv
+
+#+begin_src sh
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
+export PATH
+
+. "$HOME/.cargo/env"
+#+end_src
+
 ** melotts git clone
 
 #+begin_src sh
