@@ -1,5 +1,8 @@
 #STARTUP: content
 * mellotts
+
+not working due to transforms python
+
 ** resources
 
 [[https://github.com/myshell-ai/MeloTTS]]
@@ -7,7 +10,7 @@
 ** freebsd packages
 
 #+begin_src sh
-doas pkg install llvm15 cmake gcc
+doas pkg install py311-pytorch py311-pytorchvideo py311-torchaudio py311-torchvision llvm15 cmake gcc
 #+end_src
 
 ** rust install
@@ -108,7 +111,6 @@ loguru==0.7.2
 ** mellotts pip
 
 #+begin_src sh
-pip install torch torchaudio --no-cache-dir
 pip install tokenizers --no-cache-dir
 pip install transformers==4.27.4 --no-cache-dir
 #+end_src
@@ -116,28 +118,6 @@ pip install transformers==4.27.4 --no-cache-dir
 #+begin_src sh
 cd MeloTTS
 pip install -e .
-#+end_src
-
-#+begin_src sh
-pip install llvmlite
-#+end_src
-
-*** tokenizers 
-
-find the tokenizers pip cache directory
-
-#+begin_src sh
-find ~/.cache/pip/ -name "*tokenizers*"
-#+end_src
-
-#+begin_src sh
-pip cache purge
-#+end_src
-
-
-#+begin_src sh
-pip uninstall tokenizers
-pip install tokenizers --no-cache-dir
 #+end_src
 
 ** webui
