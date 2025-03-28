@@ -54,6 +54,8 @@ loguru==0.7.2
 ** pip install
 
 #+begin_src sh
+mkdir -p ~/tmp
+TMPDIR="${HOME}/tmp" pip install -e . --cache-dir=/home/username/tmp/
 pip install -e .
 python -m unidic download
 #+end_src
