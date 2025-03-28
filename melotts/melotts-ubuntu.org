@@ -41,11 +41,18 @@ rustup update
 
 #+begin_src sh
 # Path
-typeset -U PATH path
+ypeset -U PATH path
 path=("$HOME/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
 export PATH
 
 . "$HOME/.cargo/env"
+#+end_src
+
+** packages install
+
+#+begin_src sh
+sudo apt update
+sudo apt install build-essential cmake pkg-config libssl-dev zlib1g-dev
 #+end_src
 
 ** melotts git clone
