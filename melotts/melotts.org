@@ -1,5 +1,9 @@
 #STARTUP: content
 * mellotts
+** resources
+
+[[https://github.com/myshell-ai/MeloTTS]]
+
 ** freebsd packages
 
 #+begin_src sh
