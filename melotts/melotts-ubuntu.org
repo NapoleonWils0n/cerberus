@@ -1,0 +1,15 @@
+#+STARTUP: content
+* melotts ubuntu
+** install
+
+#+begin_src sh
+python3 -m venv ~/.venv/mellotts
+source ~/.venv/mellotts/bin/activate
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/myshell-ai/MeloTTS.git
+cd MeloTTS
+pip install -e .
+python -m unidic download
+#+end_src
