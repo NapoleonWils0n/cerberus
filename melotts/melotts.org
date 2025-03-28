@@ -59,7 +59,7 @@ export PATH
 ** python venv
 
 #+begin_src sh
-python3.11 -m venv --system-site-packages ~/.venv/mellotts
+python3.9 -m venv --system-site-packages ~/.venv/mellotts
 source ~/.venv/mellotts/bin/activate
 export LLVM_CONFIG=/usr/local/llvm15/bin/llvm-config
 #+end_src
