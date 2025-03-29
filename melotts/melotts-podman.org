@@ -1,0 +1,42 @@
+#+STARTUP: content
+* melotts podman
+** melotts clone git repo
+
+#+begin_src sh
+git clone https://github.com/myshell-ai/MeloTTS.git
+cd MeloTTS
+#+end_src
+** edit the requirements file
+
+#+begin_src sh
+vi requirements.tmp
+#+end_src
+
+#+begin_src sh
+botocore>=1.34.98
+#+end_src
+
+** create a tmp directory
+
+#+begin_src sh
+mkdir -p ~/tmp
+export TMPDIR="${HOME}/tmp" 
+#+end_src
+
+** build melotts
+
+#+begin_src sh
+podman build -t melotts . 
+#+end_src
+
+** run melotts
+
+#+begin_src sh
+podman run -it -p 8888:8888 melotts
+#+end_src
+
+** usage
+
+#+begin_src sh
+melo "This is MeloTTS with a British accent" output.wav --language EN --speaker EN-BR
+#+end_src
