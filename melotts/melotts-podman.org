@@ -40,8 +40,9 @@ RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu torchaudio==2.1.0+cpu -
 RUN pip install -e .
 RUN python -m unidic download
 RUN python melo/init_downloads.py
+RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng')"
 
-CMD ["python", "./melo/app.py", "--host", "0.0.0.0", "--port", "8888"]
+CMD ["bash"]
 #+end_src
 
 ** build melotts
@@ -51,6 +52,18 @@ podman build -t melotts .
 #+end_src
 
 ** run melotts
+
+#+begin_src sh
+mkdir -p "${HOME}"/melo_output
+#+end_src
+
+#+begin_src sh
+podman run -it -p 8888:8888 -v "${HOME}"/melo_output:/app/melo_output melotts bash
+#+end_src
+
+#+begin_src sh
+pip install 'typer[all]<0.12'
+#+end_src
 
 #+begin_src sh
 podman run -it -p 8888:8888 melotts
