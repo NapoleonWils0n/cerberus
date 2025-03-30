@@ -23,6 +23,27 @@ mkdir -p ~/tmp
 export TMPDIR="${HOME}/tmp" 
 #+end_src
 
+** Dockerfile
+
+#+begin_src sh
+FROM python:3.9-slim
+WORKDIR /app
+COPY . /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyTorch CPU only
+RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu torchaudio==2.1.0+cpu --index-url https://download.pytorch.org/whl/cpu
+
+RUN pip install -e .
+RUN python -m unidic download
+RUN python melo/init_downloads.py
+
+CMD ["python", "./melo/app.py", "--host", "0.0.0.0", "--port", "8888"]
+#+end_src
+
 ** build melotts
 
 #+begin_src sh
