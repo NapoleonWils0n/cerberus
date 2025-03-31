@@ -41,6 +41,7 @@ RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu torchaudio==2.1.0+cpu -
 
 # Install typer with specific version
 RUN pip install 'typer[all]<0.12'
+RUN pip install 'gradio-4.44.0'
 
 RUN pip install -e .
 #Removed RUN python -m unidic download
