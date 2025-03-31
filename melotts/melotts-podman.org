@@ -12,6 +12,8 @@ cd MeloTTS
 vi requirements.tmp
 #+end_src
 
+add
+
 #+begin_src sh
 botocore>=1.34.98
 #+end_src
@@ -37,8 +39,11 @@ RUN apt-get update && apt-get install -y \
 # Install PyTorch CPU only
 RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu torchaudio==2.1.0+cpu --index-url https://download.pytorch.org/whl/cpu
 
+# Install typer with specific version
+RUN pip install 'typer[all]<0.12'
+
 RUN pip install -e .
-RUN python -m unidic download
+#Removed RUN python -m unidic download
 RUN python melo/init_downloads.py
 RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng')"
 
@@ -62,15 +67,23 @@ podman run -it -p 8888:8888 -v "${HOME}"/melo_output:/app/melo_output melotts ba
 #+end_src
 
 #+begin_src sh
-pip install 'typer[all]<0.12'
+pip install --upgrade pip
 #+end_src
 
 #+begin_src sh
-podman run -it -p 8888:8888 melotts
+python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng')"
 #+end_src
 
 ** usage
 
 #+begin_src sh
-melo "This is MeloTTS with a British accent" output.wav --language EN --speaker EN-BR
+melo "This is MeloTTS with a British accent" output.wav --language EN --speaker EN-BR --speed 1.0
+#+end_src
+
+** podman no space error
+
+#+begin_src sh
+podman image prune -a
+podman container prune
+podman volume prune
 #+end_src
