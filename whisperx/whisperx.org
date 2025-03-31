@@ -1,0 +1,25 @@
+#+STARTUP: content
+* whisperx
+** resources
+
+[[https://github.com/m-bain/whisperX]]
+
+[[https://github.com/m-bain/whisperX/issues/983]]
+
+** install
+
+#+begin_src sh
+python3 -m venv ~/.venv/whisperx
+#+end_src
+
+#+begin_src sh
+source ~/.venv/whisperx/bin/activate
+#+end_src
+
+#+begin_src sh
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124 --force-reinstall --no-cache-dir
+#+end_src
+
+#+begin_src sh
+pip install whisperx
+#+end_src
