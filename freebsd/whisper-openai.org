@@ -4,65 +4,8 @@
 
 [[https://github.com/openai/whisper]]
 
-** dependencies
+** whisper install
 
 #+begin_src sh
-sudo pkg install ffmpeg 
-#+end_src
-
-serach for pytorch
-
-#+begin_src sh
-pkg search torch
-#+end_src
-
-output
-
-#+begin_example
-py39-pytorch-2.1.2             PyTorch: Tensors and dynamic neural networks in Python
-pytorch-2.1.2                  Tensors and dynamic neural networks in Python (C++ library)
-#+end_example
-
-not sure which package is needed
-
-** python3-venv install
-
-#+begin_src sh
-sudo pkg install py39-virtualenv py39-pip
-#+end_src
-
-** Create a virtual environment 
-
-#+begin_src sh
-python3 -m venv ~/.venv/whisper
-#+end_src
-
-** activate the environment
-
-#+begin_src sh
-source ~/.venv/whisper/bin/activate
-#+end_src
-
-** install package
-
-#+begin_src sh
-pip install git+https://github.com/openai/whisper.git
-#+end_src
-
-** upgrade package
-
-#+begin_src sh
-pip install --upgrade git+https://github.com/openai/whisper.git
-#+end_src
-
-activate the virtual environment
-
-#+begin_src sh
-source ~/.venv/whisper/bin/activate
-#+end_src
-
-** deactivate
-
-#+begin_src sh
-deactivate
+doas py311-openai-whisper
 #+end_src

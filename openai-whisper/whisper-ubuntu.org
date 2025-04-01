@@ -21,7 +21,6 @@ activate miniconda
 source ~/miniconda3/bin/activate
 #+end_src
 
-
 ** whisperx conda install
 
 #+begin_src sh
