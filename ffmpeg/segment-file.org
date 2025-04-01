@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* ffmpeg segment file
+
+#+begin_src sh
+ffmpeg -i input.wav -f segment -segment_time 15 -c copy output.wav
+#+end_src
