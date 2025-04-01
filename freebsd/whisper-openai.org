@@ -9,3 +9,35 @@
 #+begin_src sh
 doas py311-openai-whisper
 #+end_src
+
+** large-v3-turbo.pt
+
+when you first use whisper
+
+#+begin_src sh
+whisper input.mp3
+#+end_src
+
+it will try to download the large-v3-turbo.pt model
+
+the issue is the download can time out and fail
+
+so its easier to manually download the model using the url from this page
+
+[[https://github.com/openai/whisper/blob/main/whisper/__init__.py]]
+
+this is the url for the large-v3-turbo.pt file
+
+[[https://openaipublic.azureedge.net/main/whisper/models/aff26ae408abcba5fbf8813c21e62b0941638c5f6eebfb145be0c9839262a19a/large-v3-turbo.pt]]
+
+create the whisper directory
+
+#+begin_src sh
+mkdir -p ~/.cache/whisper
+#+end_src
+
+download the file with wget with the -c option to resume downloads
+
+#+begin_src sh
+wget -c 'https://openaipublic.azureedge.net/main/whisper/models/aff26ae408abcba5fbf8813c21e62b0941638c5f6eebfb145be0c9839262a19a/large-v3-turbo.pt' -O ~/.cache/whisper/large-v3-turbo.pt
+#+end_src
