@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* yt-dlp download audio
+
+#+begin_src sh
+yt-dlp -x --audio-format wav "youtube URL"
+#+end_src
