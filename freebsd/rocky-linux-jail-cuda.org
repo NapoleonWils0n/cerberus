@@ -536,7 +536,7 @@ vi ~/.zshenv
 # ~/.zshenv
 
 # for ZSH
-case "$(uname -a)" in
+case "$OSTYPE" in
   freebsd*)
   # Path
   typeset -U PATH path
@@ -551,6 +551,9 @@ case "$(uname -a)" in
   export QT_QPA_PLATFORM=wayland
   export GDK_BACKEND=wayland
   ;;
+esac
+
+case "$(uname -a)" in
   ,*ubuntu*)
   typeset -U PATH path
   path=( "$HOME/.cargo/bin" "/opt/resolve/bin" "/bin" "/usr/bin" "$path[@]")
