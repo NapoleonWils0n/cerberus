@@ -1,0 +1,951 @@
+#+STARTUP: show2levels
+* Rocky Linux jail
+** Freebsd
+*** Freebsd Nvidia and Cuda
+
+Make sure Nvidia and Cuda is set up on the Freebsd host
+
+#+begin_src sh
+doas pkg install nvidia-driver linux-nvidia-libs libc6-shim libvdpau-va-gl libva-nvidia-driver
+#+end_src
+
+run nv-sglrun nvidia-smi
+
+#+begin_src sh
+nv-sglrun nvidia-smi
+#+end_src
+
+nv-sglrun nvidia-smi output
+
+#+begin_example
+shim init
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.14              Driver Version: 550.54.14      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+#+end_example
+
+# Horizontal Rule
+-----
+
+*** doas install
+
+[[https://man.freebsd.org/cgi/man.cgi?query=doas.conf&sektion=5&format=html][doas.conf man page]]
+
+Install doas so we enter the jail without being prompted for a password
+
+#+begin_src sh
+sudo pkg install doas
+#+end_src
+
+Edit the doas.conf file and change username to your username on freebsd
+
+Path to the doas.conf on freebsd
+
+#+BEGIN_SRC sh
+sudo vim /usr/local/etc/doas.conf
+#+END_SRC
+
+doas.conf
+
+#+begin_src conf
+# permit user
+permit keepenv :username
+
+# jail
+permit nopass :username cmd jexec
+
+# root as root
+permit nopass keepenv root as root
+#+end_src
+
+make sure your user is in the wheel group
+
+The syntax is:
+
+#+begin_src sh
+pw group mod {GROUP-NAME-HERE} -m {USERNAME-HERE}
+#+end_src
+
+#+BEGIN_SRC sh
+pw group mod wheel -m username
+#+END_SRC
+
+# Horizontal Rule
+-----
+
+*** freebsd devfs.rules
+
+#+begin_src sh
+doas vi /etc/devfs.rules
+#+end_src
+
+#+begin_src conf
+[jail=7]
+add include $devfsrules_jail
+add path 'mixer*' unhide
+add path 'dsp*' unhide
+add path 'dri*' unhide
+add path 'drm*' unhide
+add path 'nvidia*' unhide
+add path 'speaker*' unhide
+#+end_src
+
+after adding the devfs rules reboot
+
+*** jail config
+
+enable jails
+
+#+begin_src sh
+doas sysrc jail_enable="YES"
+doas sysrc cloned_interfaces="lo1"
+doas sysrc ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
+#+end_src
+
+#+begin_src sh
+doas vi /etc/rc.conf
+#+end_src
+
+#+begin_src conf
+jail_enable="YES"
+cloned_interfaces="lo1"
+ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
+#+end_src
+
+**** Setting Up the Jail Directory Tree
+***** zroot/jails
+
+create the zroot/jails zfs dataset and set the mountpoint
+
+#+begin_src sh
+doas zfs create zroot/jails
+doas zfs set mountpoint=/usr/local/jails zroot/jails
+#+end_src
+
+***** zroot/jails/linux
+
+create the zroot/jails/linux zfs dataset and set the mountpoint
+
+#+begin_src sh
+doas zfs create zroot/jails/linux
+doas zfs set mountpoint=/usr/local/jails/linux zroot/jails/linux
+#+end_src
+
+***** zroot/jails/linux/rocky
+
+create the zroot/jails/linux/rocky zfs dataset and set the mountpoint
+
+#+begin_src sh
+doas zfs create zroot/jails/linux/rocky
+doas zfs set mountpoint=/usr/local/jails/linux/rocky zroot/jails/linux/rocky
+#+end_src
+
+***** /etc/jail.conf
+
+create the /etc/jail.conf file if it doesn't exist
+
+#+begin_src sh
+doas vi /etc/jail.conf
+#+end_src
+
+add the following code to the jail.conf file to include \\
+files with a .conf extension in the /etc/jail.conf.d/ directory
+
+jail.conf
+ 
+#+begin_src conf
+# startup/logging
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.consolelog = "/var/log/jail_console_${name}.log";
+#+end_src
+
+***** /etc/jail.conf.d/rocky.conf
+
+create the /etc/jail.conf.d/ directory
+
+#+begin_src sh
+doas mkdir -p /etc/jail.conf.d/
+#+end_src
+
+#+begin_src sh
+doas vi /etc/jail.conf.d/rocky.conf
+#+end_src
+
+rocky.conf
+
+#+begin_src sh
+rocky {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
+
+    # permissions
+    devfs_ruleset=7;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
+    mount += "linprocfs       $path/proc     linprocfs       rw                      0       0";
+    mount += "linsysfs        $path/sys      linsysfs        rw                      0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+
+    # change username to your username below
+    # mount the video directory from the host to the jail after creating it
+    #mount += "/home/username/video $path/home/username/video  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    #mount += "/var/run/xdg/username $path/run/user/1001  nullfs rw            0       0";
+}
+#+end_src
+
+*** pf.conf
+
+#+begin_src sh
+doas vi /etc/pf.conf:
+#+end_src
+
+nat for jail
+
+#+begin_src sh
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+#+end_src
+
+full pf.conf example
+
+#+begin_src conf
+#=========================================================================#
+# variables, macro and tables                                             #
+#=========================================================================#
+
+int_if="ue0" # usb to ethernet adaptor
+#int_if="bge0" # thunderbolt to ethernet adaptor
+#int_if="wlan0" # ralink usb wifi
+vpn_if="tun0" # vpn interface
+all_networks="0.0.0.0/0"
+vpn_network="$vpn_if:network"
+tcp_services = "{ ntp, 6881 }" # tcp services - torrent
+udp_services = "{ ntp, 6882 }" # udp services - torrent
+icmp_types = "{ echoreq, unreach }"
+tcp_state="flags S/SA keep state"
+udp_state="keep state"
+
+#table <internet> { $all_networks, !self, !$int_if:network } # internet
+#table <lan> { $int_if:network, !self }                      # lan network
+table <myself> { self }                                     # self
+table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
+	 	   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
+	 	   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
+	 	   203.0.113.0/24 }                         # broken networks
+
+#=========================================================================#
+# global policy                                                           #
+#=========================================================================#
+
+set block-policy drop
+set loginterface $int_if
+set fingerprints "/etc/pf.os"
+set skip on lo0
+scrub in all fragment reassemble no-df max-mss 1440
+# nat jail
+nat on $int_if from {lo1:network} to any -> ($int_if)
+antispoof log quick for { lo $int_if } label "block_spoofing"
+
+#=========================================================================#
+# block                                                                   #
+#=========================================================================#
+
+block log all # block log all
+block return out quick inet6 all tag IPV6 # block ipv6 
+block in quick inet6 all tag IPV6 # block ipv6
+
+# block broken networks - turned off for synergy
+# block in quick from { <martians> no-route urpf-failed } to any tag BAD_PACKET
+
+#=========================================================================#
+# anchors                                                                 #
+#=========================================================================#
+
+# emerging threats - anchor
+#anchor "emerging-threats"
+#load anchor "emerging-threats" from "/etc/pf.anchors/emerging-threats"
+
+# openvpn - anchor
+anchor "openvpn"
+
+#=========================================================================#
+# traffic tag                                                             #
+#=========================================================================#
+
+# icmp
+pass inet proto icmp all icmp-type $icmp_types keep state tag ICMP
+
+# Allow the tcp and udp services defined in the macros at the top of the file
+pass in on $int_if inet proto tcp from any to ($int_if) port $tcp_services $tcp_state tag TCP_IN
+pass in on $int_if inet proto udp from any to ($int_if) port $udp_services $udp_state tag UDP_IN
+
+# outbound traffic
+block out on $int_if all
+pass out quick on $int_if all modulate state
+#+end_src
+
+*** Start linux
+
+Use sysrc to set linux_enable="YES" in your /etc/rc.conf
+
+#+begin_src sh
+doas sysrc linux_enable="YES"
+#+end_src
+
+or you can edit your
+
+#+begin_src sh
+doas vi /etc/rc.conf
+#+end_src
+
+start linux
+
+#+begin_src sh
+doas service linux start
+#+end_src
+
+**** fstab add proc
+
+edit your fstab and add proc
+
+#+begin_src sh
+doas vi /etc/fstab
+#+end_src
+
+fstab
+
+#+begin_src conf
+proc            /proc                   procfs          rw      0       0
+#+end_src
+
+# Horizontal Rule
+-----
+
+** Rocky Linux
+*** Rocky linux container base
+
+rocky 9 base 
+
+#+begin_src sh
+fetch 'https://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-Container-Base.latest.x86_64.tar.xz'
+#+end_src
+
+*** tar xz
+
+rocky 9
+
+#+begin_src sh
+doas tar xvfp Rocky-9-Container-Base.latest.x86_64.tar.xz -C /usr/local/jails/linux/rocky
+#+end_src
+
+*** resolv.conf
+
+switch to root
+
+#+begin_src sh
+su
+#+end_src
+
+#+begin_src sh
+echo 'nameserver 8.8.8.8' >> /usr/local/jails/linux/rocky/etc/resolv.conf
+#+end_src
+
+*** edit group in jail
+
+#+begin_src sh
+vi /usr/local/jails/linux/rocky/etc/group
+#+end_src
+
+#+begin_src sh
+root:x:0:
+#+end_src
+
+#+begin_src sh
+root:x:0:wheel
+#+end_src
+
+*** start the jail
+
+#+begin_src sh
+doas service jail onestart rocky
+#+end_src
+
+#+begin_src sh
+doas jexec rocky /bin/bash
+#+end_src
+
+*** dnf update
+
+#+begin_src sh
+dnf update
+#+end_src
+
+*** dnf config-manager
+
+#+begin_src sh
+dnf install 'dnf-command(config-manager)'
+#+end_src
+
+*** crb
+
+Enable the CodeReady Linux Builder (CRB) repository. The CRB repository contains extra libraries and developer tools. This repository is available on Rocky Linux 9 but is disabled by default.
+
+#+begin_src sh
+dnf config-manager --set-enabled crb
+#+end_src
+
+*** epel-release
+
+Install the package for the Extra Packages for Enterprise Linux (EPEL) repository. EPEL is a Fedora project full of helpful applications for enterprise users. It includes packages like Python, Perl, Ruby, ImageMagick, and Chromium browser builds. (Please note that this package requires the CRB libraries in the previous step.)
+
+#+begin_src sh
+dnf -y install epel-release
+#+end_src
+
+check crb status
+
+#+begin_src sh
+/usr/bin/crb status
+#+end_src
+
+*** Install RPM Fusion Free Repository.
+
+#+begin_src sh
+dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+#+end_src
+
+*** Install RPM Fusion Non-Free Repository.
+
+#+begin_src sh
+dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
+#+end_src
+
+*** Next, verify the installation with the following command:
+
+#+begin_src sh
+dnf repolist | grep rpmfusion
+#+end_src
+
+*** dnf groupupdate core
+
+#+begin_src sh
+dnf groupupdate core --allowerasing
+#+end_src
+
+*** dnf.conf
+
+#+begin_src sh
+vi /etc/dnf/dnf.conf
+#+end_src
+
+#+begin_src sh
+max_parallel_downloads=5
+#+end_src
+
+*** dnf update
+
+#+begin_src sh
+dnf update
+#+end_src
+
+*** codecs
+
+[[https://rpmfusion.org/Howto/Multimedia]]
+
+Install additional codec
+This will allows the application using the gstreamer framework to play others restricted codecs:
+
+The following command will install the complements multimedia packages needed by gstreamer enabled applications:
+
+#+begin_src sh
+dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+#+end_src
+
+The following command will install the sound-and-video complement packages needed by some applications:
+
+#+begin_src sh
+#dnf groupupdate sound-and-video
+dnf groupupdate Multimedia
+#+end_src
+
+*** zsh install
+
+#+begin_src sh
+dnf install zsh
+#+end_src
+
+*** dummy-uvm.so
+
+create the gpu directory inside config directory in the jail
+
+#+begin_src sh
+mkdir -p /usr/local/jails/linux/rocky/home/"${USER}"/.config/gpu
+#+end_src
+
+copy the dummy-uvm.so from this repository to the jail
+
+#+begin_src sh
+cp davinci-resolve-freebsd-jail-rocky/rocky/home/username/.config/gpu/dummy-uvm.so /usr/local/jails/linux/rocky/home/"${USER}"/.config/gpu
+#+end_src
+
+*** zsh shell config
+
+We need to set some enviormental variables in our shell config
+
+***** zshrc
+
+We create a blank .zshrc file \\
+otherwise zsh will complain that theres is no config file
+
++ ~/.zshrc code
+
+#+begin_src sh
+# ~/.zshrc
+
+# add your zsh code below
+#+end_src
+
+***** zshenv
+
+shell path
+
+Set the shell path to include resolve bin directory \\
+this allows us to type resolve
+
+#+begin_example
+resolve
+#+end_example
+
+Instead of the full path to open Davinci Resolve in the jail
+
+#+begin_example
+/opt/resolve/bin/resolve
+#+end_example
+
++ ~/.zshenv code
+
+#+begin_src conf
+# ~/.zshenv
+
+# for ZSH
+case "$OSTYPE" in
+  freebsd*)
+  # Path
+  typeset -U PATH path
+  path=("$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR=/var/run/xdg/"${USER}"
+
+  # wayland - uncomment to use wayland
+  export WAYLAND_DISPLAY=wayland-0
+  export QT_QPA_PLATFORM=wayland
+  export GDK_BACKEND=wayland
+  ;;
+  linux*)
+  typeset -U PATH path
+  path=("/opt/resolve/bin" "/bin" "/usr/bin" "$path[@]")
+  export PATH
+
+  # XDG_RUNTIME_DIR
+  export XDG_RUNTIME_DIR="/run/user/`id -u`"
+
+  # dummy-uvm.so for access to the gpu
+  export LD_PRELOAD="${HOME}"/.config/gpu/dummy-uvm.so
+
+  # wayland - uncomment to use wayland
+  #export WAYLAND_DISPLAY=wayland-0
+  #export QT_QPA_PLATFORM=wayland
+  #export GDK_BACKEND=wayland
+
+  # x11 - comment out to use wayland
+  export DISPLAY=:0
+  export QT_QPA_PLATFORM=xcb
+  export GDK_BACKEND=x11
+  ;;
+esac
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Copy user and group from Freebsd to Rocky Linux
+
+We can just copy the settings for our user from Freebsd passwd file
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+to the passwd file on rocky
+
+#+begin_example
+/usr/local/jails/linux/ubuntu/etc/passwd
+#+end_example
+
+**** Freebsd /etc/passwd 
+
+#+begin_example
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_example
+
+We also need to check that the shell path is correct \\
+change zsh path to /bin/zsh in the jail
+
+Freebsd passwd
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/username:/usr/local/bin/zsh
+#+end_src
+
+**** rocky passwd
+
+Host path
+
+#+begin_example
+/usr/local/jails/linux/rocky/etc/passwd
+#+end_example
+
+jail path
+
+#+begin_example
+/etc/passwd
+#+end_example
+
+#+begin_src sh
+username:*:1001:1001:USER NAME:/home/djwilcox:/bin/zsh
+#+end_src
+
+Check your user and group on freebsd
+
+#+begin_src sh
+id
+#+end_src
+
+Output
+
+#+begin_src sh
+uid=1001(username) gid=1001(username) groups=1001(username),0(wheel),5(operator),44(video),47(realtime)
+#+end_src
+
+**** copy the group from freebsd to rocky
+
+Freebsd /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+Ubuntu /etc/group
+
+#+begin_src conf
+username:*:1001:
+#+end_src
+
+# Horizontal Rule
+-----
+
+**** groups
+
+#+begin_src sh
+usermod -a -G adm username
+usermod -a -G cdrom username
+usermod -a -G users username
+usermod -a -G video username
+usermod -a -G audio username
+usermod -a -G pipewire username
+usermod -a -G wheel username
+#+end_src
+
+exit and relogin for the changes to take affect
+
+#+begin_src sh
+exit
+#+end_src
+
+#+begin_src sh
+su - username
+#+end_src
+
+#+begin_example
+/etc/group
+#+end_example
+
+#+begin_src conf
+wheel:*:0:root,djwilcox
+video:x:44:djwilcox
+#root:x:0:
+#wheel:x:10:
+#video:x:39:
+#+end_src
+
+*** passwd
+
+Create a passwd for your user, replace username with your username
+
+Run the following command as root
+
+#+begin_src sh
+passwd username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** sudo install
+
+#+begin_src sh
+dnf install sudo
+#+end_src
+
+Run the following command as root
+
+Edit the sudoers file with visudo
+
+#+begin_src sh
+visudo
+#+end_src
+
+Add your user to the sudoers file, change username to your username
+
+#+begin_src sh
+username ALL=(ALL:ALL) ALL
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** Switch to out user with su
+
+switch to your user in the jail \\
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** development tools
+
+#+begin_src sh
+sudo dnf groupinstall "Development Tools"
+sudo dnf groupupdate "Development Tools"
+#+end_src
+
+*** ffmpeg install
+
+#+begin_src sh
+sudo dnf install ffmpeg
+#+end_src
+
+*** Create the XDG_RUNTIME_DIR directory
+
+Create the XDG_RUNTIME_DIR directory in the jail
+
+#+begin_src sh
+sudo mkdir -p /run/user/"$(id -u)"
+#+end_src
+
+Chown the directory 
+
+#+begin_src sh
+sudo chown -R "${USER}":"$(id -u)" /run/user/"$(id -u)"
+#+end_src
+
+Chmod the directory
+
+#+begin_src sh
+sudo chmod 700 /run/user/"$(id -u)"
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** stop the jail and edit the jail config
+
+exit the jail 
+
+#+begin_src sh
+exit
+exit
+#+end_src
+
+stop the rocky jail
+
+#+begin_src sh
+doas service jail onestop rocky
+#+end_src
+
+edit the ubuntu.conf jail config and uncomment the video and xdg directories
+
+#+begin_example
+/etc/jail.conf.d/rocky.conf
+#+end_example
+
+#+begin_src sh
+rocky {
+    # hostname/path
+    host.hostname = "${name}";
+    path = "/usr/local/jails/linux/${name}";
+
+    # permissions
+    allow.raw_sockets;
+    exec.clean;
+    persist;
+    sysvmsg=inherit;
+    sysvsem=inherit;
+    sysvshm=inherit;
+    enforce_statfs=1;
+
+    # permissions
+    devfs_ruleset=7;
+
+    # network
+    ip4.addr="lo1|10.10.0.5/24";
+
+    # mount
+    mount += "devfs           $path/dev      devfs           rw                      0       0";
+    mount += "tmpfs           $path/dev/shm  tmpfs           rw,size=1g,mode=1777    0       0";
+    mount += "fdescfs         $path/dev/fd   fdescfs         rw,linrdlnk             0       0";
+    mount += "linprocfs       $path/proc     linprocfs       rw                      0       0";
+    mount += "linsysfs        $path/sys      linsysfs        rw                      0       0";
+    mount += "/tmp            $path/tmp      nullfs          rw                      0       0";
+    mount += "/home           $path/home     nullfs          rw                      0       0";
+
+    # mount the video directory from the host to the jail after creating it
+    mount += "/home/username/video $path/home/username/video  nullfs rw      0       0";
+    # uncomment the line below for the xdg runtime directory for wayland after creating it
+    mount += "/var/run/xdg/djwilcox $path/run/user/1001  nullfs rw            0       0";
+}
+#+end_src
+
+*** start the rocky jail
+
+#+begin_src sh
+doas service jail onestart rocky
+#+end_src
+
+enter the jail
+
+#+begin_src sh
+doas jexec rocky /bin/sh
+#+end_src
+
+switch to our user 
+replace username with your username
+
+#+begin_src sh
+su - username
+#+end_src
+
+*** Nvidia download
+
+Download the linux version matching the version on the freebsd host \\
+the version must match exactly or it won't work
+
+Download link for 550.127.05
+
+[[https://www.nvidia.com/en-us/drivers/details/233004/]]
+
+# Horizontal Rule
+-----
+
+*** kernerl-modules install
+
+kernel-modules for the i915 driver
+
+#+begin_src sh
+sudo dnf install kernel-modules
+#+end_src
+
+*** Nvidia driver install
+
+on the freebsd host move the nvidia installer to the video directory
+which should be mounted in the jail, so you can cd to the video directory in the jail and install the driver
+
+chmod the Nvidia run file
+
+#+begin_src sh
+chmod +x NVIDIA-Linux-x86_64-550.127.05.run
+#+end_src
+
+Install the Nvidia driver
+
+#+begin_src sh
+sudo ./NVIDIA-Linux-x86_64-550.127.05.run --install-compat32-libs --no-nvidia-modprobe --no-backup --no-kernel-module --no-x-check --no-nouveau-check --no-cc-version-check --no-kernel-module-source --no-check-for-alternate-installs --install-libglvnd --skip-depmod --no-systemd
+#+end_src
+
+# Horizontal Rule
+-----
+
+*** cuda install
+
+[[https://developer.nvidia.com/cuda-12-4-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Rocky&target_version=9&target_type=rpm_local]]
+
+install wget
+
+#+begin_src sh
+sudo dnf install wget
+#+end_src
+
+download the cuda rpm, this may take a couple of hours
+
+#+begin_src sh
+wget -c https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda-repo-rhel9-12-4-local-12.4.0_550.54.14-1.x86_64.rpm
+#+end_src
+
+install the cuda rpm
+
+#+begin_src sh
+sudo rpm -i cuda-repo-rhel9-12-4-local-12.4.0_550.54.14-1.x86_64.rpm
+#+end_src
+
+dnf clean all
+
+#+begin_src sh
+sudo dnf clean all
+#+end_src
+
+cuda toolkit install
+
+#+begin_src sh
+sudo dnf -y install cuda-toolkit-12-4
+#+end_src
+
+** Start the jail
+
+you need to start the jail before you can use it
+
+#+begin_src sh
+doas service jail onestart rocky
+#+end_src
