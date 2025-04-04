@@ -1078,16 +1078,6 @@ source ~/.venv/whisperx/bin/activate
 pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
 #+end_src
 
-if the download stalls you can manually download the file and install it
-
-#+begin_src sh
-wget -c 'https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp39-cp39-linux_x86_64.whl'
-#+end_src
-
-#+begin_src sh
-pip install torch-2.6.0+cu124-cp39-cp39-linux_x86_64.whl
-#+end_src
-
 upgrade pip, replace djwilcox with your username
 
 #+begin_src sh
