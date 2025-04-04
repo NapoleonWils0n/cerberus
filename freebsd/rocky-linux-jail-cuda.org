@@ -92,6 +92,100 @@ add path 'speaker*' unhide
 
 after adding the devfs rules reboot
 
+*** uvm_ioctl_override.c
+**** install linux-c7-devtools
+
+#+begin_src sh
+doas pkg install linux-c7-devtools
+#+end_src
+
+**** uvm_ioctl_override.c
+
+#+begin_src c
+#define _GNU_SOURCE
+
+#include <dlfcn.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+
+// pkg install linux-c7-devtools
+// /compat/linux/bin/cc --sysroot=/compat/linux -m64 -std=c99 -Wall -ldl -fPIC -shared -o dummy-uvm.so uvm_ioctl_override.c
+// env LD_PRELOAD=$PWD/dummy-uvm.so <cmd>
+
+#define NV_UVM_INITIALIZE   0x30000001
+#define NV_UVM_DEINITIALIZE 0x30000002
+
+#define NV_ERR_NOT_SUPPORTED 0x56
+
+struct NvUvmInitParams
+{
+  uint64_t flags __attribute__((aligned(8)));
+  uint32_t status;
+};
+
+int (*libc_ioctl)(int fd, unsigned long request, ...) = NULL;
+
+int ioctl(int fd, unsigned long request, ...) {
+
+  if (!libc_ioctl) {
+    libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
+  }
+
+  va_list _args_;
+  va_start(_args_, request);
+  void* data = va_arg(_args_, void*);
+  va_end(_args_);
+
+  if (request == NV_UVM_INITIALIZE) {
+    struct NvUvmInitParams* params = (struct NvUvmInitParams*)data;
+    params->status = NV_ERR_NOT_SUPPORTED;
+    return 0;
+  }
+
+  if (request == NV_UVM_DEINITIALIZE) {
+    return 0;
+  }
+
+  return libc_ioctl(fd, request, data);
+}
+
+int (*libc_open)(const char* path, int flags, ...) = NULL;
+
+int open(const char* path, int flags, ...) {
+
+  if (!libc_open) { libc_open = dlsym(RTLD_NEXT, "open"); }
+
+  mode_t mode = 0;
+
+  va_list _args_;
+  va_start(_args_, flags);
+
+  if (flags & O_CREAT) {
+    mode = va_arg(_args_, int);
+  }
+
+  va_end(_args_);
+
+  if (strcmp("/dev/nvidia-uvm", path) == 0) {
+    return libc_open("/dev/null", flags, mode);
+  }
+
+  return libc_open(path, flags, mode);  
+}
+#+end_src
+
+**** centos
+
+#+begin_src sh
+# fetch https://gist.githubusercontent.com/shkhln/40ef290463e78fb2b0000c60f4ad797e/raw/f640983249607e38af405c95c457ce4afc85c608/uvm_ioctl_override.c
+#+end_src
+
+#+begin_src sh
+# /compat/linux/bin/cc --sysroot=/compat/linux -m64 -std=c99 -Wall -ldl -fPIC -shared -o dummy-uvm.so uvm_ioctl_override.c
+#+end_src
+
 *** jail config
 
 enable jails
@@ -112,8 +206,8 @@ cloned_interfaces="lo1"
 ifconfig_lo1_aliases="inet 10.10.0.1-12/24"
 #+end_src
 
-**** Setting Up the Jail Directory Tree
-***** zroot/jails
+*** Setting Up the Jail Directory Tree
+**** zroot/jails
 
 create the zroot/jails zfs dataset and set the mountpoint
 
@@ -122,7 +216,7 @@ doas zfs create zroot/jails
 doas zfs set mountpoint=/usr/local/jails zroot/jails
 #+end_src
 
-***** zroot/jails/linux
+**** zroot/jails/linux
 
 create the zroot/jails/linux zfs dataset and set the mountpoint
 
@@ -131,7 +225,7 @@ doas zfs create zroot/jails/linux
 doas zfs set mountpoint=/usr/local/jails/linux zroot/jails/linux
 #+end_src
 
-***** zroot/jails/linux/rocky
+**** zroot/jails/linux/rocky
 
 create the zroot/jails/linux/rocky zfs dataset and set the mountpoint
 
@@ -140,7 +234,7 @@ doas zfs create zroot/jails/linux/rocky
 doas zfs set mountpoint=/usr/local/jails/linux/rocky zroot/jails/linux/rocky
 #+end_src
 
-***** /etc/jail.conf
+**** /etc/jail.conf
 
 create the /etc/jail.conf file if it doesn't exist
 
@@ -160,7 +254,7 @@ exec.stop = "/bin/sh /etc/rc.shutdown";
 exec.consolelog = "/var/log/jail_console_${name}.log";
 #+end_src
 
-***** /etc/jail.conf.d/rocky.conf
+**** /etc/jail.conf.d/rocky.conf
 
 create the /etc/jail.conf.d/ directory
 
@@ -323,7 +417,7 @@ start linux
 doas service linux start
 #+end_src
 
-**** fstab add proc
+***** fstab add proc
 
 edit your fstab and add proc
 
@@ -955,6 +1049,51 @@ cuda toolkit install
 
 #+begin_src sh
 sudo dnf -y install cuda-toolkit-12-4
+#+end_src
+
+** whisperx
+*** python install
+
+#+begin_src sh
+sudo dnf install python3 python3-pip git
+#+end_src
+
+*** python create venv
+
+#+begin_src sh
+python3 -m venv ~/.venv/whisperx
+#+end_src
+
+#+begin_src sh
+source ~/.venv/whisperx/bin/activate
+#+end_src
+
+*** torch install
+
+#+begin_src sh
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+#+end_src
+
+if the download stalls you can manually download the file and install it
+
+#+begin_src sh
+wget -c 'https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp39-cp39-linux_x86_64.whl'
+#+end_src
+
+#+begin_src sh
+pip install torch-2.6.0+cu124-cp39-cp39-linux_x86_64.whl
+#+end_src
+
+upgrade pip, replace djwilcox with your username
+
+#+begin_src sh
+/home/djwilcox/.venv/whisperx/bin/python3 -m pip install --upgrade pip
+#+end_src
+
+*** whisperx install
+
+#+begin_src sh
+pip install whisperx
 #+end_src
 
 ** Start the jail
