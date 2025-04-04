@@ -1062,50 +1062,42 @@ sudo dnf -y install cuda-toolkit-12-4
 sudo dnf install python3 python3-pip git
 #+end_src
 
-*** python create venv
+*** miniconda
+**** miniconda install
 
 #+begin_src sh
-python3 -m venv ~/.venv/whisperx
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
 #+end_src
+
+press enter, select yes to accept terms
+and enter no at the next prompt to not automatically enable conda in the shell
+
+**** eval
 
 #+begin_src sh
-source ~/.venv/whisperx/bin/activate
+eval "$(/home/djwilcox/miniconda3/bin/conda shell.zsh hook)"
 #+end_src
 
-*** upgrade pip
-
-upgrade pip, replace djwilcox with your username
+**** conda create
 
 #+begin_src sh
-/home/djwilcox/.venv/whisperx/bin/python3 -m pip install --upgrade pip
+conda create -n whisperx_conda python=3.9
+conda activate whisperx_conda
+conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
 #+end_src
 
-*** torch install
-
-#+begin_src sh
-pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
-#+end_src
-
-if the download stalls you can manually download the file and install it
-
-#+begin_src sh
-wget -c 'https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp39-cp39-linux_x86_64.whl'
-#+end_src
-
-#+begin_src sh
-pip install torch-2.6.0+cu124-cp39-cp39-linux_x86_64.whl
-#+end_src
-
-*** whisperx install
+**** pip install whisperx
 
 #+begin_src sh
 pip install whisperx
 #+end_src
 
-if you get an error saying cuda not supported on this os try reinstalling ctranslate2
+activate whisperx_conda before use
 
 #+begin_src sh
-pip install ctranslate2
+conda activate whisperx_conda
 #+end_src
 
 *** usage
