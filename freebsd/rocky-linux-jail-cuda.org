@@ -673,7 +673,7 @@ case "$(uname -a)" in
   ;;
   ,*rocky*)
   typeset -U PATH path
-  path=( "/usr/local/cuda-12.4/bin" "/bin" "/usr/bin" "$path[@]")
+  path=( "/usr/local/cuda-12.4/bin" "$HOME/.local/bin" "/bin" "/usr/bin" "$path[@]")
   export PATH
 
   # XDG_RUNTIME_DIR
