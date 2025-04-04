@@ -1097,6 +1097,7 @@ pip install whisperx
 activate whisperx_conda before use
 
 #+begin_src sh
+eval "$(/home/djwilcox/miniconda3/bin/conda shell.zsh hook)"
 conda activate whisperx_conda
 #+end_src
 
