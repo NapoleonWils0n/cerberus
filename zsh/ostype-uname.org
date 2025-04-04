@@ -25,7 +25,7 @@ case "$OSTYPE" in
 esac
 
 case "$(uname -a)" in
-  *ubuntu*)
+  ,*ubuntu*)
   typeset -U PATH path
   path=( "$HOME/.cargo/bin" "/opt/resolve/bin" "/bin" "/usr/bin" "$path[@]")
   export PATH
@@ -48,9 +48,9 @@ case "$(uname -a)" in
 
   . "$HOME/.cargo/env"
   ;;
-  *rocky*)
+  ,*rocky*)
   typeset -U PATH path
-  path=( "/usr/local/cuda-12.4/bin" "/bin" "/usr/bin" "$path[@]")
+  path=( "/usr/local/cuda-12.4/bin" "$HOME/.local/bin" "/bin" "/usr/bin" "$path[@]")
   export PATH
 
   # XDG_RUNTIME_DIR
@@ -58,6 +58,10 @@ case "$(uname -a)" in
 
   # dummy-uvm.so for access to the gpu
   export LD_PRELOAD="${HOME}"/.config/gpu/dummy-uvm.so
+
+  # cuda
+  export CUDA_HOME=/usr/local/cuda-12.4
+  export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 
   # wayland - uncomment to use wayland
   #export WAYLAND_DISPLAY=wayland-0
@@ -78,5 +82,4 @@ export XDG_DATA_HOME="$HOME/.local/share"
 
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
-
 #+end_src

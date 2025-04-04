@@ -1072,6 +1072,14 @@ python3 -m venv ~/.venv/whisperx
 source ~/.venv/whisperx/bin/activate
 #+end_src
 
+*** upgrade pip
+
+upgrade pip, replace djwilcox with your username
+
+#+begin_src sh
+/home/djwilcox/.venv/whisperx/bin/python3 -m pip install --upgrade pip
+#+end_src
+
 *** torch install
 
 #+begin_src sh
@@ -1086,12 +1094,6 @@ wget -c 'https://download.pytorch.org/whl/cu124/torch-2.6.0%2Bcu124-cp39-cp39-li
 
 #+begin_src sh
 pip install torch-2.6.0+cu124-cp39-cp39-linux_x86_64.whl
-#+end_src
-
-upgrade pip, replace djwilcox with your username
-
-#+begin_src sh
-/home/djwilcox/.venv/whisperx/bin/python3 -m pip install --upgrade pip
 #+end_src
 
 *** whisperx install
