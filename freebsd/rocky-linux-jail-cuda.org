@@ -595,11 +595,7 @@ create the gpu directory inside config directory in the jail
 mkdir -p /usr/local/jails/linux/rocky/home/"${USER}"/.config/gpu
 #+end_src
 
-copy the dummy-uvm.so from this repository to the jail
-
-#+begin_src sh
-cp davinci-resolve-freebsd-jail-rocky/rocky/home/username/.config/gpu/dummy-uvm.so /usr/local/jails/linux/rocky/home/"${USER}"/.config/gpu
-#+end_src
+copy the dummy-uvm.so to the jail
 
 *** zsh shell config
 
