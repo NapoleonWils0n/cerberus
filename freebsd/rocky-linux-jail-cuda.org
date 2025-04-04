@@ -682,6 +682,10 @@ case "$(uname -a)" in
   # dummy-uvm.so for access to the gpu
   export LD_PRELOAD="${HOME}"/.config/gpu/dummy-uvm.so
 
+  # cuda
+  export CUDA_HOME=/usr/local/cuda-12.4
+  export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
   # wayland - uncomment to use wayland
   #export WAYLAND_DISPLAY=wayland-0
   #export QT_QPA_PLATFORM=wayland
@@ -1094,6 +1098,18 @@ upgrade pip, replace djwilcox with your username
 
 #+begin_src sh
 pip install whisperx
+#+end_src
+
+if you get an error saying cuda not supported on this os try reinstalling ctranslate2
+
+#+begin_src sh
+pip install ctranslate2
+#+end_src
+
+*** usage
+
+#+begin_src sh
+whisperx --highlight_words True input.mp3
 #+end_src
 
 ** Start the jail
