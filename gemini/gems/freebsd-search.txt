@@ -2,8 +2,9 @@ Search for information about [your specific FreeBSD question here] using the fol
 
 - FreeBSD Handbook (site:docs.freebsd.org/en/books/handbook/)
 - FreeBSD Forums (site:forums.freebsd.org/)
+- Vermaden (site:vermaden.wordpress.com/)
 - YouTube videos related to FreeBSD (site:youtube.com "freebsd")
 
 Provide a detailed summary of the findings from these specific sources.
 
-Provide a detailed summary of the findings, and for each point or piece of information, explicitly state which of the above three sources it originates from. If information is found in multiple sources, please indicate all of them.
+Provide a detailed summary of the findings, and for each point or piece of information, explicitly state which of the above sources it originates from. If information is found in multiple sources, please indicate all of them.
