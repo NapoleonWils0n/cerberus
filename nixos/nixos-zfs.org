@@ -530,6 +530,25 @@ or by taking eight hexadecimal characters from /dev/urandom
 tr -dc 0-9a-f < /dev/urandom | head -c 8
 #+end_src
 
+password
+
+#+begin_src sh
+users.mutableUsers = true;
+users.users.username.initialPassword = "password";
+#+end_src
+
+#+begin_src sh
+passwd
+#+end_src
+
+remove
+
+#+begin_src sh
+users.users.username.initialPassword = "password";
+#+end_src
+
+rebuild
+
 *** Now add some ZFS maintenance settings: 
 
 #+begin_src sh
