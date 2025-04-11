@@ -1,0 +1,618 @@
+#+STARTUP: content
+* nixos zfs on root
+** resources
+
+[[https://nixos.org/manual/nixos/stable/]]
+
+[[https://github.com/NapoleonWils0n/nixos-root-xps15/blob/0a08aa5509651298d2b2c8264b8e612f5d4e7f24/etc/nixos/configuration.nix]]
+
+[[https://wiki.nixos.org/wiki/ZFS]]
+
+[[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/Root%20on%20ZFS.html]]
+
+[[https://lowtek.ca/roo/2024/getting-started-with-zfs/]]
+
+[[https://blog.lazkani.io/posts/nixos-on-encrypted-zfs/]]
+
+[[https://mzhang.io/posts/2022-05-09-installing-nixos-on-encrypted-zfs/]]
+
+[[https://www.return12.net/zfs-on-nixos/]]
+
+** iso download
+
+Miniimal ISO image download
+
+[[https://nixos.org/download.html#nixos-iso]]
+
+#+begin_src sh
+wget -c 'https://channels.nixos.org/nixos-24.11/latest-nixos-minimal-x86_64-linux.iso'
+#+end_src
+
+** dd disk to usb
+
+[[https://nixos.org/manual/nixos/stable/#sec-booting-from-usb]]
+
+Creating bootable USB flash drive from a Terminal on Linux
+
+Plug in the USB flash drive.
+
+Find the corresponding device with lsblk. You can distinguish them by their size.
+
+#+begin_src sh
+lsblk
+#+end_src
+
+#+begin_src sh
+sdc                           8:32   1  28.9G  0 disk
+├─sdc1                        8:33   1   5.3G  0 part  /media/djwilcox/Ubuntu 24.10 amd64
+├─sdc2                        8:34   1   4.9M  0 part
+├─sdc3                        8:35   1   300K  0 part
+└─sdc4                        8:36   1  23.6G  0 part
+#+end_src
+
+Make sure all partitions on the device are properly unmounted.
+Replace sdX with your device (e.g. sdc). 
+
+#+begin_src sh
+sudo umount /dev/sdX
+#+end_src
+
+#+begin_src sh
+sudo umount /dev/sdc
+#+end_src
+
+Then use the dd utility to write the image to the USB flash drive. 
+
+#+begin_src sh
+sudo dd bs=4M conv=fsync oflag=direct status=progress if=<path-to-image> of=/dev/sdX
+#+end_src
+
+in this example sdc is the usb drive
+
+graphical
+
+#+begin_src sh
+sudo dd bs=4M conv=fsync oflag=direct status=progress if=latest-nixos-gnome-x86_64-linux.iso of=/dev/sdc
+#+end_src
+
+minimal iso
+
+#+begin_src sh
+sudo dd bs=4M conv=fsync oflag=direct status=progress if=latest-nixos-minimal-x86_64-linux.iso of=/dev/sdc
+#+end_src
+
+#+begin_src sh
+sudo umount /dev/sdc
+#+end_src
+
+** boot from usb
+
+To begin the installation, you have to boot your computer from the install drive.
+
+dell xps press f2 repeatedly
+
+Plug in the install drive. Then turn on or restart your computer.
+
+Open the boot menu by pressing the appropriate key, which is usually shown on the display on early boot. Select the USB flash drive (the option usually contains the word “USB”). If you choose the incorrect drive, your computer will likely continue to boot as normal. In that case restart your computer and pick a different drive.
+    Note
+
+The key to open the boot menu is different across computer brands and even models. It can be F12, but also F1, F9, F10, Enter, Del, Esc or another function key. If you are unsure and don’t see it on the early boot screen, you can search online for your computers brand, model followed by “boot from usb”. The computer might not even have that feature, so you have to go into the BIOS/UEFI settings to change the boot order. Again, search online for details about your specific computer model.
+
+For Apple computers with Intel processors press and hold the ⌥ (Option or Alt) key until you see the boot menu. On Apple silicon press and hold the power button.
+
+If your computer supports both BIOS and UEFI boot, choose the UEFI option.
+
+If you use a CD for the installation, the computer will probably boot from it automatically. If not, choose the option containing the word “CD” from the boot menu.
+
+Shortly after selecting the appropriate boot drive, you should be presented with a menu with different installer options. Leave the default and wait (or press Enter to speed up).
+
+The graphical images will start their corresponding desktop environment and the graphical installer, which can take some time. The minimal images will boot to a command line. You have to follow the instructions in Section 2.3, “Manual Installation” there. 
+
+** Manual Installation
+
+[[https://nixos.org/manual/nixos/stable/#sec-installation-manual]]
+
+NixOS can be installed on BIOS or UEFI systems. The procedure for a UEFI installation is broadly the same as for a BIOS installation. The differences are mentioned in the following steps.
+
+The NixOS manual is available by running nixos-help in the command line or from the application menu in the desktop environment.
+
+To have access to the command line on the graphical images, open Terminal (GNOME) or Konsole (Plasma) from the application menu.
+
+You are logged-in automatically as nixos. The nixos user account has an empty password so you can use sudo without a password:
+
+#+begin_src sh
+sudo -i
+#+end_src
+
+You can use loadkeys to switch to your preferred keyboard layout. (We even provide neo2 via loadkeys de neo!)
+
+If the text is too small to be legible, try setfont ter-v32n to increase the font size.
+
+To install over a serial port connect with 115200n8 (e.g. picocom -b 115200 /dev/ttyUSB0). When the bootloader lists boot entries, select the serial console boot entry.
+
+** Partitioning and formatting
+
+The NixOS installer doesn’t do any partitioning or formatting, so you need to do that yourself.
+
+The NixOS installer ships with multiple partitioning tools. The examples below use parted, but also provides fdisk, gdisk, cfdisk, and cgdisk.
+
+Use the command ‘lsblk’ to find the name of your ‘disk’ device.
+
+The recommended partition scheme differs depending if the computer uses Legacy Boot or UEFI.
+
+** Partition the disk
+
+We need the following partitions:
+
+1G for boot partition with "boot" as the partition label (also called name in some tools) and ef00 as partition code
+
+4G for a swap partition with "swap" as the partition label and 8200 as partition code. We will encrypt this with a random secret on each boot.
+
+The rest of disk space for zfs with "root" as the partition label and 8300 as partition code (default code)
+
+Reason for swap partition: ZFS does use a caching mechanism that is different from the normal Linux cache infrastructure. In low-memory situations, ZFS therefore might need a bit longer to free up memory from its cache. The swap partition will help with that.
+
+Example with gdisk using /dev/nvme0n1 as the device (use lsblk to find the device): 
+
+sudo gdisk /dev/nvme0n1
+GPT fdisk (gdisk) version 1.0.10
+...
+# boot partition
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (2048-1000215182, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-1000215182, default = 1000215175) or {+-}size{KMGTP}: +1G
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): ef00
+Changed type of partition to 'EFI system partition'
+
+# Swap partition
+Command (? for help): n
+Partition number (2-128, default 2): 
+First sector (2099200-1000215182, default = 2099200) or {+-}size{KMGTP}: 
+Last sector (2099200-1000215182, default = 1000215175) or {+-}size{KMGTP}: +4G
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 8200
+Changed type of partition to 'Linux swap'
+
+# root partition
+Command (? for help): n
+Partition number (3-128, default 3): 
+First sector (10487808-1000215182, default = 10487808) or {+-}size{KMGTP}: 
+Last sector (10487808-1000215182, default = 1000215175) or {+-}size{KMGTP}: 
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 
+Changed type of partition to 'Linux filesystem'
+
+# write changes
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): y
+OK; writing new GUID partition table (GPT) to /dev/nvme0n1.
+The operation has completed successfully.
+
+#+begin_src sh
+gdisk /dev/nvme0n1
+#+end_src
+
+create new partition
+
+#+begin_src sh
+o
+#+end_src
+
+gdisk will ask you if you want to proceed. Type y and press Enter to confirm that you want to create a new empty GPT partition table. This action effectively removes all existing partition information.
+
+Write the changes to disk and exit: To save the empty partition table (which means wiping the previous one) and exit gdisk, type the following command and press Enter:
+
+#+begin_src sh
+w
+#+end_src
+
+gdisk will ask you if you want to proceed. Type y and press Enter to confirm that you want to create a new empty GPT partition table. This action effectively removes all existing partition information.
+
+Write the changes to disk and exit: To save the empty partition table (which means wiping the previous one) and exit gdisk, type the following command and press Enter:
+
+#+begin_src sh
+gdisk /dev/nvme0n1
+#+end_src
+
+press n
+
+#+begin_src sh
+Command (? for help): n
+#+end_src
+
+press 1
+
+#+begin_src sh
+Partition number (1-128, default 1): 
+#+end_src
+
+last sector
+add +1G
+
+#+begin_src sh
++1G
+#+end_src
+
+#+begin_src sh
+First sector (2048-1000215182, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-1000215182, default = 1000215175) or {+-}size{KMGTP}: +1G
+#+end_src
+
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): ef00
+Changed type of partition to 'EFI system partition'
+
+add
+
+#+begin_src sh
+ef00
+#+end_src
+
+# Swap partition
+Command (? for help): n
+Partition number (2-128, default 2): 
+First sector (2099200-1000215182, default = 2099200) or {+-}size{KMGTP}: 
+Last sector (2099200-1000215182, default = 1000215175) or {+-}size{KMGTP}: +4G
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 8200
+Changed type of partition to 'Linux swap'
+
+#+begin_src sh
+n
+#+end_src
+
+press
+
+#+begin_src sh
+2
+#+end_src
+
+add
+
+last sector
+
+#+begin_src sh
++8G
+#+end_src
+
+then
+
+#+begin_src sh
+8200
+#+end_src
+
+# root partition
+Command (? for help): n
+Partition number (3-128, default 3): 
+First sector (10487808-1000215182, default = 10487808) or {+-}size{KMGTP}: 
+Last sector (10487808-1000215182, default = 1000215175) or {+-}size{KMGTP}: 
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 
+Changed type of partition to 'Linux filesystem'
+
+press
+
+#+begin_src sh
+n
+#+end_src
+
+then
+
+#+begin_src sh
+3
+#+end_src
+
+hex
+
+#+begin_src sh
+8300
+#+end_src
+
+
+# write changes
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): y
+OK; writing new GUID partition table (GPT) to /dev/nvme0n1.
+The operation has completed successfully.
+
+Final partition table (fdisk -l /dev/nvme0n1): 
+
+#+begin_src sh
+fdisk -l /dev/nvme0n1
+#+end_src
+
+Let's use variables from now on for simplicity. Get the device ID in /dev/disk/by-id/ (using blkid), in our case here it is nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O 
+
+#+begin_src sh
+blkid
+#+end_src
+
+#+begin_src sh
+ls -l /dev/disk/by-id/
+#+end_src
+
+example, use tab completion for the names
+
+#+begin_src sh
+BOOT=/dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part1
+SWAP=/dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part2
+DISK=/dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part3
+#+end_src
+
+#+begin_src sh
+zpool create -O encryption=on -O keyformat=passphrase -O keylocation=prompt -O compression=zstd -O mountpoint=none -O xattr=sa -O acltype=posixacl -o ashift=12 zpool $DISK
+# enter the password to decrypt the pool at boot
+Enter new passphrase:
+Re-enter new passphrase:
+
+# Create datasets
+zfs create zpool/root
+zfs create zpool/nix
+zfs create zpool/var
+zfs create zpool/home
+
+# Mount root
+mkdir -p /mnt
+mount -t zfs zpool/root /mnt -o zfsutil
+
+# Mount nix, var, home
+mkdir /mnt/nix /mnt/var /mnt/home
+mount -t zfs zpool/nix /mnt/nix -o zfsutil
+mount -t zfs zpool/var /mnt/var -o zfsutil
+mount -t zfs zpool/home /mnt/home -o zfsutil
+#+end_src
+
+zpool status
+
+#+begin_src sh
+zpool status
+#+end_src
+
+Format boot partition and enable swap
+
+#+begin_src sh
+mkfs.fat -F 32 -n boot $BOOT
+#+end_src
+
+#+begin_src sh
+mkswap -L swap $SWAP
+swapon $SWAP
+#+end_src
+
+Installation
+
+#+begin_src sh
+# Mount boot
+mkdir -p /mnt/boot
+mount $BOOT /mnt/boot
+
+# Generate the nixos config
+nixos-generate-config --root /mnt
+...
+writing /mnt/etc/nixos/hardware-configuration.nix...
+writing /mnt/etc/nixos/configuration.nix...
+For more hardware-specific settings, see https://github.com/NixOS/nixos-hardware.
+#+end_src
+
+Now edit the configuration.nix that was just created in /mnt/etc/nixos/configuration.nix and make sure to have at least the following content in it. 
+
+#+begin_src sh
+vim /mnt/etc/nixos/configuration.nix
+#+end_src
+
+after the imports block add the following
+
+#+begin_src sh
+systemd.services.zfs-mount.enable = false;
+#+end_src
+
+networking.hostId
+
+#+begin_src sh
+head -c 8 /etc/machine-id
+#+end_src
+
+#+begin_example
+ad26d962
+#+end_example
+
+#+begin_src sh
+networking.hostId = "ad26d962";
+#+end_src
+
+Now check the hardware-configuration.nix in /mnt/etc/nixos/hardware-configuration.nix and add whats missing e.g. options = [ "zfsutil" ] for all filesystems except boot and randomEncryption = true; for the swap partition.
+
+Also change the generated swap device to the partition we created e.g. /dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part2 in this case and /dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part1 for boot. 
+
+#+begin_src sh
+vim /mnt/etc/nixos/hardware-configuration.nix
+#+end_src
+
+#+begin_src sh
+{
+...
+  fileSystems."/" = { 
+    device = "zpool/root";
+    fsType = "zfs";
+    # the zfsutil option is needed when mounting zfs datasets without "legacy" mountpoints
++    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/nix" = { 
+    device = "zpool/nix";
+    fsType = "zfs";
++    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/var" = { 
+    device = "zpool/var";
+    fsType = "zfs";
++    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/home" = {
+    device = "zpool/home";
+    fsType = "zfs";
++    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/boot" = { 
+   device = "/dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part1";
+   fsType = "vfat";
+  };
+
+  swapDevices = [{
++    device = "/dev/disk/by-id/nvme-SKHynix_HFS512GDE9X081N_FNB6N634510106K5O-part2";
++    randomEncryption = true;
+  }];
+}
+#+end_src
+
+#+begin_src sh
+cd /mnt/etc/nixos
+#+end_src
+
+#+begin_src sh
+cp hardware-configuration.nix hardware-configuration.nix.bak
+#+end_src
+
+#+begin_src sh
+echo $BOOT >> hardware-configuration.nix
+echo $SWAP >> hardware-configuration.nix
+#+end_src
+
+edit the hardware-configuration.nix and add the boot and swap to the config
+
+delete the backup file
+
+#+begin_src sh
+rm -i hardware-configuration.nix.bak
+#+end_src
+
+** Configure the NixOS system
+
+Generate the base NixOS configuration files. 
+
+#+begin_src sh
+nixos-generate-config --root /mnt
+#+end_src
+
+Open /mnt/etc/nixos/configuration.nix in a text editor and change imports to include hardware-configuration-zfs.nix instead of the default hardware-configuration.nix. We will be editing this file later.
+
+Now Add the following block of code anywhere (how you organise your configuration.nix is up to you): 
+
+#+begin_src sh
+# ZFS boot settings.
+boot.supportedFilesystems = [ "zfs" ];
+boot.zfs.devNodes = "/dev/";
+#+end_src
+
+Now set networking.hostName and networking.hostId. The host ID must be an eight digit hexadecimal value.
+You can derive it from the /etc/machine-id, taking the first eight characters; from the hostname, by taking the first eight characters of the hostname's md5sum 
+
+#+begin_src sh
+hostname | md5sum | head -c 8
+#+end_src
+
+or by taking eight hexadecimal characters from /dev/urandom
+
+#+begin_src sh
+tr -dc 0-9a-f < /dev/urandom | head -c 8
+#+end_src
+
+*** Now add some ZFS maintenance settings: 
+
+#+begin_src sh
+# ZFS maintenance settings.
+services.zfs.trim.enable = true;
+services.zfs.autoScrub.enable = true;
+services.zfs.autoScrub.pools = [ "rpool" ];
+#+end_src
+
+You may wish to also add services.zfs.autoSnapshot.enable = true; and set the ZFS property com.sun:auto-snapshot to true on rpool/userdata to have automatic snapshots. (See #How to use the auto-snapshotting service earlier on this page.)
+
+Now open /mnt/etc/nixos/hardware-configuration-zfs.nix.
+
+Add options = [ "zfsutil" ]; to every ZFS fileSystems block.
+Add options = [ "X-mount.mkdir" ]; to fileSystems."/boot" and fileSystems."/boot2".
+
+Replace swapDevices with the following, replacing DISK1 and DISK2 with the names of your disks.
+
+#+begin_src sh
+swapDevices = [
+  { device = "/dev/disk/by-id/DISK1-part2";
+    randomEncryption = true;
+  }
+];
+#+end_src    
+
+
+#+begin_src sh
+swapDevices = [
+  { device = "/dev/disk/by-label/swap";
+    randomEncryption = true;
+  }
+];
+#+end_src    
+
+** installing nixos
+
+#+begin_src sh
+nixos-install --show-trace --root /mnt
+#+end_src
+
+--show-trace will show you where exactly things went wrong if nixos-install fails. To take advantage of all cores on your system, also specify --max-jobs n replacing n with the number of cores on your machine. 
+
+#+begin_src sh
+sudo umount -R /mnt
+#+end_src
+
+#+begin_src sh
+sudo shutdown now
+#+end_src
+
+** Mount datasets without legacy mountpoint
+
+Contrary to conventional wisdom, mountpoint=legacy is not required for mounting datasets. The trick is to use mount -t zfs -o zfsutil path/to/dataset /path/to/mountpoint.
+
+Also, legacy mountpoints are also inconvenient in that the mounts can not be natively handled by zfs mount command, hence legacy in the name.
+
+An example configuration of mounting non-legacy dataset is the following: 
+
+#+begin_src sh
+{
+  fileSystems."/tank" =
+    { device = "tank_pool/data";
+      fsType = "zfs"; options = [ "zfsutil" ];
+    };
+}
+#+end_src
+
+An alternative is to set boot.zfs.extraPools = [ pool_name ];, which is recommended by the documentation if you have many zfs filesystems. 
+
+*** zfs hardlinks
+
+Using NixOS on a ZFS root file system might result in the boot error external pointer tables not supported when the number of hardlinks in the nix store gets very high. This can be avoided by adding this option to your configuration.nix file:
+
+#+begin_src sh
+boot.loader.grub.copyKernels = true;
+#+end_src
+
+*** Automatic scrubbing
+
+Regular scrubbing of ZFS pools is recommended and can be enabled in your NixOS configuration via: 
+
+#+begin_src sh
+services.zfs.autoScrub.enable = true;
+#+end_src
+
