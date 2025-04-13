@@ -635,3 +635,13 @@ Regular scrubbing of ZFS pools is recommended and can be enabled in your NixOS c
 services.zfs.autoScrub.enable = true;
 #+end_src
 
+** home-manager
+
+#+begin_src sh
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+nix-channel --update
+#+end_src
+
+#+begin_src sh
+nix-shell '<home-manager>' -A install
+#+end_src
