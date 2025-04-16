@@ -1,0 +1,32 @@
+#+STARTUP: showall
+* fwupd
+
+To use and install fwup daemon and user space client, add following part to your config: 
+
+#+begin_src sh
+services.fwupd.enable = true;
+#+end_src
+
+To display all devices detected by fwupd: 
+
+#+begin_src sh
+fwupdmgr get-devices
+#+end_src
+
+To download the latest metadata from the Linux Vendor firmware Service (LVFS): 
+
+#+begin_src sh
+fwupdmgr refresh
+#+end_src
+
+To list updates available for any devices on the system: 
+
+#+begin_src sh
+fwupdmgr get-updates
+#+end_src
+
+To install updates: 
+
+#+begin_src sh
+fwupdmgr update
+#+end_src
