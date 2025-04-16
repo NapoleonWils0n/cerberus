@@ -1,0 +1,59 @@
+# general settings
+auto-reload yes
+max-items 50 
+reload-time 30 # update all feeds every x minutes
+reload-threads 100
+prepopulate-query-feeds yes
+cleanup-on-quit yes
+confirm-mark-feed-read no
+wrap-scroll yes
+
+# externel browser
+browser "w3m %u"
+macro . set browser "/home/djwilcox/bin/sauron %u"; open-in-browser ; set browser "w3m %u"
+macro / set browser "python3 -m readability.readability -u %u 2> /dev/null | w3m -T text/html"; open-in-browser ; set browser "w3m %u"
+macro l set browser "xdg-open %u"; open-in-browser ; set browser "w3m %u"
+macro p set browser "/home/djwilcox/bin/punch -i %u 2> /dev/null"; one; set browser "w3m %u"
+
+# urlscan
+external-url-viewer "urlscan"
+
+# html-renderer and pager
+pager "w3m -T text/html"
+html-renderer "w3m"
+
+# text width
+text-width 80
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+
+# podboat
+download-path "~/Downloads/%n"
+player "mpv"
+
+# colours
+#color background         default default
+color listnormal         default default
+color listnormal_unread  default default
+color listfocus          black blue
+color listfocus_unread   black blue
+color info               black blue
+color article            default default
+
+# highlights
+highlight article "^(Feed|Title|Link|Date|Author):.*$" color12 color8
+highlight article "https?://[^ ]+" color4 color8 protect
+
+# kill files ignore articles marked #shorts to filter out youtube shorts
+ignore-article "*" "title =~ \"#shorts$\""

@@ -1,0 +1,14 @@
+# download 1080p video in mp4 format
+#-f 'bestvideo[height<=1080][vcodec!=?vp9]+bestaudio[acodec!=?opus]'
+
+# external downloader aria2
+--downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M'
+
+# native downloader for dash and m3u8
+--downloader 'dash,m3u8:native'
+
+# restrict filenames
+--restrict-filenames
+
+# merge output format mkv
+--merge-output-format mkv

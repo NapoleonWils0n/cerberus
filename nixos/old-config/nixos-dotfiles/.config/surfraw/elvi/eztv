@@ -1,0 +1,22 @@
+#!/bin/sh
+# DESC: Elvi to search 1337x
+# elvis: eztv		-- Search eztv for torrents (eztv.re)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search eztv (eztv.re) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://eztv.re"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://eztv.re/search/${escaped_args}/1/"
+fi

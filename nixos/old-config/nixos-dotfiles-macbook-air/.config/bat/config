@@ -1,0 +1,4 @@
+# This is `bat`s configuration file
+
+# bat theme
+--theme="Solarized (dark)"

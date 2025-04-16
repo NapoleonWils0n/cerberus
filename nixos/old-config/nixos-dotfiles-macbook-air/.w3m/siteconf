@@ -1,0 +1,24 @@
+# google set user agent to lynx
+url m@^https?://(.*\.)google\.com/@
+user_agent "Lynx/2.9.0dev.5 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/3.6.1"
+no_referer_from on
+
+# remove google redirect from search links
+url "http://www.google.com/url?" exact
+substitute_url "file:/cgi-bin/google-redirector.cgi?"
+
+# youtube open video links with mpv
+url "https://www.youtube.com/watch?" exact
+substitute_url "file:/cgi-bin/video.cgi?"
+
+# dailymotion open video links with mpv
+url "https://www.dailymotion.com/video"
+substitute_url "file:/cgi-bin/video.cgi?"
+
+# bbc iplayer search
+url "https://www.bbc.co.uk/iplayer/search?"
+substitute_url "file:/cgi-bin/bbc-search.cgi?"
+
+# bbc iplayer episodes
+url "https://www.bbc.co.uk/iplayer/episodes"
+substitute_url "file:/cgi-bin/bbc-episodes.cgi?"

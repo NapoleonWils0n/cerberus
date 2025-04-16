@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/djwilcox/bin/nognome_notifications
+Hidden=True
+NoDisplay=True
+X-GNOME-Autostart-enabled=true
+Name=nognome_notifications
+Comment=nognome_notifications

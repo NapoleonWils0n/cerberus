@@ -1,0 +1,47 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("dotfiles"
+ (filename . "~/git/nixos/nixos-dotfiles/nixos-dotfiles.org")
+ (front-context-string . "* nixos dotfiles")
+ (rear-context-string . "g\")'\n#+end_src\n\n")
+ (position . 373)
+ (last-modified 25593 18293 191372 213000))
+("org-refile-last-stored"
+ (filename . "~/git/personal/org/web.org")
+ (front-context-string . "** [[https://its")
+ (rear-context-string . "lview\" program.\n")
+ (position . 173198))
+("org-capture-last-stored"
+ (filename . "~/git/personal/org/todo.org")
+ (front-context-string . "** TODO macair f")
+ (rear-context-string . "ntent\n\n* Tasks\n\n")
+ (position . 70))
+("root"
+ (filename . "/")
+ (front-context-string . "bin -> usr/bin\n ")
+ (rear-context-string . " 7 Oct 30 23:23 ")
+ (position . 197))
+("home"
+ (filename . "~/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . " 3 Oct 30 23:26 ")
+ (position . 178))
+("desktop"
+ (filename . "~/Desktop/")
+ (front-context-string . "zshrc-linux\n  -r")
+ (rear-context-string . "45 Jan 18 17:53 ")
+ (position . 236)
+ (annotation . ""))
+("cerberus"
+ (filename . "~/git/cerberus/")
+ (front-context-string . "7zip\n  drwxr-xr-")
+ (rear-context-string . "96 Jan  4  2016 ")
+ (position . 249))
+("web"
+ (filename . "~/git/personal/org/web.org")
+ (front-context-string . "#+STARTUP: overv")
+ (rear-context-string)
+ (position . 1))
+)

@@ -1,0 +1,26 @@
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Wed Mar 02, 2016
+#
+# DESC: Elvi to search rarbg
+# elvis: rarbg		-- Search rarbg for torrents (rarbg.to)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search rarbg (rarbg.to) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://rarbg.to"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://rarbg.to/torrents.php?search=${escaped_args}&order=seeders&by=DESC"
+fi

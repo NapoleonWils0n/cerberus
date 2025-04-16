@@ -1,0 +1,14 @@
+# sauron-w3m prompt
+keymap ,-. COMMAND "READ_SHELL ${HOME}/.w3m/cgi-bin/sauron-w3m.cgi; BACK"
+
+# w3m function prompt
+keymap .-, COMMAND "READ_SHELL ${HOME}/.w3m/cgi-bin/functions.cgi ; BACK ; GOTO file:/cgi-bin/run_command.cgi ; BACK"
+
+# surfraw prompt
+keymap xs COMMAND  "READ_SHELL ${HOME}/.w3m/cgi-bin/fzf_surfraw.cgi ; GOTO file:/cgi-bin/goto_clipboard_primary.cgi"
+
+# toggle line numbers
+keymap ,-l COMMAND "SET_OPTION display_link_number=toggle ; RESHAPE"
+
+# toggle borders
+keymap ,-t COMMAND "SET_OPTION display_borders=toggle ; RESHAPE"

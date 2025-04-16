@@ -1,0 +1,34 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("video" (filename . "~/git/personal/bookmarks/video.org")
+ (front-context-string . "* links\n** [[vid")
+ (rear-context-string . "ARTUP: overview\n") (position . 42)
+ (last-modified 26024 3044 81012 2000))
+("dotfiles"
+ (filename .
+           "~/git/freebsd/freebsd-dotfiles-xps/freebsd-dotfiles-xps.org")
+ (front-context-string . "#+TITLE: Freebsd") (rear-context-string)
+ (position . 1) (last-modified 25968 29887 933690 452000))
+("desktop" (filename . "~/desktop/") (front-context-string)
+ (rear-context-string . "94 Dec  3 21:10 ") (position . 77)
+ (last-modified 25965 4683 297826 423000))
+("bookmarks" (filename . "~/git/personal/bookmarks/bookmarks.org")
+ (front-context-string . "#+STARTUP: overv") (rear-context-string)
+ (position . 1) (last-modified 25703 35089 410375 479000))
+("feeds" (filename . "~/git/personal/feeds/feeds.org")
+ (front-context-string . "* elfeed :elfeed")
+ (rear-context-string . "TARTUP: content\n") (position . 20)
+ (last-modified 25692 54791 894815 365000))
+("org-refile-last-stored" (filename . "~/git/personal/org/web.org")
+ (front-context-string . "** [[https://its")
+ (rear-context-string . "lview\" program.\n") (position . 173198))
+("root" (filename . "/") (front-context-string . "bin -> usr/bin\n ")
+ (rear-context-string . " 7 Oct 30 23:23 ") (position . 197))
+("home" (filename . "~/") (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . " 3 Oct 30 23:26 ") (position . 178))
+("cerberus" (filename . "~/git/cerberus/")
+ (front-context-string . "7zip\n  drwxr-xr-")
+ (rear-context-string . "96 Jan  4  2016 ") (position . 249))
+)

@@ -1,0 +1,26 @@
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: April 07, 2013
+#
+# DESC: Elvi to search Reddit News
+# elvis: reddit		-- Search Reddit for user submitted news (www.reddit.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search Reddit (www.reddit.com) for user submitted news
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "http://www.reddit.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "http://www.reddit.com/search?q=${escaped_args}"
+fi

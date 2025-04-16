@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=DaVinci Resolve
+GenericName=DaVinci Resolve
+Exec=env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia davinci-resolve %u
+Type=Application
+Terminal=false
+Icon=utilities-terminal
+StartupNotify=true
+StartupWMClass=resolve
+MimeType=application/x-resolveproj;

@@ -1,0 +1,3 @@
+SURFRAW_graphical_browser=xdg-open
+SURFRAW_text_browser=w3m
+SURFRAW_graphical=yes

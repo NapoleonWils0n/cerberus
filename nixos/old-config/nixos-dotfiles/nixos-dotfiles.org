@@ -1,0 +1,7050 @@
+#TITLE: nixos dotfiles
+#+STARTUP: overview hideblocks
+#+OPTIONS: num:nil author:nil
+#+PROPERTY: header-args :mkdirp yes
+* tangle dotfiles
+** tangle document
+
+C-c C-v t
+
+** tangle only one code block
+
+C-u C-c C-v t
+
+** tangle from the command line
+
+#+begin_src sh
+emacs --batch -l org --eval '(org-babel-tangle-file "~/git/ubuntu-dotfiles/ubuntu-dotfiles.org")'
+#+end_src
+
+* nixos dotfiles
+:PROPERTIES:
+:VISIBILITY: children
+:END!:
+** home-manager
+*** home-manager config
+**** home.nix
+
+#+NAME: home.nix
+#+BEGIN_SRC nix
+{ config, pkgs, ... }:
+
+let
+
+  unstable = import (fetchTarball
+    "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
+      overlays = [
+        (import (builtins.fetchTarball {
+          url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+        }))
+      ];
+    };
+
+in {
+
+    programs = {
+      emacs = {
+        enable = true;
+        package = unstable.emacsPgtk;
+        extraPackages = epkgs: with epkgs; [
+          all-the-icons
+          consult
+          doom-themes
+          doom-modeline
+          ednc
+          embark
+          embark-consult
+          emmet-mode
+          evil-collection
+          evil-leader
+          evil-surround
+          fd-dired
+          flycheck
+          git-commit
+          git-auto-commit-mode
+          google-translate
+          hydra
+          iedit
+          magit
+          magit-section
+          marginalia
+          mpv
+          nix-mode
+          ob-async
+          openwith
+          orderless
+          rg
+          s
+          shrink-path
+          undo-tree
+          vertico
+          wgrep
+          which-key
+          yaml-mode
+          youtube-sub-extractor
+        ];
+      };
+      gpg = {
+        enable = true;
+      };
+    };
+
+    imports = [
+      ./programs/firefox/firefox.nix
+      ./programs/dconf/dconf.nix
+    ];
+
+    services = {
+      emacs = {
+        enable = true;
+        client.enable = true;
+      };
+      gnome-keyring = {
+        enable = true;
+      };
+      gpg-agent = {
+        enable = true;
+        extraConfig = ''
+          allow-emacs-pinentry
+          allow-loopback-pinentry
+        '';
+        pinentryFlavor = "curses";
+      };
+      mpd = {
+        enable = true;
+        musicDirectory = "~/Music";
+        network = {
+          startWhenNeeded = true;
+        };
+        extraConfig = ''
+          audio_output {
+            type "pipewire"
+            name "My PipeWire Output"
+          }
+        '';
+      };
+    };
+
+    # systemd
+    systemd.user.sessionVariables = {
+      SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
+      DISPLAY = ":0";
+      WAYLAND_DISPLAY = "wayland-0";
+    };
+
+    # home sessions variables
+    home.sessionVariables = {
+      XCURSOR_THEME = "Adwaita";
+    };
+
+    # gtk
+    gtk = {
+      enable = true;
+      gtk3.extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+      };
+      gtk4.extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+      };
+    };
+
+    # xdg directories
+    xdg = {
+      userDirs = {
+        enable = true;
+        createDirectories = true;
+        publicShare = null;
+        templates = null;
+      };
+    };
+
+  # mpv mpris 
+  nixpkgs.overlays = [
+    (self: super: {
+      mpv = super.mpv.override {
+        scripts = [ self.mpvScripts.mpris ];
+      };
+    })
+  ];
+
+  home.packages = with pkgs;[
+    abook
+    alacritty
+    apg
+    aria
+    aspell
+    aspellDicts.en
+    bat
+    bc
+    bento4
+    curl
+    csvkit
+    davinci-resolve
+    dict
+    dmg2img
+    gnome.dconf-editor
+    gnome.gnome-tweaks
+    exiftool
+    exa
+    fd
+    file
+    fira-code
+    ffmpeg_5-full
+    fzf
+    git
+    gnumake
+    html-xml-utils
+    handbrake
+    imagemagick
+    jq
+    lynx
+    libxslt
+    libnotify
+    libwebp
+    mediainfo
+    mpc_cli
+    mpd
+    mpv
+    mutt
+    ncdu
+    ncmpc
+    newsboat
+    nsxiv
+    oathToolkit
+    obs-studio
+    openvpn
+    pandoc
+    pinentry-curses
+    playerctl
+    python3
+    p7zip
+    ripgrep
+    socat
+    sox
+    spice spice-gtk
+    spice-protocol
+    shellcheck
+    streamlink
+    swtpm
+    surfraw
+    tcpdump
+    tmux
+    traceroute
+    translate-shell
+    transmission
+    ts
+    unzip
+    viddy
+    virt-manager
+    virt-viewer
+    urlscan
+    urlview
+    yt-dlp
+    w3m
+    weechat
+    wget
+    widevine-cdm
+    win-virtio
+    win-spice
+    xclip
+    zathura
+    zip
+  ];
+
+  # Home Manager needs a bit of information about you and the
+  # paths it should manage.
+  manual.manpages.enable = false; # needed for dell xps15
+  home.username = "djwilcox";
+  home.homeDirectory = "/home/djwilcox";
+
+  # This value determines the Home Manager release that your
+  # configuration is compatible with. This helps avoid breakage
+  # when a new Home Manager release introduces backwards
+  # incompatible changes.
+  #
+  # You can update Home Manager without changing this value. See
+  # the Home Manager release notes for a list of state version
+  # changes in each release.
+  home.stateVersion = "22.11";
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}
+#+END_SRC
+
+**** config.nix
+
+#+NAME: config.nix
+#+begin_src nix
+{
+  allowUnfree = true;
+  packageOverrides = pkgs: {
+    nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+      inherit pkgs;
+    };
+  };
+}
+
+#+end_src
+
+**** firefox.nix
+
+#+NAME: firefox.nix
+#+begin_src nix
+{ pkgs, ... }:
+
+{
+  programs.firefox = {
+    enable = true;
+    package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+    extraPolicies = {
+      DisableFirefoxStudies = true;
+      DisablePocket = true;
+      DisableTelemetry = true;
+      DisableFirefoxAccounts = true;
+      NoDefaultBookmarks = true;
+      OfferToSaveLogins = false;
+      OffertosaveloginsDefault = false;
+      PasswordManagerEnabled = false;
+      };
+    };
+    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      multi-account-containers
+      ublock-origin
+      vimium
+      violentmonkey
+    ];
+      profiles = {
+        default = {
+          isDefault = true;
+          extraConfig = ''
+          // beacon = false
+          user_pref("beacon.enabled", false);
+          // about config warning = false
+          user_pref("browser.aboutConfig.showWarning", false); 
+          // strictcontent blocking
+          user_pref("browser.contentblocking.category", "strict");
+          // download dont open panel in toolbar
+          user_pref("browser.download.alwaysOpenPanel", false);
+          // downloads button
+          user_pref("browser.engagement.downloads-button.has-used", true);
+          // tab manager = false
+          user_pref("browser.tabs.tabmanager.enabled", false);
+          // safebrowsing = false
+          user_pref("browser.safebrowsing.appRepURL", "");
+          user_pref("browser.safebrowsing.malware.enabled", false);
+          // browser search
+          user_pref("browser.search.hiddenOneOffs", "Google,Yahoo,Bing,Amazon.com,Twitter");
+          // browser search suggest = false
+          user_pref("browser.search.suggest.enabled", false);
+          // search bar in toolbar
+          user_pref("browser.search.widget.inNavBar", true);
+          // browser send pings = false
+          user_pref("browser.send_pings", false);
+          // homepage blank
+          user_pref("browser.startup.homepage", "about:blank");
+          // startup page
+          user_pref("browser.startup.page", "3");
+          // startup homepage = blank
+          user_pref("browser.startup.homepage", "about:blank");
+          // tabs firefox view = false
+          user_pref("browser.tabs.firefox-view", false);
+          // tabmanager = false
+          user_pref("browser.tabs.tabmanager.enabled", false);
+          // newtab = false
+          user_pref("browser.newtabpage.enabled", false);
+          // activity stream
+          user_pref("browser.newtabpage.activity-stream.showSeach", false);
+          user_pref("browser.newtabpage.activity-stream.showSponsored", false);
+          user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
+          user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+          // bookmarks toolbar visibility = never
+          user_pref("browser.toolbars.bookmarks.visibility", "never");
+          // browser ui density
+          user_pref("browser.uidensity", "1");
+          // urlbar speculativeconnect = false
+          user_pref("browser.urlbar.speculativeConnect.enabled", false);
+          // urlbar bookmarks = false
+          user_pref("browser.urlbar.shortcuts.bookmarks", false);
+          // urlbar history = false
+          user_pref("browser.urlbar.shortcuts.history", false);
+          // urlbar shortcuts tabs = false
+          user_pref("browser.urlbar.shortcuts.tabs", false);
+          // urlbar show search suggestions first = false
+          user_pref("browser.urlbar.showSearchSuggestionsFirst", false);
+          // urlbar suggest bookmarks = false
+          user_pref("browser.urlbar.suggest.bookmark", false);
+          // urlbar suggest engines = false
+          user_pref("browser.urlbar.suggest.engines", false);
+          // urlbar suggest history = false
+          user_pref("browser.urlbar.suggest.history", false);
+          // urlbar suggest open page = false
+          user_pref("browser.urlbar.suggest.openpage", false);
+          // urlbar suggest searches = false
+          user_pref("browser.urlbar.suggest.searches", false);
+          // urlbar suggest topsites = false
+          user_pref("browser.urlbar.suggest.topsites", false);
+          // firefox healthreport upload = false
+          user_pref("datareporting.healthreport.uploadEnabled", false);
+          // dont let sites disable copy and paste
+          user_pref("dom.event.clipboardevents.enabled", false);
+          // https mode = true
+          user_pref("dom.security.https_only_mode", true);
+          // experiments = false
+          user_pref("experiments.activeExperiment", false);
+          user_pref("experiments.enabled", false);
+          user_pref("experiments.supported", false);
+          // remove unifiedextensions
+          user_pref("extensions.unifiedExtensions.enabled", false);
+          // pocket show on home screen = false
+          user_pref("extensions.pocket.enabled", false);
+          user_pref("extensions.pocket.showHome", false);
+          user_pref("extensions.pocket.onSaveRecs", false);
+          user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket", false);
+          user_pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false);
+          // creditcards autofill = false
+          user_pref("extensions.formautofill.creditCards.available", false);
+          // smoothscroll = false
+          user_pref("general.smoothScroll", false);
+          // geo = false
+          user_pref("geo.enabled", false);
+          // general
+          user_pref("gfx.webrender.all", true);
+          user_pref("layout.css.devPixelsPerPx", "1");
+          // media autoplay = 5
+          user_pref("media.autoplay.default", "5");
+          user_pref("media.navigator.enabled", false);
+          user_pref("media.video_stats.enabled", false);
+          // show punycode in the urlbar
+          user_pref("network.IDN_show_punycode", true);
+          // network
+          user_pref("network.allow-experiments", false);
+          user_pref("network.dns.disablePrefetch", true);
+          user_pref("network.http.referer.XOriginPolicy", "2");
+          user_pref("network.http.referer.XOriginTrimmingPolicy", "2");
+          user_pref("network.http.referer.trimmingPolicy", "1");
+          user_pref("network.prefetch-next", false);
+          // magnet links
+          user_pref("network.protocol-handler.expose.magnet", false);
+          // default shortcuts
+          user_pref("permissions.default.shortcuts", "2");
+          // privacy dont track = true
+          user_pref("privacy.donottrackheader.enabled", true);
+          user_pref("privacy.donottrackheader.value", "1");
+          user_pref("privacy.firstparty.isolate", true);
+          user_pref("signon.rememberSignons", false);
+          // css stylesheets = true
+          user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+          // theme
+          user_pref("widget.content.gtk-theme-override", "Adwaita:dark");
+          '';
+          userChrome = ''
+          /* userChrome.css */
+          
+          @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); /* only needed once */
+          
+          /* hide close, minimize window buttons */
+          .titlebar-min {display:none!important;}
+          .titlebar-max {display:none!important;}
+          .titlebar-restore {display:none!important;}
+          .titlebar-close {display:none!important;}
+          
+          /* Adjust tab corner shape, optionally remove space below tabs */
+          #tabbrowser-tabs {
+              --user-tab-rounding: 6px;
+          }
+          
+          @media (-moz-proton) {
+              .tab-background {
+                  border-radius: var(--user-tab-rounding) var(--user-tab-rounding) 0px 0px !important;
+                  margin-block: 1px 0 !important;
+              }
+              #scrollbutton-up, #scrollbutton-down { /* 6/10/2021 */
+                  border-top-width: 1px !important;
+                  border-bottom-width: 0 !important;
+              }
+              /* Container color bar visibility */
+              .tabbrowser-tab[usercontextid] > .tab-stack > .tab-background > .tab-context-line {
+                  margin: 0px max(calc(var(--user-tab-rounding) - 3px), 0px) !important;
+              }
+          }
+          
+          /* remove the bookmark star in the url bar */
+          #star-button-box {display: none !important}
+          
+          /* Remove items from Firefox menu */
+          #context-sendimage, /* email */
+          #context-bookmarklink, /* bookmark link */
+          /* #context-savelink, save link */
+          #context-copyimage-contents, /* copy image */
+          #context-take-screenshot, /* take screenshot */
+          /* #context-openlinkintab, open link in tab */
+          /* #context-openlink, open link in new window */
+          #context-openlinkprivate, /* open link in private window */
+          #context-searchselect, /* search for */
+          #context-searchselect-private, /* search for private */
+          #context-inspect-a11y, /* accessability */
+          #context-savepage, /* save page */
+          #context-selectall, /* select all */
+          #context-viewsource, /* view source */
+          #context-back, /* back */
+          #context-forward, /* forward */
+          #context-reload, /* reload */
+          #context-bookmarkpage,/* edit this bookmark */
+          #context-media-playbackrate, /* speed in video menu */
+          #context-media-loop, /* loop video */ 
+          #context-sendvideo, /* email video */
+          #context-sendaudio, /* email audio */
+          #context-sendimage, /* email image */
+          #context-undo, /* undo */
+          #context-redo, /* redo */
+          #context-cut, /* cut */
+          #context-copy, /* copy */
+          #context-paste, /* paste */
+          #context-delete, /* delete */
+          #context-keywordfield, /* add a keyword for this search */
+          #context-selectall /* select all */
+          {display: none !important;}
+          '';
+         };
+        };
+      };
+}
+
+#+end_src
+
+**** dconf.nix
+
+#+NAME: dconf.nix
+#+begin_src nix
+{ lib, ... }:
+
+with lib.hm.gvariant;
+
+{
+  dconf.settings = {
+    "org/gnome/desktop/input-sources" = {
+     color-scheme = "prefer-dark";
+    };
+    "org/gnome/desktop/input-sources" = {
+      per-window = false;
+      show-all-sources = true;
+    };
+    "org/gnome/desktop/interface" = {
+      clock-show-date = false;
+      clock-show-weekday = false;
+      color-scheme = "prefer-dark";
+      enable-animations = false;
+    };
+    "org/gnome/desktop/peripherals/touchpad" = {
+      natural-scroll = false;
+      two-finger-scrolling-enabled = true;
+    };
+    "org/gnome/desktop/wm/keybindings" = {
+      close = ["<Shift><Super>c"];
+      move-to-monitor-left = ["<Shift><Super>h"];
+      move-to-monitor-right = ["<Shift><Super>l"];
+      move-to-workspace-1 = ["<Shift><Super>exclam"];
+      move-to-workspace-2 = ["<Shift><Super>at"];
+      move-to-workspace-3 = ["<Shift><Super>sterling"];
+      move-to-workspace-4 = ["<Shift><Super>dollar"];
+      switch-applications = ["<Super>j"];
+      switch-applications-backward = ["<Super>k"];
+      switch-to-workspace-1 = ["<Super>1"];
+      switch-to-workspace-2 = ["<Super>2"];
+      switch-to-workspace-3 = ["<Super>3"];
+      switch-to-workspace-4 = ["<Super>4"];
+      switch-to-workspace-5 = ["<Super>5"];
+      switch-to-workspace-6 = ["<Super>6"];
+      switch-to-workspace-7 = ["<Super>7"];
+      switch-to-workspace-8 = ["<Super>8"];
+      switch-to-workspace-9 = ["<Super>9"];
+      switch-to-workspace-left = ["<Super>h"];
+      switch-to-workspace-right = ["<Super>l"];
+    };
+    "org/gnome/mutter" = {
+      center-new-windows = true;
+      dynamic-workspaces = true;
+      focus-change-on-pointer-rest = false;
+      overlay-key = "Super_R";
+      workspaces-only-on-primary = true;
+    };
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      play = ["<Alt><Super>space"];
+      volume-step = 5;
+    };
+    "org/gnome/settings-daemon/power" = {
+      idle-dim = false;
+      sleep-inactive-ac-timeout = 3600;
+      sleep-inactive-ac-type = "nothing";
+    };
+    "org/gnome/shell/keybindings" = {
+      switch-to-application-1 = [""];
+      switch-to-application-2 = [""];
+      switch-to-application-3 = [""];
+      switch-to-application-4 = [""];
+      switch-to-application-5 = [""];
+      switch-to-application-6 = [""];
+      switch-to-application-7 = [""];
+      switch-to-application-8 = [""];
+      switch-to-application-9 = [""];
+      toggle-application-view = ["<Primary><Super>p"];
+    };
+    "org/gnome/shell/ubuntu" = {
+      color-scheme = "prefer-dark";
+    };
+    "org/gnome/system/location" = {
+      enabled = false;
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      audible-bell = false;
+      auto-raise = true;
+      focus-mode = "click";
+    };
+  };
+}
+#+end_src
+
+*** home-manager tangle
+**** home.nix tangle
+:PROPERTIES:
+:ORDERED:  t
+:END:
+
++ home dir
+
+#+NAME: home.nix-home-dir
+#+BEGIN_SRC nix :noweb yes :tangle "~/.config/nixpkgs/home.nix"
+<<home.nix>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: home.nix-current-dir
+#+BEGIN_SRC nix :noweb yes :tangle ".config/nixpkgs/home.nix"
+<<home.nix>>
+#+END_SRC
+
+**** config.nix tangle
+:PROPERTIES:
+:ORDERED:  t
+:END:
+
++ home dir
+
+#+NAME: config.nix-home-dir
+#+BEGIN_SRC nix :noweb yes :tangle "~/.config/nixpkgs/config.nix"
+<<config.nix>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: config.nix-current-dir
+#+BEGIN_SRC nix :noweb yes :tangle ".config/nixpkgs/config.nix"
+<<config.nix>>
+#+END_SRC
+
+**** firefox.nix tangle
+:PROPERTIES:
+:ORDERED:  t
+:END:
+
++ home dir
+
+#+NAME: firefox.nix-home-dir
+#+BEGIN_SRC nix :noweb yes :tangle "~/.config/nixpkgs/programs/firefox/firefox.nix"
+<<firefox.nix>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: firefox.nix-current-dir
+#+BEGIN_SRC nix :noweb yes :tangle ".config/nixpkgs/programs/firefox/firefox.nix"
+<<firefox.nix>>
+#+END_SRC
+
+**** dconf.nix tangle
+:PROPERTIES:
+:ORDERED:  t
+:END:
+
++ home dir
+
+#+NAME: dconf.nix-home-dir
+#+BEGIN_SRC nix :noweb yes :tangle "~/.config/nixpkgs/programs/dconf/dconf.nix"
+<<dconf.nix>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: dconf.nix-current-dir
+#+BEGIN_SRC nix :noweb yes :tangle ".config/nixpkgs/programs/dconf/dconf.nix"
+<<dconf.nix>>
+#+END_SRC
+
+** emacs
+*** emacs config
+**** init.el
+
+#+NAME: init.el
+#+BEGIN_SRC emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emacs init.el - also using early-init.el
+;; ----------------------------------------------------------------------------------
+
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+
+;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+;; package-selected-packages
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil)
+ '(custom-safe-themes
+   '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" default))
+ '(package-selected-packages
+   '())
+ '(warning-suppress-types '((comp))))
+
+;; require package
+(require 'package)
+
+;; package archive
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+;; package initialize
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(package-install-selected-packages)
+
+
+;; ----------------------------------------------------------------------------------
+;; general settings
+;; ----------------------------------------------------------------------------------
+
+;; Save all tempfiles in $TMPDIR/emacs$UID/                                                        
+(defconst emacs-tmp-dir (expand-file-name (format "emacs%d" (user-uid)) temporary-file-directory))
+(setq backup-directory-alist
+    `((".*" . ,emacs-tmp-dir)))
+(setq auto-save-file-name-transforms
+    `((".*" ,emacs-tmp-dir t)))
+(setq auto-save-list-file-prefix
+    emacs-tmp-dir)
+
+
+;; dont backup files opened by sudo or doas
+(setq backup-enable-predicate
+      (lambda (name)
+        (and (normal-backup-enable-predicate name)
+             (not
+              (let ((method (file-remote-p name 'method)))
+                (when (stringp method)
+                  (member method '("su" "sudo" "doas"))))))))
+
+
+;; save
+(save-place-mode 1)         ;; save cursor position
+(desktop-save-mode 1)       ;; Save the desktop session
+(savehist-mode 1)           ;; save history
+(global-auto-revert-mode 1) ;; revert buffers when the underlying file has changed
+
+;; scrolling
+(pixel-scroll-precision-mode 1)
+
+
+;; ----------------------------------------------------------------------------------
+;; fonts
+;; ----------------------------------------------------------------------------------
+
+(defvar efs/default-font-size 180)
+(defvar efs/default-variable-font-size 180)
+
+
+;; ----------------------------------------------------------------------------------
+;; set-face-attribute
+;; ----------------------------------------------------------------------------------
+
+;; Set the default pitch face
+(set-face-attribute 'default nil :font "Fira Code" :height efs/default-font-size)
+
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height efs/default-font-size)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+
+;; tab bar background
+(set-face-attribute 'tab-bar nil
+                    :foreground "#93a1a1")
+
+;; active tab
+(set-face-attribute 'tab-bar-tab nil
+                    :foreground "#51AFEF")
+
+;; inactive tab
+(set-face-attribute 'tab-bar-tab-inactive nil
+                    :foreground "grey50")
+
+
+;; ----------------------------------------------------------------------------------
+;; doom-modeline 
+;; ----------------------------------------------------------------------------------
+
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+;; doom modeline truncate text
+(setq doom-modeline-buffer-file-name-style 'truncate-except-project)
+
+;; hide the time icon
+(setq doom-modeline-time-icon nil)
+
+;; dont display the buffer encoding.
+(setq doom-modeline-buffer-encoding nil)
+
+
+;; ----------------------------------------------------------------------------------
+;; TAB bar mode 
+;; ----------------------------------------------------------------------------------
+
+(setq tab-bar-show 1)                     ;; hide bar if <= 1 tabs open
+(setq tab-bar-close-button-show nil)      ;; hide close tab button
+(setq tab-bar-new-button-show nil)        ;; hide new tab button
+(setq tab-bar-new-tab-choice "*scratch*") ;; default tab scratch
+(setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable) 
+(setq tab-bar-close-tab-select 'recent)
+(setq tab-bar-new-tab-to 'right)
+(setq tab-bar-tab-hints nil)
+(setq tab-bar-separator " ")
+
+;; Customize the tab bar format to add the global mode line string
+(setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator tab-bar-format-align-right tab-bar-format-global))
+
+;; menubar in tab bar
+(add-to-list 'tab-bar-format #'tab-bar-format-menu-bar)
+
+;; Turn on tab bar mode after startup
+(tab-bar-mode 1)
+
+;; tab bar menu bar button
+(setq tab-bar-menu-bar-button "👾")
+
+
+;; ----------------------------------------------------------------------------------
+;; evil
+;; ----------------------------------------------------------------------------------
+
+;; evil
+(setq evil-want-keybinding nil)
+
+;; fix tab in evil for org mode
+(setq evil-want-C-i-jump nil)
+
+;; evil
+(require 'evil)
+(evil-collection-init)
+(evil-mode 1)
+
+;; dired use h and l
+(evil-collection-define-key 'normal 'dired-mode-map
+    "e" 'dired-find-file
+    "h" 'dired-up-directory
+    "l" 'dired-find-file)
+
+
+;; ----------------------------------------------------------------------------------
+;; require
+;; ----------------------------------------------------------------------------------
+
+;; nix-mode
+(require 'nix-mode)
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+
+;; ob-async
+(require 'ob-async)
+
+;; which key
+(require 'which-key)
+(which-key-mode)
+
+;; undo tree
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+(setq undo-tree-visualizer-timestamps t)
+(setq undo-tree-visualizer-diff t)
+
+(require 'openwith)
+(setq openwith-associations
+      (list
+       (list (openwith-make-extension-regexp
+              '("mpg" "mpeg" "mp3" "mp4" "m4v"
+                "avi" "wmv" "wav" "mov" "flv"
+                "ogm" "ogg" "mkv" "webm"))
+             "mpv --fs --fs-screen=1"
+             '(file))
+       (list (openwith-make-extension-regexp
+              '("pdf"))
+             "evince"
+             '(file))))
+
+(openwith-mode 1)
+
+
+;; ----------------------------------------------------------------------------------
+;; setq
+;; ----------------------------------------------------------------------------------
+
+;; general
+(setq version-control t)
+(setq vc-make-backup-files t)
+(setq backup-by-copying t)
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq create-lockfiles nil)
+(setq undo-tree-auto-save-history nil)
+
+;; pinentry
+(defvar epa-pinentry-mode)
+(setq epa-pinentry-mode 'loopback)
+
+;; display time in mode line, hide load average
+(setq display-time-format "%H:%M")
+(setq display-time-default-load-average nil)
+(display-time-mode 1)       ;; display time
+
+;; change prompt from yes or no, to y or n
+(setq use-short-answers t)
+
+;; turn off blinking cursor
+(setq blink-cursor-mode nil)
+
+;; suppress large file prompt
+(setq large-file-warning-threshold nil)
+
+;; always follow symlinks
+(setq vc-follow-symlinks t)
+
+;; case insensitive search
+(setq read-file-name-completion-ignore-case t)
+(setq completion-ignore-case t)
+
+;; M-n, M-p recall previous mini buffer commands
+(setq history-length 25)
+
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+
+;; revert dired and other buffers
+(setq global-auto-revert-non-file-buffers t)
+
+;; eww browser text width
+(setq shr-width 80)
+
+;; emacs 28 - dictionary server
+(setq dictionary-server "dict.org")
+
+;; company auto complete
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 3)
+
+;; ediff
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+
+;; ----------------------------------------------------------------------------------
+;; completion
+;; ----------------------------------------------------------------------------------
+
+;; Vertico
+(require 'vertico)
+(require 'vertico-directory)
+
+(with-eval-after-load 'evil
+  (define-key vertico-map (kbd "C-j") 'vertico-next)
+  (define-key vertico-map (kbd "C-k") 'vertico-previous)
+  (define-key vertico-map (kbd "M-h") 'vertico-directory-up))
+
+;; Cycle back to top/bottom result when the edge is reached
+(customize-set-variable 'vertico-cycle t)
+
+;; Start Vertico
+(vertico-mode 1)
+
+;;; Marginalia
+(require 'marginalia)
+(customize-set-variable 'marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+(marginalia-mode 1)
+
+
+;; consult
+(global-set-key (kbd "C-s") 'consult-line)
+(define-key minibuffer-local-map (kbd "C-r") 'consult-history)
+
+;; remap switch-to-buffer "C-x b" to consult-buffer
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
+
+(setq completion-in-region-function #'consult-completion-in-region)
+
+
+;;; Orderless
+
+;; Set up Orderless for better fuzzy matching
+(require 'orderless)
+(customize-set-variable 'completion-styles '(orderless basic))
+(customize-set-variable 'completion-category-overrides '((file (styles . (partial-completion)))))
+
+
+;;; Embark
+(require 'embark)
+(require 'embark-consult)
+
+(global-set-key [remap describe-bindings] #'embark-bindings)
+(global-set-key (kbd "C-,") 'embark-act)
+
+;; Use Embark to show bindings in a key prefix with `C-h`
+(setq prefix-help-command #'embark-prefix-help-command)
+
+(with-eval-after-load 'embark-consult
+  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; keymap-global-set
+;; ----------------------------------------------------------------------------------
+
+;; magit
+(keymap-global-set "C-x g" 'magit-status)
+
+;; org-capture
+(keymap-global-set "C-c c" 'org-capture)
+
+;; press M-/ and invoke hippie-expand
+(keymap-global-set "M-/" 'hippie-expand)
+
+
+;; ----------------------------------------------------------------------------------
+;; keymap-set
+;; ----------------------------------------------------------------------------------
+
+(keymap-set global-map "C-c o" 'iedit-mode)
+(keymap-set global-map "C-c l" 'org-store-link)
+(keymap-set global-map "C-c a" 'org-agenda)
+
+
+;; ----------------------------------------------------------------------------------
+;; magit
+;; ----------------------------------------------------------------------------------
+
+;; delete magit buffers
+(defun kill-magit-diff-buffer-in-current-repo (&rest _)
+      "Delete the magit-diff buffer related to the current repo"
+      (let ((magit-diff-buffer-in-current-repo (magit-mode-get-buffer 'magit-diff-mode)))
+        (kill-buffer magit-diff-buffer-in-current-repo)))
+    ;;
+    ;; When 'C-c C-c' or 'C-c C-l' are pressed in the magit commit message buffer,
+    ;; delete the magit-diff buffer related to the current repo.
+    ;;    
+    (add-hook 'git-commit-setup-hook
+              (lambda ()
+                (add-hook 'with-editor-post-finish-hook #'kill-magit-diff-buffer-in-current-repo
+                          nil t)
+                (add-hook 'with-editor-post-cancel-hook #'kill-magit-diff-buffer-in-current-repo
+                          nil t)))
+
+
+;; ----------------------------------------------------------------------------------
+;; dired 
+;; ----------------------------------------------------------------------------------
+
+;; Toggle Hidden Files in Emacs dired with C-x M-o
+(require 'dired-x)
+
+;; kill the current buffer when selecting a new directory to display
+(setq dired-kill-when-opening-new-dired-buffer t)
+
+;; dired directory listing options for ls
+(setq dired-listing-switches "-ahlv")
+
+;; hide dotfiles
+(setq dired-omit-mode t)
+
+;; recursive delete and copy
+(setq dired-recursive-copies 'always)
+(setq dired-recursive-deletes 'always)
+
+;; dired hide free space
+(setq dired-free-space nil)
+
+;; dired dwim
+(setq dired-dwim-target t)
+
+;; hide dotfiles
+(setq dired-omit-files
+      (concat dired-omit-files "\\|^\\..+$"))
+
+
+;; dired hide long listing by default
+(defun my-dired-mode-setup ()
+  "show less information in dired buffers"
+  (dired-hide-details-mode 1))
+(add-hook 'dired-mode-hook 'my-dired-mode-setup)
+
+;; dired omit
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+
+;; dired hide aync output buffer
+(add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+
+
+;; ----------------------------------------------------------------------------------
+;; dired-fd
+;; ----------------------------------------------------------------------------------
+
+;; switch to buffer results automatically
+
+(defcustom fd-dired-display-in-current-window nil
+  "Whether display result"
+  :type 'boolean
+  :safe #'booleanp
+  :group 'fd-dired)
+
+
+;; ----------------------------------------------------------------------------------
+;; rip-grep
+;; ----------------------------------------------------------------------------------
+
+;; rip-grep automatically switch to results buffer
+;; https://github.com/dajva/rg.el/issues/142
+
+(with-eval-after-load 'rg
+  (advice-add 'rg-run :after
+              #'(lambda (_pattern _files _dir &optional _literal _confirm _flags) (pop-to-buffer (rg-buffer-name)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; tramp
+;; ----------------------------------------------------------------------------------
+
+;; tramp
+(require 'tramp)
+
+;; tramp setq
+(setq tramp-default-method "ssh")
+
+;; tramp ssh
+(tramp-set-completion-function "ssh"
+                               '((tramp-parse-sconfig "/etc/ssh_config")
+                                 (tramp-parse-sconfig "~/.ssh/config")))
+
+;; set tramp shell to sh to avoid zsh problems
+(with-eval-after-load 'tramp '(setenv "SHELL" "/bin/sh"))
+
+;; tramp backup directory
+(add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode
+;; ----------------------------------------------------------------------------------
+
+;; org mode
+(require 'org)
+(require 'org-tempo)
+(require 'org-protocol)
+(require 'org-capture)
+(setq org-agenda-files '("~/git/personal/org/"))
+
+;; org babel supress do you want to execute code message
+(setq org-confirm-babel-evaluate nil
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t)
+
+;; org hide markup
+(setq org-hide-emphasis-markers t)
+
+;; org column spacing for tags
+(setq org-tags-column 0)
+
+;; dont indent src block for export
+(setq org-src-preserve-indentation t)
+
+;; org src to use the current window
+(setq org-src-window-setup 'current-window)
+
+;; dont show images full size
+(setq org-image-actual-width nil)
+
+;; prevent demoting heading also shifting text inside sections
+(setq org-adapt-indentation nil)
+
+;; asynchronous tangle
+(setq org-export-async-debug t)
+
+(setq org-capture-templates
+    '(("t" "todo" entry
+      (file+headline "~/git/personal/org/todo.org" "Tasks")
+      (file "~/git/personal/org/templates/tpl-todo.txt")
+      :empty-lines-before 1)
+      ("w" "web site" entry
+      (file+olp "~/git/personal/org/web.org" "sites")
+      (file "~/git/personal/org/templates/tpl-web.txt")
+       :empty-lines-before 1)))
+
+;; refile
+(setq org-refile-targets '((nil :maxlevel . 2)
+                                (org-agenda-files :maxlevel . 2)))
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+
+;; ox-pandoc export
+(setq org-pandoc-options-for-latex-pdf '((latex-engine . "xelatex")))
+
+;; Prepare stuff for org-export-backends
+(setq org-export-backends '(org md html latex icalendar odt ascii))
+
+;; todo keywords
+(setq org-todo-keywords
+      '((sequence "TODO(t@/!)" "IN-PROGRESS(p/!)" "WAITING(w@/!)" "|" "DONE(d@)")))
+(setq org-log-done t)
+
+;; Fast Todo Selection - Changing a task state is done with C-c C-t KEY
+(setq org-use-fast-todo-selection t)
+
+;; org todo logbook
+(setq org-log-into-drawer t)
+
+;; org open files
+(setq org-file-apps
+     (quote
+     ((auto-mode . emacs)
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default)
+     ("\\.mkv\\'" . "mpv %s")
+     ("\\.mp4\\'" . "mpv %s")
+     ("\\.mov\\'" . "mpv %s")
+     ("\\.png\\'" . "nsxiv %s")
+     ("\\.jpg\\'" . "nsxiv %s")
+     ("\\.jpeg\\'" . "nsxiv %s")
+     ("\\.pdf\\'" . default))))
+
+(custom-set-faces
+ '(org-link ((t (:inherit link :underline nil)))))
+
+(defadvice org-capture
+    (after make-full-window-frame activate)
+  "Advise capture to be the only window when used as a popup"
+  (if (equal "emacs-capture" (frame-parameter nil 'name))
+      (delete-other-windows)))
+
+(defadvice org-capture-finalize
+    (after delete-capture-frame activate)
+  "Advise capture-finalize to close the frame"
+  (if (equal "emacs-capture" (frame-parameter nil 'name))
+      (delete-frame)))
+
+; org-babel shell script
+(org-babel-do-load-languages
+'org-babel-load-languages
+'((shell . t))) 
+
+
+;; ----------------------------------------------------------------------------------
+;; mutt
+;; ----------------------------------------------------------------------------------
+
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; add-hook
+;; ----------------------------------------------------------------------------------
+
+;; Make shebang (#!) file executable when saved
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+
+;; global company mode
+;;(add-hook 'after-init-hook 'global-company-mode)
+
+;; visual line mode
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+;; h1 line mode
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+
+;; flycheck syntax linting
+(add-hook 'sh-mode-hook 'flycheck-mode)
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv.el
+;; ----------------------------------------------------------------------------------
+
+(org-link-set-parameters "mpv" :follow #'mpv-play)
+(defun org-mpv-complete-link (&optional arg)
+  (replace-regexp-in-string
+   "file:" "mpv:"
+   (org-link-complete-file arg)
+   t t))
+
+;; M-RET will insert a new item with the timestamp of the current playback position
+(defun my:mpv/org-metareturn-insert-playback-position ()
+  (when-let ((item-beg (org-in-item-p)))
+    (when (and (not org-timer-start-time)
+               (mpv-live-p)
+               (save-excursion
+                 (goto-char item-beg)
+                 (and (not (org-invisible-p)) (org-at-item-timer-p))))
+      (my/mpv-insert-playback-position t))))
+(add-hook 'org-metareturn-hook #'my:mpv/org-metareturn-insert-playback-position)
+
+;; mpv insert playback position
+(with-eval-after-load 'mpv
+  (defun my/mpv-insert-playback-position (&optional arg)
+    "Insert the current playback position at point.
+
+  When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
+    (interactive "P")
+    (let ((time (mpv-get-playback-position)))
+      (funcall
+       (if arg #'mpv--position-insert-as-org-item #'insert)
+       (my/org-timer-secs-to-hms (float time))))))
+
+
+;; seek to position
+(with-eval-after-load 'mpv
+  (defun my/mpv-seek-to-position-at-point ()
+    "Jump to playback position as inserted by `mpv-insert-playback-position'.
+
+  This can be used with the `org-open-at-point-functions' hook."
+    (interactive)
+    (save-excursion
+      (skip-chars-backward ":[:digit:]" (point-at-bol))
+      (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}\\([.]?[0-9]\\{0,3\\}\\)"))
+        (let ((secs (my/org-timer-hms-to-secs (match-string 0))))
+          (when (>= secs 0)
+            (mpv-seek secs))))))
+
+;; mpv seek to position at point
+(keymap-set global-map "C-x ," 'my/mpv-seek-to-position-at-point)
+
+
+;; ----------------------------------------------------------------------------------
+;; org-timer milliseconds for mpv
+;; ----------------------------------------------------------------------------------
+
+;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun my/org-timer-secs-to-hms (s)
+    "Convert integer S into hh:mm:ss.m
+  If the integer is negative, the string will start with \"-\"."
+    (let (sign m h)
+      (setq x (number-to-string s)
+            seconds (car (split-string x "[.]"))
+            milliseconds (cadr (split-string x "[.]"))
+            sec (string-to-number seconds)
+            ms (string-to-number milliseconds))
+      (setq sign (if (< sec 0) "-" "")
+          sec (abs sec)
+          m (/ sec 60) sec (- sec (* 60 m))
+          h (/ m 60) m (- m (* 60 h)))
+      (format "%s%02d:%02d:%02d.%02d" sign h m sec ms))))
+
+;; org-timer covert hours, minutes, seconds, milliseconds to seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun my/org-timer-hms-to-secs (hms)
+    "Convert h:mm:ss string to an integer time.
+  If the string starts with a minus sign, the integer will be negative."
+    (if (not (string-match
+            "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\([.]?[0-9]\\{0,3\\}\\)"
+            hms))
+        0
+      (let* ((h (string-to-number (match-string 1 hms)))
+           (m (string-to-number (match-string 2 hms)))
+           (s (string-to-number (match-string 3 hms)))
+           (ms (string-to-number (match-string 4 hms)))
+           (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+        (setq h (abs h))
+        (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv commands
+;; ----------------------------------------------------------------------------------
+
+;; frame step forward
+(with-eval-after-load 'mpv
+  (defun mpv-frame-step ()
+    "Step one frame forward."
+    (interactive)
+    (mpv--enqueue '("frame-step") #'ignore)))
+
+
+;; frame step backward
+(with-eval-after-load 'mpv
+  (defun mpv-frame-back-step ()
+    "Step one frame backward."
+    (interactive)
+    (mpv--enqueue '("frame-back-step") #'ignore)))
+
+
+;; mpv take a screenshot
+(with-eval-after-load 'mpv
+  (defun mpv-screenshot ()
+    "Take a screenshot"
+    (interactive)
+    (mpv--enqueue '("screenshot") #'ignore)))
+
+
+;; mpv show osd
+(with-eval-after-load 'mpv
+  (defun mpv-osd ()
+    "Show the osd"
+    (interactive)
+    (mpv--enqueue '("set_property" "osd-level" "3") #'ignore)))
+
+
+;; add a newline in the current document
+(defun end-of-line-and-indented-new-line ()
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+
+;; ----------------------------------------------------------------------------------
+;; hydra
+;; ----------------------------------------------------------------------------------
+
+(defhydra hydra-mpv (global-map "<f2>")
+  "
+  ^Seek^                    ^Actions^                ^General^
+  ^^^^^^^^---------------------------------------------------------------------------
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position
+  _j_: seek back -60        _._: forward frame       _n_: insert a newline
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot
+  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd
+  ^
+  "
+  ("h" mpv-seek-backward "-5")
+  ("j" mpv-seek-backward "-60")
+  ("k" mpv-seek-forward "60")
+  ("l" mpv-seek-forward "5")
+  ("," mpv-frame-back-step)
+  ("." mpv-frame-step)
+  ("SPC" mpv-pause)
+  ("q" mpv-kill)
+  ("s" mpv-screenshot)
+  ("i" my/mpv-insert-playback-position)
+  ("o" mpv-osd)
+  ("n" end-of-line-and-indented-new-line))
+
+;; ----------------------------------------------------------------------------------
+;; emacs desktop notification center
+;; ----------------------------------------------------------------------------------
+
+;; start ednc-mode
+(ednc-mode 1)
+
+;; open notications
+(defun show-notification-in-buffer (old new)
+  (let ((name (format "Notification %d" (ednc-notification-id (or old new)))))
+    (with-current-buffer (get-buffer-create name)
+      (if new (let ((inhibit-read-only t))
+                (if old (erase-buffer) (ednc-view-mode))
+                (insert (ednc-format-notification new t))
+                (pop-to-buffer (current-buffer)))
+        (kill-buffer)))))
+
+
+;; notifications hook
+(add-hook 'ednc-notification-presentation-functions
+          #'show-notification-in-buffer)
+
+
+;; ednc evil - normal mode
+(defun noevil ()
+  (evil-define-key 'normal ednc-view-mode-map "d" 'ednc-dismiss-notification)
+  (evil-define-key 'normal ednc-view-mode-map (kbd "RET") 'ednc-invoke-action)
+)
+
+(add-hook 'ednc-view-mode-hook 'noevil)
+
+
+;; ----------------------------------------------------------------------------------
+;; man pages
+;; ----------------------------------------------------------------------------------
+
+;; bully -- make the manpage the current buffer and only window 
+(setq Man-notify-method 'bully)
+
+
+;; ----------------------------------------------------------------------------------
+;; youtube-sub-extractor.el
+;; ----------------------------------------------------------------------------------
+
+(require 'youtube-sub-extractor)
+
+;; display timestamps on the left so we can use them with mpv.el
+(setq youtube-sub-extractor-timestamps 'left-side-text)
+
+;; show the full timestamp for mpv
+(defun youtube-sub-extractor--create-subs-buffer (subs-file vid-url)
+  "Read SUBS-FILE and insert the content in a buffer.
+VID-URL gets used later for browsing video at specific timestamp."
+  (let* ((raw (with-temp-buffer
+                (insert-file-contents subs-file)
+                (buffer-string)))
+         (subs-lst (youtube-sub-extractor--process-subs raw))
+         (buf (generate-new-buffer (file-name-base subs-file)))
+         ;; if the vid shorter than hour, no need to show hours - timestamps would be s:ms
+         (mins-only? (zerop (nth 2 (parse-time-string (cl-first (cl-first (last subs-lst))))))))
+    (with-current-buffer buf
+      (insert (format "%s\n\n" (file-name-base subs-file)))
+      (dolist (el subs-lst)
+        (let* ((full-ts (nth 0 el))
+               ;;(ts (substring full-ts (if mins-only? 3 0) 8))
+               ;; show full timestamp for mpv
+               (ts (substring full-ts (if mins-only? 0 0) 8))
+               (sub-text (nth 1 el))
+               (pos (point))
+               (_ (progn
+                    (when (eq youtube-sub-extractor-timestamps 'left-side-text)
+                      (insert (format "%s\t" ts)))
+                    (insert (format "%s" (string-join sub-text " ")))
+                    (save-excursion
+                      (add-text-properties
+                       (line-beginning-position)
+                       (line-end-position)
+                       `(help-echo ,ts timestamp ,full-ts)))
+                    (insert "\n")))
+               (ovrl (make-overlay (1+ pos) (point) nil t))
+               (ovrl-txt (or ts ""))
+               (margin (if (eq youtube-sub-extractor-timestamps 'right-margin)
+                           'right-margin 'left-margin)))
+          (overlay-put
+           ovrl 'before-string
+           (propertize ovrl-txt 'display `((margin ,margin) ,ovrl-txt)))))
+      (goto-char (point-min))
+      (setq-local video-url vid-url)
+      (youtube-sub-extractor-subtitles-mode +1)
+      (read-only-mode +1))
+      ;; (switch-to-buffer-other-window buf)
+      ;; open buffer fullsize in the same buffer
+      (pop-to-buffer-same-window buf)
+    (unless (or (eq youtube-sub-extractor-timestamps 'left-side-text)
+                (null youtube-sub-extractor-timestamps))
+      (set-window-margins
+       nil
+       (when (eq youtube-sub-extractor-timestamps 'left-margin) 9)
+       (when (eq youtube-sub-extractor-timestamps 'right-margin) 9)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; garbage collection
+;; ----------------------------------------------------------------------------------
+
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
+#+END_SRC
+
+**** early-init.el
+
+#+NAME: early-init.el
+#+begin_src emacs-lisp
+;;; early-init.el -*- lexical-binding: t; -*-
+
+;;; Garbage collection
+;; Increase the GC threshold for faster startup
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq gc-cons-threshold (* 50 1000 1000))
+
+;;; UI configuration
+;; Remove some unneeded UI elements (the user can turn back on anything they wish)
+(setq inhibit-startup-message t)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;; general settings
+(setq initial-scratch-message nil)
+
+;; Don’t compact font caches during GC.
+(setq inhibit-compacting-font-caches t)
+
+;; load theme
+(add-hook 'after-init-hook (lambda () (load-theme 'doom-solarized-dark)))
+
+;; start the initial frame maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+;; start every frame maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;;Tell emacs where is your personal elisp lib dir
+(add-to-list 'load-path "~/.config/emacs/lisp/")
+
+;; Make the initial buffer load faster by setting its mode to fundamental-mode
+(customize-set-variable 'initial-major-mode 'fundamental-mode)
+#+end_src
+
+*** emacs tangle
+**** init.el
+
++ home dir
+
+#+NAME: emacs-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/init.el"
+<<init.el>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/init.el"
+<<init.el>>
+#+END_SRC
+
+**** early-init.el
+
++ home dir
+
+#+NAME: emacs-early-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/early-init.el"
+<<early-init.el>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-early-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/early-init.el"
+<<early-init.el>>
+#+END_SRC
+
+** emacs.d
+*** emacs.d config
+**** bookmarks config
+
+#+NAME: emacs-bookmarks
+#+BEGIN_SRC emacs-lisp
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("dotfiles"
+ (filename . "~/git/nixos/nixos-dotfiles/nixos-dotfiles.org")
+ (front-context-string . "* nixos dotfiles")
+ (rear-context-string . "g\")'\n#+end_src\n\n")
+ (position . 373)
+ (last-modified 25593 18293 191372 213000))
+("org-refile-last-stored"
+ (filename . "~/git/personal/org/web.org")
+ (front-context-string . "** [[https://its")
+ (rear-context-string . "lview\" program.\n")
+ (position . 173198))
+("org-capture-last-stored"
+ (filename . "~/git/personal/org/todo.org")
+ (front-context-string . "** TODO macair f")
+ (rear-context-string . "ntent\n\n* Tasks\n\n")
+ (position . 70))
+("root"
+ (filename . "/")
+ (front-context-string . "bin -> usr/bin\n ")
+ (rear-context-string . " 7 Oct 30 23:23 ")
+ (position . 197))
+("home"
+ (filename . "~/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . " 3 Oct 30 23:26 ")
+ (position . 178))
+("desktop"
+ (filename . "~/Desktop/")
+ (front-context-string . "zshrc-linux\n  -r")
+ (rear-context-string . "45 Jan 18 17:53 ")
+ (position . 236)
+ (annotation . ""))
+("cerberus"
+ (filename . "~/git/cerberus/")
+ (front-context-string . "7zip\n  drwxr-xr-")
+ (rear-context-string . "96 Jan  4  2016 ")
+ (position . 249))
+("web"
+ (filename . "~/git/personal/org/web.org")
+ (front-context-string . "#+STARTUP: overv")
+ (rear-context-string)
+ (position . 1))
+)
+#+END_SRC
+
+*** emacs.d tangle
+**** bookmark tangle
+
++ home dir
+
+#+NAME: emacs-bookmarks-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/bookmarks"
+<<emacs-bookmarks>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-bookmarks-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/bookmarks"
+<<emacs-bookmarks>>
+#+END_SRC
+
+** alacritty
+*** alacritty config
+
+#+NAME: alacritty
+#+BEGIN_SRC yaml
+# alacritty
+env:
+  TERM: xterm-256color
+
+window:
+  padding:
+    x: 4
+    y: 4
+
+  startup_mode: Fullscreen
+
+# Font configuration
+font:
+  normal:
+    family: Fira Code
+    style: Regular
+
+  # Bold font face
+  bold:
+    family: Fira Code
+    style: Bold
+
+  # Italic font face
+  italic:
+    family: Fira Code
+    style: Italic
+
+  # Bold italic font face
+  bold_italic:
+    family: Fira Code
+    style: Bold Italic
+
+  # Point size
+  size: 16.0
+
+# Colors (Solarized Dark)
+colors:
+  # Default colors
+  primary:
+    background: '0x002b36'
+    foreground: '0x839496'
+
+  # Normal colors
+  normal:
+    black:   '0x073642'
+    red:     '0xdc322f'
+    green:   '0x859900'
+    yellow:  '0xb58900'
+    blue:    '0x268bd2'
+    magenta: '0xd33682'
+    cyan:    '0x2aa198'
+    white:   '0xeee8d5'
+
+  # Bright colors
+  bright:
+    black:   '0x002b36'
+    red:     '0xcb4b16'
+    green:   '0x586e75'
+    yellow:  '0x657b83'
+    blue:    '0x839496'
+    magenta: '0x6c71c4'
+    cyan:    '0x93a1a1'
+    white:   '0xfdf6e3'
+#+END_SRC
+
+*** alacritty tangle
+
++ home dir
+
+#+NAME: alacritty-home-dir
+#+BEGIN_SRC yaml :noweb yes :tangle "~/.config/alacritty/alacritty.yml"
+<<alacritty>>
+#+END_SRC
+
++ current dir
+
+#+NAME: alacritty-current-dir
+#+BEGIN_SRC yaml :noweb yes :tangle ".config/alacritty/alacritty.yml"
+<<alacritty>>
+#+END_SRC
+
+** zsh
+*** zsh config
+**** zshrc
+
+#+NAME: zshrc
+#+BEGIN_SRC sh
+# ~/.zshrc
+
+# ssh zsh fix
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+
+# variables for PS3 prompt
+newline=$'\n'
+yesmaster='Yes Master ? '
+
+# turn off nixos default prompt before setting PS1
+prompt off
+
+# PS3 prompt function
+function zle-line-init zle-keymap-select {
+    PS1="[%n@%M %~]${newline}${yesmaster}"
+    zle reset-prompt
+}
+
+# run PS3 prompt function
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# set terminal window title to program name
+case $TERM in
+  (*xterm* | rxvt | rxvt-unicode-256color)
+    function precmd {
+      print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+    }
+    function preexec {
+      printf "\033]0;%s\a" "$1"
+    }
+  ;;
+esac
+
+# XDG_RUNTIME_DIR for mpv hardware accleration
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR=/tmp
+    if [ ! -d  "$XDG_RUNTIME_DIR" ]; then
+        mkdir "$XDG_RUNTIME_DIR"
+        chmod 0700 "$XDG_RUNTIME_DIR"
+    fi
+fi
+
+# Fix bugs when switching modes
+bindkey -v # vi mode
+bindkey "^?" backward-delete-char
+bindkey "^u" backward-kill-line
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^k" kill-line
+
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+# Set/unset  shell options
+setopt notify globdots pushdtohome cdablevars autolist
+setopt recexact longlistjobs
+setopt autoresume histignoredups pushdsilent noclobber
+setopt autopushd pushdminus extendedglob rcquotes mailwarning
+setopt histignorealldups sharehistory
+#setopt auto_cd
+cdpath=($HOME)
+unsetopt bgnice autoparamslash
+
+# Completion Styles
+
+# list of completers to use
+zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
+
+# allow one error for every three characters typed in approximate completer
+zstyle -e ':completion:*:approximate:*' max-errors \
+    'reply=( $(( ($#PREFIX+$#SUFFIX)/3 )) numeric )'
+    
+# insert all expansions for expand completer
+zstyle ':completion:*:expand:*' tag-order all-expansions
+
+# formatting and messages
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*' group-name ''
+
+#eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+
+# match uppercase from lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# offer indexes before parameters in subscripts
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+# Filename suffixes to ignore during completion (except after rm command)
+zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
+    '*?.old' '*?.pro' '.hidden'
+
+# ignore completion functions (until the _ignored completer)
+zstyle ':completion:*:functions' ignored-patterns '_*'
+
+# kill - red, green, blue
+zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34'
+
+# list optiones colour, white + cyan
+zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
+
+# nixos zsh autocompletion for sudo and doas
+zstyle ":completion:*:(sudo|su|doas):*" command-path /run/wrappers/bin /run/current-system/sw/bin /home/djwilcox/bin
+
+# rehash commands
+zstyle ':completion:*' rehash true
+
+# highlighting
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=cyan,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+
+# namespace autocomplete
+compdef _precommand namespace
+
+# transmission autocomplete
+compdef _gnu_generic transmission-daemon
+compdef _gnu_generic transmission-remote
+compdef _gnu_generic transmission-show
+compdef _gnu_generic transmission-cli
+compdef _gnu_generic transmission-create
+compdef _gnu_generic transmission-edit
+compdef _gnu_generic transmission-pwgen
+
+# exa
+compdef _gnu_generic exa
+
+# nixpks completion
+compdef _gnu_generic nix-env
+
+# aliases
+
+# mpc host and socket
+alias mpc='mpc --host="/run/user/1000/mpd/socket"'
+#+END_SRC
+
+**** zshenv
+
+#+NAME: zshenv
+#+begin_src sh
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# less
+export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
+export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
+
+# wget
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+
+# libdvdcss
+export DVDCSS_CACHE="${XDG_DATA_HOME}/dvdcss"
+
+# awscli
+export AWS_SHARED_CREDENTIALS_FILE="${XDG_CONFIG_HOME}/aws/credentials"
+export AWS_CONFIG_FILE="${XDG_CONFIG_HOME}/aws/config"
+
+# set emacsclient as editor
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -r -a emacs"
+export VISUAL="emacsclient -r -c -a emacs"
+
+
+# tell ls to be colourfull
+export LSCOLORS=ExFxCxDxBxegedabagacad
+export CLICOLOR=1
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+#export QT_QPA_PLATFORM=wayland # needed for wayland
+
+# vi mode
+export KEYTIMEOUT=1
+
+# mpd host variable for mpc
+export MPD_HOST="/run/user/1000/mpd/socket"
+
+# git pager bat with colour
+export GIT_PAGER="bat --color=always -p -l rs"
+
+# nix os xdg directories
+export XDG_DATA_DIRS="$HOME/.nix-profile/share:$XDG_DATA_DIRS"
+
+# nix-path
+export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
+
+# nix dont manage shell
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ];
+    then . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh";
+fi
+#+end_src
+
+*** zsh tangle
+**** zshrc tangle
+
++ home dir
+
+#+NAME: zshrc-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.zshrc"
+<<zshrc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: zshrc-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".zshrc"
+<<zshrc>>
+#+END_SRC
+
+**** zshenv tangle
+
++ home dir
+
+#+NAME: zshenv-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.zshenv"
+<<zshenv>>
+#+END_SRC
+
++ current dir
+
+#+NAME: zshenv-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".zshenv"
+<<zshenv>>
+#+END_SRC
+
+** mpv
+*** mpv config
+**** input.conf
+
+#+NAME: input.conf
+#+BEGIN_SRC conf
+# vim keybindings
+l seek  5
+h seek -5
+k seek  60
+j seek -60
+
+# subtitles
+J cycle sub 
+K cycle sub down
+
+# Audio filters:
+F1 show-text "F2: loudnorm | F3: dynaudnorm | F4: low Bass | F5: low Treble" 2000
+
+# loudnorm:
+F2 af toggle lavfi=[loudnorm=I=-16:TP=-3:LRA=4]
+
+# dynaudnorm:
+F3 af toggle lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5]
+
+# lowered bass:
+F4  af toggle "superequalizer=6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2:13b=2:14b=2:15b=2:16b=2:17b=2:18b=2"
+
+# lowered treble:
+F5  af toggle "superequalizer=1b=2:2b=2:3b=2:4b=2:5b=2:6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2"
+#+END_SRC
+
+**** mpv.conf
+
+#+NAME: mpv.conf
+#+BEGIN_SRC conf
+# mpv.conf
+
+# list profiles with: mpv --profile=help
+
+# load hwdec profile automatically
+profile=hwdec 
+
+# hardware acceleration profile
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
+vo=gpu
+hwdec=vaapi
+msg-level=ffmpeg=fatal
+
+# cache no for internet streams
+cache=no
+
+# yt-dlp best format 1080 or less
+#ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+
+# use ~/.config/mpv/scripts/ytdl_hook.lua to fix no audio issue with yt-dlp 2023.03.04
+no-ytdl
+
+# show milliseconds in the on screen display
+osd-fractions
+
+# alsa pipewire audio device
+audio-device=alsa/pipewire
+
+# youtube subs - J to switch to subs
+sub-auto=fuzzy
+ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
+sub-font='Noto Color Emoji'
+
+# cache profile: mpv --profile=cache
+[cache]
+profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+#+END_SRC
+
+**** ytdl_hook.lua
+
+#+NAME: ytdl-hook
+#+begin_src lua
+local utils = require 'mp.utils'
+local msg = require 'mp.msg'
+local options = require 'mp.options'
+
+local o = {
+    exclude = "",
+    try_ytdl_first = false,
+    use_manifests = false,
+    all_formats = false,
+    force_all_formats = true,
+    ytdl_path = "",
+}
+
+local ytdl = {
+    path = "",
+    paths_to_search = {"yt-dlp", "yt-dlp_x86", "youtube-dl"},
+    searched = false,
+    blacklisted = {}
+}
+
+options.read_options(o, nil, function()
+    ytdl.blacklisted = {} -- reparse o.exclude next time
+    ytdl.searched = false
+end)
+
+local chapter_list = {}
+
+function Set (t)
+    local set = {}
+    for _, v in pairs(t) do set[v] = true end
+    return set
+end
+
+-- ?: surrogate (keep in mind that there is no lazy evaluation)
+function iif(cond, if_true, if_false)
+    if cond then
+        return if_true
+    end
+    return if_false
+end
+
+-- youtube-dl JSON name to mpv tag name
+local tag_list = {
+    ["uploader"]        = "uploader",
+    ["channel_url"]     = "channel_url",
+    -- these titles tend to be a bit too long, so hide them on the terminal
+    -- (default --display-tags does not include this name)
+    ["description"]     = "ytdl_description",
+    -- "title" is handled by force-media-title
+    -- tags don't work with all_formats=yes
+}
+
+local safe_protos = Set {
+    "http", "https", "ftp", "ftps",
+    "rtmp", "rtmps", "rtmpe", "rtmpt", "rtmpts", "rtmpte",
+    "data"
+}
+
+-- For some sites, youtube-dl returns the audio codec (?) only in the "ext" field.
+local ext_map = {
+    ["mp3"]         = "mp3",
+    ["opus"]        = "opus",
+}
+
+local codec_map = {
+    -- src pattern  = mpv codec
+    ["vtt"]         = "webvtt",
+    ["opus"]        = "opus",
+    ["vp9"]         = "vp9",
+    ["avc1%..*"]    = "h264",
+    ["av01%..*"]    = "av1",
+    ["mp4a%..*"]    = "aac",
+}
+
+-- Codec name as reported by youtube-dl mapped to mpv internal codec names.
+-- Fun fact: mpv will not really use the codec, but will still try to initialize
+-- the codec on track selection (just to scrap it), meaning it's only a hint,
+-- but one that may make initialization fail. On the other hand, if the codec
+-- is valid but completely different from the actual media, nothing bad happens.
+local function map_codec_to_mpv(codec)
+    if codec == nil then
+        return nil
+    end
+    for k, v in pairs(codec_map) do
+        local s, e = codec:find(k)
+        if s == 1 and e == #codec then
+            return v
+        end
+    end
+    return nil
+end
+
+local function platform_is_windows()
+    return mp.get_property_native("platform") == "windows"
+end
+
+local function exec(args)
+    msg.debug("Running: " .. table.concat(args, " "))
+
+    return mp.command_native({
+        name = "subprocess",
+        args = args,
+        capture_stdout = true,
+        capture_stderr = true,
+    })
+end
+
+-- return true if it was explicitly set on the command line
+local function option_was_set(name)
+    return mp.get_property_bool("option-info/" ..name.. "/set-from-commandline",
+                                false)
+end
+
+-- return true if the option was set locally
+local function option_was_set_locally(name)
+    return mp.get_property_bool("option-info/" ..name.. "/set-locally", false)
+end
+
+-- youtube-dl may set special http headers for some sites (user-agent, cookies)
+local function set_http_headers(http_headers)
+    if not http_headers then
+        return
+    end
+    local headers = {}
+    local useragent = http_headers["User-Agent"]
+    if useragent and not option_was_set("user-agent") then
+        mp.set_property("file-local-options/user-agent", useragent)
+    end
+    local additional_fields = {"Cookie", "Referer", "X-Forwarded-For"}
+    for idx, item in pairs(additional_fields) do
+        local field_value = http_headers[item]
+        if field_value then
+            headers[#headers + 1] = item .. ": " .. field_value
+        end
+    end
+    if #headers > 0 and not option_was_set("http-header-fields") then
+        mp.set_property_native("file-local-options/http-header-fields", headers)
+    end
+end
+
+local function append_libav_opt(props, name, value)
+    if not props then
+        props = {}
+    end
+
+    if name and value and not props[name] then
+        props[name] = value
+    end
+
+    return props
+end
+
+local function edl_escape(url)
+    return "%" .. string.len(url) .. "%" .. url
+end
+
+local function url_is_safe(url)
+    local proto = type(url) == "string" and url:match("^(%a[%w+.-]*):") or nil
+    local safe = proto and safe_protos[proto]
+    if not safe then
+        msg.error(("Ignoring potentially unsafe url: '%s'"):format(url))
+    end
+    return safe
+end
+
+local function time_to_secs(time_string)
+    local ret
+
+    local a, b, c = time_string:match("(%d+):(%d%d?):(%d%d)")
+    if a ~= nil then
+        ret = (a*3600 + b*60 + c)
+    else
+        a, b = time_string:match("(%d%d?):(%d%d)")
+        if a ~= nil then
+            ret = (a*60 + b)
+        end
+    end
+
+    return ret
+end
+
+local function extract_chapters(data, video_length)
+    local ret = {}
+
+    for line in data:gmatch("[^\r\n]+") do
+        local time = time_to_secs(line)
+        if time and (time < video_length) then
+            table.insert(ret, {time = time, title = line})
+        end
+    end
+    table.sort(ret, function(a, b) return a.time < b.time end)
+    return ret
+end
+
+local function is_blacklisted(url)
+    if o.exclude == "" then return false end
+    if #ytdl.blacklisted == 0 then
+        for match in o.exclude:gmatch('%|?([^|]+)') do
+            ytdl.blacklisted[#ytdl.blacklisted + 1] = match
+        end
+    end
+    if #ytdl.blacklisted > 0 then
+        url = url:match('https?://(.+)')
+        for _, exclude in ipairs(ytdl.blacklisted) do
+            if url:match(exclude) then
+                msg.verbose('URL matches excluded substring. Skipping.')
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function parse_yt_playlist(url, json)
+    -- return 0-based index to use with --playlist-start
+
+    if not json.extractor or
+       (json.extractor ~= "youtube:tab" and
+        json.extractor ~= "youtube:playlist") then
+        return nil
+    end
+
+    local query = url:match("%?.+")
+    if not query then return nil end
+
+    local args = {}
+    for arg, param in query:gmatch("(%a+)=([^&?]+)") do
+        if arg and param then
+            args[arg] = param
+        end
+    end
+
+    local maybe_idx = tonumber(args["index"])
+
+    -- if index matches v param it's probably the requested item
+    if maybe_idx and #json.entries >= maybe_idx and
+        json.entries[maybe_idx].id == args["v"] then
+        msg.debug("index matches requested video")
+        return maybe_idx - 1
+    end
+
+    -- if there's no index or it doesn't match, look for video
+    for i = 1, #json.entries do
+        if json.entries[i].id == args["v"] then
+            msg.debug("found requested video in index " .. (i - 1))
+            return i - 1
+        end
+    end
+
+    msg.debug("requested video not found in playlist")
+    -- if item isn't on the playlist, give up
+    return nil
+end
+
+local function make_absolute_url(base_url, url)
+    if url:find("https?://") == 1 then return url end
+
+    local proto, domain, rest =
+        base_url:match("(https?://)([^/]+/)(.*)/?")
+    local segs = {}
+    rest:gsub("([^/]+)", function(c) table.insert(segs, c) end)
+    url:gsub("([^/]+)", function(c) table.insert(segs, c) end)
+    local resolved_url = {}
+    for i, v in ipairs(segs) do
+        if v == ".." then
+            table.remove(resolved_url)
+        elseif v ~= "." then
+            table.insert(resolved_url, v)
+        end
+    end
+    return proto .. domain ..
+        table.concat(resolved_url, "/")
+end
+
+local function join_url(base_url, fragment)
+    local res = ""
+    if base_url and fragment.path then
+        res = make_absolute_url(base_url, fragment.path)
+    elseif fragment.url then
+        res = fragment.url
+    end
+    return res
+end
+
+local function edl_track_joined(fragments, protocol, is_live, base)
+    if not (type(fragments) == "table") or not fragments[1] then
+        msg.debug("No fragments to join into EDL")
+        return nil
+    end
+
+    local edl = "edl://"
+    local offset = 1
+    local parts = {}
+
+    if (protocol == "http_dash_segments") and not is_live then
+        msg.debug("Using dash")
+        local args = ""
+
+        -- assume MP4 DASH initialization segment
+        if not fragments[1].duration and #fragments > 1 then
+            msg.debug("Using init segment")
+            args = args .. ",init=" .. edl_escape(join_url(base, fragments[1]))
+            offset = 2
+        end
+
+        table.insert(parts, "!mp4_dash" .. args)
+
+        -- Check remaining fragments for duration;
+        -- if not available in all, give up.
+        for i = offset, #fragments do
+            if not fragments[i].duration then
+                msg.verbose("EDL doesn't support fragments " ..
+                         "without duration with MP4 DASH")
+                return nil
+            end
+        end
+    end
+
+    for i = offset, #fragments do
+        local fragment = fragments[i]
+        if not url_is_safe(join_url(base, fragment)) then
+            return nil
+        end
+        table.insert(parts, edl_escape(join_url(base, fragment)))
+        if fragment.duration then
+            parts[#parts] =
+                parts[#parts] .. ",length="..fragment.duration
+        end
+    end
+    return edl .. table.concat(parts, ";") .. ";"
+end
+
+local function has_native_dash_demuxer()
+    local demuxers = mp.get_property_native("demuxer-lavf-list", {})
+    for _, v in ipairs(demuxers) do
+        if v == "dash" then
+            return true
+        end
+    end
+    return false
+end
+
+local function valid_manifest(json)
+    local reqfmt = json["requested_formats"] and json["requested_formats"][1] or {}
+    if not reqfmt["manifest_url"] and not json["manifest_url"] then
+        return false
+    end
+    local proto = reqfmt["protocol"] or json["protocol"] or ""
+    return (proto == "http_dash_segments" and has_native_dash_demuxer()) or
+        proto:find("^m3u8")
+end
+
+local function as_integer(v, def)
+    def = def or 0
+    local num = math.floor(tonumber(v) or def)
+    if num > -math.huge and num < math.huge then
+        return num
+    end
+    return def
+end
+
+local function tags_to_edl(json)
+    local tags = {}
+    for json_name, mp_name in pairs(tag_list) do
+        local v = json[json_name]
+        if v then
+            tags[#tags + 1] = mp_name .. "=" .. edl_escape(tostring(v))
+        end
+    end
+    if #tags == 0 then
+        return nil
+    end
+    return "!global_tags," .. table.concat(tags, ",")
+end
+
+-- Convert a format list from youtube-dl to an EDL URL, or plain URL.
+--  json: full json blob by youtube-dl
+--  formats: format list by youtube-dl
+--  use_all_formats: if=true, then formats is the full format list, and the
+--                   function will attempt to return them as delay-loaded tracks
+-- See res table initialization in the function for result type.
+local function formats_to_edl(json, formats, use_all_formats)
+    local res = {
+        -- the media URL, which may be EDL
+        url = nil,
+        -- for use_all_formats=true: whether any muxed formats are present, and
+        -- at the same time the separate EDL parts don't have both audio/video
+        muxed_needed = false,
+    }
+
+    local default_formats = {}
+    local requested_formats = json["requested_formats"] or json["requested_downloads"]
+    if use_all_formats and requested_formats then
+        for _, track in ipairs(requested_formats) do
+            local id = track["format_id"]
+            if id then
+                default_formats[id] = true
+            end
+        end
+    end
+
+    local duration = as_integer(json["duration"])
+    local single_url = nil
+    local streams = {}
+
+    local tbr_only = true
+    for index, track in ipairs(formats) do
+        tbr_only = tbr_only and track["tbr"] and
+                   (not track["abr"]) and (not track["vbr"])
+    end
+
+    local has_requested_video = false
+    local has_requested_audio = false
+    -- Web players with quality selection always show the highest quality
+    -- option at the top. Since tracks are usually listed with the first
+    -- track at the top, that should also be the highest quality track.
+    -- yt-dlp/youtube-dl sorts it's formats from worst to best.
+    -- Iterate in reverse to get best track first.
+    for index = #formats, 1, -1 do
+        local track = formats[index]
+        local edl_track = nil
+        edl_track = edl_track_joined(track.fragments,
+            track.protocol, json.is_live,
+            track.fragment_base_url)
+        if not edl_track and not url_is_safe(track.url) then
+            msg.error("No safe URL or supported fragmented stream available")
+            return nil
+        end
+
+        local is_default = default_formats[track["format_id"]]
+        local tracks = {}
+        -- "none" means it is not a video
+        -- nil means it is unknown
+        if (o.force_all_formats or track.vcodec) and track.vcodec ~= "none" then
+            tracks[#tracks + 1] = {
+                media_type = "video",
+                codec = map_codec_to_mpv(track.vcodec),
+            }
+            if is_default then
+                has_requested_video = true
+            end
+        end
+        if (o.force_all_formats or track.acodec) and track.acodec ~= "none" then
+            tracks[#tracks + 1] = {
+                media_type = "audio",
+                codec = map_codec_to_mpv(track.acodec) or
+                        ext_map[track.ext],
+            }
+            if is_default then
+                has_requested_audio = true
+            end
+        end
+
+        local url = edl_track or track.url
+        local hdr = {"!new_stream", "!no_clip", "!no_chapters"}
+        local skip = #tracks == 0
+        local params = ""
+
+        if use_all_formats then
+            for _, sub in ipairs(tracks) do
+                -- A single track that is either audio or video. Delay load it.
+                local props = ""
+                if sub.media_type == "video" then
+                    props = props .. ",w=" .. as_integer(track.width)
+                                  .. ",h=" .. as_integer(track.height)
+                                  .. ",fps=" .. as_integer(track.fps)
+                elseif sub.media_type == "audio" then
+                    props = props .. ",samplerate=" .. as_integer(track.asr)
+                end
+                hdr[#hdr + 1] = "!delay_open,media_type=" .. sub.media_type ..
+                    ",codec=" .. (sub.codec or "null") .. props
+
+                -- Add bitrate information etc. for better user selection.
+                local byterate = 0
+                local rates = {"tbr", "vbr", "abr"}
+                if #tracks > 1 then
+                    rates = {({video = "vbr", audio = "abr"})[sub.media_type]}
+                end
+                if tbr_only then
+                    rates = {"tbr"}
+                end
+                for _, f in ipairs(rates) do
+                    local br = as_integer(track[f])
+                    if br > 0 then
+                        byterate = math.floor(br * 1000 / 8)
+                        break
+                    end
+                end
+                local title = track.format or track.format_note or ""
+                if #tracks > 1 then
+                    if #title > 0 then
+                        title = title .. " "
+                    end
+                    title = title .. "muxed-" .. index
+                end
+                local flags = {}
+                if is_default then
+                    flags[#flags + 1] = "default"
+                end
+                hdr[#hdr + 1] = "!track_meta,title=" ..
+                    edl_escape(title) .. ",byterate=" .. byterate ..
+                    iif(#flags > 0, ",flags=" .. table.concat(flags, "+"), "")
+            end
+
+            if duration > 0 then
+                params = params .. ",length=" .. duration
+            end
+        end
+
+        if not skip then
+            hdr[#hdr + 1] = edl_escape(url) .. params
+
+            streams[#streams + 1] = table.concat(hdr, ";")
+            -- In case there is only 1 of these streams.
+            -- Note: assumes it has no important EDL headers
+            single_url = url
+        end
+    end
+
+    -- Merge all tracks into a single virtual file, but avoid EDL if it's
+    -- only a single track (i.e. redundant).
+    if #streams == 1 and single_url then
+        res.url = single_url
+    elseif #streams > 0 then
+        local tags = tags_to_edl(json)
+        if tags then
+            -- not a stream; just for the sake of concatenating the EDL string
+            streams[#streams + 1] = tags
+        end
+        res.url = "edl://" .. table.concat(streams, ";")
+    else
+        return nil
+    end
+
+    if has_requested_audio ~= has_requested_video then
+        local not_req_prop = has_requested_video and "aid" or "vid"
+        if mp.get_property(not_req_prop) == "auto" then
+            mp.set_property("file-local-options/" .. not_req_prop, "no")
+        end
+    end
+
+    return res
+end
+
+local function add_single_video(json)
+    local streamurl = ""
+    local format_info = ""
+    local max_bitrate = 0
+    local requested_formats = json["requested_formats"] or json["requested_downloads"]
+    local all_formats = json["formats"]
+    local has_requested_formats = requested_formats and #requested_formats > 0
+    local http_headers = has_requested_formats
+                         and requested_formats[1].http_headers
+                         or json.http_headers
+
+    if o.use_manifests and valid_manifest(json) then
+        -- prefer manifest_url if present
+        format_info = "manifest"
+
+        local mpd_url = requested_formats and
+            requested_formats[1]["manifest_url"] or json["manifest_url"]
+        if not mpd_url then
+            msg.error("No manifest URL found in JSON data.")
+            return
+        elseif not url_is_safe(mpd_url) then
+            return
+        end
+
+        streamurl = mpd_url
+
+        if requested_formats then
+            for _, track in pairs(requested_formats) do
+                max_bitrate = (track.tbr and track.tbr > max_bitrate) and
+                    track.tbr or max_bitrate
+            end
+        elseif json.tbr then
+            max_bitrate = json.tbr > max_bitrate and json.tbr or max_bitrate
+        end
+    end
+
+    if streamurl == ""  then
+        -- possibly DASH/split tracks
+        local res = nil
+
+        -- Not having requested_formats usually hints to HLS master playlist
+        -- usage, which we don't want to split off, at least not yet.
+        if (all_formats and o.all_formats) and
+           (has_requested_formats or o.force_all_formats)
+        then
+            format_info = "all_formats (separate)"
+            res = formats_to_edl(json, all_formats, true)
+            -- Note: since we don't delay-load muxed streams, use normal stream
+            -- selection if we have to use muxed streams.
+            if res and res.muxed_needed then
+                res = nil
+            end
+        end
+
+        if (not res) and has_requested_formats then
+            format_info = "youtube-dl (separate)"
+            res = formats_to_edl(json, requested_formats, false)
+        end
+
+        if res then
+            streamurl = res.url
+        end
+    end
+
+    if streamurl == "" and json.url then
+        format_info = "youtube-dl (single)"
+        local edl_track = nil
+        edl_track = edl_track_joined(json.fragments, json.protocol,
+            json.is_live, json.fragment_base_url)
+
+        if not edl_track and not url_is_safe(json.url) then
+            return
+        end
+        -- normal video or single track
+        streamurl = edl_track or json.url
+    end
+
+    if streamurl == "" then
+        msg.error("No URL found in JSON data.")
+        return
+    end
+
+    set_http_headers(http_headers)
+
+    msg.verbose("format selection: " .. format_info)
+    msg.debug("streamurl: " .. streamurl)
+
+    mp.set_property("stream-open-filename", streamurl:gsub("^data:", "data://", 1))
+
+    if mp.get_property("force-media-title", "") == "" then
+        mp.set_property("file-local-options/force-media-title", json.title)
+    end
+
+    -- set hls-bitrate for dash track selection
+    if max_bitrate > 0 and
+        not option_was_set("hls-bitrate") and
+        not option_was_set_locally("hls-bitrate") then
+        mp.set_property_native('file-local-options/hls-bitrate', max_bitrate*1000)
+    end
+
+    -- add subtitles
+    if not (json.requested_subtitles == nil) then
+        local subs = {}
+        for lang, info in pairs(json.requested_subtitles) do
+            subs[#subs + 1] = {lang = lang or "-", info = info}
+        end
+        table.sort(subs, function(a, b) return a.lang < b.lang end)
+        for _, e in ipairs(subs) do
+            local lang, sub_info = e.lang, e.info
+            msg.verbose("adding subtitle ["..lang.."]")
+
+            local sub = nil
+
+            if not (sub_info.data == nil) then
+                sub = "memory://"..sub_info.data
+            elseif not (sub_info.url == nil) and
+                url_is_safe(sub_info.url) then
+                sub = sub_info.url
+            end
+
+            if not (sub == nil) then
+                local edl = "edl://!no_clip;!delay_open,media_type=sub"
+                local codec = map_codec_to_mpv(sub_info.ext)
+                if codec then
+                    edl = edl .. ",codec=" .. codec
+                end
+                edl = edl .. ";" .. edl_escape(sub)
+                local title = sub_info.name or sub_info.ext
+                mp.commandv("sub-add", edl, "auto", title, lang)
+            else
+                msg.verbose("No subtitle data/url for ["..lang.."]")
+            end
+        end
+    end
+
+    -- add chapters
+    if json.chapters then
+        msg.debug("Adding pre-parsed chapters")
+        for i = 1, #json.chapters do
+            local chapter = json.chapters[i]
+            local title = chapter.title or ""
+            if title == "" then
+                title = string.format('Chapter %02d', i)
+            end
+            table.insert(chapter_list, {time=chapter.start_time, title=title})
+        end
+    elseif not (json.description == nil) and not (json.duration == nil) then
+        chapter_list = extract_chapters(json.description, json.duration)
+    end
+
+    -- set start time
+    if not (json.start_time == nil) and
+        not option_was_set("start") and
+        not option_was_set_locally("start") then
+        msg.debug("Setting start to: " .. json.start_time .. " secs")
+        mp.set_property("file-local-options/start", json.start_time)
+    end
+
+    -- set aspect ratio for anamorphic video
+    if not (json.stretched_ratio == nil) and
+        not option_was_set("video-aspect-override") then
+        mp.set_property('file-local-options/video-aspect-override', json.stretched_ratio)
+    end
+
+    local stream_opts = mp.get_property_native("file-local-options/stream-lavf-o", {})
+
+    -- for rtmp
+    if (json.protocol == "rtmp") then
+        stream_opts = append_libav_opt(stream_opts,
+            "rtmp_tcurl", streamurl)
+        stream_opts = append_libav_opt(stream_opts,
+            "rtmp_pageurl", json.page_url)
+        stream_opts = append_libav_opt(stream_opts,
+            "rtmp_playpath", json.play_path)
+        stream_opts = append_libav_opt(stream_opts,
+            "rtmp_swfverify", json.player_url)
+        stream_opts = append_libav_opt(stream_opts,
+            "rtmp_swfurl", json.player_url)
+        stream_opts = append_libav_opt(stream_opts,
+            "rtmp_app", json.app)
+    end
+
+    if json.proxy and json.proxy ~= "" then
+        stream_opts = append_libav_opt(stream_opts,
+            "http_proxy", json.proxy)
+    end
+
+    mp.set_property_native("file-local-options/stream-lavf-o", stream_opts)
+end
+
+local function check_version(ytdl_path)
+    local command = {
+        name = "subprocess",
+        capture_stdout = true,
+        args = {ytdl_path, "--version"}
+    }
+    local version_string = mp.command_native(command).stdout
+    local year, month, day = string.match(version_string, "(%d+).(%d+).(%d+)")
+
+    -- sanity check
+    if (tonumber(year) < 2000) or (tonumber(month) > 12) or
+        (tonumber(day) > 31) then
+        return
+    end
+    local version_ts = os.time{year=year, month=month, day=day}
+    if (os.difftime(os.time(), version_ts) > 60*60*24*90) then
+        msg.warn("It appears that your youtube-dl version is severely out of date.")
+    end
+end
+
+function run_ytdl_hook(url)
+    local start_time = os.clock()
+
+    -- strip ytdl://
+    if (url:find("ytdl://") == 1) then
+        url = url:sub(8)
+    end
+
+    local format = mp.get_property("options/ytdl-format")
+    local raw_options = mp.get_property_native("options/ytdl-raw-options")
+    local allsubs = true
+    local proxy = nil
+    local use_playlist = false
+
+    local command = {
+        ytdl.path, "--no-warnings", "-J", "--flat-playlist",
+        "--sub-format", "ass/srt/best"
+    }
+
+    -- Checks if video option is "no", change format accordingly,
+    -- but only if user didn't explicitly set one
+    if (mp.get_property("options/vid") == "no") and (#format == 0) then
+        format = "bestaudio/best"
+        msg.verbose("Video disabled. Only using audio")
+    end
+
+    if (format == "") then
+        format = "bestvideo+bestaudio/best"
+    end
+
+    if format ~= "ytdl" then
+        table.insert(command, "--format")
+        table.insert(command, format)
+    end
+
+    for param, arg in pairs(raw_options) do
+        table.insert(command, "--" .. param)
+        if (arg ~= "") then
+            table.insert(command, arg)
+        end
+        if (param == "sub-lang" or param == "sub-langs" or param == "srt-lang") and (arg ~= "") then
+            allsubs = false
+        elseif (param == "proxy") and (arg ~= "") then
+            proxy = arg
+        elseif (param == "yes-playlist") then
+            use_playlist = true
+        end
+    end
+
+    if (allsubs == true) then
+        table.insert(command, "--all-subs")
+    end
+    if not use_playlist then
+        table.insert(command, "--no-playlist")
+    end
+    table.insert(command, "--")
+    table.insert(command, url)
+
+    local result
+    if ytdl.searched then
+        result = exec(command)
+    else
+        local separator = platform_is_windows() and ";" or ":"
+        if o.ytdl_path:match("[^" .. separator .. "]") then
+            ytdl.paths_to_search = {}
+            for path in o.ytdl_path:gmatch("[^" .. separator .. "]+") do
+                table.insert(ytdl.paths_to_search, path)
+            end
+        end
+
+        for _, path in pairs(ytdl.paths_to_search) do
+            -- search for youtube-dl in mpv's config dir
+            local exesuf = platform_is_windows() and ".exe" or ""
+            local ytdl_cmd = mp.find_config_file(path .. exesuf)
+            if ytdl_cmd then
+                msg.verbose("Found youtube-dl at: " .. ytdl_cmd)
+                ytdl.path = ytdl_cmd
+                command[1] = ytdl.path
+                result = exec(command)
+                break
+            else
+                msg.verbose("No youtube-dl found with path " .. path .. exesuf .. " in config directories")
+                command[1] = path
+                result = exec(command)
+                if result.error_string == "init" then
+                    msg.verbose("youtube-dl with path " .. path .. exesuf .. " not found in PATH or not enough permissions")
+                else
+                    msg.verbose("Found youtube-dl with path " .. path .. exesuf .. " in PATH")
+                    ytdl.path = path
+                    break
+                end
+            end
+        end
+
+        ytdl.searched = true
+    end
+
+    if result.killed_by_us then
+        return
+    end
+
+    local json = result.stdout
+    local parse_err = nil
+
+    if result.status ~= 0 or json == "" then
+        json = nil
+    elseif json then
+        json, parse_err = utils.parse_json(json)
+    end
+
+    if (json == nil) then
+        msg.verbose("status:", result.status)
+        msg.verbose("reason:", result.error_string)
+        msg.verbose("stdout:", result.stdout)
+        msg.verbose("stderr:", result.stderr)
+
+        -- trim our stderr to avoid spurious newlines
+        ytdl_err = result.stderr:gsub("^%s*(.-)%s*$", "%1")
+        msg.error(ytdl_err)
+        local err = "youtube-dl failed: "
+        if result.error_string and result.error_string == "init" then
+            err = err .. "not found or not enough permissions"
+        elseif parse_err then
+            err = err .. "failed to parse JSON data: " .. parse_err
+        else
+            err = err .. "unexpected error occurred"
+        end
+        msg.error(err)
+        if parse_err or string.find(ytdl_err, "yt%-dl%.org/bug") then
+            check_version(ytdl.path)
+        end
+        return
+    end
+
+    msg.verbose("youtube-dl succeeded!")
+    msg.debug('ytdl parsing took '..os.clock()-start_time..' seconds')
+
+    json["proxy"] = json["proxy"] or proxy
+
+    -- what did we get?
+    if json["direct"] then
+        -- direct URL, nothing to do
+        msg.verbose("Got direct URL")
+        return
+    elseif (json["_type"] == "playlist")
+        or (json["_type"] == "multi_video") then
+        -- a playlist
+
+        if (#json.entries == 0) then
+            msg.warn("Got empty playlist, nothing to play.")
+            return
+        end
+
+        local self_redirecting_url =
+            json.entries[1]["_type"] ~= "url_transparent" and
+            json.entries[1]["webpage_url"] and
+            json.entries[1]["webpage_url"] == json["webpage_url"]
+
+
+        -- some funky guessing to detect multi-arc videos
+        if self_redirecting_url and #json.entries > 1
+            and json.entries[1].protocol == "m3u8_native"
+            and json.entries[1].url then
+            msg.verbose("multi-arc video detected, building EDL")
+
+            local playlist = edl_track_joined(json.entries)
+
+            msg.debug("EDL: " .. playlist)
+
+            if not playlist then
+                return
+            end
+
+            -- can't change the http headers for each entry, so use the 1st
+            set_http_headers(json.entries[1].http_headers)
+
+            mp.set_property("stream-open-filename", playlist)
+            if json.title and mp.get_property("force-media-title", "") == "" then
+                mp.set_property("file-local-options/force-media-title",
+                    json.title)
+            end
+
+            -- there might not be subs for the first segment
+            local entry_wsubs = nil
+            for i, entry in pairs(json.entries) do
+                if not (entry.requested_subtitles == nil) then
+                    entry_wsubs = i
+                    break
+                end
+            end
+
+            if not (entry_wsubs == nil) and
+                not (json.entries[entry_wsubs].duration == nil) then
+                for j, req in pairs(json.entries[entry_wsubs].requested_subtitles) do
+                    local subfile = "edl://"
+                    for i, entry in pairs(json.entries) do
+                        if not (entry.requested_subtitles == nil) and
+                            not (entry.requested_subtitles[j] == nil) and
+                            url_is_safe(entry.requested_subtitles[j].url) then
+                            subfile = subfile..edl_escape(entry.requested_subtitles[j].url)
+                        else
+                            subfile = subfile..edl_escape("memory://WEBVTT")
+                        end
+                        subfile = subfile..",length="..entry.duration..";"
+                    end
+                    msg.debug(j.." sub EDL: "..subfile)
+                    mp.commandv("sub-add", subfile, "auto", req.ext, j)
+                end
+            end
+
+        elseif self_redirecting_url and #json.entries == 1 then
+            msg.verbose("Playlist with single entry detected.")
+            add_single_video(json.entries[1])
+        else
+            local playlist_index = parse_yt_playlist(url, json)
+            local playlist = {"#EXTM3U"}
+            for i, entry in pairs(json.entries) do
+                local site = entry.url
+                local title = entry.title
+
+                if not (title == nil) then
+                    title = string.gsub(title, '%s+', ' ')
+                    table.insert(playlist, "#EXTINF:0," .. title)
+                end
+
+                --[[ some extractors will still return the full info for
+                     all clips in the playlist and the URL will point
+                     directly to the file in that case, which we don't
+                     want so get the webpage URL instead, which is what
+                     we want, but only if we aren't going to trigger an
+                     infinite loop
+                --]]
+                if entry["webpage_url"] and not self_redirecting_url then
+                    site = entry["webpage_url"]
+                end
+
+                -- links without protocol as returned by --flat-playlist
+                if not site:find("://") then
+                    -- youtube extractor provides only IDs,
+                    -- others come prefixed with the extractor name and ":"
+                    local prefix = site:find(":") and "ytdl://" or
+                        "https://youtu.be/"
+                    table.insert(playlist, prefix .. site)
+                elseif url_is_safe(site) then
+                    table.insert(playlist, site)
+                end
+
+            end
+
+            if use_playlist and
+                not option_was_set("playlist-start") and playlist_index then
+                mp.set_property_number("playlist-start", playlist_index)
+            end
+
+            mp.set_property("stream-open-filename", "memory://" .. table.concat(playlist, "\n"))
+        end
+
+    else -- probably a video
+        add_single_video(json)
+    end
+    msg.debug('script running time: '..os.clock()-start_time..' seconds')
+end
+
+if (not o.try_ytdl_first) then
+    mp.add_hook("on_load", 10, function ()
+        msg.verbose('ytdl:// hook')
+        local url = mp.get_property("stream-open-filename", "")
+        if not (url:find("ytdl://") == 1) then
+            msg.verbose('not a ytdl:// url')
+            return
+        end
+        run_ytdl_hook(url)
+    end)
+end
+
+mp.add_hook(o.try_ytdl_first and "on_load" or "on_load_fail", 10, function()
+    msg.verbose('full hook')
+    local url = mp.get_property("stream-open-filename", "")
+    if not (url:find("ytdl://") == 1) and
+        not ((url:find("https?://") == 1) and not is_blacklisted(url)) then
+        return
+    end
+    run_ytdl_hook(url)
+end)
+
+mp.add_hook("on_preloaded", 10, function ()
+    if next(chapter_list) ~= nil then
+        msg.verbose("Setting chapters")
+
+        mp.set_property_native("chapter-list", chapter_list)
+        chapter_list = {}
+    end
+end)
+
+#+end_src
+
+*** mpv tangle
+**** input.conf tangle
+
++ home dir
+
+#+NAME: input.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/input.conf"
+<<input.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: input.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/input.conf"
+<<input.conf>>
+#+END_SRC
+
+**** mpv.conf tangle
+
++ home dir
+
+#+NAME: mpv.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mpv.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
+**** ytdl_hook tangle
+
++ home dir
+
+#+NAME: ytdl-hook-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/scripts/ytdl_hook.lua"
+<<ytdl-hook>>
+#+END_SRC
+
++ current dir
+
+#+NAME: ytdl-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/scripts/ytdl_hook.lua"
+<<ytdl-hook>>
+#+END_SRC
+
+** yt-dlp
+*** yt-dlp config
+
+#+NAME: yt-dlp
+#+BEGIN_SRC conf
+# download 1080p video in mp4 format
+#-f 'bestvideo[height<=1080][vcodec!=?vp9]+bestaudio[acodec!=?opus]'
+
+# external downloader aria2
+--downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M'
+
+# native downloader for dash and m3u8
+--downloader 'dash,m3u8:native'
+
+# restrict filenames
+--restrict-filenames
+
+# merge output format mkv
+--merge-output-format mkv
+#+END_SRC
+
+*** yt-dlp tangle
+
++ home dir
+
+#+NAME: yt-dlp-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/yt-dlp/config"
+<<yt-dlp>>
+#+END_SRC
+
++ current dir
+
+#+NAME: yt-dlp-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/yt-dlp/config"
+<<yt-dlp>>
+#+END_SRC
+
+** streamlink
+*** streamlink config
+
+#+NAME: streamlink
+#+BEGIN_SRC conf
+# Player options
+player=mpv --cache 2048
+player-no-close
+#+END_SRC
+
+*** streamlink tangle
+
++ home dir
+
+#+NAME: streamlink-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/streamlink/config"
+<<streamlink>>
+#+END_SRC
+
++ current dir
+
+#+NAME: streamlink-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/streamlink/config"
+<<streamlink>>
+#+END_SRC
+
+** aria2c
+*** aria2c config
+
+#+NAME: aria2c
+#+begin_src conf
+# aria2 config
+ bt-max-peers=0
+ bt-request-peer-speed-limit=0
+ max-overall-upload-limit=128k
+ bt-external-ip=127.0.0.1
+ dht-listen-port=6882
+ enable-dht=true
+ enable-peer-exchange=true
+ listen-port=6881
+ bt-force-encryption=true
+ bt-min-crypto-level=arc4
+ bt-require-crypto=true
+ follow-torrent=mem
+ seed-ratio=100
+ seed-time=0
+ socket-recv-buffer-size=1M
+ event-poll=epoll
+ realtime-chunk-checksum=true
+ allow-overwrite=true
+ always-resume=true
+ auto-file-renaming=false
+ continue=true
+ remote-time=true
+ peer-id-prefix=""
+ user-agent=""
+ summary-interval=0
+ ftp-pasv=true
+ ftp-reuse-connection=true
+ metalink-language=en-US
+ metalink-location=us
+ metalink-preferred-protocol=https
+ lowest-speed-limit=50K
+ max-concurrent-downloads=10
+ max-connection-per-server=3
+ min-split-size=5M
+ split=10
+ check-certificate=true
+ conditional-get=true
+ disable-ipv6=true
+ http-accept-gzip=true
+#+end_src
+
+*** aria2c tangle
+
++ home dir
+  
+#+NAME: aria2c-home-dir
+#+begin_src conf :noweb yes :tangle "~/.config/aria2/aria2.conf"
+<<aria2c>>
+#+end_src
+
++ current dir
+
+#+NAME: aria2c-current-dir
+#+begin_src conf :noweb yes :tangle ".config/aria2/aria2.conf"
+<<aria2c>>
+#+end_src
+
+** ncmpc
+*** ncmpc config
+
+#+NAME: ncmpc
+#+BEGIN_SRC conf
+## Configuration file for ncmpc (~/.ncmpc/config)
+host = "/run/user/1000/mpd/socket"
+screen-list = playlist browse
+wrap-around = yes
+seek-time = 30
+list-format = "%name%|[%artist% - ]%title%|%file%"
+status-format = "[%artist% - ]%title%|%shortfile%"
+visible-bitrate = yes
+enable-colors = no
+color background = none
+color title = none,black
+color title-bold = blue,bold
+color line = black
+color line-flags = black,bold
+color list = none
+color list-bold = none,bold
+color browser-directory = none
+color browser-playlist = none
+color progressbar = black
+color status-state = black,bold
+color status-song  = black
+color status-time  = black
+color alert = black,bold
+#+END_SRC
+
+*** ncmpc tangle
+
++ home dir
+
+#+NAME: ncmpc-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/ncmpc/config"
+<<ncmpc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: ncmpc-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/ncmpc/config"
+<<ncmpc>>
+#+END_SRC
+
+** tmux
+*** tmux config
+
+#+NAME: tmux
+#+BEGIN_SRC conf
+# .tmux.conf
+
+# vi mode
+set-window-option -g mode-keys vi
+
+# Some tweaks to the status line
+set -g status-right "%H:%M"
+set -g status-right-style fg=color245
+
+# If running inside tmux ($TMUX is set), then change the status line to red
+%if #{TMUX}
+set -g status-bg red
+%endif
+
+# Enable RGB colour if running in xterm(1)
+set-option -sa terminal-overrides ",xterm*:Tc"
+
+# Change the default $TERM to screen
+set -g default-terminal "xterm-256color"
+
+# No bells at all
+set -g bell-action none
+
+# close panes after command has finished
+set -g remain-on-exit off
+
+# Change the prefix key to C-a
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
+
+# Turn the mouse on, but without copy mode dragging
+set -g mouse on
+
+# multiple places
+bind F set -w window-size
+
+# Keys to toggle monitoring activity in a window and the synchronize-panes option
+bind m set monitor-activity
+bind y set synchronize-panes\; display 'synchronize-panes #{?synchronize-panes,on,off}'
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# reload ~/.tmux.conf using PREFIX r
+bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+
+# default statusbar colors
+set -g status-style bg=default,fg=yellow #yellow
+
+# default window title colors
+set -g window-status-style fg=brightblue,bg=default
+
+# active window title colors
+set -g window-status-current-style fg=black,bg=blue
+
+# pane border
+set -g pane-border-style fg=black #base02
+set -g pane-active-border-style fg=black #base01
+
+# message text
+set -g message-style bg=black,fg=brightred #orange
+
+# pane number display
+set-option -g display-panes-active-colour blue #blue
+set-option -g display-panes-colour brightred #orange
+
+# clock
+set-window-option -g clock-mode-colour green #green
+
+# vim key bindings
+setw -g mode-keys vi
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+bind-key -r C-h select-window -t :-
+bind-key -r C-l select-window -t :+
+
+# resize panes using PREFIX H, J, K, L
+bind H resize-pane -L 5
+bind J resize-pane -D 5
+bind K resize-pane -U 5
+bind L resize-pane -R 5
+
+# copy and paste
+set-window-option -g automatic-rename on
+
+# toggle statusbar
+bind-key s set -g status
+
+# copying selection vim style
+# requires xsel and xclip
+bind-key Escape copy-mode			# enter copy mode; default [
+bind-key p paste-buffer				# paste; (default hotkey: ] )
+bind-key P choose-buffer 			# tmux clipboard history
+bind-key + delete-buffer \; display-message "Deleted current Tmux Clipboard History"
+
+# Send To Tmux Clipboard or System Clipboard
+bind-key < run-shell "tmux set-buffer -- \"$(xsel -o -b)\"" \; display-message "Copy To Tmux Clipboard"
+bind-key > run-shell 'tmux show-buffer | xsel -i -b' \; display-message "Copy To System Clipboard"
+
+# Note: rectangle-toggle (aka Visual Block Mode) > hit v then C-v to trigger it
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi V send-keys -X select-line
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T choice-mode-vi h send-keys -X tree-collapse
+bind-key -T choice-mode-vi l send-keys -X tree-expand
+bind-key -T choice-mode-vi H send-keys -X tree-collapse-all
+bind-key -T choice-mode-vi L send-keys -X tree-expand-all
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe "xclip -in -selection clipboard"
+bind-key -T copy-mode-vi y send-keys -X copy-pipe "xclip -in -selection clipboard"
+
+# urlscan as context and url view
+bind-key u capture-pane \; save-buffer /tmp/tmux-buffer \; \
+new-window -n "urlscan" '$SHELL -c "urlscan < /tmp/tmux-buffer"'
+
+# copy mode - emulate right click "search google for {text}" like you do in GUI web browsers. 
+bind-key -T copy-mode-vi 'o' send-keys -X copy-selection \; \
+new-window -n google \; send-keys -t google 'sr -browser=w3m google "$(tmux show-buffer)" && tmux kill-window' 'Enter'
+
+# copy mode - emulate right click "search imdb for {text}" like you do in GUI web browsers. 
+bind-key -T copy-mode-vi 'i' send-keys -X copy-selection \; \
+new-window -n imdb \; send-keys -t imdb 'sr -browser=w3m imdb "$(tmux show-buffer)" && tmux kill-window' 'Enter'
+
+# tmux auto rename pane 
+set-option -g status-interval 1
+set-option -g automatic-rename on
+set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_current_path},#{pane_current_command}}"
+#+END_SRC
+
+*** tmux tangle
+
++ home dir
+
+#+NAME: tmux-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tmux/tmux.conf"
+<<tmux>>
+#+END_SRC
+
++ current dir
+
+#+NAME: tmux-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
+<<tmux>>
+#+END_SRC
+
+** desktop files
+*** desktop files config
+**** davinci resolve config
+
+#+NAME: davinci-resolve-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=DaVinci Resolve
+GenericName=DaVinci Resolve
+Exec=env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia davinci-resolve %u
+Type=Application
+Terminal=false
+Icon=utilities-terminal
+StartupNotify=true
+StartupWMClass=resolve
+MimeType=application/x-resolveproj;
+#+end_src
+
+**** firefox vpn config
+
+#+NAME: firefox-vpn-desktop
+#+begin_src conf
+[Desktop Entry]
+Actions=new-private-window;new-window;profile-manager-window
+Categories=Network;WebBrowser
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox %U
+GenericName=Web Browser
+Icon=firefox
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;x-scheme-handler/http;x-scheme-handler/https
+Name=Firefox-VPN
+StartupNotify=true
+Terminal=false
+Type=Application
+Version=1.4
+
+[Desktop Action new-private-window]
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox --private-window %U
+Name=New Private Window
+
+[Desktop Action new-window]
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox --new-window %U
+Name=New Window
+
+[Desktop Action profile-manager-window]
+Exec=/run/wrappers/bin/doas /home/djwilcox/bin/namespace firefox --ProfileManager
+Name=Profile Manager
+#+end_src
+
+**** transmission config
+
+#+NAME: transmission-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=Transmission
+Exec=/home/djwilcox/bin/magnet-add %u
+Icon=utilities-terminal
+Type=Application
+Terminal=false
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+#+end_src
+
+*** desktop files tangle
+**** davinci resolve tangle
+
++ home dir
+  
+#+NAME: davinci-resolve-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/davinci-resolve.desktop"
+<<davinci-resolve-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: davinci-resolve-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/davinci-resolve.desktop"
+<<davinci-resolve-desktop>>
+#+END_SRC
+
+**** firefox-vpn tangle
+
++ home dir
+  
+#+NAME: firefox-vpn-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/firefox_vpn.desktop"
+<<firefox-vpn-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: firefox-vpn-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/firefox_vpn.desktop"
+<<firefox-vpn-desktop>>
+#+END_SRC
+
+**** transmission tangle
+
++ home dir
+  
+#+NAME: transmission-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/transmission.desktop"
+<<transmission-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: transmission-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/transmission.desktop"
+<<transmission-desktop>>
+#+END_SRC
+
+** autostart
+*** autostart config
+**** nognome_notications config
+
+#+NAME: nognome_notications
+#+BEGIN_SRC conf
+[Desktop Entry]
+Type=Application
+Exec=/home/djwilcox/bin/nognome_notifications
+Hidden=True
+NoDisplay=True
+X-GNOME-Autostart-enabled=true
+Name=nognome_notifications
+Comment=nognome_notifications
+#+END_SRC
+
+*** autostart tangle
+**** nognome_notications tangle
+
++ home dir
+
+#+NAME: nognome_notications-autostart-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/autostart/nognome_notications.desktop"
+<<nognome_notications>>
+#+END_SRC
+
++ current dir
+
+#+NAME: nognome_notications-autostart-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/autostart/nognome_notications.desktop"
+<<nognome_notications>>
+#+END_SRC
+** gitconfig
+*** gitconfig config
+
+#+NAME: gitconfig
+#+BEGIN_SRC conf
+[user]
+name = Daniel J Wilcox
+email = danieljwilcox@gmail.com
+[color]
+ui = true
+#+END_SRC
+
+*** gitconfig tangle
+
++ home dir
+
+#+NAME: gitconfig-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/git/config"
+<<gitconfig>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gitconfig-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/git/gitconfig"
+<<gitconfig>>
+#+END_SRC
+
+** bat
+*** bat config
+
+#+NAME: bat
+#+BEGIN_SRC conf
+# This is `bat`s configuration file
+
+# bat theme
+--theme="Solarized (dark)"
+#+END_SRC
+
+*** bat tangle
+
++ home dir
+
+#+NAME: bat-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/bat/config"
+<<bat>>
+#+END_SRC
+
++ current dir
+
+#+NAME: bat-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/bat/config"
+<<bat>>
+#+END_SRC
+
+** wget
+*** wget config
+
+#+NAME: wget
+#+BEGIN_SRC conf
+hsts-file=/home/djwilcox/.cache/wget-hsts
+#+END_SRC
+
+*** wget tangle
+
++ home dir
+
+#+NAME: wget-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wget/wgetrc"
+<<wget>>
+#+END_SRC
+
++ current dir
+
+#+NAME: wget-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/wget/wgetrc"
+<<wget>>
+#+END_SRC
+
+** zathura
+*** zathura config
+
+#+NAME: zathura
+#+BEGIN_SRC conf
+set selection-clipboard clipboard
+#+END_SRC
+
+*** zathura tangle
+
++ home dir
+  
+#+NAME: zathura-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/zathura/zathurarc"
+<<zathura>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: zathura-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/zathura/zathurarc"
+<<zathura>>
+#+END_SRC
+
+** newsboat
+*** newsboat config
+**** config
+
+#+NAME: newsboat-config
+#+BEGIN_SRC conf
+# general settings
+auto-reload yes
+max-items 50 
+reload-time 30 # update all feeds every x minutes
+reload-threads 100
+prepopulate-query-feeds yes
+cleanup-on-quit yes
+confirm-mark-feed-read no
+wrap-scroll yes
+
+# externel browser
+browser "w3m %u"
+macro . set browser "/home/djwilcox/bin/sauron %u"; open-in-browser ; set browser "w3m %u"
+macro / set browser "python3 -m readability.readability -u %u 2> /dev/null | w3m -T text/html"; open-in-browser ; set browser "w3m %u"
+macro l set browser "xdg-open %u"; open-in-browser ; set browser "w3m %u"
+macro p set browser "/home/djwilcox/bin/punch -i %u 2> /dev/null"; one; set browser "w3m %u"
+
+# urlscan
+external-url-viewer "urlscan"
+
+# html-renderer and pager
+pager "w3m -T text/html"
+html-renderer "w3m"
+
+# text width
+text-width 80
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+
+# podboat
+download-path "~/Downloads/%n"
+player "mpv"
+
+# colours
+#color background         default default
+color listnormal         default default
+color listnormal_unread  default default
+color listfocus          black blue
+color listfocus_unread   black blue
+color info               black blue
+color article            default default
+
+# highlights
+highlight article "^(Feed|Title|Link|Date|Author):.*$" color12 color8
+highlight article "https?://[^ ]+" color4 color8 protect
+
+# kill files ignore articles marked #shorts to filter out youtube shorts
+ignore-article "*" "title =~ \"#shorts$\""
+#+END_SRC
+
+**** config-reddit
+
+#+NAME: newsboat-config-reddit
+#+BEGIN_SRC conf
+# general settings
+auto-reload yes
+max-items 50 
+reload-time 30 # update all feeds every x minutes
+reload-threads 100
+prepopulate-query-feeds yes
+cleanup-on-quit yes
+confirm-mark-feed-read no
+wrap-scroll yes
+
+# externel browser
+browser "w3m %u"
+macro . set browser "/home/djwilcox/bin/sauron %u"; open-in-browser ; set browser "w3m %u"
+macro / set browser "python3 -m readability.readability -u %u 2> /dev/null | w3m -T text/html"; open-in-browser ; set browser "w3m %u"
+macro l set browser "xdg-open %u"; open-in-browser ; set browser "w3m %u"
+macro p set browser "/home/djwilcox/bin/punch -i %u 2> /dev/null"; one; set browser "w3m %u"
+
+# urlscan
+external-url-viewer "urlscan"
+
+# text width
+text-width 80
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+
+# podboat
+download-path "~/Downloads/%n"
+player "mpv"
+
+# colours
+#color background         default default
+color listnormal         default default
+color listnormal_unread  default default
+color listfocus          black blue
+color listfocus_unread   black blue
+color info               black blue
+color article            default default
+
+# highlights
+highlight article "^(Feed|Title|Link|Date|Author):.*$" color12 color8
+highlight article "https?://[^ ]+" color4 color8 protect
+#+END_SRC
+
+**** config-torrents
+
+#+NAME: newsboat-config-torrents
+#+BEGIN_SRC conf
+# general settings
+auto-reload yes
+max-items 100 
+reload-time 30 # update all feeds every x minutes
+reload-threads 100
+prepopulate-query-feeds yes
+cleanup-on-quit yes
+download-timeout 60
+confirm-mark-feed-read no
+wrap-scroll yes
+
+# transmission remote as externel browser
+browser "transmission-remote --add %u 1>/dev/null &" 
+
+# urlscan
+external-url-viewer "urlscan"
+
+# text width
+text-width 80
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+bind-key L open-in-browser-and-mark-read
+
+# colours
+#color background         default default
+color listnormal         default default
+color listnormal_unread  default default
+color listfocus          black blue
+color listfocus_unread   black blue
+color info               black blue
+color article            default default
+
+# highlights
+highlight article "^(Feed|Title|Link|Date|Author):.*$" color12 color8
+highlight article "https?://[^ ]+" color4 color8 protect
+#+END_SRC
+
+**** urls
+
+#+NAME: newsboat-urls
+#+BEGIN_SRC conf
+# queries
+
+# unread articles tagged newcastle
+"query:Newcastle:unread = \"yes\" and tags # \"newcastle\""
+
+# unread articles tagged general
+"query:General:unread = \"yes\" and tags # \"general\""
+
+# unread articles tagged linux
+"query:Linux:unread = \"yes\" and tags # \"linux\""
+
+# unread articles tagged emacs
+"query:Emacs:unread = \"yes\" and tags # \"emacs\""
+
+
+# newcastle
+
+# magpie channel
+https://www.youtube.com/feeds/videos.xml?channel_id=UCzbwOixfdDkOEl4c2Gy1Xow newcastle "~The Magpie Channel" 
+
+# robenstein
+https://www.youtube.com/feeds/videos.xml?channel_id=UC2WTz3aJZ65nN3p5_LMJAzg newcastle "~Roobenstein" 
+
+# adam pearson
+https://www.youtube.com/feeds/videos.xml?channel_id=UCbXlSJHSuY1nNHoxSElKiIA newcastle "~Adam Pearson" 
+
+# newcastle united
+https://www.youtube.com/feeds/videos.xml?channel_id=UCywGl_BPp9QhD0uAcP2HsJw newcastle "~Newcastle United" 
+
+
+# tech
+
+# gotbletu
+https://www.youtube.com/feeds/videos.xml?channel_id=UCkf4VIqu3Acnfzuk3kRIFwA linux "~gotbletu" 
+
+
+# general
+
+# A Closer Look
+https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa general "~A Closer Look" 
+
+# David Pakman
+https://www.youtube.com/feeds/videos.xml?channel_id=UCvixJtaXuNdMPUGdOPcY8Ag general "~David Pakman" 
+
+# Maximilien Robespierre
+https://www.youtube.com/feeds/videos.xml?channel_id=UCSiYkMylC3F_eQfIodMHkOw general "~Maximilien Robespierre" 
+
+# emacs
+
+# System Crafters
+https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ emacs "~System Crafters" 
+#+END_SRC
+
+**** urls-reddit
+
+#+NAME: newsboat-urls-reddit
+#+BEGIN_SRC conf
+# reddit rss
+https://www.reddit.com/r/linux/new.rss reddit "~Linux" 
+https://www.reddit.com/r/ubuntu/new.rss reddit "~Ubuntu" 
+https://www.reddit.com/r/torrents/new.rss "~Torrents"
+https://www.reddit.com/r/Piracy/new.rss "~Piracy"
+https://www.reddit.com/r/opendirectories/new.rss "~open directories"
+https://www.reddit.com/r/unixporn/new.rss "~unixporn"
+https://www.reddit.com/r/firefox/new.rss reddit "~Firefox" 
+https://www.reddit.com/r/Firefoxcss/new.rss reddit "~Firefox css" 
+https://www.reddit.com/r/obs/new.rss reddit "~OBS" 
+https://www.reddit.com/r/ffmpeg/new.rss reddit "~ffmpeg" 
+https://www.reddit.com/r/emacs/new.rss reddit "~Emacs" 
+https://www.reddit.com/r/nixos/new.rss reddit "~nixos" 
+https://www.reddit.com/r/newsboat/new.rss reddit "~Newsboat" 
+https://www.reddit.com/r/w3m/.rss reddit "~w3m" 
+https://www.reddit.com/r/zsh/.rss reddit "~zsh" 
+https://www.reddit.com/r/commandline/new.rss reddit "~Command Line" 
+https://www.reddit.com/r/clistuff/.rss reddit "~cli stuff" 
+https://www.reddit.com/r/UnixProTips/.rss reddit "~Unix Pro tips" 
+https://www.reddit.com/r/gnu/.rss reddit "~gnu"
+#+END_SRC
+
+**** urls-torrents
+
+#+NAME: newsboat-urls-torrents
+#+BEGIN_SRC conf
+# queries
+"query:Tv:unread = \"yes\" and tags # \"tv\"" meta
+"query:Movies:unread = \"yes\" and tags # \"movies\"" meta
+"query:Music:unread = \"yes\" and tags # \"music\"" meta
+
+# rarbg
+https://rarbg.to/rssdd_magnet.php?categories=18 tv sd rarbg "~tv sd"
+https://rarbg.to/rssdd_magnet.php?categories=41 tv hd rarbg "~tv hd"
+https://rarbg.to/rssdd.php?categories=17 movies h264 rarbg "~h264 movies"
+https://rarbg.to/rssdd.php?categories=44 movies 1080 h264 rarbg "~h264 1080p"
+https://rarbg.to/rssdd.php?categories=45 movies 720 h264 rarbg "~h264 720p"
+https://rarbg.to/rssdd.php?categories=54 movies 1080 h265 rarbg "~h265 1080p"
+https://rarbg.to/rssdd.php?categories=42 movies bd full rarbg "~full bd"
+https://rarbg.to/rssdd.php?categories=46 bd remux rarbg "~bd remux"
+https://rarbg.to/rssdd.php?categories=25 music flac rarbg "~flac audio"
+
+# torrentgalaxy
+https://torrentgalaxy.to/rss.php?cat=42 movies hd torrentgalaxy "~movies hd"
+https://torrentgalaxy.to/rss.php?cat=1 movies sd torrentgalaxy "~movies sd"
+https://torrentgalaxy.to/rss.php?cat=4 movies packs torrentgalaxy "~movies packs"
+https://torrentgalaxy.to/rss.php?cat=41 tv hd torrentgalaxy "~tv hd"
+https://torrentgalaxy.to/rss.php?cat=5 tv sd torrentgalaxy "~tv sd"
+https://torrentgalaxy.to/rss.php?cat=6 tv packs torrentgalaxy "~tv packs"
+https://torrentgalaxy.to/rss.php?cat=22 music albums torrentgalaxy "~music albums"
+https://torrentgalaxy.to/rss.php?cat=23 music lossless torrentgalaxy "~music lossless"
+
+# limetorrents
+https://www.limetorrents.pro/rss/16/ movies limetorrents "~movies"
+https://www.limetorrents.pro/rss/20/ tv limetorrents "~tv"
+https://www.limetorrents.pro/rss/17/ music limetorrents "~music"
+
+# demonoid
+https://www.dnoid.to/rss/8.xml movies demonoid "~movies"
+https://www.dnoid.to/rss/12.xml tv demonoid "~tv"
+https://www.dnoid.to/rss/9.xml music demonoid "~music"
+https://www.dnoid.to/rss/4.xml comics demonoid "~comics"
+#+END_SRC
+
+*** newsboat tangle
+**** config tangle
+
++ home dir
+
+#+NAME: newsboat-config-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/config"
+<<newsboat-config>>
+#+END_SRC
+
++ current dir
+
+#+NAME: newsboat-config-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/config"
+<<newsboat-config>>
+#+END_SRC
+
+**** config-reddit tangle
+
++ home dir
+  
+#+NAME: newsboat-config-reddit-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/config-reddit"
+<<newsboat-config-reddit>>
+#+END_SRC
+
++ current dir
+
+#+NAME: newsboat-config-reddit-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/config-reddit"
+<<newsboat-config-reddit>>
+#+END_SRC
+
+**** config-torrents tangle
+
++ home dir
+
+#+NAME: newsboat-config-torrents-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/config-torrents"
+<<newsboat-config-torrents>>
+#+END_SRC
+
++ current dir
+
+#+NAME: newsboat-config-torrents-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/config-torrents"
+<<newsboat-config-torrents>>
+#+END_SRC
+
+**** urls tangle
+
++ home dir
+
+#+NAME: newsboat-urls-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/urls"
+<<newsboat-urls>>
+#+END_SRC
+
++ current dir
+
+#+NAME: newsboat-urls-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/urls"
+<<newsboat-urls>>
+#+END_SRC
+
+**** urls-reddit tangle
+
++ home dir
+
+#+NAME: newsboat-urls-reddit-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/urls-reddit"
+<<newsboat-urls-reddit>>
+#+END_SRC
+
++ current dir
+
+#+NAME: newsboat-urls-reddit-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/urls-reddit"
+<<newsboat-urls-reddit>>
+#+END_SRC
+
+**** urls-torrents tangle
+
++ home dir
+
+#+NAME: newsboat-urls-torrents-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/urls-torrents"
+<<newsboat-urls-torrents>>
+#+END_SRC
+
++ current dir
+
+#+NAME: newsboat-urls-torrents-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/urls-torrents"
+<<newsboat-urls-torrents>>
+#+END_SRC
+
+** muttrc
+*** muttrc config
+
+#+NAME: muttrc
+#+BEGIN_SRC conf
+set from = "danieljwilcox@gmail.com"
+set realname = "Daniel J Wilcox"
+color normal default default
+color hdrdefault black blue
+color quoted default default
+color signature default default
+color attachment default default
+color message default default
+color error default default
+color status black blue
+color tree default default
+color normal default default
+color markers default default
+color search default default
+color tilde default default
+color index default default ~F
+color index default default "~N|~O"
+set imap_user = "danieljwilcox@gmail.com"
+set smtp_url = "smtps://danieljwilcox@smtp.gmail.com:465/"
+source "gpg -d ~/.config/mutt/mutt-passwords.gpg |"
+set folder = "imaps://imap.gmail.com:993"
+set spoolfile = "+Inbox"
+set postponed = "+Drafts"
+set record = "+Sent Mail"
+set header_cache = ~/.config/mutt/cache/headers
+set message_cachedir = ~/.config/mutt/cache/bodies
+set certificate_file = ~/.config/mutt/certificates
+set mailcap_path = ~/.config/mutt/mailcap       
+set sort=threads
+set sort_browser=reverse-date
+set sort_aux=reverse-last-date-received
+set move = "no" 
+set imap_idle = "yes"
+set mail_check = "60"
+set imap_keepalive = "900"
+set editor = "emacsclient"
+set beep_new
+# Ctrl-R to mark all as read
+macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
+set query_command = "abook --mutt-query '%s'"
+macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
+macro index,pager A "<pipe-message>abook --add-email<return>" "add the sender address to abook"
+bind editor <Tab> complete-query
+bind index "^" imap-fetch-mail
+bind compose p pgp-menu
+macro compose Y pfy "send mail without GPG"
+bind index gg first-entry
+bind index G  last-entry
+bind pager k  previous-line
+bind pager j  next-line
+bind pager gg top
+bind pager G  bottom
+
+# View URLs inside Mutt with urlscan, ctrl b
+macro index \cb "|urlscan\n"
+macro pager \cb "|urlscan\n"
+
+# decode application/pgp
+set pgp_decode_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
+
+# verify a pgp/mime signature
+set pgp_verify_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+
+# decrypt a pgp/mime attachment
+set pgp_decrypt_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
+
+# create a pgp/mime signed attachment
+set pgp_sign_command="gpg --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
+
+# create a application/pgp signed (old-style) message
+set pgp_clearsign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
+
+# create a pgp/mime encrypted attachment
+set pgp_encrypt_only_command="/usr/bin/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+
+# create a pgp/mime encrypted and signed attachment
+set pgp_encrypt_sign_command="/usr/bin/pgpewrap gpg --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+
+# import a key into the public key ring
+set pgp_import_command="gpg --no-verbose --import %f"
+
+# export a key from the public key ring
+set pgp_export_command="gpg --no-verbose --export --armor %r"
+
+# verify a key
+set pgp_verify_key_command="gpg --verbose --batch --fingerprint --check-sigs %r"
+
+# read in the public key ring
+set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --list-keys %r" 
+
+# read in the secret key ring
+set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
+
+# This version uses --status-fd messages
+set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
+
+# daniel j wilcox pgp
+set pgp_use_gpg_agent="yes"
+set my_pgp_id="3B2C8BA1"
+#+END_SRC
+
+*** muttrc tangle
+
++ home dir
+
+#+NAME: muttrc-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mutt/muttrc"
+<<muttrc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: muttrc-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mutt/muttrc"
+<<muttrc>>
+#+END_SRC
+
+** weechat
+*** weechat config 
+
+#+NAME: weechat.conf
+#+BEGIN_SRC conf
+# weechat -- weechat.conf
+[debug]
+
+[startup]
+command_after_plugins = ""
+command_before_plugins = ""
+display_logo = off
+display_version = on
+sys_rlimit = ""
+
+[look]
+align_end_of_lines = message
+align_multiline_words = on
+bar_more_down = "++"
+bar_more_left = "<<"
+bar_more_right = ">>"
+bar_more_up = "--"
+bare_display_exit_on_input = on
+bare_display_time_format = "%H:%M"
+buffer_auto_renumber = on
+buffer_notify_default = all
+buffer_position = end
+buffer_search_case_sensitive = off
+buffer_search_force_default = off
+buffer_search_regex = off
+buffer_search_where = prefix_message
+buffer_time_format = "[%H:%M]"
+color_basic_force_bold = off
+color_inactive_buffer = on
+color_inactive_message = on
+color_inactive_prefix = on
+color_inactive_prefix_buffer = on
+color_inactive_time = off
+color_inactive_window = on
+color_nick_offline = off
+color_pairs_auto_reset = 5
+color_real_white = off
+command_chars = ""
+command_incomplete = off
+confirm_quit = off
+confirm_upgrade = off
+day_change = on
+day_change_message_1date = "-- %a, %d %b %Y --"
+day_change_message_2dates = "-- %%a, %%d %%b %%Y (%a, %d %b %Y) --"
+eat_newline_glitch = off
+emphasized_attributes = ""
+highlight = ""
+highlight_regex = ""
+highlight_tags = ""
+hotlist_add_conditions = "${away} || ${buffer.num_displayed} == 0"
+hotlist_buffer_separator = ", "
+hotlist_count_max = 2
+hotlist_count_min_msg = 2
+hotlist_names_count = 3
+hotlist_names_length = 0
+hotlist_names_level = 12
+hotlist_names_merged_buffers = off
+hotlist_prefix = "H: "
+hotlist_remove = merged
+hotlist_short_names = on
+hotlist_sort = group_time_asc
+hotlist_suffix = ""
+hotlist_unique_numbers = on
+input_cursor_scroll = 20
+input_share = none
+input_share_overwrite = off
+input_undo_max = 32
+item_away_message = on
+item_buffer_filter = "*"
+item_buffer_zoom = "!"
+item_mouse_status = "M"
+item_time_format = "%H:%M"
+jump_current_to_previous_buffer = on
+jump_previous_buffer_when_closing = on
+jump_smart_back_to_buffer = on
+key_bind_safe = on
+key_grab_delay = 800
+mouse = off
+mouse_timer_delay = 100
+nick_color_force = ""
+nick_color_hash = djb2
+nick_color_stop_chars = "_|["
+nick_prefix = ""
+nick_suffix = ""
+paste_auto_add_newline = on
+paste_bracketed = on
+paste_bracketed_timer_delay = 10
+paste_max_lines = 1
+prefix_action = " *"
+prefix_align = none
+prefix_align_max = 15
+prefix_align_min = 0
+prefix_align_more = "+"
+prefix_align_more_after = on
+prefix_buffer_align = right
+prefix_buffer_align_max = 0
+prefix_buffer_align_more = "+"
+prefix_buffer_align_more_after = on
+prefix_error = "=!="
+prefix_join = "-->"
+prefix_network = "--"
+prefix_quit = "<--"
+prefix_same_nick = ""
+prefix_suffix = "|"
+quote_nick_prefix = "<"
+quote_nick_suffix = ">"
+quote_time_format = "%H:%M:%S"
+read_marker = line
+read_marker_always_show = off
+read_marker_string = "- "
+save_config_on_exit = on
+save_layout_on_exit = none
+scroll_amount = 3
+scroll_bottom_after_switch = off
+scroll_page_percent = 100
+search_text_not_found_alert = on
+separator_horizontal = "-"
+separator_vertical = ""
+tab_width = 1
+time_format = "%a, %d %b %Y %T"
+window_auto_zoom = off
+window_separator_horizontal = on
+window_separator_vertical = on
+window_title = "WeeChat ${info:version}"
+word_chars_highlight = "!\u00A0,-,_,|,alnum"
+word_chars_input = "!\u00A0,-,_,|,alnum"
+
+[palette]
+
+[color]
+bar_more = lightmagenta
+chat = default
+chat_bg = default
+chat_buffer = default
+chat_channel = white
+chat_day_change = cyan
+chat_delimiters = 2
+chat_highlight = default
+chat_highlight_bg = 1
+chat_host = cyan
+chat_inactive_buffer = default
+chat_inactive_window = default
+chat_nick = default
+chat_nick_colors = "cyan,magenta,green,brown,lightblue,default,lightcyan,lightmagenta,lightgreen,blue"
+chat_nick_offline = default
+chat_nick_offline_highlight = default
+chat_nick_offline_highlight_bg = blue
+chat_nick_other = cyan
+chat_nick_prefix = green
+chat_nick_self = default
+chat_nick_suffix = green
+chat_prefix_action = white
+chat_prefix_buffer = brown
+chat_prefix_buffer_inactive_buffer = default
+chat_prefix_error = yellow
+chat_prefix_join = lightgreen
+chat_prefix_more = lightmagenta
+chat_prefix_network = magenta
+chat_prefix_quit = lightred
+chat_prefix_suffix = green
+chat_read_marker = default
+chat_read_marker_bg = default
+chat_server = brown
+chat_tags = red
+chat_text_found = yellow
+chat_text_found_bg = default
+chat_time = default
+chat_time_delimiters = 2
+chat_value = cyan
+chat_value_null = blue
+emphasized = default
+emphasized_bg = default
+input_actions = lightgreen
+input_text_not_found = red
+item_away = yellow
+nicklist_away = cyan
+nicklist_group = green
+separator = darkgray
+status_count_highlight = magenta
+status_count_msg = brown
+status_count_other = default
+status_count_private = green
+status_data_highlight = default
+status_data_msg = yellow
+status_data_other = default
+status_data_private = default
+status_filter = green
+status_more = yellow
+status_mouse = green
+status_name = white
+status_name_ssl = lightgreen
+status_nicklist_count = default
+status_number = yellow
+status_time = default
+
+[completion]
+base_word_until_cursor = on
+command_inline = on
+default_template = "%(nicks)|%(irc_channels)"
+nick_add_space = on
+nick_case_sensitive = off
+nick_completer = ":"
+nick_first_only = off
+nick_ignore_chars = "[]`_-^"
+partial_completion_alert = on
+partial_completion_command = off
+partial_completion_command_arg = off
+partial_completion_count = on
+partial_completion_other = off
+
+[history]
+display_default = 5
+max_buffer_lines_minutes = 0
+max_buffer_lines_number = 4096
+max_commands = 100
+max_visited_buffers = 50
+
+[proxy]
+
+[network]
+connection_timeout = 60
+gnutls_ca_file = "/etc/ssl/certs/ca-certificates.crt"
+gnutls_handshake_timeout = 30
+proxy_curl = ""
+
+[plugin]
+autoload = "*,!tcl,!ruby,!python2,!lua,!aspell"
+debug = off
+extension = ".so,.dll"
+path = "%h/plugins"
+save_config_on_unload = on
+
+[bar]
+buflist.color_bg = default
+buflist.color_delim = default
+buflist.color_fg = default
+buflist.conditions = ""
+buflist.filling_left_right = vertical
+buflist.filling_top_bottom = columns_vertical
+buflist.hidden = off
+buflist.items = "buflist"
+buflist.position = left
+buflist.priority = 0
+buflist.separator = on
+buflist.size = 0
+buflist.size_max = 0
+buflist.type = root
+fset.color_bg = default
+fset.color_delim = cyan
+fset.color_fg = default
+fset.conditions = "${buffer.full_name} == fset.fset"
+fset.filling_left_right = vertical
+fset.filling_top_bottom = horizontal
+fset.hidden = off
+fset.items = "fset"
+fset.position = top
+fset.priority = 0
+fset.separator = on
+fset.size = 3
+fset.size_max = 3
+fset.type = window
+input.color_bg = default
+input.color_delim = cyan
+input.color_fg = default
+input.conditions = ""
+input.filling_left_right = vertical
+input.filling_top_bottom = horizontal
+input.hidden = off
+input.items = "[input_prompt]+(away),[input_search],[input_paste],input_text"
+input.position = bottom
+input.priority = 1000
+input.separator = off
+input.size = 1
+input.size_max = 0
+input.type = window
+isetbar.color_bg = default
+isetbar.color_delim = cyan
+isetbar.color_fg = default
+isetbar.conditions = ""
+isetbar.filling_left_right = vertical
+isetbar.filling_top_bottom = horizontal
+isetbar.hidden = on
+isetbar.items = "isetbar_help"
+isetbar.position = top
+isetbar.priority = 0
+isetbar.separator = on
+isetbar.size = 3
+isetbar.size_max = 3
+isetbar.type = window
+nicklist.color_bg = default
+nicklist.color_delim = cyan
+nicklist.color_fg = default
+nicklist.conditions = "${nicklist}"
+nicklist.filling_left_right = vertical
+nicklist.filling_top_bottom = columns_vertical
+nicklist.hidden = off
+nicklist.items = "buffer_nicklist"
+nicklist.position = right
+nicklist.priority = 200
+nicklist.separator = on
+nicklist.size = 0
+nicklist.size_max = 0
+nicklist.type = window
+status.color_bg = 0
+status.color_delim = cyan
+status.color_fg = default
+status.conditions = ""
+status.filling_left_right = vertical
+status.filling_top_bottom = horizontal
+status.hidden = off
+status.items = "[time],[buffer_last_number],[buffer_plugin],buffer_number+:+buffer_name+(buffer_modes)+{buffer_nicklist_count}+buffer_zoom+buffer_filter,scroll,[lag],[hotlist],completion"
+status.position = bottom
+status.priority = 500
+status.separator = off
+status.size = 1
+status.size_max = 0
+status.type = window
+title.color_bg = 0
+title.color_delim = cyan
+title.color_fg = default
+title.conditions = ""
+title.filling_left_right = vertical
+title.filling_top_bottom = horizontal
+title.hidden = off
+title.items = "buffer_title"
+title.position = top
+title.priority = 500
+title.separator = off
+title.size = 1
+title.size_max = 0
+title.type = window
+
+[layout]
+
+[notify]
+
+[filter]
+
+[key]
+ctrl-? = "/input delete_previous_char"
+ctrl-A = "/input move_beginning_of_line"
+ctrl-B = "/input move_previous_char"
+ctrl-C_ = "/input insert \x1F"
+ctrl-Cb = "/input insert \x02"
+ctrl-Cc = "/input insert \x03"
+ctrl-Ci = "/input insert \x1D"
+ctrl-Co = "/input insert \x0F"
+ctrl-Cv = "/input insert \x16"
+ctrl-D = "/input delete_next_char"
+ctrl-E = "/input move_end_of_line"
+ctrl-F = "/input move_next_char"
+ctrl-H = "/input delete_previous_char"
+ctrl-I = "/input complete_next"
+ctrl-J = "/input return"
+ctrl-K = "/input delete_end_of_line"
+ctrl-L = "/window refresh"
+ctrl-M = "/input return"
+ctrl-N = "/buffer +1"
+ctrl-P = "/buffer -1"
+ctrl-R = "/input search_text_here"
+ctrl-Sctrl-U = "/input set_unread"
+ctrl-T = "/input transpose_chars"
+ctrl-U = "/input delete_beginning_of_line"
+ctrl-W = "/input delete_previous_word"
+ctrl-X = "/input switch_active_buffer"
+ctrl-Y = "/input clipboard_paste"
+meta-meta-OP = "/bar scroll buflist * b"
+meta-meta-OQ = "/bar scroll buflist * e"
+meta-meta2-1~ = "/window scroll_top"
+meta-meta2-23~ = "/bar scroll nicklist * b"
+meta-meta2-24~ = "/bar scroll nicklist * e"
+meta-meta2-4~ = "/window scroll_bottom"
+meta-meta2-5~ = "/window scroll_up"
+meta-meta2-6~ = "/window scroll_down"
+meta-meta2-7~ = "/window scroll_top"
+meta-meta2-8~ = "/window scroll_bottom"
+meta-meta2-A = "/buffer -1"
+meta-meta2-B = "/buffer +1"
+meta-meta2-C = "/buffer +1"
+meta-meta2-D = "/buffer -1"
+meta-- = "/filter toggle @"
+meta-/ = "/input jump_last_buffer_displayed"
+meta-0 = "/buffer *10"
+meta-1 = "/buffer *1"
+meta-2 = "/buffer *2"
+meta-3 = "/buffer *3"
+meta-4 = "/buffer *4"
+meta-5 = "/buffer *5"
+meta-6 = "/buffer *6"
+meta-7 = "/buffer *7"
+meta-8 = "/buffer *8"
+meta-9 = "/buffer *9"
+meta-< = "/input jump_previously_visited_buffer"
+meta-= = "/filter toggle"
+meta-> = "/input jump_next_visited_buffer"
+meta-OA = "/input history_global_previous"
+meta-OB = "/input history_global_next"
+meta-OC = "/input move_next_word"
+meta-OD = "/input move_previous_word"
+meta-OF = "/input move_end_of_line"
+meta-OH = "/input move_beginning_of_line"
+meta-OP = "/bar scroll buflist * -100%"
+meta-OQ = "/bar scroll buflist * +100%"
+meta-Oa = "/input history_global_previous"
+meta-Ob = "/input history_global_next"
+meta-Oc = "/input move_next_word"
+meta-Od = "/input move_previous_word"
+meta2-15~ = "/buffer -1"
+meta2-17~ = "/buffer +1"
+meta2-18~ = "/window -1"
+meta2-19~ = "/window +1"
+meta2-1;3A = "/buffer -1"
+meta2-1;3B = "/buffer +1"
+meta2-1;3C = "/buffer +1"
+meta2-1;3D = "/buffer -1"
+meta2-1;3F = "/window scroll_bottom"
+meta2-1;3H = "/window scroll_top"
+meta2-1;5A = "/input history_global_previous"
+meta2-1;5B = "/input history_global_next"
+meta2-1;5C = "/input move_next_word"
+meta2-1;5D = "/input move_previous_word"
+meta2-1~ = "/input move_beginning_of_line"
+meta2-200~ = "/input paste_start"
+meta2-201~ = "/input paste_stop"
+meta2-20~ = "/bar scroll title * -30%"
+meta2-21~ = "/bar scroll title * +30%"
+meta2-23;3~ = "/bar scroll nicklist * b"
+meta2-23~ = "/bar scroll nicklist * -100%"
+meta2-24;3~ = "/bar scroll nicklist * e"
+meta2-24~ = "/bar scroll nicklist * +100%"
+meta2-3~ = "/input delete_next_char"
+meta2-4~ = "/input move_end_of_line"
+meta2-5;3~ = "/window scroll_up"
+meta2-5~ = "/window page_up"
+meta2-6;3~ = "/window scroll_down"
+meta2-6~ = "/window page_down"
+meta2-7~ = "/input move_beginning_of_line"
+meta2-8~ = "/input move_end_of_line"
+meta2-A = "/input history_previous"
+meta2-B = "/input history_next"
+meta2-C = "/input move_next_char"
+meta2-D = "/input move_previous_char"
+meta2-F = "/input move_end_of_line"
+meta2-G = "/window page_down"
+meta2-H = "/input move_beginning_of_line"
+meta2-I = "/window page_up"
+meta2-Z = "/input complete_previous"
+meta2-[E = "/buffer -1"
+meta-_ = "/input redo"
+meta-a = "/input jump_smart"
+meta-b = "/input move_previous_word"
+meta-d = "/input delete_next_word"
+meta-f = "/input move_next_word"
+meta-h = "/input hotlist_clear"
+meta-jmeta-f = "/buffer -"
+meta-jmeta-l = "/buffer +"
+meta-jmeta-r = "/server raw"
+meta-jmeta-s = "/server jump"
+meta-j01 = "/buffer *1"
+meta-j02 = "/buffer *2"
+meta-j03 = "/buffer *3"
+meta-j04 = "/buffer *4"
+meta-j05 = "/buffer *5"
+meta-j06 = "/buffer *6"
+meta-j07 = "/buffer *7"
+meta-j08 = "/buffer *8"
+meta-j09 = "/buffer *9"
+meta-j10 = "/buffer *10"
+meta-j11 = "/buffer *11"
+meta-j12 = "/buffer *12"
+meta-j13 = "/buffer *13"
+meta-j14 = "/buffer *14"
+meta-j15 = "/buffer *15"
+meta-j16 = "/buffer *16"
+meta-j17 = "/buffer *17"
+meta-j18 = "/buffer *18"
+meta-j19 = "/buffer *19"
+meta-j20 = "/buffer *20"
+meta-j21 = "/buffer *21"
+meta-j22 = "/buffer *22"
+meta-j23 = "/buffer *23"
+meta-j24 = "/buffer *24"
+meta-j25 = "/buffer *25"
+meta-j26 = "/buffer *26"
+meta-j27 = "/buffer *27"
+meta-j28 = "/buffer *28"
+meta-j29 = "/buffer *29"
+meta-j30 = "/buffer *30"
+meta-j31 = "/buffer *31"
+meta-j32 = "/buffer *32"
+meta-j33 = "/buffer *33"
+meta-j34 = "/buffer *34"
+meta-j35 = "/buffer *35"
+meta-j36 = "/buffer *36"
+meta-j37 = "/buffer *37"
+meta-j38 = "/buffer *38"
+meta-j39 = "/buffer *39"
+meta-j40 = "/buffer *40"
+meta-j41 = "/buffer *41"
+meta-j42 = "/buffer *42"
+meta-j43 = "/buffer *43"
+meta-j44 = "/buffer *44"
+meta-j45 = "/buffer *45"
+meta-j46 = "/buffer *46"
+meta-j47 = "/buffer *47"
+meta-j48 = "/buffer *48"
+meta-j49 = "/buffer *49"
+meta-j50 = "/buffer *50"
+meta-j51 = "/buffer *51"
+meta-j52 = "/buffer *52"
+meta-j53 = "/buffer *53"
+meta-j54 = "/buffer *54"
+meta-j55 = "/buffer *55"
+meta-j56 = "/buffer *56"
+meta-j57 = "/buffer *57"
+meta-j58 = "/buffer *58"
+meta-j59 = "/buffer *59"
+meta-j60 = "/buffer *60"
+meta-j61 = "/buffer *61"
+meta-j62 = "/buffer *62"
+meta-j63 = "/buffer *63"
+meta-j64 = "/buffer *64"
+meta-j65 = "/buffer *65"
+meta-j66 = "/buffer *66"
+meta-j67 = "/buffer *67"
+meta-j68 = "/buffer *68"
+meta-j69 = "/buffer *69"
+meta-j70 = "/buffer *70"
+meta-j71 = "/buffer *71"
+meta-j72 = "/buffer *72"
+meta-j73 = "/buffer *73"
+meta-j74 = "/buffer *74"
+meta-j75 = "/buffer *75"
+meta-j76 = "/buffer *76"
+meta-j77 = "/buffer *77"
+meta-j78 = "/buffer *78"
+meta-j79 = "/buffer *79"
+meta-j80 = "/buffer *80"
+meta-j81 = "/buffer *81"
+meta-j82 = "/buffer *82"
+meta-j83 = "/buffer *83"
+meta-j84 = "/buffer *84"
+meta-j85 = "/buffer *85"
+meta-j86 = "/buffer *86"
+meta-j87 = "/buffer *87"
+meta-j88 = "/buffer *88"
+meta-j89 = "/buffer *89"
+meta-j90 = "/buffer *90"
+meta-j91 = "/buffer *91"
+meta-j92 = "/buffer *92"
+meta-j93 = "/buffer *93"
+meta-j94 = "/buffer *94"
+meta-j95 = "/buffer *95"
+meta-j96 = "/buffer *96"
+meta-j97 = "/buffer *97"
+meta-j98 = "/buffer *98"
+meta-j99 = "/buffer *99"
+meta-k = "/input grab_key_command"
+meta-l = "/window bare"
+meta-m = "/mute mouse toggle"
+meta-n = "/window scroll_next_highlight"
+meta-p = "/window scroll_previous_highlight"
+meta-r = "/input delete_line"
+meta-s = "/mute aspell toggle"
+meta-u = "/window scroll_unread"
+meta-wmeta-meta2-A = "/window up"
+meta-wmeta-meta2-B = "/window down"
+meta-wmeta-meta2-C = "/window right"
+meta-wmeta-meta2-D = "/window left"
+meta-wmeta2-1;3A = "/window up"
+meta-wmeta2-1;3B = "/window down"
+meta-wmeta2-1;3C = "/window right"
+meta-wmeta2-1;3D = "/window left"
+meta-wmeta-b = "/window balance"
+meta-wmeta-s = "/window swap"
+meta-x = "/input zoom_merged_buffer"
+meta-z = "/window zoom"
+ctrl-_ = "/input undo"
+
+[key_search]
+ctrl-I = "/input search_switch_where"
+ctrl-J = "/input search_stop_here"
+ctrl-M = "/input search_stop_here"
+ctrl-Q = "/input search_stop"
+ctrl-R = "/input search_switch_regex"
+meta2-A = "/input search_previous"
+meta2-B = "/input search_next"
+meta-c = "/input search_switch_case"
+
+[key_cursor]
+ctrl-J = "/cursor stop"
+ctrl-M = "/cursor stop"
+meta-meta2-A = "/cursor move area_up"
+meta-meta2-B = "/cursor move area_down"
+meta-meta2-C = "/cursor move area_right"
+meta-meta2-D = "/cursor move area_left"
+meta2-1;3A = "/cursor move area_up"
+meta2-1;3B = "/cursor move area_down"
+meta2-1;3C = "/cursor move area_right"
+meta2-1;3D = "/cursor move area_left"
+meta2-A = "/cursor move up"
+meta2-B = "/cursor move down"
+meta2-C = "/cursor move right"
+meta2-D = "/cursor move left"
+@item(buffer_nicklist):K = "/window ${_window_number};/kickban ${nick}"
+@item(buffer_nicklist):b = "/window ${_window_number};/ban ${nick}"
+@item(buffer_nicklist):k = "/window ${_window_number};/kick ${nick}"
+@item(buffer_nicklist):q = "/window ${_window_number};/query ${nick};/cursor stop"
+@item(buffer_nicklist):w = "/window ${_window_number};/whois ${nick}"
+@chat:Q = "hsignal:chat_quote_time_prefix_message;/cursor stop"
+@chat:m = "hsignal:chat_quote_message;/cursor stop"
+@chat:q = "hsignal:chat_quote_prefix_message;/cursor stop"
+
+[key_mouse]
+@bar(buflist):ctrl-wheeldown = "hsignal:buflist_mouse"
+@bar(buflist):ctrl-wheelup = "hsignal:buflist_mouse"
+@bar(input):button2 = "/input grab_mouse_area"
+@bar(nicklist):button1-gesture-down = "/bar scroll nicklist ${_window_number} +100%"
+@bar(nicklist):button1-gesture-down-long = "/bar scroll nicklist ${_window_number} e"
+@bar(nicklist):button1-gesture-up = "/bar scroll nicklist ${_window_number} -100%"
+@bar(nicklist):button1-gesture-up-long = "/bar scroll nicklist ${_window_number} b"
+@chat(fset.fset):button1 = "/window ${_window_number};/fset -go ${_chat_line_y}"
+@chat(fset.fset):button2* = "hsignal:fset_mouse"
+@chat(fset.fset):wheeldown = "/fset -down 5"
+@chat(fset.fset):wheelup = "/fset -up 5"
+@chat(perl.iset):button1 = "hsignal:iset_mouse"
+@chat(perl.iset):button2* = "hsignal:iset_mouse"
+@chat(perl.iset):wheeldown = "/repeat 5 /iset **down"
+@chat(perl.iset):wheelup = "/repeat 5 /iset **up"
+@chat(script.scripts):button1 = "/window ${_window_number};/script go ${_chat_line_y}"
+@chat(script.scripts):button2 = "/window ${_window_number};/script go ${_chat_line_y};/script installremove -q ${script_name_with_extension}"
+@chat(script.scripts):wheeldown = "/script down 5"
+@chat(script.scripts):wheelup = "/script up 5"
+@item(buffer_nicklist):button1 = "/window ${_window_number};/query ${nick}"
+@item(buffer_nicklist):button1-gesture-left = "/window ${_window_number};/kick ${nick}"
+@item(buffer_nicklist):button1-gesture-left-long = "/window ${_window_number};/kickban ${nick}"
+@item(buffer_nicklist):button2 = "/window ${_window_number};/whois ${nick}"
+@item(buffer_nicklist):button2-gesture-left = "/window ${_window_number};/ban ${nick}"
+@item(buflist):button1* = "hsignal:buflist_mouse"
+@item(buflist):button2* = "hsignal:buflist_mouse"
+@item(buflist2):button1* = "hsignal:buflist_mouse"
+@item(buflist2):button2* = "hsignal:buflist_mouse"
+@item(buflist3):button1* = "hsignal:buflist_mouse"
+@item(buflist3):button2* = "hsignal:buflist_mouse"
+@bar:wheeldown = "/bar scroll ${_bar_name} ${_window_number} +20%"
+@bar:wheelup = "/bar scroll ${_bar_name} ${_window_number} -20%"
+@chat:button1 = "/window ${_window_number}"
+@chat:button1-gesture-left = "/window ${_window_number};/buffer -1"
+@chat:button1-gesture-left-long = "/window ${_window_number};/buffer 1"
+@chat:button1-gesture-right = "/window ${_window_number};/buffer +1"
+@chat:button1-gesture-right-long = "/window ${_window_number};/input jump_last_buffer"
+@chat:ctrl-wheeldown = "/window scroll_horiz -window ${_window_number} +10%"
+@chat:ctrl-wheelup = "/window scroll_horiz -window ${_window_number} -10%"
+@chat:wheeldown = "/window scroll_down -window ${_window_number}"
+@chat:wheelup = "/window scroll_up -window ${_window_number}"
+@*:button3 = "/cursor go ${_x},${_y}"
+#+END_SRC
+
+*** weechat tangle
+
++ home dir
+
+#+NAME: weechat.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/weechat/weechat.conf"
+<<weechat.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: weechat.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/weechat/weechat.conf"
+<<weechat.conf>>
+#+END_SRC
+
+** w3m
+*** w3m config
+**** bookmark.html
+
+#+NAME: w3m-bookmark.html
+#+BEGIN_SRC html
+<html><head><title>Bookmarks</title></head>
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<body>
+<h1>Bookmarks</h1>
+<ul>
+<li><a href="https://archive.org/download/t.-j.-hooker-s-01">TJ Hooker 1</a></li>
+<li><a href="https://archive.org/download/t.-j.-hooker-s-02">TJ Hooker 2</a></li>
+<li><a href="https://archive.org/download/t.-j.-hooker-s-03">TJ Hooker 3</a></li>
+<li><a href="https://archive.org/download/t.-j.-hooker-s-04">TJ Hooker 4</a></li>
+<li><a href="https://archive.org/download/t.-j.-hooker-s-05">TJ Hooker 5</a></li>
+<li><a href="https://archive.org/download/street-hawk-">Street Hawk</a></li>
+<li><a href="https://archive.org/download/monkey-saiyuuki-dub-collection-1">Monkey Magic 1</a></li>
+<li><a href="https://archive.org/download/monkey-saiyuuki-dub-collection-2">Monkey Magic 2</a></li>
+<li><a href="https://archive.org/download/monkey-saiyuuki-dub-collection-3">Monkey Magic 3</a></li>
+<li><a href="https://archive.org/download/monkey-saiyuuki-dub-collection-4">Monkey Magic 4</a></li>
+<li><a href="https://archive.org/download/monkey-saiyuuki-dub-collection-5">Monkey Magic 5</a></li>
+<li><a href="https://archive.org/download/monkey-saiyuuki-dub-collection-6">Monkey Magic 6</a></li>
+<li><a href="https://archive.org/download/monkeymagic1">Monkey Magic 1</a></li>
+<li><a href="https://archive.org/download/monkeymagic2">Monkey Magic 2</a></li>
+</ul>
+<!--End of section (do not delete this comment)-->
+</ul>
+</body>
+</html>
+#+END_SRC
+
+**** config
+
+#+NAME: w3m-config
+#+BEGIN_SRC conf
+tabstop 8
+indent_incr 4
+pixel_per_char 12
+pixel_per_line 27
+frame 1
+target_self 0
+open_tab_blank 0
+open_tab_dl_list 0
+display_link 1
+display_link_number 0
+decode_url 0
+display_lineinfo 0
+ext_dirlist 1
+dirlist_cmd file:///$LIB/dirlist.cgi
+use_dictcommand 1
+dictcommand file:///$LIB/w3mdict.cgi
+multicol 0
+alt_entity 0
+graphic_char 0
+display_borders 1
+fold_textarea 0
+display_ins_del 1
+ignore_null_img_alt 0
+view_unseenobject 0
+display_image 0
+pseudo_inlines 1
+auto_image 0
+max_load_image 4
+ext_image_viewer 1
+image_scale 100
+imgdisplay w3mimgdisplay
+image_map_list 0
+fold_line 0
+show_lnum 0
+show_srch_str 1
+label_topline 0
+nextpage_topline 0
+color 1
+basic_color terminal
+anchor_color terminal
+image_color terminal
+form_color red
+mark_color terminal
+bg_color terminal
+active_style 1
+active_color cyan
+visited_anchor 0
+visited_color magenta
+pagerline 10000
+use_history 1
+history 100
+save_hist 0
+confirm_qq 0
+close_tab_back 0
+mark 0
+emacs_like_lineedit 0
+vi_prec_num 0
+mark_all_pages 1
+wrap_search 0
+ignorecase_search 1
+use_migemo 1
+migemo_command cmigemo -q -d /usr/share/cmigemo/utf-8/migemo-dict
+use_mouse 0
+reverse_mouse 0
+relative_wheel_scroll 0
+relative_wheel_scroll_ratio 30
+fixed_wheel_scroll_count 5
+clear_buffer 1
+decode_cte 0
+auto_uncompress 0
+preserve_timestamp 1
+keymap_file keymap
+document_root 
+personal_document_root 
+cgi_bin ~/.w3m/cgi-bin:/usr/lib/w3m/cgi-bin
+index_file 
+mime_types ~/.mime.types, /usr/local/etc/mime.types
+mailcap ~/.w3m/mailcap, /usr/local/etc/w3m/mailcap
+urimethodmap ~/.w3m/urimethodmap, /usr/local/etc/w3m/urimethodmap
+editor /home/djwilcox/.nix-profile/bin/emacsclient
+mailto_options 1
+mailer 
+extbrowser xdg-open
+extbrowser2 
+extbrowser3 
+extbrowser4 
+extbrowser5 
+extbrowser6 
+extbrowser7 
+extbrowser8 
+extbrowser9 
+bgextviewer 1
+use_lessopen 0
+passwd_file ~/.w3m/passwd
+disable_secret_security_check 0
+ftppasswd 
+ftppass_hostnamegen 1
+pre_form_file ~/.w3m/pre_form
+siteconf_file /home/djwilcox/.w3m/siteconf
+user_agent Lynx/2.9.0dev.5 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/3.6.13
+no_referer 1
+accept_language en;q=1.0
+accept_encoding gzip, compress, bzip, bzip2, deflate
+accept_media text/html, text/*;q=0.5, image/*
+argv_is_url 1
+retry_http 1
+default_url 1
+follow_redirection 10
+meta_refresh 1
+dns_order 0
+nntpserver 
+nntpmode 
+max_news 50
+use_proxy 0
+http_proxy 
+https_proxy 
+gopher_proxy 
+ftp_proxy 
+no_proxy 
+noproxy_netaddr 1
+no_cache 0
+ssl_forbid_method 2, 3
+ssl_verify_server 1
+ssl_cert_file 
+ssl_key_file 
+ssl_ca_path 
+ssl_ca_file 
+use_cookie 0
+show_cookie 0
+accept_cookie 0
+accept_bad_cookie 0
+cookie_reject_domains 
+cookie_accept_domains 
+cookie_avoid_wrong_number_of_dots 
+display_charset US-ASCII
+document_charset UTF-8
+auto_detect 2
+system_charset US-ASCII
+follow_locale 1
+ext_halfdump 0
+use_wide 1
+use_combining 1
+east_asian_width 0
+use_language_tag 1
+ucs_conv 1
+pre_conv 1
+search_conv 1
+fix_width_conv 0
+use_gb12345_map 0
+use_jisx0201 0
+use_jisc6226 0
+use_jisx0201k 0
+use_jisx0212 0
+use_jisx0213 0
+strict_iso2022 1
+gb18030_as_ucs 0
+simple_preserve_space 0
+#+END_SRC
+
+**** cgi-bin
+***** archive.org
+
+#+NAME: archive
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# archive.org downloads page
+# https://archive.org/download/
+
+# current link under cursor in w3m
+archive () {
+    url="${W3M_CURRENT_LINK}"   
+    
+    # css selector
+    css='div.download-directory-listing'
+    
+    # output
+    wget_output='/tmp/wget-w3m.html'
+    output='/tmp/archive.html'
+    
+    # wget download page and convert links to absolute url
+    wget -k "${url}" -O "${wget_output}" 2> /dev/null
+    
+    # hxnormalize the page
+    hxnormalize -x "${wget_output}" | hxselect -s '\n' -c "${css}" > "${output}"
+}
+
+# run the archive function
+archive
+
+# W3m-control
+printf "%s\r\n" "W3m-control: GOTO ${output}";
+# delete previous buffer
+printf "%s\r\n" "W3m-control: DELETE_PREVBUF";
+#+END_SRC
+
+***** bbc-episodes
+
+#+NAME: bbc-episodes
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# bbc episodes
+# https://www.bbc.co.uk/iplayer/episodes
+
+# current link under cursor in w3m
+bbc_episodes () {
+    url="${W3M_CURRENT_LINK}"   
+    
+    # css selector
+    css='div.tleo-list'
+    
+    # css exclude
+    secondary='content-item__info__secondary'
+    
+    # output
+    wget_output='/tmp/wget-w3m.html'
+    output='/tmp/bbc-episodes.html'
+    
+    # wget download page and convert links to absolute url
+    wget -k "${url}" -O "${wget_output}" 2> /dev/null
+    
+    # hxnormalize the page
+    hxnormalize -x "${wget_output}" \
+    | hxselect -s '\n' -c "${css}" \
+    | hxprune -c "${secondary}" \
+    | sed -e "/<a/ { /href/ s/.*href=['\"]https:\/\/www.bbc.co.uk\/iplayer\/episode\/.*['\"]\([^<]*\)/&play/g }" \
+    > "${output}"
+}
+
+# run the bbc function
+bbc_episodes
+
+# W3m-control
+printf "%s\r\n" "W3m-control: GOTO ${output}";
+# delete previous buffer
+printf "%s\r\n" "W3m-control: DELETE_PREVBUF";
+#+END_SRC
+
+***** bbc-search
+
+#+NAME: bbc-search
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# bbc search
+# https://www.bbc.co.uk/iplayer/search?
+
+# base url and query string
+bbc_search () {
+    baseurl='https://www.bbc.co.uk/iplayer/search?'
+    query="${QUERY_STRING}"
+    url="${baseurl}${query}"
+    
+    # css selector
+    css='div.list.search-list'
+    
+    # css exclude
+    search='search-list__header'
+    
+    # output
+    wget_output='/tmp/wget-w3m.html'
+    output='/tmp/bbc-search.html'
+    
+    # wget download page and convert links to absolute url
+    wget -k "${url}" -O "${wget_output}" 2> /dev/null
+    
+    # hxnormalize the page
+    hxnormalize -x "${wget_output}" \
+    | hxselect -s '\n' -c "${css}" \
+    | hxprune -c "${search}" \
+    | sed -e "/<a/ { /href/ s/.*href=['\"]https:\/\/www.bbc.co.uk\/iplayer\/episode\/.*['\"]\([^<]*\)/&play/g }" \
+    > "${output}"
+}
+
+# run the bbc search function
+bbc_search
+
+# W3m-control
+printf "%s\r\n" "W3m-control: GOTO ${output}";
+# delete previous buffer
+printf "%s\r\n" "W3m-control: DELETE_PREVBUF";
+#+END_SRC
+
+***** functions-w3m
+
+#+NAME: functions-w3m
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# fzf prompt to specify function to run from readme.func
+file='/home/djwilcox/git/cerberus/w3m/README.func'
+selection=$(awk '{ print $0 }' "${file}" | fzf --delimiter='\n' --prompt='Run w3m function: ' --info=inline --layout=reverse --no-multi | awk '{ print $1 }')
+
+# variables
+browser='xdg-open'
+
+# default function
+default() {
+echo "${selection}" | xclip -i -selection primary 1>/dev/null
+}
+
+# open current page with external browser
+extern() {
+EXTERN="EXTERN ${browser}"
+echo "${EXTERN}" | xclip -i -selection primary 1>/dev/null
+}
+
+# open link with external browser
+extern_link() {
+EXTERN="EXTERN_LINK ${browser}"
+echo "${EXTERN_LINK}" | xclip -i -selection primary 1>/dev/null
+}
+
+# quit w3m and w3mimgdisplay with pkill -15
+quit() {
+pkill -15 w3m
+}
+
+# case statement match selection and run function
+case "${selection}" in
+   EXTERN) extern;;
+   EXTERN_LINK) extern_link;;
+   EXIT|ABORT) quit;;
+   ,*) default;;
+esac
+#+END_SRC
+
+***** fzf-surfraw
+
+#+NAME: fzf-surfraw
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# w3m and surfraw
+
+# clear screen
+printf "\033c"
+
+# select your elvi
+prefix=$(surfraw -elvi | grep -v 'LOCAL\|GLOBAL'| fzf -e --prompt='Search with: ' --info=inline --layout=reverse | awk '{print $1}')
+
+# exit script if no elvi is selected (e.g hit ESC)
+if [ "${prefix}" = "" ]; then exit; fi
+
+# get user input using echo and fzf with the prompt set to the elvi name
+input=$(echo | fzf --print-query --prompt="${prefix}: " --info=inline --layout=reverse)
+
+# dont quote the input variable and copy the url to primary clipboard
+surfraw -p "${prefix}" "${input}" | xclip -i 1>/dev/null
+#+END_SRC
+
+***** google-redirector
+
+#+NAME: google-redirector
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# current link under cursor in w3m
+url="${W3M_CURRENT_LINK}"   
+
+# if the current link contains a url pipe it into grep,
+# remove the google redirect and decode the url
+#if the current link is empty set the url to the page url
+if [ -n "${url}" ]; then
+   result=$(echo "${url}" | \
+            grep -oP '(?<=google.com\/url\?q=)[^&]*(?=&)' \
+            | sed -e "s/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g" | xargs -0 echo -e)
+   [ -n "${result}" ] && url="${result}"
+else
+    url="${W3M_URL}"
+fi
+#+END_SRC
+
+***** goto-clipboard-primary
+
+#+NAME: goto-clipboard-primary
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# goto_clipboard_primary.cgi
+
+#GOTO url in clipboard in current page. If the clipboard has a 
+#"non url string/nothing" an blank page is shown.
+printf "%s\r\n" "W3m-control: GOTO $(xclip -o)";
+#delete the buffer (element in history) created between the current page and 
+#the searched page by calling this script.
+printf "W3m-control: DELETE_PREVBUF\r\n"
+#+END_SRC
+
+***** magnet-cgi
+
+#+NAME: magnet-cgi
+#+BEGIN_SRC sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#         https://www.youtube.com/user/gotbletu
+# DESC:   send magnet links to your torrent client (for W3M Web Browser)
+# DEMO:   https://youtu.be/T74FqHMHjN0
+# REQD:   1. touch ~/.w3m/urimethodmap
+#         2. echo "magnet: file:/cgi-bin/magnet.cgi?%s" >> ~/.w3m/urimethodmap
+#         3. chmod +x ~/.w3m/cgi-bin/magnet.cgi
+#         4. sed -i 's@cgi_bin.*@cgi_bin ~/.w3m/cgi-bin:/usr/lib/w3m/cgi-bin:/usr/local/libexec/w3m/cgi-bin@g' ~/.w3m/config
+#         5. sed -i 's@urimethodmap.*@urimethodmap ~/.w3m/urimethodmap, /usr/etc/w3m/urimethodmap@g' ~/.w3m/config
+
+printf "%s\r\n" "W3m-control: READ_SHELL transmission-remote --add '$QUERY_STRING'"
+printf "%s\r\n" "W3m-control: DELETE_PREVBUF"
+printf "%s\r\n" "W3m-control: BACK"
+
+#+END_SRC
+
+***** run-command
+
+#+NAME: run-command
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# run w3m command from clipboard
+printf "%s\r\n" "W3m-control: $(xclip -o -selection primary)";
+
+#+END_SRC
+
+***** sauron-w3m
+
+#+NAME: sauron-w3m
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# sauron - w3m
+
+# current link under cursor in w3m
+url="${W3M_CURRENT_LINK}"   
+
+if [ -n "${url}" ]; then
+   result=$(echo "${url}" | \
+            grep -oP '(?<=google.com\/url\?q=)[^&]*(?=&)' \
+            | sed -e "s/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g" | xargs -0 echo -e)
+   [ -n "${result}" ] && url="${result}"
+else
+    url="${W3M_URL}"
+fi
+
+
+# mpv fullscreen on second display and taskspooler
+fullscreen() {
+      ts mpv --no-terminal --fs --fs-screen=1 "${url}" 1>/dev/null 
+}
+
+# mpv and taskspooler
+video() {
+      ts mpv --no-terminal "${url}" 1>/dev/null
+}
+
+dash () {
+      dash-ffmpeg -i "${url}"
+}
+
+# copy url to the clipboard
+copy() {
+    printf "%s\n" "${url}" | xclip -i -selection clipboard 1>/dev/null
+}
+
+# open link in browser
+open() {
+      xdg-open "${url}"
+}
+
+# yt-dlp and taskspooler
+ytdlp() {
+      ts \
+      yt-dlp \
+      --ignore-config \
+      --no-playlist \
+      --restrict-filenames \
+      -f 'bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best' \
+       -o "${HOME}/Downloads/%(title)s.%(ext)s" \
+      "${url}" 1>/dev/null
+}
+
+# aria2c and taskspooler
+aria2c() {
+      ts \
+      yt-dlp \
+      --ignore-config \
+      --no-playlist \
+      --restrict-filenames \
+      -f 'bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best' \
+      --downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M' \
+       -o "${HOME}/Downloads/%(title)s.%(ext)s" \
+      "${url}" 1>/dev/null
+}
+
+# ffmpeg and taskspooler
+ffmpeg() {
+      ts \
+      yt-dlp \
+      --ignore-config \
+      --no-playlist \
+      --restrict-filenames \
+      -f 'bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best' \
+      --downloader ffmpeg --downloader-args ffmpeg:'-hide_banner -stats -v panic' \
+       -o "${HOME}/Downloads/%(title)s.%(ext)s" \
+      "${url}" 1>/dev/null
+}
+
+# download with yt-dlp with sponsorblock to remove sponsor
+sponsorblock_download() {
+      ts \
+      yt-dlp \
+      --ignore-config \
+      --no-playlist \
+      --sponsorblock-remove all \
+      -f 'bestvideo[height<=1080][vcodec!=?vp9]+bestaudio[acodec!=?opus]' \
+      -o "$HOME/Downloads/%(title)s.%(ext)s" \
+      "${url}" 1>/dev/null
+}
+
+# mpd and taskspooler
+audio() {
+      ts pinch -i "${url}" 1>/dev/null 
+}
+
+# streamlink and taskspooler
+streamlink() {
+      ts streamlink -o "${HOME}/Downloads/{title}-{time}.mkv" "${url}" 1080p,720p 1>/dev/null
+}
+
+transmission () {
+    transmission-remote --add "${url}"
+}
+
+# fzf prompt variables spaces to line up menu options
+audio_ts='audio        - mpd play audio'
+copy='copy         - copy url'
+dash='dash         - combine dash streams and pipe into mpv'
+ytdlp_ts='yt-dlp       - yt-dlp download links'
+aria2c_ts='aria2c       - aria2c download links'
+ffmpeg_ts='ffmpeg       - ffmpeg download links'
+open='open         - open link in browser'
+sponsorblock_ts='sponsorblock - sponsorblock yt-dlp'
+fullscreen_ts='fullscreen   - mpv play fullscreen on second display'
+video_ts='video        - mpv play video on current display'
+streamlink_ts='streamlink   - streamlink'
+transmission_remote='transmission - add torrent or magnet link'
+
+# fzf prompt to specify function to run on links from ytfzf
+menu=$(printf "%s\n" \
+	      "${fullscreen_ts}" \
+	      "${video_ts}" \
+	      "${dash}" \
+	      "${ytdlp_ts}" \
+	      "${aria2c_ts}" \
+	      "${ffmpeg_ts}" \
+	      "${copy}" \
+	      "${open}" \
+	      "${audio_ts}" \
+	      "${transmission_remote}" \
+	      "${sponsorblock_ts}" \
+	      "${streamlink_ts}" \
+	      | fzf-tmux -d 32% --delimiter='\n' --prompt='Pipe links to: ' --info=inline --layout=reverse --no-multi)
+
+case "${menu}" in
+   audio*) audio;;
+   aria2c*) aria2c;;
+   copy*) copy;;
+   dash*) dash;;
+   open*) open;;
+   sponsor*)sponsorblock_download ;;
+   ffmpeg*) ffmpeg;;
+   fullscreen*) fullscreen;;
+   streamlink*) streamlink;;
+   transmission*) transmission;;
+   video*) video;;
+   yt-dlp*) ytdlp;;
+   ,*) exit;;
+esac
+#+END_SRC
+
+***** video-cgi
+
+#+NAME: video-cgi
+#+BEGIN_SRC sh
+#!/bin/sh
+
+# video.cgi
+
+# current link under cursor in w3m
+url="${W3M_CURRENT_LINK}"   
+
+# if the current link contains a url pipe it into grep,
+# remove the google redirect and decode the url
+# if the current link is empty set the url to the page url
+if [ -n "${url}" ]; then
+   result=$(echo "${url}" | \
+            grep -oP '(?<=google.com\/url\?q=)[^&]*(?=&)' \
+            | sed -e "s/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g" | xargs -0 echo -e)
+   [ -n "${result}" ] && url="${result}"
+else
+    url="${W3M_URL}"
+fi
+
+# queue the video with taskpooler and play the url with mpv on the current display
+#tsp mpv --no-terminal "${url}"
+
+# queue the video with taskpooler and play the url with mpv full screen on the second display
+ts mpv --fs "${url}"
+
+# remove http prefix for notify-send to fix issue with (U) in the notification title
+#title=$(echo "${url}" | sed -e 's#https\?://\([www.]*\)##g')
+#notify-send "Queuing ♫" "${title}"
+
+# delete previous buffer
+printf "%s\r\n" "W3m-control: BACK";
+#+END_SRC
+
+**** keymap
+
+#+NAME: w3m-keymap
+#+BEGIN_SRC fundamental
+# sauron-w3m prompt
+keymap ,-. COMMAND "READ_SHELL ${HOME}/.w3m/cgi-bin/sauron-w3m.cgi; BACK"
+
+# w3m function prompt
+keymap .-, COMMAND "READ_SHELL ${HOME}/.w3m/cgi-bin/functions.cgi ; BACK ; GOTO file:/cgi-bin/run_command.cgi ; BACK"
+
+# surfraw prompt
+keymap xs COMMAND  "READ_SHELL ${HOME}/.w3m/cgi-bin/fzf_surfraw.cgi ; GOTO file:/cgi-bin/goto_clipboard_primary.cgi"
+
+# toggle line numbers
+keymap ,-l COMMAND "SET_OPTION display_link_number=toggle ; RESHAPE"
+
+# toggle borders
+keymap ,-t COMMAND "SET_OPTION display_borders=toggle ; RESHAPE"
+
+#+END_SRC
+
+**** mailcap
+
+#+NAME: w3m-mailcap
+#+BEGIN_SRC fundamental
+image/*; nsxiv %s
+#+END_SRC
+
+**** siteconf
+
+#+NAME: w3m-siteconf
+#+BEGIN_SRC fundamental
+# google set user agent to lynx
+url m@^https?://(.*\.)google\.com/@
+user_agent "Lynx/2.9.0dev.5 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/3.6.1"
+no_referer_from on
+
+# remove google redirect from search links
+url "http://www.google.com/url?" exact
+substitute_url "file:/cgi-bin/google-redirector.cgi?"
+
+# youtube open video links with mpv
+url "https://www.youtube.com/watch?" exact
+substitute_url "file:/cgi-bin/video.cgi?"
+
+# dailymotion open video links with mpv
+url "https://www.dailymotion.com/video"
+substitute_url "file:/cgi-bin/video.cgi?"
+
+# bbc iplayer search
+url "https://www.bbc.co.uk/iplayer/search?"
+substitute_url "file:/cgi-bin/bbc-search.cgi?"
+
+# bbc iplayer episodes
+url "https://www.bbc.co.uk/iplayer/episodes"
+substitute_url "file:/cgi-bin/bbc-episodes.cgi?"
+#+END_SRC
+
+**** urimethodmap
+
+#+NAME: urimethodmap
+#+begin_src fundamental
+magnet: file:/cgi-bin/magnet.cgi?%s
+#+end_src
+
+*** w3m tangle
+**** bookmark.html
+
++ home dir
+
+#+NAME: w3m-bookmark.html-home-dir
+#+BEGIN_SRC html :noweb yes :tangle "~/.w3m/bookmark.html"
+<<w3m-bookmark.html>>
+#+END_SRC
+
++ current dir
+  
+#+NAME: w3m-bookmark.html-current-dir
+#+BEGIN_SRC html :noweb yes :tangle ".w3m/bookmark.html"
+<<w3m-bookmark.html>>
+#+END_SRC
+
+**** config
+
++ home dir
+
+#+NAME: w3m-config-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.w3m/config"
+<<w3m-config>>
+#+END_SRC
+
++ current dir
+
+#+NAME: w3m-config-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".w3m/config"
+<<w3m-config>>
+#+END_SRC
+
+**** cgi-bin
+***** archive.org
+
++ home dir
+
+#+NAME: archive-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/archive.cgi" :tangle-mode (identity #o755)
+<<archive>>
+#+END_SRC
+
++ current dir
+
+#+NAME: archive-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/archive.cgi" :tangle-mode (identity #o755)
+<<archive>>
+#+END_SRC
+
+***** bbc-episodes
+
++ home dir
+
+#+NAME: bbc-episodes-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/bbc-episodes.cgi" :tangle-mode (identity #o755)
+<<bbc-episodes>>
+#+END_SRC
+
++ current dir
+
+#+NAME: bbc-episodes-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/bbc-episodes.cgi" :tangle-mode (identity #o755)
+<<bbc-episodes>>
+#+END_SRC
+
+***** bbc-search
+
++ home dir
+
+#+NAME: bbc-search-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/bbc-search.cgi" :tangle-mode (identity #o755)
+<<bbc-search>>
+#+END_SRC
+
++ current dir
+
+#+NAME: bbc-search-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/bbc-search.cgi" :tangle-mode (identity #o755)
+<<bbc-search>>
+#+END_SRC
+
+***** functions-w3m
+
++ home dir
+
+#+NAME: functions-w3m-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/functions.cgi" :tangle-mode (identity #o755)
+<<functions-w3m>>
+#+END_SRC
+
++ current dir
+
+#+NAME: functions-w3m-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/functions.cgi" :tangle-mode (identity #o755)
+<<functions-w3m>>
+#+END_SRC
+
+***** fzf-surfraw
+
++ home dir
+
+#+NAME: fzf-surfraw-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/fzf_surfraw.cgi" :tangle-mode (identity #o755)
+<<fzf-surfraw>>
+#+END_SRC
+
++ current dir
+
+#+NAME: fzf-surfraw-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/fzf_surfraw.cgi" :tangle-mode (identity #o755)
+<<fzf-surfraw>>
+#+END_SRC
+
+***** google-redirector
+
++ home dir
+
+#+NAME: google-redirector-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/google-redirector.cgi" :tangle-mode (identity #o755)
+<<google-redirector>>
+#+END_SRC
+
++ current dir
+
+#+NAME: google-redirector-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/google-redirector.cgi" :tangle-mode (identity #o755)
+<<google-redirector>>
+#+END_SRC
+
+***** goto-clipboard-primary
+
++ home dir
+
+#+NAME: goto-clipboard-primary-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/goto_clipboard_primary.cgi" :tangle-mode (identity #o755)
+<<goto-clipboard-primary>>
+#+END_SRC
+
++ current dir
+
+#+NAME: goto-clipboard-primary-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/goto_clipboard_primary.cgi" :tangle-mode (identity #o755)
+<<goto-clipboard-primary>>
+#+END_SRC
+
+***** magnet-cgi
+
++ home dir
+
+#+NAME: magnet-cgi-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/magnet.cgi" :tangle-mode (identity #o755)
+<<magnet-cgi>>
+#+END_SRC
+
++ current dir
+
+#+NAME: magnet-cgi-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/magnet.cgi" :tangle-mode (identity #o755)
+<<magnet-cgi>>
+#+END_SRC
+
+***** run-command
+
++ home dir
+
+#+NAME: run-command-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/run_command.cgi" :tangle-mode (identity #o755)
+<<run-command>>
+#+END_SRC
+
++ current dir
+
+#+NAME: run-command-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/run_command.cgi" :tangle-mode (identity #o755)
+<<run-command>>
+#+END_SRC
+
+***** sauron-w3m
+
++ home dir
+
+#+NAME: sauron-w3m-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/sauron-w3m.cgi" :tangle-mode (identity #o755)
+<<sauron-w3m>>
+#+END_SRC
+
++ current dir
+
+#+NAME: sauron-w3m-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/sauron-w3m.cgi" :tangle-mode (identity #o755)
+<<sauron-w3m>>
+#+END_SRC
+
+***** video-cgi
+
++ home dir
+
+#+NAME: video-cgi-home-dir 
+#+BEGIN_SRC sh :noweb yes :tangle "~/.w3m/cgi-bin/video.cgi" :tangle-mode (identity #o755)
+<<video-cgi>>
+#+END_SRC
+
++ current dir
+
+#+NAME: video-cgi-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".w3m/cgi-bin/video.cgi" :tangle-mode (identity #o755)
+<<video-cgi>>
+#+END_SRC
+
+**** keymap
+
++ home dir
+
+#+NAME: w3m-keymap-home-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle "~/.w3m/keymap"
+<<w3m-keymap>>
+#+END_SRC
+
++ current dir
+
+#+NAME: w3m-keymap-current-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle ".w3m/keymap"
+<<w3m-keymap>>
+#+END_SRC
+
+**** mailcap
+
++ home dir
+
+#+NAME: w3m-mailcap-home-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle "~/.w3m/mailcap"
+<<w3m-mailcap>>
+#+END_SRC
+
++ current dir
+
+#+NAME: w3m-mailcap-current-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle ".w3m/mailcap"
+<<w3m-mailcap>>
+#+END_SRC
+
+**** siteconf
+
++ home dir
+
+#+NAME: w3m-siteconf-home-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle "~/.w3m/siteconf"
+<<w3m-siteconf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: w3m-siteconf-current-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle ".w3m/siteconf"
+<<w3m-siteconf>>
+#+END_SRC
+
+**** urimethodmap
+
++ home dir
+
+#+NAME: w3m-urimethodmap-home-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle "~/.w3m/urimethodmap"
+<<urimethodmap>>
+#+END_SRC
+
++ current dir
+
+#+NAME: w3m-urimethodmap-current-dir
+#+BEGIN_SRC fundamental :noweb yes :tangle ".w3m/urimethodmap"
+<<urimethodmap>>
+#+END_SRC
+
+** urlscan
+*** urlscan config
+
+#+NAME: urlscan
+#+BEGIN_SRC json
+{
+    "palettes": {
+        "default": [
+            [
+                "header",
+                "black",
+                "dark blue",
+                "standout"
+            ],
+            [
+                "footer",
+                "white",
+                "default",
+                "standout"
+            ],
+            [
+                "search",
+                "white",
+                "default",
+                "standout"
+            ],
+            [
+                "msgtext",
+                "",
+                ""
+            ],
+            [
+                "msgtext:ellipses",
+                "light gray",
+                "default"
+            ],
+            [
+                "urlref:number:braces",
+                "light gray",
+                "default"
+            ],
+            [
+                "urlref:number",
+                "default",
+                "default",
+                "standout"
+            ],
+            [
+                "urlref:url",
+                "white",
+                "default",
+                "standout"
+            ],
+            [
+                "url:sel",
+                "default",
+                "dark blue",
+                "bold"
+            ]
+        ],
+        "bw": [
+            [
+                "header",
+                "black",
+                "light gray",
+                "standout"
+            ],
+            [
+                "footer",
+                "black",
+                "light gray",
+                "standout"
+            ],
+            [
+                "search",
+                "black",
+                "light gray",
+                "standout"
+            ],
+            [
+                "msgtext",
+                "",
+                ""
+            ],
+            [
+                "msgtext:ellipses",
+                "white",
+                "black"
+            ],
+            [
+                "urlref:number:braces",
+                "white",
+                "black"
+            ],
+            [
+                "urlref:number",
+                "white",
+                "black",
+                "standout"
+            ],
+            [
+                "urlref:url",
+                "white",
+                "black",
+                "standout"
+            ],
+            [
+                "url:sel",
+                "black",
+                "light gray",
+                "bold"
+            ]
+        ]
+    },
+    "keys": {
+        "/": "search_key",
+        "0": "digits",
+        "1": "digits",
+        "2": "digits",
+        "3": "digits",
+        "4": "digits",
+        "5": "digits",
+        "6": "digits",
+        "7": "digits",
+        "8": "digits",
+        "9": "digits",
+        "C": "clipboard",
+        "c": "context",
+        "ctrl l": "clear_screen",
+        "f1": "help_menu",
+        "G": "bottom",
+        "g": "top",
+        "j": "down",
+        "k": "up",
+        "P": "clipboard_pri",
+        "l": "link_handler",
+        "p": "palette",
+        "Q": "quit",
+        "q": "quit",
+        "S": "all_shorten",
+        "s": "shorten",
+        "u": "all_escape"
+    }
+}
+#+END_SRC
+
+*** urlscan tangle
+
++ home dir
+
+#+NAME: urlscan-home-dir
+#+BEGIN_SRC json :noweb yes :tangle "~/.config/urlscan/config.json"
+<<urlscan>>
+#+END_SRC
+
++ current dir
+
+#+NAME: urlscan-current-dir
+#+BEGIN_SRC json :noweb yes :tangle ".config/urlscan/config.json"
+<<urlscan>>
+#+END_SRC
+
+** surfraw
+*** surfraw config
+**** surfraw
+
+surfraw config
+
+#+NAME: surfraw
+#+BEGIN_SRC conf
+SURFRAW_graphical_browser=xdg-open
+SURFRAW_text_browser=w3m
+SURFRAW_graphical=yes
+#+END_SRC
+
+**** 1337x
+
+#+NAME: 1337x
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Sat Feb 27, 2016
+#
+# DESC: Elvi to search 1337x
+# elvis: 1337x		-- Search 1337x for torrents (1337x.to)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search 1337x (1337x.to) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://1337x.to"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://1337x.to/search/${escaped_args}/1/"
+fi
+#+end_src
+
+**** archive
+
+#+NAME: archive
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Sun August 09, 2015
+#
+# DESC: Elvi to search old software, games, other media
+# elvis: archive		-- Search old software, games, other media (https://archive.org)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search old software, games, other media (https://archive.org)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://archive.org"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://archive.org/search.php?query=${escaped_args}"
+fi
+#+end_src
+
+**** btdig
+
+#+NAME: btdig
+#+BEGIN_SRC sh
+#!/bin/sh
+# DESC: Elvi to search btdig
+# elvis: btdig		-- Search btdig (https://btdig.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search btdig (https://btdig.com)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://btdig.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://btdig.com/search?q=${escaped_args}"
+fi
+#+END_SRC
+
+**** dailymotion
+
+#+NAME: dailymotion
+#+BEGIN_SRC sh
+#!/bin/sh
+# DESC: Elvi to search dailymotion
+# elvis: dailymotion     -- Search dailymotion (https://dailymotion.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search dailymotion (https://dailymotion.com)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://dailymotion.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://dailymotion.com/search/${escaped_args}/videos"
+fi
+#+END_SRC
+
+**** ddg
+
+#+NAME: ddg
+#+BEGIN_SRC sh
+#!/bin/sh
+# elvis: ddg             -- Securely search the web using duckduckgo (duckduckgo.com)
+# coder@kyleisom.net 20110105
+# relevant: https://duckduckgo.com/params.html
+# similar to duckduckgo elvi, adds more options and defaults to SSL.
+. surfraw || exit 1
+
+w3_config_hook () {
+    def     SURFRAW_duckduckgo_results             "$SURFRAW_results"
+    def     SURFRAW_duckduckgo_base_url            "duckduckgo.com"
+    def     SURFRAW_duckduckgo_search              search
+    def     SURFRAW_duckduckgo_params              "&kg=g"
+    defyn   SURFRAW_duckduckgo_use_javascript      0
+}
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Surfraw search the web using DuckDuckGo (duckduckgo.com)
+Local options:
+    -j,-javascript              use javascript
+EOF
+    w3_global_usage
+}
+
+w3_parse_option_hook () {
+    opt="$1"
+    optarg="$2"
+    case "$opt" in
+    -j|-javascript*)    setoptyn    SURFRAW_duckduckgo_use_javascript      1 ;;
+    ,*) return 1 ;;
+    esac
+    return 0
+}
+
+w3_config
+w3_parse_args "$@"
+
+# need to send the user to the non-javascript version if using a non-graphical
+# browser
+SURFRAW_duckduckgo_base_url="https://${SURFRAW_duckduckgo_base_url}"
+if [ "$SURFRAW_duckduckgo_use_javascript" = 0 ]; then
+    SURFRAW_duckduckgo_base_url="${SURFRAW_duckduckgo_base_url}/lite"
+    SURFRAW_duckduckgo_params="${SURFRAW_duckduckgo_params}&kf=-1&kz=-1&kq=-1&kv=-1&k1=-1&kp=-2&kaf=1&kd=-1"
+fi
+
+if [ "$SURFRAW_graphical" != "yes" ] ; then
+    SURFRAW_duckduckgo_params="${SURFRAW_duckduckgo_params}&kf=-1&kz=-1&kq=-1&kv=-1"
+fi
+
+escaped_args=`w3_url_of_arg $w3_args`
+w3_browse_url "${SURFRAW_duckduckgo_base_url}/?q=${escaped_args}${SURFRAW_duckduckgo_params}"
+#+END_SRC
+
+**** eztv
+
+#+NAME: eztv
+#+BEGIN_SRC sh
+#!/bin/sh
+# DESC: Elvi to search 1337x
+# elvis: eztv		-- Search eztv for torrents (eztv.re)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search eztv (eztv.re) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://eztv.re"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://eztv.re/search/${escaped_args}/1/"
+fi
+#+END_SRC
+
+**** iplayer
+
+#+NAME: iplayer
+#+BEGIN_SRC sh
+#!/bin/sh
+# DESC: Elvi to search Google Video
+# elvis: iplayer         -- Search bbc iplayer (https://bbc.co.uk/iplayer)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search bbc iplayer (https://bbc.co.uk/iplayer)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://bbc.co.uk/iplayer"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://bbc.co.uk/iplayer/search?q=${escaped_args}"
+fi
+#+END_SRC
+
+**** limetorrents
+
+#+NAME: limetorrents
+#+BEGIN_SRC sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Wed Mar 11, 2020
+#
+# DESC: Elvi to search limetorrents
+# elvis: limetorrents    -- Search limetorrents for torrents (limetorrents.info)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search limetorrents (limetorrents.info) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://limetorrents.info"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://www.limetorrents.info/search/all/${escaped_args}"
+fi
+#+END_SRC
+
+**** rarbg
+
+#+NAME: rarbg
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Wed Mar 02, 2016
+#
+# DESC: Elvi to search rarbg
+# elvis: rarbg		-- Search rarbg for torrents (rarbg.to)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search rarbg (rarbg.to) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://rarbg.to"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://rarbg.to/torrents.php?search=${escaped_args}&order=seeders&by=DESC"
+fi
+#+end_src
+
+**** reddit
+
+#+NAME: reddit
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: April 07, 2013
+#
+# DESC: Elvi to search Reddit News
+# elvis: reddit		-- Search Reddit for user submitted news (www.reddit.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search Reddit (www.reddit.com) for user submitted news
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "http://www.reddit.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "http://www.reddit.com/search?q=${escaped_args}"
+fi
+#+end_src
+
+**** stackexchange
+
+#+NAME: stackexchange
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Sat Nov 17 2012
+#
+# DESC: Elvi to search stackexchange computer questions
+# elvis: stackexchange	-- Search StackExchange for computer questions (www.stackexchange.org)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search stackexchange (www.stackexchange.org) for computer questions
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "http://www.stackexchange.com/"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "http://stackexchange.com/search?q=${escaped_args}"
+fi
+#+end_src
+
+**** sunxdcc
+
+#+NAME: sunxdcc
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Sun Feb 14, 2016
+#
+# DESC: Elvi to search sunxdcc for irc xdcc files
+# elvis: sunxdcc		-- Search sunxdcc for irc xdcc files (http://sunxdcc.com/)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search sunxdcc (http://sunxdcc.com/) for irc xdcc files 
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "http://sunxdcc.com/"
+else
+    escaped_args=$(w3_url_of_arg $w3_args)
+    w3_browse_url "http://sunxdcc.com/?sterm=${escaped_args}%20-tar%20-rar"
+fi
+#+end_src
+
+**** thepacket
+
+#+NAME: thepacket
+#+begin_src sh
+#!/bin/sh
+# DESC: Elvi to search thepacket for irc xdcc files
+# elvis: thepacket     		-- Search thepacket for irc xdcc files (https://thepacket.info/)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search thepacket (https://thepacket.info/) for irc xdcc files 
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://thepacket.info"
+else
+    escaped_args=$(w3_url_of_arg $w3_args)
+    w3_browse_url "https://thepacket.info/?q=${escaped_args}"
+fi
+#+end_src
+
+**** torrentdownloads
+
+#+NAME: torrentdownloads
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Wed Mar 11, 2020
+#
+# DESC: Elvi to search torrentdownloads
+# elvis: torrentdownloads -- Search torrentdownloads for torrents (torrentdownloads.pro)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search torrentdownloads (torrentdownloads.pro) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://torrentdownloads.pro"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://www.torrentdownloads.pro/search/?search=${escaped_args}"
+fi
+#+end_src
+
+**** torrentgalaxy
+
+#+NAME: torrentgalaxy
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Wed Nov 21, 2018
+#
+# DESC: Elvi to search torrentgalaxy
+# elvis: torrentgalaxy   -- Search torrentgalaxy for torrents (torrentgalaxy.to)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search torrentgalaxy (torrentgalaxy.to) for torrents
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://torrentgalaxy.to"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://torrentgalaxy.to/torrents.php?search=${escaped_args}"
+fi
+#+end_src
+
+**** video
+
+#+NAME: video
+#+BEGIN_SRC sh
+#!/bin/sh
+# DESC: Elvi to search Google Video
+# elvis: video		-- Search Google Video (https://www.google.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search Google Video (https://video.google.com)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://www.video.google.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://www.google.com/search?q=${escaped_args}&num=30&safe=off&tbo=p&tbm=vid"
+fi
+#+END_SRC
+
+**** vimeo
+
+#+NAME: vimeo
+#+BEGIN_SRC sh
+#!/bin/sh
+# DESC: Elvi to search vimeo
+# elvis: vimeo		-- Search vimeo (https://vimeo.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search vimeo (https://vimeo.com)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://vimeo.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://vimeo.com/search?q=${escaped_args}"
+fi
+#+END_SRC
+
+**** xdcceu
+
+#+NAME: xdcceu
+#+begin_src sh
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Wed June 14, 2017
+#
+# DESC: Elvi to search xdcceu for irc xdcc files
+# elvis: xdcceu		-- Search xdcceu for irc xdcc files (http://xdcc.eu/)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search xdcceu (http://xdcc.eu/) for irc xdcc files 
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "http://xdcc.eu/"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "http://www.xdcc.eu/search.php?searchkey=${escaped_args}"
+fi
+
+#+end_src
+
+*** surfraw tangle
+**** surfraw
+
++ home dir
+
+#+NAME: surfraw-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/surfraw/conf"
+<<surfraw>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/surfraw/conf"
+<<surfraw>>
+#+END_SRC
+
+**** 1337x
+
++ home dir
+
+#+NAME: surfraw-1337x-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/1337x" :tangle-mode (identity #o755)
+<<1337x>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-1337x-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/1337x" :tangle-mode (identity #o755)
+<<1337x>>
+#+END_SRC
+
+**** archive
+
++ home dir
+
+#+NAME: surfraw-archive-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/archive" :tangle-mode (identity #o755)
+<<archive>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-archive-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/archive" :tangle-mode (identity #o755)
+<<archive>>
+#+END_SRC
+
+**** btdig
+
++ home dir
+
+#+NAME: surfraw-btdig-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/btdig" :tangle-mode (identity #o755)
+<<btdig>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-btdig-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/btdig" :tangle-mode (identity #o755)
+<<btdig>>
+#+END_SRC
+
+**** dailymotion
+
++ home dir
+
+#+NAME: surfraw-dailymotion-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/dailymotion" :tangle-mode (identity #o755)
+<<dailymotion>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-dailymotion-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/dailymotion" :tangle-mode (identity #o755)
+<<dailymotion>>
+#+END_SRC
+
+**** ddg
+
++ home dir
+
+#+NAME: surfraw-ddg-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/ddg" :tangle-mode (identity #o755)
+<<ddg>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-ddg-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/ddg" :tangle-mode (identity #o755)
+<<ddg>>
+#+END_SRC
+
+**** eztv
+
++ home dir
+
+#+NAME: surfraw-eztv-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/eztv" :tangle-mode (identity #o755)
+<<eztv>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-eztv-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/eztv" :tangle-mode (identity #o755)
+<<eztv>>
+#+END_SRC
+
+**** iplayer
+
++ home dir
+
+#+NAME: surfraw-iplayer-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/iplayer" :tangle-mode (identity #o755)
+<<iplayer>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-iplayer-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/iplayer" :tangle-mode (identity #o755)
+<<iplayer>>
+#+END_SRC
+
+**** limetorrents
+
++ home dir
+
+#+NAME: surfraw-limetorrents-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/limetorrents" :tangle-mode (identity #o755)
+<<limetorrents>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-limetorrents-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/limetorrents" :tangle-mode (identity #o755)
+<<limetorrents>>
+#+END_SRC
+
+**** rarbg
+
++ home dir
+
+#+NAME: surfraw-rarbg-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/rarbg" :tangle-mode (identity #o755)
+<<rarbg>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-rarbg-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/rarbg" :tangle-mode (identity #o755)
+<<rarbg>>
+#+END_SRC
+
+**** reddit
+
++ home dir
+
+#+NAME: surfraw-reddit-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/reddit" :tangle-mode (identity #o755)
+<<reddit>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-reddit-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/reddit" :tangle-mode (identity #o755)
+<<reddit>>
+#+END_SRC
+
+**** stackexchange
+
++ home dir
+
+#+NAME: surfraw-stackexchange-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/stackexchange" :tangle-mode (identity #o755)
+<<stackexchange>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-stackexchange-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/stackexchange" :tangle-mode (identity #o755)
+<<stackexchange>>
+#+END_SRC
+
+**** sunxdcc
+
++ home dir
+
+#+NAME: surfraw-sunxdcc-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/sunxdcc" :tangle-mode (identity #o755)
+<<sunxdcc>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-sunxdcc-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/sunxdcc" :tangle-mode (identity #o755)
+<<sunxdcc>>
+#+END_SRC
+
+**** thepacket
+
++ home dir
+
+#+NAME: surfraw-thepacket-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/thepacket" :tangle-mode (identity #o755)
+<<thepacket>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-thepacket-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/thepacket" :tangle-mode (identity #o755)
+<<thepacket>>
+#+END_SRC
+
+**** torrentdownloads
+
++ home dir
+
+#+NAME: surfraw-torrentdownloads-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/torrentdownloads" :tangle-mode (identity #o755)
+<<torrentdownloads>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-torrentdownloads-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/torrentdownloads" :tangle-mode (identity #o755)
+<<torrentdownloads>>
+#+END_SRC
+
+**** torrentgalaxy
+
++ home dir
+
+#+NAME: surfraw-torrentgalaxy-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/torrentgalaxy" :tangle-mode (identity #o755)
+<<torrentgalaxy>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-torrentgalaxy-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/torrentgalaxy" :tangle-mode (identity #o755)
+<<torrentgalaxy>>
+#+END_SRC
+
+**** video
+
++ home dir
+
+#+NAME: surfraw-video-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/video" :tangle-mode (identity #o755)
+<<video>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-video-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/video" :tangle-mode (identity #o755)
+<<video>>
+#+END_SRC
+
+**** vimeo
+
++ home dir
+
+#+NAME: surfraw-vimeo-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/vimeo" :tangle-mode (identity #o755)
+<<vimeo>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-vimeo-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/vimeo" :tangle-mode (identity #o755)
+<<vimeo>>
+#+END_SRC
+
+**** xdcceu
+
++ home dir
+
+#+NAME: surfraw-xdcceu-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.config/surfraw/elvi/xdcceu" :tangle-mode (identity #o755)
+<<xdcceu>>
+#+END_SRC
+
++ current dir
+
+#+NAME: surfraw-xdcceu-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".config/surfraw/elvi/xdcceu" :tangle-mode (identity #o755)
+<<xdcceu>>
+#+END_SRC
+

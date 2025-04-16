@@ -1,0 +1,53 @@
+#!/bin/sh
+# elvis: ddg             -- Securely search the web using duckduckgo (duckduckgo.com)
+# coder@kyleisom.net 20110105
+# relevant: https://duckduckgo.com/params.html
+# similar to duckduckgo elvi, adds more options and defaults to SSL.
+. surfraw || exit 1
+
+w3_config_hook () {
+    def     SURFRAW_duckduckgo_results             "$SURFRAW_results"
+    def     SURFRAW_duckduckgo_base_url            "duckduckgo.com"
+    def     SURFRAW_duckduckgo_search              search
+    def     SURFRAW_duckduckgo_params              "&kg=g"
+    defyn   SURFRAW_duckduckgo_use_javascript      0
+}
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Surfraw search the web using DuckDuckGo (duckduckgo.com)
+Local options:
+    -j,-javascript              use javascript
+EOF
+    w3_global_usage
+}
+
+w3_parse_option_hook () {
+    opt="$1"
+    optarg="$2"
+    case "$opt" in
+    -j|-javascript*)    setoptyn    SURFRAW_duckduckgo_use_javascript      1 ;;
+    *) return 1 ;;
+    esac
+    return 0
+}
+
+w3_config
+w3_parse_args "$@"
+
+# need to send the user to the non-javascript version if using a non-graphical
+# browser
+SURFRAW_duckduckgo_base_url="https://${SURFRAW_duckduckgo_base_url}"
+if [ "$SURFRAW_duckduckgo_use_javascript" = 0 ]; then
+    SURFRAW_duckduckgo_base_url="${SURFRAW_duckduckgo_base_url}/lite"
+    SURFRAW_duckduckgo_params="${SURFRAW_duckduckgo_params}&kf=-1&kz=-1&kq=-1&kv=-1&k1=-1&kp=-2&kaf=1&kd=-1"
+fi
+
+if [ "$SURFRAW_graphical" != "yes" ] ; then
+    SURFRAW_duckduckgo_params="${SURFRAW_duckduckgo_params}&kf=-1&kz=-1&kq=-1&kv=-1"
+fi
+
+escaped_args=`w3_url_of_arg $w3_args`
+w3_browse_url "${SURFRAW_duckduckgo_base_url}/?q=${escaped_args}${SURFRAW_duckduckgo_params}"

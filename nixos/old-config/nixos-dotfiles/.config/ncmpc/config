@@ -1,0 +1,23 @@
+## Configuration file for ncmpc (~/.ncmpc/config)
+host = "/run/user/1000/mpd/socket"
+screen-list = playlist browse
+wrap-around = yes
+seek-time = 30
+list-format = "%name%|[%artist% - ]%title%|%file%"
+status-format = "[%artist% - ]%title%|%shortfile%"
+visible-bitrate = yes
+enable-colors = no
+color background = none
+color title = none,black
+color title-bold = blue,bold
+color line = black
+color line-flags = black,bold
+color list = none
+color list-bold = none,bold
+color browser-directory = none
+color browser-playlist = none
+color progressbar = black
+color status-state = black,bold
+color status-song  = black
+color status-time  = black
+color alert = black,bold

@@ -1,0 +1,51 @@
+# queries
+
+# unread articles tagged newcastle
+"query:Newcastle:unread = \"yes\" and tags # \"newcastle\""
+
+# unread articles tagged general
+"query:General:unread = \"yes\" and tags # \"general\""
+
+# unread articles tagged linux
+"query:Linux:unread = \"yes\" and tags # \"linux\""
+
+# unread articles tagged emacs
+"query:Emacs:unread = \"yes\" and tags # \"emacs\""
+
+
+# newcastle
+
+# magpie channel
+https://www.youtube.com/feeds/videos.xml?channel_id=UCzbwOixfdDkOEl4c2Gy1Xow newcastle "~The Magpie Channel" 
+
+# robenstein
+https://www.youtube.com/feeds/videos.xml?channel_id=UC2WTz3aJZ65nN3p5_LMJAzg newcastle "~Roobenstein" 
+
+# adam pearson
+https://www.youtube.com/feeds/videos.xml?channel_id=UCbXlSJHSuY1nNHoxSElKiIA newcastle "~Adam Pearson" 
+
+# newcastle united
+https://www.youtube.com/feeds/videos.xml?channel_id=UCywGl_BPp9QhD0uAcP2HsJw newcastle "~Newcastle United" 
+
+
+# tech
+
+# gotbletu
+https://www.youtube.com/feeds/videos.xml?channel_id=UCkf4VIqu3Acnfzuk3kRIFwA linux "~gotbletu" 
+
+
+# general
+
+# A Closer Look
+https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa general "~A Closer Look" 
+
+# David Pakman
+https://www.youtube.com/feeds/videos.xml?channel_id=UCvixJtaXuNdMPUGdOPcY8Ag general "~David Pakman" 
+
+# Maximilien Robespierre
+https://www.youtube.com/feeds/videos.xml?channel_id=UCSiYkMylC3F_eQfIodMHkOw general "~Maximilien Robespierre" 
+
+# emacs
+
+# System Crafters
+https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ emacs "~System Crafters"

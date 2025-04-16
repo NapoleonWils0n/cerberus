@@ -1,0 +1,26 @@
+#!/bin/sh
+# AUTHOR: gotbletu (@gmail|twitter|youtube|github|lbry)
+#
+# DATE: Sun August 09, 2015
+#
+# DESC: Elvi to search old software, games, other media
+# elvis: archive		-- Search old software, games, other media (https://archive.org)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search old software, games, other media (https://archive.org)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://archive.org"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://archive.org/search.php?query=${escaped_args}"
+fi

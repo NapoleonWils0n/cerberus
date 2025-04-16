@@ -1,0 +1,22 @@
+#!/bin/sh
+# DESC: Elvi to search Google Video
+# elvis: video		-- Search Google Video (https://www.google.com)
+. surfraw || exit 1
+
+w3_usage_hook () {
+    cat <<EOF
+Usage: $w3_argv0 [options] [search words]...
+Description:
+  Search Google Video (https://video.google.com)
+EOF
+    w3_global_usage
+}
+
+w3_config
+w3_parse_args "$@"
+if test -z "$w3_args"; then
+    w3_browse_url "https://www.video.google.com"
+else
+    escaped_args=`w3_url_of_arg $w3_args`
+    w3_browse_url "https://www.google.com/search?q=${escaped_args}&num=30&safe=off&tbo=p&tbm=vid"
+fi
