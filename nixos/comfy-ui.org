@@ -1,0 +1,86 @@
+#+STARTUP: content
+* comfy-ui stable-diffusion
+** resources
+
+[[https://www.youtube.com/watch?v=1N1cwHFx_QM]]
+
+** git clone repos
+
+#+begin_src sh
+git clone https://github.com/virchau13/automatic1111-webui-nix.git
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+#+end_src
+
+** stable diffusion
+
+#+begin_src sh
+cd stable-diffusion-webui
+#+end_src
+
+#+begin_src sh
+cp ../automatic1111-webui-nix/*.nix .
+#+end_src
+
+#+begin_src sh
+nix-shell
+#+end_src
+
+** comfy-ui
+
+exit out of previous shell
+
+#+begin_src sh
+exit
+cd ../
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/comfyanonymous/ComfyUI.git
+#+end_src
+
+#+begin_src sh
+cd ComfyUI
+#+end_src
+
+#+begin_src sh
+cp ../automatic1111-webui-nix/*.nix .
+#+end_src
+
+#+begin_src sh
+nix-shell
+#+end_src
+
+#+begin_src sh
+python -m venv venv
+#+end_src
+
+#+begin_src sh
+source venv/bin/activate
+#+end_src
+
+#+begin_src sh
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu126
+#+end_src
+
+#+begin_src sh
+pip install -r requirements.txt
+#+end_src
+
+#+begin_src sh
+cp extra_model_paths.yaml.example extra_model_paths.yaml
+#+end_src
+
+#+begin_src sh
+vi extra_model_paths.yaml
+#+end_src
+
+edit base_path:
+
+to point to the stable-diffusion-web-ui path
+
+#+begin_src sh
+python main.py
+#+end_src

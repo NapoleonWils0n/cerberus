@@ -1,0 +1,127 @@
+#+STARTUP: content
+* whisperx
+** create the directory structure
+
+#+begin_src sh
+mkdir -p "${HOME}"/nix/whisperx
+#+end_src
+
+#+begin_src sh
+cd "${HOME}"/nix/whisperx
+#+end_src
+
+** shell.nix
+
+#+begin_src sh
+vi shell.nix
+#+end_src
+
+#+begin_src nix
+{ pkgs }:
+
+pkgs.mkShell {
+  buildInputs = [
+    pkgs.python311
+    pkgs.python311Packages.pip
+    pkgs.python311Packages.pytorch-bin # Trying the pre-built binary
+    pkgs.python311Packages.torchaudio
+    pkgs.python311Packages.numpy
+    pkgs.python311Packages.scipy
+    pkgs.ffmpeg
+    pkgs.python311Packages.numba
+    pkgs.python311Packages.tqdm
+    pkgs.python311Packages.soundfile
+    pkgs.python311Packages.typing-extensions
+    pkgs.python311Packages.sentencepiece
+    pkgs.python311Packages.webrtcvad
+  ];
+}
+#+end_src
+
+** enter the nix shell
+
+#+begin_src sh
+export NIXPKGS_ALLOW_UNFREE=1
+nix-shell --pure --impure --arg pkgs '(import <nixpkgs> {})'
+#+end_src
+
+** pip install
+
+#+begin_src sh
+python3 -m venv .venv
+source .venv/bin/activate
+#+end_src
+
+create the requirements.txt file
+
+#+begin_src sh
+vi requirements.txt
+#+end_src
+
+with the following code
+
+#+begin_src sh
+faster-whisper
+stable-ts
+numpy
+scipy
+ffmpeg-python
+numba
+tqdm
+soundfile
+typing-extensions
+sentencepiece
+torchaudio
+webrtcvad
+whisperx
+#+end_src
+
+use pip to install the package in the requirements file
+
+#+begin_src sh
+pip install -r requirements.txt
+pip install -e .
+#+end_src
+
+** SpeakerDiarization
+
+create the SpeakerDiarization_repo in a subdirectory of the whisperx directory
+
+#+begin_src sh
+# Install SpeakerDiarization
+mkdir -p "${HOME}"/nix/whisperx/speaker-diarization
+cd "${HOME}"/nix/whisperx/speaker-diarization-repo
+git clone https://github.com/jianfch/SpeakerDiarization.git
+cd SpeakerDiarization
+pip install -r requirements.txt
+pip install -e .
+cd ../
+#+end_src
+
+** run whisperx
+
+you can now use whisperx
+
+** enter the nix shell
+
+when you want to use whisperx run the following commands
+
+cd into the whisperx directory
+
+#+begin_src sh
+cd ~/nix/whisperx
+#+end_src
+
+run nix-shell
+
+#+begin_src sh
+nix-shell
+#+end_src
+
+you can then run whisperx
+
+** exit the nix-shell
+
+#+begin_src sh
+exit
+#+end_src
