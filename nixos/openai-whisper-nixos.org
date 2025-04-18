@@ -1,6 +1,67 @@
 #+STARTUP: showall
 * openai-whisper nixos cuda
+** create the directory structure
+
+#+begin_src sh
+mkdir -p "${HOME}"/nix/whisper
+#+end_src
+
+** shell.nix
+
+create the shell.nix file in the whisper directory
+
+#+begin_src sh
+cd ~/nix/whisper
+#+end_src
+
+#+begin_src sh
+vi shell.nix
+#+end_src
+
+add the following code to the shell.nix file
 
 #+begin_src nix
-nix-shell -p 'openai-whisper.override { torch = python3.pkgs.torch-bin; }'
+{ pkgs ? import <nixpkgs> {} }:
+
+let
+  overlay = final: prev: {
+    python310Packages = prev.python310Packages.overrideScope (self: super: {
+      scipyNoCheck = super.scipy.overrideAttrs (oldAttrs: rec {
+        doCheck = false;
+      });
+      openai-whisper = super.openai-whisper.overrideAttrs (oldAttrs: rec {
+        torch = self.torch-bin;
+        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [ final.python310Packages.scipyNoCheck ];
+      });
+    });
+  };
+
+  pkgs' = import <nixpkgs> { overlays = [ overlay ]; };
+
+in
+pkgs'.mkShell {
+  buildInputs = [
+    pkgs'.python310Packages.openai-whisper
+  ];
+}
 #+end_src
+
+** nix-shell
+
+run the nix-shell command in the whisper directory
+
+#+begin_src sh
+nix-shell
+#+end_src
+
+this will take an hour or so to build
+
+** run whisper 
+
+run the whisper command with the nix-shell
+
+#+begin_src sh
+whisper input.mp3 --model turbo
+#+end_src
+
+this will download the turbo model which is 1.5 gig
