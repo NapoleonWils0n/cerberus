@@ -85,10 +85,9 @@ pip install -r requirements.txt
 
 ** SpeakerDiarization
 
-create the SpeakerDiarization_repo in a subdirectory of the whisperx directory
+git clone SpeakerDiarization inside the whisperx directory
 
 #+begin_src sh
-# Install SpeakerDiarization
 git clone https://github.com/jianfch/SpeakerDiarization.git
 cd SpeakerDiarization
 pip install -r requirements.txt
