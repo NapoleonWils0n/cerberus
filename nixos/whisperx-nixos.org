@@ -23,12 +23,12 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.python311
     pkgs.python311Packages.pip
-    pkgs.python311Packages.pytorch-bin # Trying the pre-built binary
-    pkgs.python311Packages.torchaudio
+    pkgs.python311Packages.pytorch-bin # Keep PyTorch from Nixpkgs
     pkgs.python311Packages.numpy
     pkgs.python311Packages.scipy
     pkgs.ffmpeg
-    pkgs.git
+    pkgs.rustc
+    pkgs.cargo
     pkgs.python311Packages.numba
     pkgs.python311Packages.tqdm
     pkgs.python311Packages.soundfile
@@ -53,46 +53,13 @@ python3 -m venv venv
 source venv/bin/activate
 #+end_src
 
-create the requirements.txt file
-
 #+begin_src sh
-vi requirements.txt
+pip install torchaudio
 #+end_src
 
-with the following code
-
 #+begin_src sh
-faster-whisper
-stable-ts
-numpy
-scipy
-ffmpeg-python
-numba
-tqdm
-soundfile
-typing-extensions
-sentencepiece
-torchaudio
-webrtcvad
-whisperx
-#+end_src
-
-use pip to install the package in the requirements file
-
-#+begin_src sh
-pip install -r requirements.txt
-#+end_src
-
-** SpeakerDiarization
-
-git clone SpeakerDiarization inside the whisperx directory
-
-#+begin_src sh
-git clone https://github.com/jianfch/SpeakerDiarization.git
-cd SpeakerDiarization
-pip install -r requirements.txt
-pip install -e .
-cd ../
+pip install whisperx
+pip install faster-whisper stable-ts numpy scipy ffmpeg-python numba tqdm soundfile typing-extensions sentencepiece webrtcvad
 #+end_src
 
 ** run whisperx
