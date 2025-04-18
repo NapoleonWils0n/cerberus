@@ -28,6 +28,7 @@ pkgs.mkShell {
     pkgs.python311Packages.numpy
     pkgs.python311Packages.scipy
     pkgs.ffmpeg
+    pkgs.git
     pkgs.python311Packages.numba
     pkgs.python311Packages.tqdm
     pkgs.python311Packages.soundfile
