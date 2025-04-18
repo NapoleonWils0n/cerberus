@@ -81,7 +81,6 @@ use pip to install the package in the requirements file
 
 #+begin_src sh
 pip install -r requirements.txt
-pip install -e .
 #+end_src
 
 ** SpeakerDiarization
