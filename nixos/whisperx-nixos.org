@@ -48,7 +48,7 @@ nix-shell --pure --impure --arg pkgs '(import <nixpkgs> {})'
 ** pip install
 
 #+begin_src sh
-python3 -m venv .venv
+python3 -m venv venv
 source .venv/bin/activate
 #+end_src
 
@@ -89,8 +89,6 @@ create the SpeakerDiarization_repo in a subdirectory of the whisperx directory
 
 #+begin_src sh
 # Install SpeakerDiarization
-mkdir -p "${HOME}"/nix/whisperx/speaker-diarization
-cd "${HOME}"/nix/whisperx/speaker-diarization-repo
 git clone https://github.com/jianfch/SpeakerDiarization.git
 cd SpeakerDiarization
 pip install -r requirements.txt
