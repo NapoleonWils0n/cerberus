@@ -1,12 +1,16 @@
 #+STARTUP: showall
 * openai-whisper nixos cuda
-** create the directory structure
+** nix-shell single command
+
+#+begin_src sh
+nix-shell -p "python311Packages.openai-whisper.override { triton = python311Packages.triton-cuda; torch = python311Packages.pytorch-bin.override { triton = python311Packages.triton-cuda; }; }" pkgs.cudaPackages_12_3.cudatoolkit --run 'whisper input.mp3 --model small --device cuda'
+#+end_src
+
+** shell.nix
 
 #+begin_src sh
 mkdir -p "${HOME}"/nix/whisper
 #+end_src
-
-** shell.nix
 
 create the shell.nix file in the whisper directory
 
@@ -18,50 +22,68 @@ cd ~/nix/whisper
 vi shell.nix
 #+end_src
 
-add the following code to the shell.nix file
+add the following code 
 
 #+begin_src nix
 { pkgs ? import <nixpkgs> {} }:
 
-let
-  overlay = final: prev: {
-    python310Packages = prev.python310Packages.overrideScope (self: super: {
-      scipyNoCheck = super.scipy.overrideAttrs (oldAttrs: rec {
-        doCheck = false;
-      });
-      openai-whisper = super.openai-whisper.overrideAttrs (oldAttrs: rec {
-        torch = self.torch-bin;
-        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [ final.python310Packages.scipyNoCheck ];
-      });
-    });
-  };
-
-  pkgs' = import <nixpkgs> { overlays = [ overlay ]; };
-
-in
-pkgs'.mkShell {
+pkgs.mkShell {
   buildInputs = [
-    pkgs'.python310Packages.openai-whisper
+    (pkgs.python311Packages.openai-whisper.override {
+      triton = pkgs.python311Packages.triton-cuda;
+      torch = pkgs.python311Packages.pytorch-bin.override {
+        triton = pkgs.python311Packages.triton-cuda;
+      };
+    })
+    pkgs.cudaPackages_12_3.cudatoolkit
   ];
+
+  shellHook = ''
+    echo "Welcome to the Whisper CUDA environment!"
+    echo "Run 'whisper input.mp3 --model small --device cuda' to transcribe."
+  '';
 }
 #+end_src
 
-** nix-shell
+** run whisper
 
-run the nix-shell command in the whisper directory
+enter the nix-shell in the whisper directory
 
 #+begin_src sh
 nix-shell
 #+end_src
 
-this will take an hour or so to build
-
-** run whisper 
-
-run the whisper command with the nix-shell
+you can now change directory to where the audio file is
 
 #+begin_src sh
-whisper input.mp3 --model turbo
+cd ~/Desktop
 #+end_src
 
-this will download the turbo model which is 1.5 gig
+rip the audio from a video file with ffmpeg as an mp3
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vn -c:a libmp3lame input.mp3
+#+end_src
+
+use the small model and device cuda
+
+#+begin_src sh
+whisper input.mp3 --model small --device cuda
+#+end_src
+
+list the files output by whisper
+
+#+begin_src sh
+ls -l
+#+end_src
+
+that will ouput the following files
+
+#+begin_src sh
+-rw-r--r-- 1 djwilcox users    4132 Apr 19 14:48 input.json
+-rw-r--r-- 1 djwilcox users  960825 Apr 19 14:47 input.mp3
+-rw-r--r-- 1 djwilcox users     930 Apr 19 14:48 input.srt
+-rw-r--r-- 1 djwilcox users     771 Apr 19 14:48 input.tsv
+-rw-r--r-- 1 djwilcox users     666 Apr 19 14:48 input.txt
+-rw-r--r-- 1 djwilcox users     874 Apr 19 14:48 input.vtt
+#+end_src
