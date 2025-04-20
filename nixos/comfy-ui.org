@@ -28,6 +28,22 @@ cp ../automatic1111-webui-nix/*.nix .
 nix-shell --argstr variant CUDA 
 #+end_src
 
+#+begin_src sh
+vi webui.sh
+#+end_src
+
+#+begin_src sh
+export COMMANDLINE_ARGS="--medvram"
+#+end_src
+
+#+begin_src sh
+./webui.sh --xformers
+#+end_src
+
+model download
+
+[[https://civitai.com/models/133005?modelVersionId=920957]]
+
 ** comfy-ui
 
 exit out of previous shell
