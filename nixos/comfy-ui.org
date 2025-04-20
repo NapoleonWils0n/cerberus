@@ -25,7 +25,7 @@ cp ../automatic1111-webui-nix/*.nix .
 #+end_src
 
 #+begin_src sh
-nix-shell
+nix-shell --argstr variant CUDA 
 #+end_src
 
 ** comfy-ui
