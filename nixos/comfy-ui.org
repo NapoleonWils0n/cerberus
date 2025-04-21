@@ -82,6 +82,10 @@ pip install torch torchvision torchaudio --extra-index-url https://download.pyto
 #+end_src
 
 #+begin_src sh
+pip install --upgrade pip
+#+end_src
+
+#+begin_src sh
 pip install -r requirements.txt
 #+end_src
 
