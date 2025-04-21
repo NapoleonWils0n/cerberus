@@ -44,6 +44,8 @@ model download
 
 [[https://civitai.com/models/133005?modelVersionId=920957]]
 
+[[https://civitai.com/models/46422/juggernaut]]
+
 ** comfy-ui
 
 exit out of previous shell
