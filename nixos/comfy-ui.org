@@ -121,3 +121,16 @@ move download models to
 #+begin_example
 ComfyUI/models/checkpoints
 #+end_example
+
+** start comfyui
+
+#+begin_src sh
+source venv/bin/activate
+#+end_src
+
+#+begin_src sh
+python main.py
+#+end_src
+
+[[http://127.0.0.1:8188]]
+
