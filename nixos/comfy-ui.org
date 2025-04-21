@@ -101,6 +101,11 @@ edit base_path:
 
 to point to the stable-diffusion-web-ui path
 
+#+begin_src yaml
+a111:
+    base_path: /home/djwilcox/nix/comfyui/stable-diffusion-webui
+#+end_src
+
 #+begin_src sh
 python main.py
 #+end_src
