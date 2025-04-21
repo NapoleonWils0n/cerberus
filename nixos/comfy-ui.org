@@ -111,3 +111,11 @@ python main.py
 #+end_src
 
 [[http://127.0.0.1:8188]]
+
+** model
+
+move download models to
+
+#+begin_example
+ComfyUI/models/checkpoints
+#+end_example
