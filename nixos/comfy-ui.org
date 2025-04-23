@@ -125,6 +125,14 @@ ComfyUI/models/checkpoints
 ** start comfyui
 
 #+begin_src sh
+cd ~/nix/comfyui/ComfyUI]
+#+end_src
+
+#+begin_src sh
+nix-shell --argstr variant CUDA 
+#+end_src
+
+#+begin_src sh
 source venv/bin/activate
 #+end_src
 
