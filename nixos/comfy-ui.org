@@ -125,7 +125,11 @@ ComfyUI/models/checkpoints
 ** start comfyui
 
 #+begin_src sh
-cd ~/nix/comfyui/ComfyUI]
+cd ~/nix/comfyui/ComfyUI
+#+end_src
+
+#+begin_src sh
+export NIXPKGS_ALLOW_UNFREE=1
 #+end_src
 
 #+begin_src sh
