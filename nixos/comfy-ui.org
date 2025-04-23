@@ -122,6 +122,18 @@ move download models to
 ComfyUI/models/checkpoints
 #+end_example
 
+** comfyui manager
+
+[[https://github.com/Comfy-Org/ComfyUI-Manager]]
+
+#+begin_src sh
+cd ~/nix/comfyui/ComfyUI/custom_nodes
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
+#+end_src
+
 ** start comfyui
 
 #+begin_src sh
