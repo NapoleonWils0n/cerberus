@@ -1,0 +1,7 @@
+sd3_medium_incl_clips_t5xxlfp8
+https://civitai.com/models/497255?modelVersionId=568392
+
+steps: 28
+cfg: 4.5
+sampler_name: dpmpp_2m
+scheduler: sgm_uniform

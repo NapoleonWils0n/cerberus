@@ -1,0 +1,17 @@
+Recommended Settings(VAE is baked in):
+
+Res: 832*1216 (For Portrait, but any SDXL Res will work fine)
+
+Sampler: DPM++ 2M SDE
+
+Steps: 30-40
+
+CFG: 3-6 (less is a bit more realistic)
+
+Negative: Start with no negative, and add afterwards the Stuff you don´t wanna see in that image. I don´t recommend using my Negative Prompt, i simply use it because i am lazy :D
+
+VAE is already Baked In
+
+HiRes: 4xNMKD-Siax_200k with 15 Steps and 0.3 Denoise + 1.5 Upscale
+
+

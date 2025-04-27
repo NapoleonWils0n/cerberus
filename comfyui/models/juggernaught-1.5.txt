@@ -1,0 +1,43 @@
+https://civitai.com/models/46422/juggernaut
+
+Images were created with the following settings:
+
+512*768
+
+Sampler: DPM++ 2M Karras
+
+Steps: 35
+
+CFG: 7
+
+HiRes Fix:
+
+Sampler: 4xNMKD Siax 200k
+
+Steps: 15
+
+Denoise: 0.5
+
+Upscale: 2
+
+Lastly, the recipe for the last Juggernaut (Aftermath) version on SD 1.5:
+
+SD 1.5 Base
+
+Training Set 1 (0.65)
+
+Absolute Reality (0.18)
+
+epiCRealism V3 (0.2)
+
+Humans (0.15)
+
+Skin Enhancer (0.15)
+
+Better Portrait Lighting (0.2)
+
+Training Set 2 (0.55)
+
+RPG 5 (0.38)
+
+Divas (0.15)
