@@ -1,0 +1,8 @@
+model
+https://huggingface.co/xinsir/controlnet-union-sdxl-1.0
+
+download page
+https://huggingface.co/xinsir/controlnet-union-sdxl-1.0/tree/main
+
+download link
+https://huggingface.co/xinsir/controlnet-union-sdxl-1.0/resolve/main/diffusion_pytorch_model_promax.safetensors?download=true
