@@ -1,0 +1,795 @@
+{
+  "last_node_id": 52,
+  "last_link_id": 256,
+  "nodes": [
+    {
+      "id": 42,
+      "type": "SaveImage",
+      "pos": [
+        490,
+        70
+      ],
+      "size": {
+        "0": 613.67138671875,
+        "1": 663.79248046875
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 256
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 52,
+      "type": "workflow/txt2img with styles",
+      "pos": [
+        40,
+        60
+      ],
+      "size": {
+        "0": 438.3999938964844,
+        "1": 678
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Flux Dev GGUF",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "Flux Dev GGUF"
+          }
+        },
+        {
+          "name": "Choose a style from style1, style2..",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "Choose a style from style1, style2.."
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "negative_string",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            256
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow/txt2img with styles"
+      },
+      "widgets_values": [
+        "flux1-dev-Q8_0.gguf",
+        "t5-v1_1-xxl-encoder-Q8_0.gguf",
+        "clip_l.safetensors",
+        "flux",
+        "a cat",
+        1024,
+        1024,
+        1,
+        "No Style",
+        "No Style",
+        "No Style",
+        "No Style",
+        "ae.safetensors",
+        "",
+        ", ",
+        "true",
+        3.5,
+        775949583345916,
+        "randomize",
+        20,
+        1,
+        "dpmpp_2m",
+        "sgm_uniform",
+        1,
+        "",
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      256,
+      52,
+      1,
+      42,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.1000000000000003,
+      "offset": [
+        4.12215846506339,
+        6.499285051293474
+      ]
+    },
+    "groupNodes": {
+      "txt2img with styles": {
+        "nodes": [
+          {
+            "type": "UnetLoaderGGUF",
+            "pos": [
+              -30,
+              1650
+            ],
+            "size": {
+              "0": 384.2056884765625,
+              "1": 65.37272644042969
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "UnetLoaderGGUF"
+            },
+            "widgets_values": [
+              "flux1-dev-Q8_0.gguf"
+            ],
+            "index": 0
+          },
+          {
+            "type": "DualCLIPLoaderGGUF",
+            "pos": [
+              -30,
+              1770
+            ],
+            "size": {
+              "0": 378.7062072753906,
+              "1": 106
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "CLIP",
+                "type": "CLIP",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "DualCLIPLoaderGGUF"
+            },
+            "widgets_values": [
+              "t5-v1_1-xxl-encoder-Q8_0.gguf",
+              "clip_l.safetensors",
+              "flux"
+            ],
+            "index": 1
+          },
+          {
+            "type": "easy positive",
+            "pos": [
+              -30,
+              1920
+            ],
+            "size": {
+              "0": 382.2248840332031,
+              "1": 193.26638793945312
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "positive",
+                "type": "STRING",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "easy positive"
+            },
+            "widgets_values": [
+              "a cat"
+            ],
+            "color": "#232",
+            "bgcolor": "#353",
+            "index": 2
+          },
+          {
+            "type": "EmptySD3LatentImage",
+            "pos": [
+              380,
+              1910
+            ],
+            "size": {
+              "0": 236.59744262695312,
+              "1": 106
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "EmptySD3LatentImage"
+            },
+            "widgets_values": [
+              1024,
+              1024,
+              1
+            ],
+            "color": "#323",
+            "bgcolor": "#535",
+            "index": 3
+          },
+          {
+            "type": "Prompt Multiple Styles Selector",
+            "pos": [
+              30,
+              2170
+            ],
+            "size": {
+              "0": 315,
+              "1": 150
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "positive_string",
+                "type": "STRING",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              },
+              {
+                "name": "negative_string",
+                "type": "STRING",
+                "links": null,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Prompt Multiple Styles Selector"
+            },
+            "widgets_values": [
+              "No Style",
+              "No Style",
+              "No Style",
+              "No Style"
+            ],
+            "index": 4
+          },
+          {
+            "type": "VAELoader",
+            "pos": [
+              630,
+              1960
+            ],
+            "size": {
+              "0": 324.5118713378906,
+              "1": 58
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "VAE",
+                "type": "VAE",
+                "links": [],
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAELoader"
+            },
+            "widgets_values": [
+              "ae.safetensors"
+            ],
+            "index": 5
+          },
+          {
+            "type": "CLIPTextEncode",
+            "pos": [
+              390,
+              1850
+            ],
+            "size": {
+              "0": 425.27801513671875,
+              "1": 180.6060791015625
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "clip",
+                "type": "CLIP",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CLIPTextEncode"
+            },
+            "widgets_values": [
+              ""
+            ],
+            "color": "#322",
+            "bgcolor": "#533",
+            "index": 6
+          },
+          {
+            "type": "Text Concatenate",
+            "pos": [
+              400,
+              2110
+            ],
+            "size": [
+              315,
+              178
+            ],
+            "flags": {
+              "collapsed": true
+            },
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "text_a",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_a"
+                }
+              },
+              {
+                "name": "text_b",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_b"
+                }
+              },
+              {
+                "name": "text_c",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_c"
+                }
+              },
+              {
+                "name": "text_d",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_d"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "shape": 3,
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Text Concatenate"
+            },
+            "widgets_values": [
+              ", ",
+              "true",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "index": 7
+          },
+          {
+            "type": "CLIPTextEncode",
+            "pos": [
+              400,
+              1670
+            ],
+            "size": {
+              "0": 422.84503173828125,
+              "1": 164.31304931640625
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "clip",
+                "type": "CLIP",
+                "link": null
+              },
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CLIPTextEncode"
+            },
+            "widgets_values": [
+              "portrait of a woman with red curly hair and green eyes, freckles, beautiful"
+            ],
+            "color": "#232",
+            "bgcolor": "#353",
+            "index": 8
+          },
+          {
+            "type": "FluxGuidance",
+            "pos": [
+              390,
+              1730
+            ],
+            "size": {
+              "0": 211.60000610351562,
+              "1": 58
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "FluxGuidance"
+            },
+            "widgets_values": [
+              3.5
+            ],
+            "index": 9
+          },
+          {
+            "type": "KSampler",
+            "pos": [
+              640,
+              1650
+            ],
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              251803925230194,
+              "randomize",
+              20,
+              1,
+              "dpmpp_2m",
+              "sgm_uniform",
+              1
+            ],
+            "index": 10
+          },
+          {
+            "type": "VAEDecode",
+            "pos": [
+              980,
+              1650
+            ],
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 11
+          }
+        ],
+        "links": [
+          [
+            1,
+            0,
+            6,
+            0,
+            46,
+            "CLIP"
+          ],
+          [
+            2,
+            0,
+            7,
+            0,
+            51,
+            "STRING"
+          ],
+          [
+            4,
+            0,
+            7,
+            1,
+            49,
+            "STRING"
+          ],
+          [
+            1,
+            0,
+            8,
+            0,
+            46,
+            "CLIP"
+          ],
+          [
+            7,
+            0,
+            8,
+            1,
+            50,
+            "STRING"
+          ],
+          [
+            8,
+            0,
+            9,
+            0,
+            39,
+            "CONDITIONING"
+          ],
+          [
+            0,
+            0,
+            10,
+            0,
+            45,
+            "MODEL"
+          ],
+          [
+            9,
+            0,
+            10,
+            1,
+            44,
+            "CONDITIONING"
+          ],
+          [
+            6,
+            0,
+            10,
+            2,
+            40,
+            "CONDITIONING"
+          ],
+          [
+            3,
+            0,
+            10,
+            3,
+            43,
+            "LATENT"
+          ],
+          [
+            10,
+            0,
+            11,
+            0,
+            38,
+            "LATENT"
+          ],
+          [
+            5,
+            0,
+            11,
+            1,
+            47,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            11,
+            0,
+            "IMAGE"
+          ]
+        ],
+        "config": {
+          "5": {
+            "input": {
+              "vae_name": {
+                "visible": false
+              }
+            }
+          },
+          "6": {
+            "input": {
+              "text": {
+                "visible": false
+              }
+            }
+          },
+          "7": {
+            "input": {
+              "delimiter": {
+                "visible": false
+              },
+              "clean_whitespace": {
+                "visible": false
+              },
+              "text_a": {
+                "visible": false
+              },
+              "text_b": {
+                "visible": false
+              },
+              "text_c": {
+                "visible": false,
+                "name": "Flux Dev GGUF"
+              },
+              "text_d": {
+                "visible": false,
+                "name": "Choose a style from style1, style2.."
+              }
+            }
+          },
+          "8": {
+            "input": {
+              "text": {
+                "visible": false
+              }
+            }
+          },
+          "10": {
+            "input": {
+              "denoise": {
+                "visible": false
+              }
+            }
+          },
+          "11": {
+            "output": {
+              "0": {
+                "visible": true
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "version": 0.4
+}

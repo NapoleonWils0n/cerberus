@@ -1,0 +1,261 @@
+{
+  "last_node_id": 12,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "SaveImage",
+      "pos": {
+        "0": 1002,
+        "1": 63
+      },
+      "size": [
+        370.1325201682939,
+        427.10296728723597
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 14
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "img"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "MaskToImage",
+      "pos": {
+        "0": 790,
+        "1": 490
+      },
+      "size": [
+        176.39999389648438,
+        26
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": {
+        "0": 1003,
+        "1": 543
+      },
+      "size": {
+        "0": 370.13250732421875,
+        "1": 427.10296630859375
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "mask"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "InspyrenetRembg",
+      "pos": {
+        "0": 419,
+        "1": 386
+      },
+      "size": {
+        "0": 315,
+        "1": 78
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            15
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "InspyrenetRembg"
+      },
+      "widgets_values": [
+        "default"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "iToolsLoadImages",
+      "pos": {
+        "0": 72,
+        "1": 383
+      },
+      "size": {
+        "0": 315,
+        "1": 146
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            16
+          ],
+          "shape": 6,
+          "slot_index": 0
+        },
+        {
+          "name": "images names",
+          "type": "STRING",
+          "links": null,
+          "shape": 6
+        },
+        {
+          "name": "count",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "iToolsLoadImages"
+      },
+      "widgets_values": [
+        "D:\\TEST IMAGES",
+        0,
+        4
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Note",
+      "pos": {
+        "0": 73,
+        "1": 577
+      },
+      "size": [
+        317.0030359193696,
+        112.75600394178593
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Paste the path to the folder that contains the images\n\nstart_index - if is 0 it start with first image\n\nload_limit - The number of images to load from that folder can be any amount\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      11,
+      6,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      14,
+      10,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      15,
+      10,
+      1,
+      6,
+      0,
+      "MASK"
+    ],
+    [
+      16,
+      11,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.0152559799477099,
+      "offset": [
+        155.67221443836743,
+        17.229119219375736
+      ]
+    }
+  },
+  "version": 0.4
+}

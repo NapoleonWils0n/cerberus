@@ -1,0 +1,736 @@
+{
+  "last_node_id": 34,
+  "last_link_id": 122,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        472,
+        51
+      ],
+      "size": [
+        587.1416726082434,
+        638.1940300480793
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 122
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 34,
+      "type": "workflow/txt2img with styles",
+      "pos": [
+        20,
+        40
+      ],
+      "size": [
+        430,
+        649.1958136870256
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Flux Schnell GGUF",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "Flux Schnell GGUF"
+          }
+        },
+        {
+          "name": "Chose a style from style1, style2..",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "Chose a style from style1, style2.."
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "negative_string",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            122
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow/txt2img with styles"
+      },
+      "widgets_values": [
+        "flux1-schnell-Q8_0.gguf",
+        "a cute cartoon bunny, closeup, digital painting, a fantasy forest background, magical, epic",
+        "t5-v1_1-xxl-encoder-Q8_0.gguf",
+        "clip_l.safetensors",
+        "flux",
+        "ae.safetensors",
+        1024,
+        1024,
+        1,
+        "No Style",
+        "No Style",
+        "No Style",
+        "No Style",
+        "",
+        ", ",
+        "true",
+        117322195735356,
+        "randomize",
+        4,
+        1,
+        "euler",
+        "simple",
+        1,
+        "",
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      122,
+      34,
+      1,
+      9,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.3310000000000004,
+      "offset": [
+        98.84104715133567,
+        21.297610841054542
+      ]
+    },
+    "groupNodes": {
+      "txt2img with styles": {
+        "nodes": [
+          {
+            "type": "UnetLoaderGGUF",
+            "pos": [
+              20,
+              50
+            ],
+            "size": {
+              "0": 384.2056884765625,
+              "1": 65.37272644042969
+            },
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "UnetLoaderGGUF"
+            },
+            "widgets_values": [
+              "flux1-schnell-Q8_0.gguf"
+            ],
+            "index": 0
+          },
+          {
+            "type": "easy positive",
+            "pos": [
+              20,
+              320
+            ],
+            "size": {
+              "0": 382.2248840332031,
+              "1": 193.26638793945312
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "positive",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "easy positive"
+            },
+            "widgets_values": [
+              "a cute cartoon bunny, closeup, digital painting, a fantasy forest background, magical, epic"
+            ],
+            "color": "#232",
+            "bgcolor": "#353",
+            "index": 1
+          },
+          {
+            "type": "DualCLIPLoaderGGUF",
+            "pos": [
+              20,
+              170
+            ],
+            "size": {
+              "0": 378.7062072753906,
+              "1": 106
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "CLIP",
+                "type": "CLIP",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "DualCLIPLoaderGGUF"
+            },
+            "widgets_values": [
+              "t5-v1_1-xxl-encoder-Q8_0.gguf",
+              "clip_l.safetensors",
+              "flux"
+            ],
+            "index": 2
+          },
+          {
+            "type": "VAELoader",
+            "pos": [
+              700,
+              350
+            ],
+            "size": {
+              "0": 315,
+              "1": 58
+            },
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "VAE",
+                "type": "VAE",
+                "links": [],
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAELoader"
+            },
+            "widgets_values": [
+              "ae.safetensors"
+            ],
+            "index": 3
+          },
+          {
+            "type": "EmptySD3LatentImage",
+            "pos": [
+              700,
+              460
+            ],
+            "size": {
+              "0": 315,
+              "1": 106
+            },
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "EmptySD3LatentImage"
+            },
+            "widgets_values": [
+              1024,
+              1024,
+              1
+            ],
+            "color": "#323",
+            "bgcolor": "#535",
+            "index": 4
+          },
+          {
+            "type": "Prompt Multiple Styles Selector",
+            "pos": [
+              30,
+              570
+            ],
+            "size": {
+              "0": 373.54925537109375,
+              "1": 150
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "outputs": [
+              {
+                "name": "positive_string",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              },
+              {
+                "name": "negative_string",
+                "type": "STRING",
+                "links": null,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Prompt Multiple Styles Selector"
+            },
+            "widgets_values": [
+              "No Style",
+              "No Style",
+              "No Style",
+              "No Style"
+            ],
+            "index": 5
+          },
+          {
+            "type": "CLIPTextEncode",
+            "pos": [
+              470,
+              200
+            ],
+            "size": {
+              "0": 425.27801513671875,
+              "1": 180.6060791015625
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "clip",
+                "type": "CLIP",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CLIPTextEncode"
+            },
+            "widgets_values": [
+              ""
+            ],
+            "color": "#322",
+            "bgcolor": "#533",
+            "index": 6
+          },
+          {
+            "type": "Text Concatenate",
+            "pos": [
+              440,
+              490
+            ],
+            "size": [
+              315,
+              178
+            ],
+            "flags": {
+              "collapsed": true
+            },
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "text_a",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_a"
+                }
+              },
+              {
+                "name": "text_b",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_b"
+                }
+              },
+              {
+                "name": "text_c",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_c"
+                }
+              },
+              {
+                "name": "text_d",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text_d"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "Text Concatenate"
+            },
+            "widgets_values": [
+              ", ",
+              "true",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "index": 7
+          },
+          {
+            "type": "CLIPTextEncode",
+            "pos": [
+              470,
+              140
+            ],
+            "size": {
+              "0": 422.84503173828125,
+              "1": 164.31304931640625
+            },
+            "flags": {
+              "collapsed": true
+            },
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "clip",
+                "type": "CLIP",
+                "link": null
+              },
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "text"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CLIPTextEncode"
+            },
+            "widgets_values": [
+              "A cute yet epic sci-fi robot with a rusty exterior, highlighted by a dramatic rim light, stands proudly in a cinematic portrait, exuding a blend of charm and weathered resilience."
+            ],
+            "color": "#232",
+            "bgcolor": "#353",
+            "index": 8
+          },
+          {
+            "type": "KSampler",
+            "pos": [
+              700,
+              40
+            ],
+            "size": {
+              "0": 315,
+              "1": 262
+            },
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "MODEL",
+                "link": null
+              },
+              {
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": null
+              },
+              {
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "LATENT",
+                "type": "LATENT",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "KSampler"
+            },
+            "widgets_values": [
+              261232330416488,
+              "randomize",
+              4,
+              1,
+              "euler",
+              "simple",
+              1
+            ],
+            "index": 9
+          },
+          {
+            "type": "VAEDecode",
+            "pos": [
+              1040,
+              40
+            ],
+            "size": {
+              "0": 210,
+              "1": 46
+            },
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "samples",
+                "type": "LATENT",
+                "link": null
+              },
+              {
+                "name": "vae",
+                "type": "VAE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "VAEDecode"
+            },
+            "index": 10
+          }
+        ],
+        "links": [
+          [
+            2,
+            0,
+            6,
+            0,
+            26,
+            "CLIP"
+          ],
+          [
+            1,
+            0,
+            7,
+            0,
+            28,
+            "STRING"
+          ],
+          [
+            5,
+            0,
+            7,
+            1,
+            29,
+            "STRING"
+          ],
+          [
+            2,
+            0,
+            8,
+            0,
+            26,
+            "CLIP"
+          ],
+          [
+            7,
+            0,
+            8,
+            1,
+            30,
+            "STRING"
+          ],
+          [
+            0,
+            0,
+            9,
+            0,
+            25,
+            "MODEL"
+          ],
+          [
+            8,
+            0,
+            9,
+            1,
+            6,
+            "CONDITIONING"
+          ],
+          [
+            6,
+            0,
+            9,
+            2,
+            7,
+            "CONDITIONING"
+          ],
+          [
+            4,
+            0,
+            9,
+            3,
+            10,
+            "LATENT"
+          ],
+          [
+            9,
+            0,
+            10,
+            0,
+            3,
+            "LATENT"
+          ],
+          [
+            3,
+            0,
+            10,
+            1,
+            27,
+            "VAE"
+          ]
+        ],
+        "external": [
+          [
+            null,
+            0,
+            "IMAGE"
+          ]
+        ],
+        "config": {
+          "0": {},
+          "1": {},
+          "2": {},
+          "3": {},
+          "4": {},
+          "5": {},
+          "6": {
+            "input": {
+              "text": {
+                "visible": false
+              }
+            }
+          },
+          "7": {
+            "input": {
+              "text_d": {
+                "visible": false,
+                "name": "Chose a style from style1, style2.."
+              },
+              "delimiter": {
+                "visible": false
+              },
+              "clean_whitespace": {
+                "visible": false
+              },
+              "text_a": {
+                "visible": false
+              },
+              "text_b": {
+                "visible": false
+              },
+              "text_c": {
+                "visible": false,
+                "name": "Flux Schnell GGUF"
+              }
+            }
+          },
+          "8": {
+            "input": {
+              "text": {
+                "visible": false
+              }
+            }
+          },
+          "9": {},
+          "10": {}
+        }
+      }
+    }
+  },
+  "version": 0.4
+}

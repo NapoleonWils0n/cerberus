@@ -1,0 +1,37 @@
+Instruction:
+Generate a single continuous prompt in three long, detailed sentences that begins with the exact type of image provided (e.g., 'a photo of,' 'a digital painting of,' 'a vector illustration of'), followed strictly by the given art style without introducing any new styles. Include art-style-specific details such as texture, techniques, or medium used for that style. Do not use quotation marks or any other unnecessary punctuation around the final prompt. Only output the text without quotes.
+
+Art-Style Specific Words:
+Photo:
+Use terms related to photography techniques, lighting conditions, and camera settings: high resolution, sharp focus, depth of field, vivid colors, natural light, lens flare, captured with a [camera model] (e.g., Canon EOS R5, Nikon D850), bokeh effect, shallow depth of field, HDR, long exposure, macro lens, wide-angle, underexposed, soft shadows, golden hour lighting, dynamic range.
+
+3D Render:
+Incorporate terms relating to 3D modeling, lighting techniques, and rendering engines: professional 3D render, ray tracing, highly detailed lighting, octane render, volumetric lighting, dynamic lighting, photorealistic textures, creative composition, global illumination, subsurface scattering, realistic reflections, shading maps, ambient light.
+
+Painting:
+Focus on traditional painting techniques and materials: visible brushstrokes, color palette, canvas texture, oil-based paints, watercolor wash, layered tones, vibrant hues, impressionistic style, bold strokes, realistic shading, abstract patterns, gouache highlights, oil glazes, tempera paints, pastel colors, palette knife technique, dry brush effect, textured canvas, impasto technique, delicate brushwork, smooth gradients, soft edges, chiaroscuro, saturation levels, hatching and cross-hatching, blended colors, natural pigment, wet-on-wet technique, wash of color, matte finish.
+
+Vector Illustration:
+Emphasize the clean, scalable qualities of vector art: clean lines, flat color, scalable elements, bold contrast, geometric precision, crisp edges, layered vectors, sharp angles, vibrant fills, smooth gradients, perfect symmetry, line thickness, minimalist aesthetic, monotone designs, line art, stylized shapes, solid fills, gradient mesh, iconic style, SVG format, 2D flat art.
+
+Drawing:
+Focus on traditional sketching and drawing methods: expressive lines, dynamic composition, charcoal texture, sketchy strokes, pencil details, shading with hatching, cross-hatching, graphite texture, rough pencil lines, eraser smudges, freehand style, bold outlines, contour lines, gesture drawing, stipple shading, light and shadow contrast, paper texture, rough sketch, pencil shading, delicate linework, tonal contrast, soft gradients, rapid sketch technique, rendered in charcoal/pencil/ink, light and dark pencil strokes, linear perspective, fine pencil details.
+
+Example Usage:
+For a 3D render input like:
+a futuristic cityscape at night with neon lights
+
+It should generate:
+A professional 3D render of a futuristic cityscape at night, featuring towering skyscrapers illuminated by vibrant neon lights. The scene is rendered with photorealistic textures and highly detailed lighting, showcasing dynamic volumetric lighting effects that cast intricate shadows across the city. The use of octane render and ray tracing adds depth and realism, with the reflective surfaces of the buildings and the soft ambient light creating a dramatic and immersive atmosphere.
+
+For a photo input like:
+a cute kitten playing in a field of flowers
+
+It should generate:
+A high-resolution photo of a playful kitten frolicking in a vibrant field of wildflowers, captured with a Nikon D850. The image showcases sharp focus on the kitten's soft fur and vivid colors, while a shallow depth of field blurs the background, creating a bokeh effect that highlights the scene. The golden hour sunlight bathes the field in a warm, natural light, casting soft shadows that add dimension and life to the photo.
+
+For a painting input like:
+a majestic lion in a savannah during sunset
+
+It should generate:
+An oil painting of a majestic lion standing proudly on the vast savannah, rendered with visible brushstrokes that capture the texture of its mane. The rich color palette of oranges and golds evokes the warmth of the setting sun, blending smoothly into the soft pastel hues of the sky. The lion’s bold, realistic shading contrasts beautifully with the abstract patterns of the dry grass, while delicate brushwork brings out the fine details of its fur and the subtle play of light across the landscape.

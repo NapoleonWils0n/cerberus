@@ -1,0 +1,145 @@
+{
+  "last_node_id": 32,
+  "last_link_id": 31,
+  "nodes": [
+    {
+      "id": 30,
+      "type": "easy showAnything",
+      "pos": {
+        "0": 846,
+        "1": 46
+      },
+      "size": {
+        "0": 532.684814453125,
+        "1": 634.9594116210938
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 31
+        }
+      ],
+      "outputs": [],
+      "title": "Show Prompt",
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "A regal cartoon cat sitting majestically on a grand, ornate throne in an exaggeratedly playful, whimsical illustration style where colorful tapestries and luxurious fabrics adorn the throne's surroundings, and a pair of loyal-looking, anthropomorphic dogs stand guard at the base of the throne, all depicted with a vibrant, pastel color palette with bright highlights and soft shading to give a sense of warmth and joy, and featuring intricate patterns on the cat's crown and scepter, a sparkly jewel-encrusted collar around its neck, and a mischievous glint in its eye."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 31,
+      "type": "Note",
+      "pos": {
+        "0": -13,
+        "1": 41
+      },
+      "size": {
+        "0": 398.3514404296875,
+        "1": 380.95941162109375
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "This prompt generator works ok with llama 3.1 8b\n\nllama3.1 8b\n4.7 GB\nhttps://ollama.com/library/llama3.1:8b\n\n\nIf you open a command window - start, run, cmd and press enter\nyou can check how many models you have installed using command\n\nollama list\n\nTo remove a model you can use\nollama rm <model_name>"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 32,
+      "type": "OllamaGenerateAdvance",
+      "pos": {
+        "0": 411,
+        "1": 44
+      },
+      "size": {
+        "0": 414.3514404296875,
+        "1": 634.292724609375
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "context",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "context"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            31
+          ],
+          "slot_index": 0,
+          "shape": 3
+        },
+        {
+          "name": "context",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OllamaGenerateAdvance"
+      },
+      "widgets_values": [
+        "a cartoon cat as a king on a throne",
+        false,
+        "http://127.0.0.1:11434",
+        "llama3.1:8b",
+        "Generate a detailed, continuous prompt.\nThe prompt should include the following components seamlessly integrated:\n1. Subject/Scene: Start with the main focus of the image.\n2. Additional Elements: Include any secondary details or background elements that complement the main subject.\n3. Artistic Style/Effect: Describe the visual style or effect desired for the image.\n4. Color Palette/Lighting: Specify the colors and lighting to set the mood of the image.\n5. Specific Details: Add any intricate details or specific visual features that should be emphasized.\nOutput Format:\nEnsure the output is provided within a code block using the following structure:\nA [Subject/Scene] in a [Artistic Style/Effect] where [Additional Elements] are present, all depicted with [Color Palette/Lighting] and featuring [Specific Details].\nExample Output:\nA medieval castle on a hill during a thunderstorm in a gothic, dark fantasy style where dense, dark forests surround the castle, and lightning strikes in the distance, illuminating a river winding through the valley below, all depicted with a muted, dark color palette with flashes of bright white and blue from the lightning, and featuring crumbling walls with overgrown ivy, a slightly open drawbridge, and a dim, flickering light visible inside the castle.",
+        841710588,
+        "randomize",
+        40,
+        0.9,
+        0.8,
+        -1,
+        1,
+        5,
+        false,
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      31,
+      32,
+      0,
+      30,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        304.6666259765625,
+        191.33331298828125
+      ]
+    }
+  },
+  "version": 0.4
+}

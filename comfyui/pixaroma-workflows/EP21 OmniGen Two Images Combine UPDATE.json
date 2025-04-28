@@ -1,0 +1,214 @@
+{
+  "last_node_id": 21,
+  "last_link_id": 18,
+  "nodes": [
+    {
+      "id": 16,
+      "type": "SaveImage",
+      "pos": [
+        843,
+        85
+      ],
+      "size": [
+        525.66455078125,
+        566.7876586914062
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 17
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "LoadImage",
+      "pos": [
+        101,
+        89
+      ],
+      "size": [
+        279.8789978027344,
+        371.3621826171875
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "PortraitWoman.png",
+        "image"
+      ]
+    },
+    {
+      "id": 21,
+      "type": "LoadImage",
+      "pos": [
+        95,
+        505
+      ],
+      "size": [
+        279.8789978027344,
+        371.3621826171875
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            18
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "PortraitWizard.png",
+        "image"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "ailab_OmniGen",
+      "pos": [
+        411,
+        88
+      ],
+      "size": [
+        410.3668212890625,
+        629.9027099609375
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 16,
+          "shape": 7
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 18,
+          "shape": 7
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ailab_OmniGen"
+      },
+      "widgets_values": [
+        "None",
+        "A digital painting, illustrated in a detailed and expressive style, captures the essence of a wizard and a witch side by side. The wizard, inspired by image_1, wears a rich, deep purple hooded robe that casts a shadow over his weathered face. His piercing green eyes shine with wisdom and power, framed by a well-groomed white beard that adds to his mystical presence. The lighting is soft, with a warm glow that highlights his intricate facial features and hints at his ancient knowledge.\n\nBeside him, the witch, inspired by image_2, stands in a graceful yet powerful pose. Her vibrant red curly hair cascades down, full of life and energy. She has a sharp yet kind expression, with intense green eyes that reflect a hint of mystery and magic. Her clothing is dark, with subtle details that suggest both elegance and strength. The overall mood is enchanting, with shadows and light carefully blended to create a classic, magical atmosphere, as though they are deep in a mystical forest or ancient library.",
+        "Auto",
+        "Balanced",
+        3.5,
+        1.8,
+        50,
+        true,
+        false,
+        1024,
+        1024,
+        26037750449203,
+        "randomize",
+        1024
+      ]
+    }
+  ],
+  "links": [
+    [
+      16,
+      11,
+      0,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      17,
+      20,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      18,
+      21,
+      0,
+      20,
+      1,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.9229599817706473,
+      "offset": [
+        87.509553985134,
+        34.71777984856186
+      ]
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}

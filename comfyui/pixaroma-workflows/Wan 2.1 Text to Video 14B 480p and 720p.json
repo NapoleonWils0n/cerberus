@@ -1,0 +1,556 @@
+{
+  "last_node_id": 66,
+  "last_link_id": 112,
+  "nodes": [
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        11.44460391998291,
+        404.221435546875
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 75
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            111
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "CLIP Text Encode (Negative Prompt)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "Overexposure, static, blurred details, subtitles, paintings, pictures, still, overall gray, worst quality, low quality, JPEG compression residue, ugly, mutilated, redundant fingers, poorly painted hands, poorly painted faces, deformed, disfigured, deformed limbs, fused fingers, cluttered background, three legs, a lot of people in the background, upside down"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 38,
+      "type": "CLIPLoader",
+      "pos": [
+        -403.6437072753906,
+        335.69818115234375
+      ],
+      "size": [
+        373.58380126953125,
+        82
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            74,
+            75
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "wan",
+        "default"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        10,
+        200
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 74
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            110
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "CLIP Text Encode (Positive Prompt)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "A stunning fashion model with long, dark hair looks confidently at the camera, wearing a sleek red leather dress. Soft morning light gently illuminates her face, creating a warm and natural glow. The blurred background enhances the dreamy atmosphere. A cinematic medium portrait shot captures her elegance and sophistication.\n"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 57,
+      "type": "UnetLoaderGGUF",
+      "pos": [
+        -402.34918212890625,
+        219.7893524169922
+      ],
+      "size": [
+        368.4512023925781,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            105
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "aux_id": "city96/ComfyUI-GGUF",
+        "ver": "298192ed60f8ca821c6fe5f8030cae23424cada5",
+        "Node name for S&R": "UnetLoaderGGUF"
+      },
+      "widgets_values": [
+        "wan2.1-t2v-14b-Q8_0.gguf"
+      ]
+    },
+    {
+      "id": 66,
+      "type": "EmptyHunyuanLatentVideo",
+      "pos": [
+        221.1891326904297,
+        643.4222412109375
+      ],
+      "size": [
+        210,
+        130
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            112
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "EmptyHunyuanLatentVideo"
+      },
+      "widgets_values": [
+        832,
+        480,
+        49,
+        1
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 60,
+      "type": "MarkdownNote",
+      "pos": [
+        -857.7598876953125,
+        201.14547729492188
+      ],
+      "size": [
+        439.7647705078125,
+        1043.0780029296875
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Pixaroma - Note - Settings",
+      "properties": {},
+      "widgets_values": [
+        "# 🎥 Recommended Settings for Wan 2.1  \n\n## ✅ Recommended Width and Height  \n(for EmptyHunyuanLatentVideo node)\n\n### **480p**  \n- **Landscape** → `832x480px`  \n- **Portrait** → `480x832px`  \n- **Square** → `640x640px`  \n\n### **720p**  \n- **Landscape** → `1280x720px`  \n- **Portrait** → `720x1280px`  \n- **Square** → `960x960px`  \n\n---  \n\n## ✅ Recommended Length (Frames)  \n\n### **For 16 FPS:**  \n**Duration → Length Value (in the Latent Video Node)** \n- **1 second** → `17 frames`  \n- **2 seconds** → `33 frames`  \n- **3 seconds** → `49 frames`  \n- **4 seconds** → `65 frames`  \n- **5 seconds** → `81 frames`  \n\n### **For 24 FPS:**  \n**Duration → Length Value (in the Latent Video Node)**  \n- **1 second** → `25`  \n- **2 seconds** → `49`  \n- **3 seconds** → `73`  \n- **4 seconds** → `97`  \n- **5 seconds** → `121`  \n\n⚡ **16 FPS is generated faster than 24 FPS, but 24 FPS gives smoother motion.**  \n\n---  \n\n## ✅ Formula to Calculate Length  \n*(Remember to add an extra frame!)*  \n📌 **Formula:**  \n`Frames = (Seconds × FPS) + 1`  \n\n*(Check `frame_rate` in the **Video Combine Node**)  \n\n### **Example Calculations:**  \n📌 **For 3 seconds at 24 FPS:**  \n`(3 × 24) + 1 = 73 frames`  \n\n📌 **For 3 seconds at 16 FPS:**  \n`(3 × 16) + 1 = 49 frames`  \n\n---  \n\n## ✅ KSampler Settings  \n### **Recommended Steps:**  \n🔹 `15-30 steps` *(up to 50, try 30)*  \n\n### **Recommended CFG:**  \n🔹 `5-7` *(Try 6)*  \n\n---  \n\n## ✅ Recommended Frame Rate (**Video Combine Node**)  \n- **16 FPS** → ⏩ Faster generation, but less smooth motion  \n- **24 FPS** → 🕰️ Slower generation, but smoother video  \n\n📌 **If you change the frame rate, adjust the Length in the WanImageToVideo Node.**  \n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 59,
+      "type": "MarkdownNote",
+      "pos": [
+        -1276.0726318359375,
+        202.5213623046875
+      ],
+      "size": [
+        394.6198425292969,
+        545.11669921875
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Pixaroma - Note - Models Info - START HERE",
+      "properties": {},
+      "widgets_values": [
+        "# MODELS USED IN THIS WORKFLOW  \n\n## Unet Loader (GGUF)  \nDownload **wan2.1-t2v-14b-Q8_0.gguf** from  \n[🔗 Direct Download](https://huggingface.co/city96/Wan2.1-T2V-14B-gguf/resolve/main/wan2.1-t2v-14b-Q8_0.gguf?download=true)  \n\n**Place in:** `ComfyUI/models/diffusion_models`  \n\nOr download a **bigger or smaller model** depending on your VRAM:  \n[📂 Model List](https://huggingface.co/city96/Wan2.1-T2V-14B-gguf/tree/main)  \n\n---  \n\n## Load CLIP  \nDownload **umt5_xxl_fp8_e4m3fn_scaled.safetensors** from  \n[🔗 Direct Download](https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors?download=true)  \n\n**Place in:** `ComfyUI/models/text_encoders`  \n\n---  \n\n## Load VAE  \nDownload **wan_2.1_vae.safetensors** from  \n[🔗 Direct Download](https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors?download=true)  \n\n**Place in:** `ComfyUI/models/vae`  \n\n---  \n\n## Nodes Installed from Manager\n**ComfyUI-GGUF**\n\n**ComfyUI-VideoHelperSuite**\n\n\n## Resources  \n🎥 **Watch tutorials** on the [Pixaroma YouTube Channel](https://www.youtube.com/@pixaroma)  \n💬 **Join discussions** on [Discord](https://discord.com/invite/gggpkVgBf3)  \n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        466.442626953125,
+        179.3724365234375
+      ],
+      "size": [
+        315,
+        262
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 105
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 110
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 111
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 112
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            35
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        5997952700478,
+        "randomize",
+        30,
+        6,
+        "uni_pc",
+        "simple",
+        1
+      ]
+    },
+    {
+      "id": 39,
+      "type": "VAELoader",
+      "pos": [
+        469.8733825683594,
+        491.5511474609375
+      ],
+      "size": [
+        311.92181396484375,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            76
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "wan_2.1_vae.safetensors"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        819.2828369140625,
+        181.080078125
+      ],
+      "size": [
+        140,
+        46
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 35
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 76
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            94
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.18",
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 48,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        982.5819702148438,
+        180.67518615722656
+      ],
+      "size": [
+        214.7587890625,
+        460.36083984375
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 94
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "shape": 7,
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "shape": 7,
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "shape": 7,
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "4c7858ddd5126f7293dc3c9f6e0fc4c263cde079",
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 16,
+        "loop_count": 0,
+        "filename_prefix": "WanVideo",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "WanVideo_00025.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 16,
+            "workflow": "WanVideo_00025.png",
+            "fullpath": "D:\\ComfyUI\\ComfyUI_windows_portable\\ComfyUI\\output\\WanVideo_00025.mp4"
+          },
+          "muted": false
+        }
+      }
+    }
+  ],
+  "links": [
+    [
+      35,
+      3,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      74,
+      38,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      75,
+      38,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      76,
+      39,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      94,
+      8,
+      0,
+      48,
+      0,
+      "IMAGE"
+    ],
+    [
+      105,
+      57,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      110,
+      6,
+      0,
+      3,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      111,
+      7,
+      0,
+      3,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      112,
+      66,
+      0,
+      3,
+      3,
+      "LATENT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8390545288824768,
+      "offset": [
+        1406.819711426754,
+        -73.01598598066305
+      ]
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

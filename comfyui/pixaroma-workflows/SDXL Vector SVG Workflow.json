@@ -1,0 +1,859 @@
+{
+  "last_node_id": 51,
+  "last_link_id": 63,
+  "nodes": [
+    {
+      "id": 30,
+      "type": "ConvertVectorToRaster",
+      "pos": [
+        2420,
+        40
+      ],
+      "size": [
+        184.8000030517578,
+        26
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "svg_strings",
+          "type": "LIST",
+          "link": 44
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            36
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConvertVectorToRaster"
+      },
+      "widgets_values": [],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 33,
+      "type": "SaveImage",
+      "pos": [
+        2640,
+        40
+      ],
+      "size": [
+        430.5320739746094,
+        477.6240234375
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 36
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "pngbw"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 34,
+      "type": "ConvertRasterToVectorBW",
+      "pos": [
+        2180,
+        40
+      ],
+      "size": [
+        210,
+        154
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 43
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LIST",
+          "type": "LIST",
+          "links": [
+            44,
+            45
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConvertRasterToVectorBW"
+      },
+      "widgets_values": [
+        "spline",
+        4,
+        60,
+        4,
+        45
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 37,
+      "type": "ConvertVectorToRaster",
+      "pos": [
+        2562.666748046875,
+        628.6666870117188
+      ],
+      "size": [
+        184.8000030517578,
+        26
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "svg_strings",
+          "type": "LIST",
+          "link": 49
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            48
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConvertVectorToRaster"
+      },
+      "widgets_values": [],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 29,
+      "type": "SaveSVG",
+      "pos": [
+        2420,
+        120
+      ],
+      "size": [
+        210,
+        106
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "svg_strings",
+          "type": "LIST",
+          "link": 45
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveSVG"
+      },
+      "widgets_values": [
+        "svgbw",
+        true,
+        ""
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 42,
+      "type": "ConvertRasterToVectorColor",
+      "pos": [
+        2182.666748046875,
+        628.6666870117188
+      ],
+      "size": [
+        340.20001220703125,
+        274
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 51
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LIST",
+          "type": "LIST",
+          "links": [
+            49,
+            50
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConvertRasterToVectorColor"
+      },
+      "widgets_values": [
+        "stacked",
+        "spline",
+        4,
+        6,
+        16,
+        60,
+        4,
+        10,
+        45,
+        3
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 36,
+      "type": "ConvertRasterToVectorBW",
+      "pos": [
+        2190,
+        40
+      ],
+      "size": [
+        210,
+        154
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LIST",
+          "type": "LIST",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConvertRasterToVectorBW"
+      },
+      "widgets_values": [
+        "spline",
+        4,
+        124,
+        4,
+        45
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        1683.232177734375,
+        37.847965240478516
+      ],
+      "size": [
+        430.5320739746094,
+        477.6240234375
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "org"
+      ]
+    },
+    {
+      "id": 45,
+      "type": "KSampler",
+      "pos": [
+        1105.1602783203125,
+        42.73999786376953
+      ],
+      "size": [
+        315,
+        262
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 53
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 54
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 55
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 56
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            62
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        575202613194520,
+        "randomize",
+        30,
+        7,
+        "dpmpp_2m",
+        "karras",
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1445.6650390625,
+        43.24819564819336
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 62
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 63
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9,
+            43,
+            51
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 51,
+      "type": "CLIPTextEncode",
+      "pos": [
+        620,
+        260
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 61
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            55
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "signature, shading, gradient, painting, watermark, photo, photorealistic, realism, ugly, off-center, deformed, 35mm film, dslr, cropped, frame, worst quality, low quality, lowres, JPEG artifacts, ugly"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 48,
+      "type": "EmptyLatentImage",
+      "pos": [
+        727.5799560546875,
+        488.7066955566406
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            56
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 38,
+      "type": "SaveSVG",
+      "pos": [
+        2542.666748046875,
+        708.6666870117188
+      ],
+      "size": [
+        210,
+        106
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "svg_strings",
+          "type": "LIST",
+          "link": 50
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveSVG"
+      },
+      "widgets_values": [
+        "svgc",
+        true,
+        ""
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 47,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        199.3599853515625,
+        49.19334411621094
+      ],
+      "size": [
+        379.97589111328125,
+        98
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            53
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            60,
+            61
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            63
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "Juggernaut_X_RunDiffusion.safetensors"
+      ]
+    },
+    {
+      "id": 50,
+      "type": "CLIPTextEncode",
+      "pos": [
+        620,
+        50
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 60
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            54
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "a cute cartoon bunny silhouette\nblack vector silhouette shape on solid white background, minimalist, SVG \nsilhouette art style, clean lines and shapes, scalable graphics, professional-grade execution, stylized, professional vector"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 44,
+      "type": "Fast Groups Muter (rgthree)",
+      "pos": [
+        1802.2371826171875,
+        567.0521240234375
+      ],
+      "size": [
+        311.0967102050781,
+        86.43668365478516
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "",
+        "showNav": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 39,
+      "type": "SaveImage",
+      "pos": [
+        2782.666748046875,
+        628.6666870117188
+      ],
+      "size": [
+        430.5320739746094,
+        477.6240234375
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 2,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 48
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "pngc"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    }
+  ],
+  "links": [
+    [
+      9,
+      8,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      36,
+      30,
+      0,
+      33,
+      0,
+      "IMAGE"
+    ],
+    [
+      43,
+      8,
+      0,
+      34,
+      0,
+      "IMAGE"
+    ],
+    [
+      44,
+      34,
+      0,
+      30,
+      0,
+      "LIST"
+    ],
+    [
+      45,
+      34,
+      0,
+      29,
+      0,
+      "LIST"
+    ],
+    [
+      48,
+      37,
+      0,
+      39,
+      0,
+      "IMAGE"
+    ],
+    [
+      49,
+      42,
+      0,
+      37,
+      0,
+      "LIST"
+    ],
+    [
+      50,
+      42,
+      0,
+      38,
+      0,
+      "LIST"
+    ],
+    [
+      51,
+      8,
+      0,
+      42,
+      0,
+      "IMAGE"
+    ],
+    [
+      53,
+      47,
+      0,
+      45,
+      0,
+      "MODEL"
+    ],
+    [
+      54,
+      50,
+      0,
+      45,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      55,
+      51,
+      0,
+      45,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      56,
+      48,
+      0,
+      45,
+      3,
+      "LATENT"
+    ],
+    [
+      60,
+      47,
+      1,
+      50,
+      0,
+      "CLIP"
+    ],
+    [
+      61,
+      47,
+      1,
+      51,
+      0,
+      "CLIP"
+    ],
+    [
+      62,
+      45,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      63,
+      47,
+      2,
+      8,
+      1,
+      "VAE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Black and White SVG",
+      "bounding": [
+        2170,
+        -33.599998474121094,
+        910.531982421875,
+        561.2239990234375
+      ],
+      "color": "#88A",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Color SVG",
+      "bounding": [
+        2172.666748046875,
+        555.0667114257812,
+        1050.531982421875,
+        561.2239990234375
+      ],
+      "color": "#A88",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6830134553650705,
+      "offset": [
+        54.07400760660527,
+        112.69638672666176
+      ]
+    },
+    "node_versions": {
+      "ComfyUI-ToSVG": "970301889c354558076a20e6721b944a854136cd",
+      "comfy-core": "0.3.13"
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}

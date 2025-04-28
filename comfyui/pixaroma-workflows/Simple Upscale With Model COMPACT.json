@@ -1,0 +1,583 @@
+{
+  "last_node_id": 19,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 6,
+      "type": "SaveImage",
+      "pos": {
+        "0": 630,
+        "1": 110
+      },
+      "size": {
+        "0": 382.3407897949219,
+        "1": 434.1958923339844
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "UP"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "Image Comparer (rgthree)",
+      "pos": {
+        "0": 1040,
+        "1": 80
+      },
+      "size": {
+        "0": 535.6685791015625,
+        "1": 585.4025268554688
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_a",
+          "type": "IMAGE",
+          "link": 8,
+          "dir": 3
+        },
+        {
+          "name": "image_b",
+          "type": "IMAGE",
+          "link": 10,
+          "dir": 3
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "comparer_mode": "Slide"
+      },
+      "widgets_values": [
+        [
+          {
+            "name": "A",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_ykrii_00013_.png&type=temp&subfolder=&rand=0.949771090096168"
+          },
+          {
+            "name": "B",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_ykrii_00014_.png&type=temp&subfolder=&rand=0.5788974727576075"
+          }
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Label (rgthree)",
+      "pos": {
+        "0": 1040,
+        "1": 680
+      },
+      "size": {
+        "0": 528.06640625,
+        "1": 20
+      },
+      "flags": {
+        "allow_interaction": true
+      },
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Compare the images before and after by moving the mouse\n",
+      "properties": {
+        "fontSize": 20,
+        "fontFamily": "Arial",
+        "fontColor": "#ffffff",
+        "textAlign": "center",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 15,
+      "type": "Label (rgthree)",
+      "pos": {
+        "0": 170,
+        "1": 160
+      },
+      "size": {
+        "0": 111.064453125,
+        "1": 12
+      },
+      "flags": {
+        "allow_interaction": true
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Upload your image >\n",
+      "properties": {
+        "fontSize": 12,
+        "fontFamily": "Arial",
+        "fontColor": "#ffffff",
+        "textAlign": "center",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 1,
+      "type": "Label (rgthree)",
+      "pos": {
+        "0": 10,
+        "1": 190
+      },
+      "size": {
+        "0": 273.140625,
+        "1": 12
+      },
+      "flags": {
+        "allow_interaction": true
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Change the model. Ex: 4x-AnimeSharp for Anime >\n",
+      "properties": {
+        "fontSize": 12,
+        "fontFamily": "Arial",
+        "fontColor": "#ffffff",
+        "textAlign": "center",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 16,
+      "type": "Label (rgthree)",
+      "pos": {
+        "0": 160,
+        "1": 240
+      },
+      "size": {
+        "0": 125.75390625,
+        "1": 12
+      },
+      "flags": {
+        "allow_interaction": true
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Scale by 0.5=2x 1=4x >\n",
+      "properties": {
+        "fontSize": 12,
+        "fontFamily": "Arial",
+        "fontColor": "#ffffff",
+        "textAlign": "center",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 14,
+      "type": "workflow/Upscale Group",
+      "pos": {
+        "0": 290,
+        "1": 70
+      },
+      "size": {
+        "0": 320.32000732421875,
+        "1": 507.30181884765625
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ],
+          "shape": 3
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "ImageScaleBy IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9,
+            10
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow/Upscale Group"
+      },
+      "widgets_values": [
+        "architecture (1).png",
+        "image",
+        "4x_NMKD-Siax_200k.pth",
+        "lanczos",
+        0.5
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 17,
+      "type": "Label (rgthree)",
+      "pos": {
+        "0": 733,
+        "1": 553
+      },
+      "size": {
+        "0": 177.822265625,
+        "1": 20
+      },
+      "flags": {
+        "allow_interaction": true
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "UPSCALED IMAGE\n",
+      "properties": {
+        "fontSize": 20,
+        "fontFamily": "Arial",
+        "fontColor": "#ffffff",
+        "textAlign": "center",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 18,
+      "type": "Label (rgthree)",
+      "pos": {
+        "0": 337,
+        "1": 12
+      },
+      "size": {
+        "0": 240.09765625,
+        "1": 20
+      },
+      "flags": {
+        "allow_interaction": true
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Simple Upscale with Model\n",
+      "properties": {
+        "fontSize": 20,
+        "fontFamily": "Arial",
+        "fontColor": "#ffffff",
+        "textAlign": "center",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 19,
+      "type": "Note",
+      "pos": {
+        "0": 32,
+        "1": 304
+      },
+      "size": [
+        236.08001699914314,
+        271.3454232071467
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note - ReadME",
+      "properties": {},
+      "widgets_values": [
+        "You also need these custom node:\nrgthree's ComfyUI Nodes\nInstall it from Manager>Custom Nodes Manager.\n\nInstall upscalers:\n4x_NMKD-Siax_200k \nand 4x-AnimeSharp\nfrom Manager>Model Manager\n\nFor more info and questions\nCheck youtube:\nyoutube.com/@pixaroma\n\nOr Discord:\ndiscord.gg/a8ZM7Qtsqq\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      8,
+      14,
+      0,
+      7,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      14,
+      2,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      14,
+      2,
+      7,
+      1,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.1,
+      "offset": [
+        20.5825439833831,
+        49.78868397487786
+      ]
+    },
+    "groupNodes": {
+      "Upscale Group": {
+        "nodes": [
+          {
+            "id": -1,
+            "type": "LoadImage",
+            "pos": {
+              "0": 42,
+              "1": 251
+            },
+            "size": {
+              "0": 328.9523620605469,
+              "1": 428.3612365722656
+            },
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              },
+              {
+                "name": "MASK",
+                "type": "MASK",
+                "links": null,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "LoadImage"
+            },
+            "widgets_values": [
+              "PortraitWoman.png",
+              "image"
+            ],
+            "index": 0
+          },
+          {
+            "id": -1,
+            "type": "UpscaleModelLoader",
+            "pos": {
+              "0": 50,
+              "1": 120
+            },
+            "size": {
+              "0": 301.6999206542969,
+              "1": 58
+            },
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "name": "UPSCALE_MODEL",
+                "type": "UPSCALE_MODEL",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "UpscaleModelLoader"
+            },
+            "widgets_values": [
+              "4x_NMKD-Siax_200k.pth"
+            ],
+            "color": "#432",
+            "bgcolor": "#653",
+            "index": 1
+          },
+          {
+            "id": -1,
+            "type": "ImageUpscaleWithModel",
+            "pos": {
+              "0": 384,
+              "1": 123
+            },
+            "size": {
+              "0": 226.8000030517578,
+              "1": 46
+            },
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "upscale_model",
+                "type": "UPSCALE_MODEL",
+                "link": null
+              },
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ImageUpscaleWithModel"
+            },
+            "color": "#432",
+            "bgcolor": "#653",
+            "index": 2
+          },
+          {
+            "id": -1,
+            "type": "ImageScaleBy",
+            "pos": {
+              "0": 642,
+              "1": 122
+            },
+            "size": {
+              "0": 315,
+              "1": 82
+            },
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [],
+                "slot_index": 0,
+                "shape": 3
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ImageScaleBy"
+            },
+            "widgets_values": [
+              "lanczos",
+              1
+            ],
+            "color": "#432",
+            "bgcolor": "#653",
+            "index": 3
+          }
+        ],
+        "links": [
+          [
+            1,
+            0,
+            2,
+            0,
+            3,
+            "UPSCALE_MODEL"
+          ],
+          [
+            0,
+            0,
+            2,
+            1,
+            5,
+            "IMAGE"
+          ],
+          [
+            2,
+            0,
+            3,
+            0,
+            2,
+            "IMAGE"
+          ]
+        ],
+        "external": [
+          [
+            0,
+            0,
+            "IMAGE"
+          ],
+          [
+            3,
+            0,
+            "IMAGE"
+          ]
+        ]
+      }
+    }
+  },
+  "version": 0.4
+}

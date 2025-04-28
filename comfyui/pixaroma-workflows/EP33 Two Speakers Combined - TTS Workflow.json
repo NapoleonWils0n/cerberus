@@ -1,0 +1,237 @@
+{
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "KokoroGenerator",
+      "pos": [
+        1704.54052734375,
+        -101.61383056640625
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "speaker",
+          "type": "KOKORO_SPEAKER",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KokoroGenerator"
+      },
+      "widgets_values": [
+        "I am a synthesized robot",
+        1,
+        "English"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "KokoroSpeaker",
+      "pos": [
+        1000,
+        -140
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "speaker",
+          "type": "KOKORO_SPEAKER",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Kokoro Speaker 1",
+      "properties": {
+        "Node name for S&R": "KokoroSpeaker"
+      },
+      "widgets_values": [
+        "am_onyx"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "KokoroSpeaker",
+      "pos": [
+        1001.5569458007812,
+        -12.166974067687988
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "speaker",
+          "type": "KOKORO_SPEAKER",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Kokoro Speaker 2",
+      "properties": {
+        "Node name for S&R": "KokoroSpeaker"
+      },
+      "widgets_values": [
+        "am_adam"
+      ]
+    },
+    {
+      "id": 1,
+      "type": "SaveAudio",
+      "pos": [
+        2133.883544921875,
+        -101.61386108398438
+      ],
+      "size": [
+        315,
+        100
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
+      ]
+    },
+    {
+      "id": 5,
+      "type": "KokoroSpeakerCombiner",
+      "pos": [
+        1357.824462890625,
+        -100.9571533203125
+      ],
+      "size": [
+        315,
+        78
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "speaker_a",
+          "type": "KOKORO_SPEAKER",
+          "link": 3
+        },
+        {
+          "name": "speaker_b",
+          "type": "KOKORO_SPEAKER",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "speaker",
+          "type": "KOKORO_SPEAKER",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KokoroSpeakerCombiner"
+      },
+      "widgets_values": [
+        0.5
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      1,
+      0,
+      "AUDIO"
+    ],
+    [
+      2,
+      5,
+      0,
+      3,
+      0,
+      "KOKORO_SPEAKER"
+    ],
+    [
+      3,
+      2,
+      0,
+      5,
+      0,
+      "KOKORO_SPEAKER"
+    ],
+    [
+      4,
+      4,
+      0,
+      5,
+      1,
+      "KOKORO_SPEAKER"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.0152559799477412,
+      "offset": [
+        -944.3963131659938,
+        386.2640763658688
+      ]
+    },
+    "node_versions": {
+      "comfyui-kokoro": "fc4460f4d8cbfef36a7fa93dcb494333310c1cb3",
+      "comfy-core": "0.3.13"
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}

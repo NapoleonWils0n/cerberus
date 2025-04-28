@@ -1,0 +1,231 @@
+{
+  "last_node_id": 24,
+  "last_link_id": 25,
+  "nodes": [
+    {
+      "id": 17,
+      "type": "JanusModelLoader",
+      "pos": [
+        -177.95672607421875,
+        156.25616455078125
+      ],
+      "size": [
+        315,
+        78
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "JANUS_MODEL",
+          "links": [
+            14
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "processor",
+          "type": "JANUS_PROCESSOR",
+          "links": [
+            15
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JanusModelLoader"
+      },
+      "widgets_values": [
+        "deepseek-ai/Janus-Pro-1B"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "LoadImage",
+      "pos": [
+        -178.12875366210938,
+        277.5500793457031
+      ],
+      "size": [
+        311.0978698730469,
+        405.0496520996094
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "PortraitWizard.png",
+        "image"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "easy showAnything",
+      "pos": [
+        595.1588134765625,
+        155.55752563476562
+      ],
+      "size": [
+        511.4687194824219,
+        236.99227905273438
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 16,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "title": "Show Prompt Description",
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "The image depicts a person wearing a purple hooded cloak with a long, white beard. The background is blurred, with a bokeh effect that includes soft, circular light spots in various shades of yellow and green. The person's face is partially visible, with a focused expression. The overall atmosphere of the image is mystical and serene."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 18,
+      "type": "JanusImageUnderstanding",
+      "pos": [
+        163.3448486328125,
+        155.71868896484375
+      ],
+      "size": [
+        400,
+        236
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "JANUS_MODEL",
+          "link": 14
+        },
+        {
+          "name": "processor",
+          "type": "JANUS_PROCESSOR",
+          "link": 15
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JanusImageUnderstanding"
+      },
+      "widgets_values": [
+        "Describe this image in detail. ",
+        303691553184424,
+        "randomize",
+        0.1,
+        0.95,
+        512
+      ]
+    }
+  ],
+  "links": [
+    [
+      14,
+      17,
+      0,
+      18,
+      0,
+      "JANUS_MODEL"
+    ],
+    [
+      15,
+      17,
+      1,
+      18,
+      1,
+      "JANUS_PROCESSOR"
+    ],
+    [
+      16,
+      18,
+      0,
+      20,
+      0,
+      "*"
+    ],
+    [
+      17,
+      19,
+      0,
+      18,
+      2,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.025082318194886,
+      "offset": [
+        317.49544730254365,
+        -5.473542724805962
+      ]
+    },
+    "node_versions": {
+      "janus-pro": "4400129e5c33664ae6e927162a39ba4116f44b8b",
+      "comfy-core": "0.3.13",
+      "ComfyUI-Easy-Use": "48d06c44854c5f585321c01dad963ddcf4ccd783"
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

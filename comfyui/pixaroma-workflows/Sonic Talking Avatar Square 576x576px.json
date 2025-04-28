@@ -1,0 +1,761 @@
+{
+  "last_node_id": 51,
+  "last_link_id": 61,
+  "nodes": [
+    {
+      "id": 34,
+      "type": "SONICTLoader",
+      "pos": [
+        538.2162475585938,
+        71.48157501220703
+      ],
+      "size": [
+        210,
+        150
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "label": "model",
+          "type": "MODEL",
+          "link": 42
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "label": "model",
+          "type": "MODEL_SONIC",
+          "links": [
+            38
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "dtype",
+          "type": "DTYPE",
+          "links": [
+            53
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "aux_id": "smthemex/ComfyUI_Sonic",
+        "ver": "6595df02e72406fe23baebc12ac2088832d7ff9b",
+        "Node name for S&R": "SONICTLoader"
+      },
+      "widgets_values": [
+        "unet.pth",
+        1,
+        true,
+        "fp16"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 35,
+      "type": "easy cleanGpuUsed",
+      "pos": [
+        787.2362060546875,
+        288.4765319824219
+      ],
+      "size": [
+        178.07373046875,
+        26
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "label": "anything",
+          "type": "*",
+          "link": 47
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "label": "output",
+          "type": "*",
+          "shape": 3,
+          "links": [
+            48
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "0104f7f6a9ef02ac6651221c4bc2b742c184e79a",
+        "Node name for S&R": "easy cleanGpuUsed"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 48,
+      "type": "Note",
+      "pos": [
+        99.39222717285156,
+        717.7627563476562
+      ],
+      "size": [
+        377.7667236328125,
+        159.57481384277344
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Upload a portrait image with a close-up of the face.\nFor the best results, use one of the recommended sizes: 1024x576px, 576x1024px, or 576x576px (you can adjust the size in the Image Resize node).\n\nUpload an audio file. Check the audio duration in the Load Audio node and enter it in the Duration field of the SONIC_PreData node.\n\n"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 32,
+      "type": "ImageOnlyCheckpointLoader",
+      "pos": [
+        81.36527252197266,
+        147.66864013671875
+      ],
+      "size": [
+        369.6000061035156,
+        98
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "label": "MODEL",
+          "type": "MODEL",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP_VISION",
+          "label": "CLIP_VISION",
+          "type": "CLIP_VISION",
+          "links": [
+            40
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "label": "VAE",
+          "type": "VAE",
+          "links": [
+            41
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.26",
+        "Node name for S&R": "ImageOnlyCheckpointLoader"
+      },
+      "widgets_values": [
+        "svd_xt_1_1.safetensors"
+      ]
+    },
+    {
+      "id": 46,
+      "type": "Image Resize",
+      "pos": [
+        128.25408935546875,
+        308.2685241699219
+      ],
+      "size": [
+        315,
+        178
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 59
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            60,
+            61
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "pr-was-node-suite-comfyui-47064894",
+        "ver": "9ae952b1b435d2bd846bfe6516919b5a8b9201aa",
+        "Node name for S&R": "Image Resize"
+      },
+      "widgets_values": [
+        "resize",
+        "true",
+        "lanczos",
+        1,
+        576,
+        576
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 18,
+      "type": "LoadImage",
+      "pos": [
+        -280.3692932128906,
+        307.3670654296875
+      ],
+      "size": [
+        352.7148132324219,
+        453.6283874511719
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "label": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            59
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "label": "MASK",
+          "type": "MASK"
+        }
+      ],
+      "title": "Load a portrait Image (Face Closeup)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.26",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "CartoonMan576x576.png",
+        "image"
+      ]
+    },
+    {
+      "id": 26,
+      "type": "LoadAudio",
+      "pos": [
+        127.57620239257812,
+        535.7474365234375
+      ],
+      "size": [
+        315,
+        136
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "label": "AUDIO",
+          "type": "AUDIO",
+          "shape": 3,
+          "links": [
+            29,
+            46
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.26",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "VoiceCartoonMan.mp3",
+        "",
+        ""
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 21,
+      "type": "PreviewImage",
+      "pos": [
+        521.8446044921875,
+        549.8514404296875
+      ],
+      "size": [
+        321.96844482421875,
+        361.6082763671875
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "label": "images",
+          "type": "IMAGE",
+          "link": 61
+        }
+      ],
+      "outputs": [],
+      "title": "Preview Image after Resize",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.26",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 38,
+      "type": "MarkdownNote",
+      "pos": [
+        -904.0769653320312,
+        295.8577575683594
+      ],
+      "size": [
+        599.7880249023438,
+        903.9996948242188
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Pixaroma - Note - START HERE",
+      "properties": {},
+      "widgets_values": [
+        "# 🚀 SONIC WORKFLOW SETUP GUIDE\n# ⚠️ **HIGH VRAM WARNING:** This workflow requires substantial GPU memory to run properly.\n\n## 📥 STEP 1: INSTALL NODES\n> Go to **Manager > Custom Nodes Manager** and install:\n- ComfyUI_Sonic\n- ComfyUI-VideoHelperSuite\n- ComfyUI-Easy-Use\n- WAS Node Suite\n> **⚠️ IMPORTANT:** Restart ComfyUI after installation\n\n## 💾 STEP 2: DOWNLOAD & ORGANIZE MODELS\n\n### 📂 MAIN FOLDER: `ComfyUI/models/sonic/`\nDownload these files and place them directly in the sonic folder:\n- 📥 [audio2bucket.pth](https://drive.google.com/drive/folders/1jI32B-2JX17seSGG0-MnZgUhCMHCEZlx)\n- 📥 [audio2token.pth](https://drive.google.com/drive/folders/1jI32B-2JX17seSGG0-MnZgUhCMHCEZlx) \n- 📥 [unet.pth](https://drive.google.com/drive/folders/1jI32B-2JX17seSGG0-MnZgUhCMHCEZlx)\n- 📥 [yoloface_v5m.pt](https://drive.google.com/drive/folders/1oe8VTPUy0-MHHW2a_NJ1F8xL-0VN5G7W)\n\n### 📂 SUBFOLDER: `ComfyUI/models/sonic/RIFE/`\n1. First, create this subfolder\n2. Download and place inside RIFE folder:\n   - 📥 [flownet.pkl](https://drive.google.com/drive/folders/1QIIDvCDU-rp1ZB8qDA6NQqVn8F9WYMhE)\n\n### 📂 SUBFOLDER: `ComfyUI/models/sonic/whisper-tiny/`\n1. First, create this subfolder\n2. Download from here [https://huggingface.co/openai/whisper-tiny/tree/main](https://huggingface.co/openai/whisper-tiny/tree/main) these 3 files and place inside whisper-tiny folder:\n   - 📥 config.json\n   - 📥 model.safetensors\n   - 📥 preprocessor_config.json\n\n### 📂 SVD CHECKPOINT: `ComfyUI/models/checkpoints/`\n1. **Choose ONE** of these Stable Video Diffusion models:\n   - 📥 [svd_xt.safetensors](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt/tree/main) (Larger, ~ 9.56 GB)\n   - 📥 [svd_xt_1_1.safetensors](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1/tree/main) (Smaller, ~ 4.78 GB\n)\n\n2. **Hugging Face Access Steps:**\n   - You must be logged into Hugging Face to download\n   - Click the \"Expand to review and access\" button\n   - Read the license agreement\n   - Enter your name and email\n   - Accept the terms of use\n   - Now you can download the model file\n\n3. Place the downloaded SVD file in `ComfyUI/models/checkpoints` folder\n\n---\n## 📚 RESOURCES  \n- 🎥 **Video Tutorials:** [Pixaroma YouTube Channel](https://www.youtube.com/@pixaroma)  \n- 💬 **Community Support:** [Join our Discord](https://discord.com/invite/gggpkVgBf3)\n- **ComfyUI Sonic Node:** [ComfyUI_Sonic on GitHub](https://github.com/smthemex/ComfyUI_Sonic)\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 33,
+      "type": "SONIC_PreData",
+      "pos": [
+        540.2200927734375,
+        285.8780517578125
+      ],
+      "size": [
+        210,
+        186
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip_vision",
+          "label": "clip_vision",
+          "type": "CLIP_VISION",
+          "link": 40
+        },
+        {
+          "name": "vae",
+          "label": "vae",
+          "type": "VAE",
+          "link": 41
+        },
+        {
+          "name": "audio",
+          "label": "audio",
+          "type": "AUDIO",
+          "link": 46
+        },
+        {
+          "name": "image",
+          "label": "image",
+          "type": "IMAGE",
+          "link": 60
+        },
+        {
+          "name": "weight_dtype",
+          "type": "DTYPE",
+          "link": 53
+        }
+      ],
+      "outputs": [
+        {
+          "name": "data_dict",
+          "label": "data_dict",
+          "type": "SONIC_PREDATA",
+          "links": [
+            47
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "bbox",
+          "label": "bbox",
+          "type": "BBOX"
+        }
+      ],
+      "properties": {
+        "aux_id": "smthemex/ComfyUI_Sonic",
+        "ver": "6595df02e72406fe23baebc12ac2088832d7ff9b",
+        "Node name for S&R": "SONIC_PreData"
+      },
+      "widgets_values": [
+        576,
+        4,
+        1
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 31,
+      "type": "SONICSampler",
+      "pos": [
+        995.576904296875,
+        269.9488525390625
+      ],
+      "size": [
+        266.05596923828125,
+        174
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "label": "model",
+          "type": "MODEL_SONIC",
+          "link": 38
+        },
+        {
+          "name": "data_dict",
+          "label": "data_dict",
+          "type": "SONIC_PREDATA",
+          "link": 48
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "label": "image",
+          "type": "IMAGE",
+          "links": [
+            44
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "fps",
+          "label": "fps",
+          "type": "FLOAT",
+          "links": [
+            54
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "aux_id": "smthemex/ComfyUI_Sonic",
+        "ver": "6595df02e72406fe23baebc12ac2088832d7ff9b",
+        "Node name for S&R": "SONICSampler"
+      },
+      "widgets_values": [
+        911643828,
+        "randomize",
+        25,
+        1,
+        25
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 13,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        1296.1195068359375,
+        263.6277770996094
+      ],
+      "size": [
+        434.2799377441406,
+        782.2799072265625
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "label": "images",
+          "type": "IMAGE",
+          "link": 44
+        },
+        {
+          "name": "audio",
+          "label": "audio",
+          "type": "AUDIO",
+          "shape": 7,
+          "link": 29
+        },
+        {
+          "name": "meta_batch",
+          "label": "meta_batch",
+          "type": "VHS_BatchManager",
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "label": "vae",
+          "type": "VAE",
+          "shape": 7
+        },
+        {
+          "name": "frame_rate",
+          "label": "frame_rate",
+          "type": "FLOAT",
+          "widget": {
+            "name": "frame_rate"
+          },
+          "link": 54
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "label": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "031c4ae301c9b6403e2f472eb91f0ff87bbb5385",
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 25,
+        "loop_count": 0,
+        "filename_prefix": "Video",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "paused": false,
+          "hidden": false,
+          "params": {
+            "filename": "Video_00003-audio.mp4",
+            "workflow": "Video_00003.png",
+            "fullpath": "D:\\ComfyUI - Copy\\ComfyUI_windows_portable\\ComfyUI\\output\\Video_00003-audio.mp4",
+            "format": "video/h264-mp4",
+            "subfolder": "",
+            "type": "output",
+            "frame_rate": 25
+          }
+        }
+      }
+    },
+    {
+      "id": 51,
+      "type": "Note",
+      "pos": [
+        951.8850708007812,
+        504.3520202636719
+      ],
+      "size": [
+        305.224853515625,
+        88
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note - Video Combine",
+      "properties": {},
+      "widgets_values": [
+        "Move the mouse over the video to hear the audio."
+      ]
+    }
+  ],
+  "links": [
+    [
+      29,
+      26,
+      0,
+      13,
+      1,
+      "AUDIO"
+    ],
+    [
+      38,
+      34,
+      0,
+      31,
+      0,
+      "MODEL_SONIC"
+    ],
+    [
+      40,
+      32,
+      1,
+      33,
+      0,
+      "CLIP_VISION"
+    ],
+    [
+      41,
+      32,
+      2,
+      33,
+      1,
+      "VAE"
+    ],
+    [
+      42,
+      32,
+      0,
+      34,
+      0,
+      "MODEL"
+    ],
+    [
+      44,
+      31,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      46,
+      26,
+      0,
+      33,
+      2,
+      "AUDIO"
+    ],
+    [
+      47,
+      33,
+      0,
+      35,
+      0,
+      "*"
+    ],
+    [
+      48,
+      35,
+      0,
+      31,
+      1,
+      "SONIC_PREDATA"
+    ],
+    [
+      53,
+      34,
+      1,
+      33,
+      4,
+      "DTYPE"
+    ],
+    [
+      54,
+      31,
+      1,
+      13,
+      4,
+      "FLOAT"
+    ],
+    [
+      59,
+      18,
+      0,
+      46,
+      0,
+      "IMAGE"
+    ],
+    [
+      60,
+      46,
+      0,
+      33,
+      3,
+      "IMAGE"
+    ],
+    [
+      61,
+      46,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7627768444385913,
+      "offset": [
+        1090.6519764657764,
+        -12.72721456531406
+      ]
+    },
+    "VHS_KeepIntermediate": true,
+    "ue_links": [],
+    "VHS_MetadataImage": true,
+    "0246.VERSION": [
+      0,
+      0,
+      4
+    ],
+    "VHS_latentpreviewrate": 0,
+    "VHS_latentpreview": false,
+    "node_versions": {
+      "ComfyUI_Mira": "79494e6ecb8e1b8159d6bbb100c8a20f07ad6302",
+      "ComfyUI-VideoHelperSuite": "8629188458dc6cb832f871ece3bd273507e8a766",
+      "ComfyUI-KJNodes": "86b5453a5ca9ecb883eedc9d0a96bf942b9ca73e",
+      "comfy-core": "0.3.14",
+      "ComfyUI-Custom-Scripts": "a53ef9b617ed1331640d7a2cd97644995908dc00",
+      "ComfyUI_Sonic": "f176fa4d97497b2b12834c423847de4cc8a0c05a"
+    }
+  },
+  "version": 0.4
+}

@@ -1,0 +1,187 @@
+{
+  "last_node_id": 31,
+  "last_link_id": 30,
+  "nodes": [
+    {
+      "id": 30,
+      "type": "easy showAnything",
+      "pos": [
+        834,
+        49
+      ],
+      "size": [
+        543.61669921875,
+        630.6656494140625
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "type": "*",
+          "link": 29,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "title": "Show Prompt",
+      "properties": {
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        " The image is a portrait of a person with red curly hair and tattoos. They are wearing makeup, with defined eyebrows and eyeliner. The individual has facial hair along the jawline. The background is neutral, providing no distractions from the subject. The person is looking directly at the camera, giving an impression of self-assurance or confidence. The attire appears to be a simple black top, which contrasts with the vibrant red hair and highlights the features of the individual. The lighting in the photo is soft, creating a gentle shadow on the face, adding depth to the image. "
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 29,
+      "type": "LoadImage",
+      "pos": [
+        9,
+        50
+      ],
+      "size": [
+        371.01806640625,
+        462.95941162109375
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            28
+          ],
+          "shape": 3
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "PortraitWoman.png",
+        "image"
+      ]
+    },
+    {
+      "id": 28,
+      "type": "OllamaVision",
+      "pos": [
+        400,
+        50
+      ],
+      "size": [
+        400,
+        244
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 28
+        }
+      ],
+      "outputs": [
+        {
+          "name": "description",
+          "type": "STRING",
+          "links": [
+            29
+          ],
+          "slot_index": 0,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OllamaVision"
+      },
+      "widgets_values": [
+        "Describe the image",
+        "enable",
+        "http://127.0.0.1:11434",
+        "llava:latest",
+        5,
+        "text",
+        984335926,
+        "randomize"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 31,
+      "type": "Note",
+      "pos": [
+        405.72161865234375,
+        344.78961181640625
+      ],
+      "size": [
+        398.3514404296875,
+        380.95941162109375
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Use Vision Models - usually have llava in name\n\nExamples:\n\nllava phi 3  - 3.8b\n2.9 GB\nhttps://ollama.com/benzie/llava-phi-3\n\nllava 7b\n4.7 GB\nhttps://ollama.com/library/llava\n\nInstruction examples (choose one or create a similar one):\n\nDescribe the image\nor\nDescribe the image, add a black background\nor\nDescribe the image, use a vector art style\nor\nDescribe the image, make the subject wear a hat\nor\nDescribe the image, change the art style to macro photography\nor\nDescribe this vector illustration, start with a vector style illustration\n\nThe results may not always be perfect—it depends on how well the model understands the instructions."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      28,
+      29,
+      0,
+      28,
+      0,
+      "IMAGE"
+    ],
+    [
+      29,
+      28,
+      0,
+      30,
+      0,
+      "*"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8471754695825664,
+      "offset": [
+        92.83090341880387,
+        55.75980177696063
+      ]
+    },
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}

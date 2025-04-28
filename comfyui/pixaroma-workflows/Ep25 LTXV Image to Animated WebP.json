@@ -1,0 +1,789 @@
+{
+  "last_node_id": 94,
+  "last_link_id": 212,
+  "nodes": [
+    {
+      "id": 38,
+      "type": "CLIPLoader",
+      "pos": [
+        -8.011507034301758,
+        428.47015380859375
+      ],
+      "size": [
+        351.9026184082031,
+        82
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            74,
+            75
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "t5xxl_fp16.safetensors",
+        "ltxv"
+      ]
+    },
+    {
+      "id": 76,
+      "type": "Note",
+      "pos": [
+        388.2399597167969,
+        -10.61408805847168
+      ],
+      "size": [
+        410.9342041015625,
+        243.9141845703125
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note - Prompts",
+      "properties": {},
+      "widgets_values": [
+        "You need long, descriptive prompts to get good results. You can try this formula for ChatGPT to generate cinematic prompts—just copy and paste it into ChatGPT:\n\n\nCraft detailed prompts for AI video generator, avoiding quotation marks. When I provide a description or image, translate it into a prompt that captures a cinematic, movie-like quality, focusing on elements like scene, style, mood, lighting, and specific visual details. Ensure that the prompt evokes a rich, immersive atmosphere, emphasizing textures, depth, and realism. Always incorporate slow camera or cinematic movement to enhance the feeling of fluidity and visual storytelling. Keep the wording precise yet descriptive, directly usable, and designed to achieve a high-quality, film-inspired result."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1920,
+        340
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 171
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 87
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            184
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 79,
+      "type": "SaveAnimatedWEBP",
+      "pos": [
+        2170,
+        340
+      ],
+      "size": [
+        680,
+        610
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 184
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveAnimatedWEBP"
+      },
+      "widgets_values": [
+        "ComfyUI",
+        24,
+        false,
+        100,
+        "default",
+        null
+      ]
+    },
+    {
+      "id": 72,
+      "type": "SamplerCustom",
+      "pos": [
+        1540,
+        340
+      ],
+      "size": [
+        355.20001220703125,
+        230
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 181
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 166
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 167
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 172
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 182
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 210
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            171
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustom"
+      },
+      "widgets_values": [
+        true,
+        290036502203626,
+        "randomize",
+        3
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        383.8510437011719,
+        515.5060424804688
+      ],
+      "size": [
+        425.27801513671875,
+        180.6060791015625
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 75
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            204
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "CLIP Text Encode (Negative Prompt)",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "low quality, worst quality, deformed, distorted, disfigured, motion smear, motion artifacts, fused fingers, bad anatomy, weird hand, ugly"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 69,
+      "type": "LTXVConditioning",
+      "pos": [
+        1244.8236083984375,
+        395.09637451171875
+      ],
+      "size": [
+        223.8660125732422,
+        78
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 206
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 207
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            166
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            167
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConditioning"
+      },
+      "widgets_values": [
+        24
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 71,
+      "type": "LTXVScheduler",
+      "pos": [
+        1187.94580078125,
+        527.4800415039062
+      ],
+      "size": [
+        315,
+        154
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 209,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            182
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVScheduler"
+      },
+      "widgets_values": [
+        30,
+        2.05,
+        0.95,
+        true,
+        0.1
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 81,
+      "type": "LTXVImgToVideo",
+      "pos": [
+        839.3885498046875,
+        389.04913330078125
+      ],
+      "size": [
+        315,
+        214
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 203
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 204
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 205
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 208
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            206
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            207
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            209,
+            210
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVImgToVideo"
+      },
+      "widgets_values": [
+        768,
+        512,
+        97,
+        1,
+        0.15
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 44,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        1165.8885498046875,
+        235.45831298828125
+      ],
+      "size": [
+        315,
+        98
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            181
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            87,
+            205
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "ltx-video-2b-v0.9.safetensors"
+      ]
+    },
+    {
+      "id": 73,
+      "type": "KSamplerSelect",
+      "pos": [
+        1210.105712890625,
+        745.307861328125
+      ],
+      "size": [
+        290.04730224609375,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            172
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "euler"
+      ]
+    },
+    {
+      "id": 78,
+      "type": "Note",
+      "pos": [
+        -252.83741760253906,
+        768.9039306640625
+      ],
+      "size": [
+        661.5029907226562,
+        320.4714660644531
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note - Resolution",
+      "properties": {},
+      "widgets_values": [
+        "||Resolution:\nOptimal Resolution: 768x512 pixels.\nMaximum Recommended Resolution: Up to 720x1280 pixels.\nTechnical Requirement: Both width and height should be multiples of 32.\n\n||Frame Count:\nOptimal Frame Count: 121 frames (approximately 5 seconds at 24 FPS).\nMaximum Recommended Frame Count: Up to 257 frames.\nTechnical Requirement: The total number of frames should be a multiple of 8, plus 1 (e.g., 65, 97, 121, 257).\n\nIf you set length = 97 in the EmptyLTXVLatentVideo node:\nIt meets the technical requirement (8 × 12 + 1 = 97).\nAt 24 FPS, it produces a video that's approximately 4 seconds long (97 ÷ 24).\n\nIf you set length = 121:\nIt's optimal and satisfies the technical requirement (8 × 15 + 1 = 121).\nAt 24 FPS, the video will be approximately 5 seconds long (121 ÷ 24).\n\n\n||Frame Rate:\nStandard Frame Rate: 24 frames per second (FPS).\n\nComfyUI Tutorials https://www.youtube.com/@pixaroma\n"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 80,
+      "type": "LoadImage",
+      "pos": [
+        439.107666015625,
+        753.4190063476562
+      ],
+      "size": [
+        385.15606689453125,
+        353.5552673339844
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            208
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ExoticBeach.jpg",
+        "image"
+      ],
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        382.4636535644531,
+        297.3675231933594
+      ],
+      "size": [
+        422.84503173828125,
+        164.31304931640625
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 74
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            203
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "CLIP Text Encode (Positive Prompt)",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "A breathtaking shot of a palm tree leaning gracefully over the soft, sandy beach, its lush fronds illuminated by the warm, golden rays of the sun. The camera slowly tracks upward, capturing the tree’s vibrant green leaves against the brilliant blue sky, with the sun peeking through, creating a radiant halo of light. The turquoise sea stretches out to the horizon, gently rippling in the breeze, while distant islands add depth to the scene. Fluffy clouds float lazily in the sky, enhancing the serene, tropical atmosphere. The calm, crystal-clear water reflects the sunlight, adding texture and vibrancy to the landscape. This cinematic scene exudes tranquility, warmth, and the essence of paradise, inviting viewers to immerse themselves in the beauty of this exotic beach setting."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    }
+  ],
+  "links": [
+    [
+      74,
+      38,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      75,
+      38,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      87,
+      44,
+      2,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      166,
+      69,
+      0,
+      72,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      167,
+      69,
+      1,
+      72,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      171,
+      72,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      172,
+      73,
+      0,
+      72,
+      3,
+      "SAMPLER"
+    ],
+    [
+      181,
+      44,
+      0,
+      72,
+      0,
+      "MODEL"
+    ],
+    [
+      182,
+      71,
+      0,
+      72,
+      4,
+      "SIGMAS"
+    ],
+    [
+      184,
+      8,
+      0,
+      79,
+      0,
+      "IMAGE"
+    ],
+    [
+      203,
+      6,
+      0,
+      81,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      204,
+      7,
+      0,
+      81,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      205,
+      44,
+      2,
+      81,
+      2,
+      "VAE"
+    ],
+    [
+      206,
+      81,
+      0,
+      69,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      207,
+      81,
+      1,
+      69,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      208,
+      80,
+      0,
+      81,
+      3,
+      "IMAGE"
+    ],
+    [
+      209,
+      81,
+      2,
+      71,
+      0,
+      "LATENT"
+    ],
+    [
+      210,
+      81,
+      2,
+      72,
+      5,
+      "LATENT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7627768444385613,
+      "offset": [
+        319.90968769496465,
+        74.08114461958489
+      ]
+    },
+    "linkExtensions": [],
+    "reroutes": [
+      {
+        "id": 1,
+        "pos": [
+          951.8099365234375,
+          771.2758178710938
+        ],
+        "linkIds": [
+          175
+        ]
+      },
+      {
+        "id": 2,
+        "parentId": 1,
+        "pos": [
+          1199.56396484375,
+          739.493896484375
+        ],
+        "linkIds": [
+          175
+        ]
+      }
+    ]
+  },
+  "version": 0.4
+}
