@@ -40,24 +40,48 @@ git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 #+end_src
 
+copy the .nix files from automatic1111-webui-nix to the repo
+
 #+begin_src sh
 cp ../automatic1111-webui-nix/*.nix .
+#+end_src
+
+edit the webui-user.sh 
+
+#+begin_src sh
+vi webui-user.sh
+#+end_src
+
+and change the COMMANDLINE_ARGS to set the vram if needed
+
+#+begin_src sh
+export COMMANDLINE_ARGS="--xformers --medvram"
+#+end_src
+
+add the files with git
+
+#+begin_src sh
+git add . 
+#+end_src
+
+commit the files
+
+#+begin_src sh
+git commit -m 'nix files and webui'
+#+end_src
+
+#+begin_src sh
+export NIXPKGS_ALLOW_UNFREE=1
 #+end_src
 
 #+begin_src sh
 nix-shell --argstr variant CUDA 
 #+end_src
 
-#+begin_src sh
-vi webui.sh
-#+end_src
+start the webui
 
 #+begin_src sh
-export COMMANDLINE_ARGS="--medvram"
-#+end_src
-
-#+begin_src sh
-./webui.sh --xformers
+./webui.sh
 #+end_src
 
 model download
@@ -66,7 +90,7 @@ model download
 
 [[https://civitai.com/models/46422/juggernaut]]
 
-** comfy-ui
+** comfy-ui nix-shell
 
 exit out of previous shell
 
@@ -134,6 +158,103 @@ python main.py
 
 [[http://127.0.0.1:8188]]
 
+** comfy-ui nix flake
+
+work in progress
+
+exit out of previous shell
+
+#+begin_src sh
+exit
+cd ../
+#+end_src
+
+clone comfy-ui
+
+#+begin_src sh
+git clone https://github.com/comfyanonymous/ComfyUI.git
+#+end_src
+
+cd into the repo
+
+#+begin_src sh
+cd ComfyUI
+#+end_src
+
+copy the nix files
+
+#+begin_src sh
+cp ../automatic1111-webui-nix/*.nix .
+#+end_src
+
+add the git files to the repo
+
+#+begin_src sh
+git add .
+#+end_src
+
+exit out of previous shell
+
+#+begin_src sh
+exit
+cd ../
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/comfyanonymous/ComfyUI.git
+#+end_src
+
+#+begin_src sh
+cd ComfyUI
+#+end_src
+
+#+begin_src sh
+cp ../automatic1111-webui-nix/*.nix .
+#+end_src
+
+commit the files
+
+#+begin_src sh
+git commit -m 'nix'
+#+end_src
+
+run nix develop
+
+#+begin_src sh
+nix develop '.#cuda'
+#+end_src
+
+this will create the flake.lock file and complain about the git repo being dirty
+
+so exit the nix develop
+
+#+begin_src sh
+exit
+#+end_src
+
+add and commit the flake lock file
+
+#+begin_src sh
+git add flake.lock
+#+end_src
+
+commit the changes
+
+#+begin_src sh
+git commit -m 'flake.lock'
+#+end_src
+
+run nix develop again
+
+#+begin_src sh
+nix develop '.#cuda'
+#+end_src
+
+
+#+begin_src sh
+python main.py
+#+end_src
+
 ** model
 
 move download models to
@@ -158,6 +279,10 @@ git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
 
 #+begin_src sh
 cd ~/nix/comfyui/ComfyUI
+#+end_src
+
+#+begin_src sh
+nix develop '.#cuda'
 #+end_src
 
 #+begin_src sh
