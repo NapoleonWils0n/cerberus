@@ -4,6 +4,26 @@
 
 [[https://www.youtube.com/watch?v=1N1cwHFx_QM]]
 
+** enable nix flakes
+
+#+begin_src sh
+doas vi /etc/nixos/configuration.nix
+#+end_src
+
+enable nix flakes by adding the following code to your configuration.nix
+
+#+begin_src nix
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+#+end_src
+
+rebuild
+
+#+begin_src sh
+doas nixos-rebuild switch
+#+end_src
+
+and then reboot
+
 ** git clone repos
 
 #+begin_src sh
