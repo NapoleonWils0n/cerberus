@@ -282,10 +282,6 @@ cd ~/nix/comfyui/ComfyUI
 #+end_src
 
 #+begin_src sh
-nix develop '.#cuda'
-#+end_src
-
-#+begin_src sh
 export NIXPKGS_ALLOW_UNFREE=1
 #+end_src
 
