@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* magick resize
+
+#+begin_src sh
+magick input.jpg -resize 1024 output.jpg
+#+end_src
