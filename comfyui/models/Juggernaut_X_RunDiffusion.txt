@@ -1,0 +1,3 @@
+https://huggingface.co/mojen/Juggernaut_X/blob/main/Juggernaut_X_RunDiffusion.safetensors
+
+https://huggingface.co/mojen/Juggernaut_X/resolve/main/Juggernaut_X_RunDiffusion.safetensors?download=true
