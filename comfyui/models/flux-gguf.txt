@@ -1,0 +1,9 @@
+https://huggingface.co/city96/FLUX.1-dev-gguf/tree/main
+
+https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q8_0.gguf?download=true
+
+https://huggingface.co/comfyanonymous/flux_text_encoders/tree/main
+
+https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors?download=true
+
+https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn_scaled.safetensors?download=true
