@@ -17,7 +17,7 @@ realesrgan-ncnn-vulkan -i input.jpg -o output.png -n realesr-animevideov3 -s 2
 ** photograpic images
 
 #+begin_src sh
-realesrgan-ncnn-vulkan -i input.jpg -o output.png -n realesrgan-x4plus -s 2
+realesrgan-ncnn-vulkan -i input.jpg -o output.png -n realesrgan-x4plus
 #+end_src
 
 ** help
