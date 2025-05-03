@@ -1,0 +1,49 @@
+#+STARTUP: content
+* ollama nixos
+** ollama-cuda
+
+the nixos package name is
+
+#+begin_src nix
+ollama-cuda
+#+end_src
+
+** ollama serve
+
+start the ollama server
+
+#+begin_src sh
+ollama serve
+#+end_src
+
+** models
+
+*** deepseek-r1
+
+[[https://ollama.com/library/deepseek-r1:7b]]
+
+**** pull 
+
+#+begin_src sh
+ollama pull deepseek-r1:7b
+#+end_src
+
+**** run
+
+#+begin_src sh
+ollama run deepseek-r1:7b
+#+end_src
+
+** kill the ollama server
+
+check if ollama is running
+
+#+begin_src sh
+pgrep ollama
+#+end_src
+
+kill ollama
+
+#+begin_src sh
+pkill ollama
+#+end_src
