@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* emacs insert org file link
+
+Control + c followed by Control + l
+
+#+begin_example
+C-c C-l
+#+end_example
