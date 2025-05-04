@@ -10,5 +10,4 @@ https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/tree/main
 
 https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q8_0.gguf?download=true
 
-wrong link
 https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn_scaled.safetensors?download=true
