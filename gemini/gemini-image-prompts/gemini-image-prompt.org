@@ -1,0 +1,32 @@
+:PROPERTIES:
+:GPTEL_MODEL: gemini-2.0-flash
+:GPTEL_BACKEND: Gemini
+:GPTEL_SYSTEM: You are a large language model living in Emacs and a helpful assistant. Respond concisely.
+:GPTEL_BOUNDS: ((response (421 1757)))
+:END:
+
+*** describe this image in great detail, as if it was a prompt for stable diffusion to create the image from your description
+
+[[file:Pictures/wallpaper/Akira - (1988)-\[00:05:39.339\]v1.jpg][akira]]
+
+Okay, here's a detailed Stable Diffusion prompt based on the image, aiming for a similar aesthetic to the Akira movie:
+
+*Prompt:*
+
+"A dynamic, highly detailed anime-style shot inspired by Akira (1988). Focus on a futuristic, dilapidated urban landscape at night. Dominant colors are neon red, deep blues, and grimy greys. In the foreground, a sleek, red motorcycle (Kaneda's bike) speeds towards the viewer, leaving a trail of light. The bike's design is futuristic and iconic, with glowing red accents. In the background, towering, decaying skyscrapers loom, illuminated by scattered neon signs and flickering lights. Rain is falling, creating wet reflections on the ground and adding to the cyberpunk atmosphere. The overall mood is gritty, intense, and slightly dystopian.  Art by Katsuhiro Otomo, detailed mechanical design, cinematic lighting, 8k resolution, trending on artstation."
+
+*Negative Prompt:*
+
+"photorealistic, realistic, poorly drawn, bad anatomy, disfigured, blurry, grainy, low resolution, normal quality, jpeg artifacts."
+
+*Details to Emphasize:*
+
+-   *Akira Aesthetic:* Cyberpunk, dystopian, Japanese anime style.
+-   *Kaneda's Bike:* Key element, must be accurate.
+-   *Lighting:* Neon, wet reflections, strong contrasts.
+-   *Environment:* Decaying futuristic city, rain.
+-   *Art Style:* Katsuhiro Otomo's style
+
+
+*** 
+
