@@ -202,3 +202,10 @@ python main.py
 
 [[http://127.0.0.1:8188]]
 
+** reinstall
+
+after an upgrade you may need to reinstall the requirements
+
+#+begin_src sh
+python -s -m pip install -r requirements.txt
+#+end_src
