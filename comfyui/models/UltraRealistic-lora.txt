@@ -1,0 +1,3 @@
+https://civitai.com/models/796382?modelVersionId=940466
+
+CFG=1, Guidance =2.5, Scheduler=Beta, Sampler=dpmpp_2m, Steps=40, Strength= from 0.8 to 1.0 works good, but i'm usually use with 1, but if hands getting worse then i set 0.87

@@ -1,0 +1,5 @@
+https://huggingface.co/deepseek-ai/Janus-Pro-1B/tree/main
+
+git clone https://huggingface.co/deepseek-ai/Janus-Pro-1B
+
+https://huggingface.co/deepseek-ai/Janus-Pro-1B/resolve/main/pytorch_model.bin?download=true
