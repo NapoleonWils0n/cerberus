@@ -1,0 +1,120 @@
+:PROPERTIES:
+:GPTEL_MODEL: gemini-2.0-flash
+:GPTEL_BACKEND: Gemini
+:GPTEL_SYSTEM: You are a large language model living in Emacs and a helpful assistant. Respond concisely.
+:GPTEL_BOUNDS: ((response (4249 7195)))
+:END:
+#+STARTUP: content
+* descibe image in detail prompt
+
+"Analyze this image in extreme detail, focusing on elements that are crucial for recreating it using text-to-image generation with the Flux model in ComfyUI.  Deconstruct the image into these components:
+
+1.  **Overall Scene Subject:**  Identify the central subject or figure in the scene.
+
+2.  **Action/State:** Describe what the subject is doing, feeling, or the general state it's in. Use evocative language.
+
+3.  **Environment:**  Thoroughly describe the setting or environment where the subject is located. Include details about the type of location, time of day, and any significant objects or features within the environment.
+
+4.  **Lighting:**  Analyze the lighting conditions. Specify the source, intensity, color, and direction of the light. Use terms like "soft," "harsh," "diffused," "directional," "volumetric," etc.  Identify if light is casting shadows.
+
+5.  **Camera Angle & Composition:**  Determine the camera angle (e.g., close-up, medium shot, wide shot, high angle, low angle, bird's-eye view). Describe the composition using principles like rule of thirds, leading lines, symmetry, etc. Note any depth of field effects (e.g., blurred background).
+
+6.  **Artistic Style:**  Identify the dominant artistic style or genre. Consider terms like "photorealistic," "impressionistic," "surrealistic," "cyberpunk," "art nouveau," "watercolor," "digital art," "comic book," etc.  If applicable, mention any specific artists whose style is emulated.
+
+7.  **Foreground & Background Elements:**  Identify the key elements in the foreground and background, noting their position relative to the main subject and their contribution to the overall scene.
+
+8.  **Position of Elements:**  Describe the precise placement of key objects, people, and features within the scene. Use spatial language.
+
+9.  **Color Palette:** Analyze the dominant colors. For the /most important/ colors in the scene (at least 3), provide both a descriptive name (e.g., "muted olive green") AND the approximate RGB value in the format `rgb(XXX, YYY, ZZZ)`, where XXX, YYY, and ZZZ are integer values between 0 and 255. Also describe the overall color saturation and temperature.
+
+10. **Details:** Include any small but significant details about textures, patterns, materials, and specific attributes of objects and people (e.g., wrinkles, clothing details, surface imperfections).
+
+11. **Mood/Atmosphere:**  Describe the overall feeling or mood that the image evokes.
+
+Finally, format the output as follows, mirroring the structure provided in the example:
+
+=A [Subject] [Action/State] in a [Environment] under [Lighting] with a [Camera Angle] and a [Artistic Style]=
+
+/Expanded Details:/
+
+-   /Subject:* [Detailed description of the subject]
+-   /Action/State:* [Detailed description of the action/state]
+-   /Environment:* [Detailed description of the environment]
+-   /Lighting:* [Detailed description of the lighting]
+-   /Camera Angle:* [Detailed description of the camera angle and composition]
+-   /Artistic Style:* [Detailed description of the artistic style]
+
+/Foreground/Background Elements:/
+
+-   /Foreground:* [Description of foreground elements]
+-   /Background:* [Description of background elements]
+
+/Image Composition:/
+
+-   [Description of image composition principles used]
+
+/Position of Elements:/
+
+-   [Description of the position of key elements]
+
+/Color Palette:/
+
+-   [Description of the color palette, including RGB values for key colors: e.g., "Key color: Muted Olive Green rgb(107, 142, 35)"]
+
+/Details:/
+
+-   [Description of important details]
+
+/Mood/Atmosphere:/
+
+-   [Description of the mood/atmosphere]
+
+IMPORTANT: Maintain a consistent and structured format so the generated text can be easily pasted into ComfyUI and used with a Flux GGUF model. Be extremely detailed. Use descriptive language."
+
+* using the "descibe image in detail prompt" above
+
+describe this image in great detail
+
+[[file:~/Pictures/wallpaper/Akira - (1988)-\[00:05:39.339\]v1.jpg][akira]]
+
+=A Band of masked Bosozoku Riding Down a Highway in a Futuristic City at Night under Artificial Lighting with a Medium Shot and a Anime Style=
+
+/Expanded Details:/
+
+-   /Subject:* A group of Bosozoku riders, with one prominent rider in the foreground. The rider is wearing goggles, a face mask, a light purple vest over a pink long-sleeved shirt, and brown gloves. A smiley face emblem is visible on their vest.
+-   /Action/State:* The riders are speeding down a highway, likely engaged in a high-speed pursuit or ride. The rider in the foreground is gripping a long, blue pole with a mechanical device attached to the end.
+-   /Environment:* The scene is set on a multi-lane highway at night. In the background, a dense, futuristic cityscape is visible, with illuminated skyscrapers and spherical lights dotting the urban landscape.
+-   /Lighting:* The lighting is primarily artificial, emanating from the city lights and streetlights in the background. The light is diffused, creating a slightly hazy atmosphere. There are no strong shadows, suggesting an overcast or evenly lit night.
+-   /Camera Angle:* The camera angle is a medium shot, focusing on the rider in the foreground while still providing context of the environment and other riders.
+-   /Artistic Style:* The artistic style is distinctly anime, reminiscent of 1980s-1990s Japanese animation. It features cel-shading, defined outlines, and a slightly grainy texture.
+
+/Foreground/Background Elements:/
+
+-   /Foreground:* The front of the lead rider's vehicle, adorned with "HRC" lettering and another smiley face emblem. A long blue pole with a mechanical device is prominently displayed.
+-   /Background:* The futuristic cityscape, featuring illuminated buildings and spherical lights. The highway stretches into the distance, with other riders visible.
+
+/Image Composition:/
+
+-   The composition utilizes leading lines from the highway to draw the viewer's eye towards the cityscape. The rule of thirds is loosely applied, with the rider offset to the left of the frame.
+
+/Position of Elements:/
+
+-   The lead rider is positioned in the lower-left quadrant of the frame. The cityscape occupies the upper portion of the image. The highway stretches from the foreground to the background, creating a sense of depth.
+
+/Color Palette:/
+
+-   Key color: Teal Blue rgb(0, 128, 128) - dominates the vehicle's color scheme.
+-   Key color: Light Pink rgb(255, 182, 193) - used for the rider's shirt.
+-   Key color: Dark Blue rgb(0, 0, 139) - represents the night sky and highway surface.
+
+/Details:/
+
+-   The mechanical device at the end of the blue pole features red and gold components. The "HRC" lettering on the vehicle is in red. The smiley face emblems add a whimsical touch to the otherwise gritty scene.
+
+/Mood/Atmosphere:/
+
+-   The mood is energetic and rebellious, capturing the spirit of the Bosozoku subculture. The futuristic setting adds a layer of intrigue and excitement.
+
+
+
+
