@@ -1,0 +1,86 @@
+#+STARTUP: content
+* ollama cuda override
+** resources
+
+[[https://search.nixos.org/packages?channel=24.11&from=0&size=50&sort=relevance&type=packages&query=ollama-cuda]]
+
+[[https://github.com/NixOS/nixpkgs/blob/nixos-24.11/pkgs/by-name/ol/ollama/package.nix]]
+
+[[https://github.com/ollama/ollama/releases]]
+
+** ollama download and checksum
+
+download ollama
+
+#+begin_src sh
+wget -c https://github.com/ollama/ollama/archive/refs/tags/v0.6.8.tar.gz
+#+end_src
+
+get the sha256 checksum
+
+#+begin_src sh
+sha256sum v0.6.8.tar.gz
+#+end_src
+
+v0.6.8.tar.gz sha256 checksum
+
+#+begin_example
+46e3953373be41fae1699eaca97eb0e5f35b9a83d9652f38901938c1a988634d
+#+end_example
+
+Copy the output of this command which we well use in our home.nix <YOUR_OLLAMA_SRC_SHA256_HASH> 
+
+** home.nix
+
+edit your home.nix
+
+#+begin_src sh
+vi ~/.config/home-manager/home.nix
+#+end_src
+
+edit the hash and add the sha256 sum you got from the previous command
+
+#+begin_src nix
+hash = "<YOUR_OLLAMA_SRC_SHA256_HASH>";
+#+end_src
+
+#+begin_src nix
+nixpkgs.overlays = [
+   (self: super: {
+     mpv = super.mpv.override {
+       scripts = [ self.mpvScripts.mpris ];
+     };
+   })
+   # ... other overlays (like your mpv one) ...
+   (self: super: {
+     ollama-cuda = super.ollama-cuda.overrideAttrs (oldAttrs: rec {
+       version = "0.6.8";
+       src = super.fetchFromGitHub {
+         owner = "ollama";
+         repo = "ollama";
+         rev = "v${version}";
+         hash = "<YOUR_OLLAMA_SRC_SHA256_HASH>";
+         fetchSubmodules = true;
+       };
+       vendorHash = "<YOUR_OLLAMA_VENDOR_SHA256_HASH>";
+     });
+   })
+ ];
+#+end_src
+
+** home-manager switch
+
+vendorHash: Getting the vendorHash is a bit more involved.
+The easiest way is usually to let Nix try to build Ollama with the updated version and src hash. 
+
+#+begin_src sh
+home-manager switch
+#+end_src
+
+It will likely fail with an error message indicating the expected vendorHash.
+
+edit your home.nix vendorHash and add the vender hash
+
+#+begin_src nix
+vendorHash = "<YOUR_OLLAMA_VENDOR_SHA256_HASH>";
+#+end_src
