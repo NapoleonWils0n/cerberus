@@ -1,0 +1,10 @@
+#+STARTUP: content
+* deepseek janus pro
+
+#+begin_src sh
+ollama pull erwan2/DeepSeek-Janus-Pro-7B-Vision-Encoder
+#+end_src
+
+#+begin_src sh
+ollama run erwan2/DeepSeek-Janus-Pro-7B-Vision-Encoder
+#+end_src
