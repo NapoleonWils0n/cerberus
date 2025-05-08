@@ -200,7 +200,7 @@ ef00
 Command (? for help): n
 Partition number (2-128, default 2): 
 First sector (2099200-1000215182, default = 2099200) or {+-}size{KMGTP}: 
-Last sector (2099200-1000215182, default = 1000215175) or {+-}size{KMGTP}: +4G
+Last sector (2099200-1000215182, default = 1000215175) or {+-}size{KMGTP}: +8G
 Current type is 8300 (Linux filesystem)
 Hex code or GUID (L to show codes, Enter = 8300): 8200
 Changed type of partition to 'Linux swap'
@@ -449,29 +449,6 @@ Generate the base NixOS configuration files.
 nixos-generate-config --root /mnt
 #+end_src
 
-Open /mnt/etc/nixos/configuration.nix in a text editor and change imports to include hardware-configuration-zfs.nix instead of the default hardware-configuration.nix. We will be editing this file later.
-
-Now Add the following block of code anywhere (how you organise your configuration.nix is up to you): 
-
-#+begin_src sh
-# ZFS boot settings.
-boot.supportedFilesystems = [ "zfs" ];
-boot.zfs.devNodes = "/dev/";
-#+end_src
-
-Now set networking.hostName and networking.hostId. The host ID must be an eight digit hexadecimal value.
-You can derive it from the /etc/machine-id, taking the first eight characters; from the hostname, by taking the first eight characters of the hostname's md5sum 
-
-#+begin_src sh
-hostname | md5sum | head -c 8
-#+end_src
-
-or by taking eight hexadecimal characters from /dev/urandom
-
-#+begin_src sh
-tr -dc 0-9a-f < /dev/urandom | head -c 8
-#+end_src
-
 password
 
 #+begin_src sh
@@ -495,14 +472,12 @@ rebuild
 
 #+begin_src sh
 # ZFS maintenance settings.
-services.zfs.trim.enable = true;
 services.zfs.autoScrub.enable = true;
-services.zfs.autoScrub.pools = [ "rpool" ];
 #+end_src
 
 You may wish to also add services.zfs.autoSnapshot.enable = true; and set the ZFS property com.sun:auto-snapshot to true on rpool/userdata to have automatic snapshots. (See #How to use the auto-snapshotting service earlier on this page.)
 
-Now open /mnt/etc/nixos/hardware-configuration-zfs.nix.
+Now open /mnt/etc/nixos/hardware-configuration.nix.
 
 Add options = [ "zfsutil" ]; to every ZFS fileSystems block.
 Add options = [ "X-mount.mkdir" ]; to fileSystems."/boot" and fileSystems."/boot2".
