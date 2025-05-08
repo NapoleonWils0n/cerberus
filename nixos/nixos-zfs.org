@@ -134,53 +134,13 @@ We need the following partitions:
 
 1G for boot partition with "boot" as the partition label (also called name in some tools) and ef00 as partition code
 
-4G for a swap partition with "swap" as the partition label and 8200 as partition code. We will encrypt this with a random secret on each boot.
+8G for a swap partition with "swap" as the partition label and 8200 as partition code. We will encrypt this with a random secret on each boot.
 
 The rest of disk space for zfs with "root" as the partition label and 8300 as partition code (default code)
 
 Reason for swap partition: ZFS does use a caching mechanism that is different from the normal Linux cache infrastructure. In low-memory situations, ZFS therefore might need a bit longer to free up memory from its cache. The swap partition will help with that.
 
 Example with gdisk using /dev/nvme0n1 as the device (use lsblk to find the device): 
-
-sudo gdisk /dev/nvme0n1
-GPT fdisk (gdisk) version 1.0.10
-...
-# boot partition
-Command (? for help): n
-Partition number (1-128, default 1): 
-First sector (2048-1000215182, default = 2048) or {+-}size{KMGTP}: 
-Last sector (2048-1000215182, default = 1000215175) or {+-}size{KMGTP}: +1G
-Current type is 8300 (Linux filesystem)
-Hex code or GUID (L to show codes, Enter = 8300): ef00
-Changed type of partition to 'EFI system partition'
-
-# Swap partition
-Command (? for help): n
-Partition number (2-128, default 2): 
-First sector (2099200-1000215182, default = 2099200) or {+-}size{KMGTP}: 
-Last sector (2099200-1000215182, default = 1000215175) or {+-}size{KMGTP}: +4G
-Current type is 8300 (Linux filesystem)
-Hex code or GUID (L to show codes, Enter = 8300): 8200
-Changed type of partition to 'Linux swap'
-
-# root partition
-Command (? for help): n
-Partition number (3-128, default 3): 
-First sector (10487808-1000215182, default = 10487808) or {+-}size{KMGTP}: 
-Last sector (10487808-1000215182, default = 1000215175) or {+-}size{KMGTP}: 
-Current type is 8300 (Linux filesystem)
-Hex code or GUID (L to show codes, Enter = 8300): 
-Changed type of partition to 'Linux filesystem'
-
-# write changes
-Command (? for help): w
-
-Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
-PARTITIONS!!
-
-Do you want to proceed? (Y/N): y
-OK; writing new GUID partition table (GPT) to /dev/nvme0n1.
-The operation has completed successfully.
 
 #+begin_src sh
 gdisk /dev/nvme0n1
