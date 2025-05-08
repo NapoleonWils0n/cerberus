@@ -13,7 +13,7 @@
 download ollama
 
 #+begin_src sh
-wget -c https://github.com/ollama/ollama/archive/refs/tags/v0.6.8.tar.gz
+wget https://github.com/ollama/ollama/archive/refs/tags/v0.6.8.tar.gz
 #+end_src
 
 get the sha256 checksum
@@ -28,11 +28,21 @@ v0.6.8.tar.gz sha256 checksum
 46e3953373be41fae1699eaca97eb0e5f35b9a83d9652f38901938c1a988634d
 #+end_example
 
+base64 encode the hash
+
+#+begin_src sh
+echo -n "46e3953373be41fae1699eaca97eb0e5f35b9a83d9652f38901938c1a988634d" | xxd -r -p | base64
+#+end_src
+
+#+begin_example
+RuOVM3O+QfrhaZ6sqX6w5fNbmoPZZS84kBk4wamIY00=
+#+end_example
+
 prepend sha256- to the hash
 
-#+begin_src nix
-sha256-46e3953373be41fae1699eaca97eb0e5f35b9a83d9652f38901938c1a988634d
-#+end_src
+#+begin_example
+sha256-RuOVM3O+QfrhaZ6sqX6w5fNbmoPZZS84kBk4wamIY00=
+#+end_example
 
 Copy the output of this command which we well use in our home.nix <YOUR_OLLAMA_SRC_SHA256_HASH> 
 
