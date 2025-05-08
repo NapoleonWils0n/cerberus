@@ -4,19 +4,7 @@
 
 [[https://nixos.org/manual/nixos/stable/]]
 
-[[https://github.com/NapoleonWils0n/nixos-root-xps15/blob/0a08aa5509651298d2b2c8264b8e612f5d4e7f24/etc/nixos/configuration.nix]]
-
 [[https://wiki.nixos.org/wiki/ZFS]]
-
-[[https://openzfs.github.io/openzfs-docs/Getting%20Started/NixOS/Root%20on%20ZFS.html]]
-
-[[https://lowtek.ca/roo/2024/getting-started-with-zfs/]]
-
-[[https://blog.lazkani.io/posts/nixos-on-encrypted-zfs/]]
-
-[[https://mzhang.io/posts/2022-05-09-installing-nixos-on-encrypted-zfs/]]
-
-[[https://www.return12.net/zfs-on-nixos/]]
 
 ** iso download
 
