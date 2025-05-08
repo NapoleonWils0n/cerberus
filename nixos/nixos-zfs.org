@@ -600,34 +600,7 @@ sudo umount -R /mnt
 sudo shutdown now
 #+end_src
 
-** Mount datasets without legacy mountpoint
-
-Contrary to conventional wisdom, mountpoint=legacy is not required for mounting datasets. The trick is to use mount -t zfs -o zfsutil path/to/dataset /path/to/mountpoint.
-
-Also, legacy mountpoints are also inconvenient in that the mounts can not be natively handled by zfs mount command, hence legacy in the name.
-
-An example configuration of mounting non-legacy dataset is the following: 
-
-#+begin_src sh
-{
-  fileSystems."/tank" =
-    { device = "tank_pool/data";
-      fsType = "zfs"; options = [ "zfsutil" ];
-    };
-}
-#+end_src
-
-An alternative is to set boot.zfs.extraPools = [ pool_name ];, which is recommended by the documentation if you have many zfs filesystems. 
-
-*** zfs hardlinks
-
-Using NixOS on a ZFS root file system might result in the boot error external pointer tables not supported when the number of hardlinks in the nix store gets very high. This can be avoided by adding this option to your configuration.nix file:
-
-#+begin_src sh
-boot.loader.grub.copyKernels = true;
-#+end_src
-
-*** Automatic scrubbing
+** Automatic scrubbing
 
 Regular scrubbing of ZFS pools is recommended and can be enabled in your NixOS configuration via: 
 
