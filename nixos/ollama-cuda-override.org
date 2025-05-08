@@ -28,6 +28,12 @@ v0.6.8.tar.gz sha256 checksum
 46e3953373be41fae1699eaca97eb0e5f35b9a83d9652f38901938c1a988634d
 #+end_example
 
+prepend sha256- to the hash
+
+#+begin_src nix
+sha256-46e3953373be41fae1699eaca97eb0e5f35b9a83d9652f38901938c1a988634d
+#+end_src
+
 Copy the output of this command which we well use in our home.nix <YOUR_OLLAMA_SRC_SHA256_HASH> 
 
 ** home.nix
@@ -46,11 +52,6 @@ hash = "<YOUR_OLLAMA_SRC_SHA256_HASH>";
 
 #+begin_src nix
 nixpkgs.overlays = [
-   (self: super: {
-     mpv = super.mpv.override {
-       scripts = [ self.mpvScripts.mpris ];
-     };
-   })
    # ... other overlays (like your mpv one) ...
    (self: super: {
      ollama-cuda = super.ollama-cuda.overrideAttrs (oldAttrs: rec {
