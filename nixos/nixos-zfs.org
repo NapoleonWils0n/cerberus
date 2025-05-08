@@ -57,12 +57,6 @@ sudo dd bs=4M conv=fsync oflag=direct status=progress if=<path-to-image> of=/dev
 
 in this example sdc is the usb drive
 
-graphical
-
-#+begin_src sh
-sudo dd bs=4M conv=fsync oflag=direct status=progress if=latest-nixos-gnome-x86_64-linux.iso of=/dev/sdc
-#+end_src
-
 minimal iso
 
 #+begin_src sh
