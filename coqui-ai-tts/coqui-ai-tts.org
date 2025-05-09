@@ -1,0 +1,34 @@
+#+STARTUP: content
+* coqui-ai-TTS
+** resources
+
+[[https://github.com/idiap/coqui-ai-TTS]]
+
+[[https://coqui-tts.readthedocs.io/en/latest/]]
+
+** nix-shell
+
+#+begin_src sh
+vi ~/nix/tts/shell.nix
+#+end_src
+
+#+begin_src nix
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell {
+  buildInputs = [ pkgs.tts ];
+
+  shellHook = ''
+    export NIXPKGS_ALLOW_UNFREE=1
+    echo "Coqui TTS environment loaded.  Run 'tts --help' for usage."
+  '';
+}
+#+end_src
+
+** tts
+
+tts with cuda
+
+#+begin_src sh
+tts --use_cuda --text "coqui-ai-TTS text to speech using cuda" --out_path output.wav
+#+end_src
