@@ -509,6 +509,14 @@ nixos-install --show-trace --root /mnt
 
 --show-trace will show you where exactly things went wrong if nixos-install fails. To take advantage of all cores on your system, also specify --max-jobs n replacing n with the number of cores on your machine. 
 
+after making changes to the config rebuild
+
+#+begin_src sh
+nixos-rebuild switch
+#+end_src
+
+when you are finished unmount /mnt and reboot
+
 #+begin_src sh
 sudo umount -R /mnt
 #+end_src
