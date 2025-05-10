@@ -75,7 +75,7 @@ tts --use_cuda --text "Good day, mate! How's the weather in London?" --model_nam
 *** glow-tts
 
 #+begin_src sh
-tts --use_cuda --text "The rain in Spain falls mainly on the plain." --model_name "tts_models/uk/mai/glow-tts" --out_path "british_mai_glow_tts.wav"
+tts --use_cuda --text "This is glow-tts using cuda" --model_name "tts_models/uk/mai/glow-tts" --out_path "british_mai_glow_tts.wav"
 #+end_src
 
 *** xtts_v2
