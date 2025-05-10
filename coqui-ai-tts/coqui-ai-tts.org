@@ -85,6 +85,6 @@ tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
 --text "To be or not to be, that is the question." \
 --speaker_wav input.wav \
 --language_idx en \
---use_cuda true \
+--use_cuda \
 --out_path "xtts_v2_cloned_voice.wav"
 #+end_src
