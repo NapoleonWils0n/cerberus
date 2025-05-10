@@ -83,7 +83,7 @@ tts --use_cuda --text "This is glow-tts using cuda" --model_name "tts_models/uk/
 #+begin_src sh
 tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
 --text "To be or not to be, that is the question." \
---speaker_wav /path/to/your/british_voice.wav \
+--speaker_wav input.wav \
 --language_idx en \
 --use_cuda true \
 --out_path "xtts_v2_cloned_voice.wav"
