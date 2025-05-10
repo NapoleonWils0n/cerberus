@@ -60,6 +60,31 @@ tts --list_models
 
 tts with cuda
 
+*** default model
+
 #+begin_src sh
 tts --use_cuda --text "coqui-ai-TTS text to speech using cuda" --out_path output.wav
+#+end_src
+
+*** vits
+
+#+begin_src sh
+tts --use_cuda --text "Good day, mate! How's the weather in London?" --model_name "tts_models/en/vctk/vits" --out_path "british_vctk_vits.wav"
+#+end_src
+
+*** glow-tts
+
+#+begin_src sh
+tts --use_cuda --text "The rain in Spain falls mainly on the plain." --model_name "tts_models/uk/mai/glow-tts" --out_path "british_mai_glow_tts.wav"
+#+end_src
+
+*** xtts_v2
+
+#+begin_src sh
+tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
+--text "To be or not to be, that is the question." \
+--speaker_wav /path/to/your/british_voice.wav \
+--language_idx en \
+--use_cuda true \
+--out_path "xtts_v2_cloned_voice.wav"
 #+end_src
