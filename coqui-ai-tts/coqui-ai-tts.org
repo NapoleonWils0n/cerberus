@@ -44,6 +44,12 @@ pkgs.mkShell {
 }
 #+end_src
 
+** nix-shell
+
+#+begin_src sh
+nix-shell
+#+end_src
+
 ** tts
 
 tts with cuda
