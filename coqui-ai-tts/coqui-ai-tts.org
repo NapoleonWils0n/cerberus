@@ -6,6 +6,26 @@
 
 [[https://coqui-tts.readthedocs.io/en/latest/]]
 
+** nixpkgs
+
+create the nixpkgs directory
+
+#+begin_src sh
+mkdir -p ~/.config/nixpkgs
+#+end_src
+
+create the config.nix file
+
+#+begin_src sh
+vi ~/.config/nixpkgs/config.nix
+#+end_src
+
+with this code
+
+#+begin_src nix
+{ allowUnfree = true; }
+#+end_src
+
 ** nix-shell
 
 #+begin_src sh
@@ -19,7 +39,6 @@ pkgs.mkShell {
   buildInputs = [ pkgs.tts ];
 
   shellHook = ''
-    export NIXPKGS_ALLOW_UNFREE=1
     echo "Coqui TTS environment loaded.  Run 'tts --help' for usage."
   '';
 }
