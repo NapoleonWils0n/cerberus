@@ -50,6 +50,12 @@ pkgs.mkShell {
 nix-shell
 #+end_src
 
+** tts list models
+
+#+begin_src sh
+tts --list_models
+#+end_src
+
 ** tts
 
 tts with cuda
