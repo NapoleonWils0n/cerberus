@@ -56,6 +56,51 @@ nix-shell
 tts --list_models
 #+end_src
 
+** tts-server
+
+#+begin_src sh
+tts-server -h
+#+end_src
+
+#+begin_example
+2025-05-10 22:49:18.399145: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+#+end_example
+
+#+begin_src sh
+usage: tts-server [-h] [--list_models] [--model_name MODEL_NAME] [--vocoder_name VOCODER_NAME] [--config_path CONFIG_PATH]
+                  [--model_path MODEL_PATH] [--vocoder_path VOCODER_PATH] [--vocoder_config_path VOCODER_CONFIG_PATH]
+                  [--speakers_file_path SPEAKERS_FILE_PATH] [--port PORT] [--use_cuda | --no-use_cuda] [--debug | --no-debug]
+                  [--show_details | --no-show_details]
+#+end_src
+
+#+begin_src sh
+options:
+  -h, --help            show this help message and exit
+  --list_models         list available pre-trained tts and vocoder models.
+  --model_name MODEL_NAME
+                        Name of one of the pre-trained tts models in format <language>/<dataset>/<model_name>
+  --vocoder_name VOCODER_NAME
+                        name of one of the released vocoder models.
+  --config_path CONFIG_PATH
+                        Path to model config file.
+  --model_path MODEL_PATH
+                        Path to model file.
+  --vocoder_path VOCODER_PATH
+                        Path to vocoder model file. If it is not defined, model uses GL as vocoder. Please make sure that you installed vocoder
+                        library before (WaveRNN).
+  --vocoder_config_path VOCODER_CONFIG_PATH
+                        Path to vocoder model config file.
+  --speakers_file_path SPEAKERS_FILE_PATH
+                        JSON file for multi-speaker model.
+  --port PORT           port to listen on.
+  --use_cuda, --no-use_cuda
+                        true to use CUDA.
+  --debug, --no-debug   true to enable Flask debug mode.
+  --show_details, --no-show_details
+                        Generate model detail page.
+#+end_src
+
 ** tts
 
 tts with cuda
