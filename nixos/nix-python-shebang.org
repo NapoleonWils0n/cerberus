@@ -1,0 +1,53 @@
+#+STARTUP: content
+* nixos python shebang
+** nix-shell Shebang
+
+#+begin_src python
+#!/usr/bin/env nix-shell
+#!nix-shell -i python3 -p python3
+
+print("Hello, NixOS!")
+#+end_src
+
+Explanation:
+
+#+begin_src python
+#!/usr/bin/env nix-shell:
+#+end_src
+
+This tells the system to use nix-shell to run the script.
+
+#+begin_src python
+#!nix-shell -i python3 -p python3:
+#+end_src
+
+This line provides instructions to nix-shell:
+
+-i python3:  Use python3 as the interpreter.
+
+-p python3:  Make the python3 package available in the environment.
+
+** Specifying Python Packages
+
+#+begin_src python
+#!/usr/bin/env nix-shell
+#!nix-shell -i python3 -p "python3.withPackages (pkgs: with pkgs; [ requests ])"
+
+import requests
+
+response = requests.get("https://www.example.com")
+print(f"Status Code: {response.status_code}")
+#+end_src
+
+Explanation:
+
+This method allows you to specify Python packages your script depends on (e.g., requests).
+
+python3.withPackages creates a Python environment with the specified packages.
+
+pkgs is the set of available packages in Nixpkgs.
+
+with pkgs; brings the attributes of pkgs into scope, so you can refer to packages like requests directly.
+
+
+
