@@ -133,3 +133,9 @@ tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
 --use_cuda \
 --out_path "xtts_v2_cloned_voice.wav"
 #+end_src
+
+*** model info by name
+
+#+begin_src sh
+tts --model_info_by_name tts_models/multilingual/multi-dataset/xtts_v2
+#+end_src
