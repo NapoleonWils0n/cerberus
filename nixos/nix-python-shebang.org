@@ -49,5 +49,43 @@ pkgs is the set of available packages in Nixpkgs.
 
 with pkgs; brings the attributes of pkgs into scope, so you can refer to packages like requests directly.
 
+** Using a shell.nix file
 
+#+begin_example
+my_script.py
+#+end_example
 
+#+begin_src python
+#!/usr/bin/env nix-shell
+#!nix-shell -p python3
+import sys
+
+print(f"Python version: {sys.version}")
+print("Hello from my script!")
+#+end_src
+
+#+begin_example
+shell.nix
+#+end_example
+
+#+begin_src nix
+let
+  pkgs = import <nixpkgs> {};
+in
+pkgs.mkShell {
+  name = "my-python-environment";
+  packages = with pkgs; [
+    python3
+  ];
+}
+#+end_src
+
+Explanation
+
+This method is more structured, especially for larger projects.
+
+shell.nix defines the environment.
+
+The shebang in my_script.py simply calls nix-shell.
+
+When you run chmod +x my_script.py && ./my_script.py, NixOS uses shell.nix to set up the environment.
