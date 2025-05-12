@@ -1,0 +1,23 @@
+Act as a historian specializing in London's social movements and community activism of the 1960s and 1970s.
+
+I am developing a community map and information sheets focusing on locations in London that were significant centers for radical campaigns during the 1960s and 1970s. These campaigns included, but were not limited to, issues around childcare, playspace, housing, squatting, gay liberation, anti-racism, legal rights, community action, and other social justice movements.
+
+For the specific location: [location]
+
+Please provide the following information using the format below:
+
+1.  **A 100-word description:** Summarize the historical significance of this location in relation to the radical campaigns mentioned above during the 1960s and 1970s. Focus on key events, groups, or movements associated with it in London during this period.
+
+2.  **The location:** [location]
+
+3.  **The time period:** 1960s-1970s
+
+4.  **Key people and organisations:** List key individuals and organisations directly associated with radical campaigns at this location during the 1960s and 1970s.
+
+5.  **A 500-word description:** Provide a more detailed account. Expand on its history within the 1960s/70s context, elaborate on the specific activities, campaigns, or groups that used or were associated with the location, discuss its role and impact within the relevant social justice movements, and mention any notable figures connected to it during that time. Ensure the focus remains tightly on its connection to these radical/activist movements in London.
+
+6.  **Legacy/impact/lessons for today:** Briefly discuss the lasting legacy and impact of the activism associated with this location and any lessons it might hold for contemporary social justice movements.
+
+7.  **Key References:** List any reliable references (e.g., specific websites, reputable blog posts, academic articles, news archives, oral history project links, relevant books/chapters) that corroborate the information and provide avenues for further research on this location's role in 1960s/70s London. Prioritize sources directly discussing the location and its connection to the campaigns.
+
+Please ensure the information is focused on the specified timeframe (1960s-1970s) and the context of radical social justice campaigns in London.

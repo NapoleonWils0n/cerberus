@@ -1,0 +1,19 @@
+#+STARTUP: showall
+* nix channel update
+** nixos channel update
+
+#+begin_src sh
+doas nix-channel --update nixos
+#+end_src
+
+** home-manger channel update
+
+#+begin_src sh
+nix-channel --update home-manager 
+#+end_src
+
+** upgrade
+
+#+begin_src sh
+doas nixos-rebuild switch --upgrade
+#+end_src
