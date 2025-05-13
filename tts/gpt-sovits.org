@@ -13,7 +13,7 @@ cd GPT-SoVITS
 
 ** requirements.txt
 
-comment out pyopenjtalk in the requirements.txt file
+comment out pyopenjtalk and torchaudio in the requirements.txt file
 
 #+begin_src 
 vi requirements.txt
@@ -21,6 +21,7 @@ vi requirements.txt
 
 #+begin_example
 #pyopenjtalk>=0.4.1 # error
+#torchaudio
 #+end_example
 
 ** shell.nix
@@ -88,6 +89,7 @@ pkgs.mkShell {
     pkgs.python312 # Ensure base python is available
     pythonPackages.setuptools
     pythonPackages.wheel
+    pkgs.python312Packages.torchaudio
   ];
 
 LD_LIBRARY_PATH = with pkgs;
