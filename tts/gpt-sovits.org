@@ -294,3 +294,5 @@ set the language to english
 #+begin_src sh
 python webui.py en
 #+end_src
+
+cuda not working
