@@ -98,3 +98,207 @@ pkgs.mkShell {
   ];
 }
 #+end_src
+
+** model-download.sh
+
+save the model-download.sh script to the GPT-SoVITS directory
+
+#+begin_example
+model-download.sh
+#+end_example
+
+#+begin_src sh
+#!/bin/sh
+
+# Script to download GPT-SoVITS pretrained models.
+# Intended to be run from the root of the GPT-SoVITS repository.
+
+set -e
+
+# Default values
+is_HF=false
+is_HF_MIRROR=false
+is_MODELSCOPE=false
+DOWNLOAD_UVR5=false
+DOWNLOAD_WHISPER=false # Add option to download Whisper model
+
+# Function to display help
+print_help() {
+  echo "Usage: bash model-download.sh [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  --source HF|HF-Mirror|ModelScope  Specify the model source (REQUIRED for some models)"
+  echo "  --download-uvr5                   Enable downloading the UVR5 model"
+  echo "  --download-whisper                Enable downloading the Faster Whisper model" # Add to help
+  echo "  -h, --help                        Show this help message and exit"
+  echo ""
+  echo "Examples:"
+  echo "  bash model-download.sh --source HF --download-uvr5 --download-whisper"
+  echo "  bash model-download.sh --source ModelScope"
+}
+
+# Check for arguments
+if [[ $# -eq 0 ]]; then
+  print_help
+  exit 0
+fi
+
+# Use getopts to parse command-line arguments
+while getopts "h-:" opt; do
+  case "$opt" in
+    -) # Long options
+      case "$OPTARG" in
+        source)
+          case "$2" in
+            HF)
+              is_HF=true
+              ;;
+            HF-Mirror)
+              is_HF_MIRROR=true
+              ;;
+            ModelScope)
+              is_MODELSCOPE=true
+              ;;
+            ,*)
+              echo "Error: Invalid Download Source: $2"
+              echo "Choose From: [HF, HF-Mirror, ModelScope]"
+              exit 1
+              ;;
+          esac
+          shift
+          ;;
+        download-uvr5)
+          DOWNLOAD_UVR5=true
+          ;;
+        download-whisper) # Add case for --download-whisper
+          DOWNLOAD_WHISPER=true
+          ;;
+        help)
+          print_help
+          exit 0
+          ;;
+        ,*)
+          echo "Unknown option: --$OPTARG"
+          print_help
+          exit 1
+          ;;
+      esac
+      shift
+      ;;
+    h)
+      print_help
+      exit 0
+      ;;
+    ,*)
+      echo "Unknown option: -$opt"
+      print_help
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+# Check that --source was provided (modified to account for whisper)
+if ! $is_HF && ! $is_HF_MIRROR && ! $is_MODELSCOPE && ! $DOWNLOAD_WHISPER; then
+  echo "Error: Download Source is REQUIRED (--source) unless downloading only Whisper (--download-whisper)"
+  echo ""
+  print_help
+  exit 1
+fi
+
+# Determine download URLs based on source
+PRETRINED_URL=""
+G2PW_URL=""
+UVR5_URL=""
+WHISPER_URL="https://huggingface.co/Systran/faster-whisper-large-v3" # Add Whisper URL
+
+if [ "$is_HF" = "true" ]; then
+  echo "Downloading Model From HuggingFace"
+  PRETRINED_URL="https://huggingface.co/lj1995/GPT-SoVITS" # Changed URL
+  G2PW_URL="https://huggingface.co/XXXXRT/GPT-SoVITS-Pretrained/resolve/main/G2PWModel.zip"
+  UVR5_URL="https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/uvr5_weights.zip" #changed URL
+elif [ "$is_HF_MIRROR" = "true" ]; then
+  echo "Downloading Model From HuggingFace-Mirror"
+  PRETRINED_URL="https://hf-mirror.com/lj1995/GPT-SoVITS" # Changed URL
+  G2PW_URL="https://hf-mirror.com/XXXXRT/GPT-SoVITS-Pretrained/resolve/main/G2PWModel.zip"
+  UVR5_URL="https://hf-mirror.com/lj1995/VoiceConversionWebUI/resolve/main/uvr5_weights.zip" #changed URL
+elif [ "$is_MODELSCOPE" = "true" ]; then
+  echo "Downloading Model From ModelScope"
+  PRETRINED_URL="https://www.modelscope.cn/models/XXXXRT/GPT-SoVITS-Pretrained/resolve/master/pretrained_models.zip"
+  G2PW_URL="https://www.modelscope.cn/models/XXXXRT/GPT-SoVITS-Pretrained/resolve/master/G2PWModel.zip"
+  UVR5_URL="https://www.modelscope.cn/models/XXXXRT/GPT-SoVITS-Pretrained/resolve/master/uvr5_weights.zip"
+fi
+
+# Download pretrained models if they don't exist
+if [ ! -d "GPT_SoVITS/pretrained_models" ]; then
+  echo "Downloading Pretrained Models..."
+  git clone -q "$PRETRINED_URL" GPT_SoVITS/pretrained_models # Changed to git clone
+  #cd GPT_SoVITS || exit 1  #removed cd
+  #unzip -q pretrained_models.zip #removed unzip
+  #rm -f pretrained_models.zip  #removed rm
+  #mv pretrained_models/* pretrained_models/ #removed mv
+  #rm -rf pretrained_models #removed rm
+  #cd .. #removed cd
+else
+  echo "Pretrained Models Exists"
+fi
+
+# Download G2PWModel if it doesn't exist
+if [ ! -d "GPT_SoVITS/text/G2PWModel" ]; then
+  echo "Downloading G2PWModel..."
+  wget -q -P GPT_SoVITS/text "$G2PW_URL"
+  cd GPT_SoVITS/text || exit 1
+  unzip -q G2PWModel.zip
+  rm -f G2PWModel.zip
+  cd ../..
+else
+  echo "G2PWModel Exists"
+fi
+
+# Download UVR5 model if requested
+if [ "$DOWNLOAD_UVR5" = "true" ]; then
+  if [ ! -d "tools/uvr5/uvr5_weights" ]; then
+    echo "Downloading UVR5 Model..."
+    mkdir -p tools/uvr5
+    wget -q -P tools/uvr5 "$UVR5_URL"
+    cd tools/uvr5 || exit 1
+    unzip -q uvr5_weights.zip
+    rm -f uvr5_weights.zip
+    mv uvr5_weights/* uvr5_weights/
+    rm -rf uvr5_weights
+    cd ../..
+  else
+    echo "UVR5 Model Exists"
+  fi
+fi
+
+# Download Faster Whisper model if requested
+if [ "$DOWNLOAD_WHISPER" = "true" ]; then
+  if [ ! -d "tools/faster-whisper-large-v3" ]; then
+    echo "Downloading Faster Whisper Model..."
+    git clone -q "$WHISPER_URL" tools/faster-whisper-large-v3 #git clone
+    #cd tools/faster-whisper-large-v3 || exit 1 #no cd
+    #unzip -q faster-whisper-large-v3.zip #no unzip
+    #rm -f faster-whisper-large-v3.zip #no rm
+    #mv faster-whisper-large-v3/* faster-whisper-large-v3/ #no mv
+    #rm -rf faster-whisper-large-v3 #no rm
+    #cd ../.. #no cd
+  else
+    echo "Faster Whisper Model Exists"
+  fi
+fi
+
+echo "Model download script completed."
+#+end_src
+
+make the script executable
+
+#+begin_src sh
+chmod +x ./model-download.sh
+#+end_src
+
+run the script to download the models
+
+#+begin_src sh
+./model-download.sh --source HF --download-uvr5 --download-whisper
+#+end_src
