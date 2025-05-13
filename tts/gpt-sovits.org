@@ -11,6 +11,18 @@ git clone https://github.com/RVC-Boss/GPT-SoVITS.git
 cd GPT-SoVITS
 #+end_src
 
+** requirements.txt
+
+comment out pyopenjtalk in the requirements.txt file
+
+#+begin_src 
+vi requirements.txt
+#+end_src
+
+#+begin_example
+#pyopenjtalk>=0.4.1 # error
+#+end_example
+
 ** shell.nix
 
 #+begin_src nix
@@ -18,16 +30,15 @@ cd GPT-SoVITS
 
 let
   pythonPackages = pkgs.python312Packages;
-  cudaPackages = pkgs.cudaPackages; # More consistent name
 in
 pkgs.mkShell {
   name = "gpt-sovits-env";
   # Increase stack size.
   NIX_SHELL_SET_LOCALE = "en_US.UTF-8";
   shellHook = ''
-    echo "Entering nix-shell for GPT-SoVITS.  Setting up environment..."
-    echo "Make sure you have CUDA setup and the driver is correctly installed."
-    echo "You can activate it with: nix-shell -p cudaPackages.cudatoolkit_12 --command 'nix-shell'"
+    echo "Entering nix-shell for GPT-SoVITS with CUDA 12."
+    echo "Using the default CUDA version provided by nixpkgs (likely 12.x)."
+    echo "Make sure your NVIDIA driver is compatible with CUDA 12.x."
     echo "If you run into issues, try increasing the stack size:"
     echo "ulimit -s unlimited"
     # Set the locale.
@@ -36,30 +47,34 @@ pkgs.mkShell {
     export PYTHONIOENCODING="utf-8"
 
     if [ ! -d ".venv" ]; then
-      echo "Creating and activating Python virtual environment..."
-      python3 -m venv .venv
+      echo "Creating Python virtual environment using Nix-provided Python..."
+      ${pkgs.python312}/bin/python3.12 -m venv .venv
     else
       echo "Re-activating existing Python virtual environment..."
     fi
     source .venv/bin/activate
-    # Install the specific versions of torch and torchaudio.
-    #  We do this *before* installing the other requirements.
-    # pip install torch==1.13.1+cu117 torchaudio==0.13.1+cu117 -f https://download.pytorch.org/whl/torch_stable.html
-    #  Install the requirements.txt.  Use a relative path.
+    echo "Virtual environment activated."
+
+    # Unset PYTHONPATH
+    unset PYTHONPATH
+    echo "PYTHONPATH unset."
+
+    # Install torch and torchaudio without explicit CUDA version first
+    pip install torch torchaudio -f https://download.pytorch.org/whl/torch_stable.html
+
+    # Install the rest of the requirements
     if [ -f "requirements.txt" ]; then
       echo "Installing Python dependencies from requirements.txt..."
       pip install -r requirements.txt
     else
-      echo "No requirements.txt found.  Make sure it's in the same directory as shell.nix, or that you've cloned the GPT-SoVITS repo."
+      echo "No requirements.txt found. Make sure it's in the same directory as shell.nix, or that you've cloned the GPT-SoVITS repo."
     fi
-    # Install the specific version of protobuf
-    pip install protobuf==3.20.3
     echo "Python environment setup complete."
     echo "You can now run GPT-SoVITS."
     echo " "
   '';
 
-  # List of Nix packages required.
+  # Minimal buildInputs for CUDA 12
   buildInputs = [
     pkgs.git
     pkgs.wget
@@ -68,46 +83,18 @@ pkgs.mkShell {
     pkgs.gcc
     pkgs.gnumake
     pkgs.coreutils
-    cudaPackages.cudatoolkit # Consistent usage
-    # Python and its dependencies.
-    pkgs.python3
-    pkgs.python312Packages.pip
-    pkgs.python312Packages.wheel
-    pkgs.python312Packages.numpy
-    pkgs.python312Packages.scipy
-    pkgs.python312Packages.matplotlib
-    pkgs.python312Packages.requests
-    pkgs.python312Packages.tqdm
-    pkgs.python312Packages.librosa
-    pkgs.python312Packages.pyworld
-    pkgs.python312Packages.numba
-    pkgs.python312Packages.inflect
-    pkgs.python312Packages.pynvml
-    pkgs.python312Packages.torch
-    pkgs.python312Packages.torchaudio
-    pkgs.python312Packages.transformers
-    pkgs.open-webui
-    pkgs.gdown
-    pkgs.sentencepiece
-    pkgs.python312Packages.tensorboard
-    pkgs.python312Packages.einops
-    pkgs.psutils
-    pkgs.python312Packages.fastapi
-    pkgs.python312Packages.uvicorn
-    pkgs.python312Packages.websockets
-    pkgs.python312Packages.gradio
-    pkgs.python312Packages.orjson
-    pkgs.python312Packages.tiktoken
-    pkgs.python312Packages.pydantic
-    pkgs.python312Packages.typing-extensions
-    pkgs.python312Packages.huggingface-hub
-    pkgs.python312Packages.bitsandbytes
-    pkgs.python312Packages.accelerate
+    pkgs.cacert # Certificate authority bundle
+    pkgs.cudaPackages.cudatoolkit # Default CUDA (likely 12.x)
+    pkgs.python312 # Ensure base python is available
+    pythonPackages.setuptools
+    pythonPackages.wheel
   ];
 
-  #  Libraries needed at runtime.
+  # Libraries needed at runtime.  Include libstdc++ and zlib as per the video.
   LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
-    cudaPackages.cudatoolkit # Consistent usage
+    pkgs.cudaPackages.cudatoolkit # Default CUDA (likely 12.x)
+    pkgs.libstdcxx5
+    pkgs.zlib
   ];
 }
 #+end_src
