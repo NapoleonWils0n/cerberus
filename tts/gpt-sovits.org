@@ -299,8 +299,16 @@ chmod +x ./model-download.sh
 
 run the script to download the models
 
+download uvr5
+
 #+begin_src sh
-./model-download.sh --source HF --download-uvr5 --download-whisper
+./model-download.sh --source HF --download-uvr5
+#+end_src
+
+download faster whisper
+
+#+begin_src sh
+./model-download.sh --source HF --download-whisper
 #+end_src
 
 ** webui
