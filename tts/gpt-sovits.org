@@ -59,8 +59,8 @@ pkgs.mkShell {
     unset PYTHONPATH
     echo "PYTHONPATH unset."
 
-    # Install torch and torchaudio without explicit CUDA version first
-    pip install torch torchaudio -f https://download.pytorch.org/whl/torch_stable.html
+    # Install torch without torchaudio first, from pip
+    pip install torch -f https://download.pytorch.org/whl/torch_stable.html
 
     # Install the rest of the requirements
     if [ -f "requirements.txt" ]; then
@@ -80,7 +80,7 @@ pkgs.mkShell {
     pkgs.wget
     pkgs.ffmpeg-full
     pkgs.cmake
-    pkgs.gcc
+    pkgs.gcc # Use pkgs.gcc directly
     pkgs.gnumake
     pkgs.coreutils
     pkgs.cacert # Certificate authority bundle
@@ -90,12 +90,12 @@ pkgs.mkShell {
     pythonPackages.wheel
   ];
 
-  # Libraries needed at runtime.  Include libstdc++ and zlib as per the video.
-  LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
-    pkgs.cudaPackages.cudatoolkit # Default CUDA (likely 12.x)
-    pkgs.libstdcxx5
-    pkgs.zlib
-  ];
+LD_LIBRARY_PATH = with pkgs;
+        "${lib.makeLibraryPath [
+          cudaPackages.cudatoolkit
+          zlib
+        ]}:${stdenv.cc.cc.lib}/lib";
+
 }
 #+end_src
 
