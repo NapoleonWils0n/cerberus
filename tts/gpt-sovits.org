@@ -302,3 +302,23 @@ run the script to download the models
 #+begin_src sh
 ./model-download.sh --source HF --download-uvr5 --download-whisper
 #+end_src
+
+** webui
+
+start the web ui
+
+#+begin_src sh
+python webui.py
+#+end_src
+
+optionally set the language
+
+#+begin_src sh
+python webui.py <language(optional)>
+#+end_src
+
+set the language to english
+
+#+begin_src sh
+python webui.py en
+#+end_src
