@@ -102,9 +102,13 @@ apt install gnome-core
 reboot
 #+end_src
 
-A Text Editor (like gedit): sudo apt install gedit
-Network Manager (if not already installed): sudo apt install network-manager gnome-network-manager
-(and then enable the service if needed: sudo systemctl enable NetworkManager and sudo systemctl start NetworkManager)
+** keymap
+
+in the settings, keyboard change the keymap to
+
+#+begin_example
+English (UK, Macintosh)
+#+end_example
 
 ** emacs build
 
