@@ -110,6 +110,23 @@ in the settings, keyboard change the keymap to
 English (UK, Macintosh)
 #+end_example
 
+** wayland xkb
+
+Install Gnome Tweaks and then open the Keyboard and Mouse settings, 
+click the Additional Layout Options Button, at the bottom of the list you should see custom options
+
+#+begin_src sh
+sudo apt install gnome-tweaks
+#+end_src
+
+your custom settings will be listed under this menu and you can enable them by clicking the checlbox next to their name
+
+create the ~/.config/xkb directory and sub directories
+
+#+begin_src sh
+mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
+#+end_src
+
 ** emacs build
 
 [[https://www.rahuljuliato.com/posts/compiling_emacs_30_1]]

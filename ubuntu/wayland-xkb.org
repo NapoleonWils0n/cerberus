@@ -15,6 +15,10 @@ remapping keys on wayland with xkb
 Install Gnome Tweaks and then open the Keyboard and Mouse settings, 
 click the Additional Layout Options Button, at the bottom of the list you should see custom options
 
+#+begin_src sh
+sudo apt install gnome-tweaks
+#+end_src
+
 your custom settings will be listed under this menu and you can enable them by clicking the checlbox next to their name
 
 create the ~/.config/xkb directory and sub directories
