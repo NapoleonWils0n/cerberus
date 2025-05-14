@@ -54,16 +54,6 @@ plug the usb drive in and turn on the computer
 
 on the mac you need to press alt and then select the efi partition
 
-** missing firmware
-
-missing firmware on Mabook Pro retina 2015
-
-#+begin_example
-brcm/brcmfmac43602-pcie.Apple
-brcm/brcmfmac43602-pcie.clm_blob
-brcm/brcmfmac43602-pcie.txt
-#+end_example
-
 ** partition
 
 create a seperate /home partition
@@ -115,8 +105,14 @@ English (UK, Macintosh)
 Install Gnome Tweaks and then open the Keyboard and Mouse settings, 
 click the Additional Layout Options Button, at the bottom of the list you should see custom options
 
+switch to root as sudo isnt installed yet
+
 #+begin_src sh
-sudo apt install gnome-tweaks
+su -
+#+end_src
+
+#+begin_src sh
+apt install gnome-tweaks
 #+end_src
 
 your custom settings will be listed under this menu and you can enable them by clicking the checlbox next to their name
@@ -125,6 +121,32 @@ create the ~/.config/xkb directory and sub directories
 
 #+begin_src sh
 mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
+#+end_src
+
+** missing firmware
+
+missing firmware on Mabook Pro retina 2015
+
+#+begin_example
+brcm/brcmfmac43602-pcie.Apple
+brcm/brcmfmac43602-pcie.clm_blob
+brcm/brcmfmac43602-pcie.txt
+#+end_example
+
+#+begin_example
+firmware-brcm80211
+#+end_example
+
+should already be installed, if not install it
+
+switch to root as sudo isnt installed yet
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+apt install firmware-brcm80211
 #+end_src
 
 ** emacs build
