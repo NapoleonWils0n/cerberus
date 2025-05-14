@@ -14,34 +14,43 @@ wget -c 'https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.10.
 
 ** Preparing Files for USB Memory Stick Booting
 
-[[https://www.debian.org/releases/stable/amd64/ch04s03.en.html]]
-
-To prepare the USB stick, we recommend to use a system where GNU/Linux is already running and where USB is supported. With current GNU/Linux systems the USB stick should be automatically recognized when you insert it.
-
-If it is not you should check that the usb-storage kernel module is loaded. When the USB stick is inserted, it will be mapped to a device named /dev/sdX, where the “X” is a letter in the range a-z.
-
-You should be able to see to which device the USB stick was mapped by running the command lsblk before and after inserting it. (The output of dmesg (as root) is another possible method for that.) To write to your stick, you may have to turn off its write protection switch. 
-
-Debian installation images for this architecture are created using the isohybrid technology; that means they can be written directly to a USB stick, which is a very easy way to make an installation media. Simply choose an image (such as the netinst, CD or DVD-1) that will fit on your USB stick. See Section 4.1, “Official Debian GNU/Linux installation images” to get an installation image.
-
-The installation image you choose should be written directly to the USB stick, overwriting its current contents. For example, when using an existing GNU/Linux system, the image file can be written to a USB stick as follows, after having made sure that the stick is unmounted: 
-
 run lsblk and find the usb drive you are going to use
 
 #+begin_src sh
 lsblk
 #+end_src
 
-replace X in the command below with the drive
+#+begin_example
+lsblk
+NAME                                                                      MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+sda                                                                         8:0    1  28.9G  0 disk
+├─sda1                                                                      8:1    1   1.2G  0 part  /run/media/djwilcox/nixos-minimal-24.11-x86_64
+└─sda2                                                                      8:2    1     3M  0 part
+nvme0n1                                                                   259:0    0 953.9G  0 disk
+├─nvme0n1p1                                                               259:1    0     1G  0 part  /boot
+├─nvme0n1p2                                                               259:2    0     8G  0 part
+│ └─dev-disk-byx2did-nvmex2dMicron_2300_NVMe_1024GB_________20342A09973Bx2dpart2
+│                                                                         254:0    0     8G  0 crypt [SWAP]
+└─nvme0n1p3                                                               259:3    0 944.9G  0 part
+#+end_example
+
+the drive we want to use is sda
+
+#+begin_example
+/dev/sda
+#+end_example
+
+Make sure all partitions on the device are properly unmounted.
+Replace sdX with your device (e.g. sdc). 
 
 #+begin_src sh
-sudo cp debian.iso /dev/sdX
+sudo umount /dev/sda
 #+end_src
 
-for example 
+for example to use sda we would run this command
 
 #+begin_src sh
-sudo cp debian.iso /dev/sdc
+sudo dd if=debian-12.10.0-amd64-netinst.iso of=/dev/sda bs=4M
 #+end_src
 
 run sync

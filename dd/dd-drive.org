@@ -1,0 +1,29 @@
+#+STARTUP: showall
+* dd drive
+
+run lsblk to list the drives
+
+#+begin_src sh
+lsblk
+#+end_src
+
+#+begin_example
+NAME                                                                          MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+sda                                                                             8:0    1  28.9G  0 disk
+├─sda1                                                                          8:1    1   633M  0 part  /run/media/djwilcox/Debian 12.10.0 amd64 n
+└─sda2                                                                          8:2    1   9.3M  0 part
+nvme0n1                                                                       259:0    0 953.9G  0 disk
+├─nvme0n1p1                                                                   259:1    0     1G  0 part  /boot
+├─nvme0n1p2                                                                   259:2    0     8G  0 part
+│ └─dev-disk-byx2did-nvmex2dMicron_2300_NVMe_1024GB_________20342A09973Bx2dpart2
+│                                                                             254:0    0     8G  0 crypt [SWAP]
+└─nvme0n1p3   
+#+end_example
+
+to use wipe the sda drive we can use the following code
+
+double check its the correct drive
+
+#+begin_src sh
+sudo dd if=/dev/zero of=/dev/sda bs=4M status=progress
+#+end_src
