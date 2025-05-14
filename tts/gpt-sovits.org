@@ -277,6 +277,12 @@ faster-whisper
 
 [[https://huggingface.co/Systran/faster-whisper-large-v3]]
 
+** cuda check
+
+#+begin_src sh
+python -c "import torch; print(torch.cuda.is_available(), torch.cuda.device_count() if torch.cuda.is_available() else 0)"
+#+end_src
+
 ** webui
 
 start the web ui
@@ -297,4 +303,3 @@ set the language to english
 python webui.py en
 #+end_src
 
-cuda not working
