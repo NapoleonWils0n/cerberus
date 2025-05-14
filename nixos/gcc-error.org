@@ -1,0 +1,37 @@
+#+STARTUP: content
+* gcc error
+
+[[https://discourse.nixos.org/t/what-package-provides-libstdc-so-6/18707/3]]
+
+[[https://discourse.nixos.org/t/ollama-cant-find-libstdc-so-6-resolved/44305]]
+
+** original LD_LIBRARY_PATH
+
+#+begin_src nix
+  # Libraries needed at runtime.  Include libstdc++ and zlib as per the video.
+  LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
+    pkgs.cudaPackages.cudatoolkit
+    pkgs.zlib
+  ];
+#+end_src
+
+** suggested fix
+
+#+begin_src nix
+  environment = {
+    sessionVariables = {
+      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+    };
+  };
+#+end_src
+
+** new code
+
+#+begin_src nix
+LD_LIBRARY_PATH = with pkgs;
+      "${lib.makeLibraryPath [
+        cudaPackages.cudatoolkit
+        zlib
+      ]}:${stdenv.cc.cc.lib}/lib";
+#+end_src
+
