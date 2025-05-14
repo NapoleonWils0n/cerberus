@@ -68,15 +68,43 @@ brcm/brcmfmac43602-pcie.txt
 
 create a seperate /home partition
 
-** password for live install
+** software selection
 
-when you run the debian installer it prompts you for a password for the live user
-
-the password is
+press space to deselect
 
 #+begin_example
-live
+Debian desktop environment
+Gnome
 #+end_example
+
+but the leave the 
+
+#+begin_example
+standard system utilities
+#+end_example
+
+selected and press continue
+
+** gnome
+
+switch to root as sudo isnt installed yet
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+apt update
+apt install gnome-core
+#+end_src
+
+#+begin_src sh
+reboot
+#+end_src
+
+A Text Editor (like gedit): sudo apt install gedit
+Network Manager (if not already installed): sudo apt install network-manager gnome-network-manager
+(and then enable the service if needed: sudo systemctl enable NetworkManager and sudo systemctl start NetworkManager)
 
 ** emacs build
 
