@@ -123,6 +123,31 @@ create the ~/.config/xkb directory and sub directories
 mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
 #+end_src
 
+** console keymap
+
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+edit the keyboard file
+
+#+begin_src sh
+vi /etc/default/keyboard
+#+end_src
+
+#+begin_src sh
+XKBLAYOUT="gb"
+XKBVARIANT="mac"
+#+end_src
+
+update-initramfs
+
+#+begin_src sh
+update-initramfs -u
+#+end_src
+
 ** missing firmware
 
 missing firmware on Mabook Pro retina 2015
