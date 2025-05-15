@@ -174,6 +174,118 @@ su -
 apt install firmware-brcm80211
 #+end_src
 
-** emacs build
+** opendoas
 
-[[https://www.rahuljuliato.com/posts/compiling_emacs_30_1]]
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+apt install opendoas
+#+end_src
+
+doas.conf
+
+** zsh 
+
+#+begin_src sh
+doas apt install zsh zsh-syntax-highlighting
+#+end_src
+
+change shell as your regular user, not as root
+
+#+begin_src sh
+chsh -s /usr/bin/zsh
+#+end_src
+
+enter you admin password
+
+log out and back in again
+
+** alacritty
+
+#+begin_src sh
+doas apt install alacritty
+#+end_src
+
+create the alacritty directory
+
+#+begin_src sh
+mkdir -p ~/.config/alacritty
+#+end_src
+
+copy the default alacritty.yml file into the directory
+
+#+begin_src sh
+cp /usr/share/doc/alacritty/examples/alacritty.yml
+#+end_src
+
+** backports
+
+#+begin_src sh
+doas vi /etc/apt/sources.list
+#+end_src
+
+#+begin_src conf
+# Add this line for backports:
+deb http://deb.debian.org/debian bookworm-backports main contrib non-free-firmware
+deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free-firmware
+#+end_src
+
+#+begin_src sh
+doas apt update
+#+end_src
+
+** emacs
+
+search for emacs-pgtk in backports
+
+#+begin_src sh
+apt search emacs-pgtk -t bookworm-backports
+#+end_src
+
+install emacs
+
+#+begin_src sh
+doas apt install emacs-pgtk -t bookworm-backports
+#+end_src
+
+** fonts
+
+#+begin_src sh
+doas apt install fonts-firacode
+#+end_src
+
+download the latest version of the Iosevka font
+
+#+begin_example
+PkgTTC-Iosevka-33.2.2.zip 
+#+end_example
+
+[[https://github.com/be5invis/Iosevka/releases]]
+
+unzip the zip file
+
+#+begin_src sh
+unzip PkgTTC-Iosevka-33.2.2.zip 
+#+end_src
+
+move the fonts into place
+
+#+begin_src sh
+mv Iosevka-*.ttc ~/.local/share/fonts
+#+end_src
+
+update the font cache
+
+#+begin_src sh
+fc-cache -fv
+#+end_src
+
+** general packages
+
+#+begin_src sh
+doas apt install rsync git wl-clipboard tmux
+#+end_src
