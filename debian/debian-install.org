@@ -292,3 +292,10 @@ kodi-inputstream-adaptive libsox-fmt-all mpd mpc mpv mpv-mpris ncmpc oathtool ob
 playerctl ripgrep seahorse sox task-spooler tmux transmission-gtk rsync wl-clipboard 
 #+end_src
 
+** add your ssh key to the gnome keyring
+
+#+begin_src sh
+ssh-add ~/.ssh/id_rsa
+#+end_src
+
+enter your password
