@@ -287,5 +287,5 @@ fc-cache -fv
 ** general packages
 
 #+begin_src sh
-doas apt install rsync git wl-clipboard tmux
+doas apt install rsync git wl-clipboard tmux abook ffmpeg aria2 bc curl dconf-editor fd-find gnome-tweaks
 #+end_src
