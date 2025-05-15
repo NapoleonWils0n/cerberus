@@ -294,8 +294,18 @@ playerctl ripgrep seahorse sox task-spooler tmux transmission-gtk rsync wl-clipb
 
 ** add your ssh key to the gnome keyring
 
+add the following code to your zshenv
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+#+begin_src conf
+eval $(/usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+#+end_src
+
 #+begin_src sh
 ssh-add ~/.ssh/id_rsa
 #+end_src
 
-enter your password
+enter your password at the gui prompt and check the save to keyring option
