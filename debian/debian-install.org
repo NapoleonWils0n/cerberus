@@ -288,7 +288,7 @@ fc-cache -fv
 
 #+begin_src sh
 doas apt install abook aria2 bc curl dconf-editor ffmpeg fd-find git gnome-tweaks gufw handbrake imagemagick kodi \
-kodi-inputstream-adaptive libsox-fmt-all mpd mpc mpv mpv-mpris ncmpc oathtool obs-studio openvpn pandoc pinentry-curses \
+kodi-inputstream-adaptive libnotify-bin libsox-fmt-all mpd mpc mpv mpv-mpris ncmpc oathtool obs-studio openvpn pandoc pinentry-curses \
 playerctl ripgrep seahorse sox task-spooler tmux transmission-gtk rsync wl-clipboard 
 #+end_src
 
