@@ -125,6 +125,8 @@ tts --use_cuda --text "This is glow-tts using cuda" --model_name "tts_models/uk/
 
 *** xtts_v2
 
+clone voice
+
 #+begin_src sh
 tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
 --text "To be or not to be, that is the question." \
