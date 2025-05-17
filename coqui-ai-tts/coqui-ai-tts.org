@@ -142,6 +142,8 @@ large model
 
 [[https://huggingface.co/suno/bark]]
 
+not working with the small model
+
 small model
 
 [[https://huggingface.co/suno/bark-small/tree/main]]
@@ -160,10 +162,7 @@ export SUNO_USE_SMALL_MODELS=True
 
 #+begin_src sh
 tts --model_name tts_models/multilingual/multi-dataset/bark \
---text "yes Yes People we are in for a big busy transfer window this summer.
-What's going on everyone. Hope you are all good.
-Welcome back to the Magpie Channel TV,Eddie House off a defiant message this morning in his press conference.
-Finally for a change in all of this beating around the bush hiding behind things. Don't know how much we're going to spend." \
+--text "hello world" \
 --speaker_wav input.wav \
 --language_idx en \
 --use_cuda \
