@@ -137,6 +137,14 @@ tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
 *** bark
 
 #+begin_src sh
+git clone https://huggingface.co/suno/bark
+#+end_src
+
+#+begin_src sh
+export SUNO_USE_SMALL_MODELS=True
+#+end_src
+
+#+begin_src sh
 tts --model_name tts_models/multilingual/multi-dataset/bark \
 --text "yes Yes People we are in for a big busy transfer window this summer.
 What's going on everyone. Hope you are all good.
