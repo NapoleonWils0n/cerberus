@@ -140,6 +140,8 @@ tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 \
 git clone https://huggingface.co/suno/bark
 #+end_src
 
+download the model files with aria2c
+
 #+begin_src sh
 export SUNO_USE_SMALL_MODELS=True
 #+end_src
