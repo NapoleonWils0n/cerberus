@@ -61,6 +61,26 @@ pkgs.mkShell {
 }
 #+end_src
 
+** british voices
+
+female voices
+
+#+begin_example
+bf_alice.pt
+bf_emma.pt
+bf_isabella.pt
+bf_lily.pt
+#+end_example
+
+male voices
+
+#+begin_example
+bm_daniel.pt
+bm_fable.pt
+bm_george.pt
+bm_lewis.pt
+#+end_example
+
 ** python script
 
 #+begin_src python
