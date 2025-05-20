@@ -1,0 +1,68 @@
+#+STARTUP: content
+* pw-record
+
+pipewire record desktop audio
+
+** wpctl status
+
+#+begin_src sh
+wpctl status
+#+end_src
+
+#+begin_example
+PipeWire 'pipewire-0' [1.2.7, djwilcox@pollux, cookie:2159314335]
+ └─ Clients:
+        34. .gnome-shell-wrapped                [1.2.7, djwilcox@pollux, pid:2501]
+        35. WirePlumber                         [1.2.7, djwilcox@pollux, pid:2918]
+        36. pipewire                            [1.2.7, djwilcox@pollux, pid:2921]
+        37. GNOME Shell Volume Control          [1.2.7, djwilcox@pollux, pid:2501]
+        38. GNOME Volume Control Media Keys     [1.2.7, djwilcox@pollux, pid:2674]
+        51. WirePlumber [export]                [1.2.7, djwilcox@pollux, pid:2918]
+        65. .xdg-desktop-portal-wrapped         [1.2.7, djwilcox@pollux, pid:3064]
+        69. Firefox                             [1.2.7, djwilcox@pollux, pid:49784]
+        74. wpctl                               [1.2.7, djwilcox@pollux, pid:274498]
+
+Audio
+ ├─ Devices:
+ │      52. Built-in Audio                      [alsa]
+ │
+ ├─ Sinks:
+ │  *   59. Built-in Audio Analog Stereo        [vol: 0.35]
+ │
+ ├─ Sources:
+ │  *   60. Built-in Audio Analog Stereo        [vol: 1.00]
+ │
+ ├─ Filters:
+ │
+ └─ Streams:
+        75. Firefox
+             70. output_FL       > ALC3266 Analog:playback_FL   [active]
+             71. output_FR       > ALC3266 Analog:playback_FR   [active]
+
+Video
+ ├─ Devices:
+ │      39. Integrated_Webcam_HD                [v4l2]
+ │      48. Integrated_Webcam_HD: Integrate     [libcamera]
+ │      50. Integrated_Webcam_HD                [v4l2]
+ │
+ ├─ Sinks:
+ │
+ ├─ Sources:
+ │  *   66. Integrated_Webcam_HD (V4L2)
+ │
+ ├─ Filters:
+ │
+ └─ Streams:
+
+Settings
+ └─ Default Configured Devices:
+         0. Audio/Sink    alsa_output.pci-0000_00_1f.3.analog-stereo
+#+end_example
+
+** pw-record
+
+record audio from Firefox
+
+#+begin_src sh
+pw-record --target Firefox out.wav
+#+end_src
