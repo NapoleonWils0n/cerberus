@@ -235,7 +235,7 @@ mkdir -p ~/.config/alacritty
 copy the default alacritty.yml file into the directory
 
 #+begin_src sh
-cp /usr/share/doc/alacritty/examples/alacritty.yml
+cp /usr/share/doc/alacritty/examples/alacritty.yml ~/.config/alacritty
 #+end_src
 
 ** backports
