@@ -186,7 +186,23 @@ su -
 apt install opendoas
 #+end_src
 
-doas.conf
+#+begin_src sh
+vi /etc/doas.conf
+#+end_src
+
+#+begin_src conf
+# allow user
+permit keepenv setenv { PATH } djwilcox
+    
+# allow root to switch to our user
+permit nopass keepenv setenv { PATH } root as djwilcox
+
+# nopass
+permit nopass keepenv setenv { PATH } djwilcox
+    
+# root as root
+permit nopass keepenv setenv { PATH } root as root
+#+end_src
 
 ** zsh 
 
