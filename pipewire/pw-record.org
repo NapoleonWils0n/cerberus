@@ -79,6 +79,8 @@ record audio from Firefox
 pw-record --target Firefox out.wav
 #+end_src
 
+verbose output
+
 #+begin_src sh
 pw-record -v --target Firefox out.wav
 #+end_src
