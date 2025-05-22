@@ -61,8 +61,65 @@ Settings
 
 ** pw-record
 
+record default sink
+
+#+begin_src sh
+pw-record -P '{ stream.capture.sink=true }' output.wav
+#+end_src
+
+verbose output
+
+#+begin_src sh
+pw-record -vP '{ stream.capture.sink=true }' output.wav
+#+end_src
+
 record audio from Firefox
 
 #+begin_src sh
 pw-record --target Firefox out.wav
+#+end_src
+
+#+begin_src sh
+pw-record -v --target Firefox out.wav
+#+end_src
+
+** zsh completions
+
+edit your zshrc file
+
+#+begin_src sh
+vi ~/.zshrc
+#+end_src
+
+add the following code for completions for the pipewire commands
+
+#+begin_src conf
+# pipewire commands completions
+compdef _gnu_generic pw-cat
+compdef _gnu_generic pw-cli
+compdef _gnu_generic pw-config
+compdef _gnu_generic pw-container
+compdef _gnu_generic pw-dot
+compdef _gnu_generic pw-dsdplay
+compdef _gnu_generic pw-dump
+compdef _gnu_generic pw-encplay
+compdef _gnu_generic pw-link
+compdef _gnu_generic pw-loopback
+compdef _gnu_generic pw-metadata
+compdef _gnu_generic pw-mididump
+compdef _gnu_generic pw-midiplay
+compdef _gnu_generic pw-midirecord
+compdef _gnu_generic pw-mon
+compdef _gnu_generic pw-play
+compdef _gnu_generic pw-profiler
+compdef _gnu_generic pw-record
+compdef _gnu_generic pw-reverse
+compdef _gnu_generic pw-top
+compdef _gnu_generic pw-v4l2
+#+end_src
+
+source your ~/.zshrc to pick up the new commands
+
+#+begin_src sh
+source ~/.zshrc
 #+end_src
