@@ -3,17 +3,35 @@
 ** nixos channel update
 
 #+begin_src sh
-doas nix-channel --update nixos
+doas nix-channel --add https://channels.nixos.org/nixos-25.05 nixos
+doas nix-channel --update
+doas nixos-rebuild switch
+#+end_src
+
+edit the nixos configuration.nix and change the version
+
+#+begin_src sh
+doas vi /etc/nixos/configuration.nix
+#+end_src
+
+#+begin_src nix
+system.stateVersion = "25.05";
 #+end_src
 
 ** home-manger channel update
 
 #+begin_src sh
-nix-channel --update home-manager 
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
+nix-channel --update
+home-manager switch
 #+end_src
 
-** upgrade
+edit the home-manager home.nix and change the version
 
 #+begin_src sh
-doas nixos-rebuild switch --upgrade
+vi ~/.config/home-manager/home.nix
+#+end_src
+
+#+begin_src nix
+home.stateVersion = "25.05";
 #+end_src
