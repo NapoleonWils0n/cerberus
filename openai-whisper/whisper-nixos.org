@@ -1,3 +1,12 @@
+#+STARTUP: content
+* whisper nixos
+** resources
+
+[[https://github.com/openai/whisper]]
+
+** shell.nix
+
+#+begin_src nix
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.mkShell rec {
@@ -49,3 +58,11 @@ pkgs.mkShell rec {
     echo "Whisper setup complete."
   '';
 }
+
+#+end_src
+
+** usage
+
+#+begin_src 
+whisper input.wav --model small
+#+end_src

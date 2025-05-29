@@ -1,21 +1,31 @@
 { pkgs ? import <nixpkgs> {} }:
 
-let
-  pythonPackages = pkgs.python312Packages;
-in
-pkgs.mkShell {
-  name = "kokoro-tts";
-  # Increase stack size.
-  NIX_SHELL_SET_LOCALE = "en_US.UTF-8";
+pkgs.mkShell rec {
+  name = "kokoro";
+  buildInputs = with pkgs; [
+    python312
+    stdenv.cc.cc.lib
+    stdenv.cc
+    cudaPackages.cudatoolkit
+    linuxPackages.nvidia_x11 # Seems necessary for CUDA context
+    zlib # Common dependency
+    ];
+
+  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
+  CUDA_PATH = pkgs.cudaPackages.cudatoolkit;
+  EXTRA_LDFLAGS = "-L${pkgs.linuxPackages.nvidia_x11}/lib";
+
   shellHook = ''
-    echo "ulimit -s unlimited"
+    echo "Setting up environment for Kokoro with CUDA..."
+
     # Set the locale.
     export LC_ALL="en_US.UTF-8"
     export LANG="en_US.UTF-8"
     export PYTHONIOENCODING="utf-8"
 
+    # Create and activate virtual environment
     if [ ! -d ".venv" ]; then
-      echo "Creating Python virtual environment using Nix-provided Python..."
+      echo "Creating Python virtual environment..."
       ${pkgs.python312}/bin/python3.12 -m venv .venv
     else
       echo "Re-activating existing Python virtual environment..."
@@ -23,24 +33,19 @@ pkgs.mkShell {
     source .venv/bin/activate
     echo "Virtual environment activated."
 
+    # Set CUDA variables
+    export CUDA_VISIBLE_DEVICES=0
+    export XDG_CACHE_HOME="$HOME/.cache"
+
+    # pip upgrade
+    pip install --upgrade pip
+
+    # install torch torchaudio
+    pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+    # install kokoro
     pip install -q "kokoro>=0.9.4" soundfile
 
-    export CUDA_VISIBLE_DEVICES=0 # Or adjust if you have multiple GPUs
-    export XDG_CACHE_HOME="$HOME/.cache" # Ensure a valid cache directory
-    export PATH="$PATH:${pkgs.cudaPackages.cudatoolkit}/bin" # Corrected path. Adjust version as needed.
-    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudatoolkit}/lib64:${pkgs.stdenv.cc.cc.lib}/lib" # Include stdenv
-
+    echo "Kokoro setup complete."
   '';
-
-  # Minimal buildInputs for CUDA 12
-  buildInputs = [
-    pkgs.espeak
-    pkgs.python312 # Ensure base python is available
-    pythonPackages.setuptools
-    pythonPackages.wheel
-    pkgs.cudaPackages.cudatoolkit # Default CUDA (likely 12.x)
-    pkgs.cudaPackages.cudnn
-    pkgs.stdenv.cc.cc # Include the compiler
-    pkgs.python312Packages.ipython
-  ];
 }
