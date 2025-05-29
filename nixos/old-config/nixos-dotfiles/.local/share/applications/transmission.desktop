@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Transmission
-Exec=/home/djwilcox/bin/magnet-add %u
-Icon=utilities-terminal
-Type=Application
-Terminal=false
-MimeType=application/x-bittorrent;x-scheme-handler/magnet;

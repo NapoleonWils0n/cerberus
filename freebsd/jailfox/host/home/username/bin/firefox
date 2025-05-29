@@ -1,7 +1,0 @@
-#!/bin/sh
-
-# exit if no arguments passed to script
-[ $# -gt 0 ] || exit 1
-
-# run the wrapper-freebsd script
-wrapper-freebsd -a firefox "${@}"
