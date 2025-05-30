@@ -74,6 +74,12 @@ pkgs.mkShell rec {
 
 ** download models
 
+you may need to remove the existing checkpoints/config.yaml file first
+
+#+begin_src sh
+rm -i checkpoints/config.yaml
+#+end_src
+
 #+begin_src sh
 wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bigvgan_discriminator.pth -P checkpoints
 wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bigvgan_generator.pth -P checkpoints
