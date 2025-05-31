@@ -1,0 +1,16 @@
+#+STARTUP: content
+* mkpasswd
+
+create a hash of a password
+
+in this exmaple 1234 is the password we want to create a hash from
+
+#+begin_src sh
+mkpasswd 1234
+#+end_src
+
+ouputs a hash of the 1234 password
+
+#+begin_example
+$y$j9T$9u6HCf3q5liiMA5rBIQ4N0$zl9pM0oJdQTRjTDV/6bF4HVS2VqI8c6r4ERXZ0GQ/J7
+#+end_example
