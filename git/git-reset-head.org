@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* git reset head
+
+git reset to last commit
+
+keep changes with soft
+
+#+begin_src sh
+git reset --soft HEAD~1
+#+end_src
+
+discard changes with hard
+
+#+begin_src sh
+git reset --hard HEAD~1
+#+end_src
