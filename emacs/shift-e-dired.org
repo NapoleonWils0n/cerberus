@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* emacs shift e dired
+
+pressing shift + e in dired 
+opens applications set using mimeapps.list
+
+#+begin_example
+shift e
+#+end_example
