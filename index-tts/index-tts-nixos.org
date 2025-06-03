@@ -110,3 +110,18 @@ indextts "hello this is index-tts" \
 --config checkpoints/config.yaml \
 --output output.wav
 #+end_src
+
+** batch resample audio
+
+batch resample audio to 48000 khz
+
+#+begin_src sh
+#!/bin/sh
+
+find . -maxdepth 1 -name "*.wav" -print0 | xargs -0 -I {} sh -c '
+  input="{}"
+  base="${input%.wav}"
+  output="${base}-resampled.wav"
+  ffmpeg -i "$input" -ar 48000 "$output"
+'
+#+end_src
