@@ -86,6 +86,14 @@ pkgs.mkShell rec {
 
 ** run nix-shell
 
+change directory
+
+#+begin_src sh
+cd ~/nix/index-tts
+#+end_src
+
+run the nix-shell
+
 #+begin_src sh
 nix-shell
 #+end_src
