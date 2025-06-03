@@ -105,10 +105,10 @@ wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/config.yaml -
 #+begin_src sh
 indextts "hello this is index-tts" \
 --device cuda \
---voice input.wav \
+--voice ~/Desktop/input.wav \
 --model_dir checkpoints \
 --config checkpoints/config.yaml \
---output output.wav
+--output ~/Desktop/output.wav
 #+end_src
 
 ** batch resample audio
