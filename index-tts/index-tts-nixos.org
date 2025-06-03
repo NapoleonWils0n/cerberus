@@ -6,9 +6,19 @@
 
 ** git clone
 
+create the nix directory
+
+#+begin_src sh
+mkdir -p ~/nix
+#+end_src
+
+and then change directory into the nix directory
+
 #+begin_src sh
 cd ~/nix
 #+end_src
+
+git clone the index-tts repository
 
 #+begin_src sh
 git clone https://github.com/index-tts/index-tts.git
