@@ -1,0 +1,165 @@
+#+STARTUP: showall
+* x265 fdkaac
+** resources
+
+[[https://x265.readthedocs.io/en/master/cli.html]]
+
+** x264 params 8000k
+
+first pass
+
+#+begin_src sh
+ffmpeg -hide_banner -stats -v panic -i input.mov -an -c:v libx265 \
+-x265-params "vbv-maxrate=10000:vbv-bufsize=20000:open-gop=0:keyint=48:min-keyint=48:scenecut=0:bframes=2:bitrate=8000:pass=1:no-slow-firstpass=1" \
+-pix_fmt yuv420p -preset slow -b:v 8000k \
+-f mp4 NUL
+#+end_src
+
+second pass
+
+#+begin_src sh
+ffmpeg -hide_banner -stats -v panic -i input.mov -an -c:v libx265 \
+-x265-params "vbv-maxrate=10000:vbv-bufsize=20000:open-gop=0:keyint=48:min-keyint=48:scenecut=0:bframes=2:bitrate=8000:pass=2" \
+-pix_fmt yuv420p -preset slow -b:v 8000k \
+-movflags +faststart output.mp4
+#+end_src
+
+** extract audio
+
+extract audio
+
+#+begin_src sh
+ffmpeg -i input.mov -vn -c:a copy output.wav
+#+end_src
+
+** fdkaac
+
+#+begin_src sh
+fdkaac -b 384k -o output.aac output.wav
+#+end_src
+
+** combine-audio-video script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# combine-audio-video
+# combine audio and video
+#===============================================================================
+
+# dependencies:
+# ffmpeg file grep
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# combine audio and video
+
+$(basename "$0") -i input.(mp4|mkv|mov|m4v) -a audio.(m4a|aac|wav|mp3) -o output.mp4
+-i input.(mp4|mkv|mov|m4v)
+-a audio.(m4a|aac|wav|mp3)
+-o output.mp4 : optional argument # if option not provided defaults to input-name-combined-date-time"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:a:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}";;
+     a) audio="${OPTARG}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# input, input name
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# defaults for variables
+outfile_default="${infile_name}-combined-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+record_copy () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -i "${audio}" \
+    -c:a copy \
+    -c:v copy \
+    -map 0:0 -map 1:0 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+record_copy
+#+end_src
+
+** combine audio and video
+
+ffmpeg command to combine audio and video
+
+#+begin_src sh
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-i output.mp4 \
+-i output.aac \
+-c:a copy \
+-c:v copy \
+-map 0:0 -map 1:0 \
+-pix_fmt yuv420p \
+-movflags +faststart \
+-f mp4 \
+combined-output.mp4
+#+end_src

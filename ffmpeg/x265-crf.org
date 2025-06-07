@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* x265 crf
+
+#+begin_src sh
+ffmpeg -hide_banner -stats -v panic -i input.mov -an -c:v libx265 \
+-x265-params "vbv-maxrate=10000:vbv-bufsize=20000:open-gop=0:keyint=48:min-keyint=48:scenecut=0:bframes=2" \
+-pix_fmt yuv420p -preset slow -crf 18 \
+-movflags +faststart output_crf18.mp4
+#+end_src
