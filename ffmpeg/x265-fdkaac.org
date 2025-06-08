@@ -27,7 +27,7 @@ ffmpeg -hide_banner -stats -v panic -i input.mov -an -c:v libx265 \
 ** fdkaac
 
 #+begin_src sh
-ffmpeg -hide_banner -stats -v panic -i input.mov -vn -f caf - | fdkaac -b 384k -o output.aac -
+ffmpeg -hide_banner -stats -v panic -i input.mov -vn -f caf - | fdkaac -m 5 -w 18000 -o output.aac -
 #+end_src
 
 ** combine-audio-video script
