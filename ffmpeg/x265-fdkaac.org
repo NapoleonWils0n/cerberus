@@ -24,18 +24,10 @@ ffmpeg -hide_banner -stats -v panic -i input.mov -an -c:v libx265 \
 -movflags +faststart output.mp4
 #+end_src
 
-** extract audio
-
-extract audio
-
-#+begin_src sh
-ffmpeg -i input.mov -vn -c:a copy output.wav
-#+end_src
-
 ** fdkaac
 
 #+begin_src sh
-fdkaac -b 384k -o output.aac output.wav
+ffmpeg -hide_banner -stats -v panic -i input.mov -vn -f caf - | fdkaac -b 384k -o output.aac -
 #+end_src
 
 ** combine-audio-video script
