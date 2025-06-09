@@ -1,0 +1,23 @@
+#+STARTUP: content
+* script record terminal
+** script
+
+To start recording with script, provide two destination files: a timing file and a typescript file:
+
+#+begin_src sh
+script --timing=time.tm myscript.txt
+#+end_src
+
+Output alerts you that script has started recording. Everything you do in your terminal while script is active is recorded. This includes everything going to stdin, stdout, and stderr, including your pauses, backspaces, auto-completions, and even your mistakes.
+
+Press Ctrl+D or type exit to stop the recording when you've finished your demonstration.
+
+** scriptreplay
+
+You can play a recorded script using the scriptreplay command:
+
+#+begin_src sh
+scriptreplay --timing=time.tm myscript.txt
+#+end_src
+
+This takes over your terminal session and uses it as a canvas to replay the input and output of what you recorded. The timing is replicated, too, so meaningful pauses for clarity are retained, which can be helpful to a user following along with the script playback.
