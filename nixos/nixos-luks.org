@@ -1,0 +1,368 @@
+#+STARTUP: content
+* nixos luks
+** resources
+
+[[https://nixos.wiki/wiki/NixOS_Installation_Guide]]
+
+[[https://nixos.org/manual/nixos/stable/#sec-installation]]
+
+[[https://jadarma.github.io/blog/posts/2024/08/installing-nixos-with-flakes-and-lvm-on-luks/]]
+
+** iso download
+
+Miniimal ISO image download
+
+[[https://nixos.org/download.html#nixos-iso]]
+
+#+begin_src sh
+wget -c 'https://channels.nixos.org/nixos-24.11/latest-nixos-minimal-x86_64-linux.iso'
+#+end_src
+
+** dd disk to usb
+
+[[https://nixos.org/manual/nixos/stable/#sec-booting-from-usb]]
+
+Creating bootable USB flash drive from a Terminal on Linux
+
+Plug in the USB flash drive.
+
+Find the corresponding device with lsblk. You can distinguish them by their size.
+
+#+begin_src sh
+lsblk
+#+end_src
+
+#+begin_src sh
+sdc                           8:32   1  28.9G  0 disk
+├─sdc1                        8:33   1   5.3G  0 part  /media/djwilcox/Ubuntu 24.10 amd64
+├─sdc2                        8:34   1   4.9M  0 part
+├─sdc3                        8:35   1   300K  0 part
+└─sdc4                        8:36   1  23.6G  0 part
+#+end_src
+
+Make sure all partitions on the device are properly unmounted.
+Replace sdX with your device (e.g. sdc). 
+
+#+begin_src sh
+sudo umount /dev/sdX
+#+end_src
+
+#+begin_src sh
+sudo umount /dev/sdc
+#+end_src
+
+Then use the dd utility to write the image to the USB flash drive. 
+
+#+begin_src sh
+sudo dd bs=4M conv=fsync oflag=direct status=progress if=<path-to-image> of=/dev/sdX
+#+end_src
+
+in this example sdc is the usb drive
+
+minimal iso
+
+#+begin_src sh
+sudo dd bs=4M conv=fsync oflag=direct status=progress if=latest-nixos-minimal-x86_64-linux.iso of=/dev/sdc
+#+end_src
+
+#+begin_src sh
+sudo umount /dev/sdc
+#+end_src
+
+** boot from usb
+
+To begin the installation, you have to boot your computer from the install drive.
+
+dell xps press f2 repeatedly
+
+Plug in the install drive. Then turn on or restart your computer.
+
+Open the boot menu by pressing the appropriate key, which is usually shown on the display on early boot. Select the USB flash drive (the option usually contains the word “USB”). If you choose the incorrect drive, your computer will likely continue to boot as normal. In that case restart your computer and pick a different drive.
+    Note
+
+The key to open the boot menu is different across computer brands and even models. It can be F12, but also F1, F9, F10, Enter, Del, Esc or another function key. If you are unsure and don’t see it on the early boot screen, you can search online for your computers brand, model followed by “boot from usb”. The computer might not even have that feature, so you have to go into the BIOS/UEFI settings to change the boot order. Again, search online for details about your specific computer model.
+
+For Apple computers with Intel processors press and hold the ⌥ (Option or Alt) key until you see the boot menu. On Apple silicon press and hold the power button.
+
+If your computer supports both BIOS and UEFI boot, choose the UEFI option.
+
+If you use a CD for the installation, the computer will probably boot from it automatically. If not, choose the option containing the word “CD” from the boot menu.
+
+Shortly after selecting the appropriate boot drive, you should be presented with a menu with different installer options. Leave the default and wait (or press Enter to speed up).
+
+The graphical images will start their corresponding desktop environment and the graphical installer, which can take some time. The minimal images will boot to a command line. You have to follow the instructions in Section 2.3, “Manual Installation” there. 
+
+** Manual Installation
+
+[[https://nixos.org/manual/nixos/stable/#sec-installation-manual]]
+
+NixOS can be installed on BIOS or UEFI systems. The procedure for a UEFI installation is broadly the same as for a BIOS installation. The differences are mentioned in the following steps.
+
+The NixOS manual is available by running nixos-help in the command line or from the application menu in the desktop environment.
+
+To have access to the command line on the graphical images, open Terminal (GNOME) or Konsole (Plasma) from the application menu.
+
+You are logged-in automatically as nixos. The nixos user account has an empty password so you can use sudo without a password:
+
+#+begin_src sh
+sudo -i
+#+end_src
+
+** install
+
+use lsblk to list the drive
+
+#+begin_src sh
+lsblk
+#+end_src
+
+wipe the drive
+
+#+begin_src sh
+wipefs -a /dev/sda
+#+end_src
+
+** Partition the disk
+
+We need the following partitions:
+
+1G for boot partition with "boot" as the partition label (also called name in some tools) and ef00 as partition code
+
+8G for a swap partition with "swap" as the partition label and 8200 as partition code. We will encrypt this with a random secret on each boot.
+
+The rest of disk space for zfs with "root" as the partition label and 8300 as partition code (default code)
+
+Reason for swap partition: ZFS does use a caching mechanism that is different from the normal Linux cache infrastructure. In low-memory situations, ZFS therefore might need a bit longer to free up memory from its cache. The swap partition will help with that.
+
+Example with gdisk using /dev/nvme0n1 as the device (use lsblk to find the device): 
+
+#+begin_src sh
+gdisk /dev/sda
+#+end_src
+
+create new partition
+
+#+begin_src sh
+o
+#+end_src
+
+gdisk will ask you if you want to proceed. Type y and press Enter to confirm that you want to create a new empty GPT partition table. This action effectively removes all existing partition information.
+
+
+gdisk will ask you if you want to proceed. Type y and press Enter to confirm that you want to create a new empty GPT partition table. This action effectively removes all existing partition information.
+
+press n
+
+#+begin_src sh
+Command (? for help): n
+#+end_src
+
+press 1
+
+#+begin_src sh
+Partition number (1-128, default 1): 
+#+end_src
+
+first sector
+accept default
+
+last sector
+add +1G
+
+#+begin_src sh
++1G
+#+end_src
+
+#+begin_src sh
+First sector (2048-1000215182, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-1000215182, default = 1000215175) or {+-}size{KMGTP}: +1G
+#+end_src
+
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): ef00
+Changed type of partition to 'EFI system partition'
+
+add
+
+#+begin_example
+ef00
+#+end_example
+
+Create a new LVM partition for the rest of the drive.
+
+#+begin_example
+(n <default> <default> <default> 8e00)
+#+end_example
+
+Save the changes and exit.
+
+#+begin_example
+w
+#+end_example
+
+** luks
+
+#+begin_src sh
+cryptsetup -v -y \
+-c aes-xts-plain64 -s 512 -h sha512 --use-random \
+--label=NIXOS_LUKS luksFormat --type luks2 /dev/sda2
+#+end_src
+
+An explanation of above options:
+
+#+begin_export 
+-v: Verbose, increases output for debugging in case something goes wrong.
+-y: Ask for the password interactively, twice, and ensure their match before proceeding.
+-c: Specifies the cypher, in this case aes-xts-plain64 is also the default for the LUKS2 format.
+-s: Specifies the key size used by the cypher.
+-h: Specifies the hashing algorith used, sha256 by default.
+--use-random: Specifies the more secure RNG source.
+--label: Adds a label to the partition so we can reference it easily in configs.
+luksFormat: Operation mode that encrypts a partition and sets a passphrase.
+--type: Specify the LUKS type to use.
+/dev/sda2: The partition you wish to encrypt.
+#+end_export
+
+open the luks container
+
+#+begin_src sh
+cryptsetup open --type luks /dev/sda2 cryptroot
+#+end_src
+
+enter the luks password
+
+Check the mapped device exists:
+
+#+begin_src sh
+ls /dev/mapper/cryptroot
+#+end_src
+
+** lvm partition
+
+Create a physical volume, and a volume group within it.
+
+#+begin_src sj
+pvcreate /dev/mapper/cryptroot
+vgcreate lvmroot /dev/mapper/cryptroot
+#+end_src
+
+Create the logical partitions
+
+#+begin_src sh
+lvcreate -L8G lvmroot -n swap
+lvcreate -l 100%FREE lvmroot -n root
+#+end_src
+
+** filesystem formatting
+
+#+begin_src sh
+mkfs.fat -n NIXOS_BOOT -F32 /dev/sda1
+mkfs.ext4 -L NIXOS_ROOT /dev/mapper/lvmroot-root
+mkswap -L NIXOS_SWAP /dev/mapper/lvmroot-swap
+#+end_src
+
+** mount the partitions
+
+Mount the partitions inside /mnt.
+
+#+begin_src sh
+mount /dev/disk/by-label/NIXOS_ROOT /mnt
+mkdir /mnt/boot
+mount -o umask=0077 /dev/disk/by-label/NIXOS_BOOT /mnt/boot
+swapon -L NIXOS_SWAP
+#+end_src
+
+** nixos config
+
+#+begin_src sh
+nixos-generate-config --root /mnt
+#+end_src
+
+** hardware-configuration.nix
+
+In /mnt/etc/nixos/hardware-configuration.nix, configure the following:
+
+Add the cryptd kernel module for LUKS.
+Define the primary LUKS device.
+Update the filesystem devices to /dev/disk/by-label for convenience.
+Enable firmware updates (optional, but recommended).
+
+#+begin_src nix
+{ config, lib, pkgs, modulesPath, ... }:
+{
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+  
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" "cryptd" ]; # <--
+  boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-label/NIXOS_LUKS"; # <--
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+  
+  fileSystems."/" =
+    { device = "/dev/disk/by-label/NIXOS_ROOT"; # <--
+      fsType = "ext4";
+    };
+    
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-label/NIXOS_BOOT"; # <--
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
+    
+  fileSystems."/home" =
+    { device = "/dev/disk/by-label/NIXOS_HOME"; # <--
+      fsType = "ext4";
+    };
+    
+  swapDevices =
+    [ { device = "/dev/disk/by-label/NIXOS_SWAP"; } # <--
+    ];
+    
+  networking.useDHCP = lib.mkDefault true;
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.enableAllFirmware = true; # <--
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}
+#+end_src
+
+** configuration.nix
+
+#+begin_src sh
+head -c 8 /etc/machine-id
+#+end_src
+
+#+begin_example
+37725d60
+#+end_example
+
+#+begin_src nix
+networking.hostId = "37725d60";
+#+end_src
+
+** nixos install
+
+#+begin_src sh
+nixos-install --show-trace --root /mnt
+#+end_src
+
+--show-trace will show you where exactly things went wrong if nixos-install fails. To take advantage of all cores on your system, also specify --max-jobs n replacing n with the number of cores on your machine. 
+
+after making changes to the config rebuild
+
+#+begin_src sh
+nixos-rebuild switch
+#+end_src
+
+when you are finished unmount /mnt and reboot
+
+#+begin_src sh
+umount -R /mnt
+#+end_src
+
+#+begin_src sh
+shutdown now
+#+end_src
+
+
