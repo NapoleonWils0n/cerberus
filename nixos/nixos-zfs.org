@@ -536,7 +536,7 @@ services.zfs.autoScrub.enable = true;
 ** home-manager
 
 #+begin_src sh
-nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 nix-channel --update
 #+end_src
 
