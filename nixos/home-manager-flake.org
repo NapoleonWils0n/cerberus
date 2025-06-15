@@ -87,3 +87,31 @@ nix-channel --list
 nix-channel --remove home-manager 
 #+end_src
 
+** home manager garbage collection
+*** list generations
+
+#+begin_src sh
+nix-env --list-generations
+#+end_src
+
+*** delete generations
+
+keep the current home manager generation but remove all other generations
+
+#+begin_src sh
+nix-env --delete-generations old
+#+end_src
+
+or keep the current generation and the 5 previous generations
+
+#+begin_src sh
+nix-env --delete-generations +6
+#+end_src
+
+*** nix-store gc
+
+run garbage collection on the nix-store
+
+#+begin_src sh
+nix-store --gc
+#+end_src
