@@ -1,0 +1,143 @@
+#+STARTUP: content
+* nixos flakes
+** enable flakes
+
+edit your nixos configuration.nix
+
+#+begin_src sh
+doas vi /etc/nixos/configuration.nix
+#+end_src
+
+add the following to enable flakes
+
+#+begin_src nix
+# nix flakes
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+#+end_src
+
+rebuild and reboot
+
+#+begin_src sh
+doas nixos-rebuild switch
+#+end_src
+
+** copy nixos configuration .nix files to git repo
+
+create a nix-root directory
+
+#+begin_src sh
+mkdir -p ~/git/nixos-root
+#+end_src
+
+change into the directory
+
+#+begin_src sh
+cd ~/git/nixos-root
+#+end_src
+
+copy the nix config files
+
+#+begin_src sh
+cp /etc/nixos/*.nix .
+#+end_src
+
+** flake.nix
+
+create the flake.nix file in the git repo
+
+#+begin_src nix
+{
+  description = "NixOS configuration for Dell XPS 15 2019";
+
+  inputs = {
+    # NixOS official package source, pinned to the nixos-unstable
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs,... }@inputs: {
+    # Define a NixOS system configuration
+    # host name set to pollux, change the hostname for your system
+    nixosConfigurations.pollux = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux"; # Specify the system architecture
+      specialArgs = { inherit inputs; }; # Pass the 'inputs' attribute set to modules
+      modules = [
+        # Import your existing configuration files
+       ./configuration.nix
+      ];
+    };
+  };
+}
+#+end_src
+
+** git permissions
+
+you need to set git to your git repo as a safe directory 
+so it will work with doas or sudo
+
+#+begin_src sh
+doas git config --system --add safe.directory ${HOME}/git/nixos/nixos-root
+#+end_src
+
+if you get an error about the tarball-cache directory
+then you need to set that as a git safe directory
+
+#+begin_src sh
+doas git config --system --add safe.directory ${HOME}/.cache/nix/tarball-cache
+#+end_src
+
+** nix cache directory permissions
+
+Change ownership of the Nix cache directory:
+Next, change the ownership of your Nix cache directory recursively.
+
+#+begin_src sh
+doas chown -R ${USER}:users ${HOME}/.cache/nix
+#+end_src
+
+** nixos rebuild with flake
+
+run nixos-rebuild switch --flake and replace '.#pollux' with your hostname
+
+#+begin_src sh
+doas nixos-rebuild switch --flake '.#pollux'
+#+end_src
+
+** git fix
+
+git repo is dirty error
+
+Change ownership of flake.lock:
+First, correct the ownership of your flake.lock file.
+
+#+begin_src sh
+doas chown ${USER}:users flake.lock
+#+end_src
+
+** flake update
+
+#+begin_src sh
+git add flake.lock
+git commit -m "flake.lock"
+#+end_src
+
+#+begin_src sh
+nix flake update 
+git add .
+git commit -m "nixos flake"
+git push github master
+#+end_src
+
+** remove channel
+
+#+begin_src sh
+doas nix-channel --remove nixos
+#+end_src
+
+** remove nix files
+
+removed the unused nix files
+
+#+begin_src sh
+doas rm -i /etc/nixos/configuration.nix
+doas rm -i /etc/nixos/hardware-configuration.nix
+#+end_src
