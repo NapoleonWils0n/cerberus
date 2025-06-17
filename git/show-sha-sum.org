@@ -55,6 +55,18 @@ git ls-remote github HEAD
 
 ** lrsha script
 
+run the lrsha script inside a git repo
+
+#+begin_src sh
+lrhsa
+#+end_src
+
+run the lrsha script and us the -c option and the path to a git repo
+
+#+begin_src sh
+lrsha -c ~/git/git-repo
+#+end_src
+
 #+begin_src sh
 #!/bin/sh
 
@@ -135,12 +147,12 @@ remote_sha=$(${path:=git} ls-remote ${remote_name} HEAD | awk '{print $1}')
 gitcompare () {
 if [ "${local_sha}" == "${remote_sha}" ]; then
   echo  "Local and remote sha sums match
-${local_sha}
-${remote_sha}"
+${local_sha} #local
+${remote_sha} #remote"
 else
   echo "Local and remote sha sums differ
-${local_sha}
-${remote_sha}"
+${local_sha} #local
+${remote_sha} #remote"
 fi
 }
 
