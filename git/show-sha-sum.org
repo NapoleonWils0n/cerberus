@@ -1,5 +1,6 @@
 #+STARTUP: showall
 * git show sha sum
+** current repo sha sum
 
 show the sha sum in the current git repo 
 
@@ -7,8 +8,18 @@ show the sha sum in the current git repo
 git rev-parse HEAD
 #+end_src
 
-show the sha sum and pass in the git repo with the -C option
+** specify path to a local repo
+
+pass in the git repo with the -C option and show the sha sum 
 
 #+begin_src sh
 git -C ~/git/cerberus rev-parse HEAD
+#+end_src
+
+** remote git repo sha sum
+
+show the sha sum for a remote git repo
+
+#+begin_src sh
+git ls-remote https://github.com/NapoleonWils0n/cerberus HEAD
 #+end_src
