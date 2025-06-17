@@ -52,3 +52,101 @@ get the sha sum of the remote git repo using the cached remote name
 #+begin_src sh
 git ls-remote github HEAD
 #+end_src
+
+** lrsha script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# lrsha
+# compare local and remote git sha sums
+#===============================================================================
+
+# dependencies:
+# git awk
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -c path-to-git-repo
+-c path-to-git-repo : optional"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+#[ $# -gt 1 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':c:h' opt
+do
+  case ${opt} in
+     c) path="git -C ${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# get the git remote cached name
+remote_name=$(${path:=git} remote show -n)
+
+# get the local git repo sha sum
+local_sha=$(${path:=git} rev-parse HEAD)
+
+# get the git remote sha sum using the cached remote name
+remote_sha=$(${path:=git} ls-remote ${remote_name} HEAD | awk '{print $1}')
+
+
+#===============================================================================
+# compare the local and remote git sha sums
+#===============================================================================
+
+gitcompare () {
+if [ "${local_sha}" == "${remote_sha}" ]; then
+  echo  "Local and remote sha sums match
+${local_sha}
+${remote_sha}"
+else
+  echo "Local and remote sha sums differ
+${local_sha}
+${remote_sha}"
+fi
+}
+
+#===============================================================================
+# run function
+#===============================================================================
+
+gitcompare
+#+end_src
