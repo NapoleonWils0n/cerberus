@@ -23,3 +23,32 @@ show the sha sum for a remote git repo
 #+begin_src sh
 git ls-remote https://github.com/NapoleonWils0n/cerberus HEAD
 #+end_src
+
+** remote name
+
+use the remote name of a local git repo
+
+#+begin_src sh
+git remote -v
+#+end_src
+
+#+begin_example
+github  git@github.com:NapoleonWils0n/cerberus.git (fetch)
+github  git@github.com:NapoleonWils0n/cerberus.git (push)
+#+end_example
+
+git remote show -n will show the cached local name
+
+#+begin_src sh
+git remote show -n
+#+end_src
+
+#+begin_example
+github
+#+end_example
+
+get the sha sum of the remote git repo using the cached remote name
+
+#+begin_src sh
+git ls-remote github HEAD
+#+end_src
