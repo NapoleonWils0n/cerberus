@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* git show sha sum
+
+#+begin_src sh
+git rev-parse HEAD
+#+end_src
