@@ -1,6 +1,14 @@
 #+STARTUP: showall
 * git show sha sum
 
+show the sha sum in the current git repo 
+
 #+begin_src sh
 git rev-parse HEAD
+#+end_src
+
+show the sha sum and pass in the git repo with the -C option
+
+#+begin_src sh
+git -C ~/git/cerberus rev-parse HEAD
 #+end_src
