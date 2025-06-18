@@ -61,7 +61,8 @@ run the lrsha script inside a git repo
 lrhsa
 #+end_src
 
-run the lrsha script and us the -c option and the path to a git repo
+run the lrsha script
+and us the -c option and the path to a git repo
 
 #+begin_src sh
 lrsha -c ~/git/git-repo
