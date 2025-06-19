@@ -64,5 +64,5 @@ pkgs.mkShell rec {
 ** usage
 
 #+begin_src 
-whisper input.wav --model small
+whisper input.wav --model small --device cuda
 #+end_src
