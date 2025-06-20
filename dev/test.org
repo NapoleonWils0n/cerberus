@@ -1,6 +1,6 @@
 #+STARTUP: show2levels
 #+PROPERTY: header-args:sh :results output table replace :noweb yes :wrap quote
-#+TODO: XPS(x) AIR(a) PRO(p) | SYNCED(s)
+#+SEQ_TODO: XPS(x) AIR(a) PRO(p) | SYNCED(s)
 * changelog
 ** todo states
 
