@@ -35,9 +35,9 @@ github url
 
 local git repo
 
-#+begin_example
+#+begin_src sh
 ~/git/cerberus
-#+end_example
+#+end_src
 
 git status
 
