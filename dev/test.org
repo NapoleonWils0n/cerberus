@@ -1,5 +1,5 @@
 #+STARTUP: show2levels
-#+PROPERTY: header-args:sh :results output table replace :noweb yes :wrap quote
+#+PROPERTY: header-args:sh :results output table replace :noweb yes :wrap org
 #+TODO: XPS(x) AIR(a) PRO(p) | SYNCED(s)
 * changelog
 ** todo states
@@ -48,8 +48,10 @@ git status
 #+end_src
 
 #+RESULTS: cerberus
-#+begin_quote
-| cf07e994 | quote                                              | 15:27:54/20-06-2025 | HEAD -> master, github/master, github/HEAD |
+#+begin_org
+| e91b71f2 | sh                                                 | 15:35:28/20-06-2025 | HEAD -> master, github/master, github/HEAD |
+| acf825a8 | quote                                              | 15:29:17/20-06-2025 |                                            |
+| cf07e994 | quote                                              | 15:27:54/20-06-2025 |                                            |
 | ac6fc647 | test                                               | 15:25:05/20-06-2025 |                                            |
 | 505ecdbb | nixos system flake garbage collection              | 15:11:26/20-06-2025 |                                            |
 | dbc3cbec | whisper                                            | 18:55:22/19-06-2025 |                                            |
@@ -57,9 +59,8 @@ git status
 | 862d33be | git                                                | 18:53:24/18-06-2025 |                                            |
 | 8f452ffd | lrsha show sha sums for local and remote git repos | 23:00:38/17-06-2025 |                                            |
 | 46ebdca0 | git compare local and remote sha sum               | 22:21:56/17-06-2025 |                                            |
-| 0ab9f387 | git remote sha sum using cached local name         | 20:41:17/17-06-2025 |                                            |
-| 769e629d | show remote git repo sha sum                       | 20:15:27/17-06-2025 |                                            |
-#+end_quote
+#+end_org
+
 
 
 
