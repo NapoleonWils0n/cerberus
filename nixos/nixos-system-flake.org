@@ -141,3 +141,17 @@ removed the unused nix files
 doas rm -i /etc/nixos/configuration.nix
 doas rm -i /etc/nixos/hardware-configuration.nix
 #+end_src
+
+** garbage
+
+Deletes old generations and unreachable store paths
+
+#+begin_src sh
+doas nix-collect-garbage -d
+#+end_src
+
+Hard-links identical files in the store to save space
+
+#+begin_src sh
+doas nix-store --optimise
+#+end_src
