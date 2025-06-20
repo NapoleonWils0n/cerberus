@@ -49,7 +49,8 @@ git status
 
 #+RESULTS: cerberus
 #+begin_quote
-| 3a6b9798 | push        | 15:47:28/20-06-2025 | HEAD -> master, github/master, github/HEAD |
+| 76bcf456 | table       | 15:48:03/20-06-2025 | HEAD -> master, github/master, github/HEAD |
+| 3a6b9798 | push        | 15:47:28/20-06-2025 |                                            |
 | 5a8cd58a | commit      | 15:46:57/20-06-2025 |                                            |
 | 99dc3f71 | todo        | 15:45:49/20-06-2025 |                                            |
 | 9936c068 | quote works | 15:41:45/20-06-2025 |                                            |
@@ -58,7 +59,6 @@ git status
 | 451909ed | org         | 15:36:46/20-06-2025 |                                            |
 | e91b71f2 | sh          | 15:35:28/20-06-2025 |                                            |
 | acf825a8 | quote       | 15:29:17/20-06-2025 |                                            |
-| cf07e994 | quote       | 15:27:54/20-06-2025 |                                            |
 #+end_quote
 
 
