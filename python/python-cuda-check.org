@@ -4,3 +4,7 @@
 #+begin_src sh
 python -c "import torch; print(torch.cuda.is_available())"
 #+end_src
+
+#+begin_src sh
+python -c "import torch; print(f'torch.cuda.is_available(): {torch.cuda.is_available()}'); print(f'torch.version.cuda: {torch.version.cuda}'); print(f'torch.backends.cudnn.is_available(): {torch.backends.cudnn.is_available()}')"
+#+end_src
