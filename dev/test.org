@@ -1,5 +1,5 @@
 #+STARTUP: show2levels
-#+PROPERTY: header-args:sh :results output verbatim replace :noweb yes :wrap
+#+PROPERTY: header-args:sh :results output raw replace :noweb yes :wrap quote
 #+TODO: XPS(x) AIR(a) PRO(p) | SYNCED(s)
 * changelog
 ** todo states
@@ -48,8 +48,9 @@ git status
 #+end_src
 
 #+RESULTS: cerberus
-#+begin_results
-505ecdbb, nixos system flake garbage collection, 15:11:26/20-06-2025, "HEAD -> master, github/master, github/HEAD"
+#+begin_quote
+ac6fc647, test, 15:25:05/20-06-2025, "HEAD -> master, github/master, github/HEAD"
+505ecdbb, nixos system flake garbage collection, 15:11:26/20-06-2025, ""
 dbc3cbec, whisper, 18:55:22/19-06-2025, ""
 2a63b670, git, 18:54:39/18-06-2025, ""
 862d33be, git, 18:53:24/18-06-2025, ""
@@ -58,5 +59,6 @@ dbc3cbec, whisper, 18:55:22/19-06-2025, ""
 0ab9f387, git remote sha sum using cached local name, 20:41:17/17-06-2025, ""
 769e629d, show remote git repo sha sum, 20:15:27/17-06-2025, ""
 21f9c9f1, git -C option, 20:03:10/17-06-2025, ""
-d478b8bd, git show sha sum, 18:53:23/17-06-2025, ""
-#+end_results
+#+end_quote
+
+
