@@ -1,0 +1,62 @@
+#+STARTUP: show2levels
+#+PROPERTY: header-args:sh :results output verbatim replace :noweb yes :wrap
+#+TODO: XPS(x) AIR(a) PRO(p) | SYNCED(s)
+* changelog
+** todo states
+
+with the cursor on a header set a todo
+
+#+begin_example
+C-c C-t
+#+end_example
+
++ x = xps changes only on dell xps
++ a = air changes pulled on macbook air
++ p = pro changes pulled on macbook pro
++ s = synced
+
+space clears the todo state
+
+** noweb code block
+
+pass in the var path and use eval echo path to expand it
+
+#+NAME: noweb-block
+#+begin_src sh 
+expanded_path=$(eval echo "${path}") # Force shell expansion
+git -C "${expanded_path}" log --pretty=format:'%h, %s, %cd, "%D"' -10 --date=format:'%H:%M:%S/%d-%m-%Y' 
+#+end_src
+
+** XPS cerberus
+
+github url
+
+[[https://github.com/NapoleonWils0n/cerberus]]
+
+local git repo
+
+#+begin_example
+~/git/cerberus
+#+end_example
+
+git status
+
+#+NAME: cerberus
+#+HEADER: :var path="~/git/cerberus"
+#+begin_src sh
+<<noweb-block>>
+#+end_src
+
+#+RESULTS: cerberus
+#+begin_results
+505ecdbb, nixos system flake garbage collection, 15:11:26/20-06-2025, "HEAD -> master, github/master, github/HEAD"
+dbc3cbec, whisper, 18:55:22/19-06-2025, ""
+2a63b670, git, 18:54:39/18-06-2025, ""
+862d33be, git, 18:53:24/18-06-2025, ""
+8f452ffd, lrsha show sha sums for local and remote git repos, 23:00:38/17-06-2025, ""
+46ebdca0, git compare local and remote sha sum, 22:21:56/17-06-2025, ""
+0ab9f387, git remote sha sum using cached local name, 20:41:17/17-06-2025, ""
+769e629d, show remote git repo sha sum, 20:15:27/17-06-2025, ""
+21f9c9f1, git -C option, 20:03:10/17-06-2025, ""
+d478b8bd, git show sha sum, 18:53:23/17-06-2025, ""
+#+end_results
