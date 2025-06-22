@@ -155,3 +155,9 @@ Hard-links identical files in the store to save space
 #+begin_src sh
 doas nix-store --optimise
 #+end_src
+
+** delete old generations
+
+#+begin_src sh
+doas nix-env --profile /nix/var/nix/profiles/system --delete-generations old
+#+end_src
