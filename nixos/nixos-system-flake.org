@@ -113,15 +113,33 @@ First, correct the ownership of your flake.lock file.
 doas chown ${USER}:users flake.lock
 #+end_src
 
-** flake update
+** git add flake
 
 #+begin_src sh
 git add flake.lock
 git commit -m "flake.lock"
+git push github master
 #+end_src
+
+** flake update and upgrade
+
+update the flake
 
 #+begin_src sh
 nix flake update 
+#+end_src
+
+git repo is dirty error which you will fix in the next step
+
+nixos-rebuild
+
+#+begin_src sh
+doas nixos-rebuild switch --flake '.#pollux'
+#+end_src
+
+add the updated files and push the repo
+
+#+begin_src sh
 git add .
 git commit -m "nixos flake"
 git push github master
