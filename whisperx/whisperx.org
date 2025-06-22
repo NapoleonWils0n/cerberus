@@ -101,8 +101,13 @@
 
 ** hugginface
 
-create the huggingface token file 
-and add your huggingface token to the file
+create the huggingface directory if it doesnt exist
+
+#+begin_src sh
+mkdir -p ~/.cache/huggingface
+#+end_src
+
+create the token file and add your huggingface token to the file
 
 #+begin_src sh
 vi ~/.cache/huggingface/token
