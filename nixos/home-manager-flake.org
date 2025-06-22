@@ -80,6 +80,28 @@ git commit -m "Update Home Manager flake.lock after successful switch"
 git push github master
 #+end_src
 
+** flake update
+
+update the flake
+
+#+begin_src sh
+nix flake update 
+#+end_src
+
+run home-manager switch
+
+#+begin_src sh
+home-manager switch --flake '.#djwilcox@pollux'
+#+end_src
+
+add the new flake and push the git repo
+
+#+begin_src sh
+git add .
+git commit -m "flake updated"
+git push github master
+#+end_src
+
 ** remove home manager channel
 
 #+begin_src sh
