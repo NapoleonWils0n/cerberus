@@ -179,3 +179,5 @@ doas nix-store --optimise
 #+begin_src sh
 doas nix-env --profile /nix/var/nix/profiles/system --delete-generations old
 #+end_src
+
+to clear the old boot entries you need to rebuild
