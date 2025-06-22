@@ -409,7 +409,7 @@ if __name__ == "__main__":
 
 play the video with the srt file and identify the speakers
 
-run the process_whisperx_output.py script with the -j option and the pathe to the json file
+run the process_whisperx_output.py script with the -j option and the path to the json file
 
 #+begin_src sh
 python process_whisperx_output.py -j /path-to-json/video.json \
