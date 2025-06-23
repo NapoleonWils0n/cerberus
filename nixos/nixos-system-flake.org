@@ -145,6 +145,14 @@ git commit -m "nixos flake"
 git push github master
 #+end_src
 
+if there are any errors you can revert the flake.lock file
+
+#+begin_src sh
+git checkout HEAD^ -- flake.lock
+#+end_src
+
+This command will revert flake.lock to its state in the previous commit. If you updated multiple times, you might need to go back further (e.g., HEAD~2 for two commits ago, or look at git log --oneline flake.lock to find the exact commit hash).
+
 ** remove channel
 
 #+begin_src sh
