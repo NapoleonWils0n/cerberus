@@ -131,6 +131,24 @@ nix flake update
 
 git repo is dirty error which you will fix in the next step
 
+if you get this error
+
+#+begin_example
+fatal: cannot create an empty blob in the object database
+#+end_example
+
+then chown the .git directory
+
+#+begin_src sh
+doas chown -R "${USER}":users .git
+#+end_src
+
+then run nix flake update again
+
+#+begin_src sh
+nix flake update
+#+end_src
+
 nixos-rebuild
 
 #+begin_src sh
