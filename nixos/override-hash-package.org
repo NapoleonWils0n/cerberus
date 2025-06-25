@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: showall
 * override hash
 
 override has for package in home-manager
