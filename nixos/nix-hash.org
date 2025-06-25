@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* nix-hash
+
+use nix-hash to get the sha sum of a zip file 
+
+#+begin_src sh
+nix-hash --flat --base32 --type sha256 <name_of_the_downloaded_zip_file.zip>
+#+end_src
+
+use sha256sum to get the sha of a zip file
+
+#+begin_src sh
+sha256sum <name_of_the_downloaded_zip_file.zip>
+#+end_src
