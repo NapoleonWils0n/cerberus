@@ -1,5 +1,6 @@
-#+STARTUP: showall
-* nix-hash
+#+STARTUP: content
+* nix-hash shasum
+** nix-hash
 
 use nix-hash to get the sha sum of a zip file 
 
@@ -7,8 +8,48 @@ use nix-hash to get the sha sum of a zip file
 nix-hash --flat --base32 --type sha256 <name_of_the_downloaded_zip_file.zip>
 #+end_src
 
+example
+
+#+begin_src sh
+nix-hash --flat --base32 --type sha256 DaVinci_Resolve_20.0_Linux.zip
+#+end_src
+
+output
+
+#+begin_example
+0r1b4svjykv0r3gzqjsafz0q2779yq9s5ijcnxzbx9z39ikc1vbn
+#+end_example
+
+** sha256sum
+
 use sha256sum to get the sha of a zip file
 
 #+begin_src sh
 sha256sum <name_of_the_downloaded_zip_file.zip>
 #+end_src
+
+example
+
+#+begin_src sh
+sha256sum DaVinci_Resolve_20.0_Linux.zip
+#+end_src
+
+output
+
+#+begin_example
+76edc0664ce3a7be7eb74cc6a213f6e91c81c1774a4bfcdfc8604f2fb7262b64  
+#+end_example
+
+** nix-hash sri
+
+nix sri from sha256sum
+
+#+begin_src sh
+nix-hash --to-sri --type sha256 76edc0664ce3a7be7eb74cc6a213f6e91c81c1774a4bfcdfc8604f2fb7262b64
+#+end_src
+
+output
+
+#+begin_example
+sha256-du3AZkzjp75+t0zGohP26RyBwXdKS/zfyGBPL7cmK2Q=
+#+end_example
