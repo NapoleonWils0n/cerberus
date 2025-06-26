@@ -1,0 +1,19 @@
+#+STARTUP: content
+* nixos mount zfs snapshot
+** create a mount point
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+** list zfs snapshots 
+
+#+begin_src sh
+zfs list -t snapshot
+#+end_src
+
+** mount the snapshot to the mount point
+
+#+begin_src sh
+doas mount -t zfs zpool/home@2025-06-26-220000 ~/mnt
+#+end_src
