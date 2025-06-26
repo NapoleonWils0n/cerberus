@@ -17,3 +17,9 @@ zfs list -t snapshot
 #+begin_src sh
 doas mount -t zfs zpool/home@2025-06-26-220000 ~/mnt
 #+end_src
+
+** unmount the snapshot from the mount point
+
+#+begin_src sh
+doas umount ~/mnt
+#+end_src
