@@ -1,0 +1,292 @@
+#+STARTUP: content
+* flake pin package with overlay
+** resources
+
+[[https://nixos-and-flakes.thiscute.world/nixos-with-flakes/downgrade-or-upgrade-packages]]
+
+** pin flake
+*** find the hash of the nixpkg
+
+find the nixpkg rev hash you want to pin
+
+*** flake.nix
+
+#+begin_src nix
+# ~/git/nixos-dotfiles/flake.nix
+{
+  description = "Home Manager configuration for djwilcox on pollux";
+
+  inputs = {
+    # Nixpkgs, pointing to the unstable branch for the latest packages
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    # davinci resolve fix
+    # You can also use a specific git commit hash to lock the version
+    nixpkgs-ee930f975.url = "github:nixos/nixpkgs/ee930f9755f58096ac6e8ca94a1887e0534e2d81";
+
+    # Home Manager itself
+    home-manager = {
+      url = "github:nix-community/home-manager"; # Defaults to master/unstable branch [1]
+      # Crucial: Ensure Home Manager uses the same Nixpkgs as this flake
+      # to prevent version conflicts and ensure consistency. [1, 2]
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = inputs@{
+    self,
+    nixpkgs,
+    nixpkgs-ee930f975,
+    home-manager,
+    ... }:
+    let
+      # Define the system architecture
+      system = "x86_64-linux"; # For your MacBook Air 2011
+      # Define your username
+      username = "djwilcox"; # Replace with your actual username if different
+    in
+    {
+      # Define the Home Manager configuration for your user on this host
+      # The attribute name is typically "username@hostname" for standalone setups [3]
+      homeConfigurations."${username}@pollux" = home-manager.lib.homeManagerConfiguration {
+        # Pass the Nixpkgs instance to Home Manager
+        pkgs = nixpkgs.legacyPackages.${system}; # Use the unstable nixpkgs for packages [3]
+        
+        # Pass extra arguments to your home.nix if needed.
+        # For example, if your home.nix needs access to the 'inputs' set:
+        extraSpecialArgs = {
+          pkgs-ee930f975 = import nixpkgs-ee930f975 {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
+        
+        # Import your existing home.nix file from its relative path within this repository [3]
+        modules = [
+        ./.config/home-manager/home.nix # Your existing Home Manager configuration
+        ];
+      };
+    };
+}
+#+end_src
+
+*** home.nix
+
+#+begin_src nix
+{
+  config,
+  pkgs,
+  pkgs-ee930f975,
+  ...
+}:
+
+{
+  # Home Manager needs a bit of information about you and the paths it should
+  # manage.
+  home.username = "djwilcox";
+  home.homeDirectory = "/home/djwilcox";
+
+  # This value determines the Home Manager release that your configuration is
+  # compatible with. This helps avoid breakage when a new Home Manager release
+  # introduces backwards incompatible changes.
+  #
+  # You should not change this value, even if you update Home Manager. If you do
+  # want to update the value, then make sure to first check the Home Manager
+  # release notes.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
+
+  imports = [
+    ./programs/dconf/dconf.nix
+    ./programs/firefox/firefox.nix
+  ];
+ 
+  # xdg directories
+  xdg = {
+    userDirs = {
+      enable = true;
+      createDirectories = true;
+      publicShare = null;
+      templates = null;
+    };
+  };
+
+  nixpkgs.config.allowUnfree = true;
+  
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs-pgtk;
+  };
+
+  # The home.packages option allows you to install Nix packages into your
+  # environment.
+  home.packages = with pkgs; [
+    abook
+    apg
+    alacritty
+    aria2
+    aspell
+    aspellDicts.en
+    bat
+    bc
+    chromium
+    curl
+    dict
+    dconf-editor
+    fd
+    fdk-aac-encoder
+    ffmpeg-full
+    file
+    fira-code
+    git
+    gnome-tweaks
+    gnumake
+    handbrake
+    imagemagick
+    iosevka
+    libnotify
+    libwebp
+    kodi-wayland
+    mpc
+    mpd
+    mpv
+    ncdu
+    ncmpc
+    nerd-fonts.fira-code
+    noto-fonts-emoji
+    oath-toolkit
+    obs-studio
+    openvpn
+    pandoc
+    pinentry-curses
+    playerctl
+    realesrgan-ncnn-vulkan
+    ripgrep
+    sox
+    tmux
+    translate-shell
+    transmission_4-gtk
+    ts
+    unzip
+    yt-dlp
+    wget
+    widevine-cdm
+    wl-clipboard
+    zathura
+    zip
+  ];
+
+  # home sessions variables
+  home.sessionVariables = {
+    XCURSOR_THEME = "Adwaita";
+    XCURSOR_SIZE = "24";
+  };
+
+services = {
+  emacs = {
+    enable = true;
+    package = pkgs.emacs-pgtk;
+  };
+  gnome-keyring = {
+    enable = true;
+  };
+  gpg-agent = {
+    enable = true;
+    extraConfig = ''
+      allow-emacs-pinentry
+      allow-loopback-pinentry
+    '';
+  };
+  mpd = {
+    enable = true;
+    musicDirectory = "~/Music";
+    network = {
+      startWhenNeeded = true;
+    };
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "My PipeWire Output"
+      }
+    '';
+  };
+};
+
+# systemd
+systemd.user.sessionVariables = {
+  SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
+  WAYLAND_DISPLAY = "wayland-0";
+};
+
+# gtk
+gtk = {
+  enable = true;
+  gtk3.extraConfig = {
+    gtk-application-prefer-dark-theme = true;
+  };
+  gtk4.extraConfig = {
+    gtk-application-prefer-dark-theme = true;
+  };
+};
+
+# mpv mpris 
+nixpkgs.overlays = [
+  (self: super: {
+    mpv = super.mpv.override {
+      scripts = [ self.mpvScripts.mpris ];
+    };
+  })
+  (self: super: {
+    davinci-resolve = pkgs-ee930f975.davinci-resolve;
+  })
+];
+
+  # Home Manager is pretty good at managing dotfiles. The primary way to manage
+  # plain files is through 'home.file'.
+  home.file = {
+    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
+    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
+    # # symlink to the Nix store copy.
+    # ".screenrc".source = dotfiles/screenrc;
+
+    # # You can also set the file content immediately.
+    # ".gradle/gradle.properties".text = ''
+    #   org.gradle.console=verbose
+    #   org.gradle.daemon.idletimeout=3600000
+    # '';
+  };
+
+  # Home Manager can also manage your environment variables through
+  # 'home.sessionVariables'. These will be explicitly sourced when using a
+  # shell provided by Home Manager. If you don't want to manage your shell
+  # through Home Manager then you have to manually source 'hm-session-vars.sh'
+  # located at either
+  #
+  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+  #
+  # or
+  #
+  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
+  #
+  # or
+  #
+  #  /etc/profiles/per-user/djwilcox/etc/profile.d/hm-session-vars.sh
+  #
+  home.sessionVariables = {
+    # EDITOR = "emacs";
+  };
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}
+#+end_src
+
+*** update
+
+#+begin_src sh
+nix flake update
+#+end_src
+
+#+begin_src sh
+home-manager switch --flake '.#djwilcox@pollux'
+#+end_src
+
