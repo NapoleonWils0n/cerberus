@@ -29,7 +29,19 @@ so we can install Davinci Resolve using that rev
   },
 #+end_src
 
-flake.lock
+we can use this awk command to extract git commit hash
+
+#+begin_src sh
+awk -F'"' '/"nixpkgs": \{/,/\}/ {if ($0 ~ /"rev": /) {print $4; exit}}' flake.lock
+#+end_src
+
+output
+
+#+begin_example
+ee930f9755f58096ac6e8ca94a1887e0534e2d81
+#+end_example
+
+using this flake.lock file as an example
 
 #+begin_src nix
 {
