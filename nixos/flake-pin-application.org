@@ -4,6 +4,8 @@
 
 [[https://nixos-and-flakes.thiscute.world/nixos-with-flakes/downgrade-or-upgrade-packages]]
 
+[[https://youtu.be/43VvFgPsPtY?si=PAanGM2cHxzcrqOm&t=1450][Rebuilding my NixOS config - Part 0]]
+
 *** find the hash of the nixpkg
 
 find the nixpkg rev hash you want to pin from your flake.lock
