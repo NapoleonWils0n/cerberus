@@ -4,12 +4,147 @@
 
 [[https://nixos-and-flakes.thiscute.world/nixos-with-flakes/downgrade-or-upgrade-packages]]
 
-** pin flake
 *** find the hash of the nixpkg
 
-find the nixpkg rev hash you want to pin
+find the nixpkg rev hash you want to pin from your flake.lock
+
+in this case we want to use this nixpkgs rev from github
+so we can install Davinci Resolve using that rev
+
+#+begin_src nix
+"rev": "ee930f9755f58096ac6e8ca94a1887e0534e2d81",
+#+end_src
+
+#+begin_src nix
+"nixpkgs": {
+  "locked": {
+    "lastModified": 1749794982,
+    "narHash": "sha256-Kh9K4taXbVuaLC0IL+9HcfvxsSUx8dPB5s5weJcc9pc=",
+    "owner": "NixOS",
+    "repo": "nixpkgs",
+    "rev": "ee930f9755f58096ac6e8ca94a1887e0534e2d81",
+    "type": "github"
+  },
+#+end_src
+
+flake.lock
+
+#+begin_src nix
+{
+  "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1749999552,
+        "narHash": "sha256-iCUuEq9qXUh8L1c2bRyCayAqfuUEs9nGAUlXv2RcoF8=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "04672588c61aebd18c0d0ada66dd7bb4d8edab0d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1749794982,
+        "narHash": "sha256-Kh9K4taXbVuaLC0IL+9HcfvxsSUx8dPB5s5weJcc9pc=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ee930f9755f58096ac6e8ca94a1887e0534e2d81",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
+#+end_src
 
 *** flake.nix
+**** add the git commit hash as an input
+
+add the git commit hash as a new input
+and assign it to a variable 
+
+in this case nixpkgs-ee930f975.url
+ee930f975 matches the first 9 characters of the git commit hash
+
+so the variable name we will be referencing is nixpkgs-ee930f975
+
+#+begin_src nix
+nixpkgs-ee930f975.url = "github:nixos/nixpkgs/ee930f9755f58096ac6e8ca94a1887e0534e2d81";
+#+end_src
+
+#+begin_src nix
+inputs = {
+  # Nixpkgs, pointing to the unstable branch for the latest packages
+  nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  # davinci resolve fix
+  # You can also use a specific git commit hash to lock the version
+  nixpkgs-ee930f975.url = "github:nixos/nixpkgs/ee930f9755f58096ac6e8ca94a1887e0534e2d81";
+
+  # Home Manager itself
+  home-manager = {
+    url = "github:nix-community/home-manager"; # Defaults to master/unstable branch [1]
+    # Crucial: Ensure Home Manager uses the same Nixpkgs as this flake
+    # to prevent version conflicts and ensure consistency. [1, 2]
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+};
+#+end_src
+
+**** add the git commit hash as an output
+
+add nixpkgs-ee930f975 as an output
+
+#+begin_src nix
+outputs = inputs@{
+  self,
+  nixpkgs,
+  nixpkgs-ee930f975,
+  home-manager,
+  ... }:
+#+end_src
+
+**** extraSpecialArgs
+
+add the pkgs-ee930f975 to extraSpecialArgs
+
+#+begin_src nix
+# Pass extra arguments to your home.nix if needed.
+# For example, if your home.nix needs access to the 'inputs' set:
+extraSpecialArgs = {
+  pkgs-ee930f975 = import nixpkgs-ee930f975 {
+    inherit system;
+    config.allowUnfree = true;
+  };
+};
+#+end_src
+
+**** flake.nix with new git commit input
+
+flake.nix with new input, output and extraSpecialArgs
 
 #+begin_src nix
 # ~/git/nixos-dotfiles/flake.nix
@@ -71,8 +206,27 @@ find the nixpkg rev hash you want to pin
 #+end_src
 
 *** home.nix
+**** pkgs-ee930f975 as input
 
 #+begin_src nix
+{
+  config,
+  pkgs,
+  pkgs-ee930f975,
+  ...
+}:
+#+end_src
+
+**** install davinci resolve using pkgs-ee930f975
+
+#+begin_src nix
+pkgs-ee930f975.davinci-resolve # use pkgs-ee930f975 instead of unstable
+#+end_src
+
+**** home.nix for home-manager
+
+#+begin_src nix
+,#+begin_src nix
 {
   config,
   pkgs,
@@ -130,6 +284,7 @@ find the nixpkg rev hash you want to pin
     bc
     chromium
     curl
+    pkgs-ee930f975.davinci-resolve # use pkgs-ee930f975 instead of unstable
     dict
     dconf-editor
     fd
@@ -174,6 +329,9 @@ find the nixpkg rev hash you want to pin
     zathura
     zip
   ];
+
+
+  
 
   # home sessions variables
   home.sessionVariables = {
@@ -234,9 +392,6 @@ nixpkgs.overlays = [
     mpv = super.mpv.override {
       scripts = [ self.mpvScripts.mpris ];
     };
-  })
-  (self: super: {
-    davinci-resolve = pkgs-ee930f975.davinci-resolve;
   })
 ];
 
