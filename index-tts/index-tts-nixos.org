@@ -9,13 +9,13 @@
 create the nix directory
 
 #+begin_src sh
-mkdir -p ~/nix
+mkdir -p ~/nix/index-tts
 #+end_src
 
-and then change directory into the nix directory
+and then change directory into the index-tts directory
 
 #+begin_src sh
-cd ~/nix
+cd ~/nix/index-tts
 #+end_src
 
 git clone the index-tts repository
@@ -24,93 +24,19 @@ git clone the index-tts repository
 git clone https://github.com/index-tts/index-tts.git
 #+end_src
 
-** shell.nix
-
-add the shell.nix to the ~/nix/index-tts directory
-
-#+begin_src nix
-{ pkgs ? import <nixpkgs> {} }:
-
-pkgs.mkShell rec {
-  name = "index-tts";
-  buildInputs = with pkgs; [
-    ffmpeg-full
-    python311
-    stdenv.cc.cc.lib
-    stdenv.cc
-    cudaPackages.cudatoolkit
-    linuxPackages.nvidia_x11 # Seems necessary for CUDA context
-    zlib # Common dependency
-    ];
-
-  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
-  CUDA_PATH = pkgs.cudaPackages.cudatoolkit;
-  EXTRA_LDFLAGS = "-L${pkgs.linuxPackages.nvidia_x11}/lib";
-
-  shellHook = ''
-    echo "Setting up environment for indextts with CUDA..."
-
-    # Set the locale.
-    export LC_ALL="en_US.UTF-8"
-    export LANG="en_US.UTF-8"
-    export PYTHONIOENCODING="utf-8"
-
-    # Create and activate virtual environment
-    if [ ! -d ".venv" ]; then
-      echo "Creating Python virtual environment..."
-      ${pkgs.python311}/bin/python3.11 -m venv .venv
-    else
-      echo "Re-activating existing Python virtual environment..."
-    fi
-    source .venv/bin/activate
-    echo "Virtual environment activated."
-
-    # Set CUDA variables
-    export CUDA_VISIBLE_DEVICES=0
-    export XDG_CACHE_HOME="$HOME/.cache"
-
-    # pip upgrade
-    pip install --upgrade pip
-
-    # install torch torchaudio
-    pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-    # install index-tts
-    pip install -r ./requirements.txt
-    pip install -e .
-
-    echo "index-tts setup complete."
-  '';
-}
-#+end_src
-
-** run nix-shell
-
-run the nix-shell
+this will clone the repo to
 
 #+begin_src sh
-nix-shell
-#+end_src
-
-** download models
-
-you may need to remove the existing checkpoints/config.yaml file first
-
-#+begin_src sh
-rm -i checkpoints/config.yaml
-#+end_src
-
-#+begin_src sh
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bigvgan_discriminator.pth -P checkpoints
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bigvgan_generator.pth -P checkpoints
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bpe.model -P checkpoints
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/dvae.pth -P checkpoints
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/gpt.pth -P checkpoints
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/unigram_12000.vocab -P checkpoints
-wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/config.yaml -P checkpoints
+~/nix/index-tts/index-tts
 #+end_src
 
 ** flake.nix
+
+create the flake.nix in this location
+
+#+begin_src sh
+vi ~/nix/index-tts/flake.nix
+#+end_src
 
 #+begin_src nix
 {
@@ -184,20 +110,14 @@ wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/config.yaml -
             pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 
             # install index-tts
-            pip install -r ./requirements.txt
-            pip install -e .
+            pip install -r ./index-tts/requirements.txt
+            pip install -e ./index-tts/.
 
             echo "index-tts setup complete."
           '';
         };
       });
 }
-
-#+end_src
-
-#+begin_src sh
-git add flake.nix
-git commit -m 'flake.nix'
 #+end_src
 
 #+begin_src sh
@@ -206,6 +126,24 @@ nix develop
 
 #+begin_src sh
 nix flake update
+#+end_src
+
+** download models
+
+you may need to remove the existing checkpoints/config.yaml file first
+
+#+begin_src sh
+rm -i checkpoints/config.yaml
+#+end_src
+
+#+begin_src sh
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bigvgan_discriminator.pth -P checkpoints
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bigvgan_generator.pth -P checkpoints
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/bpe.model -P checkpoints
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/dvae.pth -P checkpoints
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/gpt.pth -P checkpoints
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/unigram_12000.vocab -P checkpoints
+wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/config.yaml -P checkpoints
 #+end_src
 
 ** usage
