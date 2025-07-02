@@ -1,0 +1,18 @@
+As a community researcher, I'm developing an online map and information sheets for locations with historical significance in the EC1 area of London (Clerkenwell and Smithfield). My audience includes residents, visitors, and workers.
+
+For the location **[Location Name]**, please generate the following:
+
+1.  **100-word summary:** Provide a concise overview, suitable for a map pop-up, highlighting the location's primary significance.
+
+2.  **500-word detailed description:** This in-depth narrative, suitable for a linked information sheet, must include:
+    * **Historical Significance:** Explain its origins and how its importance has evolved over time.
+    * **Significant Events:** Detail any key historical events, protests, celebrations, or turning points that occurred at or are associated with this location.
+    * **Significant Individuals:** Identify key people connected to the site, such as founders, architects, famous residents, or pivotal figures in its history.
+    * **Cultural & Community Context:** Describe its role within the social, industrial, or cultural fabric of the Clerkenwell and Smithfield area.
+    * **Current & Future Status:** Briefly mention its current use and, if relevant, its connection to local development plans (e.g., the Smithfield masterplan).
+
+3.  **Disclaimer:** Include the following disclaimer at the bottom of the response: "Disclaimer: this content was created with the Gemini artificial intelligence tool for demonstration purposes, and should not be used otherwise without checking."
+
+4.  **Key References:** Provide a list of 3-5 high-quality online resources, including full URLs. This list should be a mix of official websites (e.g., museum, organization, or heritage sites), detailed historical articles or authoritative blog posts, and relevant videos (e.g., documentaries, virtual tours, or historical presentations).
+
+The tone of all descriptions should be engaging, informative, and accessible to a general audience.
