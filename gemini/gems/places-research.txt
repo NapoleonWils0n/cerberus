@@ -1,18 +1,23 @@
 As a community researcher, I'm developing an online map and information sheets for locations with historical significance in the EC1 area of London (Clerkenwell and Smithfield). My audience includes residents, visitors, and workers.
 
-For the location **[Location Name]**, please generate the following:
+For the location [Location Name], please conduct a thorough, in-depth historical research inquiry and then generate the following:
 
-1.  **100-word summary:** Provide a concise overview, suitable for a map pop-up, highlighting the location's primary significance.
+100-word summary: Provide a concise overview, suitable for a map pop-up, highlighting the location's primary significance. This summary should be based on the core findings of your deep research.
 
-2.  **500-word detailed description:** This in-depth narrative, suitable for a linked information sheet, must include:
-    * **Historical Significance:** Explain its origins and how its importance has evolved over time.
-    * **Significant Events:** Detail any key historical events, protests, celebrations, or turning points that occurred at or are associated with this location.
-    * **Significant Individuals:** Identify key people connected to the site, such as founders, architects, famous residents, or pivotal figures in its history.
-    * **Cultural & Community Context:** Describe its role within the social, industrial, or cultural fabric of the Clerkenwell and Smithfield area.
-    * **Current & Future Status:** Briefly mention its current use and, if relevant, its connection to local development plans (e.g., the Smithfield masterplan).
+500-word detailed description: This in-depth narrative, suitable for a linked information sheet, must be richly informed by your comprehensive research and include:
 
-3.  **Disclaimer:** Include the following disclaimer at the bottom of the response: "Disclaimer: this content was created with the Gemini artificial intelligence tool for demonstration purposes, and should not be used otherwise without checking."
+Historical Significance: Explain its origins and how its importance has evolved over time, drawing on specific historical facts and contexts uncovered during research.
 
-4.  **Key References:** Provide a list of 3-5 high-quality online resources, including full URLs. This list should be a mix of official websites (e.g., museum, organization, or heritage sites), detailed historical articles or authoritative blog posts, and relevant videos (e.g., documentaries, virtual tours, or historical presentations).
+Significant Events: Detail any key historical events, protests, celebrations, or turning points that occurred at or are associated with this location. Provide dates and brief context for each event, demonstrating your research.
 
-The tone of all descriptions should be engaging, informative, and accessible to a general audience.
+Significant Individuals: Identify key people connected to the site, such as founders, architects, famous residents, or pivotal figures in its history. Include their roles and why they are significant to the location.
+
+Cultural & Community Context: Describe its role within the social, industrial, or cultural fabric of the Clerkenwell and Smithfield area, illustrating how it has impacted or been impacted by the local community over time.
+
+Current & Future Status: Briefly mention its current use and, if relevant, its connection to local development plans (e.g., the Smithfield masterplan). Ensure this information is up-to-date based on your research.
+
+Disclaimer: Include the following disclaimer at the bottom of the response: "Disclaimer: this content was created with the Gemini artificial intelligence tool for demonstration purposes, and should not be used otherwise without checking."
+
+Key References: As part of this deep research process, please provide a list of 3-5 high-quality, authoritative online resources, including full URLs, that you used to gather this information. This list should be a mix of official websites (e.g., museum, organization, or heritage sites), detailed historical articles or authoritative blog posts, and relevant videos (e.g., documentaries, virtual tours, or historical presentations). Prioritize academic, heritage, or well-regarded journalistic sources.
+
+The tone of all descriptions should be engaging, informative, and accessible to a general audience. Ensure all information is factually accurate and well-supported by your deep research.
