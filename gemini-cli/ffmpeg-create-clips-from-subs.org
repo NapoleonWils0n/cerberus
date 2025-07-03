@@ -1,0 +1,74 @@
+#+STARTUP: content
+* Goal
+
+can you read the @video/trump.vtt subtitles file and then create clips for for each sentence that stops with a period using the timestamps using trim-clip script to create the clips from this video @video/trump.mp4
+
+the trim-clip script has these options
+
+#+begin_src sh
+trim-clip -s 00:00:00.000 -i input.mp4 -t 00:00:00.000 
+#+end_src
+
+the -s option is the start time
+the -i option is the file to process
+the -t option is the number of seconds after the start time
+
+the -s and -t options accept sexagesimal format including milliseconds
+trim-clip automatically create clips with the input name followed by the start time and duration followed by the file extension
+so you dont need to specify an output file name
+
+for example to create a 25 second clip starting at 1 minute the command would look like this
+
+#+begin_src sh
+trim-clip -s 00:01:00 -i input.mp4 -t 00:00:25
+#+end_src
+
+** Context
+
+- File to read: video/trump.vtt
+- File to process: video/trump.mp4
+
+** Instructions
+
+1. read the @video/trump.vtt file
+   create a list of how many sentence there are which end with a period which is how many clips you need to create
+
+2. process each sentence that ends with a period by getting the start and end timestamps from the srt file
+
+3. take the start time and add it to the -s option of the trim-clip script followed,
+   by the -i option and the filw we are processing.
+
+then take the start time and the end time of the sentence and use it with the sexagesimal-time script by passing the start time with the -s option and the end time wth the -e option
+
+like this
+
+#+begin_src sh
+sexagesimal-time -s 00:00:02.360 -e 00:00:04.260
+#+end_src
+
+this will give you the duration for the clip, for example
+
+#+begin_example
+00:00:01.9
+#+end_example
+
+take the duration from the sexagesimal-time script
+add that to the -t option of the trim-clip script
+
+for example to create a clip with a starting point of
+
+#+begin_example
+00:00:02.360
+#+end_example
+
+and a duration of
+
+#+begin_example
+00:00:01.9
+#+end_example
+
+we would use the following trim-clip command
+
+#+begin_src sh
+trim-clip -s 00:00:02.360 -i trump.mp4 -t 00:00:01.9
+#+end_src
