@@ -225,8 +225,8 @@ wget -c https://huggingface.co/IndexTeam/IndexTTS-1.5/resolve/main/config.yaml -
 indextts "hello this is index-tts" \
 --device cuda \
 --voice ~/Desktop/input.wav \
---model_dir checkpoints \
---config checkpoints/config.yaml \
+--model_dir ~/nix/index-tts/index-tts/checkpoints \
+--config ~/nix/index-tts/index-tts/checkpoints/config.yaml \
 --output ~/Desktop/output.wav
 #+end_src
 
