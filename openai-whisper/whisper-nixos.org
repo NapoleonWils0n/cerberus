@@ -67,6 +67,14 @@ pkgs.mkShell rec {
 nix develop
 #+end_src
 
+update
+
+#+begin_src sh
+nix flake update
+#+end_src
+
+flake.nix
+
 #+begin_src nix
 {
   description = "A development shell for OpenAI Whisper with CUDA support.";
