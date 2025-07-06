@@ -1,5 +1,5 @@
 #+STARTUP: content
-* flake pin package with overlay
+* flake pin package
 ** resources
 
 [[https://nixos-and-flakes.thiscute.world/nixos-with-flakes/downgrade-or-upgrade-packages]]
