@@ -1,0 +1,16 @@
+#+STARTUP: content
+* ardour nixos
+** vst path
+
+open the Windows menu and the plugin manager
+
+in the plugin manager window
+
+click the vst3 path which will open the file browser
+make sure who hidden files is enabled by pressing control h
+
+replace djwilcox with your username
+
+#+begin_example
+/home/djwilcox/.nix-profile/lib/vst3
+#+end_example
