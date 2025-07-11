@@ -128,7 +128,7 @@ nix flake update
 ** whisperx usage
 
 #+begin_src sh
-whisperx input.wav --device cuda --model small --diarize --highlight_words True
+whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en
 #+end_src
 
 ** whisperx json
