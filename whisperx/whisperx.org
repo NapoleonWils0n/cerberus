@@ -131,6 +131,14 @@ nix flake update
 whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en
 #+end_src
 
+** whisperx speakers
+
+specify 3 speakers
+
+#+begin_src sh
+whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en --min_speakers 3 --max_speakers 3
+#+end_src
+
 ** whisperx json
 
 #+begin_src sh
