@@ -25,12 +25,12 @@ trim-clip -s 00:01:00 -i input.mp4 -t 00:00:25
 
 ** Context
 
-- File to read: video/trump.vtt
-- File to process: video/trump.mp4
+- File to read: video/input.vtt
+- File to process: video/input.mp4
 
 ** Instructions
 
-1. read the @video/trump.vtt file
+1. read the @video/input.vtt file
    create a list of how many sentence there are which end with a period which is how many clips you need to create
 
 2. process each sentence that ends with a period by getting the start and end timestamps from the srt file
@@ -70,5 +70,5 @@ and a duration of
 we would use the following trim-clip command
 
 #+begin_src sh
-trim-clip -s 00:00:02.360 -i trump.mp4 -t 00:00:01.9
+trim-clip -s 00:00:02.360 -i input.mp4 -t 00:00:01.9
 #+end_src
