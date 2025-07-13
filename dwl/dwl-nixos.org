@@ -1,0 +1,630 @@
+#+STARTUP: content
+* dwl nixos
+** dwl
+
+make sure to create the dwl directory in the same directory as the configuration.nix file
+
+#+begin_src sh
+mkdir -p dwl
+#+end_src
+
+and copy the config.h and movestack.patch into it
+
+*** config.h
+
+#+begin_src c
+/* Taken from https://github.com/djpohly/dwl/issues/466 */
+#define COLOR(hex)    { ((hex >> 24) & 0xFF) / 255.0f, \
+                        ((hex >> 16) & 0xFF) / 255.0f, \
+                        ((hex >> 8) & 0xFF) / 255.0f, \
+                        (hex & 0xFF) / 255.0f }
+/* appearance */
+static const int sloppyfocus               = 1;  /* focus follows mouse */
+static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
+static const unsigned int borderpx         = 1;  /* border pixel of windows */
+static const float rootcolor[]             = COLOR(0x222222ff);
+static const float bordercolor[]           = COLOR(0x444444ff);
+static const float focuscolor[]            = COLOR(0x005577ff);
+static const float urgentcolor[]           = COLOR(0xff0000ff);
+/* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
+static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
+
+/* tagging - TAGCOUNT must be no greater than 31 */
+#define TAGCOUNT (9)
+
+/* logging */
+static int log_level = WLR_ERROR;
+
+/* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
+static const Rule rules[] = {
+	/* app_id             title       tags mask     isfloating   monitor */
+	/* examples: */
+	{ "mpv",  NULL,           0,       1,           0 },
+};
+
+/* layout(s) */
+static const Layout layouts[] = {
+	/* symbol     arrange function */
+	{ "[]=",      tile },
+	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "[M]",      monocle },
+};
+
+/* monitors */
+/* (x=-1, y=-1) is reserved as an "autoconfigure" monitor position indicator
+ * WARNING: negative values other than (-1, -1) cause problems with Xwayland clients
+ * https://gitlab.freedesktop.org/xorg/xserver/-/issues/899
+*/
+/* NOTE: ALWAYS add a fallback rule, even if you are completely sure it won't be used */
+static const MonitorRule monrules[] = {
+	/* name       mfact  nmaster scale layout       rotate/reflect                x    y */
+	/* example of a HiDPI laptop monitor:
+	{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	*/
+	/* defaults */
+	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+};
+
+/* keyboard */
+static const struct xkb_rule_names xkb_rules = {
+	/* can specify fields: rules, model, layout, variant, options */
+	/* example:
+	.options = "ctrl:nocaps",
+	*/
+	.layout = "gb",
+	.model = "104",
+	.options = "ctrl:swap_lalt_lctl,custom:swap_sterling_numbersign,caps:none",
+	.rules = "evdev",
+	.variant = "mac",
+};
+
+static const int repeat_rate = 25;
+static const int repeat_delay = 600;
+
+/* Trackpad */
+static const int tap_to_click = 1;
+static const int tap_and_drag = 1;
+static const int drag_lock = 1;
+static const int natural_scrolling = 0;
+static const int disable_while_typing = 1;
+static const int left_handed = 0;
+static const int middle_button_emulation = 0;
+/* You can choose between:
+LIBINPUT_CONFIG_SCROLL_NO_SCROLL
+LIBINPUT_CONFIG_SCROLL_2FG
+LIBINPUT_CONFIG_SCROLL_EDGE
+LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN
+*/
+static const enum libinput_config_scroll_method scroll_method = LIBINPUT_CONFIG_SCROLL_2FG;
+
+/* You can choose between:
+LIBINPUT_CONFIG_CLICK_METHOD_NONE
+LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS
+LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER
+*/
+static const enum libinput_config_click_method click_method = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
+
+/* You can choose between:
+LIBINPUT_CONFIG_SEND_EVENTS_ENABLED
+LIBINPUT_CONFIG_SEND_EVENTS_DISABLED
+LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE
+*/
+static const uint32_t send_events_mode = LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
+
+/* You can choose between:
+LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT
+LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE
+*/
+static const enum libinput_config_accel_profile accel_profile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
+static const double accel_speed = 1.0;
+
+/* You can choose between:
+LIBINPUT_CONFIG_TAP_MAP_LRM -- 1/2/3 finger tap maps to left/right/middle
+LIBINPUT_CONFIG_TAP_MAP_LMR -- 1/2/3 finger tap maps to left/middle/right
+*/
+static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TAP_MAP_LRM;
+
+/* If you want to use the windows key for MODKEY, use WLR_MODIFIER_LOGO */
+#define MODKEY WLR_MODIFIER_LOGO
+
+#define TAGKEYS(KEY,SKEY,TAG) \
+	{ MODKEY,                    KEY,            view,            {.ui = 1 << TAG} }, \
+	{ MODKEY|WLR_MODIFIER_CTRL,  KEY,            toggleview,      {.ui = 1 << TAG} }, \
+	{ MODKEY|WLR_MODIFIER_SHIFT, SKEY,           tag,             {.ui = 1 << TAG} }, \
+	{ MODKEY|WLR_MODIFIER_CTRL|WLR_MODIFIER_SHIFT,SKEY,toggletag, {.ui = 1 << TAG} }
+
+/* helper for spawning shell commands in the pre dwm-5.0 fashion */
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
+/* commands */
+static const char *termcmd[] = { "alacritty", NULL };
+static const char *menucmd[] = { "tofi-drun", NULL };
+static const char *volumeup[]      = { "wpctl",   "set-volume @DEFAULT_AUDIO_SINK@ 5%+",  NULL };
+static const char *volumedown[]    = { "wpctl",   "set-volume @DEFAULT_AUDIO_SINK@ 5%-",  NULL };
+static const char *mutevolume[]    = { "wpctl",   "set-mute @DEFAULT_AUDIO_SINK@ toggle",        NULL };
+static const char *cursorleft[]    = { "wlrctl",   "pointer",  "move", "-1920",     NULL };
+static const char *cursorright[]    = { "wlrctl",   "pointer", "move", "1920",        NULL };
+static const char *wlrwhichkey[]    = { "wlr-which-key",  NULL };
+
+static const Key keys[] = {
+	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
+	/* modifier                  key                 function        argument */
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
+	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
+	{ MODKEY,                    XKB_KEY_z,          spawn,          {.v = wlrwhichkey} },
+	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,     spawn,          SHCMD("emacsclient -a= -c") },
+	{ MODKEY|WLR_MODIFIER_ALT,  XKB_KEY_space,       spawn,          SHCMD("playerctl play-pause") },
+	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
+	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,          movestack,      {.i = +1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          movestack,      {.i = -1} },
+	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
+	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
+	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
+	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
+	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
+	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
+	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
+	{ MODKEY,                    XKB_KEY_s,         togglefullscreen, {0} },
+	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_period,     focusmon,       {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY,                    XKB_KEY_comma,      spawn,          {.v = cursorleft} },
+	{ MODKEY,                    XKB_KEY_period,     spawn,          {.v = cursorright} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,       tagmon,         {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,    tagmon,         {.i = WLR_DIRECTION_RIGHT} },
+	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
+	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
+	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
+	TAGKEYS(          XKB_KEY_4, XKB_KEY_dollar,                     3),
+	TAGKEYS(          XKB_KEY_5, XKB_KEY_percent,                    4),
+	TAGKEYS(          XKB_KEY_6, XKB_KEY_asciicircum,                5),
+	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
+	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
+	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
+
+	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
+	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
+	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
+	 * do not remove them.
+	 */
+#define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
+	CHVT(1), CHVT(2), CHVT(3), CHVT(4), CHVT(5), CHVT(6),
+	CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
+};
+
+static const Button buttons[] = {
+	{ MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
+	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
+	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+};
+
+#+end_src
+
+*** movestack.patch
+
+#+begin_src sh
+From b051f50233033b399db324b29ab24227257ac141 Mon Sep 17 00:00:00 2001
+From: wochap <gean.marroquin@gmail.com>
+Date: Tue, 5 Mar 2024 23:31:51 -0500
+Subject: [PATCH] apply NikitaIvanovV movestack patch
+
+source: https://github.com/djpohly/dwl/wiki/movestack
+---
+ config.def.h |  2 ++
+ dwl.c        | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/config.def.h b/config.def.h
+index db0babc..778a0dc 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -122,6 +122,8 @@ static const Key keys[] = {
+ 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+ 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
+ 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
++	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,          movestack,      {.i = +1} },
++	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          movestack,      {.i = -1} },
+ 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
+ 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
+ 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05} },
+diff --git a/dwl.c b/dwl.c
+index ef27a1d..69b9756 100644
+--- a/dwl.c
++++ b/dwl.c
+@@ -279,6 +279,7 @@ static void maplayersurfacenotify(struct wl_listener *listener, void *data);
+ static void mapnotify(struct wl_listener *listener, void *data);
+ static void maximizenotify(struct wl_listener *listener, void *data);
+ static void monocle(Monitor *m);
++static void movestack(const Arg *arg);
+ static void motionabsolute(struct wl_listener *listener, void *data);
+ static void motionnotify(uint32_t time);
+ static void motionrelative(struct wl_listener *listener, void *data);
+@@ -1603,6 +1604,40 @@ monocle(Monitor *m)
+ 		wlr_scene_node_raise_to_top(&c->scene->node);
+ }
+ 
++void
++movestack(const Arg *arg)
++{
++    Client *c, *sel = focustop(selmon);
++
++    if (!sel) {
++        return;
++    }
++
++    if (wl_list_length(&clients) <= 1) {
++        return;
++    }
++
++    if (arg->i > 0) {
++        wl_list_for_each(c, &sel->link, link) {
++            if (VISIBLEON(c, selmon) || &c->link == &clients) {
++                break; /* found it */
++            }
++        }
++    } else {
++        wl_list_for_each_reverse(c, &sel->link, link) {
++            if (VISIBLEON(c, selmon) || &c->link == &clients) {
++                break; /* found it */
++            }
++        }
++        /* backup one client */
++        c = wl_container_of(c->link.prev, c, link);
++    }
++
++    wl_list_remove(&sel->link);
++    wl_list_insert(&c->link, &sel->link);
++    arrange(selmon);
++}
++
+ void
+ motionabsolute(struct wl_listener *listener, void *data)
+ {
+-- 
+2.42.0
+
+#+end_src
+
+** nix
+*** configuration.nix
+
+#+begin_src nix
+# Edit this configuration file to define what should be installed on
+# your system. Help is available in the configuration.nix(5) man page, on
+# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+
+{ config, lib, pkgs, ... }:
+
+let
+  # 1. Define your customized dwl package
+  myCustomDwlPackage = (pkgs.dwl.override {
+    configH = ./dwl/config.h;
+  }).overrideAttrs (oldAttrs: {
+    patches = (oldAttrs.patches or []) ++ [
+      ./dwl/movestack.patch # Using the direct path for the patch
+    ];
+    # Add any necessary buildInputs if your config.h or patches require them
+    # For a bar, you might need fcft for font rendering.
+    buildInputs = oldAttrs.buildInputs or [] ++ [ pkgs.libdrm pkgs.fcft ];
+  });
+
+  # 2. Create a wrapper script that launches dwl with dwlb as the status bar
+  dwlWithDwlbWrapper = pkgs.writeScriptBin "dwl-with-dwlb" ''
+    #!/bin/sh
+    # Execute your customized dwl, passing the status bar command and any arguments received
+    exec ${lib.getExe myCustomDwlPackage} -s "${pkgs.dwlb}/bin/dwlb -font \"monospace:size=16\"" "$@"
+  '';
+in
+
+{
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+    ];
+
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.tmp.cleanOnBoot = true;
+
+  # zfs
+  systemd.services.zfs-mount.enable = false;
+  networking.hostId = "ad26d962";
+
+  # console keymap
+  console.keyMap = "us";
+  nixpkgs.config.allowUnfree = true;
+
+  # networking
+  networking.hostName = "pollux"; # Define your hostname.
+  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+
+  # Set your time zone.
+  time.timeZone = "Europe/London";
+
+#  # system auto upgrade
+#  system.autoUpgrade = {
+#      enable = true;
+#      dates = "daily";
+#      allowReboot = false;
+#  };
+
+  # nix garbage collection
+  nix = {
+    settings.auto-optimise-store = true;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_GB.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_GB.UTF-8";
+    LC_IDENTIFICATION = "en_GB.UTF-8";
+    LC_MEASUREMENT = "en_GB.UTF-8";
+    LC_MONETARY = "en_GB.UTF-8";
+    LC_NAME = "en_GB.UTF-8";
+    LC_NUMERIC = "en_GB.UTF-8";
+    LC_PAPER = "en_GB.UTF-8";
+    LC_TELEPHONE = "en_GB.UTF-8";
+    LC_TIME = "en_GB.UTF-8";
+  };
+
+  # nix flakes
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Enable the X11 windowing system.
+  services = { 
+    xserver = { 
+    enable = true;
+
+    videoDrivers = [ "nvidia" ];
+
+    # xkb
+    xkb = {
+      layout = "gb";
+      variant = "mac";
+      };
+    };
+
+    # gnome
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
+    
+    zfs.autoScrub.enable = true;
+    znapzend = {
+      enable = true;
+      autoCreation = true;
+      pure = true;
+      zetup = {
+          "zpool/home" = {
+            recursive = true;
+            mbuffer.enable = true;
+            plan = "1h=>1h,1d=>1h,1w=>1d,1m=>1w"; # Take snapshots every hour
+          };
+        };
+      };
+
+    fwupd.enable = true;
+    thermald.enable = true;
+    openssh.enable = true;
+    printing.enable = false;
+    libinput.enable = true;
+
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      jack.enable = true;
+   };
+
+    # gnome
+    gnome = {
+      localsearch.enable = false;
+    };
+};
+
+
+hardware = {
+  nvidia.open = false;
+  graphics ={
+    enable = true;
+    extraPackages = with pkgs; [
+      vaapiIntel
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
+};
+  
+
+
+# users
+users.mutableUsers = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+users.users.djwilcox = {
+    isNormalUser = true;
+    extraGroups = [ "wheel networkmanager audio video" ]; # Enable ‘sudo’ for the user.
+};
+
+programs = {
+  # dwl
+  dwl = {
+    enable = true;
+    # Tell the dwl module to use our wrapper script as the dwl executable
+    package = dwlWithDwlbWrapper;
+  };
+
+  zsh = {
+    enable = true;
+    enableCompletion = true;
+    syntaxHighlighting.enable = true;
+  };
+  dconf.enable = true;
+  #ssh.startAgent = true;
+
+
+  mtr.enable = true;
+  gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+};
+
+users.users.djwilcox.shell = pkgs.zsh;
+#enviroment.pathsToLink = [ "/share/zsh" ];
+#enviroment.shells = with pkgs; [ zsh ];
+
+security.sudo.enable = true;
+
+# rtkit for audio
+security.rtkit.enable = true;
+
+# pam setting for audio
+security.pam.loginLimits = [
+  { domain = "@audio"; item = "memlock"; type = "-"; value = "unlimited"; }
+  { domain = "@audio"; item = "rtprio"; type = "-"; value = "99"; }
+  { domain = "@audio"; item = "nofile"; type = "soft"; value = "99999"; }
+  { domain = "@audio"; item = "nofile"; type = "hard"; value = "99999"; }
+];
+
+
+# doas
+security.doas = {
+  enable = true;
+  extraConfig = ''
+    # allow user
+    permit keepenv setenv { PATH } djwilcox
+    
+    # allow root to switch to our user
+    permit nopass keepenv setenv { PATH } root as djwilcox
+
+    # nopass
+    permit nopass keepenv setenv { PATH } djwilcox
+
+    # nixos-rebuild switch
+    permit nopass keepenv setenv { PATH } djwilcox cmd nixos-rebuild
+    
+    # root as root
+    permit nopass keepenv setenv { PATH } root as root
+  '';
+};
+
+  # gnome remove packages
+  environment.gnome.excludePackages = (with pkgs; [
+    gnome-photos
+    gnome-tour
+    gnome-text-editor
+  ]) ++ (with pkgs; [
+    cheese # webcam tool
+    gnome-calendar
+    gnome-contacts
+    gnome-clocks
+    gnome-music
+    gnome-maps
+    epiphany # web browser
+    geary # email reader
+    gnome-characters
+    gnome-weather
+    simple-scan
+    totem # video player
+  ]);
+
+  # List packages installed in system profile. To search, run:
+  # The programs.dwl module creates its own dwl.desktop,
+  # which will now correctly launch our wrapper script.
+  environment.systemPackages = with pkgs; lib.filter (p: ! (lib.hasAttr "providedSessions" p && p.providedSessions == [ "dwl" ])) [
+  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+
+  #dwl
+  dwlb 
+  tofi
+  wlrctl
+  wlr-which-key
+];
+
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
+
+  # Open ports in the firewall.
+  networking.firewall.allowedTCPPorts = [ 6881 ];
+  networking.firewall.allowedUDPPorts = [ 6882 ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # Copy the NixOS configuration file and link it from the resulting system
+  # (/run/current-system/configuration.nix). This is useful in case you
+  # accidentally delete configuration.nix.
+  #system.copySystemConfiguration = true;
+
+  # This option defines the first version of NixOS you have installed on this particular machine,
+  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
+  #
+  # Most users should NEVER change this value after the initial install, for any reason,
+  # even if you've upgraded your system to a new NixOS release.
+  #
+  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
+  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
+  # to actually do that.
+  #
+  # This value being lower than the current NixOS release does NOT mean your system is
+  # out of date, out of support, or vulnerable.
+  #
+  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
+  # and migrated your data accordingly.
+  #
+  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+  system.stateVersion = "25.05"; # Did you read the comment?
+
+}
+#+end_src
+
+*** flake.nix
+
+#+begin_src nix
+# your-flake-root/flake.nix
+{
+  description = "NixOS configuration for Dell XPS 15 2019";
+
+  inputs = {
+    # NixOS official package source, pinned to the nixos-unstable
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs,... }@inputs: {
+    # Define a NixOS system configuration
+    # host name set to pollux, change the hostname for your system
+    nixosConfigurations.pollux = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux"; # Specify the system architecture
+      specialArgs = { inherit inputs; }; # Pass the 'inputs' attribute set to modules
+      modules = [
+        # Import your existing configuration files
+        ./configuration.nix
+      ];
+    };
+  };
+}
+#+end_src
+
