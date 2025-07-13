@@ -321,10 +321,10 @@ let
 
   # 2. Create a wrapper script that launches dwl with dwlb as the status bar
   dwlWithDwlbWrapper = pkgs.writeScriptBin "dwl-with-dwlb" ''
-    #!/bin/sh
-    # Execute your customized dwl, passing the status bar command and any arguments received
-    exec ${lib.getExe myCustomDwlPackage} -s "${pkgs.dwlb}/bin/dwlb -font \"monospace:size=16\"" "$@"
-  '';
+      #!/bin/sh
+      # Execute dbus-run-session, which then launches your customized dwl with its arguments
+      exec ${pkgs.dbus}/bin/dbus-run-session ${lib.getExe myCustomDwlPackage} -s "${pkgs.dwlb}/bin/dwlb -font \"monospace:size=16\"" "$@"
+    '';
 in
 
 {
@@ -387,6 +387,13 @@ in
 
   # nix flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # --- XDG Desktop Portal Configuration for Wayland ---
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true; # Recommended for better portal integration
+    wlr.enable = true;       # This is the crucial part for wlroots compositors
+  };
 
   # Enable the X11 windowing system.
   services = { 
@@ -555,9 +562,7 @@ security.doas = {
 
   #dwl
   dwlb 
-  tofi
-  wlrctl
-  wlr-which-key
+  xdg-desktop-portal-wlr
 ];
 
   # Some programs need SUID wrappers, can be configured further or are
