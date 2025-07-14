@@ -142,8 +142,8 @@ static const char *menucmd[] = { "tofi-drun", NULL };
 static const char *volumeup[]      = { "wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@", "5%+",  NULL };
 static const char *volumedown[]    = { "wpctl",   "set-volume",  "@DEFAULT_AUDIO_SINK@", "5%-",  NULL };
 static const char *mutevolume[]    = { "wpctl",   "set-mute",  "@DEFAULT_AUDIO_SINK@",  "toggle",  NULL };
-static const char *cursorleft[]    = { "wlrctl",   "pointer",  "move", "-1920",     NULL };
-static const char *cursorright[]    = { "wlrctl",   "pointer", "move", "1920",        NULL };
+static const char *cursorleft[]    = { "/home/djwilcox/bin/warp-cursor",   "-i",  "left",     NULL };
+static const char *cursorright[]    = { "/home/djwilcox/bin/warp-cursor",   "-i", "right",        NULL };
 static const char *wlrwhichkey[]    = { "wlr-which-key",  NULL };
 
 static const Key keys[] = {
@@ -292,6 +292,93 @@ index ef27a1d..69b9756 100644
  {
 -- 
 2.42.0
+
+#+end_src
+
+** warp-cursor script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# warp-cursor
+# warp cursor left and right
+#===============================================================================
+
+# dependencies:
+# wlrctl
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i left|right)
+-i left|right"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# warp cursor left
+left () {
+  wlrctl pointer move -1920 && wlrctl pointer click
+}
+
+# warp cursor right
+right () {
+  wlrctl pointer move 1920 && wlrctl pointer click
+}
+
+
+#===============================================================================
+# warp cursor left or right
+#===============================================================================
+
+case "${input}" in
+    left) left;; 
+    right) right;;
+    ,*) usage;;
+esac
 
 #+end_src
 
