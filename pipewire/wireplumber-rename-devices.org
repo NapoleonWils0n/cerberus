@@ -1,0 +1,88 @@
+#+STARTUP: content
+* wireplumber rename devices
+** resources
+
+[[https://wiki.archlinux.org/title/WirePlumber]]
+
+** wireplumber
+
+create the wireplumber config directory structure
+
+#+begin_src sh
+mkdir -p ~/.config/wireplumber/wireplumber.conf.d
+#+end_src
+
+*** get the device id
+
+#+begin_src sh
+pw-cli list-objects Node
+#+end_src
+
+*** config file
+
+#+begin_src sh
+vi ~/.config/wireplumber/wireplumber.conf.d/device-rename.conf
+#+end_src
+
+device-rename.conf
+
+#+begin_src sh
+monitor.alsa.rules = [
+  {
+    matches = [
+      {
+        object.path = "alsa:acp:PCH:6:playback"
+      }
+    ]
+    actions = {
+      update-props = {
+        node.description = "laptop"
+      }
+    }
+  },
+  {
+    matches = [
+      {
+        object.path = "alsa:acp:PCH:0:capture"
+      }
+    ]
+    actions = {
+      update-props = {
+        node.description = "mic"
+      }
+    }
+  },
+  {
+    matches = [
+      {
+        object.path = "alsa:acp:SoundSticks:1:playback"
+      }
+    ]
+    actions = {
+      update-props = {
+        node.description = "speakers"
+      }
+    }
+  },
+  {
+    matches = [
+      {
+        object.path = "alsa:acp:Snowball:0:capture"
+      }
+    ]
+    actions = {
+      update-props = {
+        node.description = "yeti"
+      }
+    }
+  }
+]
+#+end_src
+
+*** wireplumber restart
+
+#+begin_src sh
+systemctl --user restart wireplumber.service
+#+end_src
+
+
