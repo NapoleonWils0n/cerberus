@@ -85,4 +85,145 @@ monitor.alsa.rules = [
 systemctl --user restart wireplumber.service
 #+end_src
 
+** audio-switcher script
 
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# audio-switcher
+# switch audio input and ouput devices
+#===============================================================================
+
+# dependencies:
+# wpctl
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i mic|yeti -o laptop|soundsticks"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -ne 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     o) output="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# Helper function to get the device ID
+get_device_id() {
+  local device_type="$1" # "Sinks" or "Sources"
+  local device_name="$2"
+  local end_section="$3" # e.g., "Sources", "Filters", or "Streams"
+
+  # Use double quotes for the awk script to allow shell variable expansion
+  # Escape awk's own variables like $0 with a backslash
+  wpctl status | awk "
+    /${device_type}:/ { in_section = 1; next }
+    /${end_section}:/ { in_section = 0 }
+    in_section && \$0 ~ /${device_name}/ {
+      match(\$0, /[0-9]+/);
+      print substr(\$0, RSTART, RLENGTH);
+      exit;
+    }
+  "
+}
+#===============================================================================
+# audio source - input
+#===============================================================================
+
+audiosource () {
+  local id=$(get_device_id "Sources" "${1}" "Filters") # Use "Filters" as the common end boundary for Sources
+  if [ -z "${id}" ]; then
+    echo "Error: Could not find ID for source '${1}'." >&2
+    return 1 # Indicate failure
+  fi
+  wpctl set-default-source "${id}"
+  # Check if wpctl command was successful
+  if [ $? -ne 0 ]; then
+      echo "Error: Failed to set default source to '${1}' (ID: ${id})." >&2
+      return 1
+  fi
+}
+
+
+#===============================================================================
+# audio sink - output
+#===============================================================================
+
+audiosink () {
+  local id=$(get_device_id "Sinks" "${1}" "Sources") # Use "Sources" as the common end boundary for Sinks
+  if [ -z "${id}" ]; then
+    echo "Error: Could not find ID for sink '${1}'." >&2
+    return 1 # Indicate failure
+  fi
+  wpctl set-default "${id}"
+  # Check if wpctl command was successful
+  if [ $? -ne 0 ]; then
+      echo "Error: Failed to set default sink to '${1}' (ID: ${id})." >&2
+      return 1
+  fi
+}
+
+
+#===============================================================================
+# Main logic to call audiosource/audiosink based on arguments
+#===============================================================================
+
+if [ -n "${input}" ]; then
+    case "${input}" in
+        mic) audiosource mic;;
+        yeti) audiosource yeti;;
+        *) usage "Invalid input device: ${input}";;
+    esac
+fi
+
+if [ -n "${output}" ]; then
+    case "${output}" in
+        laptop) audiosink laptop;;
+        speakers) audiosink speakers;;
+        *) usage "Invalid output device: ${output}";;
+    esac
+fi
+
+#+end_src
