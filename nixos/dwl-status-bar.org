@@ -1,0 +1,114 @@
+#+STARTUP: content
+* dwl status bar
+** status-bar script
+
+create the status-bar script
+
+#+begin_src sh
+vi ~/bin/status-bar
+#+end_src
+
+with the following content
+
+and then make the script executable
+
+#+begin_src sh
+chmod +x ~/bin/status-bar
+#+end_src
+
+#+begin_src sh
+#!/bin/sh
+
+# Explicitly set PATH to include common NixOS binary paths.
+export PATH="/home/djwilcox/.nix-profile/bin:/run/current-system/sw/bin:${PATH}"
+
+if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
+    echo "$(date): Running in Gnome session. Exiting status-bar script." >> "/tmp/status-bar-debug.log"
+    exit 0
+fi
+
+# --- Configuration ---
+POLL_INTERVAL=1 # seconds
+# TIME_UPDATE_FREQ=60 # No longer strictly needed for time, but keep if other elements need less frequent updates
+
+# --- Initial Status Values ---
+CURRENT_TIME="" # Will be updated in the loop
+CURRENT_VOLUME=""
+VOLUME_ICON="🔊"
+# LAST_TIME_UPDATE=$(date +%s) # No longer needed for time updates at every poll
+
+# --- Function to update volume ---
+update_volume() {
+    if ! command -v wpctl > /dev/null; then
+        CURRENT_VOLUME="wpctl N/A"
+        VOLUME_ICON="❓"
+        return
+    fi
+    VOLUME_RAW=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '/Volume:/ { printf("%s", $2) }')
+    IS_MUTED=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '/Volume:/ { print $3 }')
+    local calculated_percentage="N/A"
+    if [ -n "$VOLUME_RAW" ]; then
+        calculated_percentage=$(printf "%.0f" "$(echo "$VOLUME_RAW * 100" | bc -l 2>/dev/null)")
+    fi
+    if [ "$IS_MUTED" = "[MUTED]" ]; then
+        VOLUME_ICON="🔇"
+    else
+        VOLUME_ICON="🔊"
+    fi
+    CURRENT_VOLUME="${calculated_percentage}%"
+}
+
+# --- Function to display the bar content ---
+display_bar() {
+    echo "${VOLUME_ICON}${CURRENT_VOLUME} | ${CURRENT_TIME}"
+}
+
+# --- Main Logic ---
+# Initial updates (optional, will be updated in loop anyway)
+update_volume
+# CURRENT_TIME=$(date +"%R") # This line will now be inside the loop for constant updates
+
+# Main loop, piping its output directly to dwlb
+while true; do
+    update_volume
+    # Always update the time with every poll
+    CURRENT_TIME=$(date +"%R") # <--- MOVED THIS LINE HERE
+
+    display_bar
+    sleep "$POLL_INTERVAL"
+done | dwlb -font "monospace:size=16" -status-stdin all
+#+end_src
+
+** status-bar.service
+
+create the status-bar.service file
+
+#+begin_src sh
+vi ~/.config/systemd/user/status-bar.service
+#+end_src
+
+with the following code
+
+#+begin_src sh
+[Unit]
+Description=dwl Custom Status Bar Feeder
+After=graphical-session.target
+BindsTo=graphical-session.target
+
+[Service]
+ExecStart=/home/djwilcox/bin/status-bar
+Restart=on-failure
+RestartSec=5
+Type=simple
+
+[Install]
+WantedBy=graphical-session.target
+#+end_src
+
+** systemd reload
+
+#+begin_src sh
+systemctl --user daemon-reload 
+systemctl --user enable status-bar.service 
+systemctl --user start status-bar.service 
+#+end_src
