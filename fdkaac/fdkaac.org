@@ -1,6 +1,13 @@
 #+STARTUP: showall
-* fdkaac convert wav to m4a
+* fdkaac 
+** convert wav to m4a
 
 #+begin_src sh
 fdkaac -m 5 -w 18000 -o output.m4a input.wav
+#+end_src
+
+** pipe a file into fdkaac
+
+#+begin_src sh
+ffmpeg -i input.wav -vn -f caf - | fdkaac -m 5 -w 18000 -o output.aac -
 #+end_src
