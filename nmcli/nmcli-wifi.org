@@ -1,0 +1,51 @@
+#+STARTUP: content
+* nmcli
+** device
+
+#+begin_src sh
+nmcli device
+#+end_src
+
+** connection
+
+#+begin_src sh
+nmcli connection
+#+end_src
+
+** radio
+
+Displaying radio switches status
+
+#+begin_src sh
+nmcli radio
+#+end_src
+
+*** wifi toggle radio switch
+
+Turn off or on wifi radio switch
+
+turn wifi off
+
+#+begin_src sh
+nmcli wifi off
+#+end_src
+
+turn wifo on
+
+#+begin_src sh
+nmcli wifi on
+#+end_src
+
+*** list networks
+
+#+begin_src sh
+nmcli device wifi list
+#+end_src
+
+*** connect to wifi network
+
+replace network-name with the name of the wifi network and password with the password
+
+#+begin_src sh
+nmcli device wifi connect network-name password 
+#+end_src
