@@ -1,0 +1,31 @@
+#+STARTUP: content
+* backlight command
+** brightness macbook
+
+full
+
+#+begin_src sh
+doas sh -c 'echo 255 > /sys/class/leds/smc::kbd_backlight/brightness'
+#+end_src
+
+
+none
+
+#+begin_src sh
+doas sh -c 'echo 0 > /sys/class/leds/smc::kbd_backlight/brightness'
+#+end_src
+
+** brightness dell
+
+full
+
+#+begin_src sh
+doas sh -c 'echo 255 > /sys/class/leds/dell::kbd_backlight/brightness'
+#+end_src
+
+
+none
+
+#+begin_src sh
+doas sh -c 'echo 0 > /sys/class/leds/dell::kbd_backlight/brightness'
+#+end_src
