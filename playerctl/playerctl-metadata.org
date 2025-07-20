@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* playerctl metadata
+
+#+begin_src sh
+playerctl metadata -f "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}"
+#+end_src
