@@ -19,9 +19,6 @@
 ;; playerctl format
 (setq doom-modeline-now-playing-playerctl-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}")
 
-;; ignored player set to empty
-(setq doom-modeline-now-playing-playerctl-ignored-players '(""))
-
 ;; modeline
 (with-eval-after-load 'doom-modeline-now-playing
 (doom-modeline-def-segment now-playing
