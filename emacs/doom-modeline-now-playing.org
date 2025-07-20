@@ -8,6 +8,7 @@
 
 ;; now playing
 (require 'doom-modeline-now-playing)
+(setq doom-modeline-now-playing t)
 
 ;; max length
 (setq doom-modeline-now-playing-max-length 35)
@@ -15,44 +16,57 @@
 ;; update interval 1 second
 (setq doom-modeline-now-playing-interval 1)
 
-;; ignored players
-(setq doom-modeline-now-playing-ignored-players '("firefox"))
-
 ;; playerctl format
-(setq doom-modeline-now-playing-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}")
+(setq doom-modeline-now-playing-playerctl-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}")
 
-(doom-modeline-def-modeline 'main
-'(bar matches buffer-info remote-host buffer-position parrot selection-info now-playing)
-'(misc-info minor-modes input-method buffer-encoding major-mode process vcs check time))
+;; ignored player set to empty
+(setq doom-modeline-now-playing-playerctl-ignored-players '(""))
 
 ;; modeline
 (with-eval-after-load 'doom-modeline-now-playing
 (doom-modeline-def-segment now-playing
-  "Current status of playerctl. Configurable via
-variables for update interval, output format, etc."
+  "Display current media playback status."
   (when (and doom-modeline-now-playing
-             (doom-modeline--active)
-             doom-modeline-now-playing-status
-             (not (string= (now-playing-status-player doom-modeline-now-playing-status) "No players found")))
-    (let ((player (now-playing-status-player doom-modeline-now-playing-status))
-          (status (now-playing-status-status doom-modeline-now-playing-status))
-          (text   (now-playing-status-text   doom-modeline-now-playing-status)))
-      (concat
-       (propertize (if (equal status "playing")
-                       (doom-modeline-icon 'faicon "nf-fa-circle_play" "" ">"
-                                           :v-adjust -0)
-                     (doom-modeline-icon 'faicon "nf-fa-circle_pause" "" "||"
-                                         :v-adjust -0))
-                   'mouse-face 'mode-line-highlight
-                   'help-echo "mouse-1: Toggle player status"
-                   'local-map (let ((map (make-sparse-keymap)))
-                                (define-key map [mode-line mouse-1] 'doom-modeline-now-playing-toggle-status)
-                                map))
-       (doom-modeline-spc)
-       (propertize
-        (truncate-string-to-width text doom-modeline-now-playing-max-length nil nil "...")
-        'face 'doom-modeline-now-playing-text))))))
+             doom-modeline-now-playing-status)
+    (let ((player (oref doom-modeline-now-playing-status player))
+          (status (oref doom-modeline-now-playing-status status))
+          (text   (oref doom-modeline-now-playing-status text)))
+      (when (and player status text
+                 (not (string= player "No players found")))
+        (concat
+         (propertize (if (equal status "playing")
+                        (doom-modeline-icon 'faicon "nf-fa-play" "" ">"
+                                          :v-adjust -0)
+                      (doom-modeline-icon 'faicon "nf-fa-pause" "" "||"
+                                        :v-adjust -0))
+                    'mouse-face 'mode-line-highlight
+                    'help-echo "mouse-1: Toggle player status"
+                    'local-map (let ((map (make-sparse-keymap)))
+                               (define-key map [mode-line mouse-1]
+                                         'doom-modeline-now-playing-toggle-status)
+                               map))
+         (doom-modeline-spc)
+         (propertize
+          (truncate-string-to-width text doom-modeline-now-playing-max-length nil nil "...")
+          'face 'doom-modeline-now-playing-text)))))))
 
 ;; doom-modeline-now-playing-timer - keep at bottom
 (doom-modeline-now-playing-timer)
+
+;; ----------------------------------------------------------------------------------
+;; doom modeline elements order
+;; ----------------------------------------------------------------------------------
+
+;; Ensure doom-modeline-def-modeline runs after the package is loaded
+(eval-after-load 'doom-modeline
+  (lambda ()
+    ;; doom modeline elements order
+    (doom-modeline-def-modeline 'main
+      '(bar matches buffer-info remote-host buffer-position selection-info now-playing)
+      '(misc-info minor-modes input-method buffer-encoding major-mode process vcs check battery time))
+
+    ;; Optional: Force modeline update to see changes immediately
+    (force-mode-line-update)
+    (message "Doom Modeline segments redefined successfully.")
+    ))
 #+end_src
