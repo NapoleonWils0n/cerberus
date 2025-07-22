@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>maphub media</name>
+    <description/>
+    <Style id="icon-1899-0288D1-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>NorthKenmap-media.csv</name>
+      <Placemark>
+        <name>Meanwhile Gardens</name>
+<description><![CDATA[Address: 156/8 Kensal Road W10 5BN<br>Description: description<br>Website: <br>Wikipedia: <br>Info sheet: https://tinyurl.com/27jgdptr<br>Latitude: 51.52547<br>Longitude: -0.20593<br>]]></description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <ExtendedData>
+          <Data name="Address">
+            <value>156/8 Kensal Road W10 5BN</value>
+          </Data>
+          <Data name="Description">
+            <value>description</value>
+          </Data>
+          <Data name="image">
+            <value><![CDATA[<img src="https://i.imgur.com/g8hYyA5.jpeg" alt="Meanwhile Gardens Image" width="200" height="150">]]></value>
+          </Data>
+          <Data name="Website">
+            <value/>
+          </Data>
+          <Data name="Wikipedia">
+            <value/>
+          </Data>
+          <Data name="Info sheet">
+            <value>https://tinyurl.com/27jgdptr</value>
+          </Data>
+          <Data name="Latitude">
+            <value>51.52547</value>
+          </Data>
+          <Data name="Longitude">
+            <value>-0.20593</value>
+          </Data>
+        </ExtendedData>
+        <Point>
+          <coordinates>
+            -0.20593,51.52547,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>
