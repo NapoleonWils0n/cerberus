@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* firefox dns over https
+
+1) open the firefox settings
+2) go to the privacy and security section in the left side bar
+3) scroll to the bottom of the page
+4) under Enable DNS over HTTPS using: select Max Protection
+5) in the Choose provider: dropdown menu select custom
+6) add google dns by adding the following text into the custom text input field
+
+#+begin_example
+https://dns.google/dns-query
+#+end_example
+
+
