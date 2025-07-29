@@ -1,0 +1,19 @@
+#+STARTUP: content
+* yt-dlp download format
+** 1080p
+
+#+begin_src sh
+yt-dlp -f "bv*[height<=1080]+ba/b[height<=1080]" 'video url'
+#+end_src
+
+** 720p
+
+#+begin_src sh
+yt-dlp -f "bv*[height<=720]+ba/b[height<=720]" 'video url'
+#+end_src
+
+** 480p
+
+#+begin_src sh
+yt-dlp -f "bv*[height<=480]+ba/b[height<=480]" 'video url'
+#+end_src
