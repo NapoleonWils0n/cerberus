@@ -1,0 +1,21 @@
+#+STARTUP: content
+* miller
+** resources
+
+[[https://github.com/johnkerl/miller]]
+
+[[https://miller.readthedocs.io/en/6.14.0/]]
+
+** miller nix-shell
+
+#+begin_src sh
+nix-shell -p miller
+#+end_src
+
+** miller csv
+
+split csv at commas into new lines
+
+#+begin_src sh
+mlr --csv put 'for (k,v in $*){print v}' input.csv > output.csv
+#+end_src
