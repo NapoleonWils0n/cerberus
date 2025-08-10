@@ -1,0 +1,41 @@
+#+STARTUP: content
+* Goal
+
+can you read the @task/input.vtt subtitles file and find each sentence that stops with a period,
+and get the start and end timestamps for each sentence and create a csv file with the start and end times
+
+** Context
+
+- File to read: task/input.vtt
+
+** Instructions
+
+1. read the @task/input.vtt file
+   create a list of how many sentence there are which end with a period which is how many clips you need to create
+
+2. process each sentence that ends with a period by getting the start and end timestamps from the vtt file
+
+3. create a csv file called cutlist.csv which shouldnt have a header,
+   and add the start and end time for each clip on a new line seperated by a comma
+
+this is an example input text
+
+#+begin_example
+01:22.614 --> 01:26.299
+That's right Malik Chow, the player that Newcastle have been linked with for
+
+01:26.279 --> 01:50.059
+Yes, let's be honest, it's another player that Eddie Howe has been talking about, fourth season after season, reports were that Newcastle were in for and reports were that Newcastle had agreed, personal terms a couple of weeks ago, that the four-year deal, I believe, is what it's going to be, a four-year deal, agreed with the centre-back, he was keen to join Eddie Howe, keen
+
+01:50.191 --> 01:56.684
+to join a team in the Premier League, Champions League, but it was the fee that was in question.
+#+end_example
+
+and this is the ouput example
+
+#+begin_example
+01:22.614,01:56.684
+#+end_example
+
+
+
