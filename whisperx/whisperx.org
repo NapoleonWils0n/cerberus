@@ -127,8 +127,16 @@ nix flake update
 
 ** whisperx usage
 
+diarize and highlight words
+
 #+begin_src sh
 whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en
+#+end_src
+
+dont diarize and highlight words
+
+#+begin_src sh
+whisperx input.wav --device cuda --model small --language en
 #+end_src
 
 ** whisperx speakers
