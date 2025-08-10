@@ -1,0 +1,99 @@
+#+STARTUP: content
+* gemini-cli install nixos
+** gemini-cli
+*** gemini-cli nixos flake
+
+#+begin_src nix
+{
+  description = "gemini-cli";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/Nixpkgs/nixos-unstable"; 
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true; 
+          };
+        };
+      in
+      {
+        devShells.default = pkgs.mkShell rec {
+          name = "gemini-cli-shell";
+
+          # build inputs 
+          buildInputs = with pkgs; [
+            gemini-cli
+          ];
+
+          # Shell hook 
+          shellHook = ''
+            echo "Welcome to the gemini-cli development shell!"
+            echo "You can now use 'gemini' directly."
+          '';
+        };
+      });
+}
+
+#+end_src
+
+*** gemini-cli site
+
+[[https://github.com/google-gemini/gemini-cli]]
+
+*** create the api key
+
+[[https://aistudio.google.com/apikey]]
+
+*** create the gemini directory
+
+#+begin_src sh
+mkdir -p ~/.gemini
+#+end_src
+
+*** add the api key
+
+#+begin_src sh
+echo "YOUR_API_KEY_HERE" > ~/.gemini/key
+#+end_src
+
+*** chmod the key
+
+#+begin_src sh
+chmod 600 ~/.gemini/key
+#+end_src
+
+*** run gemini
+
+run nix develop in the directory with the flake.nix file
+
+#+begin_src sh
+nix develop
+#+end_src
+
+then run gemini-cli
+
+#+begin_src sh
+gemini-cli
+#+end_src
+
+run gemini which will open a browser window select your account, sign in and agreed to terms
+
+*** update gemini-cli
+
+run nix flake update
+
+#+begin_src sh
+nix flake update
+#+end_src
+
+then run
+
+#+begin_src sh
+nix develop
+#+end_src

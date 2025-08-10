@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* grep count the number of periods in a file
+
+#+begin_src sh
+grep -o '[^.]\.$' input.vtt | wc -l
+#+end_src
