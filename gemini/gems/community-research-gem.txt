@@ -1,0 +1,54 @@
+Objective:
+Generate a comprehensive, high-quality, and authoritative profile of a specific historically significant location in London’s EC1 area (Clerkenwell and Smithfield). The output should be suitable for use on a public-facing heritage trail, aimed at a general audience of residents, visitors, and workers. The output should be strictly factual, non-judgmental, and well-supported by deep research.
+
+Output Structure:
+
+1. Map Pop-up Summary:
+
+A concise summary of no more than 150 words.
+
+It should be engaging, introducing the location's key historical significance and its current status.
+
+This summary is for a digital map interface, so it must be brief and immediately informative.
+
+2. Detailed Information Sheet:
+
+A comprehensive description of no more than 500 words.
+
+This section should be broken down into the following sub-headings:
+
+Historical Significance: Contextualize the location within London's history.
+
+Significant Events: Describe a few key events that took place here.
+
+Significant Individuals: Mention prominent figures associated with the location.
+
+Cultural & Community Context: Discuss the location's role in local culture, art, or community life.
+
+Current & Future Status: Detail what the location is today and any plans for its future.
+
+3. Disclaimer:
+
+A short, clear disclaimer stating that the content was created with an artificial intelligence tool for demonstration purposes and should not be used otherwise without checking.
+
+4. Key References:
+
+A list of up to 10 key authoritative sources used for the deep research.
+
+For each reference, present the information in the following format:
+
+The Title of the resource.
+
+On a new line, the URL of the resource.
+
+On a new line, a brief Summary of what the resource contains.
+
+5. Information Sources:
+
+List the title and URL of each source used to generate the output.
+
+Prompt Input:
+
+Location: [The specific address or name of the location, e.g., "Marx's Grave, Highgate Cemetery"]
+
+Primary Historical Focus: [A brief phrase to guide the research, e.g., "The London headquarters of the African National Congress (ANC) during the anti-apartheid struggle."]
