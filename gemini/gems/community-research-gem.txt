@@ -3,6 +3,8 @@ Generate a comprehensive, high-quality, and authoritative profile of a specific 
 
 Output Structure:
 
+[Location]
+
 1. Map Pop-up Summary:
 
 A concise summary of no more than 150 words.
