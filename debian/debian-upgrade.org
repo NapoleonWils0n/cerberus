@@ -1,0 +1,68 @@
+#+STARTUP: content
+* debian upgrade
+** backports
+
+delete applications that are using backports
+
+remove backports repo
+
+#+begin_src sh
+doas vi /etc/apt/source.list
+#+end_src
+
+** upgrade
+*** dpkg
+
+The main things you'll want to back up are the contents of /etc, /var/lib/dpkg, /var/lib/apt/extended_states and the output of:
+
+#+begin_src sh
+dpkg --get-selections '*' > dpkg.txt
+#+end_src
+
+*** apt-mark
+
+#+begin_src sh
+doas apt-mark manual cryptsetup-initramfs
+#+end_src
+
+*** autoremove
+
+#+begin_src sh
+doas apt autoremove
+#+end_src
+
+*** sources.list
+
+upgrade from bookworm to trixie
+
+#+begin_src sh
+doas sed -i 's/bookworm/trixie/g' /etc/apt/sources.list
+#+end_src
+
+*** update upgrade
+
+#+begin_src sh
+doas apt update && doas apt upgrade --without-new-pkgs
+#+end_src
+
+restart service = yes
+
+*** full-upgrade
+
+#+begin_src sh
+doas apt full-upgrade 
+#+end_src
+
+*** autoremove
+
+#+begin_src sh
+doas apt --purge autoremove -y
+doas apt autoclean
+#+end_src
+
+*** reboot
+
+#+begin_src sh
+doas reboot
+#+end_src
+
