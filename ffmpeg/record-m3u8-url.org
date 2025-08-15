@@ -82,6 +82,18 @@ https://example.com/p/hls_segment/playlist/p.ts?segment_num=0&segment_type=audio
 
 look at the urls for the m3u8 files to see if you can work out which is the audio m3u8 url, and which is the video m3u8 url
 
+the video url may look like this with type=video at the end of the url
+
+#+begin_example
+https://example.com/p/hls_playlist/playlist/p.m3u8?hw_acceleration=False&size=1280x720&type=video
+#+end_example
+
+the audio url may look like this with type=audio at the end of the url
+
+#+begin_example
+https://example.com/p/hls_playlist/playlist/p.m3u8?bps=128000&type=audio
+#+end_example
+
 right click on the mu38 link in the developer tools network tab
 
 with chromium select copy, copy url from the pop up menu
