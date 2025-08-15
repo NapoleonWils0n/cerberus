@@ -1,0 +1,101 @@
+#+STARTUP: content
+* ffmpeg record m3u8 url
+** browser developer tools find m3u8 files
+
+1. press the F12 function key to open the developer tools in your browser
+
+2. switch to the network inspector in the browser developer tools
+
+3. in the video player change the video quality to the setting you want, eg 1080
+
+4. play the video
+
+5. use the search filter in the developer tools network and search for m3u8
+
+6. you should see the links to the m3u8 file or files
+
+** 1 m3u8 url with audio and video stream
+*** download the m3u8 file
+
+if there is only one m3u8 url double click on it to download it
+
+then open the m3u8 file in your downloads folder and check if it contains audio and video stream url
+
+in this example the m3u8 contains an absolute url with the domain, rather than a relative link
+
+*** copy the m3u8 url
+
+right click on the mu38 link in the developer tools network tab
+
+with chromium select copy, copy url from the pop up menu
+
+*** ffmpeg record the m3u8 url
+
+ffmpeg command replace video-audio-url.m3u8 with the url you copied
+
+#+begin_src sh
+ffmpeg -i video-audio-url.m3u8 -c copy -bsf:a aac_adtstoasc output.mp4
+#+end_src
+
+ffmpeg command command with example url
+
+#+begin_src sh
+ffmpeg -i 'https://example.com/p/hls_playlist/playlist/p.m3u8' -c copy -bsf:a aac_adtstoasc output.mp4
+#+end_src
+
+** 2 m3u8 urls for audio and video stream
+*** download the m3u8 files
+
+if there two m3u8 url double click on them to download them
+
+*** video m3u8 file
+
+open the the first m3u8 file you downloaded 
+
+a video m3u8 file will look something like this
+
+in this example the m3u8 contains an absolute url with the domain, rather than a relative link
+
+#+begin_example
+#EXTM3U
+#EXT-X-VERSION:7
+#EXT-X-TARGETDURATION:4
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:4.0,
+https://example.com/p/hls_segment/playlist/p.ts?hw_acceleration=false&segment_num=0&segment_type=video&size=2560x1440
+#+end_example
+
+*** audio m3u8 file
+
+a audio m3u8 file will look something like this
+
+#+begin_example
+#EXTM3U
+#EXT-X-VERSION:7
+#EXT-X-TARGETDURATION:11
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:10.24,
+https://example.com/p/hls_segment/playlist/p.ts?segment_num=0&segment_type=audio
+#+end_example
+
+*** copy the m3u8 
+
+look at the urls for the m3u8 files to see if you can work out which is the audio m3u8 url, and which is the video m3u8 url
+
+right click on the mu38 link in the developer tools network tab
+
+with chromium select copy, copy url from the pop up menu
+
+*** ffmpeg record the video and audio urls
+
+ffmpeg command replace video-audio-url.m3u8 with video m3u8 url you copied and replace audio-url.m3u8 with audio m3u8 url
+
+#+begin_src sh
+ffmpeg -i video-url.m3u8 -i audio-url.m3u8 -c copy -map 0:v:0 -map 1:a:0 output.mp4
+#+end_src
+
+ffmpeg command command with example url
+
+#+begin_src sh
+ffmpeg -i 'https://example.com/p/hls_playlist/playlist/p.m3u8?hw_acceleration=False&size=1280x720&type=video' -i 'https://example.com/p/hls_playlist/playlist/p.m3u8?bps=128000&type=audio' -c copy -map 0:v:0 -map 1:a:0 output.mp4
+#+end_src
