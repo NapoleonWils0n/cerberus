@@ -1,0 +1,41 @@
+#+STARTUP: content
+* package-vc-selected-packages
+** init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; Bootstrap use-package
+;; ----------------------------------------------------------------------------------
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(setq use-package-always-ensure t) ;; Automatically install packages if not present
+
+
+;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+(unless (assoc-default "elpa" package-archives)
+  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
+
+;; package-vc-selected-packages
+(setq package-vc-selected-packages
+ '((combobulate :vc-backend Git :url "https://github.com/mickeynp/combobulate")))
+
+;; package initialize (use-package will handle installation and requiring)
+(package-initialize)
+#+end_src
+
+** package-vc-install-selected-packages
+
+#+begin_example
+M-x package-vc-install-selected-packages
+#+end_example
