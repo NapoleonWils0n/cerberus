@@ -51,7 +51,7 @@ media-type: The MIME type of the file. For audio, common types are audio/mpeg fo
 
 The <manifest> in the package.opf file acts as a table of contents for the entire EPUB package. When an e-reader or app opens your EPUB, it first reads the container.xml to find the package.opf. It then reads the package.opf to get a list of all the files it needs to display the book. If you don't list your audio and video files in the <manifest>, the e-reader won't know they exist and won't be able to display them, even if the <audio> tag is correct in the HTML. It's a critical step in making a valid and functional EPUB.
 
-*** origianl package.opf
+*** original package.opf
 
 #+begin_src xml
 <manifest>
