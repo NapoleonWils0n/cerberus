@@ -1,6 +1,6 @@
 #+STARTUP: content
-* epub hacking
-** google docs epub
+* epub google docs
+** download google docs download epub
 
 download a google docs file an epub
 
