@@ -1,0 +1,152 @@
+#+STARTUP: content
+* epub hacking
+** google docs epub
+
+download a google docs file an epub
+
+** unzip the epub
+
+Create a new directory to hold the extracted files
+
+#+begin_src sh
+mkdir -p epub-book
+#+end_src
+
+Unzip the epub file into the new directory
+
+#+begin_src sh
+unzip input.epub -d epub-book
+#+end_src
+
+** epub original structure
+
+#+begin_example
+epub-book
+├── GoogleDoc
+│   ├── AntiApartheidLegacy.xhtml
+│   ├── nav.xhtml
+│   └── package.opf
+├── META-INF
+│   └── container.xml
+└── mimetype
+#+end_example
+
+** package.opf
+
+What to Add to package.opf
+
+You must declare every single file (image, audio, video, font, CSS, etc.) that your EPUB uses within the <manifest> section of the package.opf file.
+
+Let's assume you've added an audio file named audio.m4a to your EPUB directory.
+
+Create a new <item> entry in the <manifest> section.
+
+The new item tag must include three things:
+
+href: The path to the file. This path is relative to the package.opf file. If you put audio.m4a in the same folder as the OPF, the path is just audio.m4a. If you created a subfolder like Audio, the path would be Audio/audio.m4a.
+
+id: A unique identifier for the item. You can choose anything, as long as it's not a duplicate. A good convention is to use the filename without the extension, e.g., audio_file_id.
+
+media-type: The MIME type of the file. For audio, common types are audio/mpeg for .mp3, and audio/mp4 for .m4a. For video, it would be video/mp4 for .mp4 and so on. For images, image/jpeg or image/png.
+
+The <manifest> in the package.opf file acts as a table of contents for the entire EPUB package. When an e-reader or app opens your EPUB, it first reads the container.xml to find the package.opf. It then reads the package.opf to get a list of all the files it needs to display the book. If you don't list your audio and video files in the <manifest>, the e-reader won't know they exist and won't be able to display them, even if the <audio> tag is correct in the HTML. It's a critical step in making a valid and functional EPUB.
+
+*** origianl package.opf
+
+#+begin_src xml
+<manifest>
+  <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
+  <item href="AntiApartheidLegacy.xhtml" id="main" media-type="application/xhtml+xml"/>
+  <item href="Audio/audio.m4a" id="audio_file_id" media-type="audio/mp4"/>
+</manifest>
+#+end_src
+
+*** modified package.opf
+
+#+begin_src xml
+<?xml version="1.0" encoding="UTF-8"?><package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" version="3.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier id="uid">97024f0c-8dc0-4731-9877-8f518d2aea31</dc:identifier>
+    <dc:language>en</dc:language>
+    <dc:title>Anti-Apartheid Legacy</dc:title>
+    <meta property="dcterms:modified">2025-08-18T14:21:56Z</meta>
+  </metadata>
+  <manifest>
+    <item href="nav.xhtml" id="toc" media-type="application/xhtml+xml" properties="nav"/>
+    <item href="AntiApartheidLegacy.xhtml" id="main" media-type="application/xhtml+xml"/>
+    <item href="bikes.jpg" id="bikes" media-type="image/jpeg"/>
+    <item href="audio.m4a" id="audio" media-type="audio/x-m4a"/>
+    <item href="big-buck-bunny.mp4" id="video" media-type="video/mp4"/>
+  </manifest>
+  <spine>
+    <itemref idref="main"/>
+  </spine>
+</package>
+
+#+end_src
+
+** html
+
+Now, in your HTML file, you can link to the files you just declared in the package.opf.
+
+*** image
+
+#+begin_src html
+<img src="bikes.jpg" width="640px" height="480px"/>
+#+end_src
+
+*** audio
+
+#+begin_src html
+<audio controls="controls">
+  <source src="audio.m4a" type="audio/x-m4a" />
+</audio>
+#+end_src
+
+*** video
+
+#+begin_src html
+<video controls="controls">
+  <source src="big-buck-bunny.mp4" />
+</video>
+#+end_src
+
+** epub new structure
+
+#+begin_example
+epub-book
+├── GoogleDoc
+│   ├── AntiApartheidLegacy.xhtml
+│   ├── audio.m4a
+│   ├── big-buck-bunny.mp4
+│   ├── bikes.jpg
+│   ├── nav.xhtml
+│   └── package.opf
+├── META-INF
+│   └── container.xml
+└── mimetype
+
+#+end_example
+
+** zip folder as and epub
+
+make sure you are instead the epub folder you created
+
+#+begin_src sh
+cd epub-book
+#+end_src
+
+This command creates a new zip file named epub-book.epub'
+It adds the 'mimetype' file first with no compression.
+
+#+begin_src sh
+zip -0 -X ../epub-book.epub mimetype
+#+end_src
+
+It then adds the rest of the files to the archive with default compression.
+
+The `-r` flag recursively adds all files and subdirectories.
+
+#+begin_src sh
+zip -r -g -X ../epub-book.epub * -x mimetype
+#+end_src
