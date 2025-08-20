@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* mpv yt-dlp path
+
+mpv yt-dlp path
+
+#+begin_example
+~/.config/mpv/mpv.conf
+#+end_example
+
+#+begin_src conf
+script-opts=ytdl_hook-ytdl_path=/home/djwilcox/bin/yt-dlp
+#+end_src

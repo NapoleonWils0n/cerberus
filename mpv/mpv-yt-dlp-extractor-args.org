@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* mpv ytdlp extractor-args
+
+mpv ytdl-raw-options extractor-args
+
+#+begin_example
+~/.config/mpv/mpv.conf
+#+end_example
+
+#+begin_src conf
+ytdl-raw-options=extractor-args="youtube:player_client=default,-ios"
+#+end_src
