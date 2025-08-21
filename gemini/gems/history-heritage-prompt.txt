@@ -24,14 +24,12 @@ and at least one source from an organisation associated with the location (e.g.,
 Format:
 Present the information in a user-friendly format, clearly labelled.
 
-Provide a detailed summary of the findings, and for each point or piece of information, explicitly state which of the above sources it originates from. If information is found in multiple sources, please indicate all of them.
-
 List the title with a summary and a clickable direct link of each source used to generate the output
 with the title, summary and direct link on separate lines as shown below
 
 Sources
 
-Wikipedia
+1. Wikipedia
 
 Provides key historical information, including the pub's Grade II listed status, the architect (Latham Withall), and the ceramic artist (W.J. Neatby). It also mentions the 1898 build date.
 
