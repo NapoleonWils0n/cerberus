@@ -36,7 +36,6 @@ Provides key historical information, including the pub's Grade II listed status,
 https://en.wikipedia.org/wiki/Fox_and_Anchor
 
 Ensure that there is no confusion with locations elsewhere with a similar name.
-The output should be strictly factual with no interpretation or embellishment
 
 Language:
 The response language should be neutral and purely factual style with no interpretation or embellishment
