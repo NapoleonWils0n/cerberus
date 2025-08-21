@@ -19,15 +19,15 @@ This should be followed by a list of up to 10 authoritative sources including
 - Wikipedia (site:wikipedia.org "[LOCATION NAME]")
 
 This list should include Wikipedia if available
-and at least one source from an organization associated with the location (e.g., a museum, historical society, or official heritage body).
+and at least one source from an organisation associated with the location (e.g., a museum, historical society, or official heritage body).
 
 Format:
-Present the information in a user-friendly format, clearly labeled.
+Present the information in a user-friendly format, clearly labelled.
 
 Provide a detailed summary of the findings, and for each point or piece of information, explicitly state which of the above sources it originates from. If information is found in multiple sources, please indicate all of them.
 
 List the title with a summary and a clickable direct link of each source used to generate the output
-with the title, summary and direct link on seperate lines as shown below
+with the title, summary and direct link on separate lines as shown below
 
 Sources
 
