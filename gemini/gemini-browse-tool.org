@@ -1,0 +1,23 @@
+#+STARTUP: showall
+* gemini browse tool
+
+I have a single tool for accessing web pages, which is a browsing tool.
+
+How it Works
+The tool is called Browse. It takes two main arguments:
+
+url: The specific web address you want me to access.
+
+query: A natural language request that tells the tool what kind of information to look for on the page. For example, "entire text content" or "a summary of the article."
+
+What it Can Do
+The tool is designed to retrieve and extract text content from a webpage. It is best used for getting the main body of an article, a short piece of information, or a full transcript of text from a static page.
+
+Limitations
+The tool has specific limitations that are important to know:
+
+No HTML or Code: It cannot retrieve the underlying HTML, CSS, or any other code from a webpage. It only returns the visible text.
+
+No Link Extraction: It cannot specifically extract a list of all hyperlinks on a page. While a URL might appear in the text it retrieves, it doesn't provide a separate function to list all links.
+
+Inconsistent Access: The tool may not always successfully access a webpage, especially if the site has security measures, is no longer active, or is a dynamic page that requires user interaction to load content. When it fails, I cannot fix the issue and must report the failure.
