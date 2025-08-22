@@ -1,0 +1,87 @@
+#+STARTUP: content
+* podman rootless nixos
+** resources
+
+[[https://nixos.wiki/wiki/Podman]]
+
+[[https://github.com/NixOS/nixpkgs/issues/207050]]
+
+** zfs create containers dataset
+
+Manually create the ZFS dataset with the acltype=posixacl property.
+
+This is done from the command line, not in a Nix file.
+
+#+begin_src sh
+doas zfs create -o acltype=posixacl zpool/containers
+#+end_src
+
+zfs create: The command to create a new ZFS dataset.
+
+-o acltype=posixacl: The option that sets the POSIX ACL property. This is required for rootless Podman to function correctly.
+
+zpool/containers: The name of the new dataset. Replace zpool with the name of your ZFS pool.
+
+** configuration.nix
+
+Rootless can't use ZFS directly but the overlay needs POSIX ACL enabled for the underlying ZFS filesystem, ie., acltype=posixacl
+
+Best to mount a dataset under /var/lib/containers/storage with property acltype=posixacl. 
+
+Add the mountpoint to your configuration.nix file. After the dataset is created, you then configure NixOS to mount it at /var/lib/containers/storage by adding the following block to your main configuration.nix file,
+
+add our user to the oci group
+
+#+begin_src nix
+{ config, lib, pkgs, ... }:
+{
+  # Enable common container config files in /etc/containers
+  virtualisation.containers.enable = true;
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
+
+  # users
+  users.mutableUsers = true;
+  
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.djwilcox = {
+      isNormalUser = true;
+      extraGroups = [ "wheel networkmanager audio video oci" ]; # Enable ‘sudo’ for the user.
+  };
+
+  # podman zfs
+  fileSystems."/var/lib/containers/storage" = {
+    device = "zpool/containers";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  # Useful other development tools
+  environment.systemPackages = with pkgs; [
+    podman-compose # start group of containers for dev
+  ];
+}
+#+end_src
+
+** nixos rebuild
+
+rebuild with flake
+
+#+begin_src sh
+doas nixos-rebuild switch --flake '.#pollux'
+#+end_src
+
+rebuild without using flakes
+
+#+begin_src sh
+doas nixos-rebuild switch
+#+end_src
