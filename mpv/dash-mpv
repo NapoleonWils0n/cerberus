@@ -1,0 +1,82 @@
+#!/bin/sh
+
+#===============================================================================
+# dash-mpv
+# yt-dlp get dash mpd and play with mpv
+#===============================================================================
+
+# dependencies:
+# mpv yt-dlp 
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# yt-dlp get dash mpd and play with mpv
+
+$(basename "$0") -i input
+-i input"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# function
+#===============================================================================
+
+# url=$(yt-dlp -f "bestvideo[height<=1080][ext=mpd]+bestaudio[ext=mpd]/best[height<=1080]" -g --no-playlist "${input}" 2> /dev/null)
+
+dash () {
+# yt-dlp get the mpd url
+url=$(yt-dlp -f "bestvideo[ext=mpd]+bestaudio[ext=mpd]/best[protocol=https]" -g --no-playlist "${input}" 2> /dev/null)
+
+# mpv play mpd url
+mpv "${url}" \
+--cache 2048 \
+--no-terminal --fs --fs-screen=1
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+dash

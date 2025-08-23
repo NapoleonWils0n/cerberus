@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* yt-dlp mpd
+
+note may not show 1080p videos
+
+#+begin_src sh
+url=$(yt-dlp -f "bestvideo[ext=mpd]+bestaudio[ext=mpd]/best[ext=mp4][protocol=https]" -g --no-playlist "${input}" 2> /dev/null)
+#+end_src
+
+1080p
+
+#+begin_src sh
+url=$(yt-dlp -f "bestvideo[height<=1080][ext=mpd]+bestaudio[ext=mpd]/best[height<=1080]" -g --no-playlist "${input}" 2> /dev/null)
+#+end_src
+
