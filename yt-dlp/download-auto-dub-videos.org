@@ -1,0 +1,112 @@
+#+STARTUP: content
+* yt-dlp download video and other lanuages
+** check the audio and video formats
+
+check the audio and video formats using yt-dlp with the -F option and the url
+
+#+begin_src sh
+yt-dlp -F 'https://www.youtube.com/watch?v=AMvce2RSEWk'
+#+end_src
+
+** Available formats
+
+this will list all the video and audio streams including the auto dubbed audio streams
+
+#+begin_example
+[info] Available formats for AMvce2RSEWk:
+ID     EXT   RESOLUTION FPS CH │  FILESIZE  TBR PROTO │ VCODEC       VBR ACODEC      ABR ASR MORE INFO
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+sb3    mhtml 48x27        0    │                mhtml │ images                               storyboard
+sb2    mhtml 80x45        0    │                mhtml │ images                               storyboard
+sb1    mhtml 160x90       0    │                mhtml │ images                               storyboard
+sb0    mhtml 320x180      0    │                mhtml │ images                               storyboard
+249-0  webm  audio only      2 │   2.58MiB  53k https │ audio only       opus        53k 48k [es-US] Spanish (US), low, webm_dash
+249-1  webm  audio only      2 │   2.60MiB  54k https │ audio only       opus        54k 48k [hi] Hindi, low, webm_dash
+249-2  webm  audio only      2 │   2.62MiB  54k https │ audio only       opus        54k 48k [ko] Korean, low, webm_dash
+249-3  webm  audio only      2 │   2.62MiB  54k https │ audio only       opus        54k 48k [de-DE] German (DE), low, webm_dash
+249-4  webm  audio only      2 │   2.63MiB  54k https │ audio only       opus        54k 48k [pt-BR] Portuguese (BR), low, webm_dash
+249-5  webm  audio only      2 │   2.63MiB  54k https │ audio only       opus        54k 48k [nl-NL] Dutch (NL), low, webm_dash
+249-6  webm  audio only      2 │   2.63MiB  54k https │ audio only       opus        54k 48k [pl] Polish, low, webm_dash
+249-7  webm  audio only      2 │   2.66MiB  55k https │ audio only       opus        55k 48k [ja] Japanese, low, webm_dash
+249-8  webm  audio only      2 │   2.68MiB  55k https │ audio only       opus        55k 48k [fr-FR] French (FR), low, webm_dash
+249-9  webm  audio only      2 │   2.69MiB  56k https │ audio only       opus        56k 48k [it] Italian, low, webm_dash
+249-10 webm  audio only      2 │   2.72MiB  56k https │ audio only       opus        56k 48k [id] Indonesian, low, webm_dash
+250-0  webm  audio only      2 │   3.39MiB  70k https │ audio only       opus        70k 48k [es-US] Spanish (US), low, webm_dash
+250-1  webm  audio only      2 │   3.42MiB  71k https │ audio only       opus        71k 48k [hi] Hindi, low, webm_dash
+250-2  webm  audio only      2 │   3.43MiB  71k https │ audio only       opus        71k 48k [ko] Korean, low, webm_dash
+250-3  webm  audio only      2 │   3.44MiB  71k https │ audio only       opus        71k 48k [de-DE] German (DE), low, webm_dash
+250-4  webm  audio only      2 │   3.44MiB  71k https │ audio only       opus        71k 48k [pt-BR] Portuguese (BR), low, webm_dash
+250-5  webm  audio only      2 │   3.45MiB  71k https │ audio only       opus        71k 48k [nl-NL] Dutch (NL), low, webm_dash
+250-6  webm  audio only      2 │   3.46MiB  71k https │ audio only       opus        71k 48k [pl] Polish, low, webm_dash
+250-7  webm  audio only      2 │   3.48MiB  72k https │ audio only       opus        72k 48k [ja] Japanese, low, webm_dash
+250-8  webm  audio only      2 │   3.51MiB  73k https │ audio only       opus        73k 48k [fr-FR] French (FR), low, webm_dash
+250-9  webm  audio only      2 │   3.52MiB  73k https │ audio only       opus        73k 48k [it] Italian, low, webm_dash
+250-10 webm  audio only      2 │   3.57MiB  74k https │ audio only       opus        74k 48k [id] Indonesian, low, webm_dash
+249-11 webm  audio only      2 │   2.31MiB  48k https │ audio only       opus        48k 48k [en-US] English (US) original (default), low, webm_dash
+250-11 webm  audio only      2 │   2.90MiB  60k https │ audio only       opus        60k 48k [en-US] English (US) original (default), low, webm_dash
+140-0  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [de-DE] German (DE), medium, m4a_dash
+140-1  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [es-US] Spanish (US), medium, m4a_dash
+140-2  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [fr-FR] French (FR), medium, m4a_dash
+140-3  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [hi] Hindi, medium, m4a_dash
+140-4  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [id] Indonesian, medium, m4a_dash
+140-5  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [it] Italian, medium, m4a_dash
+140-6  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [ja] Japanese, medium, m4a_dash
+140-7  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [ko] Korean, medium, m4a_dash
+140-8  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [nl-NL] Dutch (NL), medium, m4a_dash
+140-9  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [pl] Polish, medium, m4a_dash
+140-10 m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [pt-BR] Portuguese (BR), medium, m4a_dash
+140-11 m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [en-US] English (US) original (default), medium, m4a_dash
+251-0  webm  audio only      2 │   6.57MiB 136k https │ audio only       opus       136k 48k [hi] Hindi, medium, webm_dash
+251-1  webm  audio only      2 │   6.57MiB 136k https │ audio only       opus       136k 48k [es-US] Spanish (US), medium, webm_dash
+251-2  webm  audio only      2 │   6.61MiB 137k https │ audio only       opus       137k 48k [ko] Korean, medium, webm_dash
+251-3  webm  audio only      2 │   6.62MiB 137k https │ audio only       opus       137k 48k [pt-BR] Portuguese (BR), medium, webm_dash
+251-4  webm  audio only      2 │   6.64MiB 137k https │ audio only       opus       137k 48k [nl-NL] Dutch (NL), medium, webm_dash
+251-5  webm  audio only      2 │   6.67MiB 138k https │ audio only       opus       138k 48k [ja] Japanese, medium, webm_dash
+251-6  webm  audio only      2 │   6.68MiB 138k https │ audio only       opus       138k 48k [de-DE] German (DE), medium, webm_dash
+251-7  webm  audio only      2 │   6.69MiB 138k https │ audio only       opus       138k 48k [pl] Polish, medium, webm_dash
+251-8  webm  audio only      2 │   6.81MiB 141k https │ audio only       opus       141k 48k [it] Italian, medium, webm_dash
+251-9  webm  audio only      2 │   6.82MiB 141k https │ audio only       opus       141k 48k [fr-FR] French (FR), medium, webm_dash
+251-10 webm  audio only      2 │   6.93MiB 143k https │ audio only       opus       143k 48k [id] Indonesian, medium, webm_dash
+251-11 webm  audio only      2 │   5.22MiB 108k https │ audio only       opus       108k 48k [en-US] English (US) original (default), medium, webm_dash
+160    mp4   256x144     30    │   1.85MiB  38k https │ avc1.4d400c  38k video only          144p, mp4_dash
+278    webm  256x144     30    │   2.08MiB  43k https │ vp9          43k video only          144p, webm_dash
+242    webm  426x240     30    │   3.53MiB  73k https │ vp9          73k video only          240p, webm_dash
+134    mp4   640x360     30    │   6.94MiB 144k https │ avc1.4d401e 144k video only          360p, mp4_dash
+18     mp4   640x360     30  2 │  10.73MiB 222k https │ avc1.42001E      mp4a.40.2       44k [en] 360p
+243    webm  640x360     30    │   6.81MiB 141k https │ vp9         141k video only          360p, webm_dash
+244    webm  854x480     30    │  11.02MiB 228k https │ vp9         228k video only          480p, webm_dash
+136    mp4   1280x720    30    │  22.30MiB 461k https │ avc1.64001f 461k video only          720p, mp4_dash
+247    webm  1280x720    30    │  19.82MiB 410k https │ vp9         410k video only          720p, webm_dash
+137    mp4   1920x1080   30    │  37.12MiB 768k https │ avc1.640028 768k video only          1080p, mp4_dash
+248    webm  1920x1080   30    │  33.85MiB 700k https │ vp9         700k video only          1080p, webm_dash
+#+end_example
+
+** find the 1080p mp4 video and m4a audio
+
+we want to download the 1080 mp4 video with the audio in spainish
+
+so we look in the ID column to find the 1080p video and m4a audio in spainish or whatever language you want
+
+in this case the 1080p video stream has an ID of 137
+
+#+begin_example
+137    mp4   1920x1080   30    │  37.12MiB 768k https │ avc1.640028 768k video only          1080p, mp4_dash
+#+end_example
+
+and m4a audio in spainish has an ID of 140-1
+
+#+begin_example
+140-1  m4a   audio only      2 │   6.26MiB 129k https │ audio only       mp4a.40.2  129k 44k [es-US] Spanish (US), medium, m4a_dash
+#+end_example
+
+** download video and audio in another language
+
+we then use yt-dlp with -f option to specify the format
+
+with the video ID and then a + and the audio ID
+
+#+begin_src sh
+yt-dlp -f 137+140-1 'https://www.youtube.com/watch?v=AMvce2RSEWk'
+#+end_src
+
+this will download the 1080p video with the auto dubbed audio in spainish
