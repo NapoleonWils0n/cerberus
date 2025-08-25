@@ -1,5 +1,5 @@
 #+STARTUP: content
-* yt-dlp download video and other lanuages
+* yt-dlp download auto dub videos
 ** check the audio and video formats
 
 check the audio and video formats using yt-dlp with the -F option and the url
