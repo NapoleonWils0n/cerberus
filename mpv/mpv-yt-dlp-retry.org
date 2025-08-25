@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* mpv yt-dlp retry
+
+edit mpv.conf
+
+#+begin_src sh
+vi ~/.config/mpv/mpv.conf
+#+end_src
+
+add the following option
+
+#+begin_src conf
+ytdl-raw-options='retry-sleep=5,retries=infinite'
+#+end_src
