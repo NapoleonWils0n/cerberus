@@ -1,0 +1,245 @@
+#+STARTUP:content
+* treesitter
+** resources
+*** treesitter
+
+[[https://tree-sitter.github.io/tree-sitter/]]
+
+[[https://github.com/tree-sitter/tree-sitter/wiki/List-of-parsers]]
+
+[[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter]]
+
+*** combobulate
+
+[[https://www.youtube.com/watch?v=y7f1P-358vE][Unlock the Power of Tree-sitter in Emacs with Combobulate]]
+
+** debian 
+*** packages
+
+#+begin_src sh
+doas apt install libtree-sitter-dev libtree-sitter0.22 tree-sitter-cli 
+#+end_src
+
+*** emacs init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; treesitter
+;; ----------------------------------------------------------------------------------
+
+(require 'treesit)
+
+;; Use `major-mode-remap-alist` for languages that have a Treesitter major mode.
+;; M-x treesit-install-language-grammar bash
+(add-to-list
+ 'treesit-language-source-alist
+ '(bash "https://github.com/tree-sitter/tree-sitter-bash.git" "v0.20.1"))
+
+(setq major-mode-remap-alist
+      '((sh-mode . bash-ts-mode)))
+
+;; treesitter explore open in side window
+(add-to-list 'display-buffer-alist
+   '("^*tree-sitter explorer *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
+#+end_src
+
+** nixos
+*** packages
+
+#+begin_src nix
+gcc
+git
+gnumake
+#+end_src
+
+*** emacs init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; treesitter
+;; ----------------------------------------------------------------------------------
+
+(require 'treesit)
+
+;; Use `major-mode-remap-alist` for languages that have a Treesitter major mode.
+;; M-x treesit-install-language-grammar bash
+
+(setq treesit-language-source-alist
+      '((awk "https://github.com/Beaglefoot/tree-sitter-awk")
+        (bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (c "https://github.com/tree-sitter/tree-sitter-c")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (diff "https://github.com/the-mikedavis/tree-sitter-diff")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (make "https://github.com/tree-sitter-grammars/tree-sitter-make")
+        (nix "https://github.com/nix-community/tree-sitter-nix")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (xml "https://github.com/panicinc/tree-sitter-xml")))
+
+(setq major-mode-remap-alist
+      '((sh-mode . bash-ts-mode)))
+
+;; treesitter explore open in side window
+(add-to-list 'display-buffer-alist
+   '("^*tree-sitter explorer *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
+#+end_src
+
+** combobulate
+*** package-vc-selected-packages
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emacs init.el - also using early-init.el
+;; ----------------------------------------------------------------------------------
+
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+
+;; ----------------------------------------------------------------------------------
+;; Bootstrap use-package
+;; ----------------------------------------------------------------------------------
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(setq use-package-always-ensure t) ;; Automatically install packages if not present
+
+;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+(unless (assoc-default "elpa" package-archives)
+  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
+
+;; package-vc-selected-packages
+(setq package-vc-selected-packages
+ '((combobulate :vc-backend Git :url "https://github.com/mickeynp/combobulate")))
+
+;; package initialize (use-package will handle installation and requiring)
+(package-initialize)
+#+end_src
+
+#+begin_example
+M-x package-vc-install-selected-packages
+#+end_example
+
+*** combobulate init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; combobulate
+;; ----------------------------------------------------------------------------------
+
+(use-package combobulate
+   :custom
+   (combobulate-key-prefix "C-c o")
+   :bind
+   ("C-c o o" . combobulate)
+   :init
+          (require 'combobulate-bash)
+   :hook ((prog-mode . combobulate-mode)
+          (bash-ts-mode . combobulate-mode)
+          (css-ts-mode . combobulate-mode)
+          (html-ts-mode . combobulate-mode)
+          (json-ts-mode . combobulate-mode)
+          (python-ts-mode . combobulate-mode)))
+#+end_src
+
+*** early-init.el
+
+#+begin_example
+~/.config/emacs/early-init.el
+#+end_example
+
+#+begin_src emacs-lisp
+;;Tell emacs where is your personal elisp lib dir
+(add-to-list 'load-path "~/.config/emacs/lisp/")
+#+end_src
+
+*** combobulate-bash.el
+
+#+begin_example
+~/.config/emacs/lisp/combobulate-bash.el
+#+end_example
+
+#+begin_src emacs-lisp
+;;; combobulate-bash.el --- Bash mode support for Combobulate  -*- lexical-binding: t; -*-
+
+(require 'combobulate)
+
+;; S-expression-like navigation for function bodies and conditionals.
+(defvar combobulate-bash-procedures-sexp
+  '((:activation-nodes
+     ((:nodes ("function_definition" "if_statement" "for_statement" "while_statement")))))
+  "Combobulate `procedures-sexp' for `bash'.")
+
+;; Sibling-based navigation, typically for moving between statements.
+(defvar combobulate-bash-procedures-sibling
+  '(;; General navigation at the file level
+    (:activation-nodes
+     ((:nodes
+       ((rule "source_file"))
+       :position at
+       :has-parent nil))
+     :selector (:match-children t))
+    ;; Statement-level navigation inside a compound statement
+    (:activation-nodes
+     ((:nodes
+       ((rule "compound_statement"))
+       :position at
+       :has-parent ((rule "function_definition"))))
+     :selector (:choose parent :match-children t)))
+  "Combobulate `procedures-sibling' for `bash'.")
+
+;; Hierarchical navigation, for moving up and down the syntax tree.
+(defvar combobulate-bash-procedures-hierarchy
+  '(;; General navigation
+    (:activation-nodes
+     ((:nodes (exclude (all) "string") :position at))
+     :selector (:choose node :match-children t)))
+  "Combobulate `procedures-hierarchy' for `bash'.")
+
+;; Logical operators, for moving between `&&` and `||` parts of a command.
+;; This has been corrected to use the proper list structure.
+(defvar combobulate-bash-procedures-logical
+  '((:activation-nodes
+     ((:nodes ("and" "or") :position at))
+     :selector (:choose parent :match-children t)))
+  "Combobulate `procedures-logical' for `bash'.")
+
+(defun combobulate-bash-setup (_)
+  "Setup function for `bash-ts-mode'."
+  (add-hook 'sh-mode-hook
+            (lambda ()
+              (when (treesit-ready-p 'bash)
+                (combobulate-mode)))))
+
+(define-combobulate-language
+ :name bash
+ :language bash
+ :major-modes (sh-mode bash-ts-mode)
+ :setup-fn combobulate-bash-setup)
+
+(provide 'combobulate-bash)
+
+;;; combobulate-bash.el ends here
+#+end_src
