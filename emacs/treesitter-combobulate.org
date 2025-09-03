@@ -11,6 +11,10 @@
 
 *** combobulate
 
+[[https://github.com/mickeynp/combobulate]]
+
+[[https://www.masteringemacs.org/article/combobulate-structured-movement-editing-treesitter]]
+
 [[https://www.youtube.com/watch?v=y7f1P-358vE][Unlock the Power of Tree-sitter in Emacs with Combobulate]]
 
 ** debian 
