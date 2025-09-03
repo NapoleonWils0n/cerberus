@@ -1,5 +1,5 @@
 #+STARTUP:content
-* treesitter
+* Treesitter and Combobulate
 ** resources
 *** treesitter
 
