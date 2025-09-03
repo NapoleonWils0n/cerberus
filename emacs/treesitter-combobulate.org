@@ -17,6 +17,18 @@
 
 [[https://www.youtube.com/watch?v=y7f1P-358vE][Unlock the Power of Tree-sitter in Emacs with Combobulate]]
 
+*** config files
+
+[[https://github.com/NapoleonWils0n/nixos-dotfiles/blob/master/.config/emacs/init.el]]
+
+[[https://github.com/NapoleonWils0n/nixos-dotfiles/blob/master/.config/emacs/early-init.el]]
+
+[[https://github.com/NapoleonWils0n/nixos-dotfiles/tree/master/.config/emacs/lisp]]
+
+[[https://github.com/NapoleonWils0n/nixos-dotfiles]]
+
+[[https://github.com/NapoleonWils0n/nixos-dotfiles/blob/master/.config/home-manager/home.nix]]
+
 ** debian 
 *** packages
 
