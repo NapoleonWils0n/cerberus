@@ -134,7 +134,7 @@ gnumake
 (unless (assoc-default "elpa" package-archives)
   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
 
-;; package-vc-selected-packages
+;; M-x package-vc-install-selected-packages
 (setq package-vc-selected-packages
  '((combobulate :vc-backend Git :url "https://github.com/mickeynp/combobulate")))
 
@@ -151,6 +151,7 @@ M-x package-vc-install-selected-packages
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; combobulate
+;; combobulate languages installed in ~/.config/emacs/lisp
 ;; ----------------------------------------------------------------------------------
 
 (use-package combobulate
@@ -158,14 +159,17 @@ M-x package-vc-install-selected-packages
    ("C-c o o" . combobulate)
    :init
           (require 'combobulate-bash)
+          (require 'combobulate-c)
           (require 'combobulate-elisp)
+          (require 'combobulate-nix)
    :hook ((bash-ts-mode . combobulate-mode)
+          (c-ts-mode . combobulate-mode)
           (css-ts-mode . combobulate-mode)
           (html-ts-mode . combobulate-mode)
           (json-ts-mode . combobulate-mode)
           (lisp-mode . combobulate-mode)
+          (nix-mode . combobulate-mode)
           (python-ts-mode . combobulate-mode)))
-
 #+end_src
 
 *** early-init.el
