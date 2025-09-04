@@ -1,5 +1,8 @@
 #+STARTUP: content
-* combobulate language
+* combobulate add new language
+
+adding a new language to combobulate
+
 ** resources
 
 [[https://github.com/mickeynp/combobulate]]
