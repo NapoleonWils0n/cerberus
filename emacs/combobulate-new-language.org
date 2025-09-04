@@ -1,0 +1,138 @@
+#+STARTUP: content
+* combobulate language
+** resources
+
+[[https://github.com/mickeynp/combobulate]]
+
+[[https://github.com/mickeynp/combobulate/wiki/Adding-a-New-Language-to-Combobulate]]
+
+** clone the master branch
+
+create a packages directory
+
+#+begin_src sh
+mkdir -p ~/.config/emacs/packages
+#+end_src
+
+change into the packages directory
+
+#+begin_src sh
+cd ~/.config/emacs/packages
+#+end_src
+
+clone the combobulate development branch
+
+#+begin_src sh
+git clone -b development https://github.com/mickeynp/combobulate
+#+end_src
+
+** configure combobulate
+
+we specify the load path to combobulate
+
+and with the hook we specify treesitter languages we have installed
+
+by default combobulate expects us to have all the lanuages it can use to be installed
+and if they are not it will throw an error
+
+#+begin_src emacs-lisp
+(use-package combobulate
+    :config
+    (require 'combobulate-test-prelude)
+    (require 'combobulate-debug)
+    :load-path ("~/.config/emacs/packages/combobulate/"
+                "~/.config/emacs/packages/combobulate/tests/")
+    :hook ((c-ts-mode . combobulate-mode)
+           (css-ts-mode . combobulate-mode)
+           (html-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode)
+           (python-ts-mode . combobulate-mode)))
+#+end_src
+
+place your cursor after the last ) and evaluate the code by running
+
+#+begin_example
+C-x C-e
+#+end_example
+
+** tree-sitter-bash
+
+[[https://github.com/tree-sitter/tree-sitter-bash]]
+
+find the node-types.json file raw url
+
+[[https://raw.githubusercontent.com/tree-sitter/tree-sitter-bash/refs/heads/master/src/node-types.json]]
+
+** sources.ini
+
+create the sources.ini file in the tree-sitter directory
+
+#+begin_src sh
+touch ~/.config/emacs/tree-sitter/sources.ini
+#+end_src
+
+edit the file and add the following code
+
+#+begin_src toml
+[language.bash]
+url = "https://raw.githubusercontent.com/tree-sitter/tree-sitter-bash/master/src/node-types.json"
+revision = "HEAD"
+files = ["src/node-types.json"]
+#+end_src
+
+** Rebuilding the Rules
+
+Now run, with Python 3.11+, build-relationships.py
+to download and compile the new combobulate-rules.el file.
+
+the build-relationships.py will be at this location
+
+#+begin_example
+~/.config/emacs/packages/combobulate/build/build-relationships.py
+#+end_example
+
+change directory into the build directory
+
+#+begin_src sh
+cd ~/.config/emacs/packages/combobulate/build/
+#+end_src
+
+run python with the build-relationships.py file
+
+note you will need requests installed with python
+
+#+begin_src sh
+python3 build-relationships.py
+#+end_src
+
+** combobulate-rules
+
+add the require combobulate rules after the combobulate use package block
+
+#+begin_src emacs-lisp
+(require 'combobulate-rules)
+#+end_src
+
+it should look like this
+
+#+begin_src emacs-lisp
+(use-package combobulate
+    :config
+    (require 'combobulate-test-prelude)
+    (require 'combobulate-debug)
+    :load-path ("~/.config/emacs/packages/combobulate/"
+                "~/.config/emacs/packages/combobulate/tests/")
+    :hook ((c-ts-mode . combobulate-mode)
+           (css-ts-mode . combobulate-mode)
+           (html-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode)
+           (python-ts-mode . combobulate-mode)))
+
+(require 'combobulate-rules)
+#+end_src
+
+place your cursor after the ) in the combobulate rules and evalulate it by running
+
+#+begin_example
+C-x C-e
+#+end_example
