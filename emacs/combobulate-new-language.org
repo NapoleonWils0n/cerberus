@@ -160,6 +160,26 @@ add the following code
 (add-to-list 'load-path "~/.config/emacs/lisp/")
 #+end_src
 
+** init.el
+
+#+begin_src emacs-lisp
+(use-package combobulate
+    :config
+    (require 'combobulate-test-prelude)
+    (require 'combobulate-debug)
+    :load-path ("~/.config/emacs/packages/combobulate/"
+                "~/.config/emacs/packages/combobulate/tests/")
+    :hook ((c-ts-mode . combobulate-mode)
+           (css-ts-mode . combobulate-mode)
+           (bash-ts-mode . combobulate-mode)
+           (html-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode)
+           (python-ts-mode . combobulate-mode)))
+
+(require 'combobulate-bash)
+(require 'combobulate-rules)
+#+end_src
+
 ** combobulate-bash.el
 
 create the combobulate-bash.el in the lisp directory
