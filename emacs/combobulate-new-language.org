@@ -184,11 +184,10 @@ with the following skeleton code
  :language bash
  :major-modes (sh-mode bash-ts-mode)
  :custom combobulate-bash-definitions
+ :extra-defcustoms EXTRA-DEFCUSTOMS
  :setup-fn combobulate-bash-setup)
 
 (defun combobulate-bash-setup (_))
-
-(provide 'combobulate-bash)
 
 ;;; combobulate-bash.el ends here
 #+end_src
