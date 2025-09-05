@@ -139,3 +139,34 @@ place your cursor after the ) in the combobulate rules and evalulate it by runni
 #+begin_example
 C-x C-e
 #+end_example
+
+** ielm
+
+open a new buew buffer for example with shell script
+
+run ielm in a new buffer
+
+#+begin_example
+M-x ielm
+#+end_example
+
+in the ielm buffer run
+
+#+begin_example
+C-c C-b
+#+end_example
+
+and set the buffer to the shell script buffer you opened
+
+in the scratch buffer add the following code 
+
+#+begin_src emacs-lisp
+(defalias 'er 'combobulate-procedure-expand-rules)
+#+end_src
+
+place your cursor after the last ) and evaluate the code by running
+
+#+begin_example
+C-x C-e
+#+end_example
+
