@@ -108,38 +108,6 @@ note you will need requests installed with python
 python3 build-relationships.py
 #+end_src
 
-** combobulate-rules
-
-add the require combobulate rules after the combobulate use package block
-
-#+begin_src emacs-lisp
-(require 'combobulate-rules)
-#+end_src
-
-it should look like this
-
-#+begin_src emacs-lisp
-(use-package combobulate
-    :config
-    (require 'combobulate-test-prelude)
-    (require 'combobulate-debug)
-    :load-path ("~/.config/emacs/packages/combobulate/"
-                "~/.config/emacs/packages/combobulate/tests/")
-    :hook ((c-ts-mode . combobulate-mode)
-           (css-ts-mode . combobulate-mode)
-           (html-ts-mode . combobulate-mode)
-           (json-ts-mode . combobulate-mode)
-           (python-ts-mode . combobulate-mode)))
-
-(require 'combobulate-rules)
-#+end_src
-
-place your cursor after the ) in the combobulate rules and evalulate it by running
-
-#+begin_example
-C-x C-e
-#+end_example
-
 ** early-init.el
 
 create the lisp directory
@@ -158,26 +126,6 @@ add the following code
 
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.config/emacs/lisp/")
-#+end_src
-
-** init.el
-
-#+begin_src emacs-lisp
-(use-package combobulate
-    :config
-    (require 'combobulate-test-prelude)
-    (require 'combobulate-debug)
-    :load-path ("~/.config/emacs/packages/combobulate/"
-                "~/.config/emacs/packages/combobulate/tests/")
-    :hook ((c-ts-mode . combobulate-mode)
-           (css-ts-mode . combobulate-mode)
-           (bash-ts-mode . combobulate-mode)
-           (html-ts-mode . combobulate-mode)
-           (json-ts-mode . combobulate-mode)
-           (python-ts-mode . combobulate-mode)))
-
-(require 'combobulate-bash)
-(require 'combobulate-rules)
 #+end_src
 
 ** combobulate-bash.el
@@ -216,6 +164,34 @@ with the following skeleton code
 
 ;;; combobulate-bash.el ends here
 #+end_src
+
+** init.el
+
+add the require statements after the combobulate use package block
+
+#+begin_src emacs-lisp
+(use-package combobulate
+    :config
+    (require 'combobulate-test-prelude)
+    (require 'combobulate-debug)
+    :load-path ("~/.config/emacs/packages/combobulate/"
+                "~/.config/emacs/packages/combobulate/tests/")
+    :hook ((c-ts-mode . combobulate-mode)
+           (css-ts-mode . combobulate-mode)
+           (bash-ts-mode . combobulate-mode)
+           (html-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode)
+           (python-ts-mode . combobulate-mode)))
+
+(require 'combobulate-bash)
+(require 'combobulate-rules)
+#+end_src
+
+place your cursor after the ) in the require statements after and evalulate them by running
+
+#+begin_example
+C-x C-e
+#+end_example
 
 ** ielm
 
