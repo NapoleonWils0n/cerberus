@@ -222,7 +222,7 @@ and bash-ts-mode to the hook
 
 ** ielm
 
-open a new buew buffer for example with shell script
+open a new buffer for example with shell script
 
 run ielm in a new buffer
 
