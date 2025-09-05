@@ -140,6 +140,86 @@ place your cursor after the ) in the combobulate rules and evalulate it by runni
 C-x C-e
 #+end_example
 
+** early-init.el
+
+create the lisp directory
+
+#+begin_src sh
+mkdir -p ~/.config/emacs/lisp
+#+end_src
+
+edit your early-init.el
+
+#+begin_example
+~/.config/emacs/early-init.el
+#+end_example
+
+add the following code
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.config/emacs/lisp/")
+#+end_src
+
+** combobulate-bash.el
+
+create the combobulate-bash.el in the lisp directory
+
+#+begin_example
+~/.config/emacs/lisp/combobulate-bash.el
+#+end_example
+
+with the following skeleton code
+
+#+begin_src emacs-lisp
+;;; combobulate-bash.el --- Bash mode support for Combobulate  -*- lexical-binding: t; -*-
+
+(eval-and-compile
+ (defvar combobulate-bash-definitions
+    ;; ... DEFINITIONS ...
+
+    ))
+
+(define-combobulate-language
+ :name bash
+ :language bash
+ :major-modes (sh-mode bash-ts-mode)
+ :custom combobulate-bash-definitions
+ :setup-fn combobulate-bash-setup)
+
+(defun combobulate-bash-setup (_))
+
+(provide 'combobulate-bash)
+
+;;; combobulate-bash.el ends here
+#+end_src
+
+** init.el add combobulate-bash
+
+edit your init.el combobulate use-package block
+
+and add :init require combobulate-bash
+
+and bash-ts-mode to the hook
+
+#+begin_src emacs-lisp
+(use-package combobulate
+    :config
+    (require 'combobulate-test-prelude)
+    (require 'combobulate-debug)
+    :load-path ("~/.config/emacs/packages/combobulate/"
+                "~/.config/emacs/packages/combobulate/tests/")
+    :init
+          (require 'combobulate-bash)
+    :hook ((c-ts-mode . combobulate-mode)
+           (bash-ts-mode . combobulate-mode)
+           (css-ts-mode . combobulate-mode)
+           (html-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode)
+           (python-ts-mode . combobulate-mode)))
+
+(require 'combobulate-rules)
+#+end_src
+
 ** ielm
 
 open a new buew buffer for example with shell script
