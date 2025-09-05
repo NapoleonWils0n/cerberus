@@ -192,33 +192,6 @@ with the following skeleton code
 ;;; combobulate-bash.el ends here
 #+end_src
 
-** init.el add combobulate-bash
-
-edit your init.el combobulate use-package block
-
-and add :init require combobulate-bash
-
-and bash-ts-mode to the hook
-
-#+begin_src emacs-lisp
-(use-package combobulate
-    :config
-    (require 'combobulate-test-prelude)
-    (require 'combobulate-debug)
-    :load-path ("~/.config/emacs/packages/combobulate/"
-                "~/.config/emacs/packages/combobulate/tests/")
-    :init
-          (require 'combobulate-bash)
-    :hook ((c-ts-mode . combobulate-mode)
-           (bash-ts-mode . combobulate-mode)
-           (css-ts-mode . combobulate-mode)
-           (html-ts-mode . combobulate-mode)
-           (json-ts-mode . combobulate-mode)
-           (python-ts-mode . combobulate-mode)))
-
-(require 'combobulate-rules)
-#+end_src
-
 ** ielm
 
 open a new buffer for example with shell script
