@@ -174,10 +174,13 @@ with the following skeleton code
 ;;; combobulate-bash.el --- Bash mode support for Combobulate  -*- lexical-binding: t; -*-
 
 (eval-and-compile
- (defvar combobulate-bash-definitions
-    ;; ... DEFINITIONS ...
+  (defvar combobulate-bash-definitions
+    ;; The definitions are added here. We start with an empty list for now.
+    '())
 
-    ))
+  ;; ...
+
+  )
 
 (define-combobulate-language
  :name bash
@@ -188,6 +191,8 @@ with the following skeleton code
  :setup-fn combobulate-bash-setup)
 
 (defun combobulate-bash-setup (_))
+
+(provide 'combobulate-bash)
 
 ;;; combobulate-bash.el ends here
 #+end_src
