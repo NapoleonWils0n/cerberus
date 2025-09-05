@@ -193,6 +193,14 @@ place your cursor after the ) in the require statements after and evalulate them
 C-x C-e
 #+end_example
 
+** command
+
+#+begin_example
+C-c o B q 
+#+end_example
+
+C-c o B q command should be run in the buffer containing the shell script that you're editing.
+
 ** ielm
 
 open a new buffer for example with shell script
