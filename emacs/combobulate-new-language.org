@@ -176,8 +176,7 @@ add the require statements after the combobulate use package block
     (require 'combobulate-debug)
     :load-path ("~/.config/emacs/packages/combobulate/"
                 "~/.config/emacs/packages/combobulate/tests/")
-    :hook ((c-ts-mode . combobulate-mode)
-           (css-ts-mode . combobulate-mode)
+    :hook ((css-ts-mode . combobulate-mode)
            (bash-ts-mode . combobulate-mode)
            (html-ts-mode . combobulate-mode)
            (json-ts-mode . combobulate-mode)
