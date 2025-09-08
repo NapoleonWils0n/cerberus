@@ -710,7 +710,7 @@ total 14
 **** podman-compose down
 
 #+begin_src sh
-podman-compose
+podman-compose down
 #+end_src
 
 **** podman-compose up
