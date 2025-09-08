@@ -182,7 +182,7 @@ volumes:
 Generate the secret key sed -i "s|ultrasecretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
 
 #+begin_src sh
-sed -i "s|ultrasecretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
+sed -i "s|secretkey|$(openssl rand -hex 32)|g" settings.yml
 #+end_src
 
 ** podman

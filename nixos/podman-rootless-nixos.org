@@ -22,6 +22,10 @@ zfs create: The command to create a new ZFS dataset.
 
 zpool/containers: The name of the new dataset. Replace zpool with the name of your ZFS pool.
 
+#+begin_src sh
+doas zfs set mountpoint=/var/lib/containers/storage zpool/containers
+#+end_src
+
 zfs list
 
 #+begin_src sh
