@@ -22,6 +22,8 @@ zfs create: The command to create a new ZFS dataset.
 
 zpool/containers: The name of the new dataset. Replace zpool with the name of your ZFS pool.
 
+set the mountpoint
+
 #+begin_src sh
 doas zfs set mountpoint=/var/lib/containers/storage zpool/containers
 #+end_src
@@ -281,16 +283,22 @@ hardware = {
 # Enable common container config files in /etc/containers
 hardware.nvidia-container-toolkit.enable = true;
 
-# enable containers
-virtualisation.containers.enable = true;
-
 # containers registries
-virtualisation.containers.registries.search = [
-"docker.io"
-"quay.io"
-];
-
 virtualisation = {
+  containers = {
+  enable = true;
+  registries.search = [
+  "docker.io"
+  "quay.io"
+  ];
+    storage.settings = {
+      storage = {
+        driver = "zfs";
+        graphroot = "/var/lib/containers/storage";
+        runroot = "/run/containers/storage";
+      };
+    };
+  };
   podman = {
     enable = true;
 
@@ -425,7 +433,7 @@ security.doas = {
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 6881 ];
+  networking.firewall.allowedTCPPorts = [ 6881 8080 ];
   networking.firewall.allowedUDPPorts = [ 6882 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -455,7 +463,6 @@ security.doas = {
   system.stateVersion = "25.05"; # Did you read the comment?
 
 }
-
 #+end_src
 
 ** nixos rebuild
@@ -470,4 +477,36 @@ rebuild without using flakes
 
 #+begin_src sh
 doas nixos-rebuild switch
+#+end_src
+
+** podman
+
+*** home-manager
+
+install openssl
+
+*** searxng
+
+**** podman searxng
+
+#+begin_src sh
+podman network create searxng
+podman volume create searxng_config
+podman volume create valkey-data2
+#+end_src
+
+**** Start the Redis container.
+
+#+begin_src sh
+podman run -d --name redis --network searxng --volume valkey-data2:/data docker.io/valkey/valkey:8-alpine valkey-server --save 30 1 --loglevel warning
+#+end_src
+
+**** Start the SearXNG container
+
+Start the SearXNG container with read-write access.
+
+This is the corrected command. The -v flag is changed to mount the volume in read-write mode (rw) instead of read-only (ro).
+
+#+begin_src sh
+podman run -d --name searxng --network searxng --volume searxng_config:/etc/searxng:rw -p 8080:8080 --env SEARXNG_BASE_URL=http://searxng:8080 --env SEARXNG_REDIS_URL=redis://redis:6379/0 docker.io/searxng/searxng:latest
 #+end_src
