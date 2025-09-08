@@ -531,6 +531,7 @@ services:
       - SEARXNG_REDIS_URL=redis://redis:6379/0
       - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
       - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
+    user: "1000:100"
     cap_drop:
       - ALL
     cap_add:
