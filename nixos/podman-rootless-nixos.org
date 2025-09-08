@@ -575,7 +575,7 @@ server:
   image_proxy: true
 ui:
   static_use_hash: true
-redis:
+valkey:
   url: redis://redis:6379/0
 general:
   # Debug mode, only for development. Is overwritten by ${SEARXNG_DEBUG}
