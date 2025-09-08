@@ -53,6 +53,7 @@ add our user to the oci group
   users.mutableUsers = true;
   
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  # note have to check if the extra group is oci or podman
   users.users.djwilcox = {
       isNormalUser = true;
       extraGroups = [ "wheel networkmanager audio video oci" ]; # Enable ‘sudo’ for the user.
