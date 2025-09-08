@@ -57,6 +57,7 @@ Add the mountpoint to your configuration.nix file. After the dataset is created,
 add our user to the oci group
 
 *** configuration.nix snippet
+
 #+begin_src nix
 { config, lib, pkgs, ... }:
 {
@@ -64,16 +65,22 @@ add our user to the oci group
 # Enable common container config files in /etc/containers
 hardware.nvidia-container-toolkit.enable = true;
 
-# enable containers
-virtualisation.containers.enable = true;
-
 # containers registries
-virtualisation.containers.registries.search = [
-"docker.io"
-"quay.io"
-];
-
 virtualisation = {
+  containers = {
+  enable = true;
+  registries.search = [
+  "docker.io"
+  "quay.io"
+  ];
+    storage.settings = {
+      storage = {
+        driver = "zfs";
+        graphroot = "/var/lib/containers/storage";
+        runroot = "/run/containers/storage";
+      };
+    };
+  };
   podman = {
     enable = true;
 
@@ -94,26 +101,23 @@ fileSystems."/var/lib/containers/storage" = {
 };
 
 
-  # users
-  users.mutableUsers = true;
-  
+# users
+users.mutableUsers = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.djwilcox = {
-      isNormalUser = true;
-      extraGroups = [ "wheel networkmanager audio video oci" ]; # Enable ‘sudo’ for the user.
-  };
+users.users.djwilcox = {
+    isNormalUser = true;
+    extraGroups = [ "wheel networkmanager audio video oci" ]; # Enable ‘sudo’ for the user.
+};
 
-  # podman zfs
-  fileSystems."/var/lib/containers/storage" = {
-    device = "zpool/containers";
-    fsType = "zfs";
-    options = [ "zfsutil" ];
-  };
 
-  # Useful other development tools
-  environment.systemPackages = with pkgs; [
-    podman-compose # start group of containers for dev
-  ];
+  environment.systemPackages = with pkgs; lib.filter (p: ! (lib.hasAttr "providedSessions" p && p.providedSessions == [ "dwl" ])) [
+  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+
+  # podman
+  podman-compose
+];
+
 }
 #+end_src
 
@@ -480,14 +484,185 @@ doas nixos-rebuild switch
 #+end_src
 
 ** podman
-
 *** home-manager
 
 install openssl
 
 *** searxng
+**** compose.yaml
 
-**** podman searxng
+#+begin_src yaml
+version: "3.7"
+
+services:
+  redis:
+    container_name: redis
+    image: docker.io/valkey/valkey:8-alpine
+    command: valkey-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - searxng
+    volumes:
+      - valkey-data2:/data
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    networks:
+      - searxng
+    ports:
+      - "0.0.0.0:8080:8080"
+    volumes:
+      - searxng_config:/etc/searxng:ro
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+      - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
+      - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+networks:
+  searxng:
+
+volumes:
+  searxng_config:
+    external: true
+  valkey-data2:
+    external: true
+#+end_src
+
+**** limiter.toml
+
+#+begin_src toml
+# This configuration file updates the default configuration file
+# See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+
+[botdetection.ip_limit]
+# activate link_token method in the ip_limit method
+link_token = true
+#+end_src
+
+**** settings.yml
+
+#+begin_src yaml
+# see https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+use_default_settings: true
+server:
+  # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
+  secret_key: "secretkey"  # change this!
+  limiter: true  # can be disabled for a private instance
+  image_proxy: true
+ui:
+  static_use_hash: true
+redis:
+  url: redis://redis:6379/0
+general:
+  # Debug mode, only for development. Is overwritten by ${SEARXNG_DEBUG}
+  debug: false
+  # displayed name
+  instance_name: "Searxng"
+  # For example: https://example.com/privacy
+  privacypolicy_url: false
+  # use true to use your own donation page written in searx/info/en/donate.md
+  # use false to disable the donation link
+  donation_url: false
+  # mailto:contact@example.com
+  contact_url: false
+  # record stats
+  enable_metrics: true
+  # expose stats in open metrics format at /metrics
+  # leave empty to disable (no password set)
+  # open_metrics: <password>
+  open_metrics: ''
+
+search:
+  # Filter results. 0: None, 1: Moderate, 2: Strict
+  safe_search: 0
+  # Existing autocomplete backends: "360search", "baidu", "brave", "dbpedia", "duckduckgo", "google", "yandex",
+  # "mwmbl", "seznam", "sogou", "stract", "swisscows", "qwant", "wikipedia" -
+  # leave blank to turn it off by default.
+  autocomplete: ""
+  # minimun characters to type before autocompleter starts
+  autocomplete_min: 4
+  # backend for the favicon near URL in search results.
+  # Available resolvers: "allesedv", "duckduckgo", "google", "yandex" - leave blank to turn it off by default.
+  favicon_resolver: ""
+  # Default search language - leave blank to detect from browser information or
+  # use codes from 'languages.py'
+  default_lang: "auto"
+  # max_page: 0  # if engine supports paging, 0 means unlimited numbers of pages
+  # Available languages
+  # languages:
+  #   - all
+  #   - en
+  #   - en-US
+  #   - de
+  #   - it-IT
+  #   - fr
+  #   - fr-BE
+  # ban time in seconds after engine errors
+  ban_time_on_fail: 5
+  # max ban time in seconds after engine errors
+  max_ban_time_on_fail: 120
+  suspended_times:
+    # Engine suspension time after error (in seconds; set to 0 to disable)
+    # For error "Access denied" and "HTTP error [402, 403]"
+    SearxEngineAccessDenied: 86400
+    # For error "CAPTCHA"
+    SearxEngineCaptcha: 86400
+    # For error "Too many request" and "HTTP error 429"
+    SearxEngineTooManyRequests: 3600
+    # Cloudflare CAPTCHA
+    cf_SearxEngineCaptcha: 1296000
+    cf_SearxEngineAccessDenied: 86400
+    # ReCAPTCHA
+    recaptcha_SearxEngineCaptcha: 604800
+
+  # remove format to deny access, use lower case.
+  # formats: [html, csv, json, rss]
+  formats:
+    - html
+    - json
+    - rss
+categories_as_tabs:
+  general:
+  images:
+  videos:
+  news:
+  it:
+  files:
+#+end_src
+
+**** Generate the secret key 
+
+Generate the secret key sed -i "s|secretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
+
+#+begin_src sh
+sed -i "s|secretkey|$(openssl rand -hex 32)|g" settings.yml
+#+end_src
+
+*** podman searxng
 
 #+begin_src sh
 podman network create searxng
@@ -509,4 +684,32 @@ This is the corrected command. The -v flag is changed to mount the volume in rea
 
 #+begin_src sh
 podman run -d --name searxng --network searxng --volume searxng_config:/etc/searxng:rw -p 8080:8080 --env SEARXNG_BASE_URL=http://searxng:8080 --env SEARXNG_REDIS_URL=redis://redis:6379/0 docker.io/searxng/searxng:latest
+#+end_src
+
+open your browser to
+
+[[http://127.0.0.1:8080]]
+
+**** permissions note
+
+note that podman will change the persmissions on your files so you will need to edit as root
+
+#+begin_example
+ls -l
+total 14
+-rw-r--r-- 1 100976 100976 1133 Sep  8 19:39 compose.yaml
+-rw-r--r-- 1 100976 100976  231 Sep  8 17:31 limiter.toml
+-rw-r--r-- 1 100976 100976 2845 Sep  8 17:54 settings.yml
+#+end_example
+
+**** podman-compose down
+
+#+begin_src sh
+podman-compose
+#+end_src
+
+**** podman-compose up
+
+#+begin_src sh
+podman-compose up -d
 #+end_src
