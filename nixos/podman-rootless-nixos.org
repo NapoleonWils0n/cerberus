@@ -707,14 +707,16 @@ total 14
 -rw-r--r-- 1 100976 100976 2845 Sep  8 17:54 settings.yml
 #+end_example
 
+**** podman-compose up
+
+when you need to start searxng run
+
+#+begin_src sh
+podman-compose up -d
+#+end_src
 **** podman-compose down
 
 #+begin_src sh
 podman-compose down
 #+end_src
 
-**** podman-compose up
-
-#+begin_src sh
-podman-compose up -d
-#+end_src
