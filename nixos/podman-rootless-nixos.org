@@ -714,6 +714,7 @@ when you need to start searxng run
 #+begin_src sh
 podman-compose up -d
 #+end_src
+
 **** podman-compose down
 
 #+begin_src sh
