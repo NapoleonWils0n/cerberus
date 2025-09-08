@@ -666,7 +666,6 @@ sed -i "s|secretkey|$(openssl rand -hex 32)|g" settings.yml
 
 #+begin_src sh
 podman network create searxng
-podman volume create searxng_config
 podman volume create valkey-data2
 #+end_src
 
@@ -683,7 +682,7 @@ Start the SearXNG container with read-write access.
 This is the corrected command. The -v flag is changed to mount the volume in read-write mode (rw) instead of read-only (ro).
 
 #+begin_src sh
-podman run -d --name searxng --network searxng --volume searxng_config:/etc/searxng:rw -p 8080:8080 --env SEARXNG_BASE_URL=http://searxng:8080 --env SEARXNG_REDIS_URL=redis://redis:6379/0 docker.io/searxng/searxng:latest
+podman run -d --name searxng --network searxng --volume /home/djwilcox/podman/searxng:/etc/searxng:rw -p 8080:8080 --env SEARXNG_BASE_URL=http://searxng:8080 --env SEARXNG_REDIS_URL=redis://redis:6379/0 docker.io/searxng/searxng:latest
 #+end_src
 
 open your browser to
