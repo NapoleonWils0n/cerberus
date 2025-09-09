@@ -529,6 +529,7 @@ services:
     environment:
       - SEARXNG_BASE_URL=http://localhost:8080
       - SEARXNG_REDIS_URL=redis://redis:6379/0
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
       - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
       - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
     user: "1000:100"
@@ -554,17 +555,6 @@ volumes:
     external: true
 #+end_src
 
-**** limiter.toml
-
-#+begin_src toml
-# This configuration file updates the default configuration file
-# See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
-
-[botdetection.ip_limit]
-# activate link_token method in the ip_limit method
-link_token = true
-#+end_src
-
 **** settings.yml
 
 #+begin_src yaml
@@ -572,7 +562,7 @@ link_token = true
 use_default_settings: true
 server:
   # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
-  secret_key: "secretkey"  # change this!
+  secret_key: "secretkey"
   limiter: true  # can be disabled for a private instance
   image_proxy: true
 ui:
@@ -656,24 +646,40 @@ categories_as_tabs:
   files:
 #+end_src
 
-**** Generate the secret key 
+**** limiter.toml
 
-Generate the secret key sed -i "s|secretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
+#+begin_src toml
+# This configuration file updates the default configuration file
+# See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+
+[botdetection.ip_limit]
+# activate link_token method in the ip_limit method
+link_token = true
+#+end_src
+
+**** searxng-start
 
 #+begin_src sh
-sed -i "s|secretkey|$(openssl rand -hex 32)|g" settings.yml
+#!/bin/sh
+
+# This script generates a new secret key and starts the SearXNG containers.
+
+# Generate a new random 32-byte hex secret key.
+SECRET_KEY=$(openssl rand -hex 32)
+
+# Start the services, passing the generated secret key as an environment variable.
+# The `podman-compose up -d` command will read this variable and apply it.
+SEARXNG_SECRET=$SECRET_KEY podman-compose up -d
 #+end_src
 
 *** podman searxng
-**** podman-compose up
+**** searxng-start
 
-when you need to start searxng run
-
-#+begin_src sh
-podman-compose up -d
-#+end_src
+start searxng by running the searxng-start script
 
 **** podman-compose down
+
+stop searxng by running
 
 #+begin_src sh
 podman-compose down
