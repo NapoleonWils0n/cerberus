@@ -635,6 +635,7 @@ search:
   # formats: [html, csv, json, rss]
   formats:
     - html
+    - csv
     - json
     - rss
 categories_as_tabs:
