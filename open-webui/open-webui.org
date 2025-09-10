@@ -1,0 +1,123 @@
+#+STARTUP: content
+* open-webui
+** resources
+
+[[https://github.com/open-webui/open-webui]]
+
+[[https://docs.openwebui.com/getting-started/quick-start/]]
+
+** firewall
+
+make sure to open port 3000
+
+** podman-compose.yaml
+
+create the open-webui directory
+
+#+begin_src sh
+mkdir -p ~/podman/open-webui
+#+end_src
+
+create the data directory
+
+#+begin_src sh
+mkdir -p ~/podman/open-webui/data
+#+end_src
+
+create the compose.yaml file
+
+#+begin_src sh
+vi ~/podman/open-webui/compose.yaml
+#+end_src
+
+with the following code
+
+#+begin_src yaml
+services:
+  open-webui:
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:cuda
+    restart: always
+    ports:
+      - "3000:8080"
+    environment:
+      - WEBUI_AUTH=False
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - open-webui:/app/backend/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  open-webui:
+#+end_src
+
+** seaxng
+
+[[https://docs.openwebui.com/tutorials/web-search/searxng/]]
+
+toggle web search on
+
+set the ip address for searxng
+
+#+begin_example
+http://192.168.1.3:8080/search?q=<query>
+#+end_example
+
+*** searxng settings
+
+settings.yml
+
+#+begin_src yaml
+server:
+  limiter: false  # changed to false for open-webui
+#+end_src
+
+** ollama host
+
+export the ollama host to listen on all interfaces
+
+#+begin_src sh
+export OLLAMA_HOST=0.0.0.0:11434 
+#+end_src
+
+run ollama serve
+
+#+begin_src sh
+ollama serve
+#+end_src
+
+** open-webui start
+
+#+begin_src sh
+podman-compose up -d
+#+end_src
+
+** open-webui stop
+
+#+begin_src sh
+podman-compose down
+#+end_src
+
+** open-webui ollama
+
+[[http://127.0.0.1:3000/admin/settings/connections]]
+
+Manage OpenAI API Connections
+
+#+begin_example
+https://api.openai.com/v1
+#+end_example
+
+Manage Ollama API Connections
+
+#+begin_example
+http://host.docker.internal:11434
+#+end_example
+
