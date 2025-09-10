@@ -1,0 +1,37 @@
+#+STARTUP: content
+* firefox use local llm
+** resources
+
+[[https://docs.openwebui.com/tutorials/integrations/firefox-sidebar/]]
+
+** firefox local llm
+
+To use a local LLM with the Firefox sidebar, you'll need to do the following:
+
+Enable the AI Chatbot Feature: In the address bar, type about:config and accept the risk. Search for browser.ml.chat.enabled and set its value to true. This enables the AI chatbot sidebar feature if it isn't already.
+
+Allow Localhost Connection:
+
+The key about:config option is
+
+#+begin_example
+browser.ml.chat.hideLocalhost
+#+end_example
+
+You need to set this preference to false.
+
+By default, Firefox hides the option to connect to a local server for privacy reasons.
+
+Changing this setting will add "localhost" as an option in the sidebar's AI provider dropdown.
+
+Specify the Provider: You may also need to set the address of your local LLM server.
+
+You can do this by searching for the
+
+#+begin_example
+browser.ml.chat.provider
+#+end_example
+
+preference and setting its value to the address of your local web UI, such as http://localhost:8080.
+
+It's important to note that you will need to have a local LLM server, such as Ollama, and a web user interface (like Open WebUI) running on your computer for this to work. Firefox's built-in AI chat sidebar is designed to connect to a web interface, not directly to the Ollama API itself.
