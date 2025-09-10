@@ -1,23 +1,85 @@
 #+STARTUP: content
 * searxng podman
 ** searxng
-*** setting.yml
+*** compose.yaml
 
-#+begin_src sh
-vi searxng/settings.yml
+#+begin_src yaml
+version: "3.8"
+
+services:
+  redis:
+    container_name: redis
+    image: docker.io/valkey/valkey:8-alpine
+    command: valkey-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - searxng
+    volumes:
+      - valkey-data2:/data
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    networks:
+      - searxng
+    ports:
+      - "0.0.0.0:8080:8080"
+    volumes:
+      - /home/djwilcox/podman/searxng:/etc/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+      - SEARXNG_REDIS_URL=redis://redis:6379/0
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+      - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
+      - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
+    user: "1000:100"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+networks:
+  searxng:
+
+volumes:
+  searxng_config:
+    external: true
+  valkey-data2:
+    external: true
 #+end_src
+
+*** settings.yml
 
 #+begin_src yaml
 # see https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
 use_default_settings: true
 server:
   # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
-  secret_key: "secretkey"  # change this!
-  limiter: true  # can be disabled for a private instance
+  secret_key: ""
+  limiter: false  # changed to false for open-webui
   image_proxy: true
 ui:
   static_use_hash: true
-redis:
+valkey:
   url: redis://redis:6379/0
 general:
   # Debug mode, only for development. Is overwritten by ${SEARXNG_DEBUG}
@@ -85,6 +147,7 @@ search:
   # formats: [html, csv, json, rss]
   formats:
     - html
+    - csv
     - json
     - rss
 categories_as_tabs:
@@ -94,15 +157,12 @@ categories_as_tabs:
   news:
   it:
   files:
-
+  map:
+  social media:
 
 #+end_src
 
 *** limiter.toml
-
-#+begin_src sh
-vi searxng/limiter.toml
-#+end_src
 
 #+begin_src toml
 # This configuration file updates the default configuration file
@@ -113,80 +173,29 @@ vi searxng/limiter.toml
 link_token = true
 #+end_src
 
-** compose
-
-compose.yaml
-
-#+begin_src yaml
-version: "3.7"
-
-services:
-  redis:
-    container_name: redis
-    image: docker.io/valkey/valkey:8-alpine
-    command: valkey-server --save 30 1 --loglevel warning
-    restart: unless-stopped
-    networks:
-      - searxng
-    volumes:
-      - valkey-data2:/data
-    cap_drop:
-      - ALL
-    cap_add:
-      - SETGID
-      - SETUID
-      - DAC_OVERRIDE
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
-
-  searxng:
-    container_name: searxng
-    image: docker.io/searxng/searxng:latest
-    restart: unless-stopped
-    networks:
-      - searxng
-    ports:
-      - "0.0.0.0:8080:8080"
-    volumes:
-      - ./searxng:/etc/searxng:rw
-    environment:
-      - SEARXNG_BASE_URL=http://192.168.1.151:8080
-      - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
-      - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
-    cap_drop:
-      - ALL
-    cap_add:
-      - CHOWN
-      - SETGID
-      - SETUID
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
-
-networks:
-  searxng:
-
-volumes:
-  caddy-data:
-  caddy-config:
-  valkey-data2:
-#+end_src
-
-** Generate the secret key 
-
-Generate the secret key sed -i "s|secretkey|$(openssl rand -hex 32)|g" searxng/settings.yml
+*** searxng-start
 
 #+begin_src sh
-sed -i "s|secretkey|$(openssl rand -hex 32)|g" settings.yml
+#!/bin/sh
+
+# This script generates a new secret key and starts the SearXNG containers.
+
+# Generate a new random 32-byte hex secret key.
+SECRET_KEY=$(openssl rand -hex 32)
+
+# Start the services, passing the generated secret key as an environment variable.
+# The `podman-compose up -d` command will read this variable and apply it.
+SEARXNG_SECRET=$SECRET_KEY podman-compose up -d
 #+end_src
 
-** podman
+** searxng-start
+
+start searxng by running the searxng-start script
+
+** podman-compose down
+
+stop searxng by running
 
 #+begin_src sh
-podman-compose up -d
+podman-compose down
 #+end_src
