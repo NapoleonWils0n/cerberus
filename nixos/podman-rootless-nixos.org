@@ -681,6 +681,10 @@ SEARXNG_SECRET=$SECRET_KEY podman-compose up -d
 
 start searxng by running the searxng-start script
 
+#+begin_src sh
+./searxng-start
+#+end_src
+
 **** podman-compose down
 
 stop searxng by running
