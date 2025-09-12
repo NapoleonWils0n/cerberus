@@ -764,6 +764,12 @@ set the ip address for searxng
 http://192.168.1.3:8080/search?q=<query>
 #+end_example
 
+you can also try using the docker internal url
+
+#+begin_example
+http://host.docker.internal:8080/search?q=<query>
+#+end_example
+
 **** searxng settings
 
 settings.yml
