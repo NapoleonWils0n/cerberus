@@ -32,6 +32,10 @@ You can do this by searching for the
 browser.ml.chat.provider
 #+end_example
 
-preference and setting its value to the address of your local web UI, such as http://localhost:8080.
+preference and setting its value to the address of your local web UI, such as 
+
+#+begin_example
+http://localhost:8080
+#+end_example
 
 It's important to note that you will need to have a local LLM server, such as Ollama, and a web user interface (like Open WebUI) running on your computer for this to work. Firefox's built-in AI chat sidebar is designed to connect to a web interface, not directly to the Ollama API itself.
