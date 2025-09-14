@@ -94,6 +94,18 @@ edit docker-compose.yml
         hmac_key: "CHANGE_ME!!"
 #+end_src
 
++ comment out private_url
+
+#+begin_src yaml
+        - private_url: "http://companion:8282/companion"
+#+end_src
+
++ commented out
+
+#+begin_src yaml
+#        - private_url: "http://companion:8282/companion"
+#+end_src
+
 *** default docker-compose.yml
 
 #+begin_src yaml
@@ -188,7 +200,7 @@ services:
         invidious_companion:
         # URL used for the internal communication between invidious and invidious companion
         # There is no need to change that except if Invidious companion does not run on the same docker compose file.
-        - private_url: "http://companion:8282/companion"
+        #- private_url: "http://companion:8282/companion"
         # IT is NOT recommended to use the same key as HMAC KEY. Generate a new key!
         # Use the key generated in the 2nd step
         invidious_companion_key: "eejie3Aedee9eiw8"
