@@ -121,3 +121,8 @@ Manage Ollama API Connections
 http://host.docker.internal:11434
 #+end_example
 
+** open-webui update
+
+#+begin_src sh
+podman-compose pull && podman-compose up -d --force-recreate
+#+end_src
