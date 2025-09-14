@@ -1,0 +1,300 @@
+#+STARTUP: content
+* invidious
+** resources
+
+[[https://docs.invidious.io/installation/]]
+
+** clone the invidious repository
+
+#+begin_src sh
+git clone https://github.com/iv-org/invidious.git
+#+end_src
+
+change directory in the invidious repository
+
+#+begin_src sh
+cd invidious
+#+end_src
+
+** packages
+
+required packages
+
+#+begin_example
+podman-compose pwgen
+#+end_example
+
+*** nixos podman
+
+[[https://github.com/NapoleonWils0n/cerberus/blob/master/nixos/podman-rootless-nixos.org]]
+
+*** pwgen
+
+nix-shell install pwgenn
+
+#+begin_src sh
+nix-shell -p pwgen
+#+end_src
+
+create the keys with pwgen
+
+#+begin_example
+pwgen 16 1 # for Invidious (HMAC_KEY)
+pwgen 16 1 # for Invidious companion (invidious_companion_key)
+#+end_example
+
+HMAC_KEY
+
+#+begin_src sh
+pwgen 16 1
+#+end_src
+
+example
+
+#+begin_example
+feWohy5Xahd4laew
+#+end_example
+
+invidious_companion_key
+
+#+begin_src sh
+pwgen 16 1
+#+end_src
+
+example
+
+#+begin_example
+eejie3Aedee9eiw8
+#+end_example
+
+** edit docker-compose.yml
+
+edit docker-compose.yml
+
++ change the ports
+
+#+begin_src yaml
+    # Remove "127.0.0.1:" if used from an external IP
+    ports:
+      - "3000:3000"
+#+end_src
+
++ invidious_companion_key
+
+#+begin_src yaml
+        # IT is NOT recommended to use the same key as HMAC KEY. Generate a new key!
+        # Use the key generated in the 2nd step
+        invidious_companion_key: "CHANGE_ME!!"
+#+end_src
+
++ change the hmac_key
+
+#+begin_src yaml
+        # Use the key generated in the 2nd step
+        hmac_key: "CHANGE_ME!!"
+#+end_src
+
+*** default docker-compose.yml
+
+#+begin_src yaml
+# Warning: This docker-compose file is made for development purposes.
+# Using it will build an image from the locally cloned repository.
+#
+# If you want to use Invidious in production, see the docker-compose.yml file provided
+# in the installation documentation: https://docs.invidious.io/installation/
+
+version: "3"
+services:
+
+  invidious:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      invidious-db:
+        condition: service_healthy
+        restart: true
+    environment:
+      # Please read the following file for a comprehensive list of all available
+      # configuration options and their associated syntax:
+      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: kemal
+          password: kemal
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        # external_port:
+        # domain:
+        # https_only: false
+        # statistics_enabled: false
+        hmac_key: "CHANGE_ME!!"
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/trending || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+
+  invidious-db:
+    image: docker.io/library/postgres:14
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./config/sql:/config/sql
+      - ./docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
+    environment:
+      POSTGRES_DB: invidious
+      POSTGRES_USER: kemal
+      POSTGRES_PASSWORD: kemal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+
+volumes:
+  postgresdata:
+#+end_src
+
+Because of various issues Invidious must be restarted often, at least once a day, ideally every hour.
+
+*** docker-compose.yml
+
+#+begin_src yaml
+version: "3"
+services:
+
+  invidious:
+    image: quay.io/invidious/invidious:latest
+    # image: quay.io/invidious/invidious:latest-arm64 # ARM64/AArch64 devices
+    restart: unless-stopped
+    # Remove "127.0.0.1:" if used from an external IP
+    ports:
+      - "3000:3000"
+    environment:
+      # Please read the following file for a comprehensive list of all available
+      # configuration options and their associated syntax:
+      # https://github.com/iv-org/invidious/blob/master/config/config.example.yml
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: kemal
+          password: kemal
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        invidious_companion:
+        # URL used for the internal communication between invidious and invidious companion
+        # There is no need to change that except if Invidious companion does not run on the same docker compose file.
+        - private_url: "http://companion:8282/companion"
+        # IT is NOT recommended to use the same key as HMAC KEY. Generate a new key!
+        # Use the key generated in the 2nd step
+        invidious_companion_key: "eejie3Aedee9eiw8"
+        # external_port:
+        # domain:
+        # https_only: false
+        # statistics_enabled: false
+        # Use the key generated in the 2nd step
+        hmac_key: "feWohy5Xahd4laew"
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/trending || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    depends_on:
+      - invidious-db
+
+  companion:
+    image: quay.io/invidious/invidious-companion:latest
+    environment:
+    # Use the key generated in the 2nd step
+       - SERVER_SECRET_KEY="eejie3Aedee9eiw8"
+    restart: unless-stopped
+    # Uncomment only if you have configured "public_url" for Invidious companion
+    # Or if you want to use Invidious companion as an API in your program.
+    # Remove "127.0.0.1:" if used from an external IP
+    #ports:
+    #  - "127.0.0.1:8282:8282"
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    cap_drop:
+      - ALL
+    read_only: true
+    # cache for youtube library
+    volumes:
+      - companioncache:/var/tmp/youtubei.js:rw
+    security_opt:
+      - no-new-privileges:true
+
+  invidious-db:
+    image: docker.io/library/postgres:14
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./config/sql:/config/sql
+      - ./docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh
+    environment:
+      POSTGRES_DB: invidious
+      POSTGRES_USER: kemal
+      POSTGRES_PASSWORD: kemal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+
+volumes:
+  postgresdata:
+  companioncache:
+
+#+end_src
+
+** open ports
+
+open tcp ports
+
+#+begin_example
+3000 8282
+#+end_example
+
+** podman-compose
+
+make sure you are in the invidious git repository and run podman-compose up
+
+#+begin_src sh
+podman-compose up
+#+end_src
+
+** login
+
+select login and add a user name and password
+on the next screen add in the time from the clock
+
+** start invidious
+
+change directory into the invidious git repository
+
+#+begin_src sh 
+podman-compose up -d
+#+end_src
+
+** stop invidious
+
+change directory into the invidious git repository
+
+#+begin_src sh 
+podman-compose down
+#+end_src
+
+** update
+
+#+begin_src sh
+podman-compose pull
+podman-compose up -d
+podman image prune -f
+#+end_src
