@@ -4,3 +4,9 @@
 #+begin_src sh
 stat -f "%p" filename
 #+end_src
+
+alternative command
+
+#+begin_src sh
+stat -c "%a" filename
+#+end_src
