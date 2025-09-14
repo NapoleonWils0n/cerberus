@@ -200,7 +200,9 @@ on the next screen add in the time from the clock
 
 ** stop invidious
 
-change directory into the invidious git repository
+change directory into the invidious-podman directory
+
+and run podman-compose down
 
 #+begin_src sh 
 podman-compose down
