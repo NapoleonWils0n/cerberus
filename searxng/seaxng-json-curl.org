@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* searxng json curl
+
+query searxng with curl and json, where query is the search term
+
+#+begin_src sh
+curl 'http://localhost:8080/search?q=query&format=json'
+#+end_src
+
+query searxng with curl and json, where emacs is the search term
+
+#+begin_src sh
+curl 'http://localhost:8080/search?q=emacs&format=json'
+#+end_src
