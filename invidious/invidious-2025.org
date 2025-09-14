@@ -185,7 +185,9 @@ podman-compose up -d
 
 ** start invidious
 
-change directory into the invidious git repository
+change directory into the invidious-podman directory
+
+and run the start-invidious script
 
 #+begin_src sh 
 ./start-invidious
