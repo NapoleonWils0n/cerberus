@@ -93,6 +93,20 @@ run ollama serve
 ollama serve
 #+end_src
 
+*** ollama-start script
+
+#+begin_src sh
+#!/bin/sh
+
+# start ollama listen on 0:0:0:0
+
+# export ollama host
+export OLLAMA_HOST=0.0.0.0:11434
+
+# ollama serve
+ollama serve
+#+end_src
+
 ** open-webui start
 
 #+begin_src sh
