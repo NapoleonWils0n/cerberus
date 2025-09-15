@@ -76,7 +76,6 @@ services:
         invidious_companion:
         # URL used for the internal communication between invidious and invidious companion
         # There is no need to change that except if Invidious companion does not run on the same docker compose file.
-        # note: commented out private_url: because its not working, so you have to play the video with mpv and not in the browser
         - private_url: "http://companion:8282/companion"
         # IT is NOT recommended to use the same key as HMAC KEY. Generate a new key!
         # Use the key generated in the 2nd step
