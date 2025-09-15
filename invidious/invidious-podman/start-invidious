@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# This script generates a new secret key and starts invidious
+
+# Generate a new random secret key.
+SECRET_COMPANION_KEY=$(pwgen 16 1)
+SECRET_HMAC_KEY=$(pwgen 16 1)
+
+# Start the services, passing the generated secret key as an environment variable.
+# The `podman-compose up -d` command will read this variable and apply it.
+INVIDIOUS_COMPANION_KEY=$SECRET_COMPANION_KEY INVIDIOUS_HMAC_KEY=$SECRET_HMAC_KEY \
+podman-compose up -d
