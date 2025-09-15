@@ -4,20 +4,6 @@
 
 [[https://docs.invidious.io/installation/]]
 
-** important note
-
-there seems to be a problem with invidious-companion container
-
-so i have commented out this line in the compose.yml file
-
-#+begin_src yaml
-#- private_url: "http://companion:8282/companion"
-#+end_src
-
-this means you have to play the videos with the mpv video player
-
-because the video doesnt play in the browser
-
 ** packages
 
 required packages
@@ -91,16 +77,16 @@ services:
         # URL used for the internal communication between invidious and invidious companion
         # There is no need to change that except if Invidious companion does not run on the same docker compose file.
         # note: commented out private_url: because its not working, so you have to play the video with mpv and not in the browser
-        #- private_url: "http://companion:8282/companion"
+        - private_url: "http://companion:8282/companion"
         # IT is NOT recommended to use the same key as HMAC KEY. Generate a new key!
         # Use the key generated in the 2nd step
-        invidious_companion_key: "${INVIDIOUS_COMPANION_KEY}"
+        invidious_companion_key: ${INVIDIOUS_COMPANION_KEY}
         # external_port:
         # domain:
         # https_only: false
         # statistics_enabled: false
         # Use the key generated in the 2nd step
-        hmac_key: "${INVIDIOUS_HMAC_KEY}"
+        hmac_key: ${INVIDIOUS_HMAC_KEY}
     healthcheck:
       test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/trending || exit 1
       interval: 30s
@@ -117,7 +103,7 @@ services:
     image: quay.io/invidious/invidious-companion:latest
     environment:
     # Use the key generated in the 2nd step
-       SERVER_SECRET_KEY="${INVIDIOUS_COMPANION_KEY}"
+       SERVER_SECRET_KEY=${INVIDIOUS_COMPANION_KEY}
     restart: unless-stopped
     # Uncomment only if you have configured "public_url" for Invidious companion
     # Or if you want to use Invidious companion as an API in your program.
@@ -215,6 +201,7 @@ if you need to remove the invidious volumes you can run the following command
 #+begin_src sh
 podman-compose down --rmi all --volumes
 #+end_src
+
 ** update
 
 #+begin_src sh
