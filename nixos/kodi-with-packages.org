@@ -1,0 +1,12 @@
+#+STARTUP: showall
+* kodi install addons
+
+home-manager
+
+#+begin_src nix
+home.packages = with pkgs; [
+  (kodi-wayland.withPackages (kodiPkgs: with kodiPkgs; [
+    inputstream-adaptive
+  ]))
+];
+#+end_src
