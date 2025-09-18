@@ -1,0 +1,26 @@
+#+STARTUP: content
+* ollama create modelfile
+** resources
+
+[[https://ollama.readthedocs.io/en/modelfile/]]
+
+** modelfile
+
+#+begin_src sh
+mkdir -p modelsfiles
+#+end_src
+
+#+begin_example
+Gemma-No-Talk.modelfile
+#+end_example
+
+#+begin_example
+FROM gemma3:4b
+SYSTEM You are a strict text processor. You will only output the requested information and nothing else. You will not add any conversational phrases, introductions, or concluding remarks. You will not add any commentary or explanations.
+#+end_example
+
+** create modelfile
+
+#+begin_src sh
+ollama create gemma-no-talk -f ./modelfiles/Gemma-No-Talk.modelfile
+#+end_src
