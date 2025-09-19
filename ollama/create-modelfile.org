@@ -7,11 +7,11 @@
 ** modelfile
 
 #+begin_src sh
-mkdir -p modelsfiles
+mkdir -p modelfiles
 #+end_src
 
 #+begin_example
-Gemma-No-Talk.modelfile
+gemma-no-talk.modelfile
 #+end_example
 
 #+begin_example
@@ -22,5 +22,5 @@ SYSTEM You are a strict text processor. You will only output the requested infor
 ** create modelfile
 
 #+begin_src sh
-ollama create gemma-no-talk -f ./modelfiles/Gemma-No-Talk.modelfile
+ollama create gemma-no-talk -f ./modelfiles/gemma-no-talk.modelfile
 #+end_src
