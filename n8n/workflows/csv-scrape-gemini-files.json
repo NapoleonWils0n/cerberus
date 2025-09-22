@@ -33,7 +33,8 @@
         144
       ],
       "id": "04c1fc77-5cbe-45cc-b37b-f9669d058f76",
-      "name": "HTTP Request"
+      "name": "HTTP Request",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -349,7 +350,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "029baeb5-798b-46b8-8c54-23775c7e68c8",
+  "versionId": "7442769d-31d6-4ac8-ae2e-33227fe2ed96",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

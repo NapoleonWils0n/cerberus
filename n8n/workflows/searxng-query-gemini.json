@@ -73,7 +73,8 @@
         288
       ],
       "id": "3ed16bec-62da-4daa-958b-4eab0230c033",
-      "name": "HTTP Request"
+      "name": "HTTP Request",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -99,7 +100,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        304,
+        320,
         288
       ],
       "id": "5151b3ba-5995-48d2-9510-2233da527bc4",
@@ -387,7 +388,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "58c1a2ba-8e2d-4ee3-bf1f-52eeeb1e8672",
+  "versionId": "8393ac53-dc9e-49e5-b5ca-bffc2bd49b9c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
