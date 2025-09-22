@@ -1,5 +1,5 @@
 {
-  "name": "searxng-query",
+  "name": "searxng-query-ollama",
   "nodes": [
     {
       "parameters": {
@@ -390,7 +390,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "cb6cb95a-a4bc-47b5-a364-01230d1cc315",
+  "versionId": "4e61155c-bc71-4c7e-bf6e-57ce9708f367",
   "meta": {
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
   },
