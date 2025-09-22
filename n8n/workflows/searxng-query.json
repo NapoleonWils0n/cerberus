@@ -1,16 +1,56 @@
 {
-  "name": "csv-scrape-gemini-files",
+  "name": "searxng-query",
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bcae0409-bc62-4dc2-a48f-697360ca12bc",
+              "name": "=query",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
       "position": [
-        -544,
-        128
+        -816,
+        272
       ],
-      "id": "df55c12b-3aa3-4b5f-afaa-66a2159d79bb",
-      "name": "When clicking ‘Execute workflow’"
+      "id": "67491ff7-a946-424f-a589-4d19d683b73a",
+      "name": "search query"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -960,
+        272
+      ],
+      "id": "a9dab4b6-f222-4af0-951d-c0367c9784a1",
+      "name": "search",
+      "webhookId": "4a9411f6-bdf0-4a4c-97b7-660ad12e47b8"
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:8080/search?q={{ $json.query }}&format=json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -672,
+        272
+      ],
+      "id": "d1038d29-f4e6-4681-9810-30b7ab45117b",
+      "name": "searxng"
     },
     {
       "parameters": {
@@ -29,10 +69,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        192,
-        144
+        -80,
+        288
       ],
-      "id": "04c1fc77-5cbe-45cc-b37b-f9669d058f76",
+      "id": "e0570f81-f1c7-49e1-9632-e68477562144",
       "name": "HTTP Request"
     },
     {
@@ -42,27 +82,27 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -32,
-        128
+        -304,
+        272
       ],
-      "id": "0289678f-0980-4677-9c19-0ea56dd4cb38",
+      "id": "4e7e1769-5f95-43f0-b41b-df352fc0f290",
       "name": "Loop Over Items"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Extract the main body text directly from the following HTML content. Do not summarize, rephrase, or add any information not present in the original text. Exclude all navigation, footers, headers, ads, and other irrelevant elements. The output must only be the final, unsummarized text, without any introductions, headers, or concluding remarks. {{ $json.bodyText }}\n",
+        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}",
         "options": {
-          "systemMessage": "You are a strict text processor. Your only task is to extract the requested information directly from the provided text. You must not use any internal knowledge, summarize, rephrase, or add any commentary. Output only the extracted content."
+          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        560,
-        144
+        304,
+        288
       ],
-      "id": "5423477b-ee4a-4f1b-81af-a80e0d81d67b",
+      "id": "44c20192-a31c-403c-ae74-6b703b25847b",
       "name": "AI Agent"
     },
     {
@@ -73,57 +113,11 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        624,
-        336
+        416,
+        560
       ],
-      "id": "52c3e334-5129-4833-b08b-449f4819bd9d",
+      "id": "41a88085-2f90-4a63-808a-25d233321360",
       "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        464,
-        336
-      ],
-      "id": "2a985583-96d0-42f5-819d-e7cc4790be9b",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "TOjrSUDwcdx8wf7N",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "fileSelector": "=/home/djwilcox/Documents/work/n8n/barts-fair.csv",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -368,
-        128
-      ],
-      "id": "a899c5be-c332-4723-aef5-7e3220ff6a15",
-      "name": "read from csv"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -192,
-        128
-      ],
-      "id": "0db24fef-c2b2-4645-97a0-22c3dbeb5de0",
-      "name": "Extract from csv"
     },
     {
       "parameters": {
@@ -145,10 +139,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        368,
-        144
+        96,
+        288
       ],
-      "id": "67ed1799-f55e-49d9-9413-70f6c23a39a2",
+      "id": "677bd527-3c38-4b6a-9a30-5c61f8ae2bd6",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -169,10 +163,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        848,
-        144
+        592,
+        288
       ],
-      "id": "76a33afb-135a-4d72-96da-2ffc3d3894a0",
+      "id": "bdcd36b5-2095-4e79-b7f7-e38f6f1586cc",
       "name": "set output"
     },
     {
@@ -187,10 +181,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1232,
-        160
+        928,
+        288
       ],
-      "id": "8949b445-6071-404b-8d4b-f68c4114f058",
+      "id": "b3aefdba-8e2d-4404-8958-72ac23104d2d",
       "name": "write to file"
     },
     {
@@ -202,20 +196,67 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1008,
-        144
+        752,
+        288
       ],
-      "id": "c8471130-18ec-409a-9235-9fa8fe1a7cbe",
+      "id": "243d4ce7-412a-4875-b7be-07b77f114cdf",
       "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        240,
+        576
+      ],
+      "id": "61e78f2e-a01b-4747-9182-ad717bb62064",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "svLeeHxH9c9DdhZV",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        272
+      ],
+      "id": "7b01b0a4-3c2f-4dc9-9567-7c2f113a1c1c",
+      "name": "Split Out"
     }
   ],
   "pinData": {},
   "connections": {
-    "When clicking ‘Execute workflow’": {
+    "search query": {
       "main": [
         [
           {
-            "node": "read from csv",
+            "node": "searxng",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search": {
+      "main": [
+        [
+          {
+            "node": "search query",
             "type": "main",
             "index": 0
           }
@@ -267,39 +308,6 @@
         ]
       ]
     },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "read from csv": {
-      "main": [
-        [
-          {
-            "node": "Extract from csv",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from csv": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "extract html": {
       "main": [
         [
@@ -343,17 +351,49 @@
           }
         ]
       ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "searxng": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c223f680-5895-406b-ab96-c6cd9239d09c",
+  "versionId": "cb6cb95a-a4bc-47b5-a364-01230d1cc315",
   "meta": {
-    "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
   },
-  "id": "CxEL9QWJ8vkAkItz",
+  "id": "czbTfiMJDsUPPcq6",
   "tags": []
 }

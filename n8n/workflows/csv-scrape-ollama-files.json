@@ -51,9 +51,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Extract the main body text directly from the following HTML content.Exclude all navigation, footers, headers, ads, and other irrelevant elements. The output must only be the text summarized in 250 words, without any introductions, headers, or concluding remarks.{{ $json.bodyText }}\n",
+        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}\n",
         "options": {
-          "systemMessage": "You are a strict text processor. Your only task is to extract the requested information directly from the provided text. You must not use any internal knowledge, or add any commentary."
+          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -130,7 +130,8 @@
         144
       ],
       "id": "690c5d3c-6801-4f38-b453-f0b2dd557f8c",
-      "name": "extract html"
+      "name": "extract html",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -351,7 +352,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "635dd595-77e9-4690-a46f-b1dfc89fca1e",
+  "versionId": "622bc609-9889-465b-aff0-90278f62ea60",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
