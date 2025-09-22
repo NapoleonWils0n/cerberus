@@ -51,9 +51,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Extract the main body text directly from the following HTML content. Do not summarize, rephrase, or add any information not present in the original text. Exclude all navigation, footers, headers, ads, and other irrelevant elements. The output must only be the final, unsummarized text, without any introductions, headers, or concluding remarks. {{ $json.bodyText }}\n",
+        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}\n",
         "options": {
-          "systemMessage": "You are a strict text processor. Your only task is to extract the requested information directly from the provided text. You must not use any internal knowledge, summarize, rephrase, or add any commentary. Output only the extracted content."
+          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -349,7 +349,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c223f680-5895-406b-ab96-c6cd9239d09c",
+  "versionId": "029baeb5-798b-46b8-8c54-23775c7e68c8",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
