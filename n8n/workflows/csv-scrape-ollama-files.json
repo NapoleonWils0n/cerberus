@@ -51,7 +51,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Extract the main body text directly from the following HTML content.Exclude all navigation, footers, headers, ads, and other irrelevant elements. And then summarize the content in 250 words {{ $json.bodyText }}\n",
+        "text": "=Extract the main body text directly from the following HTML content.Exclude all navigation, footers, headers, ads, and other irrelevant elements. The output must only be the text summarized in 250 words, without any introductions, headers, or concluding remarks.{{ $json.bodyText }}\n",
         "options": {
           "systemMessage": "You are a strict text processor. Your only task is to extract the requested information directly from the provided text. You must not use any internal knowledge, or add any commentary."
         }
@@ -351,7 +351,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "2dfdd045-f029-44bb-99ee-22b2bfe7440b",
+  "versionId": "635dd595-77e9-4690-a46f-b1dfc89fca1e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
