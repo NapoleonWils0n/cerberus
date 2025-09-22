@@ -225,7 +225,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "temperature": 0
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
@@ -519,13 +521,18 @@
           }
         ]
       ]
+    },
+    "wrong content type": {
+      "main": [
+        []
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "b8489997-669c-46ab-9a12-41e94aee5f5b",
+  "versionId": "62fc9a2b-e4ad-4c06-8965-2782052b8671",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

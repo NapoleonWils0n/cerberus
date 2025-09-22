@@ -6,8 +6,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -544,
-        128
+        -624,
+        200
       ],
       "id": "b9df5306-ecb6-4898-a8eb-7dd952b21eb6",
       "name": "When clicking ‘Execute workflow’"
@@ -24,13 +24,19 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        192,
-        144
+        272,
+        128
       ],
       "id": "96f51d13-b326-4916-bbd1-24790a7926c2",
       "name": "HTTP Request",
@@ -43,8 +49,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -32,
-        128
+        48,
+        200
       ],
       "id": "2a1b6758-b734-4065-a8bd-2f3a65717989",
       "name": "Loop Over Items"
@@ -60,8 +66,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        560,
-        144
+        944,
+        -64
       ],
       "id": "8920a570-bcc9-4980-8225-95845d56e5f4",
       "name": "AI Agent"
@@ -74,8 +80,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        672,
-        384
+        1080,
+        160
       ],
       "id": "64b11de7-0a2c-4e5c-9ef9-5ebd9e7a08bc",
       "name": "Simple Memory"
@@ -88,8 +94,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -368,
-        128
+        -400,
+        200
       ],
       "id": "7b7b7b75-b87b-42cb-b90b-cf17c9d21f89",
       "name": "read from csv"
@@ -101,8 +107,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -192,
-        128
+        -176,
+        200
       ],
       "id": "1a0893a6-5786-43a6-8e87-0093a0038dc3",
       "name": "Extract from csv"
@@ -127,8 +133,8 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        368,
-        144
+        720,
+        -64
       ],
       "id": "690c5d3c-6801-4f38-b453-f0b2dd557f8c",
       "name": "extract html",
@@ -151,8 +157,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        848,
-        144
+        1296,
+        -64
       ],
       "id": "a97718fd-9a60-4e32-90c1-d8c413d380d9",
       "name": "set output"
@@ -169,8 +175,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1232,
-        160
+        1744,
+        200
       ],
       "id": "09035214-c77f-4a69-98c0-09fd36f3405a",
       "name": "write to file"
@@ -184,8 +190,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1008,
-        144
+        1520,
+        -64
       ],
       "id": "c4d9f9a8-e8ea-4a49-814f-8830dafab9d6",
       "name": "Convert to File"
@@ -194,14 +200,14 @@
       "parameters": {
         "model": "llama3.1:8b",
         "options": {
-          "temperature": 0.1
+          "temperature": 0
         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        496,
-        400
+        952,
+        160
       ],
       "id": "34fcab12-04c1-4bfc-8fbb-baecaa117264",
       "name": "Ollama Chat Model",
@@ -211,6 +217,94 @@
           "name": "Ollama account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "03372002-c93c-4054-b1b4-9fa0caef9411",
+              "leftValue": "={{ $json.error.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        320
+      ],
+      "id": "306974d3-1bd5-45cd-b4ac-48bc71d8ff27",
+      "name": "If http status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "27f22f7e-8108-460f-bc05-3f88d6c1b95e",
+              "leftValue": "={{ $json.headers['content-type'] }}",
+              "rightValue": "text/html",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        32
+      ],
+      "id": "14c45667-7974-46f3-ac2f-47377a45d3a2",
+      "name": "If content type"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        320
+      ],
+      "id": "85089d25-935a-4948-8d69-03bbc491d7db",
+      "name": "status error"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        128
+      ],
+      "id": "5c58ddb9-5379-4de7-9a17-43fa67d60fc8",
+      "name": "wrong content type"
     }
   ],
   "pinData": {},
@@ -230,7 +324,14 @@
       "main": [
         [
           {
-            "node": "extract html",
+            "node": "If content type",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If http status",
             "type": "main",
             "index": 0
           }
@@ -347,13 +448,48 @@
           }
         ]
       ]
+    },
+    "If http status": {
+      "main": [
+        [
+          {
+            "node": "status error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If content type": {
+      "main": [
+        [
+          {
+            "node": "extract html",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "wrong content type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "status error": {
+      "main": [
+        []
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "2c43581e-8c7c-4132-8607-b4ae83f13696",
+  "versionId": "396dd59b-b169-4c15-a172-17c7bc66e826",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
