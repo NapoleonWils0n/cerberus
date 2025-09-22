@@ -19,7 +19,7 @@
       "typeVersion": 3.4,
       "position": [
         -848,
-        520
+        528
       ],
       "id": "98cd536e-9b62-4a9f-a43c-3370c6d768ad",
       "name": "search query"
@@ -32,7 +32,7 @@
       "typeVersion": 1.3,
       "position": [
         -1072,
-        520
+        528
       ],
       "id": "b8debdc3-4a09-4bcc-b397-b60804a4bf37",
       "name": "search",
@@ -47,7 +47,7 @@
       "typeVersion": 4.2,
       "position": [
         -624,
-        520
+        528
       ],
       "id": "176138cb-6589-422c-b28d-c2766799c609",
       "name": "searxng"
@@ -90,7 +90,7 @@
       "typeVersion": 3,
       "position": [
         -176,
-        520
+        528
       ],
       "id": "3fff63dd-a3e5-48b0-af9c-4ea694bc8946",
       "name": "Loop Over Items"
@@ -120,7 +120,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        856,
+        864,
         480
       ],
       "id": "dc3db5b3-5850-4b95-b976-8deed58b5103",
@@ -189,7 +189,7 @@
       "typeVersion": 1,
       "position": [
         1520,
-        520
+        528
       ],
       "id": "bbe52b69-cbc5-4e2e-8653-0e60a182e483",
       "name": "write to file"
@@ -218,7 +218,7 @@
       "typeVersion": 1,
       "position": [
         -400,
-        520
+        528
       ],
       "id": "09f8b691-75b2-42fd-a234-4cd023ba87d2",
       "name": "Split Out"
@@ -230,7 +230,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        728,
+        736,
         480
       ],
       "id": "0b2d0f2d-8411-4a66-b9b1-918de7f482fd",
@@ -314,7 +314,7 @@
       "typeVersion": 1,
       "position": [
         496,
-        640
+        624
       ],
       "id": "353cbd9f-e6fd-45fc-b0ca-59459b8fc65a",
       "name": "status error"
@@ -487,14 +487,14 @@
     },
     "If http status": {
       "main": [
-        [],
         [
           {
             "node": "status error",
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "status error": {
@@ -525,7 +525,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "db9a73be-fcdb-44ec-a6d8-91d26bc0d037",
+  "versionId": "83be85b1-08e7-45b3-bf98-de9f495f9d15",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
