@@ -51,9 +51,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Extract the main body text directly from the following HTML content.Exclude all navigation, footers, headers, ads, and other irrelevant elements. {{ $json.bodyText }}\n",
+        "text": "=Extract the main body text directly from the following HTML content.Exclude all navigation, footers, headers, ads, and other irrelevant elements. And then summarize the content in 250 words {{ $json.bodyText }}\n",
         "options": {
-          "systemMessage": "You are a strict text processor. Your only task is to extract the requested information directly from the provided text. You must not use any internal knowledge, summarize, rephrase, or add any commentary. Output only the extracted content."
+          "systemMessage": "You are a strict text processor. Your only task is to extract the requested information directly from the provided text. You must not use any internal knowledge, or add any commentary."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -81,7 +81,7 @@
     },
     {
       "parameters": {
-        "fileSelector": "=/home/djwilcox/Documents/work/n8n/barts-fair.csv",
+        "fileSelector": "=/home/djwilcox/Documents/work/barts-fair/barts-fair-n8n/barts-fair.csv",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
@@ -351,7 +351,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "5f7b8d1a-6439-44d5-a5b5-a0b9dd0c06de",
+  "versionId": "2dfdd045-f029-44bb-99ee-22b2bfe7440b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
