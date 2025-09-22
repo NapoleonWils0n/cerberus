@@ -18,10 +18,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -816,
-        272
+        -1696,
+        224
       ],
-      "id": "67491ff7-a946-424f-a589-4d19d683b73a",
+      "id": "2afcdd43-802e-4930-86e1-b2cad4fb5d6f",
       "name": "search query"
     },
     {
@@ -31,12 +31,12 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -960,
-        272
+        -1920,
+        224
       ],
-      "id": "a9dab4b6-f222-4af0-951d-c0367c9784a1",
+      "id": "27375242-247b-478b-a10e-eb7ab7000bdd",
       "name": "search",
-      "webhookId": "4a9411f6-bdf0-4a4c-97b7-660ad12e47b8"
+      "webhookId": "b9985606-702a-4082-acc5-4ddecff4cfc2"
     },
     {
       "parameters": {
@@ -46,10 +46,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -672,
-        272
+        -1472,
+        224
       ],
-      "id": "d1038d29-f4e6-4681-9810-30b7ab45117b",
+      "id": "3562556f-8134-4c7f-9567-0735f99f8f86",
       "name": "searxng"
     },
     {
@@ -64,15 +64,21 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -80,
-        288
+        -800,
+        160
       ],
-      "id": "e0570f81-f1c7-49e1-9632-e68477562144",
+      "id": "e35a3535-c4c0-460c-ae0a-0b9e60263022",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -83,10 +89,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -304,
-        272
+        -1024,
+        224
       ],
-      "id": "4e7e1769-5f95-43f0-b41b-df352fc0f290",
+      "id": "6c4c6dd3-b173-4e61-bc42-7e6b75b072c8",
       "name": "Loop Over Items"
     },
     {
@@ -100,10 +106,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        304,
-        288
+        -128,
+        -48
       ],
-      "id": "44c20192-a31c-403c-ae74-6b703b25847b",
+      "id": "c81e3058-45a2-4bae-95d4-b769f504229d",
       "name": "AI Agent"
     },
     {
@@ -114,10 +120,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        416,
-        560
+        16,
+        192
       ],
-      "id": "41a88085-2f90-4a63-808a-25d233321360",
+      "id": "de68c2c4-f415-429e-ab20-39d906dfe1e2",
       "name": "Simple Memory"
     },
     {
@@ -140,10 +146,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        96,
-        288
+        -352,
+        -48
       ],
-      "id": "677bd527-3c38-4b6a-9a30-5c61f8ae2bd6",
+      "id": "bf32570f-5570-455b-9bb5-e4b12e8d468e",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -164,10 +170,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        592,
-        288
+        224,
+        -48
       ],
-      "id": "bdcd36b5-2095-4e79-b7f7-e38f6f1586cc",
+      "id": "28149a1c-4fac-46be-a3e6-a77f005c3677",
       "name": "set output"
     },
     {
@@ -182,10 +188,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        928,
-        288
+        672,
+        224
       ],
-      "id": "b3aefdba-8e2d-4404-8958-72ac23104d2d",
+      "id": "d547b730-d977-435b-8d51-b02b72070778",
       "name": "write to file"
     },
     {
@@ -197,11 +203,113 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        752,
-        288
+        448,
+        -48
       ],
-      "id": "243d4ce7-412a-4875-b7be-07b77f114cdf",
+      "id": "00bda0d0-adbd-4ccc-ae9f-4bf7c3908e91",
       "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        224
+      ],
+      "id": "57f3c42f-db30-41aa-80f5-08a91df7cecb",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "783c69a7-f872-4d2c-904b-9da5f9d82f3f",
+              "leftValue": "={{ $json.error.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -592,
+        352
+      ],
+      "id": "226586e5-79a7-4b3e-b5c1-f845fffbe11c",
+      "name": "If http status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f79209ef-c195-4d50-86bd-403a3912d56d",
+              "leftValue": "={{ $json.headers['content-type'] }}",
+              "rightValue": "=text/html",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        64
+      ],
+      "id": "381b741d-eb31-42b3-b9d1-5f5014a93a3d",
+      "name": "If content type"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        352
+      ],
+      "id": "feb945e1-26e6-4b8b-9a6c-1785d42bb459",
+      "name": "status error"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        160
+      ],
+      "id": "80bf107d-87e7-4b4f-8837-3481ca24e801",
+      "name": "wrong content type"
     },
     {
       "parameters": {
@@ -213,10 +321,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        240,
-        576
+        -128,
+        192
       ],
-      "id": "61e78f2e-a01b-4747-9182-ad717bb62064",
+      "id": "14d4ddb4-de2d-477f-b2ad-f1a01951ef5b",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
@@ -224,20 +332,6 @@
           "name": "Ollama account"
         }
       }
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "results",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
-      "position": [
-        -496,
-        272
-      ],
-      "id": "7b01b0a4-3c2f-4dc9-9567-7c2f113a1c1c",
-      "name": "Split Out"
     }
   ],
   "pinData": {},
@@ -268,7 +362,14 @@
       "main": [
         [
           {
-            "node": "extract html",
+            "node": "If content type",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If http status",
             "type": "main",
             "index": 0
           }
@@ -353,17 +454,6 @@
         ]
       ]
     },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "searxng": {
       "main": [
         [
@@ -385,14 +475,56 @@
           }
         ]
       ]
+    },
+    "If http status": {
+      "main": [
+        [],
+        [
+          {
+            "node": "status error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If content type": {
+      "main": [
+        [
+          {
+            "node": "extract html",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "wrong content type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "5de6cfa8-465f-4ee0-a68a-5d01946d04d5",
+  "versionId": "8232a616-08dc-47c2-b6ed-d7278edf3918",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
   },
   "id": "czbTfiMJDsUPPcq6",
