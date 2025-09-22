@@ -18,8 +18,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -816,
-        272
+        -848,
+        520
       ],
       "id": "98cd536e-9b62-4a9f-a43c-3370c6d768ad",
       "name": "search query"
@@ -31,8 +31,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -960,
-        272
+        -1072,
+        520
       ],
       "id": "b8debdc3-4a09-4bcc-b397-b60804a4bf37",
       "name": "search",
@@ -46,8 +46,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -672,
-        272
+        -624,
+        520
       ],
       "id": "176138cb-6589-422c-b28d-c2766799c609",
       "name": "searxng"
@@ -64,13 +64,19 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -80,
-        288
+        48,
+        448
       ],
       "id": "3ed16bec-62da-4daa-958b-4eab0230c033",
       "name": "HTTP Request",
@@ -83,8 +89,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -304,
-        272
+        -176,
+        520
       ],
       "id": "3fff63dd-a3e5-48b0-af9c-4ea694bc8946",
       "name": "Loop Over Items"
@@ -100,8 +106,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        320,
-        288
+        720,
+        256
       ],
       "id": "5151b3ba-5995-48d2-9510-2233da527bc4",
       "name": "AI Agent"
@@ -114,8 +120,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        416,
-        560
+        856,
+        480
       ],
       "id": "dc3db5b3-5850-4b95-b976-8deed58b5103",
       "name": "Simple Memory"
@@ -140,8 +146,8 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        96,
-        288
+        496,
+        256
       ],
       "id": "2dbd938f-2dd7-4e8d-aec7-350270b20b3c",
       "name": "extract html",
@@ -164,8 +170,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        592,
-        288
+        1072,
+        256
       ],
       "id": "929b0f68-b1c0-429e-8f05-eb0a94f407db",
       "name": "set output"
@@ -182,8 +188,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        928,
-        288
+        1520,
+        520
       ],
       "id": "bbe52b69-cbc5-4e2e-8653-0e60a182e483",
       "name": "write to file"
@@ -197,8 +203,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        752,
-        288
+        1296,
+        256
       ],
       "id": "758e834e-8bea-4101-9b14-f929c4922188",
       "name": "Convert to File"
@@ -211,8 +217,8 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -496,
-        272
+        -400,
+        520
       ],
       "id": "09f8b691-75b2-42fd-a234-4cd023ba87d2",
       "name": "Split Out"
@@ -224,8 +230,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        272,
-        528
+        728,
+        480
       ],
       "id": "0b2d0f2d-8411-4a66-b9b1-918de7f482fd",
       "name": "Google Gemini Chat Model",
@@ -235,6 +241,94 @@
           "name": "Google Gemini(PaLM) Api account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "783c69a7-f872-4d2c-904b-9da5f9d82f3f",
+              "leftValue": "={{ $json.error.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        640
+      ],
+      "id": "862c9216-3636-48e9-a579-66055cdc7a27",
+      "name": "If http status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f79209ef-c195-4d50-86bd-403a3912d56d",
+              "leftValue": "={{ $json.headers['content-type'] }}",
+              "rightValue": "=text/html",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        272,
+        352
+      ],
+      "id": "401fe9b0-0c7c-41ce-aa95-bc8c1ecf905f",
+      "name": "If content type"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        496,
+        640
+      ],
+      "id": "353cbd9f-e6fd-45fc-b0ca-59459b8fc65a",
+      "name": "status error"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        496,
+        448
+      ],
+      "id": "b051615b-7356-4665-9347-98bf87c11961",
+      "name": "wrong content type"
     }
   ],
   "pinData": {},
@@ -265,7 +359,14 @@
       "main": [
         [
           {
-            "node": "extract html",
+            "node": "If content type",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If http status",
             "type": "main",
             "index": 0
           }
@@ -314,7 +415,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "set output": {
@@ -382,13 +484,48 @@
           }
         ]
       ]
+    },
+    "If http status": {
+      "main": [
+        [],
+        [
+          {
+            "node": "status error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "status error": {
+      "main": [
+        []
+      ]
+    },
+    "If content type": {
+      "main": [
+        [
+          {
+            "node": "extract html",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "wrong content type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "8393ac53-dc9e-49e5-b5ca-bffc2bd49b9c",
+  "versionId": "db9a73be-fcdb-44ec-a6d8-91d26bc0d037",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
