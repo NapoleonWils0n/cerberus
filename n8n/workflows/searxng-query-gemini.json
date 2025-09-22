@@ -288,7 +288,7 @@
             {
               "id": "f79209ef-c195-4d50-86bd-403a3912d56d",
               "leftValue": "={{ $json.headers['content-type'] }}",
-              "rightValue": "=text/html",
+              "rightValue": "text/html",
               "operator": {
                 "type": "string",
                 "operation": "startsWith"
@@ -525,7 +525,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "83be85b1-08e7-45b3-bf98-de9f495f9d15",
+  "versionId": "b8489997-669c-46ab-9a12-41e94aee5f5b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
