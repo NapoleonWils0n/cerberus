@@ -6,11 +6,38 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -2944,
-        224
+        -4608,
+        1328
       ],
       "id": "f4dd1e9e-a74d-4ef7-a231-4adef366480d",
       "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/home/djwilcox/Documents/work/barts-fair/barts-fair-n8n/barts-fair.csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -4384,
+        1328
+      ],
+      "id": "89e6dde1-ae26-475c-b3a6-c86f7a9c03d2",
+      "name": "read from csv"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -4160,
+        1328
+      ],
+      "id": "aea74a61-bfc1-452c-8fb3-afee77d6b196",
+      "name": "Extract from csv"
     },
     {
       "parameters": {
@@ -35,10 +62,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2048,
-        160
+        -3648,
+        1024
       ],
-      "id": "54abf3dc-853f-47d8-981f-7444ba56642e",
+      "id": "a0b6db97-7011-42af-b852-4228cb148a64",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -49,16 +76,17 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -2272,
-        224
+        -3872,
+        1312
       ],
-      "id": "64328ede-ad1b-40fc-bafc-6749d397ba1f",
-      "name": "Loop Over Items"
+      "id": "950fcd7a-a18d-4f8e-9e60-5d8c8d0b39dc",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}\n",
+        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}",
         "options": {
           "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
@@ -66,10 +94,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1376,
-        -48
+        -2976,
+        832
       ],
-      "id": "c8442122-0524-4127-afb2-f0137023cf09",
+      "id": "5e1b0a8b-f89f-499a-95a3-451f1a913167",
       "name": "AI Agent"
     },
     {
@@ -80,38 +108,11 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -1248,
-        192
+        -2832,
+        1056
       ],
-      "id": "13fef8e2-c8aa-4c21-8190-33da30db7491",
+      "id": "df8875e8-b92d-48bb-b3fc-79e0f13fb418",
       "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "fileSelector": "=/home/djwilcox/Documents/work/barts-fair/barts-fair-n8n/barts-fair.csv",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -2720,
-        224
-      ],
-      "id": "89e6dde1-ae26-475c-b3a6-c86f7a9c03d2",
-      "name": "read from csv"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -2496,
-        224
-      ],
-      "id": "aea74a61-bfc1-452c-8fb3-afee77d6b196",
-      "name": "Extract from csv"
     },
     {
       "parameters": {
@@ -133,10 +134,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -1600,
-        -48
+        -3200,
+        832
       ],
-      "id": "d8854e4b-a4bb-40ed-b086-297c9e21bb31",
+      "id": "a5553a8f-6b72-4ec8-9586-a8ce5230cb40",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -157,16 +158,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1024,
-        -48
+        -2624,
+        832
       ],
-      "id": "e6b491ba-c85b-4e06-838f-153129c46800",
+      "id": "576b1950-bce3-449e-8fc0-a5bb3259bc22",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/djwilcox/Desktop/{{ $('Loop Over Items').item.json.title }}.txt",
+        "fileName": "=/home/djwilcox/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -175,10 +176,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -576,
-        224
+        -1952,
+        1104
       ],
-      "id": "a292cbb8-0c4b-4eed-97eb-d24cf1c876e6",
+      "id": "75ca518a-5851-4168-a205-d0cf07156a11",
       "name": "write to file"
     },
     {
@@ -190,44 +191,32 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -800,
-        -48
+        -2176,
+        832
       ],
-      "id": "fa98f52d-2011-4679-b735-5d0756125b32",
+      "id": "4c092127-9726-4b1f-b03d-2ddbce26e34a",
       "name": "Convert to File"
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "03372002-c93c-4054-b1b4-9fa0caef9411",
-              "leftValue": "={{ $json.error.status }}",
-              "rightValue": 200,
-              "operator": {
-                "type": "number",
-                "operation": "notEquals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
+        "options": {
+          "temperature": 0
+        }
       },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
       "position": [
-        -1824,
-        352
+        -2960,
+        1056
       ],
-      "id": "3bb3601d-269d-44c0-9544-9a7720c90375",
-      "name": "If http status"
+      "id": "0bc7cd58-9e25-4058-a247-7ecc77c436a2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TOjrSUDwcdx8wf7N",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
       "parameters": {
@@ -240,7 +229,7 @@
           },
           "conditions": [
             {
-              "id": "27f22f7e-8108-460f-bc05-3f88d6c1b95e",
+              "id": "f79209ef-c195-4d50-86bd-403a3912d56d",
               "leftValue": "={{ $json.headers['content-type'] }}",
               "rightValue": "text/html",
               "operator": {
@@ -256,10 +245,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1824,
-        64
+        -3424,
+        928
       ],
-      "id": "7e3dd169-f0dc-40bd-afa4-5310d31a946d",
+      "id": "e47222da-a9ce-4f6e-810d-7f62c5684725",
       "name": "If content type"
     },
     {
@@ -267,10 +256,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1600,
-        352
+        -3424,
+        1120
       ],
-      "id": "5f099dd1-b000-4702-bfc6-9b493896e8f6",
+      "id": "6edc4d66-3221-4816-97d7-fa21fdcce99b",
       "name": "status error"
     },
     {
@@ -278,32 +267,24 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1600,
-        160
+        -3200,
+        1024
       ],
-      "id": "44d7cf1f-2d87-4bc9-9bfe-08eedb267f1f",
+      "id": "fe8811c5-28a0-4f37-b4e1-acd7fabb0379",
       "name": "wrong content type"
     },
     {
       "parameters": {
-        "options": {
-          "temperature": 0
-        }
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"]/g, '-') // Replace invalid characters with a hyphen\n    .replace(/^-+|-+$/g, ''); // Remove leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        -1392,
-        192
+        -2400,
+        832
       ],
-      "id": "e60f840d-5378-41b4-83ce-f4ace92a2a9a",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "TOjrSUDwcdx8wf7N",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
+      "id": "09030ce2-4c04-4d88-97da-6e3755717c91",
+      "name": "Code"
     }
   ],
   "pinData": {},
@@ -313,6 +294,28 @@
         [
           {
             "node": "read from csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read from csv": {
+      "main": [
+        [
+          {
+            "node": "Extract from csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from csv": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -330,7 +333,7 @@
         ],
         [
           {
-            "node": "If http status",
+            "node": "status error",
             "type": "main",
             "index": 0
           }
@@ -371,28 +374,6 @@
         ]
       ]
     },
-    "read from csv": {
-      "main": [
-        [
-          {
-            "node": "Extract from csv",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from csv": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "extract html": {
       "main": [
         [
@@ -408,7 +389,7 @@
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -437,11 +418,22 @@
         ]
       ]
     },
-    "If http status": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "status error": {
       "main": [
         [
           {
-            "node": "status error",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -466,12 +458,23 @@
         ]
       ]
     },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
+    "wrong content type": {
+      "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
             "index": 0
           }
         ]
@@ -482,7 +485,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "b923a3a1-fd5d-4673-92a4-70fe2196a3cf",
+  "versionId": "11c86255-fe37-45f8-aa8c-ee83dbe4b23a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
