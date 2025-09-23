@@ -18,10 +18,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1696,
-        224
+        -3392,
+        352
       ],
-      "id": "2afcdd43-802e-4930-86e1-b2cad4fb5d6f",
+      "id": "6b4e4b43-b230-4892-8cac-7a343a167956",
       "name": "search query"
     },
     {
@@ -31,10 +31,10 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1920,
-        224
+        -3616,
+        352
       ],
-      "id": "27375242-247b-478b-a10e-eb7ab7000bdd",
+      "id": "fe8150e3-52de-48b8-9c90-f8946460c654",
       "name": "search",
       "webhookId": "b9985606-702a-4082-acc5-4ddecff4cfc2"
     },
@@ -46,10 +46,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1472,
-        224
+        -3168,
+        352
       ],
-      "id": "3562556f-8134-4c7f-9567-0735f99f8f86",
+      "id": "da493980-2dcd-4c03-a3bf-bcb1716be00a",
       "name": "searxng"
     },
     {
@@ -75,10 +75,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -800,
-        160
+        -2496,
+        64
       ],
-      "id": "e35a3535-c4c0-460c-ae0a-0b9e60263022",
+      "id": "e7fccd3c-2222-4e4f-866e-086d939ba3a0",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -89,11 +89,12 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -1024,
-        224
+        -2720,
+        352
       ],
-      "id": "6c4c6dd3-b173-4e61-bc42-7e6b75b072c8",
-      "name": "Loop Over Items"
+      "id": "18a0ddb7-f4e9-4800-9484-050f79b7eae8",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -106,10 +107,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -128,
-        -48
+        -1824,
+        -144
       ],
-      "id": "c81e3058-45a2-4bae-95d4-b769f504229d",
+      "id": "54b911e2-e9f3-4ffb-8b24-37e0a749722f",
       "name": "AI Agent"
     },
     {
@@ -120,10 +121,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        16,
-        192
+        -1696,
+        96
       ],
-      "id": "de68c2c4-f415-429e-ab20-39d906dfe1e2",
+      "id": "685a4f26-5017-47cf-9a12-e51b5f552161",
       "name": "Simple Memory"
     },
     {
@@ -146,10 +147,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -352,
-        -48
+        -2048,
+        -144
       ],
-      "id": "bf32570f-5570-455b-9bb5-e4b12e8d468e",
+      "id": "87726a48-2606-4926-b51b-9f8bef0e2de7",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -170,16 +171,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        224,
-        -48
+        -1472,
+        -144
       ],
-      "id": "28149a1c-4fac-46be-a3e6-a77f005c3677",
+      "id": "7bfbc527-fa6a-4e55-8f6c-8abfab3b7670",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/djwilcox/Desktop/{{ $('Loop Over Items').item.json.title }}.txt",
+        "fileName": "=/home/djwilcox/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -188,10 +189,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        672,
-        224
+        -800,
+        128
       ],
-      "id": "d547b730-d977-435b-8d51-b02b72070778",
+      "id": "cabd68fb-5809-49c1-a2c9-3d466842f386",
       "name": "write to file"
     },
     {
@@ -203,10 +204,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        448,
-        -48
+        -1024,
+        -144
       ],
-      "id": "00bda0d0-adbd-4ccc-ae9f-4bf7c3908e91",
+      "id": "d64a3f70-15fa-4a6f-b21a-c62b5b40dc86",
       "name": "Convert to File"
     },
     {
@@ -217,44 +218,11 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -1248,
-        224
-      ],
-      "id": "57f3c42f-db30-41aa-80f5-08a91df7cecb",
-      "name": "Split Out"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "783c69a7-f872-4d2c-904b-9da5f9d82f3f",
-              "leftValue": "={{ $json.error.status }}",
-              "rightValue": 200,
-              "operator": {
-                "type": "number",
-                "operation": "notEquals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -592,
+        -2944,
         352
       ],
-      "id": "226586e5-79a7-4b3e-b5c1-f845fffbe11c",
-      "name": "If http status"
+      "id": "4868891e-0b6d-435a-9bdf-651ad62269c3",
+      "name": "Split Out"
     },
     {
       "parameters": {
@@ -283,10 +251,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -576,
-        64
+        -2272,
+        -48
       ],
-      "id": "381b741d-eb31-42b3-b9d1-5f5014a93a3d",
+      "id": "e1920356-f106-4c73-92da-e564d35f9c61",
       "name": "If content type"
     },
     {
@@ -294,10 +262,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -288,
-        352
+        -2272,
+        160
       ],
-      "id": "feb945e1-26e6-4b8b-9a6c-1785d42bb459",
+      "id": "7fb8f513-1c0b-4095-adb9-83c7c804991f",
       "name": "status error"
     },
     {
@@ -305,26 +273,37 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -352,
-        160
+        -2048,
+        64
       ],
-      "id": "80bf107d-87e7-4b4f-8837-3481ca24e801",
+      "id": "fcb19ca9-ae60-448b-9468-0ed1a91d8a23",
       "name": "wrong content type"
     },
     {
       "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"]/g, '-') // Replace invalid characters with a hyphen\n    .replace(/^-+|-+$/g, ''); // Remove leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1248,
+        -144
+      ],
+      "id": "10d2c043-ffd6-4b16-bdbf-38c83a329a54",
+      "name": "Code"
+    },
+    {
+      "parameters": {
         "model": "llama3.1:8b",
-        "options": {
-          "temperature": 0
-        }
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -128,
-        192
+        -1856,
+        80
       ],
-      "id": "14d4ddb4-de2d-477f-b2ad-f1a01951ef5b",
+      "id": "45b1d4fd-ecca-4583-b4cf-031b86ee432b",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
@@ -369,7 +348,7 @@
         ],
         [
           {
-            "node": "If http status",
+            "node": "status error",
             "type": "main",
             "index": 0
           }
@@ -425,7 +404,7 @@
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -476,16 +455,15 @@
         ]
       ]
     },
-    "If http status": {
+    "status error": {
       "main": [
         [
           {
-            "node": "status error",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "If content type": {
@@ -500,6 +478,28 @@
         [
           {
             "node": "wrong content type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wrong content type": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
             "type": "main",
             "index": 0
           }
@@ -522,7 +522,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "fa1cb6c1-6850-4e7c-9a0e-ec6973c42ae6",
+  "versionId": "ce2cb8f0-8f6c-4fbd-aa6c-bfe1ff3a4817",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

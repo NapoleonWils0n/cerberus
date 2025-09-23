@@ -19,7 +19,7 @@
       "typeVersion": 3.4,
       "position": [
         -848,
-        528
+        736
       ],
       "id": "98cd536e-9b62-4a9f-a43c-3370c6d768ad",
       "name": "search query"
@@ -32,7 +32,7 @@
       "typeVersion": 1.3,
       "position": [
         -1072,
-        528
+        736
       ],
       "id": "b8debdc3-4a09-4bcc-b397-b60804a4bf37",
       "name": "search",
@@ -47,7 +47,7 @@
       "typeVersion": 4.2,
       "position": [
         -624,
-        528
+        736
       ],
       "id": "176138cb-6589-422c-b28d-c2766799c609",
       "name": "searxng"
@@ -90,10 +90,11 @@
       "typeVersion": 3,
       "position": [
         -176,
-        528
+        736
       ],
       "id": "3fff63dd-a3e5-48b0-af9c-4ea694bc8946",
-      "name": "Loop Over Items"
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -120,7 +121,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        864,
+        856,
         480
       ],
       "id": "dc3db5b3-5850-4b95-b976-8deed58b5103",
@@ -179,7 +180,7 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/djwilcox/Desktop/{{ $('Loop Over Items').item.json.title }}.txt",
+        "fileName": "=/home/djwilcox/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -188,8 +189,8 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1520,
-        528
+        1744,
+        520
       ],
       "id": "bbe52b69-cbc5-4e2e-8653-0e60a182e483",
       "name": "write to file"
@@ -203,7 +204,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1296,
+        1520,
         256
       ],
       "id": "758e834e-8bea-4101-9b14-f929c4922188",
@@ -218,7 +219,7 @@
       "typeVersion": 1,
       "position": [
         -400,
-        528
+        736
       ],
       "id": "09f8b691-75b2-42fd-a234-4cd023ba87d2",
       "name": "Split Out"
@@ -232,7 +233,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        736,
+        728,
         480
       ],
       "id": "0b2d0f2d-8411-4a66-b9b1-918de7f482fd",
@@ -243,39 +244,6 @@
           "name": "Google Gemini(PaLM) Api account"
         }
       }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "783c69a7-f872-4d2c-904b-9da5f9d82f3f",
-              "leftValue": "={{ $json.error.status }}",
-              "rightValue": 200,
-              "operator": {
-                "type": "number",
-                "operation": "notEquals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        256,
-        640
-      ],
-      "id": "862c9216-3636-48e9-a579-66055cdc7a27",
-      "name": "If http status"
     },
     {
       "parameters": {
@@ -315,8 +283,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        496,
-        624
+        272,
+        544
       ],
       "id": "353cbd9f-e6fd-45fc-b0ca-59459b8fc65a",
       "name": "status error"
@@ -331,6 +299,19 @@
       ],
       "id": "b051615b-7356-4665-9347-98bf87c11961",
       "name": "wrong content type"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"]/g, '-') // Replace invalid characters with a hyphen\n    .replace(/^-+|-+$/g, ''); // Remove leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        256
+      ],
+      "id": "11ef6bb8-ded8-4ebe-ad81-6f52df9064b7",
+      "name": "Code"
     }
   ],
   "pinData": {},
@@ -368,7 +349,7 @@
         ],
         [
           {
-            "node": "If http status",
+            "node": "status error",
             "type": "main",
             "index": 0
           }
@@ -425,7 +406,7 @@
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -487,21 +468,15 @@
         ]
       ]
     },
-    "If http status": {
+    "status error": {
       "main": [
         [
           {
-            "node": "status error",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
-        ],
-        []
-      ]
-    },
-    "status error": {
-      "main": [
-        []
+        ]
       ]
     },
     "If content type": {
@@ -524,7 +499,24 @@
     },
     "wrong content type": {
       "main": [
-        []
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -532,7 +524,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "62fc9a2b-e4ad-4c06-8965-2782052b8671",
+  "versionId": "1780eed8-9957-4a23-b487-4ea6e6c23ffc",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
