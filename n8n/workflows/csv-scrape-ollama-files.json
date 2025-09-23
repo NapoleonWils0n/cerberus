@@ -6,11 +6,38 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -624,
-        200
+        -2304,
+        1328
       ],
       "id": "b9df5306-ecb6-4898-a8eb-7dd952b21eb6",
       "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/home/djwilcox/Documents/work/barts-fair/barts-fair-n8n/barts-fair.csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -2080,
+        1328
+      ],
+      "id": "7b7b7b75-b87b-42cb-b90b-cf17c9d21f89",
+      "name": "read from csv"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1856,
+        1328
+      ],
+      "id": "1a0893a6-5786-43a6-8e87-0093a0038dc3",
+      "name": "Extract from csv"
     },
     {
       "parameters": {
@@ -35,10 +62,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        272,
-        128
+        -1328,
+        1024
       ],
-      "id": "96f51d13-b326-4916-bbd1-24790a7926c2",
+      "id": "ee359965-2692-4b39-aebb-495ec78e5dd4",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -49,16 +76,17 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        48,
-        200
+        -1552,
+        1312
       ],
-      "id": "2a1b6758-b734-4065-a8bd-2f3a65717989",
-      "name": "Loop Over Items"
+      "id": "0f2e2f5a-6671-48ac-afcc-9eb2d72bb9b6",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}\n",
+        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}",
         "options": {
           "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
@@ -66,10 +94,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        944,
-        -64
+        -656,
+        832
       ],
-      "id": "8920a570-bcc9-4980-8225-95845d56e5f4",
+      "id": "ec65b1bd-879d-493b-8746-2644532d2d7e",
       "name": "AI Agent"
     },
     {
@@ -80,38 +108,11 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        1080,
-        160
+        -512,
+        1056
       ],
-      "id": "64b11de7-0a2c-4e5c-9ef9-5ebd9e7a08bc",
+      "id": "f2444986-bb7d-4be2-8a2f-bd6e9e8bf14c",
       "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "fileSelector": "=/home/djwilcox/Documents/work/barts-fair/barts-fair-n8n/barts-fair.csv",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -400,
-        200
-      ],
-      "id": "7b7b7b75-b87b-42cb-b90b-cf17c9d21f89",
-      "name": "read from csv"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -176,
-        200
-      ],
-      "id": "1a0893a6-5786-43a6-8e87-0093a0038dc3",
-      "name": "Extract from csv"
     },
     {
       "parameters": {
@@ -133,10 +134,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        720,
-        -64
+        -880,
+        832
       ],
-      "id": "690c5d3c-6801-4f38-b453-f0b2dd557f8c",
+      "id": "acd0a6f4-da48-4d68-bb51-67c094830a15",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -157,16 +158,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1296,
-        -64
+        -304,
+        832
       ],
-      "id": "a97718fd-9a60-4e32-90c1-d8c413d380d9",
+      "id": "3bca74e3-817f-417d-b5f8-c59f820f9a5f",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/djwilcox/Desktop/{{ $('Loop Over Items').item.json.title }}.txt",
+        "fileName": "=/home/djwilcox/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -175,10 +176,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1744,
-        200
+        384,
+        1104
       ],
-      "id": "09035214-c77f-4a69-98c0-09fd36f3405a",
+      "id": "2966c1d9-a17d-48e1-8827-26ca9e05b5c6",
       "name": "write to file"
     },
     {
@@ -190,31 +191,30 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1520,
-        -64
+        160,
+        832
       ],
-      "id": "c4d9f9a8-e8ea-4a49-814f-8830dafab9d6",
+      "id": "51354497-a901-4332-b973-832c34e73b34",
       "name": "Convert to File"
     },
     {
       "parameters": {
-        "model": "llama3.1:8b",
         "options": {
           "temperature": 0
         }
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        952,
-        160
+        -640,
+        1056
       ],
-      "id": "34fcab12-04c1-4bfc-8fbb-baecaa117264",
-      "name": "Ollama Chat Model",
+      "id": "4207aa74-e5b4-4c79-a9ff-aef45616c955",
+      "name": "Google Gemini Chat Model",
       "credentials": {
-        "ollamaApi": {
-          "id": "svLeeHxH9c9DdhZV",
-          "name": "Ollama account"
+        "googlePalmApi": {
+          "id": "TOjrSUDwcdx8wf7N",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -229,40 +229,7 @@
           },
           "conditions": [
             {
-              "id": "03372002-c93c-4054-b1b4-9fa0caef9411",
-              "leftValue": "={{ $json.error.status }}",
-              "rightValue": 200,
-              "operator": {
-                "type": "number",
-                "operation": "notEquals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        496,
-        320
-      ],
-      "id": "306974d3-1bd5-45cd-b4ac-48bc71d8ff27",
-      "name": "If http status"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "27f22f7e-8108-460f-bc05-3f88d6c1b95e",
+              "id": "f79209ef-c195-4d50-86bd-403a3912d56d",
               "leftValue": "={{ $json.headers['content-type'] }}",
               "rightValue": "text/html",
               "operator": {
@@ -278,10 +245,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        496,
-        32
+        -1104,
+        928
       ],
-      "id": "14c45667-7974-46f3-ac2f-47377a45d3a2",
+      "id": "4e899adb-691d-4fde-a20e-d91cc66d6c41",
       "name": "If content type"
     },
     {
@@ -289,10 +256,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        720,
-        320
+        -1104,
+        1120
       ],
-      "id": "85089d25-935a-4948-8d69-03bbc491d7db",
+      "id": "e0f61a2c-4890-470d-af4e-5e57cc3a9436",
       "name": "status error"
     },
     {
@@ -300,11 +267,24 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        720,
-        128
+        -880,
+        1024
       ],
-      "id": "5c58ddb9-5379-4de7-9a17-43fa67d60fc8",
+      "id": "5f53318e-a862-4dea-b5bf-be027a4a6f5d",
       "name": "wrong content type"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"]/g, '-') // Replace invalid characters with a hyphen\n    .replace(/^-+|-+$/g, ''); // Remove leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        832
+      ],
+      "id": "48b876f9-31e4-40cc-9c90-7027ddeee69d",
+      "name": "Code"
     }
   ],
   "pinData": {},
@@ -314,6 +294,28 @@
         [
           {
             "node": "read from csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read from csv": {
+      "main": [
+        [
+          {
+            "node": "Extract from csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from csv": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -331,7 +333,7 @@
         ],
         [
           {
-            "node": "If http status",
+            "node": "status error",
             "type": "main",
             "index": 0
           }
@@ -372,28 +374,6 @@
         ]
       ]
     },
-    "read from csv": {
-      "main": [
-        [
-          {
-            "node": "Extract from csv",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from csv": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "extract html": {
       "main": [
         [
@@ -409,7 +389,7 @@
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -438,7 +418,7 @@
         ]
       ]
     },
-    "Ollama Chat Model": {
+    "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
           {
@@ -449,16 +429,15 @@
         ]
       ]
     },
-    "If http status": {
+    "status error": {
       "main": [
         [
           {
-            "node": "status error",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "If content type": {
@@ -479,9 +458,26 @@
         ]
       ]
     },
-    "status error": {
+    "wrong content type": {
       "main": [
-        []
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -489,7 +485,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "396dd59b-b169-4c15-a172-17c7bc66e826",
+  "versionId": "d6181eec-9002-4e39-8012-caff97c0220f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
