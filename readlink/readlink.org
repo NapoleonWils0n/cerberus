@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* readlink get file path
+
+get the full path to a file
+
+#+begin_src sh
+readlink -f searx_-_Cattle\ trough,\ west\ smithfield\ london.csv
+#+end_src
+
+output
+
+#+begin_example
+/home/djwilcox/Documents/work/n8n/cattle-trough/csv/searx_-_Cattle trough, west smithfield london.csv
+#+end_example
