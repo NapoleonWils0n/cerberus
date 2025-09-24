@@ -292,7 +292,7 @@
     },
     {
       "parameters": {
-        "content": "## Add the full file path to the csv file in the file path node",
+        "content": "## Add the full file path to the csv file in the file path node\n\nuse readlink -f to get the file path\n\n```\nreadlink -f input.csv\n```",
         "height": 240,
         "width": 352
       },
@@ -504,7 +504,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "8efa54a7-bb37-4011-9fe4-45538cfc4c6c",
+  "versionId": "2690c466-2568-4196-87be-0b515181528b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

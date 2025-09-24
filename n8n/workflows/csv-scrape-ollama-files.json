@@ -291,14 +291,15 @@
     },
     {
       "parameters": {
-        "content": "## Add the full file path to the csv file in the file path node",
+        "content": "## Add the full file path to the csv file in the file path node\n\nuse readlink -f to get the file path\n\n```\nreadlink -f input.csv\n```",
+        "height": 224,
         "width": 336
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -2400,
-        1120
+        -2384,
+        1088
       ],
       "id": "d43fd6d4-fe66-487b-80d9-87c892d49db5",
       "name": "Sticky Note"
@@ -502,7 +503,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "001dbdab-20ff-4f26-bbf3-5d3767658698",
+  "versionId": "c377380e-30f7-4a5a-b7fd-88fe07a5eaf1",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
