@@ -1,5 +1,5 @@
 {
-  "name": "searxng-gemini-chat",
+  "name": "searxng-chat-gemini",
   "nodes": [
     {
       "parameters": {
@@ -162,7 +162,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "ce071d82-c075-4281-8de1-18320e9058a4",
+  "versionId": "4a2755f0-66e2-4d61-8a9d-66875b81c9cd",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

@@ -1,5 +1,5 @@
 {
-  "name": "searxng-ollama-chat",
+  "name": "searxng-chat-ollama",
   "nodes": [
     {
       "parameters": {
@@ -163,7 +163,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "b3d25eca-8ade-4219-b9b2-b52eff77e58f",
+  "versionId": "cb83b79a-5c97-4e0b-b63c-0cc94807a46c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
