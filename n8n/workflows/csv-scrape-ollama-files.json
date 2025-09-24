@@ -84,8 +84,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -512,
-        1056
+        -528,
+        1040
       ],
       "id": "f2444986-bb7d-4be2-8a2f-bd6e9e8bf14c",
       "name": "Simple Memory"
@@ -143,7 +143,7 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/djwilcox/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "={{ $env.HOME }}/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -172,27 +172,6 @@
       ],
       "id": "51354497-a901-4332-b973-832c34e73b34",
       "name": "Convert to File"
-    },
-    {
-      "parameters": {
-        "options": {
-          "temperature": 0
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        -640,
-        1056
-      ],
-      "id": "4207aa74-e5b4-4c79-a9ff-aef45616c955",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "TOjrSUDwcdx8wf7N",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
     },
     {
       "parameters": {
@@ -293,6 +272,28 @@
       "id": "a481702e-9bf6-4d10-95e2-9e7774352fe9",
       "name": "upload file",
       "webhookId": "da87bff2-73ca-4e28-b8f0-0fd7330dbaaf"
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        1040
+      ],
+      "id": "7d8a2919-6e74-450e-b6c4-58219cf09758",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "svLeeHxH9c9DdhZV",
+          "name": "Ollama account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -404,17 +405,6 @@
         ]
       ]
     },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "status error": {
       "main": [
         [
@@ -476,13 +466,24 @@
           }
         ]
       ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "06d767a0-0db0-4c41-97ce-7c5c9626fed3",
+  "versionId": "c74fb9ae-c209-46cc-a4b9-ab733b449f71",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

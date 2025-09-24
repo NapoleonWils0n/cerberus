@@ -180,7 +180,7 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/djwilcox/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "={{ $env.HOME }}/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -524,7 +524,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "836e8aed-dcfc-4dd1-8cbe-9fc0efbe7d1b",
+  "versionId": "eb83b3ee-b7ce-4c68-82ee-47e25e67a34d",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
