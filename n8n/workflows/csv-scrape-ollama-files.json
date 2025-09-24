@@ -2,19 +2,8 @@
   "name": "csv-scrape-ollama-files",
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -2304,
-        1328
-      ],
-      "id": "b9df5306-ecb6-4898-a8eb-7dd952b21eb6",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
       "parameters": {
-        "fileSelector": "=/home/djwilcox/Documents/work/barts-fair/barts-fair-n8n/barts-fair.csv",
+        "fileSelector": "={{ $json.chatInput }}",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
@@ -275,7 +264,7 @@
     },
     {
       "parameters": {
-        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"]/g, '-') // Replace invalid characters with a hyphen\n    .replace(/^-+|-+$/g, ''); // Remove leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -285,21 +274,38 @@
       ],
       "id": "48b876f9-31e4-40cc-9c90-7027ddeee69d",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2288,
+        1328
+      ],
+      "id": "a481702e-9bf6-4d10-95e2-9e7774352fe9",
+      "name": "file path",
+      "webhookId": "da87bff2-73ca-4e28-b8f0-0fd7330dbaaf"
+    },
+    {
+      "parameters": {
+        "content": "## Add the full file path to the csv file in the file path node",
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2400,
+        1120
+      ],
+      "id": "d43fd6d4-fe66-487b-80d9-87c892d49db5",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
   "connections": {
-    "When clicking ‘Execute workflow’": {
-      "main": [
-        [
-          {
-            "node": "read from csv",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "read from csv": {
       "main": [
         [
@@ -479,13 +485,24 @@
           }
         ]
       ]
+    },
+    "file path": {
+      "main": [
+        [
+          {
+            "node": "read from csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d6181eec-9002-4e39-8012-caff97c0220f",
+  "versionId": "001dbdab-20ff-4f26-bbf3-5d3767658698",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

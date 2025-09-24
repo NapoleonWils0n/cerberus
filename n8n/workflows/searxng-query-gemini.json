@@ -121,7 +121,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        856,
+        864,
         480
       ],
       "id": "dc3db5b3-5850-4b95-b976-8deed58b5103",
@@ -190,7 +190,7 @@
       "typeVersion": 1,
       "position": [
         1744,
-        520
+        528
       ],
       "id": "bbe52b69-cbc5-4e2e-8653-0e60a182e483",
       "name": "write to file"
@@ -233,7 +233,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        728,
+        736,
         480
       ],
       "id": "0b2d0f2d-8411-4a66-b9b1-918de7f482fd",
@@ -302,7 +302,7 @@
     },
     {
       "parameters": {
-        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"]/g, '-') // Replace invalid characters with a hyphen\n    .replace(/^-+|-+$/g, ''); // Remove leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -524,7 +524,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1780eed8-9957-4a23-b487-4ea6e6c23ffc",
+  "versionId": "836e8aed-dcfc-4dd1-8cbe-9fc0efbe7d1b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
