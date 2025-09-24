@@ -3,20 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "fileSelector": "={{ $json.chatInput }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -4384,
-        1328
-      ],
-      "id": "89e6dde1-ae26-475c-b3a6-c86f7a9c03d2",
-      "name": "read from csv"
-    },
-    {
-      "parameters": {
+        "binaryPropertyName": "data0",
         "options": {}
       },
       "type": "n8n-nodes-base.extractFromFile",
@@ -277,48 +264,40 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "allowFileUploads": true,
+          "allowedFilesMimeTypes": "text/csv"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -4640,
+        -4368,
         1328
       ],
       "id": "4bc50859-cb1b-4926-b7c4-a9bb0e4013cc",
-      "name": "file path",
+      "name": "upload file",
       "webhookId": "b8a8e3fd-d2da-4378-a970-51b2827e0c4b",
       "notesInFlow": false
     },
     {
       "parameters": {
-        "content": "## Add the full file path to the csv file in the file path node\n\nuse readlink -f to get the file path\n\n```\nreadlink -f input.csv\n```",
-        "height": 240,
+        "content": "## Click the paper clip icon in the chat to upload a csv file, type start and press return",
+        "height": 192,
         "width": 352
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -4752,
-        1072
+        -4480,
+        1104
       ],
-      "id": "ca6bb923-9ed7-4779-926b-016331d0c482",
+      "id": "f0e6cda6-6456-49cf-a315-8e261db2b651",
       "name": "Sticky Note"
     }
   ],
   "pinData": {},
   "connections": {
-    "read from csv": {
-      "main": [
-        [
-          {
-            "node": "Extract from csv",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Extract from csv": {
       "main": [
         [
@@ -488,11 +467,11 @@
         ]
       ]
     },
-    "file path": {
+    "upload file": {
       "main": [
         [
           {
-            "node": "read from csv",
+            "node": "Extract from csv",
             "type": "main",
             "index": 0
           }
@@ -504,7 +483,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "2690c466-2568-4196-87be-0b515181528b",
+  "versionId": "4174de5f-152c-417c-b378-3ebdfe817ec8",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
