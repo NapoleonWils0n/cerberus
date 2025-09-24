@@ -8,7 +8,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -88,
+        -80,
         -96
       ],
       "id": "1ba630a2-c764-434e-9b72-b31ca6a54e0c",
@@ -48,7 +48,10 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "numResults": 20,
+          "pageNumber": 1
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
@@ -159,7 +162,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "94424d88-23eb-4ee7-b8ec-7117789faa20",
+  "versionId": "ce071d82-c075-4281-8de1-18320e9058a4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"

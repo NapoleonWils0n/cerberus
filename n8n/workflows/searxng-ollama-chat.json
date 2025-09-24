@@ -27,7 +27,10 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "numResults": 20,
+          "pageNumber": 1
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
@@ -160,7 +163,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "fdccbf8b-a3e6-4f34-9e5f-9938507a80c7",
+  "versionId": "b3d25eca-8ade-4219-b9b2-b52eff77e58f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
