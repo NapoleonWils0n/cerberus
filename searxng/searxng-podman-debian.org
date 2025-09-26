@@ -6,6 +6,10 @@
 doas apt install podman podman-compose
 #+end_src
 
+** open port 8080
+
+you need to open tcp port 8080 and set the incoming to allow using gufw
+
 ** searxng
 *** compose.yaml
 
