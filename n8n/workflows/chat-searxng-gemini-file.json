@@ -1,0 +1,203 @@
+{
+  "name": "chat-searxng-gemini-file",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -96
+      ],
+      "id": "8c5551c3-0c04-4bfd-ac6c-5e8d7fce24a2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        128
+      ],
+      "id": "7161690c-8104-4ad0-96ad-77c5b8055169",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TOjrSUDwcdx8wf7N",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        128
+      ],
+      "id": "d0219010-e02a-48d8-8c64-25f476f9c132",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {
+          "numResults": 20,
+          "pageNumber": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSearXng",
+      "typeVersion": 1,
+      "position": [
+        144,
+        128
+      ],
+      "id": "599d2f6e-e9c2-4151-af71-a2fd58654af9",
+      "name": "SearXNG",
+      "credentials": {
+        "searXngApi": {
+          "id": "3j58B895D4mC7i1t",
+          "name": "SearXNG account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        -96
+      ],
+      "id": "7323f6e7-beb7-4cf7-ab7d-1b277174bb1a",
+      "name": "chat message",
+      "webhookId": "50c377e6-e4c4-4c8a-96a9-aedc8198fbb5"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "ee770007-8453-42d6-be64-fbb5f53f8cb6",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $env.HOME + '/Desktop/gemini-searxng-summary-' + (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        432,
+        -96
+      ],
+      "id": "322c3f0d-053d-46b5-8d46-01f8a8900f18",
+      "name": "write to file"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearXNG": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chat message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "write to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "933f9c6a-136d-4ada-a1b4-7f33b85b239c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+  },
+  "id": "pgEyN9OP3Ndy0GMy",
+  "tags": []
+}

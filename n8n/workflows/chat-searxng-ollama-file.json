@@ -1,0 +1,204 @@
+{
+  "name": "chat-searxng-ollama-file",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -96
+      ],
+      "id": "0e99cb9a-4445-4eea-8555-f366669595ad",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        128
+      ],
+      "id": "dc9e4885-e0ca-4f8a-9541-02ad63549ac3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {
+          "numResults": 20,
+          "pageNumber": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSearXng",
+      "typeVersion": 1,
+      "position": [
+        144,
+        128
+      ],
+      "id": "19581707-8239-4aaa-940f-60ca5de61845",
+      "name": "SearXNG",
+      "credentials": {
+        "searXngApi": {
+          "id": "3j58B895D4mC7i1t",
+          "name": "SearXNG account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        -96
+      ],
+      "id": "8ac322b9-635a-4f73-a418-73fa8b756206",
+      "name": "chat message",
+      "webhookId": "ebe40a4d-83d5-4bb5-a567-3d6447a2f22a"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "118f0bfe-7304-452e-b90b-f0c390314fc8",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $env.HOME + '/Desktop/ollama-searxng-summary-' + (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        432,
+        -96
+      ],
+      "id": "854d9b5f-57cb-4e8a-9f28-d763557c1526",
+      "name": "write to file"
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        128
+      ],
+      "id": "e1576469-a286-42bf-b34c-566cc808e8e8",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "svLeeHxH9c9DdhZV",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearXNG": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chat message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "write to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        []
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "109b8a47-0ccb-4aed-8970-c83f02c840ff",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+  },
+  "id": "JqjkNBuczcriu4Rw",
+  "tags": []
+}
