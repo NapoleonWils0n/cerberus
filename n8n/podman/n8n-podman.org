@@ -30,10 +30,108 @@ this create a n8n-hosting directory
 mkdir -p ~/podman/n8n
 #+end_src
 
-** copy the contents of the withPostgres into the n8n directory
+** withPostgres
+
+copy the contents of the withPostgres into the n8n directory
 
 #+begin_src sh
 cp n8n-hosting/docker-compose/withPostgres/* ~/podman/n8n
+#+end_src
+
+** create the data directory
+
+create the data directory for local file access
+
+#+begin_src sh
+mkdir -p ~/podman/n8n/data
+#+end_src
+
+change the permissions on the data directory
+
+#+begin_src sh
+chmod g+w data
+#+end_src
+
+** compose.yml
+
+rename docker-compose.yml to compose.yml
+
+#+begin_src sh
+mv docker-compose.yml compose.yml
+#+end_src
+
+compose.yml
+
+#+begin_src yaml
+version: '3.8'
+
+volumes:
+  db_storage:
+  n8n_storage:
+
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    # check your id on the command line by running id
+    # and change user: "1000:100" below to match the id
+    user: "1000:100" 
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    ports:
+      - 5678:5678
+    links:
+      - postgres
+    volumes:
+      - n8n_storage:/home/node/.n8n
+      # ADD THIS BIND MOUNT: Maps the local folder './data' (where your compose file is)
+      # to the container path '/local_files'. This is your workflow output folder.
+      - ./data:/local_files 
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+#+end_src
+
+** init-data.sh
+
+#+begin_src sh
+#!/bin/bash
+set -e;
+
+
+if [ -n "${POSTGRES_NON_ROOT_USER:-}" ] && [ -n "${POSTGRES_NON_ROOT_PASSWORD:-}" ]; then
+	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+		CREATE USER ${POSTGRES_NON_ROOT_USER} WITH PASSWORD '${POSTGRES_NON_ROOT_PASSWORD}';
+		GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DB} TO ${POSTGRES_NON_ROOT_USER};
+		GRANT CREATE ON SCHEMA public TO ${POSTGRES_NON_ROOT_USER};
+	EOSQL
+else
+	echo "SETUP INFO: No Environment variables given!"
+fi
 #+end_src
 
 ** edit the .env file
