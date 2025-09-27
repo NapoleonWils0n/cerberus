@@ -8,22 +8,11 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -96,
-        -96
+        288,
+        0
       ],
-      "id": "7206b8e8-ce8c-4ecd-996e-766015b5544a",
+      "id": "abbbd526-7592-43af-a3f2-4d0e58d1b6c6",
       "name": "AI Agent"
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -48,
-        112
-      ],
-      "id": "3def8db6-1548-4e7c-8703-65fc09fb2d67",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -35,14 +24,14 @@
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
       "position": [
-        128,
-        112
+        512,
+        224
       ],
-      "id": "be34bb5a-92e0-4002-a461-d96ef87b259d",
+      "id": "4a7122cb-0132-4425-905d-5c947aedcbcc",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "3j58B895D4mC7i1t",
+          "id": "Bw09RPTTWXxagGNl",
           "name": "SearXNG account"
         }
       }
@@ -56,10 +45,10 @@
       "type": "@n8n/n8n-nodes-langchain.chat",
       "typeVersion": 1,
       "position": [
-        320,
-        -96
+        688,
+        0
       ],
-      "id": "d4fcf608-5c75-4b08-9c84-d0333237d678",
+      "id": "c4e0de15-6186-40b2-ae03-c33850554b09",
       "name": "Respond to Chat"
     },
     {
@@ -71,31 +60,46 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -368,
-        -96
+        0,
+        0
       ],
-      "id": "a0c3bf2c-bcc7-44e7-bed5-3ab621aee8b6",
+      "id": "e9973ceb-fdb6-49b3-b1f8-770f50123637",
       "name": "chat message",
-      "webhookId": "ab0f8575-28f2-4fba-aec0-3de60d7fffb6"
+      "webhookId": "7214d39b-a90f-4dda-bb3e-ad97d0ff9fc0"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        224
+      ],
+      "id": "7bc5ebd4-fac3-4289-b4e8-c4cb184ef4b7",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "tbBB6LRz9uuylma7",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
         "model": "llama3.1:8b",
-        "options": {
-          "temperature": 0.4
-        }
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -240,
-        112
+        192,
+        224
       ],
-      "id": "b9b25cb6-8572-478b-bf88-91c11f46f7eb",
+      "id": "3e7ca13c-f71b-4a63-9783-e2ca8686135c",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
-          "id": "svLeeHxH9c9DdhZV",
+          "id": "YSRVmrylPRMa82jk",
           "name": "Ollama account"
         }
       }
@@ -103,17 +107,6 @@
   ],
   "pinData": {},
   "connections": {
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "SearXNG": {
       "ai_tool": [
         [
@@ -147,6 +140,17 @@
         ]
       ]
     },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Ollama Chat Model": {
       "ai_languageModel": [
         [
@@ -163,11 +167,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "ea5c1e33-3ba7-49bf-a798-95692b4bb1ad",
+  "versionId": "1268c26a-4c1e-4142-9734-380a7c9e2aab",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
   },
-  "id": "IL4HJqCMQLLoqgyo",
+  "id": "uQrUKZUsV0qYnwEF",
   "tags": []
 }

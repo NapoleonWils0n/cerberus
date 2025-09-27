@@ -8,10 +8,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -80,
-        -96
+        288,
+        0
       ],
-      "id": "1ba630a2-c764-434e-9b72-b31ca6a54e0c",
+      "id": "86b51fdb-5242-484e-a4d7-df1826a3aba2",
       "name": "AI Agent"
     },
     {
@@ -23,28 +23,17 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -160,
-        128
+        208,
+        224
       ],
-      "id": "c7f07e92-e20e-45bf-ba0b-ebe7a12953d9",
+      "id": "3715013f-828e-4228-8fc4-fff301ba938b",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "TOjrSUDwcdx8wf7N",
+          "id": "yXiRrGRwQwcFpRVq",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        0,
-        128
-      ],
-      "id": "e0af1876-c12a-46d9-95d7-b2631625b31e",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -56,14 +45,14 @@
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
       "position": [
-        144,
-        128
+        512,
+        224
       ],
-      "id": "28252a5d-248f-4907-84a1-4db75c0da4d7",
+      "id": "10d69395-555b-474f-9577-e1c009c15507",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "3j58B895D4mC7i1t",
+          "id": "Bw09RPTTWXxagGNl",
           "name": "SearXNG account"
         }
       }
@@ -77,10 +66,10 @@
       "type": "@n8n/n8n-nodes-langchain.chat",
       "typeVersion": 1,
       "position": [
-        320,
-        -96
+        688,
+        0
       ],
-      "id": "c0e64433-c0e5-4e8d-b54e-507c738c7849",
+      "id": "1e3583b6-e894-477e-b413-419aeaa8be1f",
       "name": "Respond to Chat"
     },
     {
@@ -92,12 +81,29 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -368,
-        -96
+        0,
+        0
       ],
-      "id": "eeb6097b-3a96-4fe3-a4e5-6015e67941df",
+      "id": "a589de8b-2c03-4dab-9a0c-6c1a4ce72e54",
       "name": "chat message",
       "webhookId": "300466be-fc36-45e8-8d2e-54b0babe1a0d"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        224
+      ],
+      "id": "9a605f71-3c75-4dc6-ab4b-49d1224b6f1a",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "tbBB6LRz9uuylma7",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -108,17 +114,6 @@
           {
             "node": "AI Agent",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -156,17 +151,28 @@
           }
         ]
       ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "92f263bd-5b3c-4775-862d-4e2b79c5d18d",
+  "versionId": "22693347-aa45-496c-8989-e61d746a6f04",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
   },
-  "id": "n6xJwRq9JTVkVt8k",
+  "id": "tPXJrkpPOYNe8Nzi",
   "tags": []
 }
