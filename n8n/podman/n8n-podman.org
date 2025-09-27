@@ -12,6 +12,48 @@ doas apt install podman podman-compose
 
 [[https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres]]
 
+** clone the entire git repo
+
+option one clone the entire git repo
+
+#+begin_src sh
+git clone https://github.com/n8n-io/n8n-hosting.git
+#+end_src
+
+** clone the n8n withPostgres section of the git repo
+
+option two clone the withPostgres section of the git repo
+
+clone the withPostgres section to the git repo
+
+Initialize a local Git repository:
+
+#+begin_src sh
+git init n8n
+cd n8n
+#+end_src
+
+Enable sparse checkout and set the remote:
+
+#+begin_src sh
+git sparse-checkout init --cone
+git remote add github https://github.com/n8n-io/n8n-hosting.git
+#+end_src
+
+Specify the directory to download:
+
+#+begin_src sh
+git sparse-checkout set docker-compose/withPostgres
+#+end_src
+
+Pull the content:
+
+#+begin_src sh
+git pull github main
+#+end_src
+
+This will create the directory structure docker-compose/withPostgres inside your n8n-config folder, containing only the files from that single directory.
+
 ** n8n start
 
 start n8n
