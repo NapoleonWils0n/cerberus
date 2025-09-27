@@ -177,14 +177,6 @@ podman-compose up -d
 
 disable ublock origin to enter the license key
 
-** n8n stop
-
-stop n8n
-
-#+begin_src sh
-podman-compose down
-#+end_src
-
 ** PostgreSQL set up
 
 settings from the .env file
@@ -230,6 +222,22 @@ POSTGRES_NON_ROOT_PASSWORD=
 #+begin_example
 password
 #+end_example
+
+** data directory permissions
+
+you may need to change permission on the data driectory
+
+#+begin_src sh
+doas chown -R "${USER}":"${USERS}" data
+#+end_src
+
+** n8n stop
+
+stop n8n
+
+#+begin_src sh
+podman-compose down
+#+end_src
 
 ** searxng api
 
