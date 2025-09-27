@@ -176,6 +176,52 @@ stop n8n
 podman-compose down
 #+end_src
 
+** PostgreSQL set up
+
+settings from the .env file
+
+host
+
+#+begin_example
+postgres
+#+end_example
+
+database
+
+settings from
+
+#+begin_example
+POSTGRES_DB=
+#+end_example
+
+#+begin_example
+database name
+#+end_example
+
+user
+
+settings from
+
+#+begin_example
+POSTGRES_NON_ROOT_USER=
+#+end_example
+
+#+begin_example
+username
+#+end_example
+
+password
+
+password from
+
+#+begin_example
+POSTGRES_NON_ROOT_PASSWORD=
+#+end_example
+
+#+begin_example
+password
+#+end_example
+
 ** searxng api
 
 to connect to searxng running in a podman container
