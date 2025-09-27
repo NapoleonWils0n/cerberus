@@ -10,22 +10,11 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -80,
-        -96
+        208,
+        0
       ],
-      "id": "0e99cb9a-4445-4eea-8555-f366669595ad",
+      "id": "21638bc4-2647-409f-83fd-18a6577aad1d",
       "name": "AI Agent"
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        0,
-        128
-      ],
-      "id": "dc9e4885-e0ca-4f8a-9541-02ad63549ac3",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -37,14 +26,14 @@
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
       "position": [
-        144,
-        128
+        432,
+        224
       ],
-      "id": "19581707-8239-4aaa-940f-60ca5de61845",
+      "id": "87e37fb1-c05a-4a08-b2e9-c8f03f756e7f",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "3j58B895D4mC7i1t",
+          "id": "Bw09RPTTWXxagGNl",
           "name": "SearXNG account"
         }
       }
@@ -56,12 +45,12 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -288,
-        -96
+        0,
+        0
       ],
-      "id": "8ac322b9-635a-4f73-a418-73fa8b756206",
+      "id": "6d401adc-5aa5-4f07-af1b-7fac3b8bd0c4",
       "name": "chat message",
-      "webhookId": "ebe40a4d-83d5-4bb5-a567-3d6447a2f22a"
+      "webhookId": "999dd35e-865f-4ef5-b5b3-83134506d86e"
     },
     {
       "parameters": {
@@ -72,26 +61,43 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        224,
-        -96
+        512,
+        0
       ],
-      "id": "118f0bfe-7304-452e-b90b-f0c390314fc8",
+      "id": "911f61aa-93ae-4e23-8f91-f105f9974020",
       "name": "Convert to File"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ $env.HOME + '/Desktop/ollama-searxng-summary-' + (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
+        "fileName": "=/mnt/data/gemini-searxng-summary-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        432,
-        -96
+        720,
+        0
       ],
-      "id": "854d9b5f-57cb-4e8a-9f28-d763557c1526",
+      "id": "ee23b88b-28a6-4320-918b-b47bd9896827",
       "name": "write to file"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        224
+      ],
+      "id": "adc61efa-fc19-4251-bc46-536df846b287",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "tbBB6LRz9uuylma7",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
@@ -103,14 +109,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -160,
-        128
+        112,
+        224
       ],
-      "id": "e1576469-a286-42bf-b34c-566cc808e8e8",
+      "id": "b6991219-b551-479d-830a-2ab9b63dc9af",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
-          "id": "svLeeHxH9c9DdhZV",
+          "id": "YSRVmrylPRMa82jk",
           "name": "Ollama account"
         }
       }
@@ -118,17 +124,6 @@
   ],
   "pinData": {},
   "connections": {
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "SearXNG": {
       "ai_tool": [
         [
@@ -173,9 +168,15 @@
         ]
       ]
     },
-    "write to file": {
-      "main": [
-        []
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
       ]
     },
     "Ollama Chat Model": {
@@ -194,11 +195,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "109b8a47-0ccb-4aed-8970-c83f02c840ff",
+  "versionId": "34690053-d1da-4432-aab6-3ade1e0d6ead",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
   },
-  "id": "JqjkNBuczcriu4Rw",
+  "id": "qhI5irZjZUfqgaqq",
   "tags": []
 }
