@@ -60,6 +60,11 @@ version: '3.8'
 volumes:
   db_storage:
   n8n_storage:
+  data_access:
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOME}/podman/n8n/data
 
 services:
   postgres:
@@ -103,9 +108,7 @@ services:
       - postgres
     volumes:
       - n8n_storage:/home/node/.n8n
-      # ADD THIS BIND MOUNT: Maps the local folder './data' (where your compose file is)
-      # to the container path '/local_files'. This is your workflow output folder.
-      - ./data:/local_files 
+      - data_access:/mnt/data
     depends_on:
       postgres:
         condition: service_healthy
