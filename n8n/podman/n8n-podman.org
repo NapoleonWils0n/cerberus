@@ -16,12 +16,24 @@ make sure to open port 5678 in your firewall
 
 [[https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres]]
 
-** clone the entire git repo
-
-option one clone the entire git repo
+** clone the n8n git repo
 
 #+begin_src sh
 git clone https://github.com/n8n-io/n8n-hosting.git
+#+end_src
+
+this create a n8n-hosting directory
+
+** create the n8n directory
+
+#+begin_src sh
+mkdir -p ~/podman/n8n
+#+end_src
+
+** copy the contents of the withPostgres into the n8n directory
+
+#+begin_src sh
+cp n8n-hosting/docker-compose/withPostgres/* ~/podman/n8n
 #+end_src
 
 ** edit the .env file
