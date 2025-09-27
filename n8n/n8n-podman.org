@@ -191,3 +191,9 @@ this connects to searxng running on
 #+begin_example
 http://localhost:8080
 #+end_example
+
+** ollama
+
+#+begin_example
+http://host.docker.internal:11434
+#+end_example
