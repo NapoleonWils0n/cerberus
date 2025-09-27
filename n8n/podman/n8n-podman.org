@@ -52,15 +52,7 @@ change the permissions on the data directory
 chmod g+w data
 #+end_src
 
-** compose.yml
-
-rename docker-compose.yml to compose.yml
-
-#+begin_src sh
-mv docker-compose.yml compose.yml
-#+end_src
-
-compose.yml
+** docker-compose.yml
 
 #+begin_src yaml
 version: '3.8'
@@ -91,9 +83,6 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
-    # check your id on the command line by running id
-    # and change user: "1000:100" below to match the id
-    user: "1000:100" 
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -101,19 +90,19 @@ services:
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      - WEBHOOK_URL=http://localhost:5678/
+      - N8N_EDITOR_BASE_URL=http://localhost:5678/
     ports:
       - 5678:5678
     links:
       - postgres
     volumes:
       - n8n_storage:/home/node/.n8n
-      # ADD THIS BIND MOUNT: Maps the local folder './data' (where your compose file is)
-      # to the container path '/local_files'. This is your workflow output folder.
-      - ./data:/local_files 
     depends_on:
       postgres:
         condition: service_healthy
-
 #+end_src
 
 ** init-data.sh
@@ -174,6 +163,10 @@ start n8n
 #+begin_src sh
 podman-compose up -d
 #+end_src
+
+** license key
+
+disable ublock origin to enter the license key
 
 ** n8n stop
 
