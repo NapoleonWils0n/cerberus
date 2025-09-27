@@ -6,44 +6,11 @@
 doas apt install podman podman-compose
 #+end_src
 
-** compose.yml
+** n8n git repo 
 
-set to allow access to your Desktop
+[[https://docs.n8n.io/hosting/installation/server-setups/docker-compose/]]
 
-#+begin_src yaml
-version: '3.8'
-
-volumes:
-  # Volume for n8n's internal data
-  n8n_data:
-  # Volume to access the desktop on Linux/Mac
-  desktop_access:
-    driver_opts:
-      # This is the standard path for the desktop on most Linux/Mac setups
-      # You might need to adjust this path if your setup is different!
-      o: bind
-      type: none
-      device: ${HOME}/Desktop
-
-services:
-  n8n:
-    image: docker.n8n.io/n8nio/n8n
-    container_name: n8n
-    restart: unless-stopped
-    ports:
-      - "5678:5678"
-    environment:
-      # Use the main volume for internal data
-      N8N_DATA_FOLDER: /home/node/.n8n
-    volumes:
-      # 1. Volume for internal n8n data
-      - n8n_data:/home/node/.n8n
-      # 2. Volume to access the desktop (e.g., for file operations in n8n workflows)
-      # This maps your desktop to /mnt/desktop inside the container
-      - desktop_access:/mnt/desktop
-    user: "1000:1000" # Recommended for better file permissions when mounting host volumes
-
-#+end_src
+[[https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres]]
 
 ** n8n start
 
@@ -51,18 +18,6 @@ start n8n
 
 #+begin_src sh
 podman-compose up -d
-#+end_src
-
-** desktop permissions
-
-after running podman compose up
-
-you will need to change the permission back to your user
-
-using either doas or sudo
-
-#+begin_src sh
-doas chown "${USER}":"${USER}" "${HOME}"/Desktop
 #+end_src
 
 ** n8n stop
