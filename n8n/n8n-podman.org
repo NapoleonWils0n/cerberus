@@ -83,6 +83,9 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
+    # CRUCIAL: Set user and group to match your host ID (1000) and primary group ID (100)
+    # This ensures n8n can correctly read/write to the host folder('./data').
+    user: "1000:100" 
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -100,6 +103,9 @@ services:
       - postgres
     volumes:
       - n8n_storage:/home/node/.n8n
+      # ADD THIS BIND MOUNT: Maps the local folder './data' (where your compose file is)
+      # to the container path '/local_files'. This is your workflow output folder.
+      - ./data:/local_files 
     depends_on:
       postgres:
         condition: service_healthy
