@@ -55,6 +55,20 @@ POSTGRES_NON_ROOT_USER=changeUser
 POSTGRES_NON_ROOT_PASSWORD=changePassword
 #+end_src
 
+use openssl to create the passwords
+
+Generate a secret for POSTGRES_PASSWORD
+
+#+begin_src sh
+openssl rand -hex 16 
+#+end_src
+
+Generate a secret for POSTGRES_NON_ROOT_PASSWORD
+
+#+begin_src sh
+openssl rand -hex 16 
+#+end_src
+
 ** n8n start
 
 start n8n
