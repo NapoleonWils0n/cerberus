@@ -38,6 +38,14 @@ cp n8n-hosting/docker-compose/withPostgres/* ~/podman/n8n
 
 ** edit the .env file
 
+edit the .env file
+
+#+begin_src sh
+vi ~/podman/n8n/.env
+#+end_src
+
+change the user and passwords
+
 #+begin_src sh
 POSTGRES_USER=changeUser
 POSTGRES_PASSWORD=changePassword
