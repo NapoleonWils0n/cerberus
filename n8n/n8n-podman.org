@@ -225,10 +225,20 @@ password
 
 ** data directory permissions
 
-you may need to change permission on the data driectory
+#+begin_src sh
+podman-compose down
+#+end_src
+
+you may need to change permission on the data directory
 
 #+begin_src sh
 doas chown -R "${USER}":"${USERS}" data
+#+end_src
+
+podman start
+
+#+begin_src sh
+podman-compose up -d
 #+end_src
 
 ** n8n stop
