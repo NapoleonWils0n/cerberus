@@ -52,6 +52,16 @@ change the permissions on the data directory
 chmod 777 data
 #+end_src
 
+use podman unshare to make files in the data directory editable by our group
+
+#+begin_src sh
+podman unshare chown -R :users data
+#+end_src
+
+#+begin_src sh
+podman unshare setfacl -d -m g::rwx data
+#+end_src
+
 ** docker-compose.yml
 
 #+begin_src yaml
@@ -60,11 +70,6 @@ version: '3.8'
 volumes:
   db_storage:
   n8n_storage:
-  data_access:
-    driver_opts:
-      o: bind
-      type: none
-      device: ${HOME}/podman/n8n/data
 
 services:
   postgres:
@@ -88,9 +93,9 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
-    # CRUCIAL: Set user and group to match your host ID (1000) and primary group ID (100)
-    # This ensures n8n can correctly read/write to the host folder('./data').
-    user: "1000:100" 
+    # run id on the command line to check your uid and gid
+    # and change user: "1000:100" below to match if needed
+    user: "1000:100"
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -98,20 +103,19 @@ services:
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
-      - N8N_RUNNERS_ENABLED=true
-      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
-      - WEBHOOK_URL=http://localhost:5678/
-      - N8N_EDITOR_BASE_URL=http://localhost:5678/
+      - WEBHOOK_URL=http://localhost:5678/      
+      - N8N_EDITOR_BASE_URL=http://localhost:5678/ 
     ports:
       - 5678:5678
     links:
       - postgres
     volumes:
       - n8n_storage:/home/node/.n8n
-      - data_access:/mnt/data
+      - ./data:/mnt/data
     depends_on:
       postgres:
-        condition: service_healthy
+        # FIX: Changed to the more lenient condition to prevent hanging
+        condition: service_started
 #+end_src
 
 ** init-data.sh
@@ -142,6 +146,14 @@ vi ~/podman/n8n/.env
 
 change the user and passwords
 
+we also add the keep-id option to the .env
+
+#+begin_src sh
+PODMAN_USERNS=keep-id
+#+end_src
+
+.env
+
 #+begin_src sh
 POSTGRES_USER=changeUser
 POSTGRES_PASSWORD=changePassword
@@ -149,6 +161,8 @@ POSTGRES_DB=n8n
 
 POSTGRES_NON_ROOT_USER=changeUser
 POSTGRES_NON_ROOT_PASSWORD=changePassword
+
+PODMAN_USERNS=keep-id
 #+end_src
 
 use openssl to create the passwords
@@ -222,24 +236,6 @@ POSTGRES_NON_ROOT_PASSWORD=
 #+begin_example
 password
 #+end_example
-
-** data directory permissions
-
-#+begin_src sh
-podman-compose down
-#+end_src
-
-you may need to change permission on the data directory
-
-#+begin_src sh
-doas chown -R "${USER}":"${USERS}" data
-#+end_src
-
-podman start
-
-#+begin_src sh
-podman-compose up -d
-#+end_src
 
 ** n8n stop
 
