@@ -9,10 +9,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -1856,
-        1328
+        -960,
+        496
       ],
-      "id": "1a0893a6-5786-43a6-8e87-0093a0038dc3",
+      "id": "2bb6719b-3d5e-44f8-a765-377af7d7551c",
       "name": "Extract from csv"
     },
     {
@@ -38,10 +38,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1328,
-        1024
+        -448,
+        192
       ],
-      "id": "ee359965-2692-4b39-aebb-495ec78e5dd4",
+      "id": "d329b245-e774-4bb8-af9d-46ba487d1885",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -52,10 +52,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -1552,
-        1312
+        -672,
+        480
       ],
-      "id": "0f2e2f5a-6671-48ac-afcc-9eb2d72bb9b6",
+      "id": "72a4951a-38df-4b8c-a27d-1149bb247665",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -70,25 +70,11 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -656,
-        832
+        224,
+        0
       ],
-      "id": "ec65b1bd-879d-493b-8746-2644532d2d7e",
+      "id": "341047b5-95de-4c63-8f11-410a3a687ddf",
       "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "sessionid"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -528,
-        1040
-      ],
-      "id": "f2444986-bb7d-4be2-8a2f-bd6e9e8bf14c",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -110,10 +96,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -880,
-        832
+        0,
+        0
       ],
-      "id": "acd0a6f4-da48-4d68-bb51-67c094830a15",
+      "id": "fdbe3457-a4c7-401e-af84-f99342553fe5",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -134,16 +120,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -304,
-        832
+        576,
+        0
       ],
-      "id": "3bca74e3-817f-417d-b5f8-c59f820f9a5f",
+      "id": "458b364e-ff0b-4ce0-befb-77b4abfe8672",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ $env.HOME }}/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "=/mnt/data/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -152,10 +138,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        384,
-        1104
+        1248,
+        272
       ],
-      "id": "2966c1d9-a17d-48e1-8827-26ca9e05b5c6",
+      "id": "bafdbf84-f5f2-4a77-b72d-3c249c35a1c0",
       "name": "write to file"
     },
     {
@@ -167,10 +153,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        160,
-        832
+        1024,
+        0
       ],
-      "id": "51354497-a901-4332-b973-832c34e73b34",
+      "id": "3752c01c-5c4c-40d5-853c-35701afa5568",
       "name": "Convert to File"
     },
     {
@@ -200,10 +186,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1104,
-        928
+        -224,
+        96
       ],
-      "id": "4e899adb-691d-4fde-a20e-d91cc66d6c41",
+      "id": "82e25bb5-6581-42e6-9555-e24e6e32ff96",
       "name": "If content type"
     },
     {
@@ -211,10 +197,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1104,
-        1120
+        -224,
+        288
       ],
-      "id": "e0f61a2c-4890-470d-af4e-5e57cc3a9436",
+      "id": "03567342-b51a-43a1-8a5d-ae6090944c7e",
       "name": "status error"
     },
     {
@@ -222,10 +208,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -880,
-        1024
+        0,
+        192
       ],
-      "id": "5f53318e-a862-4dea-b5bf-be027a4a6f5d",
+      "id": "3353928d-9c9b-49e9-af13-52101f007ac1",
       "name": "wrong content type"
     },
     {
@@ -235,26 +221,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -80,
-        832
+        800,
+        0
       ],
-      "id": "48b876f9-31e4-40cc-9c90-7027ddeee69d",
+      "id": "d3c68cb4-bbb2-445a-aabe-bbbbd8bf6c0e",
       "name": "Code"
-    },
-    {
-      "parameters": {
-        "content": "## Click the paper clip icon in the chat to upload a csv file, type start and press return",
-        "height": 224,
-        "width": 352
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -2208,
-        1072
-      ],
-      "id": "d43fd6d4-fe66-487b-80d9-87c892d49db5",
-      "name": "Sticky Note"
     },
     {
       "parameters": {
@@ -266,12 +237,45 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -2096,
-        1328
+        -1168,
+        496
       ],
-      "id": "a481702e-9bf6-4d10-95e2-9e7774352fe9",
+      "id": "4ec32cbf-4d7a-4728-9f25-366b224c50c8",
       "name": "upload file",
-      "webhookId": "da87bff2-73ca-4e28-b8f0-0fd7330dbaaf"
+      "webhookId": "430c60b0-52ff-4363-b05c-9b153af4b79b",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "content": "## Click the paper clip icon in the chat to upload a csv file, type start and press return",
+        "height": 192,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        272
+      ],
+      "id": "dff7c68b-96f7-4c5a-bbf5-d223071d7584",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        224
+      ],
+      "id": "a1166fd8-ff34-47c9-a890-ab51635b94ab",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CC6D1SBjVBR8QA99",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
@@ -283,14 +287,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -672,
-        1040
+        224,
+        224
       ],
-      "id": "7d8a2919-6e74-450e-b6c4-58219cf09758",
+      "id": "f2577d1d-5a81-4cbc-bfe7-c61b033c72bc",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
-          "id": "svLeeHxH9c9DdhZV",
+          "id": "jty16zA69nBAC2F6",
           "name": "Ollama account"
         }
       }
@@ -345,17 +349,6 @@
           {
             "node": "set output",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -467,6 +460,17 @@
         ]
       ]
     },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Ollama Chat Model": {
       "ai_languageModel": [
         [
@@ -483,11 +487,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "13a748b7-bf38-418a-a98b-3e40f83aa44f",
+  "versionId": "308c7ec2-b933-4ebe-98a2-da0a169f1313",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "EA3CpyGiwXt0lpcZ",
+  "id": "RKk1FdW8DHxdhv8A",
   "tags": []
 }

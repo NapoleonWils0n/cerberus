@@ -9,10 +9,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -4160,
-        1328
+        -960,
+        496
       ],
-      "id": "aea74a61-bfc1-452c-8fb3-afee77d6b196",
+      "id": "f94856f9-ff74-4e22-8231-78e16913e9e9",
       "name": "Extract from csv"
     },
     {
@@ -38,10 +38,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3648,
-        1024
+        -448,
+        192
       ],
-      "id": "a0b6db97-7011-42af-b852-4228cb148a64",
+      "id": "a29c2ed3-c01a-4b21-8dff-e97bef69f339",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -52,10 +52,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -3872,
-        1312
+        -672,
+        480
       ],
-      "id": "950fcd7a-a18d-4f8e-9e60-5d8c8d0b39dc",
+      "id": "0bf32c76-b78f-489f-b523-f9a6fee3fe31",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -70,25 +70,11 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -2976,
-        832
+        224,
+        0
       ],
-      "id": "5e1b0a8b-f89f-499a-95a3-451f1a913167",
+      "id": "fa94f39f-8e26-4fda-b4fd-b26dad9e9981",
       "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "sessionid"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -2784,
-        1056
-      ],
-      "id": "df8875e8-b92d-48bb-b3fc-79e0f13fb418",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -110,10 +96,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -3200,
-        832
+        0,
+        0
       ],
-      "id": "a5553a8f-6b72-4ec8-9586-a8ce5230cb40",
+      "id": "d72b1baa-1873-4594-b587-110dc32eabfc",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -134,16 +120,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2624,
-        832
+        576,
+        0
       ],
-      "id": "576b1950-bce3-449e-8fc0-a5bb3259bc22",
+      "id": "50e3be9f-1dff-4968-a4c6-ec897353ff9f",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ $env.HOME }}/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "=/mnt/data/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -152,10 +138,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -1952,
-        1104
+        1248,
+        272
       ],
-      "id": "75ca518a-5851-4168-a205-d0cf07156a11",
+      "id": "900760ee-a130-484e-b9b2-0305dd94b191",
       "name": "write to file"
     },
     {
@@ -167,10 +153,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -2176,
-        832
+        1024,
+        0
       ],
-      "id": "4c092127-9726-4b1f-b03d-2ddbce26e34a",
+      "id": "6702a26f-9c83-4eb2-96b3-1f7fd5c123ae",
       "name": "Convert to File"
     },
     {
@@ -182,14 +168,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -2960,
-        1056
+        240,
+        224
       ],
-      "id": "0bc7cd58-9e25-4058-a247-7ecc77c436a2",
+      "id": "40e17088-2ac9-4fa7-8e8c-559d0a006353",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "TOjrSUDwcdx8wf7N",
+          "id": "znmwPMJRL7xlK8cc",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -221,10 +207,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3424,
-        928
+        -224,
+        96
       ],
-      "id": "e47222da-a9ce-4f6e-810d-7f62c5684725",
+      "id": "5612ada7-d6a1-4d2e-982a-4892f01cc560",
       "name": "If content type"
     },
     {
@@ -232,10 +218,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -3424,
-        1120
+        -224,
+        288
       ],
-      "id": "6edc4d66-3221-4816-97d7-fa21fdcce99b",
+      "id": "ce87fcb2-b247-49fa-88a5-594249b00f42",
       "name": "status error"
     },
     {
@@ -243,10 +229,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -3200,
-        1024
+        0,
+        192
       ],
-      "id": "fe8811c5-28a0-4f37-b4e1-acd7fabb0379",
+      "id": "7340bcc2-43c2-458f-b6b4-272ff9ffeebd",
       "name": "wrong content type"
     },
     {
@@ -256,10 +242,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2400,
-        832
+        800,
+        0
       ],
-      "id": "09030ce2-4c04-4d88-97da-6e3755717c91",
+      "id": "6197678e-b261-4e96-8e7d-05a999f37f52",
       "name": "Code"
     },
     {
@@ -272,10 +258,10 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -4368,
-        1328
+        -1168,
+        496
       ],
-      "id": "4bc50859-cb1b-4926-b7c4-a9bb0e4013cc",
+      "id": "ecbbe05a-1c58-4777-9cd8-8f377f8ea185",
       "name": "upload file",
       "webhookId": "b8a8e3fd-d2da-4378-a970-51b2827e0c4b",
       "notesInFlow": false
@@ -289,11 +275,28 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -4480,
-        1104
+        -1280,
+        272
       ],
-      "id": "f0e6cda6-6456-49cf-a315-8e261db2b651",
+      "id": "3ef14e1b-4d9e-4a2c-8dd5-135be8217122",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        224
+      ],
+      "id": "35cf9f0d-15e1-499a-9a86-6f22c4bb39f5",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CC6D1SBjVBR8QA99",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -345,17 +348,6 @@
           {
             "node": "set output",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -477,17 +469,28 @@
           }
         ]
       ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "de6233ab-ea31-4a6b-971c-bc156cb0a762",
+  "versionId": "c3c60348-f3bc-4d27-91e2-318afbe2580b",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "CxEL9QWJ8vkAkItz",
+  "id": "OvpZakdMCmO7s6iq",
   "tags": []
 }
