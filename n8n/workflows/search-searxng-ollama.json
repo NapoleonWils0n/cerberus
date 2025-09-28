@@ -18,10 +18,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3392,
-        352
+        -1344,
+        480
       ],
-      "id": "6b4e4b43-b230-4892-8cac-7a343a167956",
+      "id": "9ea84174-caa8-4a44-a114-41b920442d44",
       "name": "search query"
     },
     {
@@ -31,12 +31,12 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -3616,
-        352
+        -1568,
+        480
       ],
-      "id": "fe8150e3-52de-48b8-9c90-f8946460c654",
+      "id": "85da060a-ae0a-4182-8ea0-2ee5d7122b88",
       "name": "search",
-      "webhookId": "b9985606-702a-4082-acc5-4ddecff4cfc2"
+      "webhookId": "59628546-e526-49a9-9309-88660a191ca4"
     },
     {
       "parameters": {
@@ -46,10 +46,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3168,
-        352
+        -1120,
+        480
       ],
-      "id": "da493980-2dcd-4c03-a3bf-bcb1716be00a",
+      "id": "70d346c8-69b1-4017-9049-12e7a604b3c0",
       "name": "searxng"
     },
     {
@@ -75,10 +75,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2496,
-        64
+        -448,
+        192
       ],
-      "id": "e7fccd3c-2222-4e4f-866e-086d939ba3a0",
+      "id": "1987b8fe-7a8a-44a1-a7ab-619e9c72348d",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -89,10 +89,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -2720,
-        352
+        -672,
+        480
       ],
-      "id": "18a0ddb7-f4e9-4800-9484-050f79b7eae8",
+      "id": "82a08c5d-9eef-4a3f-8d01-2940086be741",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -107,25 +107,11 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1824,
-        -144
+        224,
+        0
       ],
-      "id": "54b911e2-e9f3-4ffb-8b24-37e0a749722f",
+      "id": "3a56f144-a75e-4779-b579-4254d5aeede4",
       "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "sessionid"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -1696,
-        96
-      ],
-      "id": "685a4f26-5017-47cf-9a12-e51b5f552161",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -147,10 +133,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -2048,
-        -144
+        0,
+        0
       ],
-      "id": "87726a48-2606-4926-b51b-9f8bef0e2de7",
+      "id": "4dc0d55d-4d72-46f6-af9a-02641026b8fd",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -171,16 +157,16 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1472,
-        -144
+        576,
+        0
       ],
-      "id": "7bfbc527-fa6a-4e55-8f6c-8abfab3b7670",
+      "id": "d9279a1d-d9af-450c-a546-9c6800d766c4",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "={{ $env.HOME }}/Desktop/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "=/mnt/data/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
           "append": false
@@ -189,10 +175,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -800,
-        128
+        1248,
+        272
       ],
-      "id": "cabd68fb-5809-49c1-a2c9-3d466842f386",
+      "id": "4871b937-526f-404d-9683-295c0cd8fedf",
       "name": "write to file"
     },
     {
@@ -204,10 +190,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1024,
-        -144
+        1024,
+        0
       ],
-      "id": "d64a3f70-15fa-4a6f-b21a-c62b5b40dc86",
+      "id": "9b2c38ea-fcd2-41a8-8c00-83ddbfa46026",
       "name": "Convert to File"
     },
     {
@@ -218,10 +204,10 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -2944,
-        352
+        -896,
+        480
       ],
-      "id": "4868891e-0b6d-435a-9bdf-651ad62269c3",
+      "id": "172812bf-924e-4e75-979e-e5087348d84e",
       "name": "Split Out"
     },
     {
@@ -251,10 +237,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2272,
-        -48
+        -224,
+        96
       ],
-      "id": "e1920356-f106-4c73-92da-e564d35f9c61",
+      "id": "59c1fe75-364c-43d8-9464-6bdf2b949bf6",
       "name": "If content type"
     },
     {
@@ -262,10 +248,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -2272,
-        160
+        -224,
+        288
       ],
-      "id": "7fb8f513-1c0b-4095-adb9-83c7c804991f",
+      "id": "6c75bbd7-0ed8-42b3-bc61-307d2a282401",
       "name": "status error"
     },
     {
@@ -273,10 +259,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -2048,
-        64
+        0,
+        192
       ],
-      "id": "fcb19ca9-ae60-448b-9468-0ed1a91d8a23",
+      "id": "ae77c1ad-b55e-49bd-bbb6-b675720f8da9",
       "name": "wrong content type"
     },
     {
@@ -286,28 +272,47 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1248,
-        -144
+        800,
+        0
       ],
-      "id": "10d2c043-ffd6-4b16-bdbf-38c83a329a54",
+      "id": "1eec30c6-0ee6-4c9b-a367-8d921ce4e02d",
       "name": "Code"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        224
+      ],
+      "id": "61bf8f31-2b26-4e98-a512-049e47414ece",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CC6D1SBjVBR8QA99",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
         "model": "llama3.1:8b",
-        "options": {}
+        "options": {
+          "temperature": 0
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -1856,
-        80
+        208,
+        224
       ],
-      "id": "45b1d4fd-ecca-4583-b4cf-031b86ee432b",
+      "id": "056f7960-9af0-4961-aaee-287cb8775078",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
-          "id": "svLeeHxH9c9DdhZV",
+          "id": "jty16zA69nBAC2F6",
           "name": "Ollama account"
         }
       }
@@ -373,17 +378,6 @@
           {
             "node": "set output",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -506,6 +500,17 @@
         ]
       ]
     },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Ollama Chat Model": {
       "ai_languageModel": [
         [
@@ -522,11 +527,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "58993159-9000-4fc6-8439-4235c1dcd1df",
+  "versionId": "c855f8bd-7d89-4701-82ef-abfacf30e4b8",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "4f5f19f3a1851293801abceb688997c09f46ac20746fee141548f02c452c2105"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "czbTfiMJDsUPPcq6",
+  "id": "8vHlZMDLdw4Vggmd",
   "tags": []
 }
