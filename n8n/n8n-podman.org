@@ -148,6 +148,8 @@ change the user and passwords
 
 we also add the keep-id option to the .env
 
+so we can edit the files created by n8n in the data directory
+
 #+begin_src sh
 PODMAN_USERNS=keep-id
 #+end_src
