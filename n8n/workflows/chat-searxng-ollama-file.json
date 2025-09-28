@@ -13,7 +13,7 @@
         208,
         0
       ],
-      "id": "21638bc4-2647-409f-83fd-18a6577aad1d",
+      "id": "aff32470-a7f4-4906-af07-db31dec0ed4a",
       "name": "AI Agent"
     },
     {
@@ -29,11 +29,11 @@
         432,
         224
       ],
-      "id": "87e37fb1-c05a-4a08-b2e9-c8f03f756e7f",
+      "id": "70b202be-d58a-48de-8550-5ad2eea0c3dc",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "Bw09RPTTWXxagGNl",
+          "id": "IuwhGnlXUgaPMvns",
           "name": "SearXNG account"
         }
       }
@@ -48,9 +48,9 @@
         0,
         0
       ],
-      "id": "6d401adc-5aa5-4f07-af1b-7fac3b8bd0c4",
+      "id": "f6a2d97c-2df3-4c0b-a453-524597fbca03",
       "name": "chat message",
-      "webhookId": "999dd35e-865f-4ef5-b5b3-83134506d86e"
+      "webhookId": "d4a372ea-f561-455f-9919-c2dedebf9215"
     },
     {
       "parameters": {
@@ -64,7 +64,7 @@
         512,
         0
       ],
-      "id": "911f61aa-93ae-4e23-8f91-f105f9974020",
+      "id": "a2595179-4910-4370-a097-f293cd095718",
       "name": "Convert to File"
     },
     {
@@ -79,7 +79,7 @@
         720,
         0
       ],
-      "id": "ee23b88b-28a6-4320-918b-b47bd9896827",
+      "id": "0f27a3a0-3fbe-4494-9af6-2b2b20f771be",
       "name": "write to file"
     },
     {
@@ -90,11 +90,11 @@
         288,
         224
       ],
-      "id": "adc61efa-fc19-4251-bc46-536df846b287",
+      "id": "527ef939-d7b5-4b11-a7ac-eea2fcf8989c",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
-          "id": "tbBB6LRz9uuylma7",
+          "id": "CC6D1SBjVBR8QA99",
           "name": "Postgres account"
         }
       }
@@ -109,14 +109,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        112,
-        224
+        80,
+        208
       ],
-      "id": "b6991219-b551-479d-830a-2ab9b63dc9af",
+      "id": "3123dba5-e361-4802-8ff6-5fc3254b5a10",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
-          "id": "YSRVmrylPRMa82jk",
+          "id": "jty16zA69nBAC2F6",
           "name": "Ollama account"
         }
       }
@@ -195,11 +195,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "34690053-d1da-4432-aab6-3ade1e0d6ead",
+  "versionId": "be14f7fd-7ba5-4617-b45c-5d857db4002a",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "qhI5irZjZUfqgaqq",
+  "id": "6tjm9Ah3EjTDfrbd",
   "tags": []
 }

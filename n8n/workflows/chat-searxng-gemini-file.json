@@ -13,7 +13,7 @@
         208,
         0
       ],
-      "id": "0b344880-65af-4654-a227-43cda62a0d9a",
+      "id": "d1fc4922-3ce1-4f12-ab34-6ad512d1ecc7",
       "name": "AI Agent"
     },
     {
@@ -28,11 +28,11 @@
         128,
         224
       ],
-      "id": "f85b8dda-e38c-4e30-950d-fe66823bb7da",
+      "id": "be3161f6-1b92-48c9-ad5b-fa2b36145a01",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "yXiRrGRwQwcFpRVq",
+          "id": "znmwPMJRL7xlK8cc",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -50,11 +50,11 @@
         432,
         224
       ],
-      "id": "0f907c0a-6e50-4be2-bdc5-8073c5593032",
+      "id": "8349cd87-dff8-46b9-bc01-155810a5de1c",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "Bw09RPTTWXxagGNl",
+          "id": "IuwhGnlXUgaPMvns",
           "name": "SearXNG account"
         }
       }
@@ -69,7 +69,7 @@
         0,
         0
       ],
-      "id": "4ca75c81-66a5-4c8a-be26-616530770d3d",
+      "id": "f14be84b-4280-456a-87ea-490886081bae",
       "name": "chat message",
       "webhookId": "50c377e6-e4c4-4c8a-96a9-aedc8198fbb5"
     },
@@ -85,7 +85,7 @@
         512,
         0
       ],
-      "id": "cf938bbc-5a69-49f4-b22e-76ccf3adcf6b",
+      "id": "39d6c6a1-35cd-4f24-933b-e1b23e6bc5b4",
       "name": "Convert to File"
     },
     {
@@ -100,7 +100,7 @@
         720,
         0
       ],
-      "id": "aeafef18-10c9-4226-a9cf-7c49e524582a",
+      "id": "7ad1ec17-343c-4b47-bb6f-52e90eb27f0e",
       "name": "write to file"
     },
     {
@@ -111,11 +111,11 @@
         288,
         224
       ],
-      "id": "0fa1659c-ab03-4036-8aea-61025b857f0c",
+      "id": "9f927c2e-61be-4c00-8d2b-ec725bcd26da",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
-          "id": "tbBB6LRz9uuylma7",
+          "id": "CC6D1SBjVBR8QA99",
           "name": "Postgres account"
         }
       }
@@ -194,11 +194,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "27169db5-6b62-49d7-bc9b-5ef628fc7daf",
+  "versionId": "94082888-9858-4f9d-b4ea-af3018b2ebc8",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "IVmpi6HCpgE9ycpW",
+  "id": "xS012MbYbnLgRFT6",
   "tags": []
 }
