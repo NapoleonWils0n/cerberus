@@ -1,0 +1,51 @@
+version: '3.8'
+
+volumes:
+  db_storage:
+  n8n_storage:
+
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    # run id on the command line to check your uid and gid
+    # and change user: "1000:100" below to match if needed
+    user: "1000:100"
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - WEBHOOK_URL=http://localhost:5678/      
+      - N8N_EDITOR_BASE_URL=http://localhost:5678/ 
+    ports:
+      - 5678:5678
+    links:
+      - postgres
+    volumes:
+      - n8n_storage:/home/node/.n8n
+      - ./data:/mnt/data
+    depends_on:
+      postgres:
+        # FIX: Changed to the more lenient condition to prevent hanging
+        condition: service_started
