@@ -49,7 +49,7 @@ mkdir -p ~/podman/n8n/data
 change the permissions on the data directory
 
 #+begin_src sh
-chmod g+w data
+chmod 777 data
 #+end_src
 
 ** docker-compose.yml
