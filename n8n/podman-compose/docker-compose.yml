@@ -8,6 +8,7 @@ services:
   postgres:
     image: postgres:16
     restart: always
+    env_file: .env
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD

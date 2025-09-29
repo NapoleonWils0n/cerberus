@@ -6,6 +6,27 @@
 doas apt install podman podman-compose
 #+end_src
 
+** registries.conf debian
+
+create the containers directory
+
+#+begin_src sh
+mkdir -p ~/.config/containers/
+#+end_src
+
+create the registries.conf file
+
+#+begin_src sh
+vi ~/.config/containers/registries.conf
+#+end_src
+
+add the following code
+
+#+begin_src conf
+[registries.search]
+registries = ['docker.io', 'quay.io']
+#+end_src
+
 ** open port 5678
 
 make sure to open port 5678 in your firewall
@@ -75,6 +96,7 @@ services:
   postgres:
     image: postgres:16
     restart: always
+    env_file: .env
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
