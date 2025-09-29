@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# This script generates a new secret key and starts the SearXNG containers.
+
+# Generate a new random 32-byte hex secret key.
+SEARXNG_SECRET=$(openssl rand -hex 32)

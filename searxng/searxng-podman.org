@@ -1,5 +1,15 @@
 #+STARTUP: content
 * searxng podman
+** debian packages
+
+#+begin_src sh
+doas apt install podman podman-compose
+#+end_src
+
+** open port 8080
+
+you need to open tcp port 8080
+
 ** searxng
 *** compose.yaml
 
@@ -38,6 +48,7 @@ services:
       - "0.0.0.0:8080:8080"
     volumes:
       - ${HOME}/podman/searxng:/etc/searxng:rw
+      - ./searxng-genkey:/usr/local/bin/searxng-genkey
     environment:
       - SEARXNG_BASE_URL=http://localhost:8080
       - SEARXNG_REDIS_URL=redis://redis:6379/0
@@ -171,7 +182,7 @@ categories_as_tabs:
 link_token = true
 #+end_src
 
-*** searxng-start
+*** searxng-genkey
 
 #+begin_src sh
 #!/bin/sh
@@ -179,16 +190,16 @@ link_token = true
 # This script generates a new secret key and starts the SearXNG containers.
 
 # Generate a new random 32-byte hex secret key.
-SECRET_KEY=$(openssl rand -hex 32)
-
-# Start the services, passing the generated secret key as an environment variable.
-# The `podman-compose up -d` command will read this variable and apply it.
-SEARXNG_SECRET=$SECRET_KEY podman-compose up -d
+SEARXNG_SECRET=$(openssl rand -hex 32)
 #+end_src
 
-** searxng-start
+** podman-compose up
 
-start searxng by running the searxng-start script
+start searxng by running
+
+#+begin_src sh
+podman-compose up -d
+#+end_src
 
 ** podman-compose down
 
