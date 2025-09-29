@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* podman system prune
+
+remove all podman volumes and images
+
+stop all podman containers
+
+#+begin_src sh
+podman stop --all
+#+end_src
+
+warning the following command will remove all podman volumes and containers
+
+#+begin_src sh
+podman system prune --all --volumes
+#+end_src
