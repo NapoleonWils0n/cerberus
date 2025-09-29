@@ -30,3 +30,11 @@ flatpak update --user io.podman_desktop.PodmanDesktop
 ** log out and back in
 
 log out and back in for the podman-desktop to show up in your applications launcher
+
+** podman-compose
+
+to use compose.yaml files with podman-desktop run the following command
+
+#+begin_src sh
+podman-compose --file compose.yaml up --detach
+#+end_src
