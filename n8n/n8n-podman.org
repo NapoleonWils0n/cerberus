@@ -59,28 +59,38 @@ copy the contents of the withPostgres into the n8n directory
 cp n8n-hosting/docker-compose/withPostgres/* ~/podman/n8n
 #+end_src
 
-** create the data directory
+** setup-n8n script
 
-create the data directory for local file access
-
-#+begin_src sh
-mkdir -p ~/podman/n8n/data
-#+end_src
-
-change the permissions on the data directory
+run the setup-n8n script to create the data directory
 
 #+begin_src sh
-chmod 777 data
-#+end_src
+#!/bin/sh
 
-use podman unshare to make files in the data directory editable by our group
+# setup-n8n
 
-#+begin_src sh
-podman unshare chown -R :users data
-#+end_src
+#=============================================
+# create data directory to store files for n8n
+#=============================================
 
-#+begin_src sh
-podman unshare setfacl -d -m g::rwx data
+# data directory
+N8N_BASE_DIR="$HOME/podman/n8n"
+N8N_DATA_DIR="$N8N_BASE_DIR/data"
+
+# create the data directory
+echo "Creating data directory: $N8N_DATA_DIR"
+mkdir -p "$N8N_DATA_DIR"
+
+# change data directory to 777
+echo "Setting initial directory permissions to 777..."
+chmod 777 "$N8N_DATA_DIR"
+
+# podman unshare chown
+echo "Changing ownership (group to 'users') using podman unshare..."
+podman unshare chown -R :users "$N8N_DATA_DIR"
+
+# podman unshare setfacl
+echo "Setting default ACL for new files to be group-editable..."
+podman unshare setfacl -d -m g::rwx "$N8N_DATA_DIR"
 #+end_src
 
 ** docker-compose.yml

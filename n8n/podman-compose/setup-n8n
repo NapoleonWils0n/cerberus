@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# setup-n8n
+
+#=============================================
+# create data directory to store files for n8n
+#=============================================
+
+# data directory
+N8N_BASE_DIR="$HOME/podman/n8n"
+N8N_DATA_DIR="$N8N_BASE_DIR/data"
+
+# create the data directory
+echo "Creating data directory: $N8N_DATA_DIR"
+mkdir -p "$N8N_DATA_DIR"
+
+# change data directory to 777
+echo "Setting initial directory permissions to 777..."
+chmod 777 "$N8N_DATA_DIR"
+
+# podman unshare chown
+echo "Changing ownership (group to 'users') using podman unshare..."
+podman unshare chown -R :users "$N8N_DATA_DIR"
+
+# podman unshare setfacl
+echo "Setting default ACL for new files to be group-editable..."
+podman unshare setfacl -d -m g::rwx "$N8N_DATA_DIR"
