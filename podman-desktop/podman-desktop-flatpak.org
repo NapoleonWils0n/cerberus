@@ -1,0 +1,32 @@
+#+STARTUP: content
+* flatpak debian install
+
+install flatpak
+
+#+begin_src sh
+doas apt install flatpak
+#+end_src
+
+install the flatpak remote
+
+#+begin_src sh
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#+end_src
+
+** podman-desktop flatpak install
+
+Install Podman Desktop from Flathub:
+
+#+begin_src sh
+flatpak install --user flathub io.podman_desktop.PodmanDesktop
+#+end_src
+
+** podman-desktop update
+
+#+begin_src sh
+flatpak update --user io.podman_desktop.PodmanDesktop
+#+end_src
+
+** log out and back in
+
+log out and back in for the podman-desktop to show up in your applications launcher

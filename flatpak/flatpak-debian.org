@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* flatpak debian install
+
+install flatpak
+
+#+begin_src sh
+doas apt install flatpak
+#+end_src
+
+install the flatpak remote
+
+#+begin_src sh
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#+end_src
