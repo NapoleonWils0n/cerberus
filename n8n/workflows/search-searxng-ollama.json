@@ -40,7 +40,7 @@
     },
     {
       "parameters": {
-        "url": "=http://localhost:8080/search?q={{ $json.query }}&format=json",
+        "url": "=http://host.docker.internal:8080/search?q={{ $json.query }}&format=json",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -527,7 +527,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c855f8bd-7d89-4701-82ef-abfacf30e4b8",
+  "versionId": "da0b6790-bf74-49b9-801e-deb9a2b057c1",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
