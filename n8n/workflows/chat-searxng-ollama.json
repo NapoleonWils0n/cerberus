@@ -11,7 +11,7 @@
         288,
         0
       ],
-      "id": "abbbd526-7592-43af-a3f2-4d0e58d1b6c6",
+      "id": "985dce1e-4b4c-488d-ae6b-05c14fd74908",
       "name": "AI Agent"
     },
     {
@@ -27,11 +27,11 @@
         512,
         224
       ],
-      "id": "4a7122cb-0132-4425-905d-5c947aedcbcc",
+      "id": "22ac47cc-bfb1-4d13-99ff-13bdadd49bf6",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "Bw09RPTTWXxagGNl",
+          "id": "IuwhGnlXUgaPMvns",
           "name": "SearXNG account"
         }
       }
@@ -48,7 +48,7 @@
         688,
         0
       ],
-      "id": "c4e0de15-6186-40b2-ae03-c33850554b09",
+      "id": "52146ef3-1844-4e2c-9ddf-54944cc67452",
       "name": "Respond to Chat"
     },
     {
@@ -63,9 +63,9 @@
         0,
         0
       ],
-      "id": "e9973ceb-fdb6-49b3-b1f8-770f50123637",
+      "id": "891d059d-de0c-4cfd-b955-c447e5e29efa",
       "name": "chat message",
-      "webhookId": "7214d39b-a90f-4dda-bb3e-ad97d0ff9fc0"
+      "webhookId": "b0b229c1-8efe-4467-81f2-611ccf56e1de"
     },
     {
       "parameters": {},
@@ -75,11 +75,11 @@
         368,
         224
       ],
-      "id": "7bc5ebd4-fac3-4289-b4e8-c4cb184ef4b7",
+      "id": "84cc036f-0fb5-4caf-ad87-18f51fa7bb09",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
-          "id": "tbBB6LRz9uuylma7",
+          "id": "CC6D1SBjVBR8QA99",
           "name": "Postgres account"
         }
       }
@@ -87,22 +87,39 @@
     {
       "parameters": {
         "model": "llama3.1:8b",
-        "options": {}
+        "options": {
+          "temperature": 0
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        192,
-        224
+        160,
+        208
       ],
-      "id": "3e7ca13c-f71b-4a63-9783-e2ca8686135c",
+      "id": "ebe1ce35-6251-4b1c-bcb5-25156051234a",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
-          "id": "YSRVmrylPRMa82jk",
+          "id": "jty16zA69nBAC2F6",
           "name": "Ollama account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Search with searxng and Ollama get the response back in the chat",
+        "height": 96,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -112
+      ],
+      "id": "1e1082f0-2498-4e13-bf06-30b4ee2be237",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -167,11 +184,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1268c26a-4c1e-4142-9734-380a7c9e2aab",
+  "versionId": "7d646a23-f0bc-4784-b489-4200361119e9",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "uQrUKZUsV0qYnwEF",
+  "id": "8DxsnClRwKBIYif6",
   "tags": []
 }

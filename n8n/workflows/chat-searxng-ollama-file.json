@@ -120,6 +120,21 @@
           "name": "Ollama account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Search with searxng and Ollama get the response in a text file",
+        "height": 96,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "3f7bb527-e40b-41aa-a18b-33a1f53d96df",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -195,7 +210,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "be14f7fd-7ba5-4617-b45c-5d857db4002a",
+  "versionId": "181c566c-3f24-4a4f-b440-c57fbf8ae125",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

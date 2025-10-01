@@ -247,9 +247,9 @@
     },
     {
       "parameters": {
-        "content": "## Click the paper clip icon in the chat to upload a csv file, type start and press return",
+        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return to search with searxng and Ollama save the results to text files",
         "height": 192,
-        "width": 352
+        "width": 416
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
@@ -487,7 +487,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "308c7ec2-b933-4ebe-98a2-da0a169f1313",
+  "versionId": "122fd228-f80c-4df3-a760-14f0c39d4e89",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

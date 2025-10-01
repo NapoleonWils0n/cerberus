@@ -315,6 +315,21 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Search with searxng and Gemini save the reults to text files\n",
+        "height": 96,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        320
+      ],
+      "id": "58a63a4f-841c-49ff-bdb2-c12a7bda5e73",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -526,7 +541,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d8690b21-0e99-4412-adac-70a983e6bc73",
+  "versionId": "01d20408-1d8f-434e-a29e-4dd3d43485bb",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

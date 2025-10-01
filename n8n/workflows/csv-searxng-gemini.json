@@ -268,15 +268,15 @@
     },
     {
       "parameters": {
-        "content": "## Click the paper clip icon in the chat to upload a csv file, type start and press return",
+        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return to search with searxng and Gemini save the results to text files",
         "height": 192,
-        "width": 352
+        "width": 400
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1280,
-        272
+        -1264,
+        256
       ],
       "id": "3ef14e1b-4d9e-4a2c-8dd5-135be8217122",
       "name": "Sticky Note"
@@ -486,7 +486,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c3c60348-f3bc-4d27-91e2-318afbe2580b",
+  "versionId": "3ea54926-cd56-4dd8-af47-e3ec094dff53",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

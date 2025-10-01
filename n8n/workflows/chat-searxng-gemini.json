@@ -11,13 +11,13 @@
         288,
         0
       ],
-      "id": "86b51fdb-5242-484e-a4d7-df1826a3aba2",
+      "id": "15ab2b57-c842-422f-ba2c-8d111ebdd0e3",
       "name": "AI Agent"
     },
     {
       "parameters": {
         "options": {
-          "temperature": 0.4
+          "temperature": 0
         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
@@ -26,11 +26,11 @@
         208,
         224
       ],
-      "id": "3715013f-828e-4228-8fc4-fff301ba938b",
+      "id": "b1eb1a3d-4300-4c5a-b63c-6c6b8034f4d3",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "yXiRrGRwQwcFpRVq",
+          "id": "znmwPMJRL7xlK8cc",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -48,11 +48,11 @@
         512,
         224
       ],
-      "id": "10d69395-555b-474f-9577-e1c009c15507",
+      "id": "774dded0-a3c3-4b84-80f7-37acaf7b2aa2",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
-          "id": "Bw09RPTTWXxagGNl",
+          "id": "IuwhGnlXUgaPMvns",
           "name": "SearXNG account"
         }
       }
@@ -69,7 +69,7 @@
         688,
         0
       ],
-      "id": "1e3583b6-e894-477e-b413-419aeaa8be1f",
+      "id": "1175d0e0-aa85-4f09-9b96-cc9833a969ca",
       "name": "Respond to Chat"
     },
     {
@@ -84,7 +84,7 @@
         0,
         0
       ],
-      "id": "a589de8b-2c03-4dab-9a0c-6c1a4ce72e54",
+      "id": "cfa075a0-04e9-47bc-b871-ef9a77865fb7",
       "name": "chat message",
       "webhookId": "300466be-fc36-45e8-8d2e-54b0babe1a0d"
     },
@@ -96,14 +96,29 @@
         368,
         224
       ],
-      "id": "9a605f71-3c75-4dc6-ab4b-49d1224b6f1a",
+      "id": "2283185f-8497-4a15-95bf-57f0232540b0",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
-          "id": "tbBB6LRz9uuylma7",
+          "id": "CC6D1SBjVBR8QA99",
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Search with searxng and Gemini get the response back in the chat",
+        "height": 144,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -160
+      ],
+      "id": "6b47abc1-2953-43fc-802c-bc48e4516d65",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -168,11 +183,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "22693347-aa45-496c-8989-e61d746a6f04",
+  "versionId": "8f4fbe1f-2b4c-465b-b686-b22ccfc9f2aa",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "678267231632980cf6576daa95fa942d50a883c648a3d1b48f508dba8d84321e"
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "tPXJrkpPOYNe8Nzi",
+  "id": "BUcEge6qSO31UDgT",
   "tags": []
 }
