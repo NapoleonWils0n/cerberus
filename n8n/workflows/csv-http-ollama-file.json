@@ -1,5 +1,5 @@
 {
-  "name": "csv-searxng-ollama-csv",
+  "name": "csv-http-ollama-file",
   "nodes": [
     {
       "parameters": {
@@ -12,7 +12,7 @@
         -960,
         496
       ],
-      "id": "6b73ac25-6a61-42bb-9ea0-6663730f46a3",
+      "id": "2bb6719b-3d5e-44f8-a765-377af7d7551c",
       "name": "Extract from csv"
     },
     {
@@ -41,7 +41,7 @@
         -448,
         192
       ],
-      "id": "16099dc5-37e5-467b-8cb3-8e5368576779",
+      "id": "d329b245-e774-4bb8-af9d-46ba487d1885",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -55,7 +55,7 @@
         -672,
         480
       ],
-      "id": "ab76dd9b-2b95-4b48-98a3-d0e0d9504da7",
+      "id": "72a4951a-38df-4b8c-a27d-1149bb247665",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -73,7 +73,7 @@
         224,
         0
       ],
-      "id": "0286daef-8731-43a8-a5d0-18ee83ffbfc1",
+      "id": "341047b5-95de-4c63-8f11-410a3a687ddf",
       "name": "AI Agent"
     },
     {
@@ -99,7 +99,7 @@
         0,
         0
       ],
-      "id": "9825a68e-f9d2-450b-b813-f05f23b8b922",
+      "id": "fdbe3457-a4c7-401e-af84-f99342553fe5",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -109,20 +109,8 @@
           "assignments": [
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
-              "name": "title",
-              "value": "={{ $('Loop Over Items').item.json.title }}",
-              "type": "string"
-            },
-            {
-              "id": "71547689-c0d8-44b7-a7bc-24818dea0991",
-              "name": "url",
-              "value": "={{ $('Loop Over Items').item.json.url }}",
-              "type": "string"
-            },
-            {
-              "id": "63f247f4-0feb-42f6-8854-39f5740f15cc",
-              "name": "content",
-              "value": "={{ $json.output }}",
+              "name": "final_output",
+              "value": "={{ $('Loop Over Items').item.json.title }}\n\n{{ $('Loop Over Items').item.json.url }}\n\n{{ $json.output }}\n",
               "type": "string"
             }
           ]
@@ -135,41 +123,40 @@
         576,
         0
       ],
-      "id": "5936feaf-cbaf-4ea5-b7aa-39800b009a83",
+      "id": "458b364e-ff0b-4ce0-befb-77b4abfe8672",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/mnt/data/csv-searxng-gemini-csv-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.csv' }}",
+        "fileName": "=/mnt/data/{{ $('Code').item.json.sanitizedTitle }}.txt",
         "dataPropertyName": "=data",
         "options": {
-          "append": true
+          "append": false
         }
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -224,
-        464
+        1248,
+        272
       ],
-      "id": "893a1f13-cda8-461a-8ddd-2219050728ae",
+      "id": "bafdbf84-f5f2-4a77-b72d-3c249c35a1c0",
       "name": "write to file"
     },
     {
       "parameters": {
-        "options": {
-          "delimiter": ",",
-          "headerRow": true
-        }
+        "operation": "toText",
+        "sourceProperty": "final_output",
+        "options": {}
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -432,
-        464
+        1024,
+        0
       ],
-      "id": "69ebba93-46a9-46d2-bed7-8186b7e7a758",
+      "id": "3752c01c-5c4c-40d5-853c-35701afa5568",
       "name": "Convert to File"
     },
     {
@@ -202,7 +189,7 @@
         -224,
         96
       ],
-      "id": "86e2464c-fdf0-42ab-b8e8-e7f3de2ff7cc",
+      "id": "82e25bb5-6581-42e6-9555-e24e6e32ff96",
       "name": "If content type"
     },
     {
@@ -213,7 +200,7 @@
         -224,
         288
       ],
-      "id": "185d6d14-d8cc-4621-bca8-278db3e098ca",
+      "id": "03567342-b51a-43a1-8a5d-ae6090944c7e",
       "name": "status error"
     },
     {
@@ -224,8 +211,21 @@
         0,
         192
       ],
-      "id": "6cdb24e1-25b8-48d5-b0db-b9b60cbe22b8",
+      "id": "3353928d-9c9b-49e9-af13-52101f007ac1",
       "name": "wrong content type"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "d3c68cb4-bbb2-445a-aabe-bbbbd8bf6c0e",
+      "name": "Code"
     },
     {
       "parameters": {
@@ -240,24 +240,24 @@
         -1168,
         496
       ],
-      "id": "927f103d-2d2f-45f6-aa1f-f3d899d5b530",
+      "id": "4ec32cbf-4d7a-4728-9f25-366b224c50c8",
       "name": "upload file",
-      "webhookId": "d80af54f-6328-43b2-9c3e-cfca7c696343",
+      "webhookId": "430c60b0-52ff-4363-b05c-9b153af4b79b",
       "notesInFlow": false
     },
     {
       "parameters": {
-        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return to search with searxng and Ollama save the results to a csv file",
-        "height": 144,
-        "width": 624
+        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return to make http requests and sumamrize with Ollama save the results to text files",
+        "height": 192,
+        "width": 528
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1392,
-        304
+        -1344,
+        256
       ],
-      "id": "b782274c-7341-4218-bf55-078483a179c6",
+      "id": "dff7c68b-96f7-4c5a-bbf5-d223071d7584",
       "name": "Sticky Note"
     },
     {
@@ -268,7 +268,7 @@
         384,
         224
       ],
-      "id": "8a3b1597-cd86-49a8-b4a2-5094ae8c431a",
+      "id": "a1166fd8-ff34-47c9-a890-ab51635b94ab",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -276,17 +276,6 @@
           "name": "Postgres account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        832,
-        32
-      ],
-      "id": "a2c688eb-0333-45a3-be1e-454861cc8c48",
-      "name": "Accumulate Data"
     },
     {
       "parameters": {
@@ -298,10 +287,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        208,
+        224,
         224
       ],
-      "id": "1a677ad5-89fb-4bd4-a9f5-fd1891757c98",
+      "id": "f2577d1d-5a81-4cbc-bfe7-c61b033c72bc",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
@@ -344,13 +333,7 @@
     },
     "Loop Over Items": {
       "main": [
-        [
-          {
-            "node": "Convert to File",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "HTTP Request",
@@ -386,7 +369,7 @@
       "main": [
         [
           {
-            "node": "Accumulate Data",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -406,7 +389,13 @@
     },
     "write to file": {
       "main": [
-        []
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "status error": {
@@ -449,6 +438,17 @@
         ]
       ]
     },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "upload file": {
       "main": [
         [
@@ -471,17 +471,6 @@
         ]
       ]
     },
-    "Accumulate Data": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Ollama Chat Model": {
       "ai_languageModel": [
         [
@@ -498,11 +487,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "8865b509-ddfb-4508-b27d-a80e4fc2d80f",
+  "versionId": "ad6185b6-2961-4073-acd4-1b1e65505428",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "LlEGxWwT0KbNiKhB",
+  "id": "RKk1FdW8DHxdhv8A",
   "tags": []
 }
