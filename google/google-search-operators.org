@@ -47,7 +47,7 @@ site:https://www.stpauls.co.uk/
 The link operator allows you to search for pages that link to other pages. Instead of providing a search term, the link operator requires a URL or server name as an argument.
 
 #+begin_example
-site:https://www.stpauls.co.uk/
+link:https://www.stpauls.co.uk/
 #+end_example
 
 ** inanchor
