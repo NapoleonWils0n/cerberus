@@ -14,6 +14,8 @@ In the Developer Tools window, click on the Console tab.
 
 Copy the JavaScript snippet below. This code finds all anchor tags (<a>), checks if their domain is different from the current page's domain (making it "external"), and prints the external links to the Console.
 
+Paste the javascript code into the console and press return
+
 #+begin_src js
 const allLinks = document.querySelectorAll('a[href]');
 const externalLinks = [];
