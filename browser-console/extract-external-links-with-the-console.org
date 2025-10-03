@@ -1,0 +1,61 @@
+#+STARTUP: content
+* Extract External Links with the Console
+** Open Developer Tools
+
+Press F12 or Ctrl+Shift+I (Windows/Linux) or Cmd+Option+I (Mac).
+
+Alternatively, right-click anywhere on the page and select Inspect.
+
+** Navigate to the Console Tab
+
+In the Developer Tools window, click on the Console tab.
+
+** Paste and Run the JavaScript Code
+
+Copy the JavaScript snippet below. This code finds all anchor tags (<a>), checks if their domain is different from the current page's domain (making it "external"), and prints the external links to the Console.
+
+#+begin_src js
+const allLinks = document.querySelectorAll('a[href]');
+const externalLinks = [];
+const currentHost = window.location.host;
+
+allLinks.forEach(link => {
+  // Use URL object to parse the href attribute reliably
+  try {
+    const url = new URL(link.href);
+    // Check if the host is different and not a relative link (which would be the current host)
+    if (url.host && url.host !== currentHost) {
+      // You can also add more filtering here, e.g., to exclude mailto or tel links
+      if (!url.protocol.startsWith('http')) return; // skip non-HTTP protocols
+      externalLinks.push(url.href);
+    }
+  } catch (e) {
+    // Handle invalid or malformed URLs
+    // console.error('Invalid URL encountered:', link.href);
+  }
+});
+
+// Remove duplicates
+const uniqueExternalLinks = [...new Set(externalLinks)].sort();
+
+console.log(`\nFound ${uniqueExternalLinks.length} unique external links:`);
+console.log(uniqueExternalLinks.join('\n'));
+#+end_src
+
+** View and Copy the Results
+
+The console will output the total number of unique external links found and then list them one per line.
+
+You can right-click the output in the Console and select Copy message (or similar) to copy the list of links.
+
+** Explanation of the Code
+
+document.querySelectorAll('a[href]'): Selects all anchor (<a>) elements that have an href attribute, which is where the link destination is stored.
+
+window.location.host: Gets the domain and port of the currently loaded webpage. This is the key piece of information for determining what is internal and what is external.
+
+const url = new URL(link.href): Creates a URL object from the link's href. This is the most reliable way to parse the URL's components (like the hostname, protocol, etc.) regardless of whether the original link was relative or absolute.
+
+url.host && url.host !== currentHost: This condition is the core logic. It checks if the link has a valid host and if that host is not the same as the current page's host, thus identifying it as an external link.
+
+[...new Set(externalLinks)].sort(): This part uses a Set to automatically filter out any duplicate URLs and then sorts the list alphabetically for easier review.
