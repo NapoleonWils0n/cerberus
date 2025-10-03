@@ -1,0 +1,79 @@
+#+STARTUP: content
+* google search terms
+
+** intitle
+
+intitle
+
+search term in the web page title
+
+#+begin_example
+intitle:st paul's
+#+end_example
+
+** allintitle 
+
+Allintitle tells Google that every single word or phrase that
+follows is to be found in the title of the page. 
+
+#+begin_example
+allintitle:st paul's
+#+end_example
+
+** inurl
+
+search term is in the url
+
+#+begin_example
+inurl:st paul's
+#+end_example
+
+** allintext
+
+Using allintext can also serve as a type of shorthand for “ﬁnd this string anywhere except in the title, the URL, and links.” 
+
+#+begin_example
+allintext:st paul's
+#+end_example
+
+** inurl
+
+serach term is in the url
+
+#+begin_example
+inurl:st paul's
+#+end_example
+
+** site
+
+Site allows you to search only for pages that are hosted on a speciﬁc server or in a speciﬁc domain. 
+
+#+begin_example
+site:https://www.stpauls.co.uk/
+#+end_example
+
+** link
+
+The link operator allows you to search for pages that link to other pages. Instead of providing a search term, the link operator requires a URL or server name as an argument.
+
+#+begin_example
+site:https://www.stpauls.co.uk/
+#+end_example
+
+** inanchor
+
+The inanchor operator helps search the anchor, or the displayed text on the link,
+which in this case is the phrase
+
+#+begin_example
+inanchor:st pauls
+#+end_example
+
+** related
+
+The related operator displays sites that Google has determined are related to a site
+
+#+begin_example
+related:https://www.stpauls.co.uk/
+#+end_example
+
