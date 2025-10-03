@@ -36,14 +36,6 @@ Using allintext can also serve as a type of shorthand for “ﬁnd this string a
 allintext:st paul's
 #+end_example
 
-** inurl
-
-serach term is in the url
-
-#+begin_example
-inurl:st paul's
-#+end_example
-
 ** site
 
 Site allows you to search only for pages that are hosted on a speciﬁc server or in a speciﬁc domain. 
