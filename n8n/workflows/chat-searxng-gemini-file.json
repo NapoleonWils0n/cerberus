@@ -91,7 +91,7 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/mnt/data/gemini-searxng-summary-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
+        "fileName": "=/mnt/data/chat-searxng-gemini-file-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
@@ -209,7 +209,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "3506f6e3-a389-4b46-a339-c40dabc6ac7a",
+  "versionId": "67bb6ddd-8d87-4fc8-97b7-6af5d59df249",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

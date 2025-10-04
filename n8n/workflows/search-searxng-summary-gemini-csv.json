@@ -1,5 +1,5 @@
 {
-  "name": "search-searxng-gemini",
+  "name": "search-searxng-summary-gemini-csv",
   "nodes": [
     {
       "parameters": {
@@ -21,7 +21,7 @@
         -1344,
         480
       ],
-      "id": "d0c86b80-bdc3-4107-b66b-6b51fbbefd46",
+      "id": "2890db48-0c8a-40d1-9dc7-8d46760dfa92",
       "name": "search query"
     },
     {
@@ -34,9 +34,9 @@
         -1568,
         480
       ],
-      "id": "2bc79fa6-66a8-4cbc-ba66-32e2dfd2d583",
+      "id": "6764f607-b43d-417a-9322-3dc1ea087cc0",
       "name": "search",
-      "webhookId": "b9985606-702a-4082-acc5-4ddecff4cfc2"
+      "webhookId": "e17714f3-0191-4155-a3c9-d098dc80ccf4"
     },
     {
       "parameters": {
@@ -49,7 +49,7 @@
         -1120,
         480
       ],
-      "id": "e5734270-5489-4d97-bd7c-c13923d77ee6",
+      "id": "4e0be8c1-6d4d-4632-a9aa-2cd327c6b097",
       "name": "searxng"
     },
     {
@@ -78,7 +78,7 @@
         -448,
         192
       ],
-      "id": "b2d8f2f5-e21a-4389-91a9-917bcb40ba5c",
+      "id": "3d29d24e-ba2f-484b-a9da-038f1c959b69",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -92,7 +92,7 @@
         -672,
         480
       ],
-      "id": "de6ece3b-bb4d-44de-acec-c06fc1cfd54b",
+      "id": "cff7d5da-3a1e-4314-8aac-3492e94f15c5",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -110,7 +110,7 @@
         224,
         0
       ],
-      "id": "a0408876-95dc-4d2f-aa96-7d460bc478fc",
+      "id": "13da0a5b-62f9-4cc8-a32a-e825de373a5f",
       "name": "AI Agent"
     },
     {
@@ -136,7 +136,7 @@
         0,
         0
       ],
-      "id": "00c1b6db-af93-465f-947e-a603489fbbeb",
+      "id": "81724b75-d85d-490e-bb38-f8992af3589b",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -146,8 +146,20 @@
           "assignments": [
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
-              "name": "final_output",
-              "value": "={{ $('Loop Over Items').item.json.title }}\n\n{{ $('Loop Over Items').item.json.url }}\n\n{{ $json.output }}\n",
+              "name": "title",
+              "value": "={{ $('Loop Over Items').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f7f6ca07-4034-4fca-b0d8-c03d2a735189",
+              "name": "url",
+              "value": "={{ $('Loop Over Items').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "7e357710-4666-4f0f-8b49-e6bde153188a",
+              "name": "content",
+              "value": "={{ $json.output }}",
               "type": "string"
             }
           ]
@@ -160,40 +172,41 @@
         576,
         0
       ],
-      "id": "7d3bd6ec-2012-4d20-acf7-e9fc5bea26f4",
+      "id": "0dc9f566-0763-4ae6-9a46-b97631a7b444",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/mnt/data/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "=/mnt/data/search-searxng-summary-gemini-csv-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.csv' }}",
         "dataPropertyName": "=data",
         "options": {
-          "append": false
+          "append": true
         }
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1248,
-        272
+        208,
+        480
       ],
-      "id": "21981ce3-fa3c-4194-8d2e-9908d95adc89",
+      "id": "0705497d-3e90-4926-b7fa-99504f98b834",
       "name": "write to file"
     },
     {
       "parameters": {
-        "operation": "toText",
-        "sourceProperty": "final_output",
-        "options": {}
+        "options": {
+          "delimiter": ",",
+          "headerRow": true
+        }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1024,
-        0
+        -144,
+        480
       ],
-      "id": "8e21ae88-fa49-4752-8564-62fcfc17186b",
+      "id": "2d77e62e-06b8-491e-9aa7-dea42cd32687",
       "name": "Convert to File"
     },
     {
@@ -207,7 +220,7 @@
         -896,
         480
       ],
-      "id": "ba6a3cfb-eb16-4706-b68e-a8e4e1ff6005",
+      "id": "ec9e0ee3-b560-4a3d-bdc1-543401267117",
       "name": "Split Out"
     },
     {
@@ -222,7 +235,7 @@
         240,
         224
       ],
-      "id": "95e3cff4-ef6e-473b-967b-ac9b23501289",
+      "id": "321c550c-b39d-42e5-bca4-cc1b9123829d",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -261,7 +274,7 @@
         -224,
         96
       ],
-      "id": "a2389470-b90b-4e3c-8b39-13b95a96ff0e",
+      "id": "eee0e1ea-73b2-4ded-b559-a05acfee94af",
       "name": "If content type"
     },
     {
@@ -272,7 +285,7 @@
         -224,
         288
       ],
-      "id": "d5b61dda-e267-4ccd-801d-44ee8db8a887",
+      "id": "867483b5-a998-4842-92b8-1d1fcf9451ac",
       "name": "status error"
     },
     {
@@ -283,21 +296,8 @@
         0,
         192
       ],
-      "id": "c5250292-b406-4c20-a7bc-26af1899d3f6",
+      "id": "61011572-a062-42cd-a3fd-2624253283f7",
       "name": "wrong content type"
-    },
-    {
-      "parameters": {
-        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        800,
-        0
-      ],
-      "id": "3731aa60-e738-4fcc-8efb-342f7879b3c3",
-      "name": "Code"
     },
     {
       "parameters": {},
@@ -307,7 +307,7 @@
         400,
         224
       ],
-      "id": "86b34c8c-efed-4a6f-b29f-de83e52ca66a",
+      "id": "ed9eb96b-522c-4611-b46a-7848cacf9e35",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -318,7 +318,7 @@
     },
     {
       "parameters": {
-        "content": "## Search with searxng and Gemini save the reults to text files\n",
+        "content": "## Search with searxng and Gemini save the reults to a csv file\n",
         "height": 96,
         "width": 416
       },
@@ -328,8 +328,54 @@
         -1728,
         320
       ],
-      "id": "58a63a4f-841c-49ff-bdb2-c12a7bda5e73",
+      "id": "b5c78402-58eb-4cac-8b73-72e56cc363cd",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        784,
+        0
+      ],
+      "id": "454ad63f-e676-4aab-8663-b7518b14269d",
+      "name": "Accumulate Data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "22b9e266-cc6c-495e-abfd-03a4427f927b",
+              "name": "title",
+              "value": "={{ $('Loop Over Items').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "ea7730e4-549d-4a0a-a23c-02756fe2c547",
+              "name": "url",
+              "value": "={{ $('Loop Over Items').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "5359a6f7-e03c-4b6e-b3f9-39e5d40524f5",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -432,
+        480
+      ],
+      "id": "b3a0049f-4cd7-4d2a-a201-92546884f7c3",
+      "name": "filter csv"
     }
   ],
   "pinData": {},
@@ -376,7 +422,13 @@
     },
     "Loop Over Items": {
       "main": [
-        [],
+        [
+          {
+            "node": "filter csv",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "HTTP Request",
@@ -412,7 +464,7 @@
       "main": [
         [
           {
-            "node": "Code",
+            "node": "Accumulate Data",
             "type": "main",
             "index": 0
           }
@@ -432,13 +484,7 @@
     },
     "write to file": {
       "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "searxng": {
@@ -514,17 +560,6 @@
         ]
       ]
     },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Convert to File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Postgres Chat Memory": {
       "ai_memory": [
         [
@@ -535,17 +570,39 @@
           }
         ]
       ]
+    },
+    "Accumulate Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter csv": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "01d20408-1d8f-434e-a29e-4dd3d43485bb",
+  "versionId": "f60e94f1-cf18-4d00-a8bf-fdb977862264",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "t3uA5ZrCIDHtokai",
+  "id": "HamEXDzel2yPwXJp",
   "tags": []
 }

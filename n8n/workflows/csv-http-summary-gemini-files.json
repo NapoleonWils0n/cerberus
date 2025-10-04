@@ -1,5 +1,5 @@
 {
-  "name": "csv-http-ollama-file",
+  "name": "csv-http-summary-gemini-files",
   "nodes": [
     {
       "parameters": {
@@ -12,7 +12,7 @@
         -960,
         496
       ],
-      "id": "2bb6719b-3d5e-44f8-a765-377af7d7551c",
+      "id": "f94856f9-ff74-4e22-8231-78e16913e9e9",
       "name": "Extract from csv"
     },
     {
@@ -41,7 +41,7 @@
         -448,
         192
       ],
-      "id": "d329b245-e774-4bb8-af9d-46ba487d1885",
+      "id": "a29c2ed3-c01a-4b21-8dff-e97bef69f339",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -55,7 +55,7 @@
         -672,
         480
       ],
-      "id": "72a4951a-38df-4b8c-a27d-1149bb247665",
+      "id": "0bf32c76-b78f-489f-b523-f9a6fee3fe31",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -73,7 +73,7 @@
         224,
         0
       ],
-      "id": "341047b5-95de-4c63-8f11-410a3a687ddf",
+      "id": "fa94f39f-8e26-4fda-b4fd-b26dad9e9981",
       "name": "AI Agent"
     },
     {
@@ -99,7 +99,7 @@
         0,
         0
       ],
-      "id": "fdbe3457-a4c7-401e-af84-f99342553fe5",
+      "id": "d72b1baa-1873-4594-b587-110dc32eabfc",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -123,7 +123,7 @@
         576,
         0
       ],
-      "id": "458b364e-ff0b-4ce0-befb-77b4abfe8672",
+      "id": "50e3be9f-1dff-4968-a4c6-ec897353ff9f",
       "name": "set output"
     },
     {
@@ -141,7 +141,7 @@
         1248,
         272
       ],
-      "id": "bafdbf84-f5f2-4a77-b72d-3c249c35a1c0",
+      "id": "900760ee-a130-484e-b9b2-0305dd94b191",
       "name": "write to file"
     },
     {
@@ -156,8 +156,29 @@
         1024,
         0
       ],
-      "id": "3752c01c-5c4c-40d5-853c-35701afa5568",
+      "id": "6702a26f-9c83-4eb2-96b3-1f7fd5c123ae",
       "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        240,
+        224
+      ],
+      "id": "40e17088-2ac9-4fa7-8e8c-559d0a006353",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "znmwPMJRL7xlK8cc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
       "parameters": {
@@ -189,7 +210,7 @@
         -224,
         96
       ],
-      "id": "82e25bb5-6581-42e6-9555-e24e6e32ff96",
+      "id": "5612ada7-d6a1-4d2e-982a-4892f01cc560",
       "name": "If content type"
     },
     {
@@ -200,7 +221,7 @@
         -224,
         288
       ],
-      "id": "03567342-b51a-43a1-8a5d-ae6090944c7e",
+      "id": "ce87fcb2-b247-49fa-88a5-594249b00f42",
       "name": "status error"
     },
     {
@@ -211,7 +232,7 @@
         0,
         192
       ],
-      "id": "3353928d-9c9b-49e9-af13-52101f007ac1",
+      "id": "7340bcc2-43c2-458f-b6b4-272ff9ffeebd",
       "name": "wrong content type"
     },
     {
@@ -224,7 +245,7 @@
         800,
         0
       ],
-      "id": "d3c68cb4-bbb2-445a-aabe-bbbbd8bf6c0e",
+      "id": "6197678e-b261-4e96-8e7d-05a999f37f52",
       "name": "Code"
     },
     {
@@ -240,24 +261,24 @@
         -1168,
         496
       ],
-      "id": "4ec32cbf-4d7a-4728-9f25-366b224c50c8",
+      "id": "ecbbe05a-1c58-4777-9cd8-8f377f8ea185",
       "name": "upload file",
-      "webhookId": "430c60b0-52ff-4363-b05c-9b153af4b79b",
+      "webhookId": "b8a8e3fd-d2da-4378-a970-51b2827e0c4b",
       "notesInFlow": false
     },
     {
       "parameters": {
-        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return to make http requests and sumamrize with Ollama save the results to text files",
+        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return to make http requests and sumamrize with Gemini save the results to text files",
         "height": 192,
-        "width": 528
+        "width": 576
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1344,
+        -1376,
         256
       ],
-      "id": "dff7c68b-96f7-4c5a-bbf5-d223071d7584",
+      "id": "3ef14e1b-4d9e-4a2c-8dd5-135be8217122",
       "name": "Sticky Note"
     },
     {
@@ -268,34 +289,12 @@
         384,
         224
       ],
-      "id": "a1166fd8-ff34-47c9-a890-ab51635b94ab",
+      "id": "35cf9f0d-15e1-499a-9a86-6f22c4bb39f5",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
           "id": "CC6D1SBjVBR8QA99",
           "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": "llama3.1:8b",
-        "options": {
-          "temperature": 0
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
-      "typeVersion": 1,
-      "position": [
-        224,
-        224
-      ],
-      "id": "f2577d1d-5a81-4cbc-bfe7-c61b033c72bc",
-      "name": "Ollama Chat Model",
-      "credentials": {
-        "ollamaApi": {
-          "id": "jty16zA69nBAC2F6",
-          "name": "Ollama account"
         }
       }
     }
@@ -398,6 +397,17 @@
         ]
       ]
     },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "status error": {
       "main": [
         [
@@ -470,28 +480,17 @@
           }
         ]
       ]
-    },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "ad6185b6-2961-4073-acd4-1b1e65505428",
+  "versionId": "e7077e93-e899-4cd8-bb7e-eb934c87ecb7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "RKk1FdW8DHxdhv8A",
+  "id": "OvpZakdMCmO7s6iq",
   "tags": []
 }

@@ -1,5 +1,5 @@
 {
-  "name": "search-searxng-ollama",
+  "name": "search-searxng-no-summary-gemini-csv",
   "nodes": [
     {
       "parameters": {
@@ -21,7 +21,7 @@
         -1344,
         480
       ],
-      "id": "9ea84174-caa8-4a44-a114-41b920442d44",
+      "id": "9c4af268-46ac-4357-b0ac-91e2c166d6a3",
       "name": "search query"
     },
     {
@@ -34,9 +34,9 @@
         -1568,
         480
       ],
-      "id": "85da060a-ae0a-4182-8ea0-2ee5d7122b88",
+      "id": "83878080-6b10-450c-8e90-af121d248538",
       "name": "search",
-      "webhookId": "59628546-e526-49a9-9309-88660a191ca4"
+      "webhookId": "7084a53e-c87f-4330-8252-b81f704ca630"
     },
     {
       "parameters": {
@@ -49,7 +49,7 @@
         -1120,
         480
       ],
-      "id": "70d346c8-69b1-4017-9049-12e7a604b3c0",
+      "id": "b0f94a76-f195-42f4-ba05-d1d0b824dd29",
       "name": "searxng"
     },
     {
@@ -78,7 +78,7 @@
         -448,
         192
       ],
-      "id": "1987b8fe-7a8a-44a1-a7ab-619e9c72348d",
+      "id": "1e981e4d-4bef-4fa6-9090-8866ab3cac40",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -92,14 +92,14 @@
         -672,
         480
       ],
-      "id": "82a08c5d-9eef-4a3f-8d01-2940086be741",
+      "id": "0aff37b2-6bfb-4cb2-a548-dfb6f2e9a45b",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, and other irrelevant elements.\n2. From the extracted body text, create a single-paragraph summary of 250 words or less.\n3. Your output must be ONLY the summary text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}",
+        "text": "=Perform the following steps on the provided HTML content:\n1. Extract the main body text, excluding all navigation, footers, headers, ads, image alt text, figcaption text and other irrelevant elements.\n2. Your output must be ONLY the text from step 2. Do not include any titles, introductions, or concluding phrases.\n\nHTML content:\n{{ $json.bodyText }}",
         "options": {
           "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
@@ -110,7 +110,7 @@
         224,
         0
       ],
-      "id": "3a56f144-a75e-4779-b579-4254d5aeede4",
+      "id": "fa3c0d41-2977-482d-9d12-55192febfb59",
       "name": "AI Agent"
     },
     {
@@ -136,7 +136,7 @@
         0,
         0
       ],
-      "id": "4dc0d55d-4d72-46f6-af9a-02641026b8fd",
+      "id": "3694cd40-b89a-4574-acd1-1cf577aa7472",
       "name": "extract html",
       "onError": "continueErrorOutput"
     },
@@ -146,8 +146,20 @@
           "assignments": [
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
-              "name": "final_output",
-              "value": "={{ $('Loop Over Items').item.json.title }}\n\n{{ $('Loop Over Items').item.json.url }}\n\n{{ $json.output }}\n",
+              "name": "title",
+              "value": "={{ $('Loop Over Items').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "f7f6ca07-4034-4fca-b0d8-c03d2a735189",
+              "name": "url",
+              "value": "={{ $('Loop Over Items').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "7e357710-4666-4f0f-8b49-e6bde153188a",
+              "name": "content",
+              "value": "={{ $json.output }}",
               "type": "string"
             }
           ]
@@ -160,40 +172,41 @@
         576,
         0
       ],
-      "id": "d9279a1d-d9af-450c-a546-9c6800d766c4",
+      "id": "97e55c0c-a0d3-4737-8f04-7f43b55aa205",
       "name": "set output"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/mnt/data/{{ $('Code').item.json.sanitizedTitle }}.txt",
+        "fileName": "=/mnt/data/search-searxng-no-summary-gemini-csv-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.csv' }}",
         "dataPropertyName": "=data",
         "options": {
-          "append": false
+          "append": true
         }
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1248,
-        272
+        112,
+        480
       ],
-      "id": "4871b937-526f-404d-9683-295c0cd8fedf",
+      "id": "c3e224ea-1c55-4b12-9b72-bb4c02b8b9ba",
       "name": "write to file"
     },
     {
       "parameters": {
-        "operation": "toText",
-        "sourceProperty": "final_output",
-        "options": {}
+        "options": {
+          "delimiter": ",",
+          "headerRow": true
+        }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1024,
-        0
+        -144,
+        480
       ],
-      "id": "9b2c38ea-fcd2-41a8-8c00-83ddbfa46026",
+      "id": "9b8e2186-3aa4-43ed-93d5-7afcae358cc5",
       "name": "Convert to File"
     },
     {
@@ -207,8 +220,29 @@
         -896,
         480
       ],
-      "id": "172812bf-924e-4e75-979e-e5087348d84e",
+      "id": "a11a3cfe-8480-4fd7-96d6-c44f1d224337",
       "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        240,
+        224
+      ],
+      "id": "f36794a8-ba0c-434c-a7ef-26a76f3eeb99",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "znmwPMJRL7xlK8cc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
       "parameters": {
@@ -240,7 +274,7 @@
         -224,
         96
       ],
-      "id": "59c1fe75-364c-43d8-9464-6bdf2b949bf6",
+      "id": "eee6c233-55a6-4e4b-9069-7f46ed0bd820",
       "name": "If content type"
     },
     {
@@ -251,7 +285,7 @@
         -224,
         288
       ],
-      "id": "6c75bbd7-0ed8-42b3-bc61-307d2a282401",
+      "id": "875a4ffc-1d50-42a7-8fdc-9305b4c51078",
       "name": "status error"
     },
     {
@@ -262,21 +296,8 @@
         0,
         192
       ],
-      "id": "ae77c1ad-b55e-49bd-bbb6-b675720f8da9",
+      "id": "2e0308d0-a7e8-4c63-9e6b-eca8abb4e6c1",
       "name": "wrong content type"
-    },
-    {
-      "parameters": {
-        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'extract html' node\n  let title = $('extract html').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        800,
-        0
-      ],
-      "id": "1eec30c6-0ee6-4c9b-a367-8d921ce4e02d",
-      "name": "Code"
     },
     {
       "parameters": {},
@@ -286,7 +307,7 @@
         400,
         224
       ],
-      "id": "61bf8f31-2b26-4e98-a512-049e47414ece",
+      "id": "af05b686-aaf1-42ff-a43c-b00e3a502135",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -297,40 +318,64 @@
     },
     {
       "parameters": {
-        "model": "llama3.1:8b",
-        "options": {
-          "temperature": 0
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
-      "typeVersion": 1,
-      "position": [
-        208,
-        224
-      ],
-      "id": "056f7960-9af0-4961-aaee-287cb8775078",
-      "name": "Ollama Chat Model",
-      "credentials": {
-        "ollamaApi": {
-          "id": "jty16zA69nBAC2F6",
-          "name": "Ollama account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "content": "## Search with searxng and Ollama save the reults to text files\n",
-        "height": 112,
-        "width": 400
+        "content": "## Search with searxng and Gemini save the reults to a csv file\n",
+        "height": 96,
+        "width": 416
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1712,
+        -1728,
         320
       ],
-      "id": "aea2eb0b-86de-4300-8cca-aaf40ef17dd4",
+      "id": "9275f250-aa8e-4cb2-89b9-0feba0602687",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        784,
+        0
+      ],
+      "id": "b985ec29-40a6-413e-a6c8-8332fecd3b70",
+      "name": "Accumulate Data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "22b9e266-cc6c-495e-abfd-03a4427f927b",
+              "name": "title",
+              "value": "={{ $('Loop Over Items').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "ea7730e4-549d-4a0a-a23c-02756fe2c547",
+              "name": "url",
+              "value": "={{ $('Loop Over Items').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "5359a6f7-e03c-4b6e-b3f9-39e5d40524f5",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -432,
+        480
+      ],
+      "id": "fb74cb52-5bdc-4c4a-8288-7ad2d82ef1a7",
+      "name": "filter csv"
     }
   ],
   "pinData": {},
@@ -377,7 +422,13 @@
     },
     "Loop Over Items": {
       "main": [
-        [],
+        [
+          {
+            "node": "filter csv",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "HTTP Request",
@@ -413,7 +464,7 @@
       "main": [
         [
           {
-            "node": "Code",
+            "node": "Accumulate Data",
             "type": "main",
             "index": 0
           }
@@ -433,13 +484,7 @@
     },
     "write to file": {
       "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "searxng": {
@@ -459,6 +504,17 @@
           {
             "node": "Loop Over Items",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -504,17 +560,6 @@
         ]
       ]
     },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Convert to File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Postgres Chat Memory": {
       "ai_memory": [
         [
@@ -526,12 +571,23 @@
         ]
       ]
     },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
+    "Accumulate Data": {
+      "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter csv": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
             "index": 0
           }
         ]
@@ -542,11 +598,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "718b2276-0096-4f8c-a479-c4232df804ae",
+  "versionId": "701bc1a6-5f40-49ee-a0d9-8e8a12e3191e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "8vHlZMDLdw4Vggmd",
+  "id": "x9g1cPlyZgmaZrwm",
   "tags": []
 }
