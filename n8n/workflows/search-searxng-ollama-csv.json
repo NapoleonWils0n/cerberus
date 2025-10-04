@@ -178,7 +178,7 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/mnt/data/search-searxng-gemini-csv-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.csv' }}",
+        "fileName": "=/mnt/data/search-searxng-ollama-csv-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.csv' }}",
         "dataPropertyName": "=data",
         "options": {
           "append": true
@@ -599,7 +599,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a0a6d847-5a39-4ab1-b9f0-becd21fa1b36",
+  "versionId": "fc90899f-9caf-4938-a054-b9a0ca9faea5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
