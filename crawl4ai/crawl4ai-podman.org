@@ -186,6 +186,14 @@ TAG=latest
 
 ** setup-crawl4ai
 
+run the setup-crawl4ai script to create the output_data directory
+
+#+begin_src sh
+./setup-crawl4ai
+#+end_src
+
+setup-crawl4ai
+
 #+begin_src sh
 #!/bin/sh
 
