@@ -1,5 +1,5 @@
 {
-  "name": "csv-crawl4ai-ollama-markdown",
+  "name": "csv-crawl4ai-markdown",
   "nodes": [
     {
       "parameters": {
@@ -10,9 +10,9 @@
       "typeVersion": 1,
       "position": [
         -400,
-        704
+        512
       ],
-      "id": "a6fdcc11-926c-4bdf-b1ad-c563fcb784bd",
+      "id": "95703a75-023d-4c7e-8ec4-7b43a6bf9e4b",
       "name": "Extract from csv"
     },
     {
@@ -23,9 +23,9 @@
       "typeVersion": 3,
       "position": [
         -176,
-        704
+        512
       ],
-      "id": "6009fe44-3b22-4bd6-aa41-19e87d5e7584",
+      "id": "597ec9d9-34f4-494b-9a74-d18c46815f39",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -36,7 +36,7 @@
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
               "name": "final_output",
-              "value": "=[Source URL]({{ $('If').item.json.url }})\n\n{{ $json.output }}",
+              "value": "=[Source URL]({{ $('If').item.json.url }})\n\n{{ $json.markdown }}",
               "type": "string"
             }
           ]
@@ -46,10 +46,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        912,
+        496,
         176
       ],
-      "id": "936d2b8c-5a08-484b-86ab-2394b33c58a1",
+      "id": "51f67696-52ac-4b23-95c6-cb07bd633261",
       "name": "set output"
     },
     {
@@ -64,10 +64,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1520,
-        496
+        1168,
+        352
       ],
-      "id": "4cb9bce0-debb-4e36-a78f-f3b8a0d8c76d",
+      "id": "e8c87cd0-e277-4a4d-9457-56e245864cfe",
       "name": "write to file"
     },
     {
@@ -79,10 +79,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1360,
-        208
+        944,
+        176
       ],
-      "id": "c404b584-0ab1-4452-b80a-b9c4a9524f17",
+      "id": "1f4ff464-266c-49d5-881b-2808785f6b3d",
       "name": "Convert to File"
     },
     {
@@ -96,11 +96,11 @@
       "typeVersion": 1.3,
       "position": [
         -624,
-        704
+        512
       ],
-      "id": "e03944e8-7dee-4a62-ae2e-db758944f2b2",
+      "id": "fe15f806-7fed-489a-930d-ee76b38c1c39",
       "name": "upload file",
-      "webhookId": "f6443ec0-039e-48fa-9e2c-8f17fff4d04e",
+      "webhookId": "9211ad05-c175-4078-baec-53ef81c6990b",
       "notesInFlow": false
     },
     {
@@ -124,10 +124,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        48,
-        416
+        0,
+        288
       ],
-      "id": "80832ed8-86bf-4055-980c-e007d30bcaa8",
+      "id": "79b982f7-879d-498f-b8b3-1711cebf5c50",
       "name": "crawl4ai",
       "onError": "continueErrorOutput"
     },
@@ -140,10 +140,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -784,
-        496
+        -768,
+        304
       ],
-      "id": "47745536-46c9-4631-a8d1-39a4a498750a",
+      "id": "a4543a92-98f2-4cf9-8668-8cab7fea4e56",
       "name": "Sticky Note"
     },
     {
@@ -153,10 +153,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        192
+        720,
+        176
       ],
-      "id": "9d093213-cae6-4f34-b977-c4bbbca7e87a",
+      "id": "6a033857-6cd5-4e57-bba4-812f8c05249f",
       "name": "sanitize title for file name"
     },
     {
@@ -181,7 +181,7 @@
             {
               "id": "e8681786-e87a-4b27-be24-d79c9637d63e",
               "leftValue": "={{ $json.markdown.length }}",
-              "rightValue": 12000,
+              "rightValue": 20000,
               "operator": {
                 "type": "number",
                 "operation": "lt"
@@ -195,77 +195,21 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        272,
-        416
+        240,
+        272
       ],
-      "id": "7c08b795-23df-447b-bab9-ecf4e8044789",
+      "id": "4ff9df05-07bd-4d9a-a96c-8e0acaeb63e6",
       "name": "If"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Perform the following steps on the provided markdown content, which is the body of a web article:\n1. Extract the main body text, **starting from the article's main content**. Exclude all navigational elements, footers, sidebars, advertisements, image alt text, figcaption text, and any other irrelevant boilerplate or website shell elements.\n2. **Preserve all original Markdown formatting** within the article's body, including all headings (e.g., #, ##, ###), lists, and links.\n3. Your final output must be **ONLY** the cleaned text from step 1. Do not include any commentary or extra text outside of the article's body content.\n\nmarkdown content:\n{{ $json.markdown }}",
-        "options": {
-          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.2,
-      "position": [
-        496,
-        160
-      ],
-      "id": "85a79c7d-7397-4a78-91ee-a6be5ace7ab5",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.3,
-      "position": [
-        640,
-        336
-      ],
-      "id": "e2eb8900-8433-4159-9aea-2f5a0a32036d",
-      "name": "Postgres Chat Memory",
-      "credentials": {
-        "postgres": {
-          "id": "CC6D1SBjVBR8QA99",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": "llama3.1:8b",
-        "options": {
-          "temperature": 0
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
-      "typeVersion": 1,
-      "position": [
-        480,
-        352
-      ],
-      "id": "7d4d2652-5404-4f47-8a2c-0af5b41b4f6d",
-      "name": "Ollama Chat Model",
-      "credentials": {
-        "ollamaApi": {
-          "id": "jty16zA69nBAC2F6",
-          "name": "Ollama account"
-        }
-      }
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        560,
-        560
+        496,
+        368
       ],
-      "id": "04c1f3bd-0ee2-4517-84b8-bb40329d7423",
+      "id": "9110dda7-1a54-4670-8052-2c3f3d3cf99f",
       "name": "no op"
     }
   ],
@@ -365,7 +309,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "set output",
             "type": "main",
             "index": 0
           }
@@ -374,39 +318,6 @@
           {
             "node": "no op",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "set output",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Postgres Chat Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -428,11 +339,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "622bbf3c-0adf-4293-99a0-68ee32c78323",
+  "versionId": "a2b6f862-b3bc-425a-bdb1-973a87344af7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "bfdBL8AHkcbTsSsZ",
+  "id": "R8YYTnCqhHPtbpFK",
   "tags": []
 }

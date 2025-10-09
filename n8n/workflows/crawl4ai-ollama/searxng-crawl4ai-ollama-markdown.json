@@ -82,7 +82,7 @@
             {}
           ]
         },
-        "jsonBody": "=\n\n{\n  \"url\": \"{{ $json.url }}\",\n  \"crawler_config\": {\n    \"type\": \"CrawlerRunConfig\",\n    \"params\": {\n      \"markdown_generator\": {\n        \"type\": \"DefaultMarkdownGenerator\"\n      }\n    }\n  }\n}",
+        "jsonBody": "={\n  \"url\": \"{{ $json.url }}\",\n  \"crawler_config\": {\n    \"type\": \"CrawlerRunConfig\",\n    \"params\": {\n      \"content_filters\": [\n        {\n          \"type\": \"PruningContentFilter\",\n          \"threshold\": 0.5,\n          \"threshold_type\": \"fixed\",\n          \"min_word_threshold\": 75 \n        }\n      ],\n      \"markdown_generator\": {\n        \"type\": \"DefaultMarkdownGenerator\"\n      }\n    }\n  }\n}",
         "options": {
           "response": {
             "response": {}
@@ -468,7 +468,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "86f1aeb8-3690-46f8-a499-1651f6178faf",
+  "versionId": "158e5ef6-b76b-4b1b-87f2-8dbd81d2885a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
