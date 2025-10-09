@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* sed prepend hash before text
+
+find all the markdown files in the current directory
+
+and prepend # and a space before [Source URL] in the files
+
+#+begin_src sh
+fd -t f -e md -d 1 -0 | xargs -0 sed -i 's/\[Source URL\]/# \[Source URL\]/g'
+#+end_src
+
+output
+
+#+begin_example
+# [Source URL]
+#+end_example
