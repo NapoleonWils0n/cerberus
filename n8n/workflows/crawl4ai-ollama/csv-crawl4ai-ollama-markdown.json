@@ -202,17 +202,6 @@
       "name": "If"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        560,
-        560
-      ],
-      "id": "04c1f3bd-0ee2-4517-84b8-bb40329d7423",
-      "name": "no markdown output"
-    },
-    {
       "parameters": {
         "promptType": "define",
         "text": "=Perform the following steps on the provided markdown content, which is the body of a web article:\n1. Extract the main body text, **starting from the article's main content**. Exclude all navigational elements, footers, sidebars, advertisements, image alt text, figcaption text, and any other irrelevant boilerplate or website shell elements.\n2. **Preserve all original Markdown formatting** within the article's body, including all headings (e.g., #, ##, ###), lists, and links.\n3. Your final output must be **ONLY** the cleaned text from step 1. Do not include any commentary or extra text outside of the article's body content.\n\nmarkdown content:\n{{ $json.markdown }}",
@@ -256,8 +245,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        368,
-        368
+        480,
+        352
       ],
       "id": "7d4d2652-5404-4f47-8a2c-0af5b41b4f6d",
       "name": "Ollama Chat Model",
@@ -267,6 +256,17 @@
           "name": "Ollama account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        560,
+        560
+      ],
+      "id": "04c1f3bd-0ee2-4517-84b8-bb40329d7423",
+      "name": "no op"
     }
   ],
   "pinData": {},
@@ -372,18 +372,7 @@
         ],
         [
           {
-            "node": "no markdown output",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "no markdown output": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
+            "node": "no op",
             "type": "main",
             "index": 0
           }
@@ -422,13 +411,24 @@
           }
         ]
       ]
+    },
+    "no op": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "402a8464-71fa-4b52-b1f1-ad6b32830f92",
+  "versionId": "5993f2dd-bbb3-4ccd-8293-1b3cc0893f8c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

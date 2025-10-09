@@ -202,17 +202,6 @@
       "name": "If"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        560,
-        560
-      ],
-      "id": "cf49de72-3ab1-416e-b031-ae4caba44694",
-      "name": "no markdown output"
-    },
-    {
       "parameters": {
         "promptType": "define",
         "text": "=Perform the following steps on the provided markdown content, which is the body of a web article:\n1. Extract the main body text, **starting from the article's main content**. Exclude all navigational elements, footers, sidebars, advertisements, image alt text, figcaption text, and any other irrelevant boilerplate or website shell elements.\n2. **Preserve all original Markdown formatting** within the article's body, including all headings (e.g., #, ##, ###), lists, and links.\n3. Your final output must be **ONLY** the cleaned text from step 1. Do not include any commentary or extra text outside of the article's body content.\n\nmarkdown content:\n{{ $json.markdown }}",
@@ -266,6 +255,17 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        560,
+        560
+      ],
+      "id": "cf49de72-3ab1-416e-b031-ae4caba44694",
+      "name": "no op"
     }
   ],
   "pinData": {},
@@ -371,18 +371,7 @@
         ],
         [
           {
-            "node": "no markdown output",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "no markdown output": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
+            "node": "no op",
             "type": "main",
             "index": 0
           }
@@ -421,13 +410,24 @@
           }
         ]
       ]
+    },
+    "no op": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d25db2b6-8549-4ca1-a287-b828e84dd169",
+  "versionId": "dfd47f62-7678-4e12-98bd-32b69f8169b4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
