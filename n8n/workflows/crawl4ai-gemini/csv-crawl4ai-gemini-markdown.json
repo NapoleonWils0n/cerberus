@@ -9,10 +9,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -400,
-        704
+        -560,
+        384
       ],
-      "id": "25ed6b65-78a6-438f-856e-e40710d00621",
+      "id": "e1931e55-516c-413b-aa5e-808d087777b6",
       "name": "Extract from csv"
     },
     {
@@ -22,10 +22,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -176,
-        704
+        -336,
+        384
       ],
-      "id": "27805415-3b2b-4284-a4ae-f8de46b3ab21",
+      "id": "f5665b62-643f-4efe-a3c8-db2da5b82929",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -36,7 +36,7 @@
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
               "name": "final_output",
-              "value": "=[Source URL]({{ $('If').item.json.url }})\n\n{{ $json.output }}",
+              "value": "=# [Source URL]({{ $('If').item.json.url }})\n\n{{ $json.output }}",
               "type": "string"
             }
           ]
@@ -46,10 +46,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        912,
-        176
+        752,
+        -144
       ],
-      "id": "f47d9534-2927-4512-8fd7-f84d30240919",
+      "id": "5a4ce09f-eeda-424b-b2fc-2358f46fe128",
       "name": "set output"
     },
     {
@@ -64,10 +64,10 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1520,
-        496
+        1360,
+        176
       ],
-      "id": "7dc1fc44-4f7f-46d9-8c57-d646a29fcace",
+      "id": "0bf48e2a-8b7d-4e8b-9b66-5d0edebd7bf9",
       "name": "write to file"
     },
     {
@@ -79,10 +79,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1360,
-        208
+        1200,
+        -112
       ],
-      "id": "827243b6-8fc0-4ce3-9bf3-2c3b599a128c",
+      "id": "faa423cc-ec4f-4afd-9c21-dbfa214bc7d7",
       "name": "Convert to File"
     },
     {
@@ -95,10 +95,10 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -624,
-        704
+        -784,
+        384
       ],
-      "id": "5b154669-a0cb-45b5-aaf6-3a8aaff226e5",
+      "id": "f1fe95ec-e282-4ecf-bd43-59cf3e821115",
       "name": "upload file",
       "webhookId": "9039b138-4e80-46c5-b94b-a3a8596b5509",
       "notesInFlow": false
@@ -124,10 +124,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        48,
-        416
+        -112,
+        96
       ],
-      "id": "5fc3cfc2-166f-4538-b7f2-eaf38aaba424",
+      "id": "9f72dc02-318a-4509-9e20-83768c213f9c",
       "name": "crawl4ai",
       "onError": "continueErrorOutput"
     },
@@ -140,10 +140,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -784,
-        496
+        -944,
+        176
       ],
-      "id": "157169e1-7853-4bd0-9e58-861972c2548a",
+      "id": "e1f3b5c6-a3b5-4676-84e3-af9453bf3b00",
       "name": "Sticky Note"
     },
     {
@@ -153,10 +153,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
-        192
+        960,
+        -128
       ],
-      "id": "7eede478-ffc5-48f6-8005-ee559389c44b",
+      "id": "8c012d1d-af4e-4554-8140-d28ea417a771",
       "name": "sanitize title for file name"
     },
     {
@@ -195,10 +195,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        272,
-        416
+        112,
+        96
       ],
-      "id": "26756702-0b50-4eee-828c-bed57f6f4f24",
+      "id": "767a86f0-c327-4a05-bf12-78c61394a718",
       "name": "If"
     },
     {
@@ -212,10 +212,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        496,
-        160
+        336,
+        -160
       ],
-      "id": "39cb5711-8ac9-44f1-8cb8-e28c3e1720ec",
+      "id": "75198ec2-0355-4b59-b586-7d1ff1d3ac48",
       "name": "AI Agent"
     },
     {
@@ -227,10 +227,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        496,
-        336
+        336,
+        16
       ],
-      "id": "70793541-1b45-4251-9aba-b8488a7082b6",
+      "id": "f77e7d75-c505-4a31-a009-0d136174b5df",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -244,10 +244,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        640,
-        336
+        480,
+        16
       ],
-      "id": "ee2c4787-6e00-4111-87a3-c2a787763514",
+      "id": "b33114df-9cd8-4f56-a859-8ab5714bf6c8",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -261,10 +261,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        560,
-        560
+        400,
+        240
       ],
-      "id": "cf49de72-3ab1-416e-b031-ae4caba44694",
+      "id": "cb8ba38b-fe80-417d-957d-212b8a662d84",
       "name": "no op"
     }
   ],
@@ -345,8 +345,7 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "sanitize title for file name": {
@@ -427,7 +426,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "986b208a-1bf9-4465-8002-7285228b535b",
+  "versionId": "5afc7e66-a770-4f23-b18e-ca21e1a72283",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
