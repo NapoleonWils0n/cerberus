@@ -22,7 +22,7 @@
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
               "name": "final_output",
-              "value": "=# [Source URL]({{ $('If').item.json.url }})\n\n{{ $json.output }}",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.output }}\n",
               "type": "string"
             }
           ]
@@ -468,7 +468,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1f96f654-8cec-41d2-8c76-dbb44bbaadf7",
+  "versionId": "cfe41cdd-a7f0-4533-869d-e80453438bdc",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
