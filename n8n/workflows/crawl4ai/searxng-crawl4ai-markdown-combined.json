@@ -1,0 +1,575 @@
+{
+  "name": "searxng-crawl4ai-markdown-combined",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2176,
+        672
+      ],
+      "id": "d78ab9a4-5d27-463e-95f2-07c7539275d2",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
+              "name": "demoted_markdown",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.demoted_markdown }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1280,
+        304
+      ],
+      "id": "cf4cec58-8f16-4e65-a85e-eb078d7e755e",
+      "name": "set output"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "demoted_markdown",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1776,
+        800
+      ],
+      "id": "608bdb9c-ef05-46da-9fcc-eba78a9999d2",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11235/md",
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n  \"url\": \"{{ $json.url }}\",\n  \"crawler_config\": {\n    \"type\": \"CrawlerRunConfig\",\n    \"params\": {\n      \"content_filters\": [\n        {\n          \"type\": \"PruningContentFilter\",\n          \"threshold\": 0.5,\n          \"threshold_type\": \"fixed\",\n          \"min_word_threshold\": 75 \n        }\n      ],\n      \"markdown_generator\": {\n        \"type\": \"DefaultMarkdownGenerator\"\n      }\n    }\n  }\n}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1952,
+        400
+      ],
+      "id": "27ff487b-ae95-4d1c-a992-4a2ef5cb6033",
+      "name": "crawl4ai",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Enter a search query for searxng, press return use crawl4ai save the results to a text file",
+        "height": 128,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3680,
+        496
+      ],
+      "id": "84b3c805-0e2c-4dce-bfa6-8b636e64c1b8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1c0f7cc-a0f7-4f9b-a2dd-0175077ea767",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "09712590-015e-4e8e-85cd-6de73444574e",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "We cannot provide a description for this page right now",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "a9430359-776d-432c-80ea-2a0ce6b56dee",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "\"\\n\"",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "ba8f54c2-47f1-4e1f-a190-114beef829ba",
+              "leftValue": "={{ $json.markdown.length }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "e8681786-e87a-4b27-be24-d79c9637d63e",
+              "leftValue": "={{ $json.markdown.length }}",
+              "rightValue": 20000,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        400
+      ],
+      "id": "6ab9eb7e-3683-4d76-b3ad-43178034ace0",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1504,
+        496
+      ],
+      "id": "70c34bc3-635f-4ef0-a65f-c9a544bd2606",
+      "name": "no op"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import re\n\n# The user explicitly stated the input field for the markdown content MUST be called 'markdown'.\n# We will strictly use items[0].json[\"markdown\"]. This assumes the preceding node\n# in the workflow has named its output field exactly 'markdown'.\n# If 'markdown' is not present, this will raise an error, enforcing the user's requirement.\nmarkdown_content = items[0].json[\"markdown\"]\n\n# 1. Split the content into lines\n# We use splitlines(True) to keep the newline characters, which is crucial for\n# reconstructing the markdown file correctly later.\nlines = markdown_content.splitlines(True)\n\n# 2. Check the first non-empty line with a header\ndemote = False\n# Regex to find markdown headers (starting with one or more '#' followed by space)\nheader_regex = r\"^(#+)\\s+.*\" \nfirst_header_level = 7 # Start higher than H6\n\nfor line in lines:\n    line = line.strip()\n    if line: # Check if the line is not empty (e.g. not just a newline character)\n        match = re.match(header_regex, line)\n        if match:\n            # Found the first header. Count the number of hashes.\n            hashes = match.group(1)\n            first_header_level = len(hashes)\n            \n            # Check if demotion is needed (i.e., if the first header is H1 or H2)\n            # We want to demote if the top-level header is <= H2 (level 2)\n            if first_header_level <= 2:\n                demote = True\n            break # Stop checking after the first header is found\n\nnew_lines = []\n\nif demote:\n    for line in lines:\n        match = re.match(header_regex, line)\n        if match:\n            hashes = match.group(1)\n            current_level = len(hashes)\n                        \n            # Stop demoting at H6 (level 6). If current_level is < 6, we demote it.\n            if current_level < 6:\n                # Prepend one hash to the line to demote it (e.g., # -> ##, ## -> ###)\n                new_line = '#' + line\n            else:\n                # Keep H6 and below as is\n                new_line = line\n        else:\n            # Not a header line, keep it as is\n            new_line = line\n                    \n        new_lines.append(new_line)\nelse:\n    # If the demotion condition is NOT met (first header was H3 or higher), keep all lines original\n    new_lines = lines\n\n# 3. Join the lines back together\ndemoted_markdown = \"\".join(new_lines)\n\n# 4. Write the demoted content back to a new field named 'demoted_markdown'.\n# We maintain all original fields from the input item and add the new one.\noutput_item = {**items[0].json, \"demoted_markdown\": demoted_markdown}\n\nreturn [output_item]\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1504,
+        304
+      ],
+      "id": "d8e63a1a-be7d-4d6e-87cc-f6501b3c0ad4",
+      "name": "Code in Python (Beta)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d012900c-f3ab-430c-80b5-1dbee6ef820c",
+              "leftValue": "={{ $json.demoted_markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1984,
+        848
+      ],
+      "id": "35dee6de-c55b-413c-b8ca-186dd0e052f3",
+      "name": "if markdown"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1776,
+        1040
+      ],
+      "id": "06562a7c-172a-42b6-a8a8-e4eef1f3ae99",
+      "name": "no markdown"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -3520,
+        672
+      ],
+      "id": "ba4f8a83-55c5-41ac-abee-53fcf3e97330",
+      "name": "search",
+      "webhookId": "45c01273-5ee6-47e8-a10b-a88c3ae194b7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to clean the query and create the filename\nfunction cleanQueryToFilename(query) {\n    if (!query) {\n        return 'default-output';\n    }\n    \n    const lowerCaseQuery = query.toLowerCase().trim();\n\n    // 1. Handle 'link:' operator (Example: link:https://spitalfieldslife.com/2024/01/31/at-beppes-cafe/)\n    if (lowerCaseQuery.startsWith('link:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https)\n        let pathSegment = urlPart.replace(/https?:\\/\\//, '');\n\n        // Split by '/' and get the last part (e.g., 'at-beppes-cafe/')\n        let lastSegment = pathSegment.split('/').filter(s => s).pop();\n        \n        // Remove file extensions (like .html) and remaining dots\n        let cleanedSegment = lastSegment ? lastSegment.replace(/\\.[a-z]{2,5}$/i, '') : '';\n        \n        // Replace any remaining non-alphanumeric with dashes\n        cleanedSegment = cleanedSegment.replace(/[^a-z0-9-]/gi, '-'); \n        \n        // Final cleanup: remove multiple dashes and trim\n        return cleanedSegment.replace(/-{2,}/g, '-').replace(/^-|-$/g, '') || 'link-search';\n    }\n\n    // 2. Handle 'site:' operator (Example: site:https://spitalfieldslife.com)\n    if (lowerCaseQuery.startsWith('site:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https), 'www.', and trailing slash\n        urlPart = urlPart.replace(/https?:\\/\\//, '').replace(/^www\\./, '').replace(/\\/$/, '');\n        \n        // Split at the first dot and take the domain name (spitalfieldslife)\n        let domainName = urlPart.split('.')[0];\n        \n        return domainName.toLowerCase();\n    }\n\n    // 3. Handle General Text Prompt (Example: beppes cafe london)\n    // Replace all non-alphanumeric (except space) with dashes, remove multiple dashes, and trim.\n    let cleanedText = lowerCaseQuery;\n    // Replace all non-alphanumeric or space with dash\n    cleanedText = cleanedText.replace(/[^a-z0-9\\s]/g, '-'); \n    // Replace spaces with single dash\n    cleanedText = cleanedText.replace(/\\s+/g, '-');\n    // Final cleanup: remove multiple dashes and trim\n    cleanedText = cleanedText.replace(/-{2,}/g, '-').replace(/^-|-$/g, '');\n\n    return cleanedText;\n}\n\n// ----------------------------------------------------\n// CRUCIAL CHANGE: Use the correct input variable\n// ----------------------------------------------------\nconst originalQuery = $input.first().json.chatInput;\n\n// Process the query to get the clean filename base\nconst cleanedFilename = cleanQueryToFilename(originalQuery);\n\n// Return the original item with the new field added\nreturn [{\n    ...$json,\n    cleaned_filename: cleanedFilename\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3296,
+        672
+      ],
+      "id": "383adddf-d123-46b3-bebd-812f5276526e",
+      "name": "clean query"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f6f282a-a986-45d6-a254-92887ceabce0",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3072,
+        672
+      ],
+      "id": "f8d7f598-979f-416f-aafe-e81fd9a31c97",
+      "name": "search query"
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8080/search?q={{ $json.chatInput }}&format=json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2848,
+        672
+      ],
+      "id": "7c8f77c8-a8bc-499b-bf47-58541ec35c16",
+      "name": "searxng"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -2624,
+        672
+      ],
+      "id": "34c7ef7e-f98d-4a86-b70b-66ca010704a7",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9abdb309-0f79-4361-917b-2967abe6e321",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "9a84d28b-3e7f-4791-b636-1a4482658435",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2400,
+        672
+      ],
+      "id": "cce34456-75e4-45ba-a777-faa733a306fd",
+      "name": "set url title"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        576
+      ],
+      "id": "9c74579e-fcdc-49d3-b906-d51d16be65c7",
+      "name": "Accumulate Data"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/mnt/data/{{ $('clean query').item.json.cleaned_filename }}.md",
+        "options": {
+          "append": true
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -1488,
+        800
+      ],
+      "id": "35362242-bf0e-4cd6-a021-8097267d0188",
+      "name": "write to file"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "if markdown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "crawl4ai",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set output": {
+      "main": [
+        [
+          {
+            "node": "Accumulate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "write to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crawl4ai": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no op",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no op": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Beta)": {
+      "main": [
+        [
+          {
+            "node": "set output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if markdown": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search": {
+      "main": [
+        [
+          {
+            "node": "clean query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean query": {
+      "main": [
+        [
+          {
+            "node": "search query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search query": {
+      "main": [
+        [
+          {
+            "node": "searxng",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "searxng": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "set url title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set url title": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accumulate Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "671072d6-9379-4e99-bcc9-2e172229c218",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
+  },
+  "id": "qhHYfrVpLOaQlSmz",
+  "tags": []
+}
