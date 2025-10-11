@@ -1,0 +1,13 @@
+#+STARTUP: content
+* pandoc demote markdown headers
+** output to file
+
+#+begin_src sh
+pandoc -f markdown -t markdown --wrap=preserve --shift-heading-level-by=1 input.md -o output.md
+#+end_src
+
+** output to stdout
+
+#+begin_src sh
+pandoc -f markdown -t markdown --wrap=preserve --shift-heading-level-by=1 input.md 
+#+end_src
