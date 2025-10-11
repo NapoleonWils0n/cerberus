@@ -1,0 +1,573 @@
+{
+  "name": "csv-crawl4ai-markdown-combined",
+  "nodes": [
+    {
+      "parameters": {
+        "binaryPropertyName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        992
+      ],
+      "id": "5b9a5d45-b619-4f88-8d5b-7e22b767f421",
+      "name": "Extract from csv"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -384,
+        896
+      ],
+      "id": "2cf29ddf-1729-4072-b7ec-dbf8dccb6170",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
+              "name": "demoted_markdown",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.demoted_markdown }}\n\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        512,
+        336
+      ],
+      "id": "eabcb0be-4987-4766-9338-14bb7fec4dfd",
+      "name": "set output"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/mnt/data/{{ $('upload file').item.json.files[0].fileName.split('.')[0] }}.md",
+        "dataPropertyName": "=data",
+        "options": {
+          "append": true
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        288,
+        720
+      ],
+      "id": "903cbd46-e4f5-483e-8a30-03ef77d7ec8a",
+      "name": "write to file"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "demoted_markdown",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        64,
+        720
+      ],
+      "id": "0ce8dbdb-e149-4f78-b3de-3eaf028dfa7e",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true,
+          "allowedFilesMimeTypes": "text/csv"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1280,
+        992
+      ],
+      "id": "46c5dc77-6139-4f12-9ec6-33cdbdcafe0f",
+      "name": "upload file",
+      "webhookId": "52e96095-c92c-4436-88f5-1b583138828b",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11235/md",
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n  \"url\": \"{{ $json.url }}\",\n  \"crawler_config\": {\n    \"type\": \"CrawlerRunConfig\",\n    \"params\": {\n      \"content_filters\": [\n        {\n          \"type\": \"PruningContentFilter\",\n          \"threshold\": 0.5,\n          \"threshold_type\": \"fixed\",\n          \"min_word_threshold\": 75 \n        }\n      ],\n      \"markdown_generator\": {\n        \"type\": \"DefaultMarkdownGenerator\"\n      }\n    }\n  }\n}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        384
+      ],
+      "id": "d00ff04d-e442-4684-9815-bac214b54e83",
+      "name": "crawl4ai",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return use crawl4ai save the results to a single markdown file",
+        "height": 176,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        336
+      ],
+      "id": "5ae3a31f-82fd-4f4a-a63c-87cd46e902f7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4064ebbe-058a-4b2a-a7fe-c8cd444e5983",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "9b12b0af-1a94-4cb5-993c-e49d1490ac50",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "We cannot provide a description for this page right now",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "fd36d578-d256-443a-b9a0-d18fcf707699",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "\"\\n\"",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "ba8f54c2-47f1-4e1f-a190-114beef829ba",
+              "leftValue": "={{ $json.markdown.length }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "e8681786-e87a-4b27-be24-d79c9637d63e",
+              "leftValue": "={{ $json.markdown.length }}",
+              "rightValue": 20000,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        384
+      ],
+      "id": "dcafb889-6919-4a5e-a397-136ff61a19cc",
+      "name": "If",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        288,
+        528
+      ],
+      "id": "f3bdebe0-8636-4dba-8231-92a4fb92d7ee",
+      "name": "no op"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        736,
+        656
+      ],
+      "id": "2967bc45-facd-4671-8f88-1f9621cb0b2a",
+      "name": "Accumulate Data"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import re\n\n# The user explicitly stated the input field for the markdown content MUST be called 'markdown'.\n# We will strictly use items[0].json[\"markdown\"]. This assumes the preceding node\n# in the workflow has named its output field exactly 'markdown'.\n# If 'markdown' is not present, this will raise an error, enforcing the user's requirement.\nmarkdown_content = items[0].json[\"markdown\"]\n\n# 1. Split the content into lines\n# We use splitlines(True) to keep the newline characters, which is crucial for\n# reconstructing the markdown file correctly later.\nlines = markdown_content.splitlines(True)\n\n# 2. Check the first non-empty line with a header\ndemote = False\n# Regex to find markdown headers (starting with one or more '#' followed by space)\nheader_regex = r\"^(#+)\\s+.*\" \nfirst_header_level = 7 # Start higher than H6\n\nfor line in lines:\n    line = line.strip()\n    if line: # Check if the line is not empty (e.g. not just a newline character)\n        match = re.match(header_regex, line)\n        if match:\n            # Found the first header. Count the number of hashes.\n            hashes = match.group(1)\n            first_header_level = len(hashes)\n            \n            # Check if demotion is needed (i.e., if the first header is H1 or H2)\n            # We want to demote if the top-level header is <= H2 (level 2)\n            if first_header_level <= 2:\n                demote = True\n            break # Stop checking after the first header is found\n\nnew_lines = []\n\nif demote:\n    for line in lines:\n        match = re.match(header_regex, line)\n        if match:\n            hashes = match.group(1)\n            current_level = len(hashes)\n                        \n            # Stop demoting at H6 (level 6). If current_level is < 6, we demote it.\n            if current_level < 6:\n                # Prepend one hash to the line to demote it (e.g., # -> ##, ## -> ###)\n                new_line = '#' + line\n            else:\n                # Keep H6 and below as is\n                new_line = line\n        else:\n            # Not a header line, keep it as is\n            new_line = line\n                    \n        new_lines.append(new_line)\nelse:\n    # If the demotion condition is NOT met (first header was H3 or higher), keep all lines original\n    new_lines = lines\n\n# 3. Join the lines back together\ndemoted_markdown = \"\".join(new_lines)\n\n# 4. Write the demoted content back to a new field named 'demoted_markdown'.\n# We maintain all original fields from the input item and add the new one.\noutput_item = {**items[0].json, \"demoted_markdown\": demoted_markdown}\n\nreturn [output_item]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        336
+      ],
+      "id": "1aae696e-eeaa-46ce-9c89-10f8ea364298",
+      "name": "Code in Python (Beta)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f811a1e-57d4-4e9d-82e8-8d54638711d9",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "364ff861-5b02-4c82-9114-cb239c5c5080",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -832,
+        992
+      ],
+      "id": "5923be72-3f04-4c78-8cdc-ccd434058579",
+      "name": "csv headers"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        1088
+      ],
+      "id": "af20e46a-85f0-4177-a92d-0a7f9907a4cf",
+      "name": "url empty"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "740e31b3-4655-4690-99e0-f946847edf43",
+              "leftValue": "={{ $json.url }}",
+              "rightValue": "null",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -608,
+        992
+      ],
+      "id": "144f313c-6641-4acf-8e7c-b881a68d2ed5",
+      "name": "If url"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c83060bf-3105-481b-aea4-5772ac5d9a04",
+              "leftValue": "={{ $json.demoted_markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        768
+      ],
+      "id": "0520eb6e-9d45-4729-922e-4248628bf939",
+      "name": "if markdown"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        64,
+        912
+      ],
+      "id": "7d27440f-d621-40b5-b9de-1b642c246587",
+      "name": "no markdown"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract from csv": {
+      "main": [
+        [
+          {
+            "node": "csv headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "if markdown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "crawl4ai",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "set output": {
+      "main": [
+        [
+          {
+            "node": "Accumulate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "write to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload file": {
+      "main": [
+        [
+          {
+            "node": "Extract from csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crawl4ai": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no op",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no op": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accumulate Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Beta)": {
+      "main": [
+        [
+          {
+            "node": "set output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "csv headers": {
+      "main": [
+        [
+          {
+            "node": "If url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        []
+      ]
+    },
+    "url empty": {
+      "main": [
+        []
+      ]
+    },
+    "If url": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "url empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "if markdown": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4dc83624-bf13-42bf-9133-aacd8ee2154c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
+  },
+  "id": "DabhcdL8xQ1nvHVE",
+  "tags": []
+}
