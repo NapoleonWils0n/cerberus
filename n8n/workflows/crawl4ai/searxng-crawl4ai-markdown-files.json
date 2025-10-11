@@ -1,0 +1,583 @@
+{
+  "name": "searxng-crawl4ai-markdown-files",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2176,
+        544
+      ],
+      "id": "be4eabf7-13c1-4ed1-9d07-320f91b614cf",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
+              "name": "demoted_markdown",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.demoted_markdown }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1280,
+        208
+      ],
+      "id": "ec93de24-b5e5-41ca-a1fa-45bd406f5032",
+      "name": "set output"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/mnt/data/{{ $('sanitize title for file name').item.json.sanitizedTitle }}.md",
+        "dataPropertyName": "=data",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        496
+      ],
+      "id": "e850b12e-c265-46b2-ba6e-85d04b47c3be",
+      "name": "write to file"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "demoted_markdown",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -832,
+        208
+      ],
+      "id": "9d533646-ce11-475e-8e37-cd99426abea4",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11235/md",
+        "sendBody": true,
+        "specifyBody": "=json",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonBody": "={\n  \"url\": \"{{ $json.url }}\",\n  \"crawler_config\": {\n    \"type\": \"CrawlerRunConfig\",\n    \"params\": {\n      \"content_filters\": [\n        {\n          \"type\": \"PruningContentFilter\",\n          \"threshold\": 0.5,\n          \"threshold_type\": \"fixed\",\n          \"min_word_threshold\": 75 \n        }\n      ],\n      \"markdown_generator\": {\n        \"type\": \"DefaultMarkdownGenerator\"\n      }\n    }\n  }\n}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1952,
+        304
+      ],
+      "id": "c4d2d092-3e8f-4328-996b-f6aa7f9a5172",
+      "name": "crawl4ai",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Enter a search query for searxng, press return use crawl4ai save the results to text files",
+        "height": 176,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3584,
+        320
+      ],
+      "id": "f784b374-f956-427e-b973-233ece51bf71",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'Loop Over Items' node\n  let title = $('Loop Over Items').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1056,
+        208
+      ],
+      "id": "58e7a891-d2d4-4608-9be4-67e9082cb95b",
+      "name": "sanitize title for file name"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1c0f7cc-a0f7-4f9b-a2dd-0175077ea767",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "09712590-015e-4e8e-85cd-6de73444574e",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "We cannot provide a description for this page right now",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "a9430359-776d-432c-80ea-2a0ce6b56dee",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "\"\\n\"",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "ba8f54c2-47f1-4e1f-a190-114beef829ba",
+              "leftValue": "={{ $json.markdown.length }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "e8681786-e87a-4b27-be24-d79c9637d63e",
+              "leftValue": "={{ $json.markdown.length }}",
+              "rightValue": 20000,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        304
+      ],
+      "id": "ef81b99f-d3ef-49ca-aa0e-89cfb174f446",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1504,
+        400
+      ],
+      "id": "ded23b8a-b7f8-4d7f-85f1-11ecbfde4e75",
+      "name": "no op"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import re\n\n# The user explicitly stated the input field for the markdown content MUST be called 'markdown'.\n# We will strictly use items[0].json[\"markdown\"]. This assumes the preceding node\n# in the workflow has named its output field exactly 'markdown'.\n# If 'markdown' is not present, this will raise an error, enforcing the user's requirement.\nmarkdown_content = items[0].json[\"markdown\"]\n\n# 1. Split the content into lines\n# We use splitlines(True) to keep the newline characters, which is crucial for\n# reconstructing the markdown file correctly later.\nlines = markdown_content.splitlines(True)\n\n# 2. Check the first non-empty line with a header\ndemote = False\n# Regex to find markdown headers (starting with one or more '#' followed by space)\nheader_regex = r\"^(#+)\\s+.*\" \nfirst_header_level = 7 # Start higher than H6\n\nfor line in lines:\n    line = line.strip()\n    if line: # Check if the line is not empty (e.g. not just a newline character)\n        match = re.match(header_regex, line)\n        if match:\n            # Found the first header. Count the number of hashes.\n            hashes = match.group(1)\n            first_header_level = len(hashes)\n            \n            # Check if demotion is needed (i.e., if the first header is H1 or H2)\n            # We want to demote if the top-level header is <= H2 (level 2)\n            if first_header_level <= 2:\n                demote = True\n            break # Stop checking after the first header is found\n\nnew_lines = []\n\nif demote:\n    for line in lines:\n        match = re.match(header_regex, line)\n        if match:\n            hashes = match.group(1)\n            current_level = len(hashes)\n                        \n            # Stop demoting at H6 (level 6). If current_level is < 6, we demote it.\n            if current_level < 6:\n                # Prepend one hash to the line to demote it (e.g., # -> ##, ## -> ###)\n                new_line = '#' + line\n            else:\n                # Keep H6 and below as is\n                new_line = line\n        else:\n            # Not a header line, keep it as is\n            new_line = line\n                    \n        new_lines.append(new_line)\nelse:\n    # If the demotion condition is NOT met (first header was H3 or higher), keep all lines original\n    new_lines = lines\n\n# 3. Join the lines back together\ndemoted_markdown = \"\".join(new_lines)\n\n# 4. Write the demoted content back to a new field named 'demoted_markdown'.\n# We maintain all original fields from the input item and add the new one.\noutput_item = {**items[0].json, \"demoted_markdown\": demoted_markdown}\n\nreturn [output_item]\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1504,
+        208
+      ],
+      "id": "7ec94dfd-6ffd-45c8-9c0a-2aa9501fb1ad",
+      "name": "Code in Python (Beta)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d012900c-f3ab-430c-80b5-1dbee6ef820c",
+              "leftValue": "={{ $('Code in Python (Beta)').item.json.demoted_markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -608,
+        208
+      ],
+      "id": "1630893f-3683-4d1b-823f-9653712ab17d",
+      "name": "if markdown"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        160
+      ],
+      "id": "782f708d-9c90-40a9-a3be-0f974be1b4a2",
+      "name": "no markdown"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -3520,
+        544
+      ],
+      "id": "ac38205e-bc1f-4465-931f-3a77f3b064da",
+      "name": "search",
+      "webhookId": "0468a675-a8fd-47f3-95e2-cb58ace19c3d"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to clean the query and create the filename\nfunction cleanQueryToFilename(query) {\n    if (!query) {\n        return 'default-output';\n    }\n    \n    const lowerCaseQuery = query.toLowerCase().trim();\n\n    // 1. Handle 'link:' operator (Example: link:https://spitalfieldslife.com/2024/01/31/at-beppes-cafe/)\n    if (lowerCaseQuery.startsWith('link:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https)\n        let pathSegment = urlPart.replace(/https?:\\/\\//, '');\n\n        // Split by '/' and get the last part (e.g., 'at-beppes-cafe/')\n        let lastSegment = pathSegment.split('/').filter(s => s).pop();\n        \n        // Remove file extensions (like .html) and remaining dots\n        let cleanedSegment = lastSegment ? lastSegment.replace(/\\.[a-z]{2,5}$/i, '') : '';\n        \n        // Replace any remaining non-alphanumeric with dashes\n        cleanedSegment = cleanedSegment.replace(/[^a-z0-9-]/gi, '-'); \n        \n        // Final cleanup: remove multiple dashes and trim\n        return cleanedSegment.replace(/-{2,}/g, '-').replace(/^-|-$/g, '') || 'link-search';\n    }\n\n    // 2. Handle 'site:' operator (Example: site:https://spitalfieldslife.com)\n    if (lowerCaseQuery.startsWith('site:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https), 'www.', and trailing slash\n        urlPart = urlPart.replace(/https?:\\/\\//, '').replace(/^www\\./, '').replace(/\\/$/, '');\n        \n        // Split at the first dot and take the domain name (spitalfieldslife)\n        let domainName = urlPart.split('.')[0];\n        \n        return domainName.toLowerCase();\n    }\n\n    // 3. Handle General Text Prompt (Example: beppes cafe london)\n    // Replace all non-alphanumeric (except space) with dashes, remove multiple dashes, and trim.\n    let cleanedText = lowerCaseQuery;\n    // Replace all non-alphanumeric or space with dash\n    cleanedText = cleanedText.replace(/[^a-z0-9\\s]/g, '-'); \n    // Replace spaces with single dash\n    cleanedText = cleanedText.replace(/\\s+/g, '-');\n    // Final cleanup: remove multiple dashes and trim\n    cleanedText = cleanedText.replace(/-{2,}/g, '-').replace(/^-|-$/g, '');\n\n    return cleanedText;\n}\n\n// ----------------------------------------------------\n// CRUCIAL CHANGE: Use the correct input variable\n// ----------------------------------------------------\nconst originalQuery = $input.first().json.chatInput;\n\n// Process the query to get the clean filename base\nconst cleanedFilename = cleanQueryToFilename(originalQuery);\n\n// Return the original item with the new field added\nreturn [{\n    ...$json,\n    cleaned_filename: cleanedFilename\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3296,
+        544
+      ],
+      "id": "4d30c597-7ad4-4506-9e84-79a00665842a",
+      "name": "clean query"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f6f282a-a986-45d6-a254-92887ceabce0",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3072,
+        544
+      ],
+      "id": "5760931d-d886-4b03-984e-a8b25a8745c0",
+      "name": "search query"
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8080/search?q={{ $json.chatInput }}&format=json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2848,
+        544
+      ],
+      "id": "ca912c98-b3a6-4d88-b3d3-f0c742d6dee8",
+      "name": "searxng"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -2624,
+        544
+      ],
+      "id": "6130f8c9-f3c4-420e-b182-fe23e66bda9c",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9abdb309-0f79-4361-917b-2967abe6e321",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "9a84d28b-3e7f-4791-b636-1a4482658435",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2400,
+        544
+      ],
+      "id": "51e46eeb-f47b-4c99-a3a5-b616ca1e5fee",
+      "name": "set url title"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "crawl4ai",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set output": {
+      "main": [
+        [
+          {
+            "node": "sanitize title for file name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "if markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crawl4ai": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sanitize title for file name": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no op",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no op": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Beta)": {
+      "main": [
+        [
+          {
+            "node": "set output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if markdown": {
+      "main": [
+        [
+          {
+            "node": "write to file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search": {
+      "main": [
+        [
+          {
+            "node": "clean query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean query": {
+      "main": [
+        [
+          {
+            "node": "search query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search query": {
+      "main": [
+        [
+          {
+            "node": "searxng",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "searxng": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "set url title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set url title": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "37582940-03ab-4bfa-a0f9-d38bf41b5541",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
+  },
+  "id": "Cqi3QUQG9vUDj1gh",
+  "tags": []
+}
