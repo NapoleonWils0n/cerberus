@@ -22,7 +22,7 @@
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
               "name": "final_output",
-              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.output }}\n",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.markdown }}\n",
               "type": "string"
             }
           ]
@@ -122,6 +122,16 @@
             "version": 2
           },
           "conditions": [
+            {
+              "id": "43f2cdbc-940b-4e65-a77c-720f193e29fc",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
             {
               "id": "ba8f54c2-47f1-4e1f-a190-114beef829ba",
               "leftValue": "={{ $json.markdown.length }}",
@@ -379,7 +389,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "26f897e9-6f64-4d51-8f44-6c8eb03180eb",
+  "versionId": "fb82a06d-2526-4398-bcd7-29f78281640f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"

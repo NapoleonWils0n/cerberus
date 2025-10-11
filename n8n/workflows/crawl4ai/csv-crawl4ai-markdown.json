@@ -36,7 +36,7 @@
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
               "name": "final_output",
-              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.output }}\n",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.markdown }}\n",
               "type": "string"
             }
           ]
@@ -170,6 +170,16 @@
           },
           "conditions": [
             {
+              "id": "c1c0f7cc-a0f7-4f9b-a2dd-0175077ea767",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
               "id": "ba8f54c2-47f1-4e1f-a190-114beef829ba",
               "leftValue": "={{ $json.markdown.length }}",
               "rightValue": 100,
@@ -207,7 +217,7 @@
       "typeVersion": 1,
       "position": [
         496,
-        368
+        400
       ],
       "id": "9110dda7-1a54-4670-8052-2c3f3d3cf99f",
       "name": "no op"
@@ -339,7 +349,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d49992da-beeb-4548-99d7-7b2ff36b3b2e",
+  "versionId": "07669fbe-d38c-4ef3-bb77-561697d8d063",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
