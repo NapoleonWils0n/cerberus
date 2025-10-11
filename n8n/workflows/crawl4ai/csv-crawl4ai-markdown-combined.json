@@ -140,8 +140,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1280,
-        336
+        -1408,
+        768
       ],
       "id": "5ae3a31f-82fd-4f4a-a63c-87cd46e902f7",
       "name": "Sticky Note"
@@ -563,7 +563,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "4dc83624-bf13-42bf-9133-aacd8ee2154c",
+  "versionId": "65c7233e-0209-47f7-82b0-8fe15c3fc3c1",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
