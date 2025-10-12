@@ -1,6 +1,20 @@
 {
-  "name": "searxng-crawl4ai-gemini-markdown-combined",
+  "name": "csv-crawl4ai-gemini-markdown-files",
   "nodes": [
+    {
+      "parameters": {
+        "binaryPropertyName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        656
+      ],
+      "id": "2fd7de79-c0b0-4835-b7f4-364e890646d4",
+      "name": "Extract from csv"
+    },
     {
       "parameters": {
         "options": {}
@@ -8,10 +22,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -2176,
-        672
+        48,
+        512
       ],
-      "id": "eb580ec1-f138-4693-bf81-432568000283",
+      "id": "b5411dee-3b61-4d8e-831f-744218db871b",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -32,11 +46,29 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1072,
-        304
+        1152,
+        224
       ],
-      "id": "866495b4-f8a8-4436-8163-ef4ba33bb39c",
+      "id": "72a50ee7-73a5-46d1-9247-9c85aff92964",
       "name": "set output"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/mnt/data/{{ $('sanitize title for file name').item.json.sanitizedTitle }}.md",
+        "dataPropertyName": "=data",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2048,
+        512
+      ],
+      "id": "61698cd9-36e0-40d2-a974-17ec5c9b5117",
+      "name": "write to file"
     },
     {
       "parameters": {
@@ -47,11 +79,29 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1568,
-        800
+        1600,
+        224
       ],
-      "id": "d4cd0e14-ad9b-41b0-a1c5-ad34b6834bd0",
+      "id": "85ad7fa5-1c1f-4a56-99f0-ba82302c765d",
       "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true,
+          "allowedFilesMimeTypes": "text/csv"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -848,
+        656
+      ],
+      "id": "fbc6146d-8d11-4e6b-8297-4a499eb93a2b",
+      "name": "upload file",
+      "webhookId": "ba72e288-f8fd-43b7-a8d2-b4f37c7a9d09",
+      "notesInFlow": false
     },
     {
       "parameters": {
@@ -74,27 +124,40 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2080,
-        400
+        160,
+        272
       ],
-      "id": "5ea671d4-32a5-412b-a355-70aecc3169d7",
+      "id": "9b7907cc-2fd9-4d8b-a442-7d435545272f",
       "name": "crawl4ai",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "content": "## Enter a search query for searxng, press return use crawl4ai save the results to a text file",
-        "height": 128,
-        "width": 544
+        "content": "## Click the paper clip icon in the chat to upload a csv file with urls, type start and press return use crawl4ai save the results to text files",
+        "height": 176,
+        "width": 448
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -3680,
-        496
+        -960,
+        416
       ],
-      "id": "402eecab-6e3c-4d00-bbb0-6b5bbfb89ebb",
+      "id": "85f84470-47ca-47da-906d-80e3a5d7bc82",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'Loop Over Items' node\n  let title = $('Loop Over Items').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        224
+      ],
+      "id": "a68cca16-701d-4c08-a18a-72960ed70863",
+      "name": "sanitize title for file name"
     },
     {
       "parameters": {
@@ -160,10 +223,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1856,
-        384
+        384,
+        256
       ],
-      "id": "49f590d8-3c10-443b-883a-6ff86ead10fa",
+      "id": "c92afc74-046c-4208-a9f4-35f542232800",
       "name": "If"
     },
     {
@@ -171,10 +234,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1296,
-        496
+        928,
+        416
       ],
-      "id": "fec7a5a5-f534-4f38-a876-d39032ac0e7c",
+      "id": "405341d3-cdd7-4599-910c-72c405188337",
       "name": "no op"
     },
     {
@@ -185,11 +248,40 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1296,
-        304
+        928,
+        224
       ],
-      "id": "4cf7d85f-19ef-48a5-95cd-65621ced2335",
+      "id": "1005ff96-bd51-4533-80dc-8924e92ea3b2",
       "name": "Code in Python (Beta)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ac6a171b-5550-4974-ae6c-57ba2741e2bc",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "9bdb02ee-f1ce-4529-926c-72b478de761e",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        656
+      ],
+      "id": "a643d82a-ee93-4a9a-91b3-dadff379d8af",
+      "name": "csv headers"
     },
     {
       "parameters": {
@@ -202,8 +294,8 @@
           },
           "conditions": [
             {
-              "id": "d012900c-f3ab-430c-80b5-1dbee6ef820c",
-              "leftValue": "={{ $json.demoted_markdown }}",
+              "id": "f1a7d870-9ff4-47bf-929e-44acfbd6bf53",
+              "leftValue": "={{ $json.url }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -219,10 +311,55 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1984,
-        848
+        -176,
+        656
       ],
-      "id": "d1afa5c4-6ee8-4b8f-a3d4-a67c2186f7e0",
+      "id": "f1aa054b-1312-4651-9fbf-260901966f1e",
+      "name": "if url"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        48,
+        704
+      ],
+      "id": "ec89be87-53cf-4478-9e0a-90de9bdb7deb",
+      "name": "url empty"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d012900c-f3ab-430c-80b5-1dbee6ef820c",
+              "leftValue": "={{ $('Code in Python (Beta)').item.json.demoted_markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1824,
+        224
+      ],
+      "id": "b0844fd1-bb17-4456-9ebf-4a9a15d536df",
       "name": "if markdown"
     },
     {
@@ -230,162 +367,27 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1568,
-        1040
+        2048,
+        176
       ],
-      "id": "a2a6355b-338a-4fbb-882b-c52f9308882e",
+      "id": "3ba9d122-3596-423e-ba2a-5f3c51536b68",
       "name": "no markdown"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.3,
-      "position": [
-        -3520,
-        672
-      ],
-      "id": "df613a3b-0ad3-4b18-a898-0f4314128d0a",
-      "name": "search",
-      "webhookId": "c070181a-5b82-4fbb-b41b-f67b822e809e"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Function to clean the query and create the filename\nfunction cleanQueryToFilename(query) {\n    if (!query) {\n        return 'default-output';\n    }\n    \n    const lowerCaseQuery = query.toLowerCase().trim();\n\n    // 1. Handle 'link:' operator (Example: link:https://spitalfieldslife.com/2024/01/31/at-beppes-cafe/)\n    if (lowerCaseQuery.startsWith('link:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https)\n        let pathSegment = urlPart.replace(/https?:\\/\\//, '');\n\n        // Split by '/' and get the last part (e.g., 'at-beppes-cafe/')\n        let lastSegment = pathSegment.split('/').filter(s => s).pop();\n        \n        // Remove file extensions (like .html) and remaining dots\n        let cleanedSegment = lastSegment ? lastSegment.replace(/\\.[a-z]{2,5}$/i, '') : '';\n        \n        // Replace any remaining non-alphanumeric with dashes\n        cleanedSegment = cleanedSegment.replace(/[^a-z0-9-]/gi, '-'); \n        \n        // Final cleanup: remove multiple dashes and trim\n        return cleanedSegment.replace(/-{2,}/g, '-').replace(/^-|-$/g, '') || 'link-search';\n    }\n\n    // 2. Handle 'site:' operator (Example: site:https://spitalfieldslife.com)\n    if (lowerCaseQuery.startsWith('site:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https), 'www.', and trailing slash\n        urlPart = urlPart.replace(/https?:\\/\\//, '').replace(/^www\\./, '').replace(/\\/$/, '');\n        \n        // Split at the first dot and take the domain name (spitalfieldslife)\n        let domainName = urlPart.split('.')[0];\n        \n        return domainName.toLowerCase();\n    }\n\n    // 3. Handle General Text Prompt (Example: beppes cafe london)\n    // Replace all non-alphanumeric (except space) with dashes, remove multiple dashes, and trim.\n    let cleanedText = lowerCaseQuery;\n    // Replace all non-alphanumeric or space with dash\n    cleanedText = cleanedText.replace(/[^a-z0-9\\s]/g, '-'); \n    // Replace spaces with single dash\n    cleanedText = cleanedText.replace(/\\s+/g, '-');\n    // Final cleanup: remove multiple dashes and trim\n    cleanedText = cleanedText.replace(/-{2,}/g, '-').replace(/^-|-$/g, '');\n\n    return cleanedText;\n}\n\n// ----------------------------------------------------\n// CRUCIAL CHANGE: Use the correct input variable\n// ----------------------------------------------------\nconst originalQuery = $input.first().json.chatInput;\n\n// Process the query to get the clean filename base\nconst cleanedFilename = cleanQueryToFilename(originalQuery);\n\n// Return the original item with the new field added\nreturn [{\n    ...$json,\n    cleaned_filename: cleanedFilename\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3296,
-        672
-      ],
-      "id": "b5b6eb3d-007e-4c30-b5c1-ad393e2d23a6",
-      "name": "clean query"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "4f6f282a-a986-45d6-a254-92887ceabce0",
-              "name": "chatInput",
-              "value": "={{ $json.chatInput }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -3072,
-        672
-      ],
-      "id": "abf60615-42db-4d64-a28e-6ead2e8f808b",
-      "name": "search query"
-    },
-    {
-      "parameters": {
-        "url": "=http://host.docker.internal:8080/search?q={{ $json.chatInput }}&format=json",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -2848,
-        672
-      ],
-      "id": "03a534bc-7bca-4fb5-a42e-a6dc50b949ac",
-      "name": "searxng"
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "results",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
-      "position": [
-        -2624,
-        672
-      ],
-      "id": "f574d1da-c4ae-4f74-be86-72bd400f75bb",
-      "name": "Split Out"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "9abdb309-0f79-4361-917b-2967abe6e321",
-              "name": "url",
-              "value": "={{ $json.url }}",
-              "type": "string"
-            },
-            {
-              "id": "9a84d28b-3e7f-4791-b636-1a4482658435",
-              "name": "title",
-              "value": "={{ $json.title }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -2400,
-        672
-      ],
-      "id": "e68b9b5a-2abd-419a-9d9c-d3d514ae4c8e",
-      "name": "set url title"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        -848,
-        576
-      ],
-      "id": "2c29454d-f4d2-4fd6-a953-137da6474857",
-      "name": "Accumulate Data"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "=/mnt/data/{{ $('clean query').item.json.cleaned_filename }}.md",
-        "options": {
-          "append": true
-        }
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -1280,
-        800
-      ],
-      "id": "8c2c2752-c36a-4785-9724-f16f85135235",
-      "name": "write to file"
     },
     {
       "parameters": {
         "promptType": "define",
         "text": "=Perform the following steps on the provided markdown content, which is the body of a web article:\n1. Extract the main body text, **starting from the article's main content**. Exclude all navigational elements, footers, sidebars, advertisements, image alt text, figcaption text, and any other irrelevant boilerplate or website shell elements.\n2. **Preserve all original Markdown formatting** within the article's body, including all headings (e.g., #, ##, ###), lists, and links.\n3. Your final output must be **ONLY** the cleaned text from step 1. Do not include any commentary or extra text outside of the article's body content.\n\nmarkdown content:\n{{ $json.markdown }}",
         "options": {
-          "systemMessage": "You are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
+          "systemMessage": "You are a helpful assistantYou are a text processing machine. You do not have a persona and are not conversational. Your task is to follow the user's instructions precisely, without deviation, and provide ONLY the requested output. You must never provide commentary or extra information."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1648,
-        288
+        592,
+        160
       ],
-      "id": "17306219-dbb9-491d-8b03-9f7e8aea54ec",
+      "id": "0bbd94c4-1f85-4308-b2e2-3603103a22d5",
       "name": "AI Agent"
     },
     {
@@ -397,10 +399,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1664,
-        480
+        592,
+        384
       ],
-      "id": "0ef7e737-4937-40c8-b010-d9d5262f5e71",
+      "id": "21ae9f30-8845-481b-909a-380116cc96b9",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -414,10 +416,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        -1536,
-        496
+        736,
+        384
       ],
-      "id": "936f4c1d-3f1a-484d-9698-8f2c16349e98",
+      "id": "db6e7f50-6944-4e73-9d0a-57bed2233676",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -429,15 +431,20 @@
   ],
   "pinData": {},
   "connections": {
-    "Loop Over Items": {
+    "Extract from csv": {
       "main": [
         [
           {
-            "node": "if markdown",
+            "node": "csv headers",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
         [
           {
             "node": "crawl4ai",
@@ -451,7 +458,7 @@
       "main": [
         [
           {
-            "node": "Accumulate Data",
+            "node": "sanitize title for file name",
             "type": "main",
             "index": 0
           }
@@ -462,7 +469,29 @@
       "main": [
         [
           {
-            "node": "write to file",
+            "node": "if markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload file": {
+      "main": [
+        [
+          {
+            "node": "Extract from csv",
             "type": "main",
             "index": 0
           }
@@ -474,6 +503,18 @@
         [
           {
             "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "sanitize title for file name": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
             "type": "main",
             "index": 0
           }
@@ -520,11 +561,40 @@
         ]
       ]
     },
+    "csv headers": {
+      "main": [
+        [
+          {
+            "node": "if url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if url": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "url empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "if markdown": {
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "write to file",
             "type": "main",
             "index": 0
           }
@@ -532,83 +602,6 @@
         [
           {
             "node": "no markdown",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "search": {
-      "main": [
-        [
-          {
-            "node": "clean query",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "clean query": {
-      "main": [
-        [
-          {
-            "node": "search query",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "search query": {
-      "main": [
-        [
-          {
-            "node": "searxng",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "searxng": {
-      "main": [
-        [
-          {
-            "node": "Split Out",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Split Out": {
-      "main": [
-        [
-          {
-            "node": "set url title",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "set url title": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Accumulate Data": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -653,11 +646,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "899f04a3-d25a-437b-abc6-97bb1646010a",
+  "versionId": "8a8065a3-05e3-4935-adf2-6704b2f75494",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "JenTDbMwhAUEQBYB",
+  "id": "dxaQu44kEK4pJEyI",
   "tags": []
 }

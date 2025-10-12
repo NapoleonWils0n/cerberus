@@ -9,10 +9,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -896,
-        576
+        -1056,
+        992
       ],
-      "id": "c8194a21-6aad-4823-b3bb-2717f49f32b0",
+      "id": "933f7c59-4453-48b5-b498-4a22801ea992",
       "name": "Extract from csv"
     },
     {
@@ -22,10 +22,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -672,
-        576
+        -384,
+        896
       ],
-      "id": "285ece14-539f-4ebe-909d-85db560fefa7",
+      "id": "8357e648-8cb3-49cc-b72b-f49b5ccd6684",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -35,8 +35,8 @@
           "assignments": [
             {
               "id": "418644c8-dbc8-4b0f-a8e3-ede524853dae",
-              "name": "final_output",
-              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.output }}\n\n",
+              "name": "demoted_markdown",
+              "value": "=# [{{ $('Loop Over Items').item.json.title }}]({{ $('If').item.json.url }})\n{{ $json.demoted_markdown }}\n\n\n",
               "type": "string"
             }
           ]
@@ -46,10 +46,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        352,
-        96
+        720,
+        336
       ],
-      "id": "4263865d-b87f-4608-90b8-e05988db0d3d",
+      "id": "5796a14a-d62f-490f-919d-4e0eec23c68f",
       "name": "set output"
     },
     {
@@ -64,25 +64,25 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -304,
-        656
+        496,
+        720
       ],
-      "id": "0b112c9d-5c1e-4205-8415-acd600825c77",
+      "id": "ba5fc7fd-5fdd-43af-8331-7369331cac92",
       "name": "write to file"
     },
     {
       "parameters": {
         "operation": "toText",
-        "sourceProperty": "final_output",
+        "sourceProperty": "demoted_markdown",
         "options": {}
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -464,
-        656
+        272,
+        720
       ],
-      "id": "937f0179-ee88-47c8-bb96-68863fa16698",
+      "id": "e282b990-4225-47a9-a979-56ab69421624",
       "name": "Convert to File"
     },
     {
@@ -95,12 +95,12 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1120,
-        576
+        -1280,
+        992
       ],
-      "id": "1fdcefa9-8f72-4640-ad7b-499eb1038d0e",
+      "id": "d94cf49a-3d75-47be-bd11-d553a348803d",
       "name": "upload file",
-      "webhookId": "c361dba2-abda-4542-9d32-9d4a21c82b04",
+      "webhookId": "ab49ec84-3410-4e27-8be5-cf74294ee283",
       "notesInFlow": false
     },
     {
@@ -124,10 +124,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -448,
-        256
+        -320,
+        400
       ],
-      "id": "8e748d21-e188-49d8-80bb-dcbf90372853",
+      "id": "9d4e0d67-8c23-4d1b-81cf-be056b43bd54",
       "name": "crawl4ai",
       "onError": "continueErrorOutput"
     },
@@ -140,10 +140,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -1280,
-        336
+        -1408,
+        768
       ],
-      "id": "2cd383fe-1f4a-43d2-b5e7-258e57cc6705",
+      "id": "4943d5e8-e575-47e6-95c0-7eb85285d747",
       "name": "Sticky Note"
     },
     {
@@ -156,6 +156,34 @@
             "version": 2
           },
           "conditions": [
+            {
+              "id": "4064ebbe-058a-4b2a-a7fe-c8cd444e5983",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "9b12b0af-1a94-4cb5-993c-e49d1490ac50",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "We cannot provide a description for this page right now",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "fd36d578-d256-443a-b9a0-d18fcf707699",
+              "leftValue": "={{ $json.markdown }}",
+              "rightValue": "\"\\n\"",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
             {
               "id": "ba8f54c2-47f1-4e1f-a190-114beef829ba",
               "leftValue": "={{ $json.markdown.length }}",
@@ -182,11 +210,167 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -224,
-        256
+        -80,
+        384
       ],
-      "id": "92863f33-1b5c-4bd9-b814-7ea49d296dd3",
-      "name": "If"
+      "id": "29932f5b-5180-45fe-a255-42f0b8e8076e",
+      "name": "If",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        496,
+        528
+      ],
+      "id": "29c595ed-e374-4986-9f4c-c724b195614a",
+      "name": "no op"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        944,
+        656
+      ],
+      "id": "f0c8072a-fff3-4100-8e70-8a1233ade99d",
+      "name": "Accumulate Data"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import re\n\n# The user explicitly stated the input field for the markdown content MUST be called 'markdown'.\n# We will strictly use items[0].json[\"markdown\"]. This assumes the preceding node\n# in the workflow has named its output field exactly 'markdown'.\n# If 'markdown' is not present, this will raise an error, enforcing the user's requirement.\nmarkdown_content = items[0].json[\"output\"]\n\n# 1. Split the content into lines\n# We use splitlines(True) to keep the newline characters, which is crucial for\n# reconstructing the markdown file correctly later.\nlines = markdown_content.splitlines(True)\n\n# 2. Check the first non-empty line with a header\ndemote = False\n# Regex to find markdown headers (starting with one or more '#' followed by space)\nheader_regex = r\"^(#+)\\s+.*\" \nfirst_header_level = 7 # Start higher than H6\n\nfor line in lines:\n    line = line.strip()\n    if line: # Check if the line is not empty (e.g. not just a newline character)\n        match = re.match(header_regex, line)\n        if match:\n            # Found the first header. Count the number of hashes.\n            hashes = match.group(1)\n            first_header_level = len(hashes)\n            \n            # Check if demotion is needed (i.e., if the first header is H1 or H2)\n            # We want to demote if the top-level header is <= H2 (level 2)\n            if first_header_level <= 2:\n                demote = True\n            break # Stop checking after the first header is found\n\nnew_lines = []\n\nif demote:\n    for line in lines:\n        match = re.match(header_regex, line)\n        if match:\n            hashes = match.group(1)\n            current_level = len(hashes)\n                        \n            # Stop demoting at H6 (level 6). If current_level is < 6, we demote it.\n            if current_level < 6:\n                # Prepend one hash to the line to demote it (e.g., # -> ##, ## -> ###)\n                new_line = '#' + line\n            else:\n                # Keep H6 and below as is\n                new_line = line\n        else:\n            # Not a header line, keep it as is\n            new_line = line\n                    \n        new_lines.append(new_line)\nelse:\n    # If the demotion condition is NOT met (first header was H3 or higher), keep all lines original\n    new_lines = lines\n\n# 3. Join the lines back together\ndemoted_markdown = \"\".join(new_lines)\n\n# 4. Write the demoted content back to a new field named 'demoted_markdown'.\n# We maintain all original fields from the input item and add the new one.\noutput_item = {**items[0].json, \"demoted_markdown\": demoted_markdown}\n\nreturn [output_item]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        336
+      ],
+      "id": "34fdb060-7dd7-4639-b5d3-7742ea50042b",
+      "name": "Code in Python (Beta)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f811a1e-57d4-4e9d-82e8-8d54638711d9",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "364ff861-5b02-4c82-9114-cb239c5c5080",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -832,
+        992
+      ],
+      "id": "427d191d-86f1-496f-a433-4464b25870fb",
+      "name": "csv headers"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        1088
+      ],
+      "id": "3247e76f-312c-4b03-b0c7-30bc909842da",
+      "name": "url empty"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "740e31b3-4655-4690-99e0-f946847edf43",
+              "leftValue": "={{ $json.url }}",
+              "rightValue": "null",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -608,
+        992
+      ],
+      "id": "021b6e75-d6e0-4d43-aae6-2c8b8124f204",
+      "name": "If url"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c83060bf-3105-481b-aea4-5772ac5d9a04",
+              "leftValue": "={{ $json.demoted_markdown }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        768
+      ],
+      "id": "984ab238-05c5-4811-bcac-8701ad43a67a",
+      "name": "if markdown"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        272,
+        912
+      ],
+      "id": "cb7b27d0-bd47-40d6-91e6-07814b823326",
+      "name": "no markdown"
     },
     {
       "parameters": {
@@ -199,10 +383,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        0,
-        0
+        128,
+        288
       ],
-      "id": "11dff682-cc66-4963-99ba-dff2aa7c081a",
+      "id": "85630421-ee0a-462c-849f-2e23d698b74d",
       "name": "AI Agent"
     },
     {
@@ -214,10 +398,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        16,
-        224
+        96,
+        480
       ],
-      "id": "244a7df4-fb2c-4c6d-9507-099346386ee4",
+      "id": "7c1a77ae-b314-4cd2-b1f3-9330d2820f6d",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -231,10 +415,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        144,
-        224
+        240,
+        496
       ],
-      "id": "19c7ebd8-8f85-41bd-8db1-d44a71f330bd",
+      "id": "b43b1e17-4d03-422e-90d8-9f8c7fbefab0",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -242,28 +426,6 @@
           "name": "Postgres account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        64,
-        400
-      ],
-      "id": "57529a6e-070a-493d-9819-1377d89dcd07",
-      "name": "no op"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        576,
-        432
-      ],
-      "id": "c304c567-9164-46a5-a498-b072a535a30f",
-      "name": "Accumulate Data"
     }
   ],
   "pinData": {},
@@ -272,7 +434,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "csv headers",
             "type": "main",
             "index": 0
           }
@@ -283,7 +445,7 @@
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "if markdown",
             "type": "main",
             "index": 0
           }
@@ -294,7 +456,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "set output": {
@@ -359,11 +522,102 @@
         ]
       ]
     },
-    "AI Agent": {
+    "no op": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accumulate Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Beta)": {
       "main": [
         [
           {
             "node": "set output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "csv headers": {
+      "main": [
+        [
+          {
+            "node": "If url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        []
+      ]
+    },
+    "url empty": {
+      "main": [
+        []
+      ]
+    },
+    "If url": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "url empty",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "if markdown": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
             "type": "main",
             "index": 0
           }
@@ -391,39 +645,17 @@
           }
         ]
       ]
-    },
-    "no op": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Accumulate Data": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d5ff2dd6-5561-43d1-a37e-4d2b6e8625df",
+  "versionId": "ee25aff1-331d-4983-850b-43614759f32e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "EUxwFgpdRN52gsAg",
+  "id": "1iGc9wn8Chpu0lhu",
   "tags": []
 }

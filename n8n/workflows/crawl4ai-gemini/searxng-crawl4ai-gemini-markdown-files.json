@@ -1,5 +1,5 @@
 {
-  "name": "searxng-crawl4ai-gemini-markdown-combined",
+  "name": "searxng-crawl4ai-gemini-markdown-files",
   "nodes": [
     {
       "parameters": {
@@ -9,9 +9,9 @@
       "typeVersion": 3,
       "position": [
         -2176,
-        672
+        544
       ],
-      "id": "eb580ec1-f138-4693-bf81-432568000283",
+      "id": "0a1ee721-db4e-4195-a149-03a62e3c9f16",
       "name": "Loop Over Items",
       "onError": "continueRegularOutput"
     },
@@ -33,10 +33,28 @@
       "typeVersion": 3.4,
       "position": [
         -1072,
-        304
+        208
       ],
-      "id": "866495b4-f8a8-4436-8163-ef4ba33bb39c",
+      "id": "203c56b9-88fa-4e1f-88e3-95652f294946",
       "name": "set output"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/mnt/data/{{ $('sanitize title for file name').item.json.sanitizedTitle }}.md",
+        "dataPropertyName": "=data",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        496
+      ],
+      "id": "e05e6ef7-b075-4ea1-b466-0939eec15d6f",
+      "name": "write to file"
     },
     {
       "parameters": {
@@ -47,10 +65,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1568,
-        800
+        -624,
+        208
       ],
-      "id": "d4cd0e14-ad9b-41b0-a1c5-ad34b6834bd0",
+      "id": "50def5ce-9837-40c6-8d26-06324f651a29",
       "name": "Convert to File"
     },
     {
@@ -74,27 +92,40 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2080,
-        400
+        -2048,
+        304
       ],
-      "id": "5ea671d4-32a5-412b-a355-70aecc3169d7",
+      "id": "018e93e4-4307-4e49-b43d-2cbc413f3f05",
       "name": "crawl4ai",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "content": "## Enter a search query for searxng, press return use crawl4ai save the results to a text file",
-        "height": 128,
-        "width": 544
+        "content": "## Enter a search query for searxng, press return use crawl4ai save the results to text files",
+        "height": 176,
+        "width": 448
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -3680,
-        496
+        -3584,
+        320
       ],
-      "id": "402eecab-6e3c-4d00-bbb0-6b5bbfb89ebb",
+      "id": "e4cce524-16cc-4898-a60a-e8fa1ba1cfb3",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of items) {\n  // Access the 'title' from the 'Loop Over Items' node\n  let title = $('Loop Over Items').first().json.title;\n  \n  // Sanitize the title\n  let sanitizedTitle = title\n    .replace(/[/\\?<>\\\\:*|\"\\.\\r\\n]/g, '-') // Replaces invalid characters, including periods and newlines, with a hyphen\n    .replace(/^-+|-+$/g, ''); // Removes leading or trailing hyphens\n  \n  // Create a new property on the item with the sanitized title\n  item.json.sanitizedTitle = sanitizedTitle;\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        208
+      ],
+      "id": "7f3616c4-d3f2-41d1-bbd4-4fffee791c30",
+      "name": "sanitize title for file name"
     },
     {
       "parameters": {
@@ -160,10 +191,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1856,
-        384
+        -1840,
+        288
       ],
-      "id": "49f590d8-3c10-443b-883a-6ff86ead10fa",
+      "id": "66bdb774-ef07-450f-b71a-7d0a4906dea8",
       "name": "If"
     },
     {
@@ -172,9 +203,9 @@
       "typeVersion": 1,
       "position": [
         -1296,
-        496
+        400
       ],
-      "id": "fec7a5a5-f534-4f38-a876-d39032ac0e7c",
+      "id": "758312d4-6833-490e-b2d2-86d7097c733b",
       "name": "no op"
     },
     {
@@ -186,9 +217,9 @@
       "typeVersion": 2,
       "position": [
         -1296,
-        304
+        208
       ],
-      "id": "4cf7d85f-19ef-48a5-95cd-65621ced2335",
+      "id": "ded3054a-d2e3-4691-86ea-6ccb3f1ec5fb",
       "name": "Code in Python (Beta)"
     },
     {
@@ -203,7 +234,7 @@
           "conditions": [
             {
               "id": "d012900c-f3ab-430c-80b5-1dbee6ef820c",
-              "leftValue": "={{ $json.demoted_markdown }}",
+              "leftValue": "={{ $('Code in Python (Beta)').item.json.demoted_markdown }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -219,10 +250,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1984,
-        848
+        -400,
+        208
       ],
-      "id": "d1afa5c4-6ee8-4b8f-a3d4-a67c2186f7e0",
+      "id": "2ff7eebe-4d67-49bf-bb8c-b22358dd4941",
       "name": "if markdown"
     },
     {
@@ -230,10 +261,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -1568,
-        1040
+        -176,
+        160
       ],
-      "id": "a2a6355b-338a-4fbb-882b-c52f9308882e",
+      "id": "e6cfe3fe-bc4a-438d-99f4-e31eba040c1b",
       "name": "no markdown"
     },
     {
@@ -244,11 +275,11 @@
       "typeVersion": 1.3,
       "position": [
         -3520,
-        672
+        544
       ],
-      "id": "df613a3b-0ad3-4b18-a898-0f4314128d0a",
+      "id": "89911796-e310-4e2a-a2e3-c8d00a532ca5",
       "name": "search",
-      "webhookId": "c070181a-5b82-4fbb-b41b-f67b822e809e"
+      "webhookId": "05e04499-fce4-43bc-b211-bfe41934eabc"
     },
     {
       "parameters": {
@@ -258,9 +289,9 @@
       "typeVersion": 2,
       "position": [
         -3296,
-        672
+        544
       ],
-      "id": "b5b6eb3d-007e-4c30-b5c1-ad393e2d23a6",
+      "id": "204886df-801e-48fc-953e-1395cfa78dfe",
       "name": "clean query"
     },
     {
@@ -281,9 +312,9 @@
       "typeVersion": 3.4,
       "position": [
         -3072,
-        672
+        544
       ],
-      "id": "abf60615-42db-4d64-a28e-6ead2e8f808b",
+      "id": "4ec79517-827c-47a6-a9c8-f47a8db6f230",
       "name": "search query"
     },
     {
@@ -295,9 +326,9 @@
       "typeVersion": 4.2,
       "position": [
         -2848,
-        672
+        544
       ],
-      "id": "03a534bc-7bca-4fb5-a42e-a6dc50b949ac",
+      "id": "3decd98f-c7f5-4b81-b8b8-379c56fe44e9",
       "name": "searxng"
     },
     {
@@ -309,9 +340,9 @@
       "typeVersion": 1,
       "position": [
         -2624,
-        672
+        544
       ],
-      "id": "f574d1da-c4ae-4f74-be86-72bd400f75bb",
+      "id": "e9df6e47-eaf7-48f9-b3a1-20eb1054feca",
       "name": "Split Out"
     },
     {
@@ -338,38 +369,10 @@
       "typeVersion": 3.4,
       "position": [
         -2400,
-        672
+        544
       ],
-      "id": "e68b9b5a-2abd-419a-9d9c-d3d514ae4c8e",
+      "id": "9c4fb755-4b88-4855-98ed-56577055c654",
       "name": "set url title"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        -848,
-        576
-      ],
-      "id": "2c29454d-f4d2-4fd6-a953-137da6474857",
-      "name": "Accumulate Data"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "=/mnt/data/{{ $('clean query').item.json.cleaned_filename }}.md",
-        "options": {
-          "append": true
-        }
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -1280,
-        800
-      ],
-      "id": "8c2c2752-c36a-4785-9724-f16f85135235",
-      "name": "write to file"
     },
     {
       "parameters": {
@@ -382,10 +385,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1648,
-        288
+        -1632,
+        192
       ],
-      "id": "17306219-dbb9-491d-8b03-9f7e8aea54ec",
+      "id": "7f54699a-a05a-43ae-a06a-47a1b3bafd4b",
       "name": "AI Agent"
     },
     {
@@ -397,10 +400,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1664,
-        480
+        -1632,
+        384
       ],
-      "id": "0ef7e737-4937-40c8-b010-d9d5262f5e71",
+      "id": "b106346a-3f33-458a-921c-e674f881c934",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -414,10 +417,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        -1536,
-        496
+        -1520,
+        384
       ],
-      "id": "936f4c1d-3f1a-484d-9698-8f2c16349e98",
+      "id": "aa2ddebd-4e8a-4cc6-8c65-622d636439c8",
       "name": "Postgres Chat Memory",
       "credentials": {
         "postgres": {
@@ -431,13 +434,7 @@
   "connections": {
     "Loop Over Items": {
       "main": [
-        [
-          {
-            "node": "if markdown",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "crawl4ai",
@@ -451,7 +448,7 @@
       "main": [
         [
           {
-            "node": "Accumulate Data",
+            "node": "sanitize title for file name",
             "type": "main",
             "index": 0
           }
@@ -462,7 +459,18 @@
       "main": [
         [
           {
-            "node": "write to file",
+            "node": "if markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write to file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -474,6 +482,17 @@
         [
           {
             "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sanitize title for file name": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
             "type": "main",
             "index": 0
           }
@@ -524,7 +543,7 @@
       "main": [
         [
           {
-            "node": "Convert to File",
+            "node": "write to file",
             "type": "main",
             "index": 0
           }
@@ -604,17 +623,6 @@
         ]
       ]
     },
-    "Accumulate Data": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "AI Agent": {
       "main": [
         [
@@ -653,11 +661,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "899f04a3-d25a-437b-abc6-97bb1646010a",
+  "versionId": "f694082f-51f7-4482-abc1-e4f7759ecd91",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
   },
-  "id": "JenTDbMwhAUEQBYB",
+  "id": "tCGoCUX9p4iGa3Ge",
   "tags": []
 }
