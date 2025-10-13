@@ -10,7 +10,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        208,
+        808,
         0
       ],
       "id": "d1fc4922-3ce1-4f12-ab34-6ad512d1ecc7",
@@ -25,7 +25,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        128,
+        752,
         224
       ],
       "id": "be3161f6-1b92-48c9-ad5b-fa2b36145a01",
@@ -47,7 +47,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
       "position": [
-        432,
+        1008,
         224
       ],
       "id": "8349cd87-dff8-46b9-bc01-155810a5de1c",
@@ -66,7 +66,7 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.3,
       "position": [
-        0,
+        80,
         0
       ],
       "id": "f14be84b-4280-456a-87ea-490886081bae",
@@ -82,7 +82,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        512,
+        1216,
         0
       ],
       "id": "39d6c6a1-35cd-4f24-933b-e1b23e6bc5b4",
@@ -91,13 +91,13 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/mnt/data/chat-searxng-gemini-file-{{ (new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace(/\\./g, '_').slice(0, 19) + '.txt' }}",
+        "fileName": "=/mnt/data/{{ $('clean query').item.json.cleaned_filename }}.txt",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        720,
+        1440,
         0
       ],
       "id": "7ad1ec17-343c-4b47-bb6f-52e90eb27f0e",
@@ -108,7 +108,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        288,
+        880,
         224
       ],
       "id": "9f927c2e-61be-4c00-8d2b-ec725bcd26da",
@@ -129,11 +129,47 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -128,
+        -112,
         -128
       ],
       "id": "b711e563-0c38-43dd-93b0-65126e50d381",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to clean the query and create the filename\nfunction cleanQueryToFilename(query) {\n    if (!query) {\n        return 'default-output';\n    }\n    \n    const lowerCaseQuery = query.toLowerCase().trim();\n\n    // 1. Handle 'link:' operator (Example: link:https://spitalfieldslife.com/2024/01/31/at-beppes-cafe/)\n    if (lowerCaseQuery.startsWith('link:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https)\n        let pathSegment = urlPart.replace(/https?:\\/\\//, '');\n\n        // Split by '/' and get the last part (e.g., 'at-beppes-cafe/')\n        let lastSegment = pathSegment.split('/').filter(s => s).pop();\n        \n        // Remove file extensions (like .html) and remaining dots\n        let cleanedSegment = lastSegment ? lastSegment.replace(/\\.[a-z]{2,5}$/i, '') : '';\n        \n        // Replace any remaining non-alphanumeric with dashes\n        cleanedSegment = cleanedSegment.replace(/[^a-z0-9-]/gi, '-'); \n        \n        // Final cleanup: remove multiple dashes and trim\n        return cleanedSegment.replace(/-{2,}/g, '-').replace(/^-|-$/g, '') || 'link-search';\n    }\n\n    // 2. Handle 'site:' operator (Example: site:https://spitalfieldslife.com)\n    if (lowerCaseQuery.startsWith('site:')) {\n        let urlPart = query.substring(5).trim();\n        \n        // Remove protocol (http/https), 'www.', and trailing slash\n        urlPart = urlPart.replace(/https?:\\/\\//, '').replace(/^www\\./, '').replace(/\\/$/, '');\n        \n        // Split at the first dot and take the domain name (spitalfieldslife)\n        let domainName = urlPart.split('.')[0];\n        \n        return domainName.toLowerCase();\n    }\n\n    // 3. Handle General Text Prompt (Example: beppes cafe london)\n    // Replace all non-alphanumeric (except space) with dashes, remove multiple dashes, and trim.\n    let cleanedText = lowerCaseQuery;\n    // Replace all non-alphanumeric or space with dash\n    cleanedText = cleanedText.replace(/[^a-z0-9\\s]/g, '-'); \n    // Replace spaces with single dash\n    cleanedText = cleanedText.replace(/\\s+/g, '-');\n    // Final cleanup: remove multiple dashes and trim\n    cleanedText = cleanedText.replace(/-{2,}/g, '-').replace(/^-|-$/g, '');\n\n    return cleanedText;\n}\n\n// ----------------------------------------------------\n// CRUCIAL CHANGE: Use the correct input variable\n// ----------------------------------------------------\nconst originalQuery = $input.first().json.chatInput;\n\n// Process the query to get the clean filename base\nconst cleanedFilename = cleanQueryToFilename(originalQuery);\n\n// Return the original item with the new field added\nreturn [{\n    ...$json,\n    cleaned_filename: cleanedFilename\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        0
+      ],
+      "id": "c69610a3-6c40-4406-ae06-9856bf980efa",
+      "name": "clean query"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3a6c30b0-81ee-4207-8792-4246ea1e3e1f",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        0
+      ],
+      "id": "830e22f4-e29a-4afa-8995-43cf1ac25a10",
+      "name": "search query"
     }
   ],
   "pinData": {},
@@ -175,7 +211,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "clean query",
             "type": "main",
             "index": 0
           }
@@ -203,13 +239,35 @@
           }
         ]
       ]
+    },
+    "clean query": {
+      "main": [
+        [
+          {
+            "node": "search query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search query": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "67bb6ddd-8d87-4fc8-97b7-6af5d59df249",
+  "versionId": "2a952c1e-afba-4973-97f2-e7fa43b8adb5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
