@@ -178,10 +178,6 @@ GEMINI_API_TOKEN=your_gemini_key_here
 # If not set, uses the provider specified in config.yml (default: openai/gpt-4o-mini)
 # LLM_PROVIDER=anthropic/claude-3-opus
 LLM_PROVIDER=google/gemini-2.5-flash
-
-# image and tag
-IMAGE=unclecode/crawl4ai
-TAG=latest
 #+end_src
 
 ** setup-crawl4ai
