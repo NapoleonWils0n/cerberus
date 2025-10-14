@@ -1,0 +1,204 @@
+#+STARTUP: content
+* emacs markdown mode
+** resources
+
+[[https://leanpub.com/markdown-mode/read]]
+
+[[https://jblevins.org/projects/markdown-mode/]]
+
+** markdown-mode install
+
+#+begin_src emacs-lisp
+;; markdown mode
+;; ----------------------------------------------------------------------------------
+
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode) ; Define mode functions to autoload the package
+  :mode (("\\.md\\'" . markdown-mode) ; Use markdown-mode for *.md files
+         ("\\.markdown\\'" . markdown-mode) ; Use markdown-mode for *.markdown files
+         ("README\\.md\\'" . gfm-mode)) ; Use gfm-mode for README.md files
+  :config
+  (add-hook 'markdown-mode-hook 'visual-line-mode)
+  (setq markdown-command "pandoc")
+  )
+#+end_src
+
+** keyboard shortcuts
+*** Headings 	 
+
+#+begin_example
+Insert heading depending on context 	C-c C-s h
+Insert heading, prefer setext 	C-c C-s H
+Insert atx heading of level # = 1, 2, … 6 	C-c C-s #
+Insert setext heading of level 1 	C-c C-s !
+Insert setext heading of level 2 	C-c C-s @
+#+end_example
+
+*** Inline Elements 	 
+
+#+begin_example
+Bold 	C-c C-s b
+Italics 	C-c C-s i
+Inline code 	C-c C-s c
+kbd tag 	C-c C-s k
+Wiki link 	C-c C-s w
+#+end_example
+
+*** Block Elements 	 
+
+#+begin_example
+Preformatted/code block 	C-c C-s p
+Preformatted/code block (region) 	C-c C-s P
+Blockquote 	C-c C-s q
+Blockquote (region) 	C-c C-s Q
+GFM code block 	C-c C-s C
+Edit code block in indirect buffer 	C-c '
+#+end_example
+
+*** Links and Images 	 
+
+#+begin_example
+Insert or edit link (inline, reference, or URL) 	C-c C-l
+Insert or edit image (inline or reference) 	C-c C-i
+Follow link at point 	C-c C-o
+Jump between reference link and definition 	C-c C-d
+Move to next link 	M-n
+Move to previous link 	M-p
+#+end_example
+
+*** Footnotes 	 
+
+#+begin_example
+Insert footnote 	C-c C-s f
+Jump between footnote and definition 	C-c C-d
+#+end_example
+
+*** List Items & List Editing 	 
+
+#+begin_example
+Insert new list item (same level) 	M-RET
+Insert new list item (same level) 	C-c C-j
+Insert new list item (parent level) 	C-u C-c C-j
+Insert new list item (child level) 	C-u C-u C-c C-j
+Move list item up 	C-c <up>
+Move list item down 	C-c <down>
+Outdent/promote list item 	C-c <left>
+Indent/demote list item 	C-c <right>
+Toggle GFM checkbox 	C-c C-x C-x
+#+end_example
+
+*** Horizontal Rules 	 
+
+#+begin_example
+Insert default horizontal rule string 	C-c C-s -
+#+end_example
+
+*** Killing and Yanking 	 
+
+#+begin_example
+Kill element and keep text in kill ring 	C-c C-k
+Yank text back into buffer 	C-y
+#+end_example
+
+*** Movement by Paragraph 	 
+
+#+begin_example
+Backward paragraph 	M-{
+Forward paragraph 	M-}
+Mark paragraph 	M-h
+#+end_example
+
+*** Movement by Block 	 
+
+#+begin_example
+Backward block 	C-M-{
+Forward block 	C-M-}
+Mark block 	C-c M-h
+Narrow to block 	C-x n b
+Widen 	C-x n w
+#+end_example
+
+*** Movement by Section (Defun) 	 
+
+#+begin_example
+Beginning of section 	C-M-a
+End of section 	C-M-e
+Mark section 	C-M-h
+Mark subtree 	C-c C-M-h
+Narrow to section 	C-x n d
+Narrow to subtree 	C-x n s
+Widen 	C-x n w
+#+end_example
+
+*** Outline & List Movement 	 
+
+#+begin_example
+Next heading or list item 	C-c C-n
+Previous heading or list item 	C-c C-p
+Next heading or list item (same level) 	C-c C-f
+Previous heading or list item (same level) 	C-c C-b
+Move up to parent heading or list item 	C-c C-u
+#+end_example
+
+*** Outline Visibility Cycling 	 
+
+#+begin_example
+Cycle visibility globally 	S-TAB
+Cycle visibility of heading at point 	TAB
+#+end_example
+
+*** Outline Subtree Editing 	 
+
+#+begin_example
+Move subtree up 	C-c <up>
+Move subtree down 	C-c <down>
+Promote subtree 	C-c <left>
+Demote subtree 	C-c <right>
+#+end_example
+
+*** Region Editing 	 
+
+#+begin_example
+Indent region 	C-c >
+Exdent region 	C-c <
+#+end_example
+
+*** Promotion and Demotion 	 
+
+#+begin_example
+Promote element at point 	C-c -
+Demote element at point 	C-c =
+#+end_example
+
+*** Markup Completion 	 
+
+#+begin_example
+Complete markup at point or in region 	C-c C-]
+Complete markup in buffer 	C-c C-c ]
+#+end_example
+
+
+*** Markdown & Utility Commands 	 
+
+#+begin_example
+Run Markdown, output to temporary buffer 	C-c C-c m
+Run Markdown, export to file 	C-c C-c e
+Run Markdown, preview in browser 	C-c C-c p
+Run Markdown, export, and preview 	C-c C-c v
+Run Markdown, save to kill ring 	C-c C-c w
+Toggle live preview mode 	C-c C-c l
+Open external previewer 	C-c C-c o
+Check references in buffer 	C-c C-c c
+Renumber ordered lists in buffer 	C-c C-c n
+#+end_example
+
+*** Toggles and Settings 	 
+
+#+begin_example
+Toggle markup hiding 	C-c C-x C-m
+Toggle URL hiding 	C-c C-x C-l
+Toggle native code block font lock 	C-c C-x C-f
+Toggle inline images 	C-c C-x C-i
+Toggle LaTeX math support 	C-c C-x C-e
+Toggle GFM checkbox 	C-c C-x C-x
+#+end_example
