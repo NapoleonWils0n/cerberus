@@ -1,0 +1,21 @@
+#+STARTUP: showall
+* home manager cache permissions
+
+if you get an error like this 
+
+#+begin_example
+nix flake update
+error:
+       … while fetching the input 'git+file:///home/djwilcox/git/nixos/nixos-dotfiles'
+
+       error: executing SQLite statement 'insert or replace into Cache(domain, key, value, timestamp) values ('gitRevCount', '{"rev":"6c1f9e0b4192120dde03180e3ff815454e253867"}', '{"revCount":453}', 1760476917)': attempt to write a readonly database, attempt to write a readonly database (in '/home/djwilcox/.cache/nix/fetcher-cache-v4.sqlite')
+#+end_example
+
+then you need to fix the permissions on the ~/.cache/nix directory
+
+by running the following command
+
+#+begin_src sh
+doas chown -R ${USER}:users ${HOME}/.cache/nix
+#+end_src
+
