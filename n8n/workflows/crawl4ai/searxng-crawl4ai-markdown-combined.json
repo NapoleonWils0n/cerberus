@@ -142,15 +142,6 @@
                 "type": "number",
                 "operation": "gt"
               }
-            },
-            {
-              "id": "e8681786-e87a-4b27-be24-d79c9637d63e",
-              "leftValue": "={{ $json.markdown.length }}",
-              "rightValue": 20000,
-              "operator": {
-                "type": "number",
-                "operation": "lt"
-              }
             }
           ],
           "combinator": "and"
@@ -565,7 +556,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "671072d6-9379-4e99-bcc9-2e172229c218",
+  "versionId": "cb30b0ce-d8e7-40c9-b844-cd7508522e03",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ee718081dceace9a4bccc1cc08d3d8ae41f44d3a86e1399dd1a159c3f3ae7e8e"
