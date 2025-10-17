@@ -29,7 +29,7 @@ cd ~/podman/archivebox/
 User and Group ID that the data directory should be owned by. We recommend leaving this as the default 911 and running
 
 #+begin_src sh
-chown -R 911:$(id -g) ./data
+doas chown -R "${USER}":911 ./data
 #+end_src
 
 outside Docker, this will make sure your data is writable by both ArchiveBox inside Docker and host users in your group outside of Docker.
