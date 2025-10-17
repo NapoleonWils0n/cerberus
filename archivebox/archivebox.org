@@ -518,6 +518,8 @@ create an admin user for the Web UI (or set ADMIN_USERNAME/ADMIN_PASSWORD env va
 podman compose run archivebox manage createsuperuser
 #+end_src
 
+or use a set up script below
+
 ** setup-archivebox script
 
 setup-archivebox script to set username and password
@@ -530,9 +532,6 @@ ADMIN_USERNAME=
 ADMIN_PASSWORD=
 
 # archivebox_scheduler
-SEARCH_BACKEND_PASSWORD=
-
-# sonic
 SEARCH_BACKEND_PASSWORD=
 
 # pihole
