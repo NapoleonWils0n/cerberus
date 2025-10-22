@@ -25,6 +25,19 @@ gptel includes gptel-integrations, a small library to make this more convenient.
 (require 'gptel-integrations)
 #+end_src
 
+on nixos i have podman installed here
+
+#+begin_example
+/run/current-system/sw/bin/podman
+#+end_example
+
+so i have the path set in emacs to that bin directory
+
+#+begin_src emacs-lisp
+;; exec-path add nix system bin directory
+(add-to-list 'exec-path "/run/current-system/sw/bin")
+#+end_src
+
 gptel config
 
 #+begin_src emacs-lisp
