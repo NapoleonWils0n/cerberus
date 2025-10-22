@@ -106,6 +106,9 @@ gptel config
       (while (re-search-forward "^#\\+begin_src bash" end t)
         (replace-match "#+begin_src sh"))))
 
+;; end of gptel use-package config
+(add-hook 'gptel-post-response-functions #'my/gptel-fix-src-header)) 
+
 #+end_src
 
 ** mcp
