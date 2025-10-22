@@ -1,0 +1,186 @@
+#+STARTUP: content
+* emacs gptel mcp servers
+** resources
+*** gptel mcp intergration
+
+[[https://github.com/karthink/gptel?tab=readme-ov-file#model-context-protocol-mcp-integration]]
+
+*** mcp.el
+
+[[https://github.com/lizqwerscott/mcp.el]]
+
+*** mcp-nixos
+
+[[https://github.com/utensils/mcp-nixos]]
+
+*** mcp-searxng
+
+[[https://github.com/ihor-sokoliuk/mcp-searxng]]
+
+** gptel
+
+gptel includes gptel-integrations, a small library to make this more convenient. This library is not automatically loaded by gptel, so if you would like to use it you have to require it:
+
+#+begin_src emacs-lisp
+(require 'gptel-integrations)
+#+end_src
+
+gptel config
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; auth-source
+;; ----------------------------------------------------------------------------------
+
+(require 'auth-source)
+(add-to-list 'auth-sources (expand-file-name ".authinfo" user-emacs-directory))
+
+
+;; ----------------------------------------------------------------------------------
+;; gptel
+;; ----------------------------------------------------------------------------------
+
+(use-package gptel
+  :init
+  ;; Enable tool use
+  (setq gptel-use-tools t)
+  (setq gptel-default-mode 'org-mode
+        gptel-post-response-functions #'gptel-end-of-response
+        gptel-expert-commands t)
+  (require 'gptel-integrations) 
+  :config
+  (setq gptel-model 'mistral:7b)
+  (setq gptel-model 'llama3.1:8b)
+  (setq gptel-model 'gemma3:4b)
+  (setq gptel-model 'deepseek-r1:8b)
+  (setq gptel-backend (gptel-make-ollama "Ollama"
+                        :host "localhost:11434"
+                        :stream t
+                        :models '(gemma3:4b
+                                  mistral:7b
+                                  llama3.1:8b
+                                  deepseek-r1:8b)))
+
+  (setq gptel-model 'gemini-2.5-flash
+        gptel-backend (gptel-make-gemini "Gemini"
+                                         :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+                                         :stream t))
+  
+
+;; ----------------------------------------------------------------------------------
+;; display the Ollama buffer in same window
+;; ----------------------------------------------------------------------------------
+
+  (add-to-list 'display-buffer-alist
+     '("^*Ollama*" display-buffer-same-window))
+
+
+;; ----------------------------------------------------------------------------------
+;; display the Gemini buffer in same window
+;; ----------------------------------------------------------------------------------
+
+  (add-to-list 'display-buffer-alist
+               '("^*Gemini*" display-buffer-same-window))
+
+
+;; ----------------------------------------------------------------------------------
+;; gptel set org source blocks to use sh and not bash
+;; ----------------------------------------------------------------------------------
+
+  (defun my/gptel-fix-src-header (beg end)
+    (save-excursion
+      (goto-char beg)
+      (while (re-search-forward "^#\\+begin_src bash" end t)
+        (replace-match "#+begin_src sh"))))
+
+#+end_src
+
+** mcp
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers `(("mcp-nixos" . (
+                                      :command "podman" ; <-- Use your container runtime
+                                      :args ("run" "--rm" "-i" "ghcr.io/utensils/mcp-nixos")))
+                     )) ;; closing parentheses
+
+  :config
+  (require 'mcp-hub)
+  :hook
+  (after-init . mcp-hub-start-all-server)
+  )
+#+end_src
+
+** mcp-nixos
+
+podman pull
+
+#+begin_src sh
+podman pull ghcr.io/utensils/mcp-nixos:1.0.3
+#+end_src
+
+you dont need to run mcp-nixos in the terminal
+
+its started with emacs, but heres the command to run it in the terminal
+
+#+begin_src sh
+podman run --rm -i ghcr.io/utensils/mcp-nixos
+#+end_src
+
+** emacs mcp
+
+mcp start server, select the server from the list
+
+#+begin_example
+M-x mcp-hub-start-server
+#+end_example
+
+gptel mcp connect
+
+#+begin_example
+M-x gptel-mcp-connect
+#+end_example
+
+** ollama
+
+start ollama
+
+#+begin_src sh
+ollama serve
+#+end_src
+
+ollama-start script
+
+#+begin_src sh
+#!/bin/sh
+
+# start ollama listen on 0:0:0:0
+
+# export ollama host
+export OLLAMA_HOST=0.0.0.0:11434
+
+# ollama serve
+ollama serve
+#+end_src
+
+start a model in the terminal that supports tools
+
+#+begin_src sh
+ollama run llama3.1:8b
+#+end_src
+
+** gptel run model
+
+run gptel select tools and mcp should show up
+
+** gptel-mcp-disonnect
+
+#+begin_example
+M-x gptel-mcp-disonnect
+#+end_example
