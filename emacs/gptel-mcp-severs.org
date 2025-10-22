@@ -117,6 +117,19 @@ gptel config
   )
 #+end_src
 
+** mcp keymap
+
+#+begin_example
+key	function	description
+l	mcp-hub-view-log	View server logs
+s	mcp-hub-start-server	Start server under cursor
+k	mcp-hub-close-server	Stop server under cursor
+r	mcp-hub-restart-server	Restart server under cursor
+S	mcp-hub-start-all-server	Start all configured servers
+R	mcp-hub-restart-all-server	Restart all configured servers
+K	mcp-hub-close-all-server	Stop all running servers
+#+end_example
+
 ** mcp-nixos
 
 podman pull
