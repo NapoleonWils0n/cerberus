@@ -15,9 +15,24 @@
 ** nixos packages
 
 #+begin_src nix
+shellcheck-minimal
 bash-language-server
 python313Packages.python-lsp-server
 nixd
+#+end_src
+
+** debian packages
+
+#+begin_src sh
+doas apt install python3-pylsp
+#+end_src
+
+#+begin_src sh
+doas apt install nodejs npm
+#+end_src
+
+#+begin_src sh
+doas npm i -g bash-language-server
 #+end_src
 
 ** emacs init.el
