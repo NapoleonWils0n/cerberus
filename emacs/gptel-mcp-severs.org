@@ -97,6 +97,8 @@ gptel config
 
 ** mcp
 
+start mcp servers automatically
+
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
 ;; mcp server
@@ -113,8 +115,27 @@ gptel config
   :config
   (require 'mcp-hub)
   :hook
-  (after-init . mcp-hub-start-all-server)
-  )
+  (after-init . mcp-hub-start-all-server))
+#+end_src
+
+
+dont start mcp servers automatically
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers `(("mcp-nixos" . (
+                                      :command "podman" ; <-- Use your container runtime
+                                      :args ("run" "--rm" "-i" "ghcr.io/utensils/mcp-nixos")))
+                     )) ;; closing parentheses
+
+  :config
+  (require 'mcp-hub))
 #+end_src
 
 ** mcp keymap
