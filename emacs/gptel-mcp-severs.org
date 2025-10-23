@@ -76,6 +76,12 @@ so i have the path set in emacs to that bin directory
 (add-to-list 'exec-path "/run/current-system/sw/bin")
 #+end_src
 
+authinfo for gemini which you can get from ai studio
+
+#+begin_example
+machine generativelanguage.googleapis.com password google-api-goes-here
+#+end_example
+
 gptel config
 
 #+begin_src emacs-lisp
@@ -146,7 +152,6 @@ gptel config
 
 ;; end of gptel use-package config
 (add-hook 'gptel-post-response-functions #'my/gptel-fix-src-header)) 
-
 #+end_src
 
 ** mcp
