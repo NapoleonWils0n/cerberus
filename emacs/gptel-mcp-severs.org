@@ -129,7 +129,7 @@ start mcp servers automatically
                      ("searxng" . ( ; General web search tool
                                     :command "podman"
                                     :args ("run" "--rm" "-i" 
-                                           "isokoliuk/mcp-searxng:latest" 
+                                           "docker.io/isokoliuk/mcp-searxng:latest" 
                                            "--url" "http://localhost:8080")))
                      )) ;; closing parentheses
 
@@ -157,7 +157,7 @@ dont start mcp servers automatically
                      ("searxng" . ( ; General web search tool
                                     :command "podman"
                                     :args ("run" "--rm" "-i" 
-                                           "isokoliuk/mcp-searxng:latest" 
+                                           "docker.io/isokoliuk/mcp-searxng:latest" 
                                            "--url" "http://localhost:8080")))
                      )) ;; closing parentheses
 
