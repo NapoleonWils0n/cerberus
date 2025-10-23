@@ -126,12 +126,18 @@ start mcp servers automatically
   (mcp-hub-servers `(("mcp-nixos" . (
                                       :command "podman" ; <-- Use your container runtime
                                       :args ("run" "--rm" "-i" "ghcr.io/utensils/mcp-nixos")))
+                     ("searxng" . ( ; General web search tool
+                                    :command "podman"
+                                    :args ("run" "--rm" "-i" 
+                                           "isokoliuk/mcp-searxng:latest" 
+                                           "--url" "http://localhost:8080")))
                      )) ;; closing parentheses
 
   :config
   (require 'mcp-hub)
   :hook
   (after-init . mcp-hub-start-all-server))
+
 #+end_src
 
 
@@ -148,10 +154,16 @@ dont start mcp servers automatically
   (mcp-hub-servers `(("mcp-nixos" . (
                                       :command "podman" ; <-- Use your container runtime
                                       :args ("run" "--rm" "-i" "ghcr.io/utensils/mcp-nixos")))
+                     ("searxng" . ( ; General web search tool
+                                    :command "podman"
+                                    :args ("run" "--rm" "-i" 
+                                           "isokoliuk/mcp-searxng:latest" 
+                                           "--url" "http://localhost:8080")))
                      )) ;; closing parentheses
 
   :config
   (require 'mcp-hub))
+
 #+end_src
 
 ** mcp keymap
@@ -181,6 +193,12 @@ its started with emacs, but heres the command to run it in the terminal
 
 #+begin_src sh
 podman run --rm -i ghcr.io/utensils/mcp-nixos
+#+end_src
+
+** mcp-searxng
+
+#+begin_src sh
+podman pull isokoliuk/mcp-searxng:latest
 #+end_src
 
 ** emacs mcp
