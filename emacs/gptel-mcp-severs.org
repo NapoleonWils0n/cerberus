@@ -17,6 +17,36 @@
 
 [[https://github.com/ihor-sokoliuk/mcp-searxng]]
 
+** mcp-nixos
+
+podman pull
+
+#+begin_src sh
+podman pull ghcr.io/utensils/mcp-nixos:1.0.3
+#+end_src
+
+you dont need to run mcp-nixos in the terminal
+
+its started with emacs, but heres the command to run it in the terminal
+
+#+begin_src sh
+podman run --rm -i ghcr.io/utensils/mcp-nixos
+#+end_src
+
+** mcp-searxng
+
+#+begin_src sh
+cd ~/podman
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/ihor-sokoliuk/mcp-searxng.git
+#+end_src
+
+#+begin_src sh
+podman build -t mcp-searxng:local -f Dockerfile .
+#+end_src
+
 ** gptel
 
 gptel includes gptel-integrations, a small library to make this more convenient. This library is not automatically loaded by gptel, so if you would like to use it you have to require it:
@@ -114,12 +144,23 @@ gptel config
 ** mcp
 
 #+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
 (use-package mcp
   :after gptel
   :custom
   (mcp-hub-servers `(("mcp-nixos" . (
                                       :command "podman" ; <-- Use your container runtime
                                       :args ("run" "--rm" "-i" "ghcr.io/utensils/mcp-nixos")))
+                     ("searxng" . ( ; General web search tool
+                                    :command "podman"
+                                    :args ("run" "-i" "--rm"
+                                           "--network=host"
+                                            "-e" "SEARXNG_URL=http://localhost:8080"
+                                            "mcp-searxng:local")
+                                    ))
                      )) ;; closing parentheses
 
   :config
@@ -138,28 +179,6 @@ S	mcp-hub-start-all-server	Start all configured servers
 R	mcp-hub-restart-all-server	Restart all configured servers
 K	mcp-hub-close-all-server	Stop all running servers
 #+end_example
-
-** mcp-nixos
-
-podman pull
-
-#+begin_src sh
-podman pull ghcr.io/utensils/mcp-nixos:1.0.3
-#+end_src
-
-you dont need to run mcp-nixos in the terminal
-
-its started with emacs, but heres the command to run it in the terminal
-
-#+begin_src sh
-podman run --rm -i ghcr.io/utensils/mcp-nixos
-#+end_src
-
-** mcp-searxng
-
-#+begin_src sh
-podman pull isokoliuk/mcp-searxng:latest
-#+end_src
 
 ** emacs mcp
 
