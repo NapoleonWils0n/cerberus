@@ -9,6 +9,14 @@
 
 [[https://github.com/lizqwerscott/mcp.el]]
 
+*** docker.el
+
+[[https://github.com/Silex/docker.el]]
+
+*** dockerfile-mode
+
+[[https://github.com/spotify/dockerfile-mode]]
+
 *** mcp-nixos
 
 [[https://github.com/utensils/mcp-nixos]]
