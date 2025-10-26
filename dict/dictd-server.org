@@ -8,6 +8,12 @@ dictdDBs.wordnet
 dictdDBs.wiktionary
 #+end_src
 
+** debian packages
+
+#+begin_src sh
+doas apt install dict dictd dictfmt dict-gcide
+#+end_src
+
 ** dictrc
 
 #+begin_example
