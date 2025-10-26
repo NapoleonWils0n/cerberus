@@ -1,0 +1,109 @@
+#+STARTUP: content
+* dictd server
+** nixos packages
+
+#+begin_src nix
+dict
+dictdDBs.wordnet
+dictdDBs.wiktionary
+#+end_src
+
+** dictrc
+
+#+begin_example
+~/.dictrc
+#+end_example
+
+#+begin_src conf
+server localhost
+#+end_src
+
+** dictd.conf
+
+change the data and index paths to match your install
+
+#+begin_src conf
+# ~/.dictd.conf
+
+global {
+    listen_to 127.0.0.1
+    port 2628
+    pid_file "/tmp/dictd.pid"
+}
+database wordnet {
+    data "/home/djwilcox/.nix-profile/share/dictd/wn.dict"
+    index "/home/djwilcox/.nix-profile/share/dictd/wn.index"
+}
+
+database wiktionary-en {
+    data "/home/djwilcox/.nix-profile/share/dictd/wiktionary-en.dict.dz"
+    index "/home/djwilcox/.nix-profile/share/dictd/wiktionary-en.index"
+}
+#+end_src
+
+** dictd.service
+
+dictd.service
+
+#+begin_example
+~/.config/systemd/user/dictd.service
+#+end_example
+
+#+begin_src conf
+[Unit]
+Description=Dictionary Server Daemon
+After=network-online.target
+
+[Service]
+# Type should be 'forking' because dictd daemonizes by default.
+Type=forking
+# SuccessExitStatus is needed because dictd typically exits with 143 (SIGTERM)
+SuccessExitStatus=143
+
+# IMPORTANT: This environment variable is often required in NixOS/Home Manager 
+# environments for programs (like dictd) that rely on locale data.
+Environment=LOCALE_ARCHIVE=/run/current-system/sw/lib/locale/locale-archive
+
+# ExecStart: 
+# - Removed -f flag (Type=forking handles this)
+# - Added -s (syslog logging, helpful for debugging)
+# - Added --locale en_US.UTF-8 (dictd often requires this in Nix)
+ExecStart=%h/.nix-profile/bin/dictd -s -c %h/.dictd.conf --locale en_US.UTF-8
+
+# This is the key: Systemd creates this directory (/run/user/<UID>/dictd)
+# and makes it available to the service, solving the permission problem.
+RuntimeDirectory=dictd
+RuntimeDirectoryMode=0700
+
+# Security and management
+Restart=always
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+systemctl daemon-reload
+
+#+begin_src sh
+systemctl --user daemon-reload
+#+end_src
+
+systemctl enable dictd
+
+#+begin_example
+systemctl --user enable dictd.service
+#+end_example
+
+systemctl start dictd
+
+#+begin_src sh
+systemctl --user start dictd.service
+#+end_src
+
+** emacs
+
+emacs init.el
+
+#+begin_src emacs-lisp
+(setq dictionary-server "localhost")
+#+end_src
