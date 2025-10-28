@@ -1,0 +1,49 @@
+#+STARTUP: content
+* wayback machine
+** resources
+
+[[https://github.com/birbwatcher/wayback-machine-downloader]]
+
+** podman
+
+#+begin_src sh
+git clone https://github.com/birbwatcher/wayback-machine-downloader.git
+#+end_src
+
+#+begin_src sh
+cd wayback-machine-downloader/wayback-machine-downloader
+#+end_src
+
+#+begin_src sh
+podman build -t wayback-machine-downloader .
+#+end_src
+
+** download directory
+
+#+begin_src sh
+mkdir -p websites
+#+end_src
+
+#+begin_src sh
+podman run -it -v $(pwd)/websites:/app/websites wayback-machine-downloader
+#+end_src
+
+Explanation:
+
+    -it — enables interactive input/output for the terminal (so you can answer questions).
+    -v $(pwd)/websites:/app/websites — mounts the local websites folder so downloaded sites are saved on your machine.
+
+After running, the same interactive menu will appear as with the standard Node.js run.
+All archived websites will be saved locally in the ./websites directory.
+
+#+begin_example
+Enter base URL to archive (e.g., https://example.com): https://example.com
+From timestamp (YYYYMMDDhhmmss) or leave blank: 20200101000000
+To timestamp (YYYYMMDDhhmmss) or leave blank: 20201231235959
+Rewrite links? (yes=relative / no=as-is, default no): yes
+Canonical: "keep" (default) or "remove": keep
+How many download threads? (default 3): 5
+Only exact URL (no wildcard /*)? (yes/no, default no): no
+Target directory (leave blank for default websites/<host>/): 
+Download external assets? (yes/no, default no): no
+#+end_example
