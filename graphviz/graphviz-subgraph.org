@@ -1,0 +1,60 @@
+#+STARTUP: showall
+* graphviz
+** subgraph
+
+#+BEGIN_SRC dot :file photos.png :cmdline -Kdot -Tpng
+digraph {
+    // Graph from left to right
+    rankdir=LR;
+    splines=ortho; // Using orthogonal splines for a cleaner, angular flow
+    node [shape=box, style=filled, fillcolor="lightgray", fontname="Helvetica"]; // Added some styling for better visual
+    edge [style=solid, arrowhead="normal"];
+
+    // Nodes
+    searxng [label="Searxng"]
+    raindrop [label="Raindrop"]
+    spreadsheet [label="Spreadsheet"]
+    csv [label="CSV"]
+    n8n [label="n8n"]
+    crawl4ai [label="crawl4ai"]
+    markdown [label="Markdown"]
+    googledrive [label="Google Drive"]
+    googledocs [label="Google Docs"]
+    notebooklm [label="NotebookLM"]
+
+    // Grouping input sources explicitly for clarity
+    subgraph cluster_inputs {
+        label = "Data Sources";
+        style = "filled";
+        fillcolor = "lightyellow";
+        node [fillcolor="white"]; // Override node fillcolor inside subgraph
+        searxng;
+        raindrop;
+        spreadsheet;
+    }
+
+    // Grouping N8n, Crawl4AI, and Markdown into "Extract Web Content"
+    subgraph cluster_extract {
+        label = "Extract Web Content";
+        style = "filled";
+        fillcolor = "lightblue"; // Different color for this stage
+        node [fillcolor="white"]; // Override node fillcolor inside subgraph
+        n8n;
+        crawl4ai;
+        markdown;
+    }
+
+    // Connections
+    { searxng raindrop spreadsheet } -> csv; // All inputs funnel into CSV
+
+    csv -> n8n; // CSV now flows into the 'Extract Web Content' stage
+
+    // Connections within and out of the "Extract Web Content" subgraph
+    n8n -> crawl4ai;
+    crawl4ai -> markdown;
+    markdown -> googledrive; // Markdown now flows out of the 'Extract Web Content' stage
+
+    googledrive -> googledocs;
+    googledocs -> notebooklm;
+}
+#+END_SRC
