@@ -1,0 +1,26 @@
+#+STARTUP: content
+* playlist urls
+** curl file
+
+#+begin_src sh
+curl -sL "https://web.archive.org/web/20220813130651/https://www.youtube.com/playlist?list=YOUR_ID" > playlist.html
+#+end_src
+
+#+begin_src sh
+grep -o 'https://web\.archive\.org/web/[0-9]\{14\}/[^"]*googlevideo\.com/[^"]*' playlist.html > output
+#+end_src
+
+** grep file
+
+#+begin_src sh
+cat playlist.html | \
+grep -o '\"videoId\":\"[A-Za-z0-9_-]\{11\}' | \
+sed 's/\"videoId\":\"//' | \
+uniq > input.txt
+#+end_src
+
+** prepend urls
+
+#+begin_src sh
+sed -i.bak 's#^#https://web.archive.org/web/20240206171253mp_/https://www.youtube.com/watch?v=#' input.txt
+#+end_src
