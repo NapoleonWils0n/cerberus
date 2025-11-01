@@ -1,0 +1,51 @@
+#+STARTUP: content
+* emacs mcp
+** resources
+
+[[https://github.com/mpontus/emacs-mcp]]
+
+[[https://github.com/mpontus/emacs-mcp/blob/master/emacs-mcp.el]]
+
+** init.el
+
+use package-vc-selected-packages to install emacs-mcp from github
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; Bootstrap use-package
+;; ----------------------------------------------------------------------------------
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(setq use-package-always-ensure t) ;; Automatically install packages if not present
+
+
+;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+(unless (assoc-default "melpa" package-archives)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+(unless (assoc-default "elpa" package-archives)
+  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t))
+
+
+;; package-vc-selected-packages
+(setq package-vc-selected-packages
+ '((emacs-mcp :vc-backend Git :url "https://github.com/mpontus/emacs-mcp.git")))
+
+
+;; package initialize (use-package will handle installation and requiring)
+(package-initialize)
+#+end_src
+
+** package-vc-install-selected-packages
+
+#+begin_example
+M-x package-vc-install-selected-packages
+#+end_example
