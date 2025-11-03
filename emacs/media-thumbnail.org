@@ -1,0 +1,61 @@
+#+STARTUP: content
+* emacs media-thumbnail
+** resources
+
+[[https://github.com/jojojames/media-thumbnail]]
+
+** ffmpegthumbnailer
+
+install ffmpegthumbnailer using your package manager
+
+[[https://github.com/dirkvdb/ffmpegthumbnailer]]
+
+** media-thumbnail
+
+toggle media-thumbnail-dired-mode
+
+#+begin_example
+C-x m
+#+end_example
+
+set the thumbnail width to 480
+
+cache directory set to
+
+#+begin_example
+/tmp/ffmpegthumbnailer
+#+end_example
+
+emacs init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; dired
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'dired
+  (require 'dired-x) ;; Load dired-x functionalities
+  ;; Dired hooks (moved here to ensure my-dired-mode-setup is defined)
+  (add-hook 'dired-mode-hook 'my-dired-mode-setup)
+  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+  ;; media-thumbnail-dired-mode
+  (define-key dired-mode-map (kbd "C-x m") 'media-thumbnail-dired-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; media-thumbnail
+;; ----------------------------------------------------------------------------------
+
+;; use ffmpegthumbnailer to create thumbnails for videos
+
+(use-package media-thumbnail
+  :diminish media-thumbnail-dired-mode
+  :commands (media-thumbnail-dired-mode)
+  :config
+  ;; set thumbnail size to 480
+  (setq media-thumbnail-image-width 480)
+  ;; set cache to /tmp/ffmpegthumbnailer
+  (setq media-thumbnail-cache-dir 
+        (file-name-concat temporary-file-directory "ffmpegthumbnailer/"))
+  (setq media-thumbnail-dired-should-hide-details-fn #'ignore))
+#+end_src
