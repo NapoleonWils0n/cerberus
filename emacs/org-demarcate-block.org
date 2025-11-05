@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* org demarcate block
+
+split code blocks at the cursor
+
+#+begin_example
+C-c C-v d
+#+end_example

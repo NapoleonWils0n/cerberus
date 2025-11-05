@@ -1,0 +1,19 @@
+#+STARTUP: showall
+* tangle tmp buffer
+
+tangle contents of other block temp buffer and write to file
+
+#+NAME: emacs-early-init.el-tangle
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "early-init-backup.el"
+<<early-init-content()>>
+#+END_SRC
+
+read file with temp buffer
+
+#+NAME: early-init-content
+#+BEGIN_SRC emacs-lisp :var file="early-init.el" :results raw :exports none
+(with-temp-buffer
+  (insert-file-contents file)
+  (buffer-string))
+#+END_SRC
+
