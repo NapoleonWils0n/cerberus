@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* org-info
+
+read the org manual in emacs
+
+#+begin_example
+M-x org-info
+#+end_example
