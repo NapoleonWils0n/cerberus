@@ -1,0 +1,24 @@
+#+STARTUP: content
+* deno debian
+
+deno install on debian for yt-dlp
+
+** install with curl
+
+#+begin_src sh
+curl -fsSL https://deno.land/install.sh | sh
+#+end_src
+
+** zshenv
+
+#+begin_example
+~/.zshenv
+#+end_example
+
+add deno to your path
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "${HOME}/.deno/bin" "/usr/bin" "$path[@]")
+export PATH
+#+end_src
