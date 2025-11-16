@@ -9,7 +9,7 @@
 ** iso download
 
 #+begin_src sh
-wget -c 'https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.10.0-amd64-netinst.iso'
+wget -c 'https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso'
 #+end_src
 
 ** Preparing Files for USB Memory Stick Booting
