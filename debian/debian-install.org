@@ -41,7 +41,7 @@ sudo umount /dev/sda
 #+end_src
 
 #+begin_src sh
-sudo cp debian-12.10.0-amd64-netinst.iso /dev/sda
+sudo cp debian-13.2.0-amd64-netinst.iso /dev/sda
 #+end_src
 
 #+begin_src sh
