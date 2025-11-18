@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* ubuntu emacs no postfix
+
+#+begin_src sh
+sudo apt install emacs-pgtk --no-install-recommends
+#+end_src
