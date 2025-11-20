@@ -1,0 +1,33 @@
+#+STARTUP: showall
+* nix-prefetch-url
+
+get the sha checksum for a file
+
+#+begin_src sh
+nix-prefetch-url --unpack https://gitlab.com/graphviz/graphviz/-/archive/14.0.4/graphviz-14.0.4.tar.gz
+#+end_src
+
+output
+
+#+begin_example
+07g49pqcgv8pcwwdl8mil9xx14500qk8hmzdjf54cxig8yfsxc2v
+#+end_example
+
+#+begin_quote
+it will output a hash string (e.g., 0bd...).
+
+Copy that string.
+
+Go back to default.nix.
+
+Update the hash line, making sure to add the sha256: prefix:
+#+end_quote
+
+#+begin_example
+hash = "sha256:PASTE_YOUR_HASH_HERE";
+#+end_example
+
+#+begin_example
+hash = "sha256:07g49pqcgv8pcwwdl8mil9xx14500qk8hmzdjf54cxig8yfsxc2v";
+#+end_example
+

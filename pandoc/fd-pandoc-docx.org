@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* fd pandoc docx markdown
+
+#+begin_src sh
+fd -e docx --exec pandoc -f docx -t markdown -o {.}.md {}
+#+end_src
