@@ -1,0 +1,51 @@
+#+STARTUP: content
+* yt-dlp and deno
+** create bin directory in your home
+
+#+begin_src sh
+mkdir -p ~/bin
+#+end_src
+
+** download yt-dlp
+
+#+begin_src sh
+curl 'https://github.com/yt-dlp/yt-dlp/releases/download/2025.11.12/yt-dlp' -o ~/bin/yt-dlp 
+#+end_src
+
+** make yt-dlp executable
+
+#+begin_src sh
+chmod +x ~/bin/yt-dlp 
+#+end_src
+
+** install deno
+
+#+begin_src sh
+curl -fsSL https://deno.land/install.sh | sh 
+#+end_src
+
+** edit your ~/.zshenv
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+add the bin directory and deno bin directory to your path
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "${HOME}/.deno/bin" "/usr/bin" "$path[@]")
+export PATH
+#+end_src
+
+** deno upgrade
+
+#+begin_src sh
+deno upgrade
+#+end_src
+
+** yt-dlp update
+
+#+begin_src sh
+yt-dlp -U
+#+end_src
