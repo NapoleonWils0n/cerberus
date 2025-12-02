@@ -1,0 +1,15 @@
+#+STARTUP: showall
+* start ssh agent
+
+start the ssh-agent
+
+#+begin_src sh
+eval $(ssh-agent)
+#+end_src
+
+run ssh-add and enter the password for your ssh key
+
+#+begin_src sh
+ssh-add
+#+end_src
+
