@@ -1,0 +1,39 @@
+#+STARTUP: content
+* ocrmypdf
+** resources
+
+[[https://github.com/ocrmypdf/OCRmyPDF]]
+
+** ocrmypdf install
+*** nixos
+
+nixos package name
+
+#+begin_example
+ocrmypdf
+#+end_example
+
+*** debian
+
+#+begin_src sh
+doas apt install ocrmypdf
+#+end_src
+
+** ocrmypdf usage
+
+#+begin_src sh
+ocrmypdf \
+--sidecar extracted_text.txt \
+--force-ocr \
+--output-type pdf \
+input.pdf \
+output.pdf
+#+end_src
+
+** format text
+
+the extracted text width is quite narrow so we use the fmt command to increase the width
+
+#+begin_src sh
+fmt -w 100 extracted_text.txt > output.txt
+#+end_src
