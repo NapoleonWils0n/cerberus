@@ -146,6 +146,10 @@ nix-channel --list
 nix-channel --remove home-manager 
 #+end_src
 
+#+begin_src sh
+nix-channel --update 
+#+end_src
+
 ** home manager garbage collection
 *** list generations
 
