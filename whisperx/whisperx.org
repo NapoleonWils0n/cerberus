@@ -4,7 +4,7 @@
 
 #+begin_src nix
 {
-  description = "A development shell for WhisperX with CUDA support (pip-based installation, targeting CUDA 12.x and cuDNN 8.x on NixOS 25.05).";
+  description = "A development shell for WhisperX with CUDA support";
 
   inputs = {
     # Pinning to the latest NixOS unstable
@@ -21,9 +21,6 @@
             allowUnfree = true; # Necessary for NVIDIA drivers and CUDA
           };
         };
-        # Resolve the cudnn_8_9 path at Nix evaluation time.
-        # If attribute doesn't exist, getAttrFromPath returns null.
-        cudnn89Path = pkgs.lib.getAttrFromPath [ "cudaPackages" "cudnn_8_9" "out" ] pkgs;
       in
       {
         devShells.default = pkgs.mkShell rec {
@@ -35,10 +32,14 @@
             stdenv.cc.cc.lib # C standard library
             stdenv.cc        # C compiler
             cudaPackages.cudatoolkit # Default CUDA toolkit from NixOS 25.05 (likely 12.x)
-          ] ++ pkgs.lib.optionals (cudnn89Path != null) [ pkgs.cudaPackages.cudnn_8_9 ] # Conditionally include cudnn_8_9 if its path was resolved (not null)
-          ++ [
+            cudaPackages.cudnn  
             linuxPackages.nvidia_x11 # Host NVIDIA X11 drivers (for libcuda.so)
             zlib # Common dependency
+            # --- NEW MEDIA/BUILD DEPENDENCIES FOR PYAV/FFMPEG ---
+            pkg-config # Required for finding C libraries during python wheel build
+            ffmpeg     # Core library for audio/video processing (PyAV backend)
+            libiconv   # Character encoding conversion library
+            libxml2    # XML parsing library
           ];
 
           # Environment variables required for CUDA and library linking
@@ -46,8 +47,6 @@
           CUDA_PATH = pkgs.cudaPackages.cudatoolkit;
           CUDA_HOME = pkgs.cudaPackages.cudatoolkit;
           EXTRA_LDFLAGS = "-L${pkgs.linuxPackages.nvidia_x11}/lib";
-          # Pass the resolved cuDNN 8.9 path to the shell. Convert null to empty string for shell.
-          NIX_CUDNN_8_9_PATH = if cudnn89Path != null then toString cudnn89Path else "";
 
           # Ensure CUDA binaries (like nvidia-smi) are in PATH for diagnostics
           PATH = pkgs.lib.makeBinPath [
@@ -56,7 +55,7 @@
 
           # Shell hook to set up the Python virtual environment and install dependencies
           shellHook = ''
-            echo "Entering WhisperX development shell with CUDA support (NixOS 25.05 stable, PyTorch cu121/cu122, attempting cuDNN 8.9)..."
+            echo "Entering WhisperX development shell with CUDA support"
             echo "Note: PyTorch and WhisperX will be installed via pip within a virtual environment."
 
             # Set the locale for consistent encoding
@@ -81,15 +80,14 @@
             # Upgrade pip
             pip install --upgrade pip
 
-            # Install torch torchaudio for CUDA 12.1/12.2 (trying general cu12x)
-            echo "Installing latest stable torch and torchaudio for CUDA 12.x..."
-            pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
-            # If cu121 still resolves to 12.6, we might try cu122 or no specific version
-            # If problems persist, consider explicit torch versions that are known to work with cuDNN 8.x and CUDA 12.x
-            # Example: pip install torch==2.1.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121
+            # Set environment variable to prevent silent async CUDA errors (Crucial for debugging low-level crashes)
+            export CUDA_LAUNCH_BLOCKING=1
+            export TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=true
 
-            # Install whisperx
-            echo "Installing whisperx..."
+            # cuda 13
+            pip install --force-reinstall torch torchaudio --index-url https://download.pytorch.org/whl/cu130
+
+            # install whisperx
             pip install -U whisperx
 
             echo "WhisperX setup complete. You can now use 'whisperx' command."
@@ -126,23 +124,22 @@ nix flake update
 #+end_src
 
 ** whisperx usage
-
 *** diarize and highlight words
 
 #+begin_src sh
-whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en
+whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en --compute_type float32
 #+end_src
 
 *** dont diarize and highlight words
 
 #+begin_src sh
-whisperx input.wav --device cuda --model small --language en
+whisperx input.wav --device cuda --model small --language en --compute_type float32
 #+end_src
 
 *** only create a vtt file
 
 #+begin_src sh
-whisperx input.wav --device cuda --model small --language en --output_format vtt
+whisperx input.wav --device cuda --model small --language en --output_format vtt --compute_type float32
 #+end_src
 
 ** whisperx speakers
@@ -150,13 +147,13 @@ whisperx input.wav --device cuda --model small --language en --output_format vtt
 specify 3 speakers
 
 #+begin_src sh
-whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en --min_speakers 3 --max_speakers 3
+whisperx input.wav --device cuda --model small --diarize --highlight_words True --language en --min_speakers 3 --max_speakers 3 --compute_type float32
 #+end_src
 
 ** whisperx json
 
 #+begin_src sh
-whisperx --language en input.mp4 --device cuda --model small --diarize --highlight_words True --output_format json,srt
+whisperx --language en input.mp4 --device cuda --model small --diarize --highlight_words True --output_format json,srt --compute_type float32
 #+end_src
 
 ** whisperx python script
