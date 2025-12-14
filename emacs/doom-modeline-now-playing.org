@@ -1,5 +1,23 @@
 #+STARTUP: showall
 * doom modeline now playing
+** doom-modeline-now-playing
+
+important doom-modeline-now-playing must go before doom-modeline in your init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; doom-modeline now playing
+;; ----------------------------------------------------------------------------------
+
+(use-package doom-modeline-now-playing
+  :after doom-modeline
+  :defer t 
+  :config
+  (setq doom-modeline-now-playing-playerctl-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}")
+  (setq doom-modeline-now-playing-interval 1)
+  (doom-modeline-now-playing-timer))
+#+end_src
+
 ** doom-modeline
 
 #+begin_src emacs-lisp
@@ -26,17 +44,3 @@
     '(misc-info minor-modes input-method buffer-encoding major-mode process vcs check battery time)))
 #+end_src
 
-** doom-modeline-now-playing
-
-#+begin_src emacs-lisp
-;; ----------------------------------------------------------------------------------
-;; doom-modeline now playing
-;; ----------------------------------------------------------------------------------
-
-(use-package doom-modeline-now-playing
-  :after doom-modeline
-  :config
-  (doom-modeline-now-playing-timer)
-  (setq doom-modeline-now-playing-interval 1)
-  (setq doom-modeline-now-playing-playerctl-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}"))
-#+end_src
