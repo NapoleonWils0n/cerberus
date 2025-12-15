@@ -1,0 +1,48 @@
+#+STARTUP: content
+* query-replace-regexp
+** run query-replace-regexp
+
+#+begin_example
+C-M-% 
+#+end_example
+
+or
+
+#+begin_example
+M-x
+#+end_example
+
+then
+
+#+begin_example
+query-replace-regexp
+#+end_example
+
+** string to match
+
+note there is a space after the colon
+
+#+begin_example
+[SPEAKER_18]: 
+#+end_example
+
+enter the regex 
+
+#+begin_example
+\[SPEAKER_[0-9][0-9]\]: 
+#+end_example
+
+press RET
+
+Confirm: Press ! to replace all occurrences.
+
+** clear query-replace-regexp history
+
+#+begin_example
+M-:
+#+end_example
+
+
+#+begin_example
+(setq query-replace-defaults nil)
+#+end_example
