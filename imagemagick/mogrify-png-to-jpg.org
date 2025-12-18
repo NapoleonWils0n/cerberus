@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* image magick mogrify png to jpg
+
+#+begin_src sh
+mogrify -format jpg *.png
+#+end_src
