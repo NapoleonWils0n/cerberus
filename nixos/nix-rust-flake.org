@@ -116,6 +116,8 @@ cargo run
 
 ** nix build
 
+Final check to see if the flake can package the app correctly
+
 #+begin_src sh
 nix build
 #+end_src
