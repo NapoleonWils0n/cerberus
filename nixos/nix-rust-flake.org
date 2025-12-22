@@ -134,6 +134,45 @@ Why this is "Portable"
 
 Because you used this specific naerskLib override , if you ever want to build this for Debian as we discussed, you would simply add the musl target to your rustToolchain definition in the flake.nix and Nix will handle the rest
 
+** How to Organize Multiple Scripts
+
+Instead of having just one main.rs, create a folder named bin inside your src folder.
+
+Each .rs file you put in there becomes its own independent script/binary.
+
+Your folder structure would look like this:
+
+#+begin_example
+.
+├── Cargo.toml
+├── flake.nix
+└── src
+    ├── main.rs       <-- Your "default" program
+    └── bin           <-- Put your scripts here
+        ├── video_convert.rs
+        ├── audio_extract.rs
+        └── thumbnail_gen.rs
+#+end_example
+
+How to Run Them
+
+When you have multiple binaries, you just tell Cargo which one you want to run using the --bin flag:
+
+#+begin_src sh
+cargo run --bin video_convert
+cargo run --bin audio_extract
+#+end_src
+
+How to Build Them for Debian (Static)
+
+The same logic applies to your cross-compilation.
+
+If you want to build your video_convert script for your Debian machine:
+
+#+begin_src sh
+cargo build --target x86_64-unknown-linux-musl --release --bin video_convert
+#+end_src
+
 ** compile for debian
 
 #+begin_src sh
