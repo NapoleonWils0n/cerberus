@@ -1,0 +1,132 @@
+#+STARTUP: content
+* nix rust flake
+** resources
+
+[[https://www.youtube.com/watch?v=Ss1IXtYnpsg]]
+
+[[https://wiki.nixos.org/wiki/Rust]]
+
+[[https://github.com/nix-community/naersk]]
+
+[[https://github.com/oxalica/rust-overlay]]
+
+[[https://rust-lang.org/]]
+
+[[https://doc.rust-lang.org/book/]]
+
+** create directory
+
+#+begin_src sh
+mkdir -p ~/nix/rust
+#+end_src
+
+#+begin_src sh
+cd ~/nix/rust
+#+end_src
+
+** flake
+
+create the flake.nix
+
+#+begin_src nix
+{
+  description = "rust flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    naersk.url = "github:nix-community/naersk";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, naersk, rust-overlay }: 
+    let
+      system = "x86_64-linux";
+      overlays = [ (import rust-overlay) ];
+      pkgs = import nixpkgs { inherit system overlays; };
+
+      # Define the toolchain with the IDE components (rust-src and rust-analyzer)
+      rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        extensions = [ "rust-src" "rust-analyzer" ];
+      };
+
+      # Override naersk to use our toolchain
+      naerskLib = (naersk.lib.${system}.override {
+        cargo = rustToolchain;
+        rustc = rustToolchain;
+      });
+    in {
+      # For 'nix develop'
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = [ rustToolchain ];
+
+        # Point tools (like Emacs Eglot) to the Rust source code in the Nix store
+        shellHook = ''
+          export RUST_SRC_PATH="${rustToolchain}/lib/rustlib/src/rust/library"
+        '';
+      };
+
+      # For 'nix build'
+      packages.${system}.default = naerskLib.buildPackage {
+        src = ./.;
+        # Add these if your Hello World needs them later
+        # buildInputs = [ pkgs.glib ]; 
+        # nativeBuildInputs = [ pkgs.pkg-config ];
+      };
+    };
+}
+#+end_src
+
+** git init
+
+#+begin_src sh
+git init .
+#+end_src
+
+#+begin_src sh
+git add flake.nix
+#+end_src
+
+** nix develop
+
+#+begin_src sh
+nix develop
+#+end_src
+
+** cargo init
+
+#+begin_src sh
+cargo init
+#+end_src
+
+** git stage
+
+#+begin_src sh
+git add -A
+#+end_src
+
+** cargo run
+
+#+begin_src sh
+cargo run
+#+end_src
+
+** nix build
+
+#+begin_src sh
+nix build
+#+end_src
+
+Nix will look at your packages.default output.
+
+It will use the Naersk library that you specifically overridden with your rustToolchain.
+
+It creates a folder called result in your current directory.
+
+You can run your final compiled binary with ./result/bin/rust.
+
+Why this is "Portable"
+
+Because you used this specific naerskLib override , if you ever want to build this for Debian as we discussed, you would simply add the musl target to your rustToolchain definition in the flake.nix and Nix will handle the rest
