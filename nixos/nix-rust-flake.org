@@ -50,6 +50,7 @@ create the flake.nix
       # Define the toolchain with the IDE components (rust-src and rust-analyzer)
       rustToolchain = pkgs.rust-bin.stable.latest.default.override {
         extensions = [ "rust-src" "rust-analyzer" ];
+        targets = [ "x86_64-unknown-linux-musl" ]; # static Linux builds
       };
 
       # Override naersk to use our toolchain
@@ -130,3 +131,19 @@ You can run your final compiled binary with ./result/bin/rust.
 Why this is "Portable"
 
 Because you used this specific naerskLib override , if you ever want to build this for Debian as we discussed, you would simply add the musl target to your rustToolchain definition in the flake.nix and Nix will handle the rest
+
+** compile for debian
+
+#+begin_src sh
+cargo build --target x86_64-unknown-linux-musl
+#+end_src
+
+Where to find the file
+
+After the build finishes, your static binary won't be in the usual target/debug/ folder. It will be located at:
+
+#+begin_example
+target/x86_64-unknown-linux-musl/debug/rust
+#+end_example
+
+This binary is statically linked. You can copy just that one file to a Debian machine, and it will run perfectly even if that machine doesn't have Nix, Rust, or even the same version of C libraries (glibc) installed.
