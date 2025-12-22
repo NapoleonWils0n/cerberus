@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* dired show hidden files
+
+#+begin_example
+C-x M-o
+#+end_example
+
+Runs the command dired-omit-mode
