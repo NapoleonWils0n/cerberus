@@ -597,6 +597,48 @@ doas virsh pool-list --all
 
 ** windows
 
+change into the images directory
+
+#+begin_src sh
+cd ~/libvirt/images
+#+end_src
+
+download virtio-win.iso
+
+#+begin_src sh
+curl -L -O https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso
+#+end_src
+
+You are currently on the Overview customization screen in Virtual Machine Manager. To ensure Windows 11 functions correctly and performs well on your Dell XPS 15, you need to verify several settings before clicking Begin Installation.
+
+1. Confirm Hardware Requirements
+
+Firmware & Chipset: Your screen shows UEFI and Q35 are already selected, which is correct for Windows 11.
+
+TPM: Look at the bottom of the left sidebar. It currently says TPM vNone. You must click Add Hardware, select TPM, and ensure it is set to Model: TIS and Version: 2.0. Windows 11 will not install without this.
+
+Memory: Since you intend to record with OBS Studio while leaving room for the host, verify under the Memory tab that it is set to 8192 MiB.
+
+CPUs: In the CPUs section, set the count to 4 and ensure "Copy host CPU configuration" is checked so the VM can use your Intel i7's native features.
+
+2. Optimize for ZFS and Performance
+
+Storage (SATA Disk 1): Click on SATA Disk 1. Change the Disk bus to VirtIO. Under Performance options, set Cache mode to none and IO mode to native to properly utilize your ZFS pool.
+
+Network (NIC): Click on your NIC and change the Device model to virtio for better throughput.
+
+The "Pro-Tip" for Windows 11 Home/Pro Setup
+
+Windows 11 often forces you to connect to the internet during setup. Since you are using a VirtIO Network driver, the installer won't have internet until you load the driver.
+
+If you get stuck on a "Let's connect you to a network" screen with no "Next" button:
+
+Press Shift + F10 on your keyboard to open a Command Prompt.
+
+Type OOBE\BYPASSNRO and press Enter.
+
+The VM will reboot, and you will now have an option that says "I don't have internet" so you can finish the account setup.
+
 [[https://www.youtube.com/watch?v=rCVW8BGnYIc]]
 
 [[https://raw.githubusercontent.com/TechsupportOnHold/Nixos-VM/main/vm.nix]]
