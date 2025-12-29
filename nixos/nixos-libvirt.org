@@ -656,6 +656,54 @@ Once that loads, your ZFS disk will appear!
 
 For the Network: After the install finishes (or during the "connect to network" step), you can load the driver from NetKVM/w11/amd64.
 
+*** 5 Product Key Screen:
+
+When it asks for a key, click "I don't have a product key" at the bottom.
+
+*** 6 select image
+
+select Windows 11 pro
+
+*** 7 select location to install windows 11
+
+You are at the critical stage where the VirtIO drivers are needed to see your ZFS-backed storage. Since the window is currently empty, Windows doesn't yet have the "map" to find your virtual disk.
+
+Load the Storage Driver
+
+Follow these steps to make your drive appear:
+
+Click Load Driver (the icon with the small CD and green arrow).
+
+Click Browse in the popup window.
+
+Locate and expand the CD Drive labeled virtio-win (usually Drive E:).
+
+Navigate to the following folder path: vioscsi -> w11 -> amd64.
+
+Click OK. You should see "Red Hat VirtIO SCSI pass-through controller" listed.
+
+Troubleshooting the Empty List
+
+If the list remains empty after clicking OK, try these two quick fixes:
+
+working fix
+
+Try the alternate folder: If vioscsi doesn't show a driver, click Browse and navigate to E:\viostor\w11\amd64 instead. Both are storage drivers, but depending on your exact QEMU version, one may be preferred over the other.
+
+select Red Hat Virtio SCSI controller and click install
+
+*** 8 select location to install windows 11
+
+select the drive
+
+*** 9 installing windows
+
+Handling the First Reboot
+
+Once those stages reach 100%, the VM will automatically restart.
+
+Important: You might see a black screen that says "Press any key to boot from CD or DVD" again. Do not press anything. * You want it to boot from your virtual hard drive to continue the "Out of Box Experience" (setting up your region, keyboard, and user account).
+
 *** The "Pro-Tip" for Windows 11 Home/Pro Setup
 
 Windows 11 often forces you to connect to the internet during setup. Since you are using a VirtIO Network driver, the installer won't have internet until you load the driver.
@@ -664,9 +712,75 @@ If you get stuck on a "Let's connect you to a network" screen with no "Next" but
 
 Press Shift + F10 on your keyboard to open a Command Prompt.
 
+note: press the ~ keyboard for \
+
 Type OOBE\BYPASSNRO and press Enter.
 
 The VM will reboot, and you will now have an option that says "I don't have internet" so you can finish the account setup.
+
+*** 10 create user account
+
+enter user name and answer security questions
+
+*** 11 set up the network
+
+How to install the Guest Tools:
+
+Open File Explorer: Click the folder icon on your taskbar.
+
+Go to "This PC": On the left sidebar, click This PC.
+
+Open the VirtIO Drive: You should see a CD drive labeled virtio-win. Double-click it to open it.
+
+Run the Installer:
+
+Look for a file named virtio-win-gt-x64 (it has a small computer icon).
+
+Double-click it to start the setup.
+
+Follow the Wizard:
+
+Click Next, I accept, and keep all the default features selected.
+
+During the process, Windows will pop up several "Security" boxes asking if you want to install drivers from "Red Hat, Inc."
+
+Always click Install for every popup.
+
+*** 12 display
+
+right click on the start button and select device manager
+
+Instead of letting Windows search the folder, you need to "force-feed" it:
+
+Open Device Manager -> Display Adapters.
+
+Right-click Microsoft Basic Display Adapter -> Update driver.
+
+Click "Browse my computer for drivers."
+
+CRITICAL STEP: Click "Let me pick from a list of available drivers on my computer."
+
+Click the Have Disk... button in the bottom right.
+
+Click Browse and go to your E:\ drive (the VirtIO CD).
+
+Navigate to qxldod -> w11 -> amd64.
+
+If w11 isn't there, use w10 -> amd64.
+
+Select the file ending in .inf (usually qxldod.inf) and click Open, then OK.
+
+Select the Red Hat VirtIO GPU DOD controller from the list and click Next.
+
+Click Yes if a warning pops up about compatibility.
+
+Go back to Settings > System > Display.
+
+Look at the Scale setting (just above resolution).
+
+I recommend setting it to 125% or 150%. This keeps your recording area at 1080p but makes the Windows interface much easier to navigate.
+
+*** window notes
 
 [[https://www.youtube.com/watch?v=rCVW8BGnYIc]]
 
