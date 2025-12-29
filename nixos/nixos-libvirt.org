@@ -502,6 +502,99 @@ Autoconnect = checkmark
 
 Connect
 
+** libvirt pool
+*** zfs
+
+Create the dataset with the mountpoint set to your desired home path
+
+#+begin_src sh
+doas zfs create -o mountpoint=/home/djwilcox/libvirt zpool/home/libvirt
+#+end_src
+
+Set the recordsize to 64k (Optimized for KVM/Windows 11)
+
+#+begin_src sh
+doas zfs set recordsize=64k zpool/home/libvirt
+#+end_src
+
+Set the compression (lz4 is usually best for performance/space balance)
+
+#+begin_src sh
+doas zfs set compression=lz4 zpool/home/libvirt
+#+end_src
+
+After ZFS mounts the new dataset, it will be owned by root.
+
+You need to change the ownership so your user and the libvirt service can use it:
+
+#+begin_src sh
+doas chown -R "${USER}":libvirtd /home/djwilcox/libvirt
+#+end_src
+
+#+begin_src sh
+chmod 755 libvirt
+#+end_src
+
+*** create a directory for the libvirt storage pool
+
+#+begin_src sh
+mkdir -p ~/libvirt/images
+#+end_src
+
+not needed if using zfs - chown the libvirt directory to allow both your user and the libvirt group access
+
+#+begin_src sh
+doas chown -R "${USER}":libvirt "${HOME}":/libvirt
+#+end_src
+
+this step is required even if using zfs
+
+#+begin_src sh
+chmod o+x /home/"${USER}"
+#+end_src
+
+*** list libvirt pool
+
+#+begin_src sh
+doas virsh pool-list --all
+#+end_src
+
+*** stop default pool
+
+#+begin_src sh
+doas virsh pool-destroy default
+#+end_src
+
+*** remove default pool
+
+#+begin_src sh
+doas virsh pool-undefine default
+#+end_src
+
+*** create new pool
+
+#+begin_src sh
+doas virsh pool-define-as --name default --type dir --target /home/"${USER}"/libvirt/images 
+#+end_src
+
+*** start the new pool
+
+#+begin_src sh
+doas virsh pool-start default
+#+end_src
+
+*** autostart the new pool
+
+#+begin_src sh
+doas virsh pool-autostart default
+#+end_src
+
+*** list pools
+
+#+begin_src sh
+doas virsh pool-list --all
+#+end_src
+
 ** windows
 
 [[https://www.youtube.com/watch?v=rCVW8BGnYIc]]
