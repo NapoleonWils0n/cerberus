@@ -596,8 +596,7 @@ doas virsh pool-list --all
 #+end_src
 
 ** windows
-
-change into the images directory
+*** change into the images directory
 
 #+begin_src sh
 cd ~/libvirt/images
@@ -609,9 +608,7 @@ download virtio-win.iso
 curl -L -O https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso
 #+end_src
 
-You are currently on the Overview customization screen in Virtual Machine Manager. To ensure Windows 11 functions correctly and performs well on your Dell XPS 15, you need to verify several settings before clicking Begin Installation.
-
-1. Confirm Hardware Requirements
+*** 1. Confirm Hardware Requirements
 
 Firmware & Chipset: Your screen shows UEFI and Q35 are already selected, which is correct for Windows 11.
 
@@ -621,13 +618,45 @@ Memory: Since you intend to record with OBS Studio while leaving room for the ho
 
 CPUs: In the CPUs section, set the count to 4 and ensure "Copy host CPU configuration" is checked so the VM can use your Intel i7's native features.
 
-2. Optimize for ZFS and Performance
+*** 2. Optimize for ZFS and Performance
 
 Storage (SATA Disk 1): Click on SATA Disk 1. Change the Disk bus to VirtIO. Under Performance options, set Cache mode to none and IO mode to native to properly utilize your ZFS pool.
 
 Network (NIC): Click on your NIC and change the Device model to virtio for better throughput.
 
-The "Pro-Tip" for Windows 11 Home/Pro Setup
+*** 3. Add virtio-win.iso to your VM
+
+Now back in your virt-manager customization window:
+
+Click Add Hardware (bottom left) -> Storage.
+
+Set Device type to CDROM device.
+
+Click Manage... and browse to ~/libvirt/images/virtio-win.iso.
+
+*** 4. Proceed to "Begin Installation"
+
+With both ISOs (Windows 11 and VirtIO) attached as CD-ROMs:
+
+Click Begin Installation.
+
+Mash your keys to boot from the CD.
+
+When you get to the "Where do you want to install Windows?" screen and it's empty:
+
+Click Load Driver -> Browse.
+
+Find the VirtIO-Win CD.
+
+Look for vioscsi or viostor -> w11 -> amd64.
+
+For the Disk: Go to amd64/w11 (or vioscsi/w11/amd64) to make your ZFS drive appear.
+
+Once that loads, your ZFS disk will appear!
+
+For the Network: After the install finishes (or during the "connect to network" step), you can load the driver from NetKVM/w11/amd64.
+
+*** The "Pro-Tip" for Windows 11 Home/Pro Setup
 
 Windows 11 often forces you to connect to the internet during setup. Since you are using a VirtIO Network driver, the installer won't have internet until you load the driver.
 
