@@ -782,8 +782,16 @@ I recommend setting it to 125% or 150%. This keeps your recording area at 1080p 
 
 *** virsh dumpxml
 
+export
+
 #+begin_src sh
 doas virsh dumpxml win11 > win11_backup.xml
+#+end_src
+
+import
+
+#+begin_src sh
+doas virsh define win11.xml
 #+end_src
 
 **** win11 xml
