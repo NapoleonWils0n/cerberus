@@ -1038,6 +1038,12 @@ You can check the status by running:
 doas virsh net-list --all
 #+end_src
 
+** Important mount the zfs directory
+
+#+begin_src sh
+doas zfs mount zpool/home/libvirt
+#+end_src
+
 ** osx-kvm
 
 [[https://github.com/kholia/OSX-KVM]]
