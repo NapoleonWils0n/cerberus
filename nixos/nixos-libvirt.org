@@ -1014,6 +1014,30 @@ doas virsh define win11.xml
 
 [[https://raw.githubusercontent.com/TechsupportOnHold/Nixos-VM/main/vm.nix]]
 
+** Start the Network Manually
+
+Run these two commands to get the network running and set it to start automatically every time you boot NixOS:
+
+Start the 'default' network
+
+#+begin_src sh
+doas virsh net-start default
+#+end_src
+
+Set it to start automatically on boot
+
+#+begin_src sh
+doas virsh net-autostart default
+#+end_src
+
+Verify it's Active
+
+You can check the status by running:
+
+#+begin_src sh
+doas virsh net-list --all
+#+end_src
+
 ** osx-kvm
 
 [[https://github.com/kholia/OSX-KVM]]
