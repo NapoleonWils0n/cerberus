@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# pinch send youtube audio to mpd
+
+# script usage
+usage()
+{
+echo "\
+$(basename "$0") -i url"
+exit 2
+}
+
+# error messages
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+# mpd host socket
+# MPD_HOST set in ~/.zshenv to "/run/user/1000/mpd/socket"
+host="/run/user/1000/mpd/socket"
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# get the audio url and title
+url=$(yt-dlp --no-check-certificate --no-playlist -e -f bestaudio -g "${input}")
+link=$(echo "${url}" | awk -F' ' '/https:/ {print $1}') # audio url
+name=$(echo "${url}" | awk -F'https:' '{print $1}') # name of song
+
+# yt function
+yt () {
+    if [ -z "$(mpc --host="${host}" current)" ]; then # nothing playing
+        if [ -z "$(mpc --host="${host}" playlist)" ]; then # playlist empty
+           mpc --host="${host}" add "${link}"
+           mpc --host="${host}" play 
+	else # playlist not empty so clear add url and play
+           mpc --host="${host}" clear
+	   mpc --host="${host}" add "${link}"
+           mpc --host="${host}" play 
+	fi
+    else # audio playing insert url and play next
+        mpc --host="${host}" add "${link}" 
+#	mpc --host="${host}" next
+    fi
+}
+
+# run the yt function with the url
+yt "${url}"
