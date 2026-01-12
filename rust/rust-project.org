@@ -1,0 +1,278 @@
+#+STARTUP: content
+* Rust project
+** project set up
+
+create a project directory
+
+#+begin_src sh
+mkdir -p ~/projects/rust-scripts
+#+end_src
+
+change into the project driectory
+
+#+begin_src sh
+cd ~/projects/rust-scripts
+#+end_src
+
+*** flake.nix
+
+create the flake.nix file in the project directory
+
+#+begin_src nix
+{
+  description = "rust flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    naersk.url = "github:nix-community/naersk";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, naersk, rust-overlay, flake-utils }: 
+    flake-utils.lib.eachDefaultSystem (system:
+    let
+      # system is already provided by eachDefaultSystem, so we don't define it here
+      overlays = [ (import rust-overlay) ];
+      pkgs = import nixpkgs { inherit system overlays; };
+
+      rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        extensions = [ "rust-src" "rust-analyzer" ];
+        targets = [ "x86_64-unknown-linux-musl" "x86_64-pc-windows-gnu" ]; 
+      };
+
+      naerskLib = (naersk.lib.${system}.override {
+        cargo = rustToolchain;
+        rustc = rustToolchain;
+      });
+    in {
+      devShells.default = pkgs.mkShell {
+        # ADD MINGW TO THE SHELL FOR LINKING
+        buildInputs = [ 
+          rustToolchain 
+          pkgs.pkgsCross.mingwW64.stdenv.cc 
+        ];
+
+
+        # Tell Cargo which linker to use for Windows
+        # Add these lines to help the linker find pthreads
+        shellHook = ''
+          export RUST_SRC_PATH="${rustToolchain}/lib/rustlib/src/rust/library"
+          export NIX_CROSS_LDFLAGS="-L${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib"
+          export NIX_CROSS_CFLAGS_COMPILE="-I${pkgs.pkgsCross.mingwW64.windows.pthreads}/include"
+          export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="x86_64-w64-mingw32-gcc"
+          export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS="-L ${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib"
+        '';
+      };
+
+      packages.default = naerskLib.buildPackage {
+        src = ./.;
+      };
+    } 
+  ); # This closes eachDefaultSystem
+}    # This closes outputs
+
+#+end_src
+
+*** run nix develop
+
+run nix develop which will set up the rust environment
+
+#+begin_src sh
+nix develop
+#+end_src
+
+*** Cargo Initialization
+
+After entering the Nix development environment for the first time, you must initialize the Rust project structure.
+
+**** Initialize the Project
+
+Run cargo init to generate the necessary Rust configuration files and directory structure within the current folder.
+
+#+begin_src sh
+cargo init .
+#+end_src
+
+Note: This command creates a Cargo.toml file and a src/ directory with a default main.rs.
+
+**** Staging Project Files
+
+This will automatically create a git repository
+
+Once initialized, you need to track the following essential files in your git repository:
+
+#+begin_example
+.gitignore
+Cargo.toml
+flake.lock
+flake.nix
+src/
+#+end_example
+
+**** Git Setup
+
+Stage all the newly created files:
+
+#+begin_src sh
+git add .
+#+end_src
+
+Finalize the initialization with an initial commit:
+
+#+begin_src sh
+git commit -m 'project init'
+#+end_src
+
+**** gitignore
+
+a .gitignore file will be created
+
+#+begin_example
+.gitignore
+#+end_example
+
+with the following content
+
+#+begin_src sh
+/target
+#+end_src
+
+we need to edit the .gitignore 
+
+#+begin_src sh
+vi .gitignore
+#+end_src
+
+and a new line to exclude the results symlink
+
+#+begin_src sh
+/target
+/result*
+#+end_src
+
+check the git status
+
+#+begin_src sh
+git status
+#+end_src
+
+and then commit the changes
+
+#+begin_src sh
+git add .gitignore
+#+end_src
+
+and add a commit message
+
+#+begin_src sh
+git commit -m "update .gitignore to exclude build results"
+#+end_src
+
+** main.rs
+
+the main.rs file for the project is stored in
+
+#+begin_example
+src/main.rs
+#+end_example
+
+which will contain a default hello, world scripts
+
+#+begin_src rust
+fn main() {
+    println!("Hello, world!");
+}
+#+end_src
+
+run the main.rs
+
+#+begin_src sh
+cargo run src/main.rs
+#+end_src
+
+** Cargo.toml
+
+edit the Cargo.toml file and add clap as a dependency
+
+#+begin_src toml
+[package]
+name = "rust_scripts"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+#+end_src
+
+run the main.rs script again
+
+#+begin_src sh
+cargo run src/main.rs
+#+end_src
+
+then add Cargo.toml and Cargo.lock with github
+
+#+begin_src sh
+git add Cargo.toml Cargo.lock
+#+end_src
+
+and commit the changes
+
+#+begin_src sh
+git commit -m 'cargo'
+#+end_src
+
+** bin directory
+
+create a bin directory for the scripts
+
+#+begin_src sh
+mkdir -p src/bin
+#+end_src
+
+create a script in the bin directory
+
+#+begin_example
+src/bin/example-script.rs
+#+end_example
+
+edit the Cargo.toml file and code for the example-script in the bin directory
+
+#+begin_src toml
+[package]
+name = "rust_scripts"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "example-script"
+path = "src/bin/example-script.rs"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+#+end_src
+
+add the files with git
+
+#+begin_src sh
+git add Cargo.toml src/bin/example-script.rs
+#+end_src
+
+and then commit them
+
+#+begin_src sh
+git commit -m 'example-script'
+#+end_src
+
+run scripts in the bin directory
+
+replace example-script with the name of the script
+
+#+begin_src sh
+cargo run --bin example-script -- -h
+#+end_src
+
