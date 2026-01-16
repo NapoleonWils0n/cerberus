@@ -1,0 +1,171 @@
+#!/bin/sh
+
+
+#===============================================================================
+# relay a stream to a named pipe
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i input -s 00:00:00 -t 00:00:00"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':s:i:t:h' opt
+do
+  case ${opt} in
+     s) start="${OPTARG}";;
+     i) input="${OPTARG}";;
+     t) end="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# named pipe
+#===============================================================================
+
+# check if the /tmp/relay named pipe exist otherwise create it
+[ -p /tmp/relay ] || mkfifo /tmp/relay
+
+
+#===============================================================================
+# url
+#===============================================================================
+
+# yt-dlp url
+url=$(yt-dlp -f b -g --no-playlist "${input}")
+
+# check number of stream links
+streamcount=$(echo "${url}" | awk 'END{print NR}')
+
+
+#===============================================================================
+# one stream containing audio and video
+#===============================================================================
+
+# copy audio and video streams
+one_stream () {
+ffmpeg \
+-hide_banner \
+-y \
+-re \
+-i "${url}" \
+-c:a copy -c:v copy \
+-tune zerolatency \
+-f matroska /tmp/relay
+}
+
+
+# trim video and re-encode
+one_stream_trim () {
+ffmpeg \
+-hide_banner \
+-y \
+-re \
+-ss "${start}" \
+-i "${url}" \
+-t "${end}" \
+-c:a aac \
+-c:v libx264 -profile:v high \
+-tune zerolatency \
+-f matroska /tmp/relay
+}
+
+
+#===============================================================================
+# two streams containing audio and video
+#===============================================================================
+
+
+# copy audio and video streams
+two_streams () {
+video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+
+# ffmpeg join audio and video and stream
+ffmpeg \
+-hide_banner \
+-y \
+-re \
+-i "${video_url}" \
+-i "${audio_url}" \
+-c:a copy -c:v copy \
+-tune zerolatency \
+-map 0:0 -map 1:0 \
+-f matroska /tmp/relay
+}
+
+
+# trim video and re-encode
+two_streams_trim () {
+video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+
+# ffmpeg join audio and video and stream
+ffmpeg \
+-hide_banner \
+-y \
+-re \
+-ss "${start}" \
+-i "${video_url}" \
+-i "${audio_url}" \
+-t "${end}" \
+-c:a aac \
+-c:v libx264 -profile:v high \
+-tune zerolatency \
+-map 0:0 -map 1:0 \
+-f matroska /tmp/relay
+}
+
+
+#===============================================================================
+# case statement check for number of streams
+#===============================================================================
+
+if [ -z "${start}" ]; then
+   case "${streamcount}" in
+       1) one_stream;; # single stream
+       2) two_streams;; # audio and video stream
+       *) usage;;
+   esac
+else
+   case "${streamcount}" in
+       1) one_stream_trim;; # single stream
+       2) two_streams_trim;; # audio and video stream
+       *) usage;;
+   esac
+fi    
