@@ -13,7 +13,47 @@ obs-cmd
 https://github.com/grigio/obs-cmd
 
 *** obs studio set up
-**** media source
+**** media source set up
+
+Add a media source to a scene and add change the following settings
+
+1) uncheck local file
+
+2) make sure restart playback is checked
+
+3) set network buffering to 0
+
+4) under input add
+
+#+begin_example
+/tmp/relay
+#+end_example
+
+5) set reconnect delay to its lowest setting
+
+6) make sure the following check boxes are checked
+
+#+begin_example
+use hardware decoding when available
+
+show nothing when playback ends
+
+close the file when inactive
+#+end_example
+
+**** media source audio properties
+
+1) select the media source and then click on the media source audio track
+
+2) click the 3 dots on the media source audio track, and from the pop up menu select Advanced Audio Properties
+
+3) in the Advanced Audio Properties window
+
+set Desktop Audio to Monitor Off
+
+and the media source audio settings to Monitor Only (mute output)
+
+This will allow you to monitor the audio from media source and record it with desktop audio
 
 ** obs-cmd
 *** emacs doom modeline
