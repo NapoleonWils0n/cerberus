@@ -1,0 +1,89 @@
+#+STARTUP: show2levels
+#+PROPERTY: header-args:sh :async t :results none
+* relay-mpv
+** set up
+*** resources
+
+relay-mpv
+
+[[https://github.com/NapoleonWils0n/rust-scripts]]
+
+obs-cmd
+
+https://github.com/grigio/obs-cmd
+
+*** obs studio set up
+**** media source
+
+** obs-cmd
+*** emacs doom modeline
+
+doom modeline now playing hangs when using obs-cmd pause
+
+Run this BEFORE starting a relay to prevent Emacs from hanging
+
+#+begin_src emacs-lisp :results silent
+(setq doom-modeline-now-playing nil)
+(doom-modeline-update-now-playing)
+#+end_src
+
+Run this to turn it back on after your stream
+
+#+begin_src emacs-lisp :results silent
+(setq doom-modeline-now-playing t)
+(doom-modeline-update-now-playing)
+#+end_src
+
+*** switch scene
+
+Laptop
+
+#+begin_src sh
+obs-cmd scene switch "laptop"
+#+end_src
+
+Monitor
+
+#+begin_src sh
+obs-cmd scene switch "monitor"
+#+end_src
+
+Media
+
+#+begin_src sh
+obs-cmd scene switch "media"
+#+end_src
+
+Both screens
+
+#+begin_src sh
+obs-cmd scene switch "both"
+#+end_src
+
+*** media source
+
+Pause media source
+
+#+begin_src sh
+obs-cmd media-input pause "relay"
+#+end_src
+
+Play media source
+
+#+begin_src sh
+obs-cmd media-input play "relay"
+#+end_src
+
+Stop media source
+
+#+begin_src sh
+obs-cmd media-input stop "relay"
+#+end_src
+
+** clips
+*** Big Buck Bunny
+
+#+begin_src sh
+relay-mpv -i 'https://www.youtube.com/watch?v=YE7VzlLtp-4' -s 00:00:00 -e 00:00:20
+#+end_src
+
