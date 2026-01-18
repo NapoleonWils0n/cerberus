@@ -1,6 +1,26 @@
 #+STARTUP: show2levels
 #+PROPERTY: header-args:sh :async t :results none
 * relay-mpv
+** about relay-mpv
+
+relay-mpv is a rust script that use's mpv to stream either local or remote videos into obs studio media source.
+
+you can either play the entire video or optionaly specify a start and end time for the clip.
+
+because mpv use's yt-dlp as a dependency you can stream any video supported by yt-dlp into the obs media source
+
+the script streams to a named piped whose location is added as the obs media source.
+
+the video only starts playing into the named pipe when you switch to the media source, allowing you to pre cue a video
+
+when you switch scenes the video stops streaming and the named pipe is cleaned to remove any data ready for the next video
+
+there are prebuilt binaries for Linux and NixOS, so you dont need Rust installed to use the script
+
+Mac and Freebsd users will have to install rust and build the project
+
+Windows doesnt have named pipes so relay-mpv doesnt work on Windows
+
 ** set up
 *** resources
 
