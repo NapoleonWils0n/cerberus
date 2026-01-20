@@ -1,0 +1,72 @@
+#!/bin/sh
+
+#===============================================================================
+# record-pipewire
+# record pipewire audio with pw-record
+#===============================================================================
+
+# dependencies:
+# pipewire
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# record pipewire audio with pw-record
+$(basename "$0") -o output.(wav|flac)
+-o output.(wav|flac) : optional argument"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':o:h' opt
+do
+  case ${opt} in
+     h) usage;;
+     o) output="${OPTARG}";;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+output_default="pipewire-$(date +"%Y-%m-%d-%H-%M-%S").wav"
+
+
+#===============================================================================
+# function
+#===============================================================================
+
+pwrec () {
+  pw-record -P '{ stream.capture.sink=true }' "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+pwrec
