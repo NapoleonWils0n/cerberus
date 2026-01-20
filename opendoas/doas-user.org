@@ -1,0 +1,66 @@
+#+STARTUP: showall
+* doas user
+
+To avoid hardcoding your username while ensuring the application doesn't run as root, you can leverage the environment variables that doas sets when you execute the script.
+
+When you run a command with doas, it preserves the name of the user who initiated the command in the $DOAS_USER environment variable. By using this variable, the script becomes portable and will work for any user who executes it.
+
+script example test-user
+
+#+begin_example
+test-user
+#+end_example
+
+make the script executable
+
+#+begin_src sh
+chmod +x test-user
+#+end_src
+
+run the script with doas
+
+#+begin_src sh
+doas ./test-user
+#+end_src
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# Run the script with doas and echo the USER and DOAS_USER
+#===============================================================================
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+ROOT_ERR="$(basename "$0") must be run as root"
+
+#===============================================================================
+# check if script is run as root
+#===============================================================================
+
+[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+
+#===============================================================================
+# echo environment variables
+#===============================================================================
+
+# This will be 'root' because doas scales privileges
+echo "The script is currently executing as: ${USER}"
+
+# This will be your user name (or whoever ran doas)
+echo "The user who initiated doas is: ${DOAS_USER}"
+
+# This is a fallback method that doesn't rely on environment variables
+echo "The logged-in user according to logname is: $(logname)"
+
+#+end_src
+
+output
+
+#+begin_example
+The script is currently executing as: root
+The user who initiated doas is: djwilcox
+The logged-in user according to logname is: djwilcox
+#+end_example
