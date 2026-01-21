@@ -111,3 +111,9 @@ Disable "Recently Opened Items" (the file list)
 #+begin_src sh
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackDocs" /t REG_DWORD /d 0 /f
 #+end_src
+
+refresh the ui
+
+#+begin_src sh
+gps explorer | spps
+#+end_src
