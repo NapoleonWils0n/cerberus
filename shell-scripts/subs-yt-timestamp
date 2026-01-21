@@ -1,0 +1,109 @@
+#!/bin/sh
+
+#===============================================================================
+# subs-yt-timestamp
+# convert a file from emacs youtube-subs-extractor to youtube timestamps
+#===============================================================================
+
+# dependencies:
+# awk
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+convert a file from emacs youtube-subs-extractor to youtube timestamps
+$(basename "$0") -i input -o output"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     o) output="${OPTARG}";;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# get the input file name
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+# output file name
+output_default="${input_name}-timestamps.csv"
+
+
+#===============================================================================
+# sexagesimal function
+#===============================================================================
+
+sexagesimal () {
+awk 'BEGIN { FS="\t"; OFS="," } {
+  rebuilt=0
+  for(i=1; i<=NF; ++i) {
+    if ($i ~ /,/ && $i !~ /^".*"$/) { 
+      gsub("\"", "\"\"", $i)
+      $i = "\"" $i "\""
+      rebuilt=1 
+    }
+  }
+  if (!rebuilt) { $1=$1 }
+  print
+}' < "${input}" \
+| awk -F "," '
+       NR==1 {
+          match($0, /\[[A-Za-z0-9_-]*\]/);
+          id=substr($0, RSTART + 1, RLENGTH - 2)
+        }
+        NR>=2 {
+            time = $1
+            text = $2
+            if (time ~ /:/) {
+              split(time, t, ":")
+              combined = (t[1] * 3600) + (t[2] * 60) + t[3] 
+            }
+            printf("%s%s%s%d,%s\n"), "https://youtu.be/", id, "?t=", combined, text
+         }' > "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+sexagesimal
