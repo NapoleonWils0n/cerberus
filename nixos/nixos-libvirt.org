@@ -1014,6 +1014,14 @@ doas virsh define win11.xml
 
 [[https://raw.githubusercontent.com/TechsupportOnHold/Nixos-VM/main/vm.nix]]
 
+**** Spice guest tools
+
+Spice guest tools for copy and paste from host to the vm
+
+you can get the official spice-guest-tools-latest.exe directly from the Spice project.
+
+https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe
+
 ** Start the Network Manually
 
 Run these two commands to get the network running and set it to start automatically every time you boot NixOS:
