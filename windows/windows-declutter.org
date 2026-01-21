@@ -1,0 +1,96 @@
+#+STARTUP: content
+* Windows tips
+** Dark Mode
+
+You can force Dark Mode on by changing two values in the Windows Registry.
+
+Option 1
+
+Copy and paste these two lines into your Administrator PowerShell.
+
+This does exactly what the Registry Editor would do, but it's faster and more precise:
+
+#+begin_src sh
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
+#+end_src
+
+Option 2
+
+This works even if the Settings menu is locked.
+
+1) Press Win + R, type regedit, and hit Enter.
+
+2) Navigate to:
+
+#+begin_example
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
+#+end_example
+
+3) Look for these two items on the right:
+
+AppsUseLightTheme
+
+SystemUsesLightTheme
+
+4) Double-click each one and change the value from 1 to 0.
+
+5) Restart your computer (or restart explorer.exe via Task Manager) to see the change.
+
+** Windows Web Experience Pack
+
+Because Microsoft really wants you to see that weather/news feed, Windows sometimes "heals" this registry key.
+
+If it keeps reappearing, there is a more "nuclear" option that disables the Widget service entirely:
+
+1) Open PowerShell as Administrator.
+
+2) Run this command to uninstall the "Web Experience Pack" (which powers the weather widget):
+
+#+begin_src sh
+winget uninstall "Windows Web Experience Pack"
+#+end_src
+
+3) Type Y and hit Enter if it asks for permission.
+
+4) restart
+
+** search bar remove ads
+
+That "clutter" inside the search menu is called Search Highlights.
+
+On an unactivated version of Windows, the toggle to turn it off is usually locked in the Settings menu, but we can kill it using—you guessed it—the Registry.
+
+1) Remove the "Squirrel" (Search Highlights)
+
+Run this command in Administrator PowerShell to get rid of the icons and the daily "fun facts" content:
+
+#+begin_src sh
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search\Flighting\Config" /v "IsDynamicSearchBoxHighlightEnabled" /t REG_DWORD /d 0 /f
+#+end_src
+
+2) Disable Web Results (Trending News/Recipes)
+
+If you want the search bar to only search your local files and apps (like a clean Linux app launcher) and stop showing web results from Bing, run this:
+
+#+begin_src sh
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d 0 /f
+#+end_src
+
+3) Change the Search Box to a simple Icon
+
+If the big search bar is taking up too much space on your taskbar, you can shrink it down to just a small magnifying glass:
+
+#+begin_src sh
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d 1 /f
+#+end_src
+
+(Values: 0 = Hidden, 1 = Icon only, 2 = Search box)
+
+Apply the Changes
+
+For these to take effect, you need to restart the explorer process again:
+
+#+begin_src sh
+gps explorer | spps
+#+end_src
