@@ -94,3 +94,20 @@ For these to take effect, you need to restart the explorer process again:
 #+begin_src sh
 gps explorer | spps
 #+end_src
+
+** The Final Clean-Up (Start Menu)
+
+Run these in your Administrator PowerShell to stop Windows from suggesting apps or tracking your recently opened files:
+
+Disable "Recently Added Apps"
+
+#+begin_src sh
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackProgs" /t REG_DWORD /d 0 /f
+
+#+end_src
+
+Disable "Recently Opened Items" (the file list)
+
+#+begin_src sh
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackDocs" /t REG_DWORD /d 0 /f
+#+end_src
