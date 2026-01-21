@@ -118,20 +118,3 @@ refresh the ui
 gps explorer | spps
 #+end_src
 
-** disable super key for windows search
-
-Copy this entire block and paste it into your Administrator PowerShell:
-
-#+begin_src sh
-$path = "HKLM:\System\CurrentControlSet\Control\Keyboard Layout"
-$hex = [byte[]](0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x00, 0x03,0x00,0x00,0x00, 0x00,0x00,0x5B,0xE0, 0x00,0x00,0x5C,0xE0, 0x00,0x00,0x00,0x00)
-Set-ItemProperty -Path $path -Name "Scancode Map" -Value $hex
-#+end_src
-
-restart
-
-Undo the setting if needed
-
-#+begin_src sh
-Remove-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Keyboard Layout" -Name "Scancode Map"
-#+end_src
