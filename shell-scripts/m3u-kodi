@@ -1,10 +1,11 @@
 #!/bin/sh
 
-
 #===============================================================================
-# srt-yt
+# youtube create a m3u playlist for kodi
 #===============================================================================
 
+# dependencies:
+# yt-dlp awk
 
 #===============================================================================
 # script usage
@@ -15,7 +16,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -i ip/dns -p port -u url"
+$(basename "$0") -i input"
 exit 2
 }
 
@@ -30,22 +31,20 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
-while getopts ':u:i:p:h' opt
+while getopts ':i:h' opt
 do
   case ${opt} in
-     u) infile="${OPTARG}";;
-     i) ip="${OPTARG}";;
-     p) port="${OPTARG}";;
+     i) input="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
      :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
@@ -55,69 +54,28 @@ shift $((OPTIND-1))
 
 
 #===============================================================================
-# defaults
+# variables
 #===============================================================================
 
-# default ip
-ip_default='192.168.1.131'
-
-# default port
-port_default='6882'
-
-
-#===============================================================================
-# url
-#===============================================================================
-
-# yt-dlp url
-url=$(yt-dlp -f b -g --no-playlist "${infile}")
-
-# check number of stream links
-streamcount=$(echo "${url}" | awk 'END{print NR}')
+video=$(yt-dlp --skip-download --print "%(id)s\%(title)s" "${input}")
+title=$(echo "${video}" | awk -F'\' '{ printf("%s\n"), $2 }')
+playlistdir="${HOME}/.kodi/userdata/playlists/video/"
+m3u="${playlistdir}${title}.m3u"
 
 
 #===============================================================================
-# one stream containing audio and video
+# m3uplaylist function
 #===============================================================================
 
-one_stream () {
-ffmpeg \
--hide_banner \
--re \
--i "${url}" \
--c:a copy -c:v copy \
--tune zerolatency \
--f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
+m3uplaylist () {
+echo "${video}" \
+| awk -F'\' '{ printf("%s\n%s %s\n%s%s\n"),\
+"#EXTM3U", "#EXTINF: 0,", $2, "plugin://plugin.video.youtube/play/?video_id=", $1 }' > "${m3u}"
 }
 
 
 #===============================================================================
-# two streams containing audio and video
+# run function
 #===============================================================================
 
-two_streams () {
-video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
-audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
-
-# ffmpeg join audio and video and stream
-ffmpeg \
--hide_banner \
--re \
--i "${video_url}" \
--i "${audio_url}" \
--c:a copy -c:v copy \
--tune zerolatency \
--map 0:0 -map 1:0 \
--f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
-}
-
-
-#===============================================================================
-# case statement check for number of streams
-#===============================================================================
-
-case "${streamcount}" in
-    1) one_stream;; # single stream
-    2) two_streams;; # audio and video stream
-    *) usage;;
-esac
+m3uplaylist

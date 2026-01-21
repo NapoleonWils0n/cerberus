@@ -1,8 +1,7 @@
 #!/bin/sh
 
-
 #===============================================================================
-# srt-yt
+# srt-mpv - receive a srt stream with mpv
 #===============================================================================
 
 
@@ -15,10 +14,9 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -i ip/dns -p port -u url"
+$(basename "$0") -i ip -p port -l latency"
 exit 2
 }
-
 
 #===============================================================================
 # error messages
@@ -30,29 +28,21 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
-#===============================================================================
-
-[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
-
-
-#===============================================================================
 # getopts check options passed to script
 #===============================================================================
 
-while getopts ':u:i:p:h' opt
+while getopts 'i:p:l:h' opt
 do
   case ${opt} in
-     u) infile="${OPTARG}";;
      i) ip="${OPTARG}";;
      p) port="${OPTARG}";;
+     l) latency="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
      :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
   esac
 done
 shift $((OPTIND-1))
-
 
 #===============================================================================
 # defaults
@@ -61,63 +51,23 @@ shift $((OPTIND-1))
 # default ip
 ip_default='192.168.1.131'
 
+# default latency
+latency_default='1000'
+
 # default port
 port_default='6882'
 
 
 #===============================================================================
-# url
+# srt_recv function
 #===============================================================================
 
-# yt-dlp url
-url=$(yt-dlp -f b -g --no-playlist "${infile}")
-
-# check number of stream links
-streamcount=$(echo "${url}" | awk 'END{print NR}')
-
-
-#===============================================================================
-# one stream containing audio and video
-#===============================================================================
-
-one_stream () {
-ffmpeg \
--hide_banner \
--re \
--i "${url}" \
--c:a copy -c:v copy \
--tune zerolatency \
--f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
+srt_recv () {
+srt-live-transmit "srt://${ip:=${ip_default}}:${port:=${port_default}}?mode=listener&latency=${latency:=${latency_default}}&timeout=5000000" file://con | mpv --fs -
 }
 
-
 #===============================================================================
-# two streams containing audio and video
-#===============================================================================
-
-two_streams () {
-video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
-audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
-
-# ffmpeg join audio and video and stream
-ffmpeg \
--hide_banner \
--re \
--i "${video_url}" \
--i "${audio_url}" \
--c:a copy -c:v copy \
--tune zerolatency \
--map 0:0 -map 1:0 \
--f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
-}
-
-
-#===============================================================================
-# case statement check for number of streams
+# run srt_recv function
 #===============================================================================
 
-case "${streamcount}" in
-    1) one_stream;; # single stream
-    2) two_streams;; # audio and video stream
-    *) usage;;
-esac
+srt_recv

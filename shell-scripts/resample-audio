@@ -1,0 +1,8 @@
+#!/bin/sh
+
+find . -maxdepth 1 -name "*.wav" -print0 | xargs -0 -I {} sh -c '
+  input="{}"
+  base="${input%.wav}"
+  output="${base}-resampled.wav"
+  ffmpeg -i "$input" -ar 48000 "$output"
+'

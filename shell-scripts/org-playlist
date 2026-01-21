@@ -1,0 +1,74 @@
+#!/bin/sh
+
+#===============================================================================
+# org-playlist
+# create playlist as org mode video links and copy to clipboard
+#===============================================================================
+
+# dependencies:
+# yt-dlp
+# jq
+# wl-copy
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+create playlist as org mode video links and copy to clipboard
+$(basename "$0") -i input"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# org-playlist function
+#===============================================================================
+
+org_playlist () {
+  yt-dlp -j --flat-playlist "${input}" 2>/dev/null \
+  | jq -rj '"[[video:\(.original_url)][\(.title)]]\n"' \
+  | wl-copy
+}
+
+#===============================================================================
+# run function
+#===============================================================================
+
+org_playlist

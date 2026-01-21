@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# w3m pager with stty columns for wrapping text
+
+# if script is run without arguments exit
+[ $# -gt 0 ] || exit
+
+# store the stty columns
+cols="$(tput cols)"
+
+# set the stty cols to 80
+stty cols 80
+
+# w3m open argument
+w3m -T text/html "$@"
+
+# restore stty columns
+stty cols "${cols}"

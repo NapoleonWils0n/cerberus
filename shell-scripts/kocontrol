@@ -1,0 +1,106 @@
+#!/bin/sh
+
+#===============================================================================
+# kocontrol - control kodi via its jsonrpc interface
+#===============================================================================
+
+# dependencies:
+# curl
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -p play -x stop -s -00 -f 00 -r 00)
+-p play    : toggle play/pause
+-x stop    : stop
+-s seek    : -00
+-f forward : 00
+-r rewind  : 00 "
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# kodi webserver url
+kodi_url='http://kodi:kodi@127.0.0.1:8080/jsonrpc'
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# main function
+jsonrpc () {
+  curl -X POST -H "content-type:application/json" "${kodi_url}" -d "$@" >/dev/null 2>&1
+}
+
+# play
+play () {
+  jsonrpc '{"jsonrpc": "2.0", "method": "Player.PlayPause", "params": { "playerid": 1 }, "id": 1}'
+}
+
+# stop
+stop () {
+  jsonrpc '{"jsonrpc": "2.0", "method": "Player.Stop", "params": { "playerid": 1 }, "id": 1}'
+}
+
+# seek
+seek () {
+  jsonrpc '{"jsonrpc":"2.0", "method":"Player.Seek", "params": { "playerid":1, "value":{ "seconds": '"${seek}"' } }, "id":1}'
+}
+
+# forward
+forward () {
+  jsonrpc '{"jsonrpc":"2.0","method":"Player.SetSpeed","params":{"playerid":1,"speed":'"${forward}"'},"id":1}'
+}
+
+# rewind
+rewind () {
+  jsonrpc '{"jsonrpc":"2.0","method":"Player.SetSpeed","params":{"playerid":1,"speed":-'"${rewind}"'},"id":1}'
+}
+
+
+#===============================================================================
+# getopts check the options passed to the script - run function
+#===============================================================================
+
+while getopts ':p:x:s:f:r:h' opt
+do
+  case ${opt} in
+     p) play="${OPTARG}"; play;;
+     x) stop="${OPTARG}"; stop;;
+     s) seek="${OPTARG}"; seek;;
+     f) forward="${OPTARG}"; forward;;
+     r) rewind="${OPTARG}"; rewind;;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
