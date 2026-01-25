@@ -1,0 +1,10 @@
+#+TITLE: NotebookLM Workflow Guide
+#+OPTIONS: toc:nil num:nil
+#+LATEX_HEADER: \usepackage[landscape, margin=0.5in]{geometry}
+
+* User Guide
+#+INCLUDE: "notebooklm-guide.org" :minlevel 1
+
+#+LATEX: \newpage
+#+ATTR_LATEX: :width \textwidth :placement [H]
+[[file:notebooklm_workflow.png]]

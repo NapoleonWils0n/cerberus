@@ -1,0 +1,131 @@
+#+STARTUP: showall
+* graphviz notebooklm
+
+#+BEGIN_SRC dot :file notebooklm_workflow.png :cmdline -Kdot -Tpng
+digraph {
+    label="NotebookLM Workflow";
+    labelloc="t";
+    fontsize=22;
+    fontname="Helvetica-Bold";
+
+    rankdir=LR;
+    splines=ortho;
+    nodesep=0.6; 
+    ranksep=2.5; 
+    
+    node [shape=box, style=filled, fillcolor="white", fontname="Helvetica", fontsize=11];
+
+    // 1. DATA SOURCES
+    subgraph cluster_inputs {
+        label = "Sources";
+        style = "filled";
+        fillcolor = "#fff9c4";
+        upload [label="Uploaded Files\n(PDF, Text, Audio, Video,\nImage, Spreadsheets)", fillcolor="#fff59d", penwidth=2];
+        g_drive [label="Google Drive\n(Docs, Sheets, Slides, PDF,\nText, Audio, Video, Image)", fillcolor="#fff59d", penwidth=2];
+        websites [label="Websites\n(URLs & YouTube)", fillcolor="#fff59d"];
+        web_search [label="Web Search"];
+        copied_text [label="Copied Text"];
+    }
+
+    // 2. AI PROCESSING
+    subgraph cluster_processing {
+        label = "AI Processing";
+        style = "filled";
+        fillcolor = "#e1f5fe";
+        transcript [label="Generated Transcript"];
+        ocr_text [label="Extracted Text (OCR)"];
+    }
+
+    notebooklm [label="Chat", shape=diamond, fillcolor="#bbdefb", style="filled,bold", fontsize=16, width=2.5, height=1.5];
+
+    // 3. STUDIO TOOLS
+    subgraph cluster_studio {
+        label = "Studio";
+        style = "filled";
+        fillcolor = "#f3e5f5";
+        
+        subgraph cluster_creative {
+            label = "Custom Prompt";
+            style="dashed";
+            color="#7e57c2";
+            flashcards [label="Flashcards"];
+            quiz [label="Quiz"];
+            slides [label="Slide Deck"];
+            data_table [label="Data Table"];
+            audio_over [label="Audio Overview"];
+            video_over [label="Video Overview"];
+            infographics [label="Infographics"];
+        }
+        
+        // Forced to render UNDER the creative suite
+        {flashcards quiz slides data_table audio_over video_over infographics} -> reports [style=invis];
+        
+        reports [label="Reports"]; 
+        mind_map [label="Mind Map"];
+        notes [label="Notes"];
+        
+        {rank=same; reports; mind_map; notes;}
+    }
+
+    // 4. OUTPUT DESTINATIONS
+    subgraph cluster_export {
+        label = "Output Options";
+        style = "filled";
+        fillcolor = "#c8e6c9";
+        g_docs [label="Google Docs"];
+        g_sheets [label="Google Sheets"];
+        conv_source [label="Convert to Source"];
+        download [label="Download (.wav/.mp4)"];
+        link [label="Shared Link"];
+    }
+
+    // --- RESTORED FLOW LEGEND ---
+    subgraph cluster_legend {
+        label = "Flow Legend";
+        fontsize = 12;
+        legend_node [
+            shape=plaintext, 
+            label="Orange Path: Media & Image Processing (Transcript/OCR)\lBlue Path: Direct Text/Doc Ingestion\lGreen Path: Google Docs Export\lLight Green Path: Google Sheets Export\lTeal Path: Notebook Context / Source Conversion\lPurple Path: Media File Download\l"
+        ];
+    }
+
+    // --- CONNECTIONS ---
+    
+    // Ingestion
+    edge [color="#e67e22", penwidth=2];
+    { websites upload g_drive } -> transcript;
+    { upload g_drive } -> ocr_text;
+    
+    edge [color="#3498db", penwidth=1.5];
+    { web_search websites upload g_drive copied_text transcript ocr_text } -> notebooklm;
+
+    // To Studio
+    edge [color="#7f8c8d", penwidth=1];
+    notebooklm -> { audio_over video_over flashcards quiz slides data_table mind_map reports notes infographics };
+
+    // Verified Export Path - Google Docs (Green)
+    edge [color="#27ae60", penwidth=1.5];
+    { reports notes quiz infographics slides } -> g_docs;
+
+    // Verified Export Path - Google Sheets (Light Green)
+    edge [color="#2ecc71", penwidth=1.5];
+    { data_table notes reports } -> g_sheets;
+
+    // Verified Export Path - Convert to Source (Teal)
+    edge [color="#16a085", penwidth=1.5];
+    notes -> conv_source -> notebooklm;
+
+    // Media Downloads (Purple)
+    edge [color="#8e44ad", penwidth=1.5];
+    { audio_over video_over } -> download;
+    
+    // Shared Links (Blue)
+    edge [color="#2980b9"];
+    { flashcards audio_over video_over notes } -> link;
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:notebooklm_workflow.png]]
+
+
