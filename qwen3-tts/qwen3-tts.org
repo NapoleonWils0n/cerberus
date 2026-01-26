@@ -145,25 +145,25 @@ nix develop
 
 ** models
 
-in the nix develop shell run the huggingface-cli to download the models
+in the nix develop shell run hf download the models
 
 in this example we are downloading the 0.6B models
 
 Qwen3-TTS-12Hz-0.6B-Base
 
 #+begin_src sh
-huggingface-cli download Qwen/Qwen3-TTS-12Hz-0.6B-Base --local-dir ./Qwen3-TTS-12Hz-0.6B-Base
+hf download Qwen/Qwen3-TTS-12Hz-0.6B-Base --local-dir ./Qwen3-TTS-12Hz-0.6B-Base
 #+end_src
 
 Qwen3-TTS-12Hz-0.6B-CustomVoice
 
 #+begin_src sh
-huggingface-cli download Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice --local-dir ./Qwen3-TTS-12Hz-0.6B-CustomVoice
+hf download Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice --local-dir ./Qwen3-TTS-12Hz-0.6B-CustomVoice
 #+end_src
 
 Qwen3-TTS-Tokenizer-12Hz
 
 #+begin_src sh
-huggingface-cli download Qwen/Qwen3-TTS-Tokenizer-12Hz --local-dir ./Qwen3-TTS-Tokenizer-12Hz
+hf download Qwen/Qwen3-TTS-Tokenizer-12Hz --local-dir ./Qwen3-TTS-Tokenizer-12Hz
 #+end_src
 
