@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* dired sort toggle
+
+dired sort toggle to show the latest file first
+
+#+begin_example
+M-x dired-sort-toggle-or-edit
+#+end_example
+
+or press o when running dired
