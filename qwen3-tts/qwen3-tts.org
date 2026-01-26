@@ -1,0 +1,169 @@
+#+STARTUP: content
+* qwen3-tts
+** resources
+
+qwen-tts github
+
+[[https://github.com/QwenLM/Qwen3-TTS]]
+
+qwen-tts huggingface
+
+[[https://huggingface.co/collections/Qwen/qwen3-tts]]
+
+qwen-tts 0.6B models
+
+[[https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base]]
+
+[[https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-Base]]
+
+[[https://huggingface.co/Qwen/Qwen3-TTS-Tokenizer-12Hz]]
+
+** flake
+
+create a directory for qwen-tts
+
+#+begin_src sh
+mkdir -p ~/nix/qwen3-tts
+#+end_src
+
+change into the qwen-tts directory
+
+#+begin_src sh
+cd ~/nix/qwen3-tts
+#+end_src
+
+create the flake.nix
+
+#+begin_src sh
+vi flake.nix
+#+end_src
+
+qwen-tts flake.nix
+
+#+begin_src nix
+{
+  description = "Qwen3-TTS development shell with CUDA support";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true; # Necessary for NVIDIA drivers and CUDA
+            cudaSupport = true; 
+          };
+        };
+      in
+      {
+        devShells.default = pkgs.mkShell rec {
+          name = "qwen-tts-dev";
+
+          # System dependencies for Qwen3-TTS audio processing
+          buildInputs = with pkgs; [
+            python312
+            stdenv.cc.cc.lib
+            stdenv.cc
+            # CUDA stack
+            cudaPackages.cudatoolkit 
+            cudaPackages.cudnn
+            linuxPackages.nvidia_x11
+            pkg-config 
+            zlib
+            # Essential media libraries for soundfile/sox/ffmpeg
+            ffmpeg
+            sox
+            libsndfile
+            libiconv
+            libxml2
+          ];
+
+
+          # Environment variables required for CUDA and library linking
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
+          CUDA_PATH = pkgs.cudaPackages.cudatoolkit;
+          CUDA_HOME = pkgs.cudaPackages.cudatoolkit;
+          EXTRA_LDFLAGS = "-L${pkgs.linuxPackages.nvidia_x11}/lib";
+
+          # Ensure CUDA binaries (like nvidia-smi) are in PATH for diagnostics
+          PATH = pkgs.lib.makeBinPath [
+            pkgs.cudaPackages.cudatoolkit
+          ];
+
+          shellHook = ''
+            # Set the locale for consistent encoding
+            export LC_ALL="en_US.UTF-8"
+            export LANG="en_US.UTF-8"
+            export PYTHONIOENCODING="utf-8"
+
+
+            # Setup Venv
+            if [ ! -d ".venv" ]; then
+              ${pkgs.python312}/bin/python3.12 -m venv .venv
+            fi
+            source .venv/bin/activate
+
+            # Set CUDA variables
+            export CUDA_VISIBLE_DEVICES=0
+            export XDG_CACHE_HOME="$HOME/.cache"
+
+            # Install Qwen3-TTS and Torch for CUDA 12+ (standard for NixOS Unstable)
+            pip install --upgrade pip
+
+            # Set environment variable to prevent silent async CUDA errors (Crucial for debugging low-level crashes)
+            export CUDA_LAUNCH_BLOCKING=1
+            export TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=true
+
+            # cuda 13
+            pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu130
+
+            # pip instal qwen-tts
+            pip install -U qwen-tts 
+
+            echo "--- Qwen3-TTS Nix Environment Ready ---"
+            echo "To run the demo on your 4GB VRAM card, use:"
+            echo "qwen-tts-demo Qwen/Qwen3-TTS-12Hz-0.6B-Base --no-flash-attn"
+          '';
+        };
+      });
+}
+
+#+end_src
+
+** nix develop
+
+run nix develop
+
+#+begin_src sh
+nix develop
+#+end_src
+
+** models
+
+in the nix develop shell run the huggingface-cli to download the models
+
+in this example we are downloading the 0.6B models
+
+Qwen3-TTS-12Hz-0.6B-Base
+
+#+begin_src sh
+huggingface-cli download Qwen/Qwen3-TTS-12Hz-0.6B-Base --local-dir ./Qwen3-TTS-12Hz-0.6B-Base
+#+end_src
+
+Qwen3-TTS-12Hz-0.6B-CustomVoice
+
+#+begin_src sh
+huggingface-cli download Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice --local-dir ./Qwen3-TTS-12Hz-0.6B-CustomVoice
+#+end_src
+
+Qwen3-TTS-Tokenizer-12Hz
+
+#+begin_src sh
+huggingface-cli download Qwen/Qwen3-TTS-Tokenizer-12Hz --local-dir ./Qwen3-TTS-Tokenizer-12Hz
+#+end_src
+
