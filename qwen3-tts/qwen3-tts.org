@@ -147,6 +147,8 @@ nix develop
 
 in the nix develop shell run hf download the models
 
+*** 0.6 models
+
 in this example we are downloading the 0.6B models
 
 Qwen3-TTS-12Hz-0.6B-Base
@@ -167,3 +169,10 @@ Qwen3-TTS-Tokenizer-12Hz
 hf download Qwen/Qwen3-TTS-Tokenizer-12Hz --local-dir ./Qwen3-TTS-Tokenizer-12Hz
 #+end_src
 
+*** 1.7 models
+
+voice design
+
+#+begin_src sh
+hf download Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign --local-dir ./Qwen3-TTS-12Hz-1.7B-VoiceDesign
+#+end_src
