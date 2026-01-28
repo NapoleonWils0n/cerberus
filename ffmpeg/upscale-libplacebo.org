@@ -1,5 +1,5 @@
 #+STARTUP: content
-* libplacebo ffmpeg
+* upscale libplacebo
 ** vulkan-tools
 
 #+begin_src sh
@@ -253,25 +253,7 @@ nove the shader into the directory
 mv SSimSuperRes.glsl ~/Documents/ffmpeg-shaders
 #+end_src
 
-ffmpeg command
-
-#+begin_src sh
-ffmpeg \
--hide_banner \
--stats -v panic \
--init_hw_device vulkan=vk:1 \
--i input.mp4 \
--filter_hw_device vk \
--vf "hwupload,libplacebo=w=3840:h=2160:upscaler=lanczos:custom_shader_path=$HOME/Documents/ffmpeg-shaders/SSimSuperRes.glsl:disable_builtin=1:format=yuv420p,hwdownload,format=yuv420p" \
--c:v hevc_nvenc -preset p7 -tune hq -rc vbr -cq 20 -b:v 0 \
--c:a copy \
--pix_fmt yuv420p -movflags +faststart \
-output.mp4
-#+end_src
-
-** script
-
-upscale-libplacebo
+** upscale-libplacebo script
 
 #+begin_src sh
 chmod +x upscale-libplacebo
