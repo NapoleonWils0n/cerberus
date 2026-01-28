@@ -345,7 +345,7 @@ input_name="${input_nopath%.*}"
 #===============================================================================
 
 # output default file name
-output_default="${input_name}-upscale.mp4"
+output_default="${input_name}-4k.mp4"
 
 # vulkan default
 vulkan_default=1
