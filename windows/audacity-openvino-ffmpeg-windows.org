@@ -28,6 +28,23 @@ Now run the following command:
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 #+end_example
 
+**** upgrade packages
+
+upgrade Chocolatey
+
+open powershell as an administrator
+
+#+begin_src sh
+choco upgrade chocolatey
+#+end_src
+
+upgrade packages
+
+#+begin_src sh
+choco upgrade all
+#+end_src
+
+
 ** ffmpeg-shared install
 
 open PowerShell as a administrator
