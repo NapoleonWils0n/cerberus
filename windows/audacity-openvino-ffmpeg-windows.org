@@ -1,0 +1,77 @@
+#+STARTUP: content
+* windows audacity
+** Chocolatey
+
+[[https://chocolatey.org/]]
+
+The first step is to open PowerShell on your Windows 11 computer, and that too with administrator privileges.
+Opening PowerShell with administrator privileges is important, as you will be unable to install Chocolatey without that.
+
+Now type in the following command to know the execution policy status of PowerShell.
+
+#+begin_example
+Get-ExecutionPolicy
+#+end_example
+
+If it says ‘Restricted’,
+type in the following command as shown below, all on the PowerShell with administrator privileges.
+
+#+begin_example
+Set-ExecutionPolicy AllSigned
+#+end_example
+
+You will have to type ‘Y’ and hit the enter key when you will be asked for a confirmation.
+
+Now run the following command:
+
+#+begin_example
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+#+end_example
+
+** ffmpeg-shared install
+
+open PowerShell as a administrator
+
+if you have ffmpeg installed with Chocolatey, unistall it
+
+#+begin_src sh
+choco uninstall ffmpeg -y
+#+end_src
+
+and then install ffmpeg-shared
+
+#+begin_src sh
+choco install ffmpeg-shared -y
+#+end_src
+
+** audacity install
+
+[[https://www.audacityteam.org/]]
+
+download the 64 bit audacity installer
+
+https://github.com/audacity/audacity/releases/download/Audacity-3.7.7/audacity-win-3.7.7-64bit.exe
+
+run the exe installer
+
+download openvino
+
+[[https://www.audacityteam.org/download/openvino/]]
+
+run the openvino installer
+
+select whisperx small during the install
+
+** ffmpeg library
+
+Once ffmpeg-shared is installed, Audacity won't find it automatically because Chocolatey hides the DLLs in a sub-folder. You have to tell it exactly where they are:
+
+Open Audacity and go to Edit > Preferences > Libraries.
+
+Click Locate... and then Browse.
+
+Navigate to this specific folder: C:\ProgramData\chocolatey\lib\ffmpeg-shared\tools\ffmpeg\bin
+
+Look for a file named avformat-61.dll (if it's FFmpeg 7.x) or avformat-60.dll (if it's FFmpeg 6.x).
+
+Select it and click Open.
