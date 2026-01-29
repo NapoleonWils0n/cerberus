@@ -116,9 +116,9 @@ upscale () {
     deband=true:
     deband_iterations=4:
     deband_threshold=8:
-    deband_radius=32:
+    deband_radius=48:
     deband_grain=6.0:
-    antiringing=0.8:
+    antiringing=0.5:
     tonemapping=mobius:
     gamut_mode=relative:
     contrast_recovery=0.0:
