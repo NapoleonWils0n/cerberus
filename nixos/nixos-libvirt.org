@@ -1193,6 +1193,8 @@ doas virsh net-list --all
 
 ** Important mount the zfs directory
 
+if you havent set the zfs filesystem mount in your configuration.nix you have manually mount the directory
+
 #+begin_src sh
 doas zfs mount zpool/home/libvirt
 #+end_src
