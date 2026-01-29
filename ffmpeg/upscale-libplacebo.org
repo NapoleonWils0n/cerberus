@@ -254,7 +254,7 @@ mv SSimSuperRes.glsl ~/Documents/ffmpeg-shaders
 #+end_src
 
 ** upscale-libplacebo scripts
-*** upscale-libplacebo
+*** upscale-libplacebo progressive scan footage
 
 #+begin_src sh
 chmod +x upscale-libplacebo
@@ -362,6 +362,45 @@ cq_default=16
 # ffmpeg function
 #===============================================================================
 
+#upscale () {
+#    ffmpeg \
+#    -hide_banner \
+#    -stats -v panic \
+#    -init_hw_device vulkan=vk:"${vulkan:=${vulkan_default}}" \
+#    -i "${input}" \
+#    -filter_hw_device vk \
+#    -vf "yadif=mode=send_frame,
+#    format=yuv420p,
+#    hwupload,
+#    libplacebo=w=-2:h=2160:
+#    upscaler=ewa_lanczos:
+#    custom_shader_path=${shader_path}:
+#    disable_builtin=1:
+#    deband=true:
+#    deband_iterations=4:
+#    deband_threshold=8:
+#    deband_radius=48:
+#    deband_grain=6.0:
+#    antiringing=0.5:
+#    tonemapping=mobius:
+#    gamut_mode=relative:
+#    contrast_recovery=0.0:
+#    dithering=blue:
+#    dither_temporal=1:
+#    format=yuv420p,
+#    hwdownload,format=yuv420p" \
+#    -c:v hevc_nvenc \
+#    -preset "${preset:=${preset_default}}" \
+#    -tune hq \
+#    -rc vbr \
+#    -cq "${cq:=${cq_default}}" \
+#    -b:v 0 \
+#    -c:a copy \
+#    -pix_fmt yuv420p -movflags +faststart \
+#    "${outfile:=${output_default}}"
+#}
+
+
 upscale () {
     ffmpeg \
     -hide_banner \
@@ -369,25 +408,14 @@ upscale () {
     -init_hw_device vulkan=vk:"${vulkan:=${vulkan_default}}" \
     -i "${input}" \
     -filter_hw_device vk \
-    -vf "yadif=mode=send_frame,
-    format=yuv420p,
+    -vf "format=yuv420p,
     hwupload,
     libplacebo=w=-2:h=2160:
-    upscaler=ewa_lanczos:
-    custom_shader_path=${shader_path}:
-    disable_builtin=1:
+    upscaler=mitchell:
     deband=true:
-    deband_iterations=4:
-    deband_threshold=8:
-    deband_radius=48:
-    deband_grain=6.0:
-    antiringing=0.5:
-    tonemapping=mobius:
-    gamut_mode=relative:
-    contrast_recovery=0.0:
-    contrast_smoothness=3.5:
-    dithering=blue:
-    dither_temporal=1:
+    deband_iterations=2:
+    deband_threshold=4:
+    custom_shader_path=${shader_path}:
     format=yuv420p,
     hwdownload,format=yuv420p" \
     -c:v hevc_nvenc \
@@ -400,6 +428,7 @@ upscale () {
     -pix_fmt yuv420p -movflags +faststart \
     "${outfile:=${output_default}}"
 }
+
 
 #===============================================================================
 # run ffmpeg function
