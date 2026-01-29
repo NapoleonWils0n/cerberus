@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* sabr yt-dlp fix
+
+yt-dlp
+
+#+begin_src sh
+yt-dlp --extractor-args "youtube:player_client=default,-android_sdkless" url
+#+end_src
+
+mpv
+
+#+begin_src sh
+mpv --ytdl-raw-options='extractor-args="youtube:player_client=default,ios,-android_sdkless;formats=missing_pot",format="bv[protocol=m3u8_native]+ba[protocol=m3u8_native]/b[protocol=m3u8_native]"' url
+#+end_src
