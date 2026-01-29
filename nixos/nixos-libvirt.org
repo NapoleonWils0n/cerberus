@@ -1,5 +1,11 @@
 #+STARTUP: content hideblocks
 * nixos libvirt
+** libvirt directory
+
+#+begin_src sh
+mkdir -p ~/libvirt
+#+end_src
+
 ** configuration.nix
 *** configuration.nix snippet
 
@@ -24,6 +30,12 @@ virtualisation = {
     spiceUSBRedirection.enable = true;
 };
 
+# libvirt zfs mount
+fileSystems."/home/djwilcox/libvirt" = {
+  device = "zpool/home/libvirt";
+  fsType = "zfs";
+  options = [ "zfsutil" ];
+};
 
 # add user to Libvirtd group
 users.users.djwilcox = {
@@ -244,6 +256,12 @@ virtualisation = {
     spiceUSBRedirection.enable = true;
 };
 
+# libvirt zfs mount
+fileSystems."/home/djwilcox/libvirt" = {
+  device = "zpool/home/libvirt";
+  fsType = "zfs";
+  options = [ "zfsutil" ];
+};
 
 # podman zfs
 fileSystems."/var/lib/containers/storage" = {
