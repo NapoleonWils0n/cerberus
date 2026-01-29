@@ -20,7 +20,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -i input -o output)
+$(basename "$0") -i input -o output
 -i input.(mp4|mov|mkv|m4v|webm)
 -f path-to-gsl-shader
 -v (0|1) 
