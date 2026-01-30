@@ -6,6 +6,15 @@
 fdkaac -m 5 input.wav 
 #+end_src
 
+#+begin_example
+-w, --bandwidth <n>
+       Frequency bandwidth (lowpass cut-off frequency) in Hz.  Available on AAC LC only.
+#+end_example
+
+#+begin_src sh
+fdkaac -m 5 -w 18000 input.wav 
+#+end_src
+
 output
 
 #+begin_src sh
