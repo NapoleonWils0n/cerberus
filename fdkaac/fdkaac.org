@@ -1,5 +1,17 @@
 #+STARTUP: showall
 * fdkaac 
+** vbr bitrate
+
+#+begin_src sh
+fdkaac -m 5 input.wav 
+#+end_src
+
+output
+
+#+begin_src sh
+fdkaac -m 5 input.wav -o output.m4a
+#+end_src
+
 ** convert wav to m4a
 
 #+begin_src sh
