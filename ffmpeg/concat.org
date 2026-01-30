@@ -13,11 +13,11 @@ printf "file '%s'\n" *.mp4 > list.txt
 use ffmpeg to concat the video file in the text file
 
 #+BEGIN_SRC sh
-ffmpeg -f concat -i list.txt -c copy outfile.mp4
+ffmpeg -f concat -safe 0 -i list.txt -c copy outfile.mp4
 #+END_SRC
 
 use subshell to generate a list of the mp4s in the current directory
 
 #+BEGIN_SRC sh
-ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) outfile.mp4
+ffmpeg -f concat -safe 0 -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) outfile.mp4
 #+END_SRC
