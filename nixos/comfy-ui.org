@@ -123,8 +123,16 @@ python -m venv venv
 source venv/bin/activate
 #+end_src
 
++ old version
+
 #+begin_src sh
 pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu127
+#+end_src
+
++ new use cu130
+
+#+begin_src sh
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130
 #+end_src
 
 #+begin_src sh
