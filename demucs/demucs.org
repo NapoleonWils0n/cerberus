@@ -93,6 +93,12 @@ fork
 
 #+end_src
 
+** extract audio from a video
+
+#+begin_src sh
+ffmpeg -i input.mp4 -vn -c:a pcm_s16le output.wav
+#+end_src
+
 ** demuc commands
 *** htdemucs_ft
 
