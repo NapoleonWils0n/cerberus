@@ -61,3 +61,24 @@ ffmpeg \
 -movflags +faststart \
 comparison.mp4
 #+end_src
+
+** compare 4k videos side by side
+
+#+begin_src sh
+ffmpeg \
+-i input-libplacebo.mp4 \
+-i input-realesrgan.mp4 \
+-filter_complex \
+"[0:v]scale=1920:1080:flags=lanczos[left]; \
+ [1:v]scale=1920:1080:flags=lanczos[right]; \
+ [left][right]hstack=inputs=2[v]" \
+-map "[v]" \
+-map 0:a \
+-c:v hevc_nvenc \
+-cq 20 \
+-preset p4 \
+-c:a copy \
+-pix_fmt yuv420p \
+-movflags +faststart \
+comparison.mp4
+#+end_src
