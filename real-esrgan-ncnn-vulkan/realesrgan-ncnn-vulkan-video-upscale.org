@@ -24,6 +24,20 @@ realesrgan-ncnn-vulkan -i frames -o upscaled_frames -n realesrgan-x4plus -s 4 -f
 
 #+begin_src sh
 ffmpeg -framerate $(ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=noprint_wrappers=1:nokey=1 input.mp4) \
--i upscaled_frames/frame_%08d.png -i input.mp4 -map 0:v:0 -map 1:a? \
--c:v libx264 -pix_fmt yuv420p -crf 18 -c:a copy output_upscaled.mp4
+-i upscaled_frames/frame_%08d.png \
+-i input.mp4 \
+-map 0:v:0 -map '1:a?' \
+-c:v hevc_nvenc \
+-tune hq \
+-preset p7 \
+-rc vbr \
+-multipass fullres \
+-cq 20 \
+-b:v 0 \
+-rc-lookahead 32 \
+-spatial-aq 1 \
+-c:a copy \
+-pix_fmt yuv420p \
+-movflags +faststart \
+output_upscaled.mp4
 #+end_src
