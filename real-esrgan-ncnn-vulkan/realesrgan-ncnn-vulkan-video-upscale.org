@@ -1,0 +1,29 @@
+#+STARTUP: content
+* realesrgan-ncnn-vulkan video upscale
+** ffmpeg extract frames
+
+#+begin_src sh
+mkdir -p frames
+#+end_src
+
+#+begin_src sh
+ffmpeg -i input.mp4 -qscale:v 1 -qmin 1 -vsync 0 frames/frame_%08d.png
+#+end_src
+
+** realesrgan-ncnn-vulkan upscale
+
+#+begin_src sh
+mkdir -p upscaled_frames
+#+end_src
+
+#+begin_src sh
+realesrgan-ncnn-vulkan -i frames -o upscaled_frames -n realesrgan-x4plus -s 4 -f png
+#+end_src
+
+** ffmpeg create video from upscaled frames
+
+#+begin_src sh
+ffmpeg -framerate $(ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=noprint_wrappers=1:nokey=1 input.mp4) \
+-i upscaled_frames/frame_%08d.png -i input.mp4 -map 0:v:0 -map 1:a? \
+-c:v libx264 -pix_fmt yuv420p -crf 18 -c:a copy output_upscaled.mp4
+#+end_src
