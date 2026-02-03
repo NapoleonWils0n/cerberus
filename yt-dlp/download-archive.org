@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* yt-dlp download-archive
+
+#+begin_src sh
+yt-dlp --download-archive archive.txt -i "https://www.youtube.com/@ChannelName/videos"
+#+end_src
+
+--download-archive archive.txt: This is the magic flag.
+
+It records every video ID you've already downloaded in a text file. If the ID is in the file, yt-dlp skips it.
+
+Automation: Add this command to a Cron job or a systemd timer to run once an hour.
+
+It will only download the "new" videos since the last run.

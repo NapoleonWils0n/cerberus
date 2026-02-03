@@ -1,0 +1,77 @@
+#+STARTUP: show2levels
+* duke nukem nixos install
+** duke nukem files
+
+[[https://archive.org/details/Duke3dAtomicEdition]]
+
+create a directory to download the rar into
+
+#+begin_src sh
+mkdir -p duke-nukem
+#+end_src
+
+#+begin_src sh
+cd duke-nukem
+#+end_src
+
+#+begin_src sh
+wget 'https://archive.org/download/Duke3dAtomicEdition/Duke3d%20Atomic%20Edition.rar'
+#+end_src
+
+** unrar 
+
+install unrar with a nix shell
+
+#+begin_src sh
+nix-shell -p unrar
+#+end_src
+
+extract the rar file
+
+#+begin_src sh
+unrar e Duke3d\ Atomic\ Edition.rar
+#+end_src
+
+exit the nix shell
+
+#+begin_src sh
+exit
+#+end_src
+
+** create the eduke32 directory in your config directory
+
+#+begin_src sh
+mkdir -p ~/.config/eduke32
+#+end_src
+
+** copy files
+
+copy the DUKE3D.GRP and DUKE.RTS files from the eduke32-rar directory into the config eduke32 directory
+
+make sure the filenames are lowercased
+
++ DUKE3D.GRP
+
+#+begin_src sh
+cp DUKE3D.GRP ~/.config/eduke32/duke3d.grp
+#+end_src
+
++ DUKE.RTS
+
+#+begin_src sh
+cp DUKE.RTS ~/.config/eduke32/duke.rts
+#+end_src
+
+** intall and run eduke32
+
+install eduke32 with a nix shell
+
+#+begin_src sh
+nix-shell -p eduke32
+#+end_src
+
+run eduke32
+
+#+begin_src sh
+eduke32
+#+end_src
