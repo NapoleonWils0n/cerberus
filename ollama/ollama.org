@@ -51,6 +51,53 @@ ollama pull deepseek-coder
 ollama run deepseek-coder
 #+end_src
 
+*** deepseek-coder-v2
+
+[[https://ollama.com/library/deepseek-coder-v2/tags]]
+
+**** pull 
+
+#+begin_src sh
+ollama pull deepseek-coder-v2:16b-lite-instruct-q4_K_M
+#+end_src
+
+**** model file
+
+You can force Ollama to leave more room for your Linux GUI by setting the number of layers sent to the GPU.
+
+***** create the model file
+
+model file name
+
+#+begin_example
+deepseek-coder-v2-custom.modelfile
+#+end_example
+
+model file code
+
+#+begin_src sh
+FROM deepseek-coder-v2:16b-lite-instruct-q4_K_M
+PARAMETER num_gpu 20
+#+end_src
+
+***** create the model from the model file
+
+#+begin_src sh
+ollama create deepseek-coder-v2-gpu-20 -f deepseek-coder-v2-custom.modelfile
+#+end_src
+
+***** run the custom model
+
+#+begin_src sh
+ollama run deepseek-coder-v2-gpu-20
+#+end_src
+
+**** run deepseek-coder-v2 without model file
+
+#+begin_src sh
+ollama run deepseek-coder-v2:16b-lite-instruct-q4_K_M
+#+end_src
+
 *** gemma 3
 
 [[https://ollama.com/library/gemma3]]
@@ -65,6 +112,22 @@ ollama pull gemma3:4b
 
 #+begin_src sh
 ollama run gemma3:4b
+#+end_src
+
+*** codegemma
+
+[[https://ollama.com/library/codegemma/tags]]
+
+**** pull 
+
+#+begin_src sh
+ollama pull codegemma:7b
+#+end_src
+
+**** run 
+
+#+begin_src sh
+ollama run codegemma:7b
 #+end_src
 
 *** llama3.2
