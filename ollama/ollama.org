@@ -77,7 +77,10 @@ model file code
 
 #+begin_src sh
 FROM deepseek-coder-v2:16b-lite-instruct-q4_K_M
+# Limit GPU layers to keep 1GB VRAM free for your NixOS desktop
 PARAMETER num_gpu 20
+# Cap context to 8192 to prevent slow-down as the chat gets long
+PARAMETER num_ctx 8192
 #+end_src
 
 ***** create the model from the model file
