@@ -77,22 +77,27 @@ model file code
 
 #+begin_src sh
 FROM deepseek-coder-v2:16b-lite-instruct-q4_K_M
-# Limit GPU layers to keep 1GB VRAM free for your NixOS desktop
-PARAMETER num_gpu 20
-# Cap context to 8192 to prevent slow-down as the chat gets long
-PARAMETER num_ctx 8192
+
+# Lowering to 15 layers is a safer bet for a 4GB card
+PARAMETER num_gpu 15
+
+# 4096 is enough for a few files of Rust code but small enough for your VRAM.
+PARAMETER num_ctx 4096
+
+# Optional: Disable some overhead
+PARAMETER f16_kv false
 #+end_src
 
 ***** create the model from the model file
 
 #+begin_src sh
-ollama create deepseek-coder-v2-gpu-20 -f deepseek-coder-v2-custom.modelfile
+ollama create deepseek-coder-v2-gpu-15 -f deepseek-coder-v2-custom.modelfile
 #+end_src
 
 ***** run the custom model
 
 #+begin_src sh
-ollama run deepseek-coder-v2-gpu-20
+ollama run deepseek-coder-v2-gpu-15
 #+end_src
 
 **** run deepseek-coder-v2 without model file
