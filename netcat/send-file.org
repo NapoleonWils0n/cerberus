@@ -1,21 +1,37 @@
 #+STARTUP: content
 * netcat send and recieve files
 
-send and recieve files with netcat 
+transfer files with netcat
 
-** recieving computer
+** sending computer
 
 replace 6881 with the port of your choice  
-and make sure the port is open in your firewall on the recieving computer
+and make sure the port is open in your firewall
+
+*** no -w option for nixos
 
 #+begin_src sh
-nc -lv -w 3 6881 > outfile.txt
+nc -lv 6881 < infile.txt
 #+end_src
 
-* sending sending computer
-
-replace 192.168.1.3 with the ip address of the recieving computer
+*** -w option on sender for debian
 
 #+begin_src sh
-nc 192.168.1.3 6881 < infile.txt
+nc -lv -w 3 6881 < infile.txt
+#+end_src
+
+*** recieving computer
+
+replace 192.168.1.3 with the ip address of the sending computer
+
+*** -w option for nixos
+
+#+begin_src sh
+nc -w 3 192.168.1.3 6881 > outfile.txt
+#+end_src
+
+*** no -w option for debian
+
+#+begin_src sh
+nc 192.168.1.3 6881 > outfile.txt
 #+end_src
