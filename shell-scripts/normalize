@@ -1,0 +1,96 @@
+#!/bin/sh
+
+#===============================================================================
+# normalize audio levels (2-Pass loudnorm)
+#===============================================================================
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage() {
+echo "Usage: $(basename "$0") -i input -t -3.0 -o output
+-i input
+-t target lufs tp
+-o output"
+exit 2
+}
+
+
+#===============================================================================
+# check number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage
+
+
+#===============================================================================
+# getopts
+#===============================================================================
+
+while getopts ':i:t:o:h' opt; do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     t) target="${OPTARG}";;
+     o) output="${OPTARG}";;
+     h) usage;;
+     *) usage;;
+  esac
+done
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# setup output defaults
+input_name="${input%.*}"
+input_ext="${input##*.}"
+audio_default="${input_name}-normalized.${input_ext}"
+
+# lufs settings
+target_i="-16"
+target_tp="-3.0"
+target_lra="11"
+
+#===============================================================================
+# Analyzing file
+#===============================================================================
+
+echo "+ Pass 1: Analyzing file for -16 LUFS target..."
+
+measurements=$(ffmpeg -hide_banner -i "${input}" -af "loudnorm=I=${target_i}:TP=${target:-${target_tp}}:LRA=${target_lra}:print_format=json" -f null - 2>&1)
+
+# Extracting variables using a more robust awk pattern matching
+measured_i=$(echo "${measurements}" | awk -F'"' '/input_i/ {print $4}')
+measured_tp=$(echo "${measurements}" | awk -F'"' '/input_tp/ {print $4}')
+measured_lra=$(echo "${measurements}" | awk -F'"' '/input_lra/ {print $4}')
+measured_thresh=$(echo "${measurements}" | awk -F'"' '/input_thresh/ {print $4}')
+target_offset=$(echo "${measurements}" | awk -F'"' '/target_offset/ {print $4}')
+
+# Safety check: If we didn't get data, stop here
+if [ -z "${measured_i}" ]; then
+    echo "Error: Could not analyze audio. Check if ffmpeg is installed."
+    exit 1
+fi
+
+
+#===============================================================================
+# Applying normalization
+#===============================================================================
+
+echo "+ Pass 2: Applying normalization (Source: ${measured_i} LUFS)"
+
+# Pass 2: Applying the 2-pass linear normalization
+ffmpeg -hide_banner \
+-stats -v panic \
+-i "${input}" -af \
+"loudnorm=I=${target_i}:TP=${target:-${target_tp}}:LRA=${target_lra}:\
+measured_i=${measured_i}:\
+measured_tp=${measured_tp}:\
+measured_lra=${measured_lra}:\
+measured_thresh=${measured_thresh}:\
+offset=${target_offset}:\
+linear=true" \
+-ar 48000 \
+"${output:-${audio_default}}"
