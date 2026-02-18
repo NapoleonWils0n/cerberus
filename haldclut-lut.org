@@ -1,0 +1,80 @@
+#+STARTUP: content
+* haldcut
+** resources
+
+[[https://gabor.heja.hu/blog/2024/12/10/using-ffmpeg-to-color-correct-color-grade-a-video-lut-hald-clut/]]
+
+** haldclut ffmpeg
+
+With the following command you can generate a snapshot of the video at a specific time (0:00:04 in this case) along with a LUT.
+
+#+begin_src sh
+ffmpeg \
+-hide_banner \
+-v error \
+-stats \
+-f lavfi -i haldclutsrc=8 \
+-i input.mp4 -ss 0:00:04 -frames:v 1 \
+-filter_complex "[1]scale=-1:512[b];[0][b]hstack" \
+haldclut.png
+#+end_src
+
+** gimp or photoshop
+
+import the exported haldcut.png lut from ffmpeg into gimp or ffmpeg
+
+use the levels tool to adjust the black, midtones and white point
+
+then adjust the red, blue and green channels
+
+and export the images a as png and call it something like haldclut-correction.png
+
+** hardware encoding
+
+use nvenc hardware encoding with the input.mp4 video file and the haldclut-correction.png lut
+
+which you exported from gimp or photoshop
+
+#+begin_src sh
+ffmpeg \
+-hide_banner \
+-v error \
+-stats \
+-i input.mp4 \
+-i haldclut-correction.png \
+-filter_complex haldclut \
+-c:v hevc_nvenc \
+-tune hq \
+-preset p7 \
+-rc vbr \
+-multipass fullres \
+-rc-lookahead 32 \
+-spatial-aq 1 \
+-cq 20 \
+-b:v 0 \
+-c:a copy \
+-pix_fmt yuv420p \
+-movflags +faststart \
+output.mp4
+#+end_src
+
+** software encoding
+
+use nvenc hardware encoding with the input.mp4 video file and the haldclut-correction.png lut
+
+which you exported from gimp or photoshop
+
+#+begin_src sh
+ffmpeg \
+-hide_banner \
+-v error \
+-stats \
+-i input.mp4 \
+-i haldclut-correction.png \
+-filter_complex haldclut \
+-c:v libx264 -preset slow -crf 18 \
+-c:a copy \
+-pix_fmt yuv420p \
+-movflags +faststart \
+output.mp4
+#+end_src
