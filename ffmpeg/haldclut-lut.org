@@ -4,6 +4,8 @@
 
 [[https://gabor.heja.hu/blog/2024/12/10/using-ffmpeg-to-color-correct-color-grade-a-video-lut-hald-clut/]]
 
+[[https://ffmpeg.org/ffmpeg-filters.html#haldclut-1]]
+
 ** haldclut ffmpeg
 
 With the following command you can generate a snapshot of the video at a specific time (0:00:04 in this case) along with a LUT.
