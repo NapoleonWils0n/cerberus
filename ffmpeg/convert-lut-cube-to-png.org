@@ -1,8 +1,18 @@
 #+STARTUP: showall
 * convert lut cube to png
 
+convert a single lut cube file into a png
+
 #+begin_src sh
 ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='lut.cube'" -frames:v 1 lut.png
+#+end_src
+
+Convert a whole folder of .cube files to .png for use with lut-apply
+
+#+begin_src sh
+for f in *.cube; do 
+  ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='$f'" -frames:v 1 "${f%.cube}.png"; 
+done
 #+end_src
 
 lut collection on archive.org
