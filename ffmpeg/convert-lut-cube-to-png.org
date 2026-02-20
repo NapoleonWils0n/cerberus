@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* convert lut cube to png
+
+#+begin_src sh
+ffmpeg -f lavfi -i haldclutsrc=8 -i lut.cube -filter_complex "[0][1] haldclut" lut.png
+#+end_src

@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* imagemagick crop image
+
+crop an image to 512 x 512 pixels
+
+#+begin_src sh
+magick input.png -crop 512x512+0+0 output.png
+#+end_src
