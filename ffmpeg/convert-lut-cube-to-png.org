@@ -9,6 +9,14 @@ ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='lut.cube'" -frames:v 1 lut.png
 
 Convert a whole folder of .cube files to .png for use with lut-apply
 
+using fd
+
+#+begin_src sh
+fd -e cube -x ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='{}'" -frames:v 1 "{.}.png"
+#+end_src
+
+or using a for loop
+
 #+begin_src sh
 for f in *.cube; do 
   ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='$f'" -frames:v 1 "${f%.cube}.png"; 
