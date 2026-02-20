@@ -4,3 +4,7 @@
 #+begin_src sh
 ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='lut.cube'" -frames:v 1 lut.png
 #+end_src
+
+lut collection on archive.org
+
+[[https://archive.org/details/mylutcollection]]
