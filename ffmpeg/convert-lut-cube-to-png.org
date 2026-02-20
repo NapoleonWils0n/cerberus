@@ -1,21 +1,18 @@
-#+STARTUP: showall
+#+STARTUP: content
 * convert lut cube to png
-
-convert a single lut cube file into a png
+** convert a single lut cube file into a png
 
 #+begin_src sh
 ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='lut.cube'" -frames:v 1 lut.png
 #+end_src
 
-Convert a whole folder of .cube files to .png for use with lut-apply
-
-using fd
+** use fd to batch convert .cube files to .png
 
 #+begin_src sh
 fd -e cube -x ffmpeg -f lavfi -i haldclutsrc=8 -vf "lut3d='{}'" -frames:v 1 "{.}.png"
 #+end_src
 
-or using a for loop
+** use a for loop to batch convert .cube files to .png
 
 #+begin_src sh
 for f in *.cube; do 
@@ -23,6 +20,9 @@ for f in *.cube; do
 done
 #+end_src
 
-lut collection on archive.org
+** lut collection on archive.org
+
+download the collection with a torrent
+and not a web browser which will download the cube files as binary files
 
 [[https://archive.org/details/mylutcollection]]
