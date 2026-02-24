@@ -1,0 +1,121 @@
+#+STARTUP: content
+* cat subshell
+** linux use cat on a text file
+
+If you want to process the video files in a specific order
+
+You can use ls and redirect the output to a text file and then cat it as the input to the script
+
+Create a list of the videos in the current directory you want to process
+
+In this example we match all the .MOV files in the current directory and redirect the output into a text file called clips.txt
+
+#+begin_src sh
+ls *.MOV > clips.txt
+#+end_src
+
+Note: the concat script creates a temporary file called concat_list.txt which it deletes after processing
+
+So dont use concat_list.txt as the name of the text file
+
+Note: if you want to match .mp4 files you would change the file extension you pass to ls
+
+#+begin_src sh
+ls *.mp4 > clips.txt
+#+end_src
+
+This will create the clips.txt file like this that matches all the .MOV files in the current directory
+
+clips.txt
+
+#+begin_example
+IMG_3497.MOV
+IMG_3498.MOV
+IMG_3499.MOV
+IMG_3500.MOV
+IMG_3502.MOV
+IMG_3503.MOV
+IMG_3504.MOV
+IMG_3506.MOV
+IMG_3507.MOV
+IMG_3508.MOV
+#+end_example
+
+You can then edit the clips.txt file and change the order of the videos to process and save the file.
+
+Like this
+
+#+begin_example
+IMG_3500.MOV
+IMG_3502.MOV
+IMG_3503.MOV
+IMG_3504.MOV
+IMG_3498.MOV
+IMG_3497.MOV
+IMG_3499.MOV
+IMG_3506.MOV
+IMG_3507.MOV
+IMG_3508.MOV
+#+end_example
+
+We first run the script with echo as a prefix and cat in a subshell and give it the clips.txt file
+
+#+begin_src sh
+echo concat -i $(cat clips.txt) -o output.mov
+#+end_src
+
+This will print out the command in the terminal so we can check the order of the video files that will be processed
+
+#+begin_src sh
+concat -i IMG_3500.MOV IMG_3502.MOV IMG_3503.MOV IMG_3504.MOV IMG_3498.MOV IMG_3497.MOV IMG_3499.MOV IMG_3506.MOV IMG_3507.MOV IMG_3508.MOV -o output.mov
+#+end_src
+
+After we have checked the command we can run it without the echo command and the -p option to preview using ffplay
+
+#+begin_src sh
+concat -i $(cat clips.txt) -p
+#+end_src
+
+** Using the ls and cat commands with the Windows PowerShell
+
+To create a list of files to pass to a script redirect the output of ls into a text file.
+
+#+begin_src sh
+ls -Name *.MOV > clips.txt
+#+end_src
+
+Edit the clips.txt file and change the order of the files to be passed to the script.
+
+Note: You can't prefix a command with echo as you can on Linux to show the command that would be run.
+
+Preview with ffplay
+
+To echo the command in the PowerShell terminal before running it you use the following command.
+
+#+begin_src sh
+echo "concat -i $((cat clips.txt) -join ' ') -p"
+#+end_src
+
+Run the command.
+
+#+begin_src powershell
+concat -i $(cat clips.txt) -p
+#+end_src
+
+Concatenate with ffmpeg
+
+To echo the command in the PowerShell terminal before running it you use the following command.
+
+#+begin_src sh
+echo "concat -i $((cat clips.txt) -join ' ') -o output.mov"
+#+end_src
+
+Run the command.
+
+#+begin_src powershell
+concat -i $(cat clips.txt) -o output.mov
+#+end_src
+
+Note: These subshell commands will not work in the classic Windows Command Prompt (~cmd.exe~).
+
+Please use PowerShell or a bash-like terminal (such as Git Bash).

@@ -1,0 +1,109 @@
+#+STARTUP: content
+* ls subshell
+
+Instead of manually typing out a list of files to pass with the -i option
+
+You can use ls or a text file as input
+
+A lot of phones create video files with incremental file names
+
+for example:
+
+#+begin_example
+IMG_3497.MOV
+IMG_3498.MOV
+IMG_3499.MOV
+IMG_3500.MOV
+IMG_3502.MOV
+IMG_3503.MOV
+IMG_3504.MOV
+IMG_3506.MOV
+IMG_3507.MOV
+IMG_3508.MOV
+#+end_example
+
+instead of typing out a list of files with -i option 
+
+like this, which can take a while 
+
+#+begin_src sh
+concat -i IMG_3497.MOV IMG_3498.MOV IMG_3499.MOV IMG_3500.MOV IMG_3502.MOV IMG_3503.MOV IMG_3504.MOV IMG_3506.MOV IMG_3507.MOV IMG_3508.MOV -o output.mp4
+#+end_src
+
+You can use the ls command or a text file instead.
+
+** linux using ls in a subshell
+
+You can use ls in a subshell as input if you want to process the video files in order based on their file names.
+
+To match all the .MOV files in the current directory
+
+We first run the script with echo as a prefix and ls in a subshell with the wildcard *.MOV
+
+#+begin_src sh
+echo concat -i $(ls *.MOV) -o output.mov
+#+end_src
+
+This will print out the command in the terminal so we can check the order of the video files that will be processed
+
+#+begin_src sh
+concat -i IMG_3497.MOV IMG_3498.MOV IMG_3499.MOV IMG_3500.MOV IMG_3502.MOV IMG_3503.MOV IMG_3504.MOV IMG_3506.MOV IMG_3507.MOV IMG_3508.MOV -o output.mov
+#+end_src
+
+After we have checked the command we can run it without the echo command and the -p option to preview using ffplay
+
+#+begin_src sh
+concat -i $(ls *.MOV) -p
+#+end_src
+
+** Windows (PowerShell)
+
+If you are using Windows PowerShell, the syntax is almost identical to the Linux examples above:
+
+Except the ls command needs the -Name option
+
+And echo requires some quoting
+
+*** Using the ls command on the Windows PowerShell
+
+The Windows PowerShell syntax for the ls command needs the -Name option to just list the file names.
+
+#+begin_src sh
+ls -Name
+#+end_src
+
+So to list only the .MOV files with a wildcard you would run this command.
+
+#+begin_src sh
+ls -Name *.MOV
+#+end_src
+
+Note: You can't prefix a command with echo as you can on Linux to show the command that would be run.
+
+To echo the command in the PowerShell terminal before running it you use the following command.
+
+Preview with ffplay
+
+#+begin_src sh
+echo "concat -i $((ls -Name *.MOV) -join ' ') -p"
+#+end_src
+
+And you must pass the -Name option to ls in the subshell when you run the script.
+
+#+begin_src powershell
+concat -i $(ls -Name *.MOV) -p
+#+end_src
+
+To echo the command in the PowerShell terminal before running it you use the following command.
+
+Concatenate with ffmpeg
+
+#+begin_src sh
+echo "concat -i $((ls -Name *.MOV) -join ' ') -o output.mov"
+#+end_src
+
+And you must pass the -Name option to ls in the subshell when you run the script.
+
+#+begin_src powershell
+concat -i $(ls -Name *.MOV) -o output.mov
+#+end_src
