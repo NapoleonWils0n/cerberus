@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* imagemagick ghostscript pdf to image
+
+Using nix-shell
+
+#+begin_src sh
+nix-shell -p ghostscript --run "magick -density 300 'input.pdf' -quality 95 output.jpg"
+#+end_src
