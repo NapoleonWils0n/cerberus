@@ -1,0 +1,74 @@
+#+STARTUP: content
+* ipad dfu mode linux
+** resources
+
+[[https://github.com/libimobiledevice/idevicerestore]]
+
+** nixos
+
+*** install packages
+
+#+begin_src sh
+nix-shell -p libimobiledevice idevicerestore usbmuxd
+#+end_src
+
+*** Start the daemon
+
+#+begin_src sh
+doas usbmuxd -f -v
+#+end_src
+
+*** Run the restore command:
+
+Open a new terminal or tmux pane
+
+And run enter the nix-shell again
+
+#+begin_src sh
+nix-shell -p libimobiledevice idevicerestore usbmuxd
+#+end_src
+
+Put the iPad in Recovery Mode:
+
+Plug it into your PC.
+
+Press Vol Up (quick), Vol Down (quick).
+
+Hold Power until you see the cable/computer icon on the iPad screen.
+
+#+begin_src sh
+doas idevicerestore --erase --latest
+#+end_src
+
+You will be prompted to download the firmware for your device
+
+As shown in the example below
+
+Press 1 to download the firmware
+
+#+begin_example
+Device Product Build: 23D127
+The following firmwares are currently being signed for iPad12,1:
+  [1] 26.3 (build 23D127)
+Select the firmware you want to restore: 1
+Selected firmware 26.3 (build 23D127)
+Downloading firmware (https://updates.cdn-apple.com/2026WinterFCS/fullrestores/047-55967/690A75C4-B917-4D09-A068-F3748AB052BB/iPad_10.2_2021_26.3_23D127_Restore.ipsw)
+#+end_example
+
+The firmware is 8.6 GB so will take a while to download
+
+You can also use aria2c to download the file which maybe faster
+
+Press control c to stop the download and then copy the url for the firmware
+
+You can then use aria2c to download the file instead
+
+#+begin_src sh
+aria2c -x 16 -s 16 'https://updates.cdn-apple.com/2026WinterFCS/fullrestores/047-55967/690A75C4-B917-4D09-A068-F3748AB052BB/iPad_10.2_2021_26.3_23D127_Restore.ipsw'
+#+end_src
+
+flash the firmware, replacing the ipsw name to match the downloaded file name
+
+#+begin_src sh
+doas idevicerestore --erase iPad_10.2_2021_26.3_23D127_Restore.ipsw
+#+end_src
