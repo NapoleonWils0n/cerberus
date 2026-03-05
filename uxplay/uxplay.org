@@ -1,6 +1,10 @@
 #+STARTUP: content
 * uxplay
-** configuration.nix
+** nixos 
+
+Dell xps 15 with nvidia
+
+*** configuration.nix
 
 #+begin_src sh
 services.usbmuxd.enable = true;
@@ -31,7 +35,7 @@ networking.firewall = {
 };
 #+end_src
 
-** uxplay window
+*** uxplay window
 
 #+begin_src sh
 uxplay -vd nvh264dec -vs waylandsink -fs -p
@@ -46,13 +50,13 @@ Run uxplay -fs to force it into fullscreen on a second monitor,
 uxplay -avdec -p -fs 
 #+end_src
 
-** config
+*** uxplay config
 
 #+begin_src sh
 vi ~/.config/uxplayrc
 #+end_src
 
-#+begin_src sh
+#+begin_src conf
 # Use NVIDIA hardware decoding
 vd nvh264dec
 
@@ -63,6 +67,48 @@ vs waylandsink
 fs
 
 # Use legacy ports: UDP 6000, 6001, 7011 and TCP 7000, 7001, 7100
+p
+#+end_src
+
+** debian
+
+debian macboook air with intel
+
+*** packages 
+
+#+begin_src sh
+doas apt install gstreamer1.0-vaapi intel-media-va-driver-non-free
+#+end_src
+
+*** uxplay window
+
+#+begin_src sh
+uxplay -vd vah264dec -vs waylandsink -fs -vsync no -reset 0 -p
+#+end_src
+
+*** uxplay config
+
+#+begin_src sh
+vi ~/.config/uxplayrc
+#+end_src
+
+#+begin_src conf
+# Intel Hardware Decoding (VA-API)
+vd vah264dec
+
+# Native Wayland Video Sink
+vs waylandsink
+
+# Start in Fullscreen
+fs
+
+# Disable timestamp sync (Fixes "invalid ntp_time" error)
+vsync no
+
+# Network timeout fix (Prevents "raop_ntp" drops)
+reset 0
+
+# Use legacy firewall ports
 p
 #+end_src
 
