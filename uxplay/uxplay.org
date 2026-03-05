@@ -1,0 +1,119 @@
+#+STARTUP: content
+* uxplay
+** configuration.nix
+
+#+begin_src sh
+services.usbmuxd.enable = true;
+
+services.avahi = {
+  enable = true;
+  nssmdns4 = true;
+  publish = {
+    enable = true;
+    userServices = true;
+  };
+};
+
+environment.systemPackages = with pkgs; [
+    libimobiledevice 
+    ifuse
+    uxplay
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gst-libav
+];
+
+# Open the necessary ports in your firewall
+networking.firewall = {
+  allowedTCPPorts = [ 7000 7001 7100 ];
+  allowedUDPPorts = [ 5353 6000 6001 7011 ];
+};
+#+end_src
+
+** uxplay window
+
+#+begin_src sh
+uxplay -vd nvh264dec -vs waylandsink -fs -p
+#+end_src
+
+press F11 to toggle full screen
+
+Pro Tip:
+Run uxplay -fs to force it into fullscreen on a second monitor,
+
+#+begin_src sh
+uxplay -avdec -p -fs 
+#+end_src
+
+** config
+
+#+begin_src sh
+vi ~/.config/uxplayrc
+#+end_src
+
+#+begin_src sh
+# Use NVIDIA hardware decoding
+vd nvh264dec
+
+# Use Wayland video sink
+vs waylandsink
+
+# Always start in fullscreen
+fs
+
+# Use legacy ports: UDP 6000, 6001, 7011 and TCP 7000, 7001, 7100
+p
+#+end_src
+
+** mount device
+
+The Handshake (The "Trust" Dance)
+Plug the iPad into your PC.
+
+Unlock the iPad screen.
+
+On your Linux terminal, run:
+
+#+begin_src sh
+idevicepair pair
+#+end_src
+
+Look at the iPad: A "Trust This Computer?" prompt will appear. Tap Trust and enter your iPad passcode.
+
+Run idevicepair pair again to confirm. It should say SUCCESS.
+
+Mount the Filesystem
+You need to create a mount point and then use ifuse to map the iPad's media partition to it.
+
+Create a mount point in your home dir
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+Mount the media folder (Photos, Books, etc.)
+
+#+begin_src sh
+ifuse ~/mnt
+#+end_src
+
+You can now cd ~/mnt or open your file manager (Nautilus, Dolphin, Thunar).
+
+Photos/Videos: Look in DCIM/100APPLE.
+
+App Files: If you want to access files inside a specific app (like VLC or a PDF reader), use:
+
+#+begin_src sh
+ifuse --documents <appid> ~/mnt
+#+end_src
+
+(You can find the <appid> by running ifuse --list-apps).
+
+Permissions: If you get a "Permission Denied" error, ensure your user is in the plugdev or adbusers group, or just run the mount command with sudo (though ifuse usually prefers being run as a user).
+
+The "Dirty" Mount: If the iPad disconnects, the mount point will "ghost." Unmount it forcefully with:
+
+#+begin_src sh
+fusermount -u ~/mnt
+#+end_src
