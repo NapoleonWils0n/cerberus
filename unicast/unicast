@@ -1,8 +1,3 @@
-#+STARTUP: content
-* unicast video
-** unicast script
-
-#+begin_src sh
 #!/bin/sh
 
 #===============================================================================
@@ -105,15 +100,6 @@ while getopts ':l:u:p:h' opt; do
         exit 0
         ;;
      h) usage ;;
-     ,*) usage ;;
+     *) usage ;;
   esac
 done
-#+end_src
-
-** unicast.m3u
-
-#+begin_src conf
-#EXTM3U
-#EXTINF:-1,Unicast Stream
-http://192.168.1.3:8080
-#+end_src
