@@ -1,0 +1,116 @@
+#+STARTUP: content
+* unicast video
+** unicast script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# unicast - Unified Streamer
+#===============================================================================
+# note when using the -p playlist option
+# press ctrl c once to move to the next item in the playlist
+# you have to press play again in vlc on the ipad to play the video
+# press ctrl c twice to stop the script when using the -p option
+#===============================================================================
+
+usage () {
+  [ -z "${1}" ] || echo "! ${1}"
+  echo "Usage: $(basename "$0") [-l local_file] [-u single_url] [-p playlist_url]"
+  exit 2
+}
+
+[ $# -gt 0 ] || usage "wrong number of arguments"
+
+#===============================================================================
+# Functions
+#===============================================================================
+
+one_stream () {
+  ffmpeg \
+  -hide_banner -stats -v panic -re \
+  -i "${url}" \
+  ${v_params:-"-c:v copy"} ${a_params:-"-c:a copy"} \
+  -tune zerolatency -listen 1 \
+  -f mpegts http://0.0.0.0:8080
+}
+
+two_streams () {
+  video_url=$(echo "${url}" | awk 'NR==1')
+  audio_url=$(echo "${url}" | awk 'NR==2')
+
+  ffmpeg \
+  -hide_banner -stats -v panic -re \
+  -i "${video_url}" -i "${audio_url}" \
+  ${v_params:-"-c:v copy"} ${a_params:-"-c:a copy"} \
+  -tune zerolatency -map 0:0 -map 1:0 \
+  -listen 1 \
+  -f mpegts http://0.0.0.0:8080
+}
+
+#===============================================================================
+# Getopts & Mode Logic
+#===============================================================================
+
+while getopts ':l:u:p:h' opt; do
+  case ${opt} in
+     l) 
+        infile="${OPTARG}"
+        v_codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "${infile}")
+        a_codec=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "${infile}")
+        a_channels=$(ffprobe -v error -select_streams a:0 -show_entries stream=channels -of default=noprint_wrappers=1:nokey=1 "${infile}")
+
+        [ "${v_codec}" = "h264" ] && v_params="-c:v copy" || v_params="-c:v libx264 -preset ultrafast -crf 23"
+        [ "${a_codec}" = "aac" ] && [ "${a_channels}" -le 2 ] && a_params="-c:a copy" || a_params="-c:a aac -b:a 192k -ac 2"
+
+        url="${infile}"
+        echo "+ stream ready"
+        one_stream
+        exit 0
+        ;;
+     u) 
+        infile="${OPTARG}"
+        echo "+ fetching single stream..."
+        url=$(yt-dlp --no-warnings -f "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[vcodec^=avc1]" -g --no-playlist "${infile}")
+        streamcount=$(echo "${url}" | wc -l)
+        
+        echo "+ stream ready"
+        # Reset params to copy for YT streams
+        v_params="-c:v copy"
+        a_params="-c:a copy"
+        
+        [ "${streamcount}" -eq 2 ] && two_streams || one_stream
+        exit 0
+        ;;
+     p) 
+        infile="${OPTARG}"
+        echo "+ loading playlist..."
+        video_ids=$(yt-dlp --no-warnings --flat-playlist --print id "${infile}")
+        # Reset params for YT playlist items
+        v_params="-c:v copy"
+        a_params="-c:a copy"
+
+        for id in $video_ids; do
+            echo "+ fetching: $id"
+            url=$(yt-dlp --no-warnings -f "bestvideo[vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[vcodec^=avc1]" -g "https://www.youtube.com/watch?v=$id")
+            streamcount=$(echo "${url}" | wc -l)
+            echo "+ stream ready"
+            [ "${streamcount}" -eq 2 ] && two_streams || one_stream
+            echo "+ video finished. loading next video in playlist"
+        done
+        exit 0
+        ;;
+     h) usage ;;
+     ,*) usage ;;
+  esac
+done
+
+#+end_src
+
+** unicast.m3u
+
+#+begin_src conf
+#EXTM3U
+#EXTINF:-1,Unicast Stream
+http://192.168.1.3:8080
+#+end_src
