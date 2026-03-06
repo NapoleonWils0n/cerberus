@@ -1,0 +1,3 @@
+#EXTM3U
+#EXTINF:-1,Unicast Stream
+http://192.168.1.3:8080
