@@ -1,0 +1,10 @@
+#+STARTUP: showall
+* git reset local to remote head
+
+#+begin_src sh
+git fetch master
+#+end_src
+
+#+begin_src sh
+git reset --hard master
+#+end_src

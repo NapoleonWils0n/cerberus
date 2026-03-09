@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* reset
+
+#+begin_src sh
+reset
+#+end_src
+
+This will re-initialize your terminal settings and should bring your prompt and typing back to normal.
