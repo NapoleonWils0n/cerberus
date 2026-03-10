@@ -1,0 +1,66 @@
+#+STARTUP: show3levels
+#+PROPERTY: header-args:sh :results none
+* obs cmd
+** emacs doom modeline
+
+doom modeline now playing hangs when using obs-cmd pause
+
+Run this BEFORE starting a relay to prevent Emacs from hanging
+
+#+begin_src emacs-lisp :results silent
+(setq doom-modeline-now-playing nil)
+(doom-modeline-update-now-playing)
+#+end_src
+
+Run this to turn it back on after your stream
+
+#+begin_src emacs-lisp :results silent
+(setq doom-modeline-now-playing t)
+(doom-modeline-update-now-playing)
+#+end_src
+
+** switch scene
+*** terminal
+
+#+begin_src sh
+obs-cmd scene switch "terminal"
+#+end_src
+
+*** emacs
+
+#+begin_src sh
+obs-cmd scene switch "emacs"
+#+end_src
+
+*** firefox
+
+#+begin_src sh
+obs-cmd scene switch "firefox"
+#+end_src
+
+*** laptop
+
+#+begin_src sh
+obs-cmd scene switch "laptop"
+#+end_src
+
+*** monitor
+
+#+begin_src sh
+obs-cmd scene switch "monitor"
+#+end_src
+
+*** media
+
+#+begin_src sh
+obs-cmd scene switch "media"
+#+end_src
+
+*** both screens
+
+#+begin_src sh
+obs-cmd scene switch "both"
+#+end_src
+
+
+
