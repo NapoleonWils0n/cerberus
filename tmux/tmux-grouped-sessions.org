@@ -1,0 +1,56 @@
+#+STARTUP: showall
+* tmux grouped sessions
+** Start the primary session
+
+#+begin_src sh
+tmux new -s master
+#+end_src
+
+** Create the grouped session.
+
+#+begin_src sh
+tmux new-session -t master -s client
+#+end_src
+
+It will link to "master" but allow this window to shrink to the tile size without affecting the fullscreen view:
+
+** exit session
+
+using the default prefix key to exit the session is ctrl + b + d
+
+but in the config listed below i have changed the prefix key to a
+
+so you can exit the session by typing 
+
+#+begin_example
+ctrl a d
+#+end_example
+
+tmux kill the client session
+
+#+begin_src sh
+tmux kill-session -t client
+#+end_src
+
+** config
+
+#+begin_src conf
+# Change the prefix key to C-a
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
+
+# Remove the session name from the left side
+set -g status-left " "
+
+# Put the window list on the left
+set -g status-justify left
+
+# Put the session name on the right
+set -g status-right "[#S]" 
+set -g status-right-style fg=color245
+
+# resize 
+setw -g aggressive-resize on
+set -g focus-events on
+#+end_src
