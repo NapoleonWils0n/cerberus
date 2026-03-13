@@ -156,6 +156,18 @@ ifuse --documents <appid> ~/mnt
 
 (You can find the <appid> by running ifuse --list-apps).
 
+Mount the native vlc app container
+
+#+begin_src sh
+ifuse --documents org.videolan.vlc-ios ~/mnt
+#+end_src
+
+copy files into vlc
+
+#+begin_src sh
+rsync -vP --inplace --no-perms --no-owner --no-group files/* ~/mnt/
+#+end_src
+
 Permissions: If you get a "Permission Denied" error, ensure your user is in the plugdev or adbusers group, or just run the mount command with sudo (though ifuse usually prefers being run as a user).
 
 The "Dirty" Mount: If the iPad disconnects, the mount point will "ghost." Unmount it forcefully with:
