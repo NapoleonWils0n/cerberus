@@ -1,0 +1,118 @@
+#+STARTUP: content
+* wayback machine cdx api
+** cdx api and curl
+
+replace VIDEO_ID with the youtube video id
+
+#+begin_src sh
+curl -s "https://web.archive.org/cdx/search/cdx?url=youtube.com/watch?v=VIDEO_ID&output=txt&fl=timestamp,original" | awk '{print "https://web.archive.org/web/" $1 "/" $2}' > links.txt
+#+end_src
+
+** wayback-links script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# wayback-links
+#
+# use the Wayback Machine's CDX API
+# to query for every captured timestamp of a specific URL
+#
+# dependencies:
+# awk, curl
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i url -o output"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -ne 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     o) output="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# Splits by /, ?, =, &, and . to isolate the YouTube ID or the file basename
+output_default=$(echo "$input" | awk -F'[/=?&.]' '{
+    # Look for the YouTube "v" parameter
+    for (i=1; i<=NF; i++) {
+        if ($i == "v") {
+            print $(i+1) "-links.txt"
+            exit
+        }
+    }
+    # Fallback: Get the last non-empty segment and strip common extensions
+    for (i=NF; i>0; i--) {
+        if ($i != "" && $i != "html" && $i != "php" && $i != "htm") {
+            print $i "-links.txt"
+            exit
+        }
+    }
+}')
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# use the wayback machine cdx api
+# curl use the -L option to follow redirects, and -# for a progress bar
+
+get_urls() {
+curl -L --progress-bar "https://web.archive.org/cdx/search/cdx?url=${input}&output=txt&fl=timestamp,original" \
+| awk '{print "https://web.archive.org/web/" $1 "/" $2}' \
+> "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+# run the get urls function
+get_urls
+
+#+end_src
