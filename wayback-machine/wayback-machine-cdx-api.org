@@ -128,3 +128,9 @@ xargs -I % wayback-links -i % < urls.txt
 #+begin_src sh
 fd -e txt -x yt-dlp -i -a {}
 #+end_src
+
+sleep request
+
+#+begin_src sh
+fd -e txt -j 1 -x yt-dlp -i --sleep-requests 5 -a {}
+#+end_src
