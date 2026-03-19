@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* fd find text files download with yt-dlp
+
+#+begin_src sh
+fd -e txt -x yt-dlp -i -a {}
+#+end_src
+
+use fd with the -e option to find txt files
+
+use the -x option to execute yt-dlp
+
+the -i option is to ignore errors
+
+-a {} batch downloads all the urls from the text file found with fd

@@ -1,0 +1,20 @@
+#+STARTUP: showall
+* xargs command substitution
+
+#+begin_src sh
+xargs -I % echo % < urls.txt
+#+end_src
+
+xargs: The primary tool used to build and execute command lines from standard input.
+
+-I %: This defines a replace-string (or placeholder).
+
+It tells xargs: "Every time you see the symbol % in the following command, replace it with exactly one full line from the input file."
+
+echo %: This is the command being executed.
+
+Because of the -I flag, xargs will run echo once for every line in your file, swapping the % for the actual URL.
+
+< urls.txt: This is a shell redirection.
+
+It opens the file urls.txt and "feeds" its contents into the start of the xargs command.
