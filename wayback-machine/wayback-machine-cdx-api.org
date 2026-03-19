@@ -122,3 +122,9 @@ get_urls
 #+begin_src sh
 xargs -I % wayback-links -i % < urls.txt
 #+end_src
+
+** yt-dlp download videos from text files
+
+#+begin_src sh
+fd -e txt -x yt-dlp -i -a {}
+#+end_src
