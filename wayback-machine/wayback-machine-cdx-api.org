@@ -116,3 +116,9 @@ curl -L --progress-bar "https://web.archive.org/cdx/search/cdx?url=${input}&outp
 get_urls
 
 #+end_src
+
+** batch process text file of urls
+
+#+begin_src sh
+xargs -I % wayback-links -i % < urls.txt
+#+end_src
