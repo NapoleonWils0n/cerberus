@@ -1,0 +1,20 @@
+#+STARTUP: showall
+* softwareupdate mac osx
+
+list available updates
+
+#+begin_src sh
+softwareupdate -l 
+#+end_src
+
+<name of update from the above command> to install one specific update
+
+#+begin_src sh
+softwareupdate -i
+#+end_src
+
+install all available updates 
+
+#+begin_src sh
+softwareupdate -i -a 
+#+end_src
