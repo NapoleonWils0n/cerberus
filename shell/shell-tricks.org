@@ -1,0 +1,221 @@
+* Shell Tricks That Actually Make Life Easier (And Save Your Sanity)
+:PROPERTIES:
+:CUSTOM_ID: shell-tricks-that-actually-make-life-easier-and-save-your-sanity
+:END:
+
+[[https://blog.hofstede.it/shell-tricks-that-actually-make-life-easier-and-save-your-sanity/]]
+
+There is a distinct, visceral kind of pain in watching an otherwise brilliant engineer hold down the Backspace key for six continuous seconds to fix a typo at the beginning of a line.
+
+We've all been there. We learn =ls=, =cd=, and =grep=, and then we sort of... stop. The terminal becomes a place we live in-but we rarely bother to arrange the furniture. We accept that certain tasks take forty keystrokes, completely unaware that the shell authors solved our exact frustration sometime in 1989.
+
+Here are some tricks that aren't exactly secret, but aren't always taught either. To keep the peace in our extended Unix family, I've split these into two camps: the universal tricks that work on almost any POSIX-ish shell (like =sh= on FreeBSD or =ksh= on OpenBSD), and the quality-of-life additions specific to interactive shells like Bash or Zsh.
+
+** The “Works (Almost) Everywhere” Club
+:PROPERTIES:
+:CUSTOM_ID: the-works-almost-everywhere-club
+:END:
+These tricks rely on standard terminal line disciplines, generic Bourne shell behaviors, or POSIX features. If you SSH into an embedded router from 2009, a fresh OpenBSD box, or a minimal Alpine container, these will still have your back.
+
+*** The Backspace Replacements
+:PROPERTIES:
+:CUSTOM_ID: the-backspace-replacements
+:END:
+Why shuffle character-by-character when you can teleport? These are standard Emacs-style line-editing bindings (via Readline or similar), enabled by default in most modern shells.
+
+*=CTRL + W=*: You're typing =/var/log/nginx/= but you actually meant =/var/log/apache2/=. You have two choices: hold down Backspace until your soul leaves your body, or hit =CTRL + W= to instantly delete the word before the cursor. Once you get used to this, holding Backspace feels like digging a hole with a spoon.
+
+*=CTRL + U= and =CTRL + K=*: You typed out a beautifully crafted, 80-character =rsync= command, but suddenly realize you need to check if the destination directory actually exists first. You don't want to delete it, but you don't want to run it. Hit =CTRL + U= to cut everything from the cursor to the beginning of the line. Check your directory, and then hit *=CTRL + Y=* to paste (“yank”) your masterpiece right back into the prompt. (=CTRL + K= does the same thing, but cuts from the cursor to the /end/ of the line.)
+
+*=CTRL + A= and =CTRL + E=*: Jump instantly to the beginning (=A=) or end (=E=) of the line. Stop reaching for the Home and End keys; they are miles away from the home row anyway.
+
+*=ALT + B= and =ALT + F=*: Move backward (=B=) or forward (=F=) one entire word at a time. It's the arrow key's much faster, much cooler sibling. /(Mac users: you usually have to tweak your terminal settings to use Option as Meta for this to work)./
+
+*** The “Oh No, Binary Output” Fix
+:PROPERTIES:
+:CUSTOM_ID: the-oh-no-binary-output-fix
+:END:
+*=reset= (or =stty sane=)*: While strictly more of a terminal recovery tip than an interactive shell trick, it belongs here. We've all done it: you meant to =cat= a text file, but you accidentally =cat= a compiled binary or a compressed tarball. Suddenly, your terminal is spitting out ancient runes and Wingdings, and your prompt is completely illegible. Instead of closing the terminal window in shame, type =reset= (even if you can't see the letters you're typing) and hit enter. Your terminal will heal itself.
+
+*** The Emergency Exits
+:PROPERTIES:
+:CUSTOM_ID: the-emergency-exits
+:END:
+*=CTRL + C=*: Cancel the current command immediately. Your emergency exit when a command hangs, or you realize you're tailing the wrong log file.
+
+*=CTRL + D=*: Sends an EOF (End of File) signal. If you're typing input to a command that expects it, this closes the stream. But if the command line is empty, it logs you out of the shell completely-be careful where you press it.
+
+*** The Screen Cleaner
+:PROPERTIES:
+:CUSTOM_ID: the-screen-cleaner
+:END:
+*=CTRL + L=*: Your terminal is cluttered with stack traces, compiler spaghetti, and pure digital noise. Running the =clear= command works, but what if you're already halfway through typing a new command? =CTRL + L= wipes the slate clean, throwing your current prompt right up to the top without interrupting your train of thought.
+
+*** The Previous Directory Ping-Pong
+:PROPERTIES:
+:CUSTOM_ID: the-previous-directory-ping-pong
+:END:
+*=cd -=*: The classic channel-flipper. You're deep down in =/usr/local/etc/postfix= and you need to check something in =/var/log=. You type =cd /var/log=, look at the logs, and now you want to go back. Instead of typing that long path again, type =cd -=. It switches you to your previous directory. Run it again, and you're back in logs. Perfect for toggling back and forth.
+
+*=pushd= and =popd=*: If =cd -= is a toggle switch, =pushd= is a stack. Need to juggle multiple directories? =pushd /etc= changes to =/etc= but saves your previous directory to a hidden stack. When you're done, type =popd= to pop it off the stack and return exactly where you left off.
+
+*** The Instant Truncate
+:PROPERTIES:
+:CUSTOM_ID: the-instant-truncate
+:END:
+*=> file.txt=*: This empties a file completely without deleting and recreating it. Why does this matter? It preserves file permissions, ownership, and doesn't interrupt processes that already have the file open. It's much cleaner than =echo "" > file.txt= (which actually leaves a newline character) or =rm file && touch file=.
+
+*** The “Last Argument” Variable
+:PROPERTIES:
+:CUSTOM_ID: the-last-argument-variable
+:END:
+*=$_=*: In most shells, =$_= expands to the last argument of the previous command-especially useful interactively or in simple scripts when you need to operate on the same long path twice:
+
+#+begin_example
+mkdir -p /some/ridiculously/long/path/newdir && cd "$_"
+#+end_example
+
+No more re-typing paths or declaring temporary variables to enter a directory you created a second ago.
+
+*** Scripting Sanity Savers
+:PROPERTIES:
+:CUSTOM_ID: scripting-sanity-savers
+:END:
+If you are writing shell scripts, put these at the top immediately after your shebang. It will save you from deploying chaos to production.
+
+- *=set -e=*: Exit on error. Very useful, but notoriously weird with edge cases (especially inside conditionals like =if= statements, =while= loops, and pipelines). Don't rely on it blindly as it can create false confidence. /(Pro-tip: consider =set -euo pipefail= for a more robust safety net, but learn its caveats first.)/
+- *=set -u=*: Treats referencing an unset variable as an error. This protects you from catastrophic disasters like =rm -rf /usr/local/${MY_TYPO_VAR}/*= accidentally expanding into =rm -rf /usr/local/*=.
+
+--------------
+
+** The Bash & Zsh Comfort Zone
+:PROPERTIES:
+:CUSTOM_ID: the-bash-zsh-comfort-zone
+:END:
+If you're on a Linux box or using a modern interactive shell, these are the tools that make the CLI feel less like a rusty bicycle and more like something that actually responds when you steer.
+
+*** The History Hunter
+:PROPERTIES:
+:CUSTOM_ID: the-history-hunter
+:END:
+*=CTRL + R=*: Reverse incremental search. Stop pressing the up arrow forty times to find that one =awk= command you used last Tuesday. Press =CTRL + R=, start typing a keyword from the command, and it magically pulls it from your history. Press =CTRL + R= again to cycle backwards through matches.
+
+*** The “Oops, Sudo” Move
+:PROPERTIES:
+:CUSTOM_ID: the-oops-sudo-move
+:END:
+*=!!=*: This expands to the entirety of your previous command. Its most famous use case is the “Permission denied” walk of shame. You confidently type =systemctl restart nginx=, hit enter, and the system laughs at your lack of privileges. Instead of retyping it, run:
+
+#+begin_example
+sudo !!
+#+end_example
+
+It's your way of telling the shell, “Do what I said, but this time with authority.”
+
+*** The Ultimate Editor Escape Hatch
+:PROPERTIES:
+:CUSTOM_ID: the-ultimate-editor-escape-hatch
+:END:
+*=CTRL + X=, then =CTRL + E=*: You start typing a quick one-liner. Then you add a pipe. Then an =awk= statement. Soon, you're editing a four-line monster inside your prompt and navigation is getting difficult. Hit =CTRL + X= followed by =CTRL + E= (in Bash; in Zsh, this needs configuring). This drops your current command into your default text editor (like Vim or Nano). You can edit it with all the power of a proper editor, save, and exit. The shell then executes the command instantly.
+
+*=fc=*: The highly portable, traditional sibling to =CTRL+X CTRL+E=. Running =fc= opens your previous command in your =$EDITOR=. It works across most shells and is a fantastic hidden gem for fixing complex, multi-line commands that went wrong.
+
+*** The Last Argument (Interactive Edition)
+:PROPERTIES:
+:CUSTOM_ID: the-last-argument-interactive-edition
+:END:
+*=ESC + .=* (or *=ALT + .=*): Inserts the last argument of the previous command right at your cursor. Press it repeatedly to cycle further back through your history, dropping the exact filename or parameter you need right into your current command.
+
+*=!$=*: The non-interactive sibling of =ESC + .=. Unlike =ESC + .= (which inserts the text live at your cursor for you to review or edit), =!$= expands blindly at the exact moment you hit enter. /(Pro-Tip: For scripting or standard =sh=, use the =$_= variable mentioned earlier instead!)/
+
+*** The Renaming Trick & Brace Expansion
+:PROPERTIES:
+:CUSTOM_ID: the-renaming-trick-brace-expansion
+:END:
+Brace expansion is pure magic for avoiding repetitive typing, especially when doing quick backups or renames.
+
+*The Backup Expansion*: Need to edit a critical config file and want to make a quick backup first?
+
+#+begin_example
+cp pf.conf{,.bak}
+#+end_example
+
+The shell expands this seamlessly into =cp pf.conf pf.conf.bak=.
+
+*The Rename Trick*:
+
+#+begin_example
+mv filename.{txt,md}
+#+end_example
+
+This expands to =mv filename.txt filename.md=. Fast, elegant, and makes you look like a wizard.
+
+Need multiple directories? =mkdir -p project/{src,tests,docs}= creates all three at once.
+
+*** Process Substitution
+:PROPERTIES:
+:CUSTOM_ID: process-substitution
+:END:
+*=<(command)=*: Treats the output of a command as if it were a file. Say you want to diff the sorted versions of two files. Traditionally, you'd sort them into temporary files, diff those, and clean up. Process substitution skips the middleman:
+
+#+begin_example
+diff <(sort file1.txt) <(sort file2.txt)
+#+end_example
+
+*** The Ultimate Glob
+:PROPERTIES:
+:CUSTOM_ID: the-ultimate-glob
+:END:
+*=**= (Globstar)*: =find= is a great command, but sometimes it feels like overkill. If you run =shopt -s globstar= in Bash (it's enabled by default in Zsh), =**= matches files recursively in all subdirectories. Need to find all JavaScript files in your current directory and everything beneath it?
+
+#+begin_example
+ls **/*.js
+#+end_example
+
+No =find= command required.
+
+*** Backgrounding and Disowning
+:PROPERTIES:
+:CUSTOM_ID: backgrounding-and-disowning
+:END:
+*=CTRL + Z=*, then *=bg=*, then *=disown=*: You started a massive, hour-long database import task, but you forgot to run it in =tmux= or =screen=. It's tying up your terminal, and if your SSH connection drops, the process dies. Panic sets in.
+
+1. Hit =CTRL + Z= to suspend (pause) the process.
+2. Type =bg= to let it resume running in the background. Your prompt is free!
+3. Type =disown= to detach it from your shell entirely. You can safely close your laptop, grab a coffee, and the process will survive.
+
+*** The Everything-Logger
+:PROPERTIES:
+:CUSTOM_ID: the-everything-logger
+:END:
+*=command |& tee file.log=*: Standard pipes (=|=) only catch standard output (=stdout=). If a script throws an error (=stderr=), it skips the pipe and bleeds directly onto your screen, missing the log file. =|&= pipes /both/ stdout and stderr (it's a helpful shorthand for =2>&1 |=).
+
+Throw in =tee=, and you get to watch the output on your screen while simultaneously saving it to a log file. It's the equivalent of watching live TV while recording it to your DVR.
+
+--------------
+
+The shell is a toolbox, not an obstacle course. You don't need to memorize all of these today. Pick just one trick, force it into your daily habits for a week, and then pick another. Stop letting the terminal push you around, and start rearranging the furniture. It's your house now.
+
+**** Comments
+:PROPERTIES:
+:CUSTOM_ID: comments
+:CLASS: fediverse-comments-title
+:END:
+You can use your [[https://joinmastodon.org][Mastodon]] or other ActivityPub account to comment on this article by replying to the associated [[https://burningboard.net/@Larvitz/116292171083322195][post]].
+
+Copy post link
+
+Search for the copied link on your Mastodon instance to reply.
+
+<<mastodon-comments-list>>
+Loading comments...
+
+You need to enable JavaScript to view comments.
+
+- [[https://blog.hofstede.it/about/][About]]
+- [[https://blog.hofstede.it/contact/][Contact]]
+- [[https://blog.hofstede.it/archives/][Archives]]
+- [[https://blog.hofstede.it/categories/][Categories]]
+- [[https://blog.hofstede.it/imprint/][Impressum / Imprint]]
+
+© 2025--2026 Christian Hofstede-Kuhn - Proudly hosted on FreeBSD

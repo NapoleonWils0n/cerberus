@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* wrap none sed remove non breaking spaces
+
+#+begin_src sh
+pandoc -f html-native_spans -t org --wrap=none \
+'https://blog.hofstede.it/shell-tricks-that-actually-make-life-easier-and-save-your-sanity/' | \
+sed 's/\xc2\xa0/ /g' > shell-tricks.org
+#+end_src
