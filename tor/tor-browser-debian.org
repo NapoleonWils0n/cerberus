@@ -1,0 +1,54 @@
+#+STARTUP: show2levels
+* tor browser debian install
+** sources.list
+
+edit your sources.list and add contrib
+
+#+begin_src sh
+sudo vi /etc/apt/sources.list
+#+end_src
+
+#+begin_src conf
+#deb cdrom:[Debian GNU/Linux 12.10.0 _Bookworm_ - Official amd64 NETINST with firmware 20250315-10:09]/ trixie contrib main non-free-firmware
+
+deb http://deb.debian.org/debian/ trixie main contrib non-free-firmware non-free
+deb-src http://deb.debian.org/debian/ trixie main contrib non-free-firmware non-free
+
+deb http://security.debian.org/debian-security trixie-security main contrib non-free-firmware non-free
+deb-src http://security.debian.org/debian-security trixie-security main contrib non-free-firmware non-free
+
+# trixie-updates, to get updates before a point release is made;
+# see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+deb http://deb.debian.org/debian/ trixie-updates main contrib non-free-firmware non-free
+deb-src http://deb.debian.org/debian/ trixie-updates main contrib non-free-firmware non-free
+
+# backports
+deb http://deb.debian.org/debian/ trixie-backports main contrib non-free-firmware non-free
+deb-src http://deb.debian.org/debian/ trixie-backports main contrib non-free-firmware non-free
+
+# This system was installed using small removable media
+# (e.g. netinst, live or single CD). The matching "deb cdrom"
+# entries were disabled at the end of the installation process.
+# For information about how to configure apt package sources,
+# see the sources.list(5) manual.
+#+end_src
+
+** apt update
+
+run apt update
+
+#+begin_src sh
+sudo apt update
+#+end_src
+
+** torbrowser-launcher
+
+#+begin_src sh
+sudo apt install torbrowser-launcher
+#+end_src
+
+** open the tor browser 
+
+open the tor browser with your application launcher 
+
+this will download and install the tor browser the first time your run it
