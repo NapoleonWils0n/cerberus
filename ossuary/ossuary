@@ -1,47 +1,83 @@
-#!/bin/bash
+#!/bin/sh
 
+
+#===============================================================================
 # luks container mount and umount script
-#=======================================
+#===============================================================================
 
-# check to see if script was run as root
-if [[ $UID -ne 0 ]]; then
-  echo "$0 must be run as root using sudo, make your own sandwich"
-  exit 1
-fi
 
-# Create the prompt
-PS3="Enter your choice: "
-options=("mount" "umount" "quit")
-OLD_IFS=${IFS}; #ifs space seperator
-IFS=$'\t\n' #change ifs seperator from spaces to new line
+#===============================================================================
+# script usage
+#===============================================================================
 
-# luks container variables
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i disk.iso -m mountpoint"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+ROOT_ERR="$(basename "$0") must be run as root"
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+NOTFILE_ERR='not a file'
+
+
+#===============================================================================
+# check if script is run as root
+#===============================================================================
+
+#[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# free loop device
 loop=$(losetup -f)
-lukscontainer="/home/djwilcox/Documents/superfly.iso"
-luks=luks
-luksmapper="/dev/mapper/luks"
-mountpoint="/home/djwilcox/mnt"
-rmloop=$(losetup -j $lukscontainer | awk '{print $1}' | sed s/://g)
 
-# select and case statement
-select opt in "${options[@]}"; do
-case $opt in
-  mount)
-        echo "Mounting luks container"
-        losetup $loop $lukscontainer
-        cryptsetup luksOpen $loop $luks
-        mount $luksmapper $mountpoint
-        break;;
-  umount)
-        echo "Unmounting luks container"
-        umount $mountpoint
-        cryptsetup luksClose $luks
-	losetup -d $rmloop
-	break;;
-  quit) 
-	echo "Quitting"
-	IFS=${OLD_IFS}
-	break;;
-  *)    echo "Usage: crypt [ mount | umount | quit ]";;
-esac
+# mount point full path needed for doas
+mountdir="/home/djwilcox/mnt"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:u:h' opt
+do
+  case ${opt} in
+     i) mountdisk="${OPTARG}"
+        luksmapper="/dev/mapper/luks"
+        losetup ${loop} ${mountdisk}
+        cryptsetup luksOpen ${loop} luks
+        mount ${luksmapper} ${mountdir}
+        ;;
+     u) unmountdisk="${OPTARG}"
+        rmloop=$(losetup -j ${unmountdisk} | awk '{print $1}' | sed s/://g)
+        umount ${mountdir}
+        cryptsetup luksClose luks
+        losetup -d ${rmloop}
+        ;;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
 done
+shift $((OPTIND-1))

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# luks container mount and umount script
+#=======================================
+
+# check to see if script was run as root
+if [[ $UID -ne 0 ]]; then
+  echo "$0 must be run as root using sudo, make your own sandwich"
+  exit 1
+fi
+
+# Create the prompt
+PS3="Enter your choice: "
+options=("mount" "umount" "quit")
+OLD_IFS=${IFS}; #ifs space seperator
+IFS=$'\t\n' #change ifs seperator from spaces to new line
+
+# luks container variables
+loop=$(losetup -f)
+lukscontainer="/home/djwilcox/Documents/superfly.iso"
+luks=luks
+luksmapper="/dev/mapper/luks"
+mountpoint="/home/djwilcox/mnt"
+rmloop=$(losetup -j $lukscontainer | awk '{print $1}' | sed s/://g)
+
+# select and case statement
+select opt in "${options[@]}"; do
+case $opt in
+  mount)
+        echo "Mounting luks container"
+        losetup $loop $lukscontainer
+        cryptsetup luksOpen $loop $luks
+        mount $luksmapper $mountpoint
+        break;;
+  umount)
+        echo "Unmounting luks container"
+        umount $mountpoint
+        cryptsetup luksClose $luks
+	losetup -d $rmloop
+	break;;
+  quit) 
+	echo "Quitting"
+	IFS=${OLD_IFS}
+	break;;
+  *)    echo "Usage: crypt [ mount | umount | quit ]";;
+esac
+done
