@@ -1,0 +1,138 @@
+#+STARTUP: content
+* luks encrypted container
+** cryptsetup install
+
+install cryptsetup with home manager
+
+#+begin_src sh
+nix-shell -p cryptsetup
+#+end_src
+
+** create a container wth dd on the desktop called crypt
+
+#+begin_src sh
+cd ~/Desktop
+#+end_src
+
+create a 128mb disk image
+
+#+begin_src sh
+dd if=/dev/urandom of=crypt bs=1M count=128
+#+end_src
+
+** rename the file and give it a file extension to disguise it
+
+#+begin_src sh
+mv crypt disk.iso 
+#+end_src
+
+** find a free loop device to mount the file
+
+#+begin_src sh
+doas losetup -f
+#+end_src
+
+the free loop device is /dev/loop0 in this case
+if you have a different free loop device use that number
+
+** use the block device and the path to the file you just created
+
+#+begin_src sh
+doas losetup /dev/loop0 disk.iso
+#+end_src
+
+create the luks container inside the file
+you will be prompted to enter a password for the new luks container
+
+#+begin_src sh
+doas cryptsetup luksFormat /dev/loop0
+#+end_src
+
+** check the file is now an encrypted luks container
+
+#+begin_src sh
+file disk.iso
+#+end_src
+
+map the luks container to the loop device
+and give it a luks alias in this case luks
+
+#+begin_src sh
+doas cryptsetup luksOpen /dev/loop0 luks
+#+end_src
+
+** format the container as ext4
+
+#+begin_src sh
+doas mkfs.ext4 /dev/mapper/luks
+#+end_src
+
+** mount the file
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+#+begin_src sh
+doas mount /dev/mapper/luks ~/mnt
+#+end_src
+
+** change ownership on container to the current user
+
+#+begin_src sh
+cd ~/mnt
+#+end_src
+
+nixos
+
+#+begin_src sh
+doas chown -R ${USER}:users .
+#+end_src
+
+debian
+
+#+begin_src sh
+doas chown -R ${USER}:${USER} .
+#+end_src
+
+
+#+begin_src sh
+cd ~/Desktop/
+#+end_src
+
+** umount the file
+
+#+begin_src sh
+doas umount ~/mnt
+#+end_src
+
+** close the luks container
+
+#+begin_src sh
+doas cryptsetup luksClose luks
+#+end_src
+
+** free the loop device
+
+#+begin_src sh
+doas losetup -d /dev/loop0
+#+end_src
+
+** open luks encrypted container
+
+#+begin_src sh
+doas losetup -f
+doas losetup /dev/loop0 disk.iso
+doas cryptsetup luksOpen /dev/loop0 luks
+doas mkdir -p ~/mnt
+doas mount /dev/mapper/luks ~/mnt
+#+end_src
+
+** umount luks encrypted container
+
+#+begin_src sh
+doas umount ~/mnt
+doas cryptsetup luksClose luks
+doas losetup -d /dev/loop0
+#+end_src
+
