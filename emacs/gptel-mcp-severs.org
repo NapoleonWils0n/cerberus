@@ -55,6 +55,30 @@ git clone https://github.com/ihor-sokoliuk/mcp-searxng.git
 podman build -t mcp-searxng:local -f Dockerfile .
 #+end_src
 
+to update run
+
+#+begin_src sh
+git pull origin main
+#+end_src
+
+and rebuild
+
+start the searxng podman container
+
+and then in emacs run
+
+#+begin_example
+M-x gptel-mcp-connect
+#+end_example
+
+and select searxng
+
+to disconnect run
+
+#+begin_example
+M-x gptel-mcp-disonnect
+#+end_example
+
 ** gptel
 
 gptel includes gptel-integrations, a small library to make this more convenient. This library is not automatically loaded by gptel, so if you would like to use it you have to require it:
