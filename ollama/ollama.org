@@ -115,6 +115,22 @@ ollama pull qwen3.5:2b
 ollama run qwen3.5:2b
 #+end_src
 
+*** Huihui-Qwen3.5-2B-abliterated
+
+https://huggingface.co/huihui-ai/Huihui-Qwen3.5-2B-abliterated
+
+**** pull 
+
+#+begin_src sh
+ollama pull huihui_ai/qwen3.5-abliterated:2b
+#+end_src
+
+**** run
+
+#+begin_src sh
+ollama run huihui_ai/qwen3.5-abliterated:2b
+#+end_src
+
 ** kill the ollama server
 
 check if ollama is running
