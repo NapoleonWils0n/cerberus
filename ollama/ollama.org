@@ -119,6 +119,8 @@ ollama run qwen3.5:2b
 
 https://huggingface.co/huihui-ai/Huihui-Qwen3.5-2B-abliterated
 
+[[https://huggingface.co/collections/huihui-ai/qwen35-abliterated]]
+
 **** pull 
 
 #+begin_src sh
