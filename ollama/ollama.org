@@ -99,20 +99,20 @@ ollama pull llama3.2
 ollama run llama3.2:latest 
 #+end_src
 
-*** qwen3.5:4b
+*** qwen3.5:2b
 
 [[https://ollama.com/library/qwen3.5]]
 
 **** pull 
 
 #+begin_src sh
-ollama pull qwen3.5:4b
+ollama pull qwen3.5:2b
 #+end_src
 
 **** run
 
 #+begin_src sh
-ollama run qwen3.5:4b
+ollama run qwen3.5:2b
 #+end_src
 
 ** kill the ollama server
