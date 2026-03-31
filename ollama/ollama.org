@@ -99,52 +99,20 @@ ollama pull llama3.2
 ollama run llama3.2:latest 
 #+end_src
 
-*** mistral
+*** qwen3.5:9b
 
-[[https://ollama.com/library/mistral]]
+[[https://ollama.com/library/qwen3.5]]
 
 **** pull 
 
 #+begin_src sh
-ollama pull mistral
+ollama pull qwen3.5:9b
 #+end_src
 
 **** run
 
 #+begin_src sh
-ollama run mistral:latest
-#+end_src
-
-*** qwen2.5
-
-[[https://ollama.com/library/qwen2.5:7b]]
-
-**** pull 
-
-#+begin_src sh
-ollama pull qwen2.5:7b
-#+end_src
-
-**** run
-
-#+begin_src sh
-ollama run qwen2.5:7b
-#+end_src
-
-*** zephyr
-
-[[https://ollama.com/library/zephyr]]
-
-**** pull 
-
-#+begin_src sh
-ollama pull zephyr
-#+end_src
-
-**** run
-
-#+begin_src sh
-ollama run zephyr
+ollama run qwen3.5:9b
 #+end_src
 
 ** kill the ollama server
