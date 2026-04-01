@@ -1,0 +1,39 @@
+#+STARTUP: content
+* mcp-searxng-enhanced
+** resources
+
+[[https://github.com/OvertliDS/mcp-searxng-enhanced]]
+
+** build mcp-searxng-enhanced
+*** download the git repo
+
+#+begin_src sh
+git clone https://github.com/OvertliDS/mcp-searxng-enhanced.git
+#+end_src
+
+*** build mcp-searxng-enhanced
+
+#+begin_src sh
+cd mcp-searxng-enhanced
+#+end_src
+
+#+begin_src sh
+podman build -t mcp-searxng-enhanced:local .
+#+end_src
+
+** emacs mcp set up 
+
+#+begin_src emacs-lisp
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers `(("mcp-nixos" . (:command "podman"
+                                     :args ("run" "--rm" "-i" "ghcr.io/utensils/mcp-nixos")))
+                     ("searxng" . (:command "podman"
+                                   :args ("run" "-i" "--rm"
+                                          "--network=host"
+                                          "-e" "SEARXNG_ENGINE_API_BASE_URL=http://localhost:8080/search"
+                                          "mcp-searxng-enhanced:local")))))
+  :config
+  (require 'mcp-hub))
+#+end_src
