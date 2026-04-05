@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# openvpn split route
+#====================
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -c infile.ovpn -a auth.txt"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+ROOT_ERR="$(basename "$0") must be run as root"
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+NOTFILE_ERR='not a file'
+
+
+#===============================================================================
+# check if script is run as root
+#===============================================================================
+
+[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':c:a:h' opt
+do
+  case ${opt} in
+     c) config="${OPTARG}"
+     [ -f "${config}" ] || usage "${config} ${NOTFILE_ERR}";;
+     a) auth="${OPTARG}"
+     [ -f "${auth}" ] || usage "${auth} ${NOTFILE_ERR}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# openvpn code
+#===============================================================================
+
+openvpn \
+--auth-nocache --script-security 2 --route-nopull --redirect-gateway \
+--ifconfig-noexec --route-noexec \
+--up /home/djwilcox/bin/netns-vpn --down /home/djwilcox/bin/netns-vpn \
+--config "${config}" \
+--mute-replay-warnings \
+--auth-user-pass "${auth}"

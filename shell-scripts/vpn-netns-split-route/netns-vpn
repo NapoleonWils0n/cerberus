@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# openvpn split route with namespace
+#===================================
+
+# openvpn up script
+up() {
+  # Set PATH to include NixOS /bin directory for common commands
+  PATH="/run/current-system/sw/bin:${PATH}"
+  
+  # create network namespace
+  ip netns add vpn || true
+  
+  # bring up loop device
+  ip netns exec vpn ip link set dev lo up
+  
+  # move VPN tunnel to netns
+  ip link set dev "${1}" up netns vpn mtu "${2}"
+  
+  # configure tunnel in netns
+  ip netns exec vpn ip addr add dev "${1}" \
+          "${4}/${ifconfig_netmask:-30}" \
+          ${ifconfig_broadcast:+broadcast "${ifconfig_broadcast}"}
+  if [ -n "${ifconfig_ipv6_local}" ]; then
+          ip netns exec vpn ip addr add dev "${1}" \
+                  "${ifconfig_ipv6_local}"/112
+  fi
+  
+  # set route in netns
+  ip netns exec vpn ip route add default via "${route_vpn_gateway}"
+}
+
+# openvpn down script
+down() {
+  # Set PATH to include NixOS /bin directory for common commands
+  PATH="/run/current-system/sw/bin:${PATH}"
+  ip netns delete vpn
+  
+  true
+}
+
+"${script_type}" "$@"
