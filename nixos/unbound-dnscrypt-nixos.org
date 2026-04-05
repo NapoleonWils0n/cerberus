@@ -124,8 +124,8 @@ networking = {
 
   # firewall
   firewall = {
-  # trust the virbr0 veth-host dummy0 interfaces 
-  trustedInterfaces = [ "virbr0" "veth-host" "dummy0" ]; 
+  # trust the veth-host dummy0 interfaces 
+  trustedInterfaces = [ "veth-host" "dummy0" ]; 
   };
 };
 #+end_src
