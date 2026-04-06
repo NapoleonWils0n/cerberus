@@ -205,6 +205,11 @@ boot = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+
+  # needed for virt-manager
+  kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+  };
 };
 
 
@@ -554,7 +559,20 @@ networking = {
   allowedUDPPortRanges = [ { from = 32768; to = 61000; } ];
 
   # trust the virbr0 veth-host dummy0 interfaces 
-  trustedInterfaces = [ "virbr0" "veth-host" "dummy0" ]; 
+  trustedInterfaces = [
+    "virbr0"
+    "veth-host"
+    "dummy0"
+    "tap0"
+    "vnet0"
+  ]; 
+
+  # needed for virt-manager
+  checkReversePath = false;
+  extraCommands = ''
+      iptables -A FORWARD -i virbr0 -j ACCEPT
+      iptables -A FORWARD -o virbr0 -j ACCEPT
+    '';
   };
 };
 
@@ -714,7 +732,6 @@ virtualisation = {
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
 }
-
 #+end_src
 
 ** vpn scripts
