@@ -45,6 +45,42 @@ create the modelfile
 ollama create gemma4-text -f modelfiles/gemma-4-E2B-text.modelfile
 #+end_src
 
+** gemma4 bartowski mmproj-google_gemma-4-E2B-it-f16.gguf
+
+https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/mmproj-google_gemma-4-E2B-it-f16.gguf
+
+#+begin_src sh
+aria2c 'https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/mmproj-google_gemma-4-E2B-it-f16.gguf' -o mmproj-google_gemma-4-E2B-it-f16.gguf
+#+end_src
+
+gemma-4-E2B-media.modelfile
+
+#+begin_src conf
+# use model
+FROM ./gemma-4-E2B-it-Q4_K_M.gguf
+FROM ./mmproj-google_gemma-4-E2B-it-f16.gguf
+
+# Low temp for technical/search accuracy
+PARAMETER temperature 0.1
+PARAMETER top_p 0.95
+PARAMETER top_k 64
+
+# num_ctx for 4gb vram
+PARAMETER num_ctx 4096
+
+# template
+TEMPLATE """<|im_start|>system
+{{ .System }}<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+#+end_src
+
+#+begin_src sh
+ollama create gemma4-media -f modelfiles/gemma-4-E2B-media.modelfile
+#+end_src
+
 ** gemma4 HauhauCS uncensored
 
 Gemma-4-E2B-Uncensored-HauhauCS-Aggressive-Q6_K_P.gguf
