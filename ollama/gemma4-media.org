@@ -41,5 +41,5 @@ TEMPLATE """<|im_start|>system
 ** create the model
 
 #+begin_src sh
-ollama create gemma4-multimodal -f modelfiles/gemma4-media.modelfile
+ollama create gemma4-media -f modelfiles/gemma4-media.modelfile
 #+end_src
