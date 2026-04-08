@@ -16,20 +16,21 @@ download with aria2c
 aria2c 'https://huggingface.co/bartowski/google_gemma-4-E2B-it-GGUF/resolve/main/google_gemma-4-E2B-it-Q4_K_M.gguf' -o gemma-4-E2B-it-Q4_K_M.gguf
 #+end_src
 
-gemma-4-E2B.modelfile
+gemma-4-E2B-text.modelfile
 
 #+begin_src conf
+# use model
 FROM ./gemma-4-E2B-it-Q4_K_M.gguf
 
-# Standard Gemma 4 sampling for best balance of logic and creativity
-PARAMETER temperature 1.0
+# Low temp for technical/search accuracy
+PARAMETER temperature 0.1
 PARAMETER top_p 0.95
 PARAMETER top_k 64
 
-# Keeps the model from forgetting your long NixOS search results
-PARAMETER num_ctx 32768
+# num_ctx for 4gb vram
+PARAMETER num_ctx 4096
 
-# This specific template is required for Trimodal (Audio/Image/Text) support
+# template
 TEMPLATE """<|im_start|>system
 {{ .System }}<|im_end|>
 <|im_start|>user
@@ -41,7 +42,7 @@ TEMPLATE """<|im_start|>system
 create the modelfile
 
 #+begin_src sh
-ollama create gemma4-text -f modelfiles/gemma-4-E2B.modelfile
+ollama create gemma4-text -f modelfiles/gemma-4-E2B-text.modelfile
 #+end_src
 
 ** gemma4 HauhauCS uncensored
@@ -63,14 +64,18 @@ aria2c -x 16 -s 16 -k 1M -c 'https://huggingface.co/HauhauCS/Gemma-4-E2B-Uncenso
 gemma-4-E2B-uncensored.modelfile
 
 #+begin_src conf
+# use model
 FROM ./Gemma-4-E2B-Uncensored-HauhauCS-Aggressive-Q6_K_P.gguf
 
-# Standard Gemma 4 settings
-PARAMETER temperature 1.0
+# Low temp for technical/search accuracy
+PARAMETER temperature 0.1
 PARAMETER top_p 0.95
 PARAMETER top_k 64
-PARAMETER num_ctx 32768
 
+# num_ctx for 4gb vram
+PARAMETER num_ctx 4096
+
+# template
 TEMPLATE """<|im_start|>system
 {{ .System }}<|im_end|>
 <|im_start|>user
