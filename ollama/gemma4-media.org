@@ -10,9 +10,32 @@ ollama pull gemma4:e2b
 
 #+begin_src conf
 FROM gemma4:e2b
+
+# --- RESOURCE MANAGEMENT (For 4GB VRAM) ---
+# Caps memory to prevent CUDA runner crashes
 PARAMETER num_ctx 4096
-# This ensures it prioritizes the GPU even if it's large
+# Force 1 layer to GPU (Ollama will try to offload the rest to RAM)
 PARAMETER num_gpu 1
+
+# --- RECOMMENDED SAMPLING (April 2026 Specs) ---
+# Standardized for the Edge MoE architecture
+PARAMETER temperature 1.0
+PARAMETER top_p 0.95
+PARAMETER top_k 64
+
+# --- MULTIMODAL ADJUSTMENT ---
+# Optional: Higher budget (1120) = clearer images but more VRAM usage.
+# Default 560 is a good "sweet spot" for 4GB cards.
+# PARAMETER vision_token_budget 560
+
+# --- CHAT TEMPLATE ---
+# Ensure the model uses the correct Instruct tags
+TEMPLATE """<|im_start|>system
+{{ .System }}<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
 #+end_src
 
 ** create the model
