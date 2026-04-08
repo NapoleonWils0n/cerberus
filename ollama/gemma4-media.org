@@ -12,13 +12,13 @@ ollama pull gemma4:e2b
 FROM gemma4:e2b
 
 # --- RESOURCE MANAGEMENT (For 4GB VRAM) ---
-PARAMETER num_ctx 2048
+PARAMETER num_ctx 1024
 PARAMETER num_predict 512
 # Force 1 layer to GPU (Ollama will try to offload the rest to RAM)
 PARAMETER num_gpu 1
 
 # Standardized for the Edge MoE architecture
-PARAMETER temperature 1.0
+PARAMETER temperature 0.1
 PARAMETER top_p 0.95
 PARAMETER top_k 64
 
