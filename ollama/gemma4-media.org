@@ -1,0 +1,22 @@
+#+STARTUP: content
+* gemma4 media
+** gemma4:e2b
+
+#+begin_src sh
+ollama pull gemma4:e2b
+#+end_src
+
+** gemma4-media.modelfile
+
+#+begin_src conf
+FROM gemma4:e2b
+PARAMETER num_ctx 4096
+# This ensures it prioritizes the GPU even if it's large
+PARAMETER num_gpu 1
+#+end_src
+
+** create the model
+
+#+begin_src sh
+ollama create gemma4-multimodal -f modelfiles/gemma4-media.modelfile
+#+end_src
