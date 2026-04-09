@@ -37,3 +37,46 @@ podman build -t mcp-searxng-enhanced:local .
   :config
   (require 'mcp-hub))
 #+end_src
+
+** search
+*** web search
+**** Task: Search the web for the "query"
+
+Use 'search_web' for the query "query".
+Set the 'categories' parameter to ["general"].
+
+you must extract the following fields
+
+1) url
+2) title 
+3) content
+
+for every result you must print the result in the following format
+
+and then use the get_website tool to get the website page content and save the web page under - page
+
+- url
+- title
+- content
+- page
+
+
+***** Mandatory Formatting Rules:
+- For each result, print exactly: [[URL][Title]]
+- Below each link, print: Snippet: [Content]
+- DO NOT use any Markdown formatting.
+- DO NOT use #+begin_reasoning.
+
+*** image search
+**** Task: Find images of "query"
+
+Use 'search_web' for the query "query".
+Set the 'categories' parameter to ["images"].
+
+***** Mandatory Formatting Rules:
+- For each result, print exactly: [[URL][Title]]
+- Below each link, print: Snippet: [Content]
+- DO NOT use any Markdown formatting.
+- DO NOT use #+begin_reasoning.
+
+
