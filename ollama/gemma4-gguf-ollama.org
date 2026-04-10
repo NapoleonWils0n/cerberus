@@ -58,7 +58,9 @@ gemma-4-E2B-media.modelfile
 #+begin_src conf
 # use model
 FROM ./gemma-4-E2B-it-Q4_K_M.gguf
-FROM ./mmproj-google_gemma-4-E2B-it-f16.gguf
+
+# The Projector Ears/Eyes
+ADAPTER ./mmproj-google_gemma-4-E2B-it-f16.gguf
 
 # Low temp for technical/search accuracy
 PARAMETER temperature 0.1
