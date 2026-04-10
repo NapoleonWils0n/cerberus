@@ -60,7 +60,6 @@ and then use the get_website tool to get the website page content and save the w
 - content
 - page
 
-
 ***** Mandatory Formatting Rules:
 - For each result, print exactly: [[URL][Title]]
 - Below each link, print: Snippet: [Content]
