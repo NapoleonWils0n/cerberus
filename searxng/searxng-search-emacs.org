@@ -1,0 +1,39 @@
+#+TITLE: searxng search
+#+STARTUP: overview
+#+STARTUP: hideblocks
+* noweb code block
+** video noweb
+#+NAME: video-noweb
+#+begin_src sh 
+curl -s -G "http://localhost:8080/search" \
+--data-urlencode "q=${query}" \
+--data "format=json" \
+--data "categories=videos" \
+--data "pageno=${page}" \
+--data "language=auto" \
+--data "time_range=" \
+--data "safesearch=0" | \
+jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nScore: \(.value.score)\n\n"'
+#+end_src
+
+* video search
+#+NAME: video-search
+#+HEADER: :var query="buster keaton" page=1
+#+BEGIN_SRC sh :results output :noweb yes :wrap
+<<video-noweb>>
+#+end_src
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
