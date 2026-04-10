@@ -78,4 +78,16 @@ Set the 'categories' parameter to ["images"].
 - DO NOT use any Markdown formatting.
 - DO NOT use #+begin_reasoning.
 
+*** Task: Find Buster Keaton Videos
+Use 'search_web' for the query "Buster Keaton".
+- categories: ["videos"]
+- pageno: 1
 
+** Formatting Rules (STRICT):
+1. Start the list on a BRAND NEW LINE.
+2. Use an Org-mode numbered list with PARENTHESES: 1) 2) 3).
+3. Format each item exactly as follows:
+   1) [[URL][Title]]
+      Snippet: [Insert snippet here]
+4. Do NOT use "1." or "- ". Use "1) ".
+5. Provide as many results as the tool returns.
