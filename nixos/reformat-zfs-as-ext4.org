@@ -1,0 +1,94 @@
+#+STARTUP: content
+* reformat zfs as ext4
+** Step 1: Identify the Drive
+First, we need to be 100% sure which drive is the external one.
+
+#+begin_src sh
+lsblk
+#+end_src
+
+Look for your drive based on its size. For this guide, I will assume your drive is identified as /dev/sdX.
+
+Replace sdX with your actual identifier.
+
+** Step 2: Clear the ZFS Metadata
+
+ZFS is "sticky." Sometimes a simple format leaves ZFS signatures behind that confuse the OS.
+
+We’ll wipe the filesystem signatures first.
+
+Replace sdX with your actual identifier.
+
+#+begin_src sh
+sudo wipefs -a /dev/sdX
+#+end_src
+
+** Step 3: Create a New Partition Table
+
+To ensure a clean slate, create a new GPT partition table:
+
+#+begin_src sh
+nix-shell -p parted
+#+end_src
+
+#+begin_src sh
+doas parted /dev/sdX mklabel gpt
+#+end_src
+
+** Step 4: Create the Partition
+
+Now, create a primary partition that spans the whole drive:
+
+Replace sdX with your actual identifier.
+
+#+begin_src sh
+sudo parted -a optimal /dev/sdX mkpart primary ext4 0% 100%
+#+end_src
+
+** Step 5: Format to ext4
+
+Now we layout the actual ext4 filesystem on the new partition (usually /dev/sdX1):
+
+Replace sdX with your actual identifier.
+
+#+begin_src sh
+doas mkfs.ext4 /dev/sdX1
+#+end_src
+
+** Step 6: fix permissions
+
+By default, a newly formatted ext4 drive is owned by root. To make it usable for your standard user account without using sudo every time, mount it and then change the ownership:
+
+Mount it:
+
+Replace sdX with your actual identifier.
+
+#+begin_src sh
+doas mount /dev/sdX1 /mnt
+#+end_src
+
+in this case the drive is mounted to
+
+#+begin_example
+/run/media/djwilcox/6653e0d1-af6c-4c85-bd2e-daf01073e183
+#+end_example
+
+Change owner:
+
+#+begin_src sh
+doas chown -R djwilcox:users /run/media/djwilcox/6653e0d1-af6c-4c85-bd2e-daf01073e183
+#+end_src
+
+** Give it a readable Label
+
+Unmount it first
+
+#+begin_src sh
+doas umount /dev/sda1
+#+end_src
+
+Label it
+
+#+begin_src sh
+doas e2label /dev/sda1 videos
+#+end_src
