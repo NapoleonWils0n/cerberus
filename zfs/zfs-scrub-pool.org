@@ -1,0 +1,6 @@
+#+STARTUP: content
+* zfs scrub pool
+
+#+begin_src sh
+doas zpool scrub zpool
+#+end_src
