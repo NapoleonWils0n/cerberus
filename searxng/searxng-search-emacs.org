@@ -1,39 +1,94 @@
 #+TITLE: searxng search
-#+STARTUP: overview
-#+STARTUP: hideblocks
-* noweb code block
-** video noweb
-#+NAME: video-noweb
+#+STARTUP: overview hideblocks 
+#+PROPERTY: header-args :results output append :noweb yes :wrap :var page=1 query="buster keaton"
+* noweb code blocks
+** searxng-curl
+:CODE:
+#+NAME: searxng-curl
 #+begin_src sh 
 curl -s -G "http://localhost:8080/search" \
 --data-urlencode "q=${query}" \
 --data "format=json" \
---data "categories=videos" \
+--data "categories=${category}" \
 --data "pageno=${page}" \
 --data "language=auto" \
 --data "time_range=" \
---data "safesearch=0" | \
-jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nScore: \(.value.score)\n\n"'
+--data "safesearch=0"
+#+end_src
+:END:
+
+** general noweb
+:CODE:
+#+NAME: general-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nScore: \(.value.score)\n\n"'
+#+end_src
+:END:
+
+** image noweb
+:CODE:
+#+NAME: image-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n[[\(.value.img_src)]]\n\nResolution: \(.value.resolution)\nFile Size: \(.value.filesize)\nScore: \(.value.score)\n\n"'
+#+end_src
+:END:
+
+** video noweb
+:CODE:
+#+NAME: video-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nScore: \(.value.score)\n\n"'
+#+end_src
+:END:
+
+* search
+** general search
+:PROPERTIES:
+:header-args:sh: :var category="general"
+:END:
+#+NAME: general-search
+#+BEGIN_SRC sh 
+<<general-noweb>>
 #+end_src
 
-* video search
+** image search
+:PROPERTIES:
+:header-args:sh: :var category="images"
+:END:
+#+NAME: image-search
+#+BEGIN_SRC sh
+<<image-noweb>>
+#+end_src
+
+** video search
+:PROPERTIES:
+:header-args:sh: :var category="video"
+:END:
 #+NAME: video-search
-#+HEADER: :var query="buster keaton" page=1
-#+BEGIN_SRC sh :results output :noweb yes :wrap
+#+BEGIN_SRC sh
 <<video-noweb>>
 #+end_src
 
+** custom search
+*** custom general search
+:PROPERTIES:
+:header-args:sh: :var category="general" query="harold lloyd"
+:END:
+#+NAME: custom-general-search
+#+BEGIN_SRC sh 
+<<general-noweb>>
+#+end_src
 
+* results
+** general results
+#+RESULTS: general-search
 
+** image results
+#+RESULTS: image-search
 
-
-
-
-
-
-
-
-
-
-
+** video results
+#+RESULTS: video-search
+** custom results
+*** custom general search
+#+RESULTS: custom-general-search
 
