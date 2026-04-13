@@ -1,6 +1,44 @@
 #+TITLE: searxng search
+#+OPTIONS: toc:nil num:nil title:nil author:nil date:nil
 #+STARTUP: overview hideblocks 
-#+PROPERTY: header-args :results output append :noweb yes :wrap :var page=1 query="buster keaton"
+#+SELECT_TAGS: export
+#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="buster keaton"
+* usage
+** global search
+
+edit the PROPERTY at the top of the file and change the query and page number
+
+#+begin_example
+#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="buster keaton"
+#+end_example
+
+** custom search
+
+You can override the global search using a custom search using header-args
+
+As shown below without the comma before the heading
+
+#+begin_example
+,*** custom general search
+:PROPERTIES:
+:header-args:sh: :var category="general" page=1 query="harold lloyd"
+:END:
+#+NAME: custom-general-search
+#+BEGIN_SRC sh 
+<<general-noweb>>
+#+end_src
+#+end_example
+
+** export results
+
+1) Move your cursor so it is physically on the * results headline
+
+2) Press C-c C-e to open the export settings
+  
+3) Press C-s this will toggle the setting from Buffer to Subtree
+
+4) Once it says Subtree, press your export keys (e.g., m m for Markdown).
+
 * noweb code blocks
 ** searxng-curl
 :CODE:
@@ -21,15 +59,14 @@ curl -s -G "http://localhost:8080/search" \
 :CODE:
 #+NAME: general-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nScore: \(.value.score)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nScore: \(.value.score)\n\n"'
 #+end_src
-:END:
 
 ** image noweb
 :CODE:
 #+NAME: image-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n[[\(.value.img_src)]]\n\nResolution: \(.value.resolution)\nFile Size: \(.value.filesize)\nScore: \(.value.score)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n[[\(.value.img_src)]]\n\nResolution: \(.value.resolution)\nFile Size: \(.value.filesize)\nScore: \(.value.score)\n\n"'
 #+end_src
 :END:
 
@@ -37,7 +74,7 @@ curl -s -G "http://localhost:8080/search" \
 :CODE:
 #+NAME: video-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1)) [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nScore: \(.value.score)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nScore: \(.value.score)\n\n"'
 #+end_src
 :END:
 
@@ -72,14 +109,14 @@ curl -s -G "http://localhost:8080/search" \
 ** custom search
 *** custom general search
 :PROPERTIES:
-:header-args:sh: :var category="general" query="harold lloyd"
+:header-args:sh: :var category="general" page=1 query="harold lloyd"
 :END:
 #+NAME: custom-general-search
 #+BEGIN_SRC sh 
 <<general-noweb>>
 #+end_src
 
-* results
+* results :export:
 ** general results
 #+RESULTS: general-search
 
