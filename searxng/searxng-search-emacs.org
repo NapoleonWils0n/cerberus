@@ -127,6 +127,25 @@ curl -s -G "http://localhost:8080/search" \
 #+end_src
 :END:
 
+** files noweb
+:CODE:
+#+NAME: files-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+(if (.value.filename and .value.filename != "") then "Filename: \(.value.filename)\n" else "" end) +
+(if (.value.filesize and .value.filesize != 0) then "Size: \(.value.filesize)\n" else "" end) +
+(if (.value.seed) then "Seeds: \(.value.seed)\n" else "" end) +
+(if (.value.leech) then "Leech: \(.value.leech)\n" else "" end) +
+(if (.value.magnetlink) then "\(.value.magnetlink)\n" else "" end) +
+(if (.value.author and .value.author != "") then "Author: \(.value.author)\n" else "" end) +
+(if (.value.pubdate and .value.pubdate != "") then "Date: \(.value.pubdate)\n" else "" end) +
+(if (.value.metadata and .value.metadata != "") then "Info: \(.value.metadata)\n" else "" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
+#+end_src
+:END:
+
 * search
 ** general
 :PROPERTIES:
@@ -173,6 +192,15 @@ curl -s -G "http://localhost:8080/search" \
 <<it-noweb>>
 #+end_src
 
+** files
+:PROPERTIES:
+:header-args:sh: :var category="files"
+:END:
+#+NAME: files-search
+#+BEGIN_SRC sh
+<<files-noweb>>
+#+end_src
+
 ** custom 
 *** custom general
 :PROPERTIES:
@@ -198,6 +226,9 @@ curl -s -G "http://localhost:8080/search" \
 
 ** it
 #+RESULTS: it-search
+
+** files
+#+RESULTS: files-search
 
 ** custom
 *** custom general
