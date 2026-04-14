@@ -2,7 +2,7 @@
 #+OPTIONS: toc:nil num:nil
 #+STARTUP: overview hideblocks 
 #+SELECT_TAGS: export
-#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="buster keaton"
+#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="Buster Keaton"
 * usage
 ** global search
 
@@ -31,23 +31,11 @@ As shown below without the comma before the heading
 
 ** org refesh
 
-To tell Org-mode to re-scan the entire file for changes to #+PROPERTY or #+OPTIONS lines, put your cursor anywhere on a line starting with #+ and press:
+To tell Org-mode to re-scan the entire file for changes to #+PROPERTY put your cursor on the line and press:
 
 #+begin_example
 C-c C-c
 #+end_example
-
-Sometimes Org-mode caches the result of a code block and won't run it again if it thinks nothing has changed. To force a fresh execution regardless of the cache, use the "Universal Argument":
-
-#+begin_example
-C-u C-c C-c
-#+end_example
-
-C-c C-c (on a #+ line): Refreshes global properties/settings for the buffer.
-
-C-c C-c (on a code block): Runs that specific search.
-
-C-u C-c C-c (on a code block): Forces the search to run even if Org is being stubborn.
 
 ** export results
 
@@ -98,7 +86,13 @@ curl -s -G "http://localhost:8080/search" \
 :CODE:
 #+NAME: video-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nAuthor: \(.value.author)\nScore: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+(if (.value.length and .value.length != "") then "Length: \(.value.length)\n" else "" end) +
+(if (.value.pubdate and .value.pubdate != "") then "Published: \(.value.pubdate)\n" else "" end) +
+(if (.value.author and .value.author != "") then "Author: \(.value.author)\n" else "" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
 #+end_src
 :END:
 
@@ -109,6 +103,26 @@ curl -s -G "http://localhost:8080/search" \
 <<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
 "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
 (if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
+#+end_src
+:END:
+
+** it noweb
+:CODE:
+#+NAME: it-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+(if (.value.package_name and .value.package_name != "") then "Name: \(.value.package_name)\n" else "" end) +
+(if (.value.version and .value.version != "") then "Version: \(.value.version)\n" else "" end) +
+(if (.value.maintainer and .value.maintainer != "") then "Maintainer: \(.value.maintainer)\n" else "" end) +
+(if (.value.pubdate and .value.pubdate != "") then "Updated at: \(.value.pubdate)\n" else "" end) +
+(if (.value.tags and (.value.tags | length) > 0) then "Tags: \(.value.tags | join(", "))\n" else "" end) +
+(if (.value.popularity or .value.stars) then "Popularity: \(.value.popularity // .value.stars)\n" else "" end) +
+(if (.value.license_name and .value.license_name != "") then (if .value.license_url then "License: [[\(.value.license_url)][\(.value.license_name)]]\n" else "License: \(.value.license_name)\n" end) else "" end) +
+(if (.value.homepage and .value.homepage != "" and .value.homepage != .value.url) then "Docs: [[\(.value.homepage)][Project Homepage]]\n" else "" end) +
+(if (.value.source_code_url and .value.source_code_url != "") then "Source: [[\(.value.source_code_url)][View Code]]\n" else "" end) +
 "Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
 #+end_src
 :END:
@@ -150,6 +164,15 @@ curl -s -G "http://localhost:8080/search" \
 <<news-noweb>>
 #+end_src
 
+** it
+:PROPERTIES:
+:header-args:sh: :var category="it"
+:END:
+#+NAME: it-search
+#+BEGIN_SRC sh
+<<it-noweb>>
+#+end_src
+
 ** custom 
 *** custom general
 :PROPERTIES:
@@ -172,6 +195,9 @@ curl -s -G "http://localhost:8080/search" \
 
 ** news
 #+RESULTS: news-search
+
+** it
+#+RESULTS: it-search
 
 ** custom
 *** custom general
