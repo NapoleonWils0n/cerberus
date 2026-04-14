@@ -29,6 +29,26 @@ As shown below without the comma before the heading
 #+end_src
 #+end_example
 
+** org refesh
+
+To tell Org-mode to re-scan the entire file for changes to #+PROPERTY or #+OPTIONS lines, put your cursor anywhere on a line starting with #+ and press:
+
+#+begin_example
+C-c C-c
+#+end_example
+
+Sometimes Org-mode caches the result of a code block and won't run it again if it thinks nothing has changed. To force a fresh execution regardless of the cache, use the "Universal Argument":
+
+#+begin_example
+C-u C-c C-c
+#+end_example
+
+C-c C-c (on a #+ line): Refreshes global properties/settings for the buffer.
+
+C-c C-c (on a code block): Runs that specific search.
+
+C-u C-c C-c (on a code block): Forces the search to run even if Org is being stubborn.
+
 ** export results
 
 1) Move your cursor so it is physically on the * results headline
@@ -40,7 +60,7 @@ As shown below without the comma before the heading
 4) Once it says Subtree, press your export keys (e.g., m m for Markdown).
 
 * noweb code blocks
-** searxng-curl
+** searxng-curl noweb
 :CODE:
 #+NAME: searxng-curl
 #+begin_src sh 
@@ -59,14 +79,18 @@ curl -s -G "http://localhost:8080/search" \
 :CODE:
 #+NAME: general-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nScore: \(.value.score)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
 #+end_src
+:END:
 
 ** image noweb
 :CODE:
 #+NAME: image-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n[[\(.value.img_src)]]\n\nResolution: \(.value.resolution)\nFile Size: \(.value.filesize)\nScore: \(.value.score)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n[[\(.value.img_src)]]\n\nResolution: \(.value.resolution)\nFile Size: \(.value.filesize)\nScore: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
 #+end_src
 :END:
 
@@ -74,12 +98,23 @@ curl -s -G "http://localhost:8080/search" \
 :CODE:
 #+NAME: video-noweb
 #+begin_src sh :noweb yes
-<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nScore: \(.value.score)\n\n"'
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | "\(.key + 1): [[\(.value.url)][\(.value.title)]]\n\n\(.value.content // "No snippet available")\n\nLength: \(.value.length // "N/A")\nPublished: \(.value.pubdate // "N/A")\nAuthor: \(.value.author)\nScore: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
+#+end_src
+:END:
+
+** news noweb
+:CODE:
+#+NAME: news-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
 #+end_src
 :END:
 
 * search
-** general search
+** general
 :PROPERTIES:
 :header-args:sh: :var category="general"
 :END:
@@ -88,7 +123,7 @@ curl -s -G "http://localhost:8080/search" \
 <<general-noweb>>
 #+end_src
 
-** image search
+** images
 :PROPERTIES:
 :header-args:sh: :var category="images"
 :END:
@@ -97,19 +132,28 @@ curl -s -G "http://localhost:8080/search" \
 <<image-noweb>>
 #+end_src
 
-** video search
+** videos
 :PROPERTIES:
-:header-args:sh: :var category="video"
+:header-args:sh: :var category="videos"
 :END:
 #+NAME: video-search
 #+BEGIN_SRC sh
 <<video-noweb>>
 #+end_src
 
-** custom search
-*** custom general search
+** news
 :PROPERTIES:
-:header-args:sh: :var category="general" page=1 query="harold lloyd"
+:header-args:sh: :var category="news"
+:END:
+#+NAME: news-search
+#+BEGIN_SRC sh
+<<news-noweb>>
+#+end_src
+
+** custom 
+*** custom general
+:PROPERTIES:
+:header-args:sh: :var category="general" page=1 query="!ddg nixos"
 :END:
 #+NAME: custom-general-search
 #+BEGIN_SRC sh 
@@ -117,15 +161,19 @@ curl -s -G "http://localhost:8080/search" \
 #+end_src
 
 * results :export:
-** general results
+** general
 #+RESULTS: general-search
 
-** image results
+** image
 #+RESULTS: image-search
 
-** video results
+** video
 #+RESULTS: video-search
-** custom results
-*** custom general search
+
+** news
+#+RESULTS: news-search
+
+** custom
+*** custom general
 #+RESULTS: custom-general-search
 
