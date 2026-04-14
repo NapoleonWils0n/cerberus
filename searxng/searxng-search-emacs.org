@@ -1,5 +1,5 @@
 #+TITLE: searxng search
-#+OPTIONS: toc:nil num:nil title:nil author:nil date:nil
+#+OPTIONS: toc:nil num:nil
 #+STARTUP: overview hideblocks 
 #+SELECT_TAGS: export
 #+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="buster keaton"
