@@ -2,7 +2,7 @@
 #+OPTIONS: toc:nil num:nil
 #+STARTUP: overview hideblocks 
 #+SELECT_TAGS: export
-#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="billingsgate market london"
+#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="nixos"
 * usage
 ** global search
 
@@ -10,23 +10,6 @@ edit the PROPERTY at the top of the file and change the query and page number
 
 #+begin_example
 #+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="buster keaton"
-#+end_example
-
-** custom search
-
-You can override the global search using a custom search using header-args
-
-As shown below without the comma before the heading
-
-#+begin_example
-,*** custom general search
-:PROPERTIES:
-:header-args:sh: :var category="general" page=1 query="harold lloyd"
-:END:
-#+NAME: custom-general-search
-#+BEGIN_SRC sh 
-<<general-noweb>>
-#+end_src
 #+end_example
 
 ** org refesh
@@ -55,7 +38,7 @@ C-c C-c
 curl -s -G "http://localhost:8080/search" \
 --data-urlencode "q=${query}" \
 --data "format=json" \
---data "categories=${category}" \
+--data-urlencode "categories=${category}" \
 --data "pageno=${page}" \
 --data "language=auto" \
 --data "time_range=" \
@@ -166,6 +149,21 @@ else "" end) +
 #+end_src
 :END:
 
+** social media noweb
+:CODE:
+#+NAME: social-media-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if .value.content then 
+  "\n" + (.value.content | gsub("<[^>]*>"; "")) + "\n\n" 
+else "\n" end) +
+(if .value.metadata then "Metadata: \(.value.metadata)\n" else "" end) +
+(if (.value.pubdate and .value.pubdate != "") then "Published: \(.value.pubdate)\n" else "" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
+#+end_src
+:END:
+
 * search
 ** general
 :PROPERTIES:
@@ -230,14 +228,13 @@ else "" end) +
 <<map-noweb>>
 #+end_src
 
-** custom 
-*** custom general
+** social media
 :PROPERTIES:
-:header-args:sh: :var category="general" page=1 query="!ddg Harold Lloyd"
+:header-args:sh: :var category="social media"
 :END:
-#+NAME: custom-general-search
+#+NAME: social-media-search
 #+BEGIN_SRC sh 
-<<general-noweb>>
+<<social-media-noweb>>
 #+end_src
 
 * results :export:
@@ -262,7 +259,6 @@ else "" end) +
 ** map
 #+RESULTS: map-search
 
-** custom
-*** custom general
-#+RESULTS: custom-general-search
+** social media
+#+RESULTS: social-media-search
 
