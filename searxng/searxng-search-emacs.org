@@ -2,7 +2,7 @@
 #+OPTIONS: toc:nil num:nil
 #+STARTUP: overview hideblocks 
 #+SELECT_TAGS: export
-#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="Buster Keaton"
+#+PROPERTY: header-args :results output wrap append :noweb yes :var page=1 query="billingsgate market london"
 * usage
 ** global search
 
@@ -146,6 +146,26 @@ curl -s -G "http://localhost:8080/search" \
 #+end_src
 :END:
 
+** map noweb
+:CODE:
+#+NAME: map-noweb
+#+begin_src sh :noweb yes
+<<searxng-curl>> | jq -rj '.results | sort_by(.score) | reverse | to_entries[] | 
+"\(.key + 1): [[\(.value.url)][\(.value.title)]]\n" + 
+(if (.value.content and .value.content != "") then "\n\(.value.content)\n\n" else "\n" end) +
+(if .value.address then 
+  ([.value.address.house_number, .value.address.road, .value.address.locality, .value.address.postcode, .value.address.country] | del(..|nulls) | join(", ")) as $addr |
+  (if ($addr | length) > 0 then "Address: \($addr)\n" else "" end)
+else "" end) +
+(if (.value.data and (.value.data | length) > 0) then 
+  (.value.data | map(if .label == "open days" then "opening hours: \(.value)" else "\(.label): \(.value)" end) | join("\n")) + "\n" 
+else "" end) +
+(if .value.latitude then "Coords: \(.value.latitude), \(.value.longitude)\n" else "" end) +
+(if .value.osm then "OSM: \(.value.osm.type)/\(.value.osm.id)\n" else "" end) +
+"Score: \(.value.score)\nCategory: \(.value.category)\nEngine: \(.value.engines)\n\n"'
+#+end_src
+:END:
+
 * search
 ** general
 :PROPERTIES:
@@ -201,10 +221,19 @@ curl -s -G "http://localhost:8080/search" \
 <<files-noweb>>
 #+end_src
 
+** map
+:PROPERTIES:
+:header-args:sh: :var category="map"
+:END:
+#+NAME: map-search
+#+BEGIN_SRC sh 
+<<map-noweb>>
+#+end_src
+
 ** custom 
 *** custom general
 :PROPERTIES:
-:header-args:sh: :var category="general" page=1 query="!ddg nixos"
+:header-args:sh: :var category="general" page=1 query="!ddg Harold Lloyd"
 :END:
 #+NAME: custom-general-search
 #+BEGIN_SRC sh 
@@ -229,6 +258,9 @@ curl -s -G "http://localhost:8080/search" \
 
 ** files
 #+RESULTS: files-search
+
+** map
+#+RESULTS: map-search
 
 ** custom
 *** custom general
