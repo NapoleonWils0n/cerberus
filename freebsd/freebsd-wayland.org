@@ -221,6 +221,46 @@ wifi-firmware-iwlwifi-kmod-22000
 
 press enter
 
+** add user
+
+press enter to select Yes
+
+- Username should be set to your username you will log in with
+
+- Full Name is your full name
+
+- Uid leave empty for default
+
+- Login group leave at default
+
+- Login group invite to other groups should be set to wheel video
+
+- Login class: (Default).
+
+- Shell leave as default sh
+
+- Home directory leave as default
+
+- Home Directory persmission leave empty for default
+
+- Enable ZFS encryption for the home directory use the default of no
+
+- Use password based authentication leave as default of yes
+
+- Use and empty password accept default of no
+
+- Use a random password accept default of no
+
+- Enter password: enter your password
+
+- Lock out the account after creation leave at default of no
+
+Press enter to select yes to create the user
+
+Add another user press enter to select no
+
+** Final configuration
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
