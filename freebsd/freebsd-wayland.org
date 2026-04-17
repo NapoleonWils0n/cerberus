@@ -50,6 +50,14 @@ extract the xz file
 xz -dv FreeBSD-15.0-RELEASE-amd64-memstick.img.xz
 #+end_src
 
+check the output of lblk to find the device
+
+#+begin_src sh
+lsblk
+#+end_src
+
+in this example the drive is /dev/sda
+
 dd the image to a usb drive
 
 #+begin_src sh
