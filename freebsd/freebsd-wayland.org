@@ -99,7 +99,19 @@ set to
 
 Packages (Tech Preview)
 
-** root on zfs
+*** network or offline installation
+
+select network
+
+*** network configuration
+
+select your ethernet connection
+
+ue0
+
+and select auto
+
+** partitioning
 
 Select root on zfs during in
 
@@ -109,6 +121,21 @@ Select root on zfs during in
 
 freebsd installer partition scheme
 for apple hardware choose gpt (bios+uefi)
+
+select Pool Type/Disks
+
+select stripe and select you disk by pressing space and then ok by pressing enter
+
+press procede with install
+
+*** zfs configuration
+
+press the left arrow to select yes and then enter
+
+enter the your geli password
+
+you will prompted to enter it twice
+
 
 *** set the root password
 
