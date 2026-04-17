@@ -192,6 +192,35 @@ and press enter
 
 ** system configuration
 
+deselect
+
+sshd
+
+select 
+
+- ntpd
+- ntpd_sync_on_start
+- local_unbound  
+- powered
+- moused
+- dumpdev
+
+** system hardening
+
+select everything except
+
+9 disable_ddtrace
+
+** Freebsd firmware installation
+
+keep the following selected
+
+gpu-firmware-intel-kmod-kabylake
+
+wifi-firmware-iwlwifi-kmod-22000
+
+press enter
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
