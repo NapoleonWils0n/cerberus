@@ -299,6 +299,24 @@ zfs create zroot/home/djwilcox/.local
 chown -R djwilcox:djwilcox /mnt/home/djwilcox
 #+end_src
 
+check the directories have been created
+
+#+begin_src sh
+ls -al /mnt/home/djwilcox
+#+end_src
+
+exit the installer
+
+#+begin_src sh
+exit
+#+end_src
+
+select shutdown
+
+press the right arrow once to select shutdown and then press enter
+
+once its shutdown unplug the usb drive
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
