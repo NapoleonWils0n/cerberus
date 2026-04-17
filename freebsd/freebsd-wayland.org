@@ -89,6 +89,16 @@ select
 
 United States of America (Macbook/Macbook Pro) IS0-88591
 
+*** set hostname
+
+set to pollux
+
+*** select installation type
+
+set to
+
+Packages (Tech Preview)
+
 ** root on zfs
 
 Select root on zfs during in
