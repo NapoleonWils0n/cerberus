@@ -28,6 +28,7 @@ sha512sum -c CHECKSUM.SHA512-FreeBSD-15.0-RELEASE-amd64 FreeBSD-15.0-RELEASE-amd
 #+end_src
 
 ** writing an image file to usb
+*** freebsd 
 
 extract the xz file
 
@@ -39,6 +40,20 @@ dd the image to a usb drive
 
 #+begin_src sh
 sudo dd if=FreeBSD-15.0-RELEASE-amd64-memstick.img of=/dev/da0 bs=1M conv=sync
+#+end_src
+
+*** linux
+
+extract the xz file
+
+#+begin_src sh
+xz -dv FreeBSD-15.0-RELEASE-amd64-memstick.img.xz
+#+end_src
+
+dd the image to a usb drive
+
+#+begin_src sh
+doas dd if=FreeBSD-15.0-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=fsync status=progress
 #+end_src
 
 ** root on zfs
