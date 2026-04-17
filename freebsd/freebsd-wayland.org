@@ -136,8 +136,27 @@ enter the your geli password
 
 you will prompted to enter it twice
 
+*** select system components
 
-*** set the root password
+select the following options
+
+use the arrow keys to move up and down and space to select
+
+- base: System core
+- devel: Build tools/headers (Required for dwl)
+- src: System source code (Required for NVIDIA/Kmods)
+- lib32: 32-bit compatibility (Good for Linuxulator)
+
+*** Post-Install: Fetching the Ports Tree
+
+FreeBSD 15 uses git for ports. Once booted:
+
+#+begin_src sh
+doas pkg install git
+doas git clone https://git.freebsd.org/ports.git /usr/ports
+#+end_src
+
+** set the root password
 
 set the root password during the install
 
