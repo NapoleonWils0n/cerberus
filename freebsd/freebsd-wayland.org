@@ -317,6 +317,16 @@ press the right arrow once to select shutdown and then press enter
 
 once its shutdown unplug the usb drive
 
+*** log in
+
+press the power button
+
+enter the geli password
+
+press enter at the log in screen
+
+then log in with your username and password
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
