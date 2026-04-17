@@ -358,7 +358,7 @@ shutdown -p now
 To bootstrap the system switch to root with su
 
 #+begin_src sh
-su
+su -
 #+end_src
 
 then bootstrap pkg
