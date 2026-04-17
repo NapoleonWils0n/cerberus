@@ -64,6 +64,18 @@ dd the image to a usb drive
 doas dd if=FreeBSD-15.0-RELEASE-amd64-memstick.img of=/dev/sda bs=1M conv=fsync status=progress
 #+end_src
 
+** remove old boot entry
+
+on the dell xps we need to press F2 repeatedly when we start up to enter the bios
+
+delete any boot entries by selecting them and pressing delete
+
+then click apply and exit
+
+plug in the freebsd usb stick and then pres F12 to enter the one time boot menu
+
+select the usb drive to boot into freebsd
+
 ** root on zfs
 
 Select root on zfs during in
