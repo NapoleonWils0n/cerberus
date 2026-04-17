@@ -347,12 +347,6 @@ create a new boot environment
 bectl create fresh_install
 #+end_src
 
-activate the new boot environment
-
-#+begin_src 
-bectl activate fresh_install
-#+end_src
-
 shutdown 
 
 #+begin_src sh
