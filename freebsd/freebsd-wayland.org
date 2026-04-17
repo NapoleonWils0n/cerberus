@@ -353,18 +353,18 @@ shutdown
 shutdown -p now
 #+end_src
 
-** bootstrap the system
+** pkg update
 
-To bootstrap the system switch to root with su
+pkg is already installed with the new tech preview
 
 #+begin_src sh
 su -
 #+end_src
 
-then bootstrap pkg
+run pkg update
 
 #+BEGIN_SRC sh
-/usr/sbin/pkg
+pkg update
 #+END_SRC
 
 ** sudo
