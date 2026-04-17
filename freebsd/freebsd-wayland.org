@@ -111,7 +111,7 @@ ue0
 
 and select auto
 
-** partitioning
+*** partitioning
 
 Select root on zfs during in
 
@@ -156,11 +156,11 @@ doas pkg install git
 doas git clone https://git.freebsd.org/ports.git /usr/ports
 #+end_src
 
-** set the root password
+*** set the root password
 
 set the root password during the install
 
-** timezone
+*** timezone
 
 set the timezone
 
@@ -180,7 +180,7 @@ does the timezone abbreviation 'BST' look reasonable
 
 click Yes
 
-**  time and date
+*** time and date
 
 press the left arrow key to select Set Date
 
@@ -190,7 +190,7 @@ press the left arrow key to select Set Time
 
 and press enter
 
-** system configuration
+*** system configuration
 
 deselect
 
@@ -205,13 +205,13 @@ select
 - moused
 - dumpdev
 
-** system hardening
+*** system hardening
 
 select everything except
 
 9 disable_ddtrace
 
-** Freebsd firmware installation
+*** Freebsd firmware installation
 
 keep the following selected
 
@@ -221,7 +221,7 @@ wifi-firmware-iwlwifi-kmod-22000
 
 press enter
 
-** add user
+*** add user
 
 press enter to select Yes
 
@@ -259,11 +259,11 @@ Press enter to select yes to create the user
 
 Add another user press enter to select no
 
-** Final configuration
+*** Final configuration
 
 Select Finish and press enter to select
 
-** Manual Configuration
+*** Manual Configuration
 
 the installation is now finished
 
@@ -274,6 +274,30 @@ press the left arrow key to select yes and press enter
 this shell is operatin in a chroot in the new system
 
 when finised making configuration changes, type exit
+
+*** create zfs dataset in home for directories
+
+change djwilcox to your username in the code below
+
+#+begin_src sh
+zfs create zroot/home/djwilcox/bin
+zfs create zroot/home/djwilcox/desktop
+zfs create zroot/home/djwilcox/documents
+zfs create zroot/home/djwilcox/downloads
+zfs create zroot/home/djwilcox/mnt
+zfs create zroot/home/djwilcox/music
+zfs create zroot/home/djwilcox/git
+zfs create zroot/home/djwilcox/video
+zfs create zroot/home/djwilcox/pictures
+zfs create zroot/home/djwilcox/torrents
+zfs create zroot/home/djwilcox/.cache
+zfs create zroot/home/djwilcox/.config
+zfs create zroot/home/djwilcox/.local
+#+end_src
+
+#+begin_src sh
+chown -R djwilcox:djwilcox /mnt/home/djwilcox
+#+end_src
 
 ** bootstrap the system
 
