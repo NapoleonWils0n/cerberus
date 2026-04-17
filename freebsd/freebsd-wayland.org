@@ -261,6 +261,20 @@ Add another user press enter to select no
 
 ** Final configuration
 
+Select Finish and press enter to select
+
+** Manual Configuration
+
+the installation is now finished
+
+before exiting the installer would you like to open a shell in the new system to make any final manual modification's
+
+press the left arrow key to select yes and press enter
+
+this shell is operatin in a chroot in the new system
+
+when finised making configuration changes, type exit
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
