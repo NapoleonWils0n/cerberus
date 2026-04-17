@@ -76,6 +76,19 @@ plug in the freebsd usb stick and then pres F12 to enter the one time boot menu
 
 select the usb drive to boot into freebsd
 
+** freebsd installer
+
+press enter to start the installer
+
+select install
+
+
+*** keymap
+
+select
+
+United States of America (Macbook/Macbook Pro) IS0-88591
+
 ** root on zfs
 
 Select root on zfs during in
