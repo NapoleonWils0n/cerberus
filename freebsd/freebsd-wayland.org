@@ -160,6 +160,38 @@ doas git clone https://git.freebsd.org/ports.git /usr/ports
 
 set the root password during the install
 
+** timezone
+
+set the timezone
+
+for the uk select
+
+8 Europe
+
+countries or region
+
+select
+
+49 United Kingdon of Great Britain and Northen Ireland
+
+configuration
+
+does the timezone abbreviation 'BST' look reasonable 
+
+click Yes
+
+**  time and date
+
+press the left arrow key to select Set Date
+
+and press enter
+
+press the left arrow key to select Set Time
+
+and press enter
+
+** system configuration
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
