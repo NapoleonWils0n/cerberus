@@ -327,6 +327,38 @@ press enter at the log in screen
 
 then log in with your username and password
 
+** bectl crete boot environment
+
+list the boot environments
+
+#+begin_src sh
+bectl list
+#+end_src
+
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+create a new boot environment
+
+#+begin_src sh
+bectl create fresh_install
+#+end_src
+
+activate the new boot environment
+
+#+begin_src 
+bectl activate fresh_install
+#+end_src
+
+shutdown 
+
+#+begin_src sh
+shutdown -p now
+#+end_src
+
 ** bootstrap the system
 
 To bootstrap the system switch to root with su
