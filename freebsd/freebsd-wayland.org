@@ -922,8 +922,6 @@ use the sysrc command as root to add commands to /etc/rc.conf
 
 #+BEGIN_SRC sh
 sudo sysrc dnscrypt_proxy_enable="YES"
-sudo sysrc dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
-sudo sysrc dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
 #+END_SRC
 
 we also need to enable unbound in the /etc/rc.conf
@@ -933,8 +931,6 @@ we also need to enable unbound in the /etc/rc.conf
 local_unbound_enable="YES"
 # dnscrypt
 dnscrypt_proxy_enable="YES"
-dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
-dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
 #+END_SRC
 
 *** resolv.conf
