@@ -32,6 +32,7 @@ git-prompt.zsh
 gmake
 grub2-bhyve
 gstreamer1-libav
+gstreamer1-plugins-bad
 gstreamer1-plugins-opus
 hs-pandoc
 jq
