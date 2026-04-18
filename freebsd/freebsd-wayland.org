@@ -365,41 +365,9 @@ run pkg update
 pkg update
 #+END_SRC
 
-** sudo
-*** switch to root
+** doas 
 
-#+begin_src sh
-su
-#+end_src
-
-*** install sudo 
-
-#+BEGIN_SRC sh
-pkg install sudo
-#+END_SRC
-
-*** edit /etc/sudoers
-
-#+BEGIN_SRC sh
-visudo
-#+END_SRC
-
-*** add your user to the sudoers file, replace username with your username
-
-#+BEGIN_SRC sh
-username   ALL=(ALL:ALL) ALL
-#+END_SRC
-
-** create new user
-
-if you didnt create a new user duration the install
-you can run the adduser command to add a new user
-
-#+BEGIN_SRC sh
-adduser
-#+END_SRC
-
-add the new user to wheel and video groups
+install doas
 
 ** single user mode
 
@@ -411,7 +379,7 @@ change setting from secure to insecure to require root password
 edit /etc/ttys
 
 #+BEGIN_SRC sh
-sudo vi /etc/ttys
+doas vi /etc/ttys
 #+END_SRC
 
 change the settings to insecure
