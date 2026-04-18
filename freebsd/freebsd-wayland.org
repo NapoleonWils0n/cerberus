@@ -963,7 +963,7 @@ options edns0
 check dnscrypt-proxy can resolve a domain
 
 #+BEGIN_SRC sh
-dnscrypt-proxy -resolve google.com
+dnscrypt-proxy -resolve google.com -config /usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
 #+END_SRC
 
 ** zfs home datasets
