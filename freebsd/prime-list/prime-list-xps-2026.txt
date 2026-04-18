@@ -33,7 +33,6 @@ gmake
 grub2-bhyve
 gstreamer1-libav
 gstreamer1-plugins-opus
-gstreamer1-vaapi
 hs-pandoc
 jq
 libc6-shim
@@ -84,7 +83,6 @@ translate-shell
 tree
 tree-sitter
 ts
-virtual_oss
 wayland
 wayland-protocols
 wayland-utils
@@ -94,7 +92,7 @@ wl-clipboard
 wlr-which-key
 wlrctl
 wlrobs
-wlroots
+wlroots019
 xdg-desktop-portal-wlr
 xcb-util-wm
 yt-dlp
