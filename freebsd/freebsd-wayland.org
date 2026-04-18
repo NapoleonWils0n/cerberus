@@ -365,6 +365,74 @@ run pkg update
 pkg update
 #+END_SRC
 
+** prime list
+
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+load linux64 needed for nvidia drivers
+
+#+begin_src sh
+kldload linux64
+#+end_src
+
+install prime list of packages
+
+#+begin_src sh
+pkg install $(cat prime-list-xps-2026.txt)
+#+end_src
+
+** copy files into place
+
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+Assuming you are in the git repo directory
+
+#+begin_src sh
+rsync -av ./etc/ /etc/
+rsync -av ./usr/local/etc/ /usr/local/etc/
+rsync -av ./boot/ /boot/
+#+end_src
+
+change the permisions
+
+#+begin_src sh
+chown -R root:wheel /boot
+chown -R root:wheel /etc
+chown -R root:wheel /usr/local/etc/
+#+end_src
+
+run cap_mkdb
+
+#+begin_src sh
+cap_mkdb /etc/login.conf
+#+end_src
+
+switch back to out user by running exit to exit from the root shell
+
+#+begin_src sh
+exit
+#+end_src
+
+run cap_mkdb
+
+#+begin_src sh
+cap_mkdb ~/.login_conf
+#+end_src
+
+change shell
+
+#+begin_src sh
+chsh -s /usr/local/bin/zsh
+#+end_src
+
 ** doas 
 
 install doas

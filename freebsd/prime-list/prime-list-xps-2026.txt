@@ -28,7 +28,6 @@ ffmpegthumbnailer
 firacode
 firefox
 git
-git-prompt.zsh
 gmake
 grub2-bhyve
 gstreamer1-libav
