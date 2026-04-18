@@ -82,7 +82,6 @@ press enter to start the installer
 
 select install
 
-
 *** keymap
 
 select
@@ -284,7 +283,6 @@ zfs create zroot/home/djwilcox/bin
 zfs create zroot/home/djwilcox/desktop
 zfs create zroot/home/djwilcox/documents
 zfs create zroot/home/djwilcox/downloads
-zfs create zroot/home/djwilcox/mnt
 zfs create zroot/home/djwilcox/music
 zfs create zroot/home/djwilcox/git
 zfs create zroot/home/djwilcox/video
