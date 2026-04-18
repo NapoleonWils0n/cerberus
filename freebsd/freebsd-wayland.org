@@ -433,191 +433,15 @@ change shell
 chsh -s /usr/local/bin/zsh
 #+end_src
 
-** doas 
-
-install doas
-
-** single user mode
-
-single user mode require root password
-
-change single user mode to requite root password
-change setting from secure to insecure to require root password
-
-edit /etc/ttys
-
-#+BEGIN_SRC sh
-doas vi /etc/ttys
-#+END_SRC
-
-change the settings to insecure
-
-#+BEGIN_SRC sh
-console none unknown off insecure
-#+END_SRC
-
-** drivers
-*** dell xps 15 2019
-
-#+begin_SRC sh
-sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils gpu-firmware-intel-kmod-kabylake
-#+END_SRC
-
-we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
-
-#+begin_src sh
-sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
-#+end_src
-
-or manually edit the config file
-
-#+BEGIN_SRC sh
-sudo vi /etc/rc.conf
-#+END_SRC
-
-then add the code below to /etc/rc.conf
-
-#+BEGIN_SRC sh
-kld_list="i915kms nvidia-modeset nvidia-drm linux linux64"
-#+END_SRC
-
-*** macbook air 2011 
-
-#+begin_SRC sh
-sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
-#+END_SRC
-
-use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
-
-we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
-
-#+begin_src sh
-sudo sysrc kld_list="i915kms"
-#+end_src
-
-or manually edit the config file
-
-#+BEGIN_SRC sh
-sudo vi /etc/rc.conf
-#+END_SRC
-
-then add the code below to /etc/rc.conf
-
-#+BEGIN_SRC sh
-kld_list="i915kms"
-#+END_SRC
-
-** wayland
-
-#+begin_src sh
-sudo pkg install wayland wayland-protocols seatd qt5ct qt5-wayland 
-#+end_src
-
-*** fstab
-
-Add procfs to /etc/fstab with this line
-
-#+begin_src sh
-proc /proc procfs rw 0 0
-#+end_src
-
-The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
-
-#+begin_src sh
-sudo sysrc seatd_enable="YES"
-sudo sysrc dbus_enable="YES"
-#+end_src
-
-[[https://docs.freebsd.org/en/books/handbook/wayland/]]
-
-[[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop.85930/]]
-
-[[https://forums.freebsd.org/threads/sway-and-wayland.83682/]]
-
-** wayfire
-
-[[https://github.com/WayfireWM/wayfire/wiki/Configuration]]
-
-[[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop.85930/]]
-
-[[https://forums.freebsd.org/threads/example-tutorial-pure-wayland-desktop-discussion.85994/]]
-
-#+begin_src sh
-sudo pkg install wayfire wf-shell wayfire-plugins-extra alacritty swaylock-effects swayidle wlogout kanshi wcm
-#+end_src
-
-config
-
-#+begin_src sh
-mkdir ~/.config/wayfire
-cp /usr/local/share/examples/wayfire/wayfire.ini ~/.config/wayfire
-#+end_src
-
-test config
-
-#+begin_src sh
-wayfire -c ~/.config/wayfire/wayfire.ini
-#+end_src
-
-note the wayfire config gui saves the config to ~/.config/wayfire.ini
-
-*** dbus-launch wayfire
-
-#+begin_src sh
-exec dbus-launch --exit-with-session wayfire
-#+end_src
-
-note make sure to enable dbus in the rc.conf
-
 ** install zsh
 
-install zsh
-
-#+BEGIN_SRC sh
-sudo pkg install zsh zsh-completions zsh-syntax-highlighting
-#+END_SRC
-
-change the shell to bash
+change the shell to zsh
 
 #+BEGIN_SRC sh
 chsh -s /usr/local/bin/zsh
 #+END_SRC
 
-add to your ~/.zshrc
-
-#+begin_src sh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#+end_src
-
-** emacs
-
-#+begin_src sh
-sudo pkg install emacs-devel tree-sitter cantarell-fonts
-#+end_src
-
-remove the eln-cache and restart if needed
-
-#+begin_src sh
-rm -rf ~/.config/emacs/eln-cache
-#+end_src
-
-** applications
-
-#+BEGIN_SRC sh
-sudo pkg install abook adwaita-qt5 adwaita-qt6 apg aria2 aspell en-aspell bat dictd fd-find firacode firefox ffmpeg fzf git gstreamer1-plugins-opus hs-pandoc ImageMagick7 libnotify mpc mutt ncmpc noto-basic noto-emoji oath-toolkit obs-studio openvpn ripgrep ripgrep-all socat sox tmux ts translate-shell urlview w3m weechat wl-clipboard yt-dlp wget2 xkbcomp mpv mpv-mpris playerctl xdg-desktop-portal-wlr-
-#+END_SRC
-
-enable dict
-
-#+begin_src sh
-sudo sysrc dictd_enable="YES"
-#+end_src
-
 ** obs studio
-
-#+begin_src sh
-sudo pkg install obs-studio qt6-wayland wlrobs
-#+end_src
 
 Only root can grant real-time priority to processes for now, using rtprio(1).
 Upcoming FreeBSD releases will have a MAC policy with a realtime user group.
@@ -639,12 +463,6 @@ me:\
 
 #+begin_src sh
 cap_mkdb ~/.login_conf
-#+end_src
-
-** qtt5
-
-#+begin_src sh
-export QT_QPA_PLATFORMTHEME=qt5ct
 #+end_src
 
 ** mpd
@@ -925,16 +743,12 @@ pulseaudio --start
 pulseaudio --kill
 #+END_SRC
 
-** beadm install
-
-#+BEGIN_SRC sh
-pkg install beadm
-#+END_SRC
+** bectl
 
 See which boot environments you have.
 
 #+BEGIN_SRC sh
-beadm list
+bectl list
 #+END_SRC
 
 The only boot environment is named default. Under active, N means the environment is active now.  
@@ -946,62 +760,41 @@ check the current version of freebsd with uname
 uname -s
 #+END_SRC
 
-check for an update
-
-#+BEGIN_SRC sh
-freebsd-update fetch
-#+END_SRC
-
-The updates have been downloaded but still haven’t been installed.  
-I will prepare a boot environment just in case after installing them something breaks
-
 *** create new boot environment
 
 I need to upgrade this host to the latest version of FreeBSD 12.0, p3.  
 This is where we need a new boot environment. I’ll name it after the release.
 
-run the beadm commands as root
+run the bectl commands as root
 
 #+BEGIN_SRC sh
-beadm create 14.0-p0
+bectl 15.0-p0
 #+END_SRC
 
 list the boot environments
 
 #+BEGIN_SRC sh
-beadm list
+bectl list
 #+END_SRC
 
 Activate the new boot environment.
 
 #+BEGIN_SRC sh
-beadm activate 14.0-p0
+bectl activate 15.0-p0
 #+END_SRC
 
 list the boot environments
 
 #+BEGIN_SRC sh
-beadm list
+bectl list
 #+END_SRC
 
 While the default environment has an N, indicating it’s active now,
-the 14.0-p0 environment has an R, so it will be active after a reboot.
+the 15.0-p0 environment has an R, so it will be active after a reboot.
 
 Reboot. After the reboot, you’ll see the new environment is running.
 
 **** install updates in new boot environment
-
-install update in new boot environment
-
-#+BEGIN_SRC sh
-freebsd-update install
-#+END_SRC
-
-reboot and run freebsd-update install again
-
-#+BEGIN_SRC sh
-freebsd-update install
-#+END_SRC
 
 check for package updates
 
@@ -1014,178 +807,6 @@ create a zfs snapshot
 
 #+BEGIN_SRC sh
 zfs snapshot -r zroot@14.0-p0
-#+END_SRC
-
-** unbound dns server
-
-Select local_unbound during freebsd setup
-or install the unbound package
-
-+ switch to root using sudo 
-
-#+BEGIN_SRC sh
-sudo su
-#+END_SRC
-
-+ or doas
-
-#+BEGIN_SRC sh
-doas su
-#+END_SRC
-
-install unbound dns server
-
-#+BEGIN_SRC sh
-pkg install unbound
-#+END_SRC
-
-enable unbound to start at boot 
-if you enable unbound during the freebsd the service is called local_unbound
-
-We can use the sysrc command to enable the service in /etc/rc.conf
-
-#+BEGIN_SRC sh
-sysrc local_unbound_enable="YES"
-#+END_SRC
-
-or if you install unbound pkg or port the service with be called unbound
-
-#+BEGIN_SRC sh
-sysrc unbound_enable="YES"
-#+END_SRC
-
-You can also edit the /etc/rc.conf as root to enable unbound
-
-#+BEGIN_SRC sh
-vi /etc/rc.conf
-#+END_SRC
-
-which should look like the following for the local_unbound pkg
-
-#+BEGIN_SRC sh
-local_unbound_enable="YES"
-#+END_SRC
-
-*** ca_root_nss install
-
-may be automatically installed
-
-Install the ca_root_nss package which contains the trusted internet root CA servers
-This is used by unbound to create the root.key file which is auto trusted
-
-#+BEGIN_SRC sh
-pkg install ca_root_nss
-#+END_SRC
-
-*** unbound config
-
-dnscrypt needs - do-not-query-localhost: no
-in the custom.conf file in order to work
-
-**** unbound custom.conf
-
-Create a custom.conf configuration file for unbound
-switch to root and then create custom.conf
-
-#+BEGIN_SRC sh
-vi /etc/unbound/conf.d/custom.conf
-#+END_SRC
-
-#+BEGIN_SRC sh
-server:
-	include: "/var/unbound/unbound_ad_servers"
-# include: "/etc/unbound/unbound_outgoing_interface"
-	verbosity: 1
-	access-control: 0.0.0.0/0 refuse
-	access-control: 127.0.0.0/8 allow
-	access-control: ::0/0 refuse
-	access-control: ::1 allow
-	access-control: ::ffff:127.0.0.1 allow
-	
-	# enable to not answer id.server and hostname.bind queries.
-	hide-identity: yes
-	hide-version: yes
-	harden-glue: yes
-	harden-dnssec-stripped: yes
-	
-        # dont query localhost needed for dnscrypt-proxy
-        do-not-query-localhost: no
-# remote-control:
-#	control-enable: no
-#+END_SRC
-
-**** unbound forward.conf
-
-edit the unbound forward.conf file as root
-
-#+BEGIN_SRC sh
-vi /etc/unbound/forward.conf
-#+END_SRC
-
-replace the contents of the file with the code below
-this will use dnscrypt as the forwarder
-
-#+BEGIN_SRC sh
-forward-zone:
-	name: "."
-	forward-addr: 127.0.0.1@5353
-#+END_SRC
-
-**** unbound adblocking
-
-Convert the Yoyo.org anti-ad server listing
-into an unbound dns spoof redirection list.
-
-#+BEGIN_SRC sh
-wget -q -O- --header\="Accept-Encoding: gzip" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&mimetype=plaintext' | \
-gunzip | \
-awk '/^127\./{
-        print "local-zone: \"" $2 "\" redirect"
-        print "local-data: \"" $2 " A 127.0.0.1\""
-}' > unbound_ad_servers
-#+END_SRC
-
-Copy unbound_ad_servers file to /etc/unbound as root
-
-#+BEGIN_SRC sh
-cp unbound_ad_servers /etc/unbound
-#+END_SRC
-
-chown the unbound_ad_servers file as root
-
-#+BEGIN_SRC sh
-chown root:unbound /etc/unbound/unbound_ad_servers
-#+END_SRC
-
-edit the unbound custom.conf file as root
-
-#+BEGIN_SRC sh
-vi /etc/unbound/conf.d/custom.conf
-#+END_SRC
-
-add an include statement to add the unbound_ad_servers to the config file
-
-#+BEGIN_SRC sh
-server:
-	include: "/var/unbound/unbound_ad_servers"
-# include: "/etc/unbound/unbound_outgoing_interface"
-	verbosity: 1
-	access-control: 0.0.0.0/0 refuse
-	access-control: 127.0.0.0/8 allow
-	access-control: ::0/0 refuse
-	access-control: ::1 allow
-	access-control: ::ffff:127.0.0.1 allow
-	
-	# enable to not answer id.server and hostname.bind queries.
-	hide-identity: yes
-	hide-version: yes
-	harden-glue: yes
-	harden-dnssec-stripped: yes
-	
-        # dont query localhost needed for dnscrypt-proxy
-        do-not-query-localhost: no
-# remote-control:
-#	control-enable: no
 #+END_SRC
 
 ** dnscrypt-proxy2
@@ -1540,26 +1161,6 @@ pinentry-program /usr/local/bin/pinentry-curses
 default-cache-ttl 36000
 max-cache-ttl 36000
 #+end_src
-
-** ports
-
-To download a compressed snapshot of the Ports Collection into /var/db/portsnap:
-
-#+BEGIN_SRC sh
-# portsnap fetch
-#+END_SRC
-
-2 When running Portsnap for the first time, extract the snapshot into /usr/ports:
-
-#+BEGIN_SRC sh
-# portsnap extract
-#+END_SRC
-
-3 After the first use of Portsnap has been completed as shown above, /usr/ports can be updated as needed by running:
-
-#+BEGIN_SRC sh
-# portsnap fetch update
-#+END_SRC
 
 ** bluetooth freebsd stop
 
@@ -2362,10 +1963,6 @@ Default
 ** virtual_oss audiofor obs
 
 virtual oss to record sndio audio in obs studio
-
-#+begin_src sh
-sudo pkg install virtual_oss
-#+end_src
 
 *** cuse boot loader.conf
 
