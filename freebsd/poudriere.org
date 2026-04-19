@@ -85,13 +85,13 @@ poudriere ports -c -p quarterly -m git+https -B 2026Q2
 ** create the distfiles directory
 
 #+BEGIN_SRC sh
-# mkdir -p /usr/ports/distfiles
+mkdir -p /usr/ports/distfiles
 #+END_SRC
 
 edit the poudriere.conf file
 
 #+BEGIN_SRC sh
-# vi /usr/local/etc/poudriere.conf
+vi /usr/local/etc/poudriere.conf
 #+END_SRC
 
 change the poudriere.conf so it looks like this
@@ -415,7 +415,7 @@ PKG_REPO_SIGNING_KEY=/usr/local/etc/ssl/keys/poudriere.key
 *** Creating the Build Environment
 
 #+BEGIN_SRC sh
-# poudriere jail -c -j freebsd_15-0x64 -v 15.0-CURRENT
+poudriere jail -c -j freebsd_15-0x64 -m git+https -v main
 #+END_SRC
 
 This will take awhile to complete, so be patient.  
@@ -430,13 +430,13 @@ Once you have a jail created, we will have to install a ports tree. It is possib
 We can use the -p flag to name our ports tree. We will call our tree "quarterly" as it accurately summarizes the use of this tree (the "head" or most up-to-date point of the tree). We will be updating it regularly to match the most current version of the ports tree available:
 
 #+BEGIN_SRC sh
-# poudriere ports -c -p quarterly
+poudriere ports -c -p quarterly
 #+END_SRC
 
 Again, this procedure will take awhile because the entire ports tree must be fetched and extracted. When it is finished, we can view our ports tree by typing:
 
 #+BEGIN_SRC sh
-# poudriere ports -l
+poudriere ports -l
 #+END_SRC
 
 *** Creating a Port Building List and Setting Port Options
@@ -444,7 +444,7 @@ Again, this procedure will take awhile because the entire ports tree must be fet
 We will be creating a list of ports that we can pass directly to the command.  
 
 #+BEGIN_SRC sh
-# vi /usr/local/etc/poudriere.d/port-list 
+vi /usr/local/etc/poudriere.d/port-list 
 #+END_SRC
 
 The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
@@ -456,7 +456,7 @@ net-p2p/rtorrent
 If you use specific make.conf options to build your ports, you can create a make.conf file for each jail within your /usr/local/etc/poudriere.d directory. For example, for our jail, we can create a make.conf file with this name:
 
 #+BEGIN_SRC sh
-# vi /usr/local/etc/poudriere.d/freebsd_15-0x64-make.conf
+vi /usr/local/etc/poudriere.d/freebsd_15-0x64-make.conf
 #+END_SRC
 
 #+BEGIN_SRC sh
@@ -470,7 +470,7 @@ You can configure anything which has not been already configured using the optio
 Our command will look like this:
 
 #+BEGIN_SRC sh
-# poudriere options -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
+poudriere options -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
 You will see a dialog for each of the ports on the list and any dependencies that do not have corresponding options set in the -options directory. The specifications in your make.conf file will be preselected in the selection screens. Select all of the options you would like to use.
@@ -478,13 +478,13 @@ You will see a dialog for each of the ports on the list and any dependencies tha
 If you wish to reconfigure the options for your ports in the future, you can re-run the command above with the -c option. This will show you all of the available configuration options, regardless of whether you have made a selection in the past:
 
 #+BEGIN_SRC sh
-# poudriere options -c -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
+poudriere options -c -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
 bulk build with no user input
 
 #+BEGIN_SRC sh
-# poudriere bulk -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
+poudriere bulk -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
 *** Building the Ports
@@ -496,19 +496,19 @@ The last thing we need to do is ensure that both our jail and ports tree are up-
 To update your jail, type:
 
 #+BEGIN_SRC sh
-# poudriere jail -u -j freebsd_15-0x64
+poudriere jail -u -j freebsd_15-0x64
 #+END_SRC
 
 To update your ports tree, type:
 
 #+BEGIN_SRC sh
-# poudriere ports -u -p quarterly
+poudriere ports -u -p quarterly
 #+END_SRC
 
 Once that is complete, we can kick off the bulk build process.
 
 #+BEGIN_SRC sh
-# poudriere bulk -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
+poudriere bulk -j freebsd_15-0x64 -p quarterly -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
 This will start up a number of workers (depending on your poudriere.conf file or the number of CPUs available) and begin building the ports.
@@ -529,13 +529,13 @@ We can begin by configuring the build server to use the packages it has been bui
 First, we need to make a directory to hold our repository configuration files:
 
 #+BEGIN_SRC sh
-# mkdir -p /usr/local/etc/pkg/repos
+mkdir -p /usr/local/etc/pkg/repos
 #+END_SRC
 
 Inside this directory, we can create our repository configuration file. It must end in .conf, so we will call it poudriere.conf to reflect its purpose:
 
 #+BEGIN_SRC sh
-# vi /usr/local/etc/pkg/repos/poudriere.conf
+vi /usr/local/etc/pkg/repos/poudriere.conf
 #+END_SRC
 
 We will define the repository name as poudriere once again. Inside the definition, we will point to the location on disk where our packages are stored. This should be a directory that combines your jail name and port tree name with a dash. Check your filesystem to be certain. We will also set up signature validation of our packages by pointing to the certificate we created.
@@ -564,5 +564,5 @@ To mix packages, add a priority setting to your repository definition, specifyin
 Update the repo info:
 
 #+BEGIN_SRC sh
-# pkg update
+pkg update
 #+END_SRC
