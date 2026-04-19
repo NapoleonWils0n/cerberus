@@ -455,6 +455,16 @@ vi /usr/local/etc/poudriere.d/freebsd_15-0x64-make.conf
 OPTIONS_UNSET+= DOCS NLS X11 EXAMPLES
 #+END_SRC
 
+set IGNORE_OSVERSION in pkg.conf
+
+#+begin_src sh
+vi /usr/local/etc/pkg.conf
+#+end_src
+
+#+begin_src conf
+IGNORE_OSVERSION = true;
+#+end_src
+
 Afterwards, we can configure each of our ports, which will create files with the options we selected.
 
 You can configure anything which has not been already configured using the options command. We should pass in both the port tree we created (using the -p option) and the jail we are setting these options for (using the -j option). We also must specify the list of ports we want to configure using the -f option.
