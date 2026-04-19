@@ -79,7 +79,7 @@ pkg install git
 use poudriere to pull ports
 
 #+begin_src sh
-poudriere ports -c -p quarterly -m git+https -B 2026Q1
+poudriere ports -c -p quarterly -m git+https -B 2026Q2
 #+end_src
 
 ** create the distfiles directory
