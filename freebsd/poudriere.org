@@ -62,6 +62,20 @@ We now have the SSL components we need to sign packages and verify the signature
 # pkg install poudriere
 #+END_SRC
 
+** ports install
+
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+install git
+
+#+begin_src sh
+pkg install git
+#+end_src
+
 ** create the distfiles directory
 
 #+BEGIN_SRC sh
