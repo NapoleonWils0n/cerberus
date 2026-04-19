@@ -425,14 +425,6 @@ When you are finished, you can see the installed jail by typing:
 poudriere jail -l
 #+END_SRC
 
-Once you have a jail created, we will have to install a ports tree. It is possible to maintain multiple ports trees in order to serve different development needs. We will be installing a single ports tree that our jail can utilize.
-
-We can use the -p flag to name our ports tree. We will call our tree "quarterly" as it accurately summarizes the use of this tree (the "head" or most up-to-date point of the tree). We will be updating it regularly to match the most current version of the ports tree available:
-
-#+BEGIN_SRC sh
-poudriere ports -c -p quarterly
-#+END_SRC
-
 Again, this procedure will take awhile because the entire ports tree must be fetched and extracted. When it is finished, we can view our ports tree by typing:
 
 #+BEGIN_SRC sh
