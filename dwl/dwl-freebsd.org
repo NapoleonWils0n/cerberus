@@ -402,6 +402,12 @@ make without xwayland
 gmake CC=cc CFLAGS+='-std=c11'
 #+end_src
 
+make without xwayland and match and let the compiler optimize specifically for your hardware.
+
+#+begin_src sh
+gmake CC=cc CFLAGS+='-std=c11 -march=native'
+#+end_src
+
 https://forums.freebsd.org/threads/building-dwl-fails-with-c99-illegal-option-p.92040/
 
 ** dwl git update
