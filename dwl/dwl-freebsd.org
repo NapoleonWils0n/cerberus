@@ -408,6 +408,12 @@ make without xwayland and match and let the compiler optimize specifically for y
 gmake CC=cc CFLAGS+='-std=c11 -march=native'
 #+end_src
 
+install
+
+#+begin_src sh
+doas install -m 755 dwl /usr/local/bin/
+#+end_src
+
 https://forums.freebsd.org/threads/building-dwl-fails-with-c99-illegal-option-p.92040/
 
 ** dwl git update
