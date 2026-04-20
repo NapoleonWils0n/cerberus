@@ -6,15 +6,15 @@ include config.mk
 # flags for compiling
 DWLCPPFLAGS = -I. -DWLR_USE_UNSTABLE -D_XOPEN_SOURCE=700 \
 	-DVERSION=\"$(VERSION)\" $(XWAYLAND)
-DWLDEVCFLAGS = -g -pedantic -Wall -Wextra -Wdeclaration-after-statement \
+DWLDEVCFLAGS = -g -Wpedantic -Wall -Wextra -Wdeclaration-after-statement \
 	-Wno-unused-parameter -Wshadow -Wunused-macros -Werror=strict-prototypes \
 	-Werror=implicit -Werror=return-type -Werror=incompatible-pointer-types \
 	-Wfloat-conversion
 
 # CFLAGS / LDFLAGS
-PKGS      = wlroots-0.18 wayland-server xkbcommon libinput $(XLIBS)
-DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CFLAGS)
-LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` -lm $(LIBS)
+PKGS      = wayland-server xkbcommon libinput $(XLIBS)
+DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(WLR_INCS) $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CFLAGS)
+LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` $(WLR_LIBS) -lm $(LIBS)
 
 all: dwl
 dwl: dwl.o util.o
@@ -61,6 +61,7 @@ dist: clean
 
 install: dwl
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	rm -f $(DESTDIR)$(PREFIX)/bin/dwl
 	cp -f dwl $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dwl
 	mkdir -p $(DESTDIR)$(MANDIR)/man1
