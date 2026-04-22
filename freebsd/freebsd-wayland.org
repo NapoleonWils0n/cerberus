@@ -1111,6 +1111,12 @@ To mount a ext2fs volume located on /dev/ada1s1:
 mount -t ext2fs /dev/ada1s1 /mnt/usb
 #+end_src
 
+alternative command
+
+#+begin_src sh
+doas fuse-ext2 /dev/da0p1 /home/djwilcox/mnt -o rw+,uid=1001,gid=1001
+#+end_src
+
 ** chromium widevine
 *** chromium install
 
