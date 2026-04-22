@@ -232,7 +232,7 @@ press enter to select Yes
 
 - Login group leave at default
 
-- Login group invite to other groups should be set to wheel video
+- Login group invite to other groups should be set to wheel video operator
 
 - Login class: (Default).
 
