@@ -133,7 +133,7 @@ i found the vm iso command stopped downloading the iso part way through,
 so instead i used fetch to download the iso
 
 #+begin_src sh
-fetch -o /home/djwilcox/vm/.iso 'https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.4.0-amd64-netinst.iso'
+fetch -o /home/djwilcox/vm/.iso 'https://releases.ubuntu.com/26.04/ubuntu-26.04-live-server-amd64.iso'
 #+end_src
 
 *** find number of cpu's
@@ -147,31 +147,20 @@ sysctl kern.sched.topology_spec
 *** vm config
 
 #+begin_src sh
-doas vi /vm/.templates/debian.conf
+doas vi /vm/.templates/ubuntu.conf
 #+end_src
 
 #+begin_src conf
 # --- Debian Utility VM Template ---
-loader="uefi"
-cpu="2"
-memory="2G"
-
-# Networking
+loader="grub"
+cpu=2
+memory=2G
 network0_type="virtio-net"
 network0_switch="public"
-
-# Graphics
-graphics="no"
-
-# This forces the UEFI firmware to use the serial port
-comconsole="com0"
-
-# Ensure the loader knows this is a serial boot
-loader_conf="console=comconsole"
-
-# Storage
 disk0_type="virtio-blk"
 disk0_name="disk0.img"
+grub_run_partition="2"
+grub_run_dir="/grub"
 
 # Console settings for bhyve
 utctime="yes"
@@ -203,19 +192,19 @@ uefi_vars="yes"
 *** vm create
 
 #+begin_src sh
-doas vm create -t debian -s 60G debian
+doas vm create -t ubuntu -s 60G ubuntu
 #+end_src
 
 ** vm install
 
 #+begin_src sh
-doas vm install debian debian-13.4.0-amd64-netinst.iso
+doas vm install -f ubuntu ubuntu-26.04-live-server-amd64.iso
 #+end_src
 
 console
 
 #+begin_src sh
-doas vm console debian
+doas vm console ubuntu
 #+end_src
 
 press return and enter your username and password
@@ -226,13 +215,13 @@ the default escape sequence to exit the bhyve console and return to your FreeBSD
 ** vm start
 
 #+begin_src sh
-doas vm start debian
+doas vm start ubuntu
 #+end_src
 
 console
 
 #+begin_src sh
-doas vm console debian
+doas vm console ubuntu
 #+end_src
 
 press return and enter your username and password
@@ -243,7 +232,7 @@ the default escape sequence to exit the bhyve console and return to your FreeBSD
 ** vm destroy
 
 #+begin_src sh
-doas vm stop debian
-doas vm destroy debian
+doas vm stop ubuntu
+doas vm destroy ubuntu
 #+end_src
 
