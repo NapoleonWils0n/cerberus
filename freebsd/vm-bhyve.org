@@ -131,7 +131,7 @@ i found the vm iso command stopped downloading the iso part way through,
 so instead i used fetch to download the iso
 
 #+begin_src sh
-doas fetch -o /vm/.iso/ubuntu-24.04.1-live-server-amd64.iso 'https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso'
+fetch -o /home/djwilcox/vm/.iso 'https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.4.0-amd64-netinst.iso'
 #+end_src
 
 *** find number of cpu's
