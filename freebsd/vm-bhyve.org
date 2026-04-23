@@ -199,10 +199,8 @@ doas vm create -t debian -s 60G debian
 
 ** vm install
 
-use the -f option to run the vm in the current terminal
-
 #+begin_src sh
-doas vm install -f debian debian-13.4.0-amd64-netinst.iso
+doas vm install debian debian-13.4.0-amd64-netinst.iso
 #+end_src
 
 ** vm start
