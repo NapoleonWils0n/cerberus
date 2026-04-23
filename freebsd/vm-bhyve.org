@@ -160,6 +160,15 @@ memory="2G"
 network0_type="virtio-net"
 network0_switch="public"
 
+# Graphics
+graphics="no"
+
+# This forces the UEFI firmware to use the serial port
+comconsole="com0"
+
+# Ensure the loader knows this is a serial boot
+loader_conf="console=comconsole"
+
 # Storage
 disk0_type="virtio-blk"
 disk0_name="disk0.img"
