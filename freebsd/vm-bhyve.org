@@ -219,6 +219,9 @@ doas vm console debian
 
 press return and enter your username and password
 
+the default escape sequence to exit the bhyve console and return to your FreeBSD shell is:
+~. (Tilde followed by a period).
+
 ** vm destroy
 
 #+begin_src sh
