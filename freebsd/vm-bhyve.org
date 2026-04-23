@@ -23,6 +23,8 @@ create the vm data set in your home
 doas zfs create zroot/home/djwilcox/vm
 doas zfs create zroot/home/djwilcox/vm/.iso
 doas zfs create zroot/home/djwilcox/vm/.templates
+doas zfs create zroot/home/djwilcox/vm/.config
+doas zfs create zroot/home/djwilcox/vm/.img
 #+end_src
 
 change the permission on the vm directory
