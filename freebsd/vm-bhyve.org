@@ -151,6 +151,7 @@ doas vi /vm/.templates/ubuntu.conf
 #+end_src
 
 #+begin_src conf
+# ubuntu
 loader="uefi"
 cpu="2"
 memory="2G"
