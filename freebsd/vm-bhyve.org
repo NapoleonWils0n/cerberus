@@ -17,10 +17,16 @@ doas pkg install bhyve-firmware grub2-bhyve edk2-bhyve vm-bhyve-devel
 
 *** zfs dataset
 
+create the vm data set in your home
+
 #+begin_src sh
-doas zfs create -o mountpoint=/vm zroot/vm
-doas zfs create -o mountpoint=/vm/.iso zroot/vm/iso
-doas zfs create -o mountpoint=/vm/.templates zroot/vm/templates
+doas zfs create zroot/home/djwilcox/vm
+#+end_src
+
+change the permission on the vm directory
+
+#+begin_src sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/vm
 #+end_src
 
 *** rc.conf
