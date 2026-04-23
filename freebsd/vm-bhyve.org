@@ -147,7 +147,7 @@ sysctl kern.sched.topology_spec
 *** vm config
 
 #+begin_src sh
-doas vi /vm/.templates/ubuntu.conf
+doas vi /vm/.templates/debian.conf
 #+end_src
 
 #+begin_src conf
@@ -164,7 +164,9 @@ grub_run_dir="/grub"
 
 *** uefi notes
 
-You can use UEFI and add uefi_vars="yes" with Debian and it will work, no need to edit partition locations. On Ubuntu uefi variables aren't needed but it doesn't hurt.
+You can use UEFI and add uefi_vars="yes" with Debian and it will work, no need to edit partition locations.
+
+On Ubuntu uefi variables aren't needed but it doesn't hurt.
 
 ubuntu-uefi.conf
 
@@ -185,7 +187,7 @@ uefi_vars="yes"
 *** vm create
 
 #+begin_src sh
-doas vm create -t ubuntu -s 40G ubuntu
+doas vm create -t debian -s 60G debian
 #+end_src
 
 ** vm install
