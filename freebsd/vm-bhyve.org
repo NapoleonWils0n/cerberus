@@ -151,7 +151,6 @@ doas vi /vm/.templates/ubuntu.conf
 #+end_src
 
 #+begin_src conf
-# --- Debian Utility VM Template ---
 loader="grub"
 cpu=2
 memory=2G
@@ -162,7 +161,6 @@ disk0_name="disk0.img"
 grub_run_partition="2"
 grub_run_dir="/grub"
 
-# Console settings for bhyve
 utctime="yes"
 virt_random="yes"
 #+end_src
