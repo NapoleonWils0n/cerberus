@@ -43,6 +43,10 @@ check the settings
 sysrc vm_dir
 #+end_src
 
+#+begin_example
+vm_dir: zfs:zroot/home/djwilcox/vm
+#+end_example
+
 *** kldload
 
 only needed if you havent rebooted, and not needed after that
