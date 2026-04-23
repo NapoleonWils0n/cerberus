@@ -21,6 +21,8 @@ create the vm data set in your home
 
 #+begin_src sh
 doas zfs create zroot/home/djwilcox/vm
+doas zfs create zroot/home/djwilcox/vm/.iso
+doas zfs create zroot/home/djwilcox/vm/.templates
 #+end_src
 
 change the permission on the vm directory
@@ -80,7 +82,13 @@ doas echo "net.inet.ip.forwarding=1" >> /etc/sysctl.conf
 *** copy vm-bhyve config
 
 #+begin_src sh
-doas cp -a /usr/local/share/examples/vm-bhyve /vm/.templates
+doas cp -a /usr/local/share/examples/vm-bhyve/* /home/djwilcox/vm/.templates
+#+end_src
+
+change the permission on the vm directory
+
+#+begin_src sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/vm/.templates
 #+end_src
 
 *** doas
