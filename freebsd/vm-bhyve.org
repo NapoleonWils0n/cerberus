@@ -151,15 +151,22 @@ doas vi /vm/.templates/debian.conf
 #+end_src
 
 #+begin_src conf
-loader="grub"
-cpu=6
-memory=8G
+# --- Debian Utility VM Template ---
+loader="uefi"
+cpu="2"
+memory="2G"
+
+# Networking
 network0_type="virtio-net"
 network0_switch="public"
+
+# Storage
 disk0_type="virtio-blk"
 disk0_name="disk0.img"
-grub_run_partition="2"
-grub_run_dir="/grub"
+
+# Console settings for bhyve
+utctime="yes"
+virt_random="yes"
 #+end_src
 
 *** uefi notes
@@ -195,19 +202,19 @@ doas vm create -t debian -s 60G debian
 use the -f option to run the vm in the current terminal
 
 #+begin_src sh
-doas vm install -f ubuntu ubuntu-24.04.1-live-server-amd64.iso
+doas vm install -f debian debian-13.4.0-amd64-netinst.iso
 #+end_src
 
 ** vm start
 
 #+begin_src sh
-doas vm start ubuntu
+doas vm start debian
 #+end_src
 
 console
 
 #+begin_src sh
-doas vm console ubuntu
+doas vm console debian
 #+end_src
 
 press return and enter your username and password
@@ -215,20 +222,7 @@ press return and enter your username and password
 ** vm destroy
 
 #+begin_src sh
-doas vm stop ubuntu
-doas vm destroy ubuntu
+doas vm stop debian
+doas vm destroy debian
 #+end_src
 
-alternative method
-
-#+begin_src sh
-ls /dev/vmm
-#+end_src
-
-#+begin_src sh
-crw-------  1 root wheel 0x202 29 Jan 19:41 ubuntu
-#+end_src
-
-#+begin_src sh
-doas bhyvectl --vm=ubuntu-uefi --destroy
-#+end_src
