@@ -37,6 +37,12 @@ doas sysrc vm_enable=YES
 doas sysrc vm_dir="zfs:zroot/home/djwilcox/vm"
 #+end_src
 
+check the settings
+
+#+begin_src sh
+sysrc vm_dir
+#+end_src
+
 *** kldload
 
 only needed if you havent rebooted, and not needed after that
