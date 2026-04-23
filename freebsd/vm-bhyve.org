@@ -34,7 +34,7 @@ doas chown -R djwilcox:djwilcox /home/djwilcox/vm
 #+begin_src sh
 doas sysrc kld_list+="vmm nmdm"
 doas sysrc vm_enable=YES
-doas sysrc vm_dir="zfs:zroot/vm"
+doas sysrc vm_dir="zfs:zroot/home/djwilcox/vm"
 #+end_src
 
 *** kldload
