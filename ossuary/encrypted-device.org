@@ -23,12 +23,6 @@ create a 128mb container with dd on the Desktop called disk.img
 cd ~/Desktop
 #+END_SRC
 
-** switch to root
-
-#+BEGIN_SRC sh
-sudo su
-#+END_SRC
-
 ** use dd to create a 128mb disk image
 
 #+BEGIN_SRC sh
@@ -135,19 +129,19 @@ doas mdconfig -d -u 0
 use mdconfig to mount the encrypted container to /dev/md0
 
 #+BEGIN_SRC sh
-mdconfig -a -t vnode -f disk.img -u 0
+doas mdconfig -a -t vnode -f disk.img -u 0
 #+END_SRC
 
 + use geli with the path to the key and device
 
 #+BEGIN_SRC sh
-geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+doas geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
 #+END_SRC
 
 + we need to import the zpool which will also mount the container
 
 #+BEGIN_SRC sh
-zpool import crypt
+doas zpool import crypt
 #+END_SRC
 
 *** umount
@@ -155,25 +149,25 @@ zpool import crypt
 unmount the zfs pool
 
 #+BEGIN_SRC sh
-zfs umount crypt
+doas zfs umount crypt
 #+END_SRC
 
 + we need to export the zfs pool before we use geli detach, otherwise geli thinks the device is busy
 
 #+BEGIN_SRC sh
-zpool export crypt
+doas zpool export crypt
 #+END_SRC
 
 + use geli to detach the encrypted device
 
 #+BEGIN_SRC sh
-geli detach md0.eli
+doas geli detach md0.eli
 #+END_SRC
 
 + free the loop device
 
 #+BEGIN_SRC sh
-mdconfig -d -u 0
+doas mdconfig -d -u 0
 #+END_SRC
 	
 ** ossuary script
@@ -296,5 +290,4 @@ case "${action}" in
     umount) umount_container;;
     ,*) usage;;
 esac
-
 #+end_src
