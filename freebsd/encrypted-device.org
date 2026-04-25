@@ -40,7 +40,7 @@ dd if=/dev/zero of=disk.img bs=1M count=128
 use mdconfig to mount the disk image
 
 #+BEGIN_SRC sh
-mdconfig -a -t vnode -f disk.img -u 0
+doas mdconfig -a -t vnode -f disk.img -u 0
 #+END_SRC
 
 Here, the -a option forces the disk mounting, -t vnode is used for opening a regular file, and the path of this file is specified after -f. The -u 0 option set the virtual disk identifier to use, in this case /dev/md0.
