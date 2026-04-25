@@ -1,0 +1,300 @@
+#+STARTUP: content
+#+OPTIONS: num:nil
+#+OPTIONS: author:nil
+* freebsd geli encrypted container
+
+freebsd geli encrypted container
+
+** Load geli Support
+
+Support for geli is available as a loadable kernel module. To configure the system to automatically load the module at boot time, add the following line to /boot/loader.conf:
+
+#+BEGIN_SRC sh
+geom_eli_load="YES"
+#+END_SRC
+
+** create virtual container with dd
+
+create a 128mb container with dd on the Desktop called disk.img
+
+** change directory to the Desktop
+
+#+BEGIN_SRC sh
+cd ~/Desktop
+#+END_SRC
+
+** switch to root
+
+#+BEGIN_SRC sh
+sudo su
+#+END_SRC
+
+** use dd to create a 128mb disk image
+
+#+BEGIN_SRC sh
+dd if=/dev/zero of=disk.img bs=1M count=128
+#+END_SRC
+
+** mount the image with mdconfig
+
+use mdconfig to mount the disk image
+
+#+BEGIN_SRC sh
+doas mdconfig -a -t vnode -f disk.img -u 0
+#+END_SRC
+
+Here, the -a option forces the disk mounting, -t vnode is used for opening a regular file, and the path of this file is specified after -f. The -u 0 option set the virtual disk identifier to use, in this case /dev/md0.
+
+** Generate the Master Key
+
+create directory to store geli key
+
+#+BEGIN_SRC sh
+mkdir -p ~/.config/ossuary
+#+END_SRC
+
+Now we want to create a key for GELI to encrypt with, and attach it to our disk image device:
+
+#+BEGIN_SRC sh
+dd if=/dev/zero of=/home/djwilcox/.config/ossuary/ossuary.key bs=256 count=1
+doas geli init -e aes -l 256 -s 4096 -K /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+#+END_SRC
+
+Enter passphrase:
+
+** Create the ZFS File System
+
+Next, format the device with the ZFS file system and mount it on an existing mount point:
+
++ use dd to write random data to geli container before adding file system
+
+#+BEGIN_SRC sh
+doas dd if=/dev/random of=/dev/md0.eli bs=1M
+#+END_SRC
+
++ To create a simple, non-redundant pool using a single disk device:
+
+#+BEGIN_SRC sh
+doas zpool create crypt /dev/md0.eli
+#+END_SRC
+
++ add compression and duplication to the zfs pool
+
+#+BEGIN_SRC sh
+doas zfs set compression=lz4 crypt
+#+END_SRC
+
++ zfs set mount point
+
+#+BEGIN_SRC sh
+doas zfs set mountpoint=/home/djwilcox/mnt crypt
+#+END_SRC
+
++ change the permission on the container
+
+#+BEGIN_SRC sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/mnt
+#+END_SRC
+
++ chmod the ~/mnt directory
+
+#+begin_src sh
+chmod 700 ~/mnt
+#+end_src
+
+Finally, when you want to unmount, we also want to detach from GELI and detach from md:
+
++ zfs unmount
+
+#+BEGIN_SRC sh
+doas zfs umount crypt
+#+END_SRC
+
++ zpool export
+
+#+begin_src sh
+doas zpool export crypt
+#+end_src
+
++ geli detach
+
+#+BEGIN_SRC sh
+doas geli detach md0.eli
+#+END_SRC
+
++ mdconfig free loop device
+
+#+BEGIN_SRC sh
+doas mdconfig -d -u 0
+#+END_SRC
+
+** mounting and unmounting
+*** mount
+
+use mdconfig to mount the encrypted container to /dev/md0
+
+#+BEGIN_SRC sh
+mdconfig -a -t vnode -f disk.img -u 0
+#+END_SRC
+
++ use geli with the path to the key and device
+
+#+BEGIN_SRC sh
+geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
+#+END_SRC
+
++ we need to import the zpool which will also mount the container
+
+#+BEGIN_SRC sh
+zpool import crypt
+#+END_SRC
+
+*** umount
+
+unmount the zfs pool
+
+#+BEGIN_SRC sh
+zfs umount crypt
+#+END_SRC
+
++ we need to export the zfs pool before we use geli detach, otherwise geli thinks the device is busy
+
+#+BEGIN_SRC sh
+zpool export crypt
+#+END_SRC
+
++ use geli to detach the encrypted device
+
+#+BEGIN_SRC sh
+geli detach md0.eli
+#+END_SRC
+
++ free the loop device
+
+#+BEGIN_SRC sh
+mdconfig -d -u 0
+#+END_SRC
+	
+** ossuary script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# ossuary
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+echo "\
+$(basename "$0") -m mount -f container -k gelikey 
+$(basename "$0") -m umount -f container"
+exit 1
+}
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+ROOT_ERR="$(basename "$0") must be run as root"
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+
+
+#===============================================================================
+# check if script is run as root
+#===============================================================================
+
+[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':m:f:k:h' opt
+do
+  case ${opt} in
+     m) action="${OPTARG}";;
+     f) container="${OPTARG}";;
+     k) gelikey="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# mount function
+mount_container () {
+    [ -f "${container}" ] || usage "Container file not found"
+    [ -f "${gelikey}" ] || usage "GELI key not found"
+
+    # mdconfig create vnode
+    loop=$(mdconfig -a -t vnode -f "${container}") || exit 1
+
+    # geli attach
+    geli attach -k "${gelikey}" "${loop}" || { mdconfig -du "${loop}"; exit 1; }
+
+    loopcrypt="/dev/${loop}.eli"
+
+    # find pool name
+    poolname=$(zdb -l "${loopcrypt}" | awk -F\' '/[[:blank:]]name/ {print $2; exit;}')
+
+    # import pool
+    zpool import "${poolname}"
+}
+
+# umount function
+umount_container () {
+    [ -n "${container}" ] || usage "Container path required (-f)"
+
+    # find associated md device
+    loopdevice=$(mdconfig -lv | grep "${container}" | awk '{print $1}')
+    
+    if [ -z "${loopdevice}" ]; then
+        echo "Error: Container not found in mdconfig list."
+        exit 1
+    fi
+
+    loopcrypt="/dev/${loopdevice}.eli"
+    poolname=$(zdb -l "${loopcrypt}" | awk -F\' '/[[:blank:]]name/ {print $2; exit;}')
+
+    # clean tear down
+    zfs umount "${poolname}" 2>/dev/null
+    zpool export "${poolname}"
+    sleep 1
+    geli detach "${loopcrypt}"
+    mdconfig -du "${loopdevice}"
+}
+
+#===============================================================================
+# mount and umount case statement
+#===============================================================================
+
+case "${action}" in
+    mount) mount_container;;
+    umount) umount_container;;
+    ,*) usage;;
+esac
+
+#+end_src

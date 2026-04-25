@@ -15,7 +15,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -i disk.iso -m mountpoint"
+$(basename "$0") -m|u disk"
 exit 2
 }
 
@@ -35,7 +35,7 @@ NOTFILE_ERR='not a file'
 # check if script is run as root
 #===============================================================================
 
-#[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
 
 
 #===============================================================================
@@ -60,10 +60,10 @@ mountdir="/home/djwilcox/mnt"
 # getopts check options passed to script
 #===============================================================================
 
-while getopts ':i:u:h' opt
+while getopts ':m:u:h' opt
 do
   case ${opt} in
-     i) mountdisk="${OPTARG}"
+     m) mountdisk="${OPTARG}"
         luksmapper="/dev/mapper/luks"
         losetup ${loop} ${mountdisk}
         cryptsetup luksOpen ${loop} luks
