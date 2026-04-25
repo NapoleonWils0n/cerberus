@@ -70,31 +70,31 @@ Next, format the device with the ZFS file system and mount it on an existing mou
 + use dd to write random data to geli container before adding file system
 
 #+BEGIN_SRC sh
-dd if=/dev/random of=/dev/md0.eli bs=1M
+doas dd if=/dev/random of=/dev/md0.eli bs=1M
 #+END_SRC
 
 + To create a simple, non-redundant pool using a single disk device:
 
 #+BEGIN_SRC sh
-zpool create crypt /dev/md0.eli
+doas zpool create crypt /dev/md0.eli
 #+END_SRC
 
 + add compression and duplication to the zfs pool
 
 #+BEGIN_SRC sh
-zfs set compression=lz4 crypt
+doas zfs set compression=lz4 crypt
 #+END_SRC
 
 + zfs set mount point
 
 #+BEGIN_SRC sh
-zfs set mountpoint=/home/djwilcox/mnt crypt
+doas zfs set mountpoint=/home/djwilcox/mnt crypt
 #+END_SRC
 
 + change the permission on the container
 
 #+BEGIN_SRC sh
-sudo chown -R djwilcox:djwilcox ~/mnt
+doas chown -R djwilcox:djwilcox /home/djwilcox/mnt
 #+END_SRC
 
 + chmod the ~/mnt directory
@@ -108,25 +108,25 @@ Finally, when you want to unmount, we also want to detach from GELI and detach f
 + zfs unmount
 
 #+BEGIN_SRC sh
-sudo zfs umount crypt
+doas zfs umount crypt
 #+END_SRC
 
 + zpool export
 
 #+begin_src sh
-sudo zpool export crypt
+doas zpool export crypt
 #+end_src
 
 + geli detach
 
 #+BEGIN_SRC sh
-sudo geli detach md0.eli
+doas geli detach md0.eli
 #+END_SRC
 
 + mdconfig free loop device
 
 #+BEGIN_SRC sh
-sudo mdconfig -d -u 0
+doas mdconfig -d -u 0
 #+END_SRC
 
 ** mounting and unmounting
