@@ -1,7 +1,6 @@
 #+STARTUP: content
 #+OPTIONS: num:nil
 #+OPTIONS: author:nil
-
 * freebsd geli encrypted container
 
 freebsd geli encrypted container
@@ -131,8 +130,7 @@ sudo mdconfig -d -u 0
 #+END_SRC
 
 ** mounting and unmounting
-
-** mount
+*** mount
 
 use mdconfig to mount the encrypted container to /dev/md0
 
@@ -152,7 +150,7 @@ geli attach -k /home/djwilcox/.config/ossuary/ossuary.key /dev/md0
 zpool import crypt
 #+END_SRC
 
-** umount
+*** umount
 
 unmount the zfs pool
 
