@@ -507,6 +507,22 @@ doas podman-compose up -d
 doas podman-compose down
 #+end_src
 
+*** podman-compose pull
+
+update the containers
+
+#+begin_src sh
+doas podman pull --os linux docker.io/searxng/searxng:latest
+doas podman pull --os linux docker.io/library/redis:7-bookworm
+#+end_src
+
+clean up old images
+
+#+begin_src sh
+doas podman-compose up -d
+doas podman image prune -f
+#+end_src
+
 *** permisions
 
 note the permissions on the searxng directory and files will be changed to tests
