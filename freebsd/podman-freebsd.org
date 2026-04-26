@@ -121,19 +121,23 @@ doas vi /etc/pf.conf
 
 #+begin_src conf
 #=========================================================================#
+# pf.conf
+#=========================================================================#
+
+#=========================================================================#
 # variables, macro and tables                                             #
 #=========================================================================#
 
 int_if="lagg0" # lagg0 failover
-# podman
-v4egress_if = "lagg0"
-v6egress_if = "lagg0"
+v4egress_if = "lagg0" # podman
+v6egress_if = "lagg0" # podman
 vpn_if="tun0" # vpn interface
 all_networks="0.0.0.0/0"
 vpn_network="$vpn_if:network"
-# 6881, 6882 = transmission. , 22000, 21025 = syncthing
-tcp_services = "{ ntp, 6881, 22000 }" # tcp services - torrent
-udp_services = "{ ntp, 6882, 21025 }" # udp services - torrent
+# 6881, 6882 = transmission. , 22000, 22000, 21027 = syncthing
+# searxng podman = 8080
+tcp_services = "{ ntp, 6881, 22000, 8080 }" # tcp services - torrent
+udp_services = "{ ntp, 6882, 22000, 21027 }" # udp services - torrent
 #nfs_services = "{ 2049 }" # 2049 = nfs
 icmp_types = "{ echoreq, unreach }"
 tcp_state="flags S/SA keep state"
@@ -154,7 +158,7 @@ table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
 set block-policy drop
 set loginterface $int_if
 set fingerprints "/etc/pf.os"
-set skip on lo0
+set skip on { lo0, cni-podman0 }
 scrub in all fragment reassemble no-df max-mss 1440
 # nat jail
 nat on $int_if from {lo1:network} to any -> ($int_if)
@@ -165,7 +169,9 @@ nat on $v6egress_if inet6 from <cni-nat> to !ff00::/8 -> ($v6egress_if)
 rdr-anchor "cni-rdr/*"
 nat-anchor "cni-rdr/*"
 table <cni-nat>
+# antispoof
 antispoof log quick for { lo $int_if } label "block_spoofing"
+
 
 #=========================================================================#
 # block                                                                   #
