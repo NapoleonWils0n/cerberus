@@ -36,7 +36,49 @@ doas vi /etc/fstab
 fdesc   /dev/fd         fdescfs         rw      0       0
 #+end_src
 
-** networking
+** linux
+
+Enable Linux compatibility at boot
+
+#+begin_src sh
+doas sysrc linux_enable="YES"
+#+end_src
+
+Start the service and load the 64-bit Linux kernel module
+
+#+begin_src sh
+doas service linux start
+#+end_src
+
+load linux 
+
+#+begin_src sh
+doas kldload linux64
+#+end_src
+
+Ensure it loads every boot
+
+#+begin_src sh
+doas sysrc kld_list+="linux64"
+#+end_src
+
+** pf
+
+#+begin_src sh
+service pf enable
+#+end_src
+
+#+begin_src sh
+service pf start
+#+end_src
+
+#+begin_src sh
+doas echo 'pf_load="YES"' >> /boot/loader.conf
+#+end_src
+
+#+begin_src sh
+kldload pf
+#+end_src
 
 Container networking relies on NAT to allow container network packets out to the host's network. This requires a PF firewall to perform the translation. A simple example is included - to use it:
 
@@ -153,7 +195,15 @@ block out on $int_if all
 pass out quick on $int_if all modulate state
 #+end_src
 
+restart pf
+
+#+begin_src sh
+doas service pf restart
+#+end_src
+
 ** zfs
+
+create a zfs dataset for podman
 
 #+begin_src sh
 doas zfs create -o mountpoint=/var/db/containers zroot/containers
@@ -161,8 +211,24 @@ doas zfs create -o mountpoint=/var/db/containers zroot/containers
 
 ** sysctl
 
+apply net.pf.filter_local=1
+
 #+begin_src sh
 doas sysctl net.pf.filter_local=1
+#+end_src
+
+set net.pf.filter_local=1 permanently
+
+#+begin_src sh
+doas vi /etc/sysctl.conf
+#+end_src
+
+#+begin_src conf
+#=========================================================================#
+# podman
+#=========================================================================#
+
+net.pf.filter_local=1
 #+end_src
 
 ** podman enable
@@ -171,6 +237,36 @@ Podman can restart containers after a host is rebooted. To enable this, use:
 
 #+begin_src sh
 doas sysrc podman_enable=YES
+#+end_src
+
+or you can manually edit your /etc/rc.conf
+
+#+begin_src sh
+doas vi /etc/rc.conf
+#+end_src
+
+#+begin_src conf
+#=========================================================================#
+# podman
+#=========================================================================#
+
+podman_enable=YES
+#+end_src
+
+** podman zfs dataset for config files
+
+we will also create a zfs dataset for our podman config files
+
+
+
+change djwilcox to your username in the code below
+
+#+begin_src sh
+doas zfs create zroot/home/djwilcox/podman
+#+end_src
+
+#+begin_src sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/podman
 #+end_src
 
 ** doas podman set up
