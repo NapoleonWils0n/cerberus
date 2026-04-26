@@ -540,7 +540,7 @@ cd mcp-searxng-enhanced
 #+end_src
 
 #+begin_src sh
-doas podman build --os linux -t mcp-searxng-enhanced:local .
+doas podman build --network host --os linux -t mcp-searxng-enhanced:local .
 #+end_src
 
 ** ubuntu
