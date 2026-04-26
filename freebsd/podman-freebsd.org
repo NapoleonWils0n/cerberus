@@ -11,7 +11,7 @@
 There's also a podman-suite meta package that will pull additional packages for you (buildah, skopeo).
 
 #+begin_src sh
-doas pkg install podman-suite emulators/qemu-user-static
+doas pkg install podman-suite py311-podman-compose
 #+end_src
 
 ** fstab
