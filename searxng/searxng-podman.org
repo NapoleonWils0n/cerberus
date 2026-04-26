@@ -214,7 +214,7 @@ podman-compose down
 specify the linux to pull the images
 
 #+begin_src sh
-doas podman pull --os linux docker.io/library/redis:7-bookworm
+doas podman pull --os linux docker.io/valkey/valkey:9-trixie
 #+end_src
 
 #+begin_src sh
