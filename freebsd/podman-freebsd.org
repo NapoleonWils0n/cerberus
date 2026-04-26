@@ -522,6 +522,27 @@ note the permissions on the searxng directory and files will be changed to tests
 
 so you will need to use doas or sudo to edit the files
 
+** mcp-searxng-enhanced
+*** resources
+
+[[https://github.com/OvertliDS/mcp-searxng-enhanced]]
+
+*** download the git repo
+
+#+begin_src sh
+git clone https://github.com/OvertliDS/mcp-searxng-enhanced.git
+#+end_src
+
+*** build mcp-searxng-enhanced
+
+#+begin_src sh
+cd mcp-searxng-enhanced
+#+end_src
+
+#+begin_src sh
+doas podman build --os linux -t mcp-searxng-enhanced:local .
+#+end_src
+
 ** ubuntu
 
 #+begin_src sh
