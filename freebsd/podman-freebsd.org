@@ -36,6 +36,10 @@ doas vi /etc/fstab
 fdesc   /dev/fd         fdescfs         rw      0       0
 #+end_src
 
+#+begin_src sh
+doas mount -t procfs proc /proc
+#+end_src
+
 ** linux
 
 Enable Linux compatibility at boot
@@ -253,6 +257,29 @@ doas vi /etc/rc.conf
 podman_enable=YES
 #+end_src
 
+** registries.conf
+
+edit the registries.conf to define repos to podman
+
+#+begin_src sh
+doas vi /usr/local/etc/containers/registries.conf
+#+end_src
+
+append the following code
+
+#+begin_src conf
+unqualified-search-registries = ["docker.io", "quay.io", "ghcr.io"]
+
+[[registry]]
+location = "docker.io"
+
+[[registry]]
+location = "quay.io"
+
+[[registry]]
+location = "ghcr.io"
+#+end_src
+
 ** podman zfs dataset for config files
 
 we will also create a zfs dataset for our podman config files
@@ -290,16 +317,6 @@ run the hello workd podmand container
 
 #+begin_src sh
 doas podman run --rm docker.io/dougrabson/hello
-#+end_src
-
-** podman search
-
-#+begin_src sh
-doas vi /usr/local/etc/containers/registries.conf
-#+end_src
-
-#+begin_src sh
-unqualified-search-registries=["docker.io", "quay.io"]
 #+end_src
 
 ** alpine

@@ -193,7 +193,7 @@ link_token = true
 SEARXNG_SECRET=$(openssl rand -hex 32)
 #+end_src
 
-** podman-compose up
+** linux podman-compose up
 
 start searxng by running
 
@@ -201,10 +201,35 @@ start searxng by running
 podman-compose up -d
 #+end_src
 
-** podman-compose down
+** linux podman-compose down
 
 stop searxng by running
 
 #+begin_src sh
 podman-compose down
 #+end_src
+
+** freebsd
+
+specify the linux to pull the images
+
+#+begin_src sh
+doas podman pull --os linux docker.io/valkey/valkey:8-alpine
+#+end_src
+
+#+begin_src sh
+doas podman pull --os linux docker.io/searxng/searxng:latest
+#+end_src
+
+*** start searxng 
+
+#+begin_src sh
+doas podman-compose up -d
+#+end_src
+
+*** stop searxng
+
+#+begin_src sh
+doas podman-compose down
+#+end_src
+
