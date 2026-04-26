@@ -1911,6 +1911,20 @@ and the Custom DSP Path to
 /dev/dsp
 #+end_example
 
+** ollama
+
+we will also create a zfs dataset for our ollama
+
+change djwilcox to your username in the code below
+
+#+begin_src sh
+doas zfs create zroot/home/djwilcox/.ollama
+#+end_src
+
+#+begin_src sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/.ollama
+#+end_src
+
 ** shutdown
 
 shutdown and reboot
