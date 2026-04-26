@@ -68,7 +68,7 @@ nat-anchor "cni-rdr/*"
 #+end_src
 
 #+begin_src sh
-doas vi /etc/fstab
+doas vi /etc/pf.conf
 #+end_src
 
 #+begin_src conf
