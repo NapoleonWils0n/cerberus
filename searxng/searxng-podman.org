@@ -208,28 +208,3 @@ stop searxng by running
 #+begin_src sh
 podman-compose down
 #+end_src
-
-** freebsd
-
-specify the linux to pull the images
-
-#+begin_src sh
-doas podman pull --os linux docker.io/valkey/valkey:9-trixie
-#+end_src
-
-#+begin_src sh
-doas podman pull --os linux docker.io/searxng/searxng:latest
-#+end_src
-
-*** start searxng 
-
-#+begin_src sh
-doas podman-compose up -d
-#+end_src
-
-*** stop searxng
-
-#+begin_src sh
-doas podman-compose down
-#+end_src
-

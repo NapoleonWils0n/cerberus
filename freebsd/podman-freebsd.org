@@ -16,7 +16,7 @@ To install podman-compose you need to install the py311-podman-compose package a
 doas pkg install podman-suite py311-podman-compose
 #+end_src
 
-** fstab
+*** fstab
 
 To properly support Podman's container restart policy, conmon needs fdescfs(5) to be mounted on /dev/fd.
 
@@ -40,7 +40,7 @@ fdesc   /dev/fd         fdescfs         rw      0       0
 doas mount -t procfs proc /proc
 #+end_src
 
-** linux
+*** linux
 
 Enable Linux compatibility at boot
 
@@ -66,7 +66,7 @@ Ensure it loads every boot
 doas sysrc kld_list+="linux64"
 #+end_src
 
-** pf
+*** pf
 
 #+begin_src sh
 service pf enable
@@ -211,7 +211,7 @@ restart pf
 doas service pf restart
 #+end_src
 
-** zfs
+*** zfs
 
 create a zfs dataset for podman
 
@@ -219,7 +219,7 @@ create a zfs dataset for podman
 doas zfs create -o mountpoint=/var/db/containers zroot/containers
 #+end_src
 
-** sysctl
+*** sysctl
 
 apply net.pf.filter_local=1
 
@@ -241,7 +241,7 @@ doas vi /etc/sysctl.conf
 net.pf.filter_local=1
 #+end_src
 
-** podman enable
+*** podman enable
 
 Podman can restart containers after a host is rebooted. To enable this, use:
 
@@ -263,7 +263,7 @@ doas vi /etc/rc.conf
 podman_enable=YES
 #+end_src
 
-** registries.conf
+*** registries.conf
 
 edit the registries.conf to define repos to podman
 
@@ -286,7 +286,7 @@ location = "quay.io"
 location = "ghcr.io"
 #+end_src
 
-** podman zfs dataset for config files
+*** podman zfs dataset for config files
 
 we will also create a zfs dataset for our podman config files
 
@@ -302,7 +302,7 @@ doas zfs create zroot/home/djwilcox/podman
 doas chown -R djwilcox:djwilcox /home/djwilcox/podman
 #+end_src
 
-** doas podman set up
+*** doas podman set up
 
 set up doas so you can can run podman without being prompted for a password
 
@@ -325,15 +325,202 @@ run the hello workd podmand container
 doas podman run --rm docker.io/dougrabson/hello
 #+end_src
 
-** alpine
+** searxng
+*** pull the images
+
+specify os linux to pull the images
 
 #+begin_src sh
-doas podman run --rm --os=linux --net=host alpine cat /etc/os-release | head -1
+doas podman pull --os linux docker.io/library/redis:7-bookworm
 #+end_src
 
 #+begin_src sh
-doas podman run --os=linux --net=host -it docker.io/library/alpine /bin/sh
+doas podman pull --os linux docker.io/searxng/searxng:latest
 #+end_src
+
+*** searxng config
+**** compose.yaml
+
+#+begin_src yaml
+version: "3.8"
+
+services:
+  redis:
+    container_name: redis
+    image: docker.io/library/redis:7-bookworm
+    command: ["redis-server", "--save", "30", "1", "--loglevel", "warning"]
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - valkey-data2:/data
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ${HOME}/podman/searxng:/etc/searxng:rw
+      - ./searxng-genkey:/usr/local/bin/searxng-genkey
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+      # Use 127.0.0.1 because network_mode: host shares the interface
+      - SEARXNG_REDIS_URL=redis://127.0.0.1:6379/0
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+      - UWSGI_WORKERS=${SEARXNG_UWSGI_WORKERS:-4}
+      - UWSGI_THREADS=${SEARXNG_UWSGI_THREADS:-4}
+
+networks:
+  searxng:
+
+volumes:
+  searxng_config:
+  valkey-data2:
+
+#+end_src
+
+**** limiter.toml
+
+#+begin_src toml
+# This configuration file updates the default configuration file
+# See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+
+[botdetection.ip_limit]
+# activate link_token method in the ip_limit method
+link_token = true
+
+#+end_src
+
+**** searxng-genkey
+
+#+begin_src sh
+#!/bin/sh
+
+# This script generates a new secret key and starts the SearXNG containers.
+
+# Generate a new random 32-byte hex secret key.
+SEARXNG_SECRET=$(openssl rand -hex 32)
+#+end_src
+
+**** settings.yml
+
+#+begin_src yaml
+# see https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+use_default_settings: true
+server:
+  # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
+  secret_key: ""
+  limiter: false  # changed to false for open-webui
+  image_proxy: true
+ui:
+  static_use_hash: true
+redis:
+  url: redis://redis:6379/0
+general:
+  # Debug mode, only for development. Is overwritten by ${SEARXNG_DEBUG}
+  debug: false
+  # displayed name
+  instance_name: "Searxng"
+  # For example: https://example.com/privacy
+  privacypolicy_url: false
+  # use true to use your own donation page written in searx/info/en/donate.md
+  # use false to disable the donation link
+  donation_url: false
+  # mailto:contact@example.com
+  contact_url: false
+  # record stats
+  enable_metrics: true
+  # expose stats in open metrics format at /metrics
+  # leave empty to disable (no password set)
+  # open_metrics: <password>
+  open_metrics: ''
+
+search:
+  # Filter results. 0: None, 1: Moderate, 2: Strict
+  safe_search: 0
+  # Existing autocomplete backends: "360search", "baidu", "brave", "dbpedia", "duckduckgo", "google", "yandex",
+  # "mwmbl", "seznam", "sogou", "stract", "swisscows", "qwant", "wikipedia" -
+  # leave blank to turn it off by default.
+  autocomplete: ""
+  # minimun characters to type before autocompleter starts
+  autocomplete_min: 4
+  # backend for the favicon near URL in search results.
+  # Available resolvers: "allesedv", "duckduckgo", "google", "yandex" - leave blank to turn it off by default.
+  favicon_resolver: ""
+  # Default search language - leave blank to detect from browser information or
+  # use codes from 'languages.py'
+  default_lang: "auto"
+  # max_page: 0  # if engine supports paging, 0 means unlimited numbers of pages
+  # Available languages
+  # languages:
+  #   - all
+  #   - en
+  #   - en-US
+  #   - de
+  #   - it-IT
+  #   - fr
+  #   - fr-BE
+  # ban time in seconds after engine errors
+  ban_time_on_fail: 5
+  # max ban time in seconds after engine errors
+  max_ban_time_on_fail: 120
+  suspended_times:
+    # Engine suspension time after error (in seconds; set to 0 to disable)
+    # For error "Access denied" and "HTTP error [402, 403]"
+    SearxEngineAccessDenied: 86400
+    # For error "CAPTCHA"
+    SearxEngineCaptcha: 86400
+    # For error "Too many request" and "HTTP error 429"
+    SearxEngineTooManyRequests: 3600
+    # Cloudflare CAPTCHA
+    cf_SearxEngineCaptcha: 1296000
+    cf_SearxEngineAccessDenied: 86400
+    # ReCAPTCHA
+    recaptcha_SearxEngineCaptcha: 604800
+
+  # remove format to deny access, use lower case.
+  # formats: [html, csv, json, rss]
+  formats:
+    - html
+    - csv
+    - json
+    - rss
+categories_as_tabs:
+  general:
+  images:
+  videos:
+  news:
+  it:
+  files:
+  map:
+  social media:
+
+#+end_src
+
+*** start searxng 
+
+#+begin_src sh
+doas podman-compose up -d
+#+end_src
+
+*** stop searxng
+
+#+begin_src sh
+doas podman-compose down
+#+end_src
+
+*** permisions
+
+note the permissions on the searxng directory and files will be changed to tests
+
+#+begin_example
+-rwxr-xr-x  1 tests    tests     916 26 Apr 18:59 compose.yaml
+-rwxr-xr-x  1 tests    tests     232 26 Apr 14:41 limiter.toml
+-rwxr-xr-x  1 tests    tests     175 26 Apr 14:41 searxng-genkey
+-rwxr-xr-x  1 tests    tests    2791 26 Apr 18:44 settings.yml
+#+end_example
+
+so you will need to use doas or sudo to edit the files
 
 ** ubuntu
 
