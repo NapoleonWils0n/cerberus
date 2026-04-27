@@ -1912,7 +1912,6 @@ and the Custom DSP Path to
 #+end_example
 
 ** ollama
-
 *** zfs datasets
 we will also create a zfs dataset for our ollama
 
