@@ -1,0 +1,74 @@
+#+STARTUP: content
+* whisper.cpp build
+** whisper.cpp clone git repository
+
+#+begin_src sh
+git clone https://github.com/ggml-org/whisper.cpp.git
+#+end_src
+
+** cmake install
+
+#+begin_src sh
+doas pkg install cmake
+#+end_src
+
+** build
+
+change into the git repo
+
+#+begin_src sh
+cd whisper.cpp
+#+end_src
+
+build
+
+#+begin_src sh
+cmake -B build -DGGML_VULKAN=1
+cmake --build build --config Release
+#+end_src
+
+install to ~/bin
+
+#+begin_src sh
+cp build/bin/whisper-cli ~/bin/
+#+end_src
+
+** download the model
+
+steps to download the large mode
+
+#+begin_src sh
+./models/download-ggml-model.sh large-v3
+#+end_src
+
+** Quantization
+
+quantization the model
+
+#+begin_src sh
+./build/bin/whisper-quantize models/ggml-large-v3.bin models/ggml-large-v3-q4_0.bin q4_0
+#+end_src
+
+where does the model need to be installed 
+
+#+begin_src sh
+mkdir -p ~/.local/share/whisper-models
+#+end_src
+
+#+begin_src sh
+cp models/ggml-large-v3-q4_0.bin ~/.local/share/whisper-models/
+#+end_src
+
+** Audio Format
+
+whisper.cpp is extremely fast, but it is "picky" about its input.
+
+It requires 16-bit WAV files at a 16kHz sample rate.
+
+#+begin_src sh
+ffmpeg -i video.mp4 -vn -ar 16000 -ac 1 -c:a pcm_s16le audio.wav
+#+end_src
+
+#+begin_src sh
+~/bin/whisper-cli -m ~/.local/share/whisper-models/ggml-large-v3-q4_0.bin -f audio.wav
+#+end_src
