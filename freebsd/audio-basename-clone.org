@@ -1,0 +1,6 @@
+#+STARTUP: content
+* basename clone
+
+#+begin_src sh
+doas sysctl hw.snd.basename_clone=1
+#+end_src
