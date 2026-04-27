@@ -19,36 +19,43 @@ OLLAMA_NUM_PARALLEL=1 OLLAMA_DEBUG=1 LLAMA_DEBUG=1 ollama start
 2. In the second terminal pull the model you want to install
 
 ** models
-*** deepseek-r1
-
-[[https://ollama.com/library/deepseek-r1:7b]]
-
+*** gemma4:e4b
 **** pull 
 
 #+begin_src sh
-ollama pull deepseek-r1:7b
+ollama pull gemma4:e4b
+#+end_src
+
+**** run 
+
+#+begin_src sh
+ollama run gemma4:e4b
+#+end_src
+
+*** qwen3.5:9b
+**** pull 
+
+#+begin_src sh
+ollama pull qwen3.5:9b
+#+end_src
+
+**** run 
+
+#+begin_src sh
+ollama run qwen3.5:9b
+#+end_src
+
+*** mistral-nemo:12b
+**** pull 
+
+#+begin_src sh
+ollama pull mistral-nemo:12b
 #+end_src
 
 **** run
 
 #+begin_src sh
-ollama run deepseek-r1:7b
-#+end_src
-
-*** qwen3.5:2b
-
-[[https://ollama.com/library/qwen3.5]]
-
-**** pull 
-
-#+begin_src sh
-ollama pull qwen3.5:2b
-#+end_src
-
-**** run
-
-#+begin_src sh
-ollama run qwen3.5:2b
+ollama run mistral-nemo:12b
 #+end_src
 
 *** Huihui-Qwen3.5-2B-abliterated
