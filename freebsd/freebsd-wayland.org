@@ -1913,6 +1913,7 @@ and the Custom DSP Path to
 
 ** ollama
 
+*** zfs datasets
 we will also create a zfs dataset for our ollama
 
 change djwilcox to your username in the code below
@@ -1923,6 +1924,32 @@ doas zfs create zroot/home/djwilcox/.ollama
 
 #+begin_src sh
 doas chown -R djwilcox:djwilcox /home/djwilcox/.ollama
+#+end_src
+
+*** ollama vulkan
+
+enable vulkan support for ollama
+
+edit your zshenv file
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+add export OLLAMA_VULKAN=1
+
+#+begin_src conf
+#===============================================================================
+# ollama vulkan
+#===============================================================================
+
+export OLLAMA_VULKAN=1
+#+end_src
+
+source your zshenv file
+
+#+begin_src sh
+source ~/.zshenv
 #+end_src
 
 ** shutdown
