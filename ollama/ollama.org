@@ -49,7 +49,7 @@ ollama run mistral-nemo:12b
 **** pull 
 
 #+begin_src sh
-ollama run huihui_ai/qwen3.5-abliterated:2b
+ollama run huihui_ai/qwen3.5-abliterated:9b
 #+end_src
 
 **** run
