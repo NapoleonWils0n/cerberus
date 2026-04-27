@@ -1,18 +1,22 @@
 #+STARTUP: content
-* whisper.cpp build
+* whisper.cpp vulkan freebsd
+** resources
+
+[[https://github.com/ggml-org/whisper.cpp]]
+
 ** whisper.cpp clone git repository
 
 #+begin_src sh
 git clone https://github.com/ggml-org/whisper.cpp.git
 #+end_src
 
-** cmake install
+*** cmake install
 
 #+begin_src sh
 doas pkg install cmake
 #+end_src
 
-** build
+*** build
 
 change into the git repo
 
@@ -33,7 +37,7 @@ install to ~/bin
 cp build/bin/whisper-cli ~/bin/
 #+end_src
 
-** download the model
+*** download the model
 
 steps to download the large mode
 
@@ -41,7 +45,7 @@ steps to download the large mode
 ./models/download-ggml-model.sh large-v3
 #+end_src
 
-** Quantization
+*** Quantization
 
 quantization the model
 
@@ -59,7 +63,7 @@ mkdir -p ~/.local/share/whisper-models
 cp models/ggml-large-v3-q4_0.bin ~/.local/share/whisper-models/
 #+end_src
 
-** Audio Format
+*** Audio Format
 
 whisper.cpp is extremely fast, but it is "picky" about its input.
 
