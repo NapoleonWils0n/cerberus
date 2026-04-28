@@ -19,7 +19,7 @@ OLLAMA_NUM_PARALLEL=1 OLLAMA_DEBUG=1 LLAMA_DEBUG=1 ollama start
 2. In the second terminal pull the model you want to install
 
 ** models
-***  qwen3.5:2b
+*** qwen3.5:2b
 **** resources
 
 [[https://ollama.com/library/qwen3.5:2b]]
