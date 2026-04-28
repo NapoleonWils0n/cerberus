@@ -41,7 +41,7 @@ Build dependencies:
 ** packages install
 
 #+begin_src sh
-sudo pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots libxkbcommon xcb-util-wm
+sudo pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots019 libxkbcommon xcb-util-wm
 #+end_src
 
 ** drivers
