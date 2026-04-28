@@ -44,7 +44,7 @@ ollama run qwen3.5:4b
 **** pull 
 
 #+begin_src sh
-ollama run huihui_ai/qwen3.5-abliterated:4B
+ollama pull huihui_ai/qwen3.5-abliterated:4B
 #+end_src
 
 **** run
