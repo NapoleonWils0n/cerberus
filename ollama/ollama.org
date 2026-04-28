@@ -19,43 +19,38 @@ OLLAMA_NUM_PARALLEL=1 OLLAMA_DEBUG=1 LLAMA_DEBUG=1 ollama start
 2. In the second terminal pull the model you want to install
 
 ** models
-*** qwen3.5:9b
+***  qwen3.5:4b
+**** resources
+
+[[https://ollama.com/library/qwen3.5:4b]]
+
 **** pull 
 
 #+begin_src sh
-ollama pull qwen3.5:9b
+ollama pull qwen3.5:4b
 #+end_src
 
 **** run 
 
 #+begin_src sh
-ollama run qwen3.5:9b
+ollama run qwen3.5:4b
 #+end_src
 
-*** mistral-nemo:12b
+*** qwen3.5-abliterated:4B
+**** resources
+
+[[https://ollama.com/huihui_ai/qwen3.5-abliterated:4B]]
+
 **** pull 
 
 #+begin_src sh
-ollama pull mistral-nemo:12b
+ollama run huihui_ai/qwen3.5-abliterated:4B
 #+end_src
 
 **** run
 
 #+begin_src sh
-ollama run mistral-nemo:12b
-#+end_src
-
-*** qwen3.5-abliterated:9b
-**** pull 
-
-#+begin_src sh
-ollama pull huihui_ai/qwen3.5-abliterated:9b
-#+end_src
-
-**** run
-
-#+begin_src sh
-ollama run huihui_ai/qwen3.5-abliterated:9b
+ollama run huihui_ai/qwen3.5-abliterated:4B
 #+end_src
 
 ** kill the ollama server
