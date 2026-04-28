@@ -422,6 +422,7 @@ gstreamer1-libav
 gstreamer1-plugins-bad
 gstreamer1-plugins-opus
 hs-pandoc
+imv
 jq
 libc6-shim
 libheif
@@ -498,7 +499,6 @@ zip
 zsh
 zsh-completions
 zsh-syntax-highlighting
-
 #+end_example
 
 ** copy files into place
