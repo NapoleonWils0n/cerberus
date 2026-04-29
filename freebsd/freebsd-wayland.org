@@ -652,6 +652,12 @@ sed -i'' -e s/_POSIX_C_SOURCE=200809L/_XOPEN_SOURCE=700/ Makefile
 
 **** config.h
 
+rename config.def.h to config.h
+
+#+begin_src sh
+mv config.def.h config.h
+#+end_src
+
 edit config.h
 
 #+begin_src c
@@ -865,29 +871,25 @@ doas install -m 755 dwl /usr/local/bin/
 
 *** dwl-start
 
-#+begin_src sh
-#!/bin/sh
+dwl-start script to start dwl from a tty
 
-# start dwl with dbus
-exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"' 2>/dev/null
-#+end_src
-
-copy dwl-start to ~/bin
+move the dwl-start script to your local bin directory
 
 #+begin_src sh
-cp dwl-start ~/bin
+mv dwl-start ~/bin
 #+end_src
 
-make the script executable
+make it executable
 
 #+begin_src sh
 chmod +x ~/bin/dwl-start
 #+end_src
 
-after you login to the tty run
-
 #+begin_src sh
-dwl-start
+#!/bin/sh
+
+# start dwl with dbus
+exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"' 2>/dev/null
 #+end_src
 
 ** obs studio
