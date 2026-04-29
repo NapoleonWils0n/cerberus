@@ -1,0 +1,133 @@
+#+STARTUP: content
+* zfs mount dataset instead of rolling them back
+** zfs list datasets
+
+#+begin_src sh
+zfs list
+#+end_src
+
+** zfs list snapshots
+
+#+begin_src sh
+zfs list -t snapshot
+#+end_src
+
+** zfs snapshot zroot recursively
+
+Recursive snapshot of zroot
+
+#+begin_src sh
+doas zfs snapshot -r zroot@29-04-2026
+#+end_src
+
+** create zfs snapshot during the Freebsd install
+*** Manual Configuration
+
+the installation is now finished
+
+before exiting the installer would you like to open a shell in the new system to make any final manual modification's
+
+press the left arrow key to select yes and press enter
+
+this shell is operatin in a chroot in the new system
+
+when finised making configuration changes, type exit
+
+*** create zfs dataset in home for directories
+
+change djwilcox to your username in the code below
+
+#+begin_src sh
+zfs create zroot/home/djwilcox/bin
+zfs create zroot/home/djwilcox/desktop
+zfs create zroot/home/djwilcox/documents
+zfs create zroot/home/djwilcox/downloads
+zfs create zroot/home/djwilcox/music
+zfs create zroot/home/djwilcox/git
+zfs create zroot/home/djwilcox/video
+zfs create zroot/home/djwilcox/pictures
+zfs create zroot/home/djwilcox/torrents
+zfs create zroot/home/djwilcox/.cache
+zfs create zroot/home/djwilcox/.config
+zfs create zroot/home/djwilcox/.local
+#+end_src
+
+#+begin_src sh
+chown -R djwilcox:djwilcox /mnt/home/djwilcox
+#+end_src
+
+check the directories have been created
+
+#+begin_src sh
+ls -al /mnt/home/djwilcox
+#+end_src
+
+exit the installer
+
+#+begin_src sh
+exit
+#+end_src
+
+select shutdown
+
+press the right arrow once to select shutdown and then press enter
+
+once its shutdown unplug the usb drive
+
+** create a snapshot after login
+
+create a zfs dataset for our ollama
+
+change djwilcox to your username in the code below
+
+#+begin_src sh
+doas zfs create zroot/home/djwilcox/.ollama
+#+end_src
+
+#+begin_src sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/.ollama
+#+end_src
+
+** zfs snapshot dataset
+
+#+begin_src sh
+doas zfs snapshot zroot/home/djwilcox/desktop@29-04-2026
+#+end_src
+
+** zfs destroy zpool snapshot recursively
+
+#+begin_src sh
+doas zfs destroy -R zroot@29-04-2026
+#+end_src
+
+** zfs destroy snapshot 
+
+#+begin_src sh
+doas zfs destroy zroot/home/djwilcox/desktop@29-04-2026
+#+end_src
+
+** mount zfs snapshot
+
+create a mount point 
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+mount a zfs snapshot on the mount point
+
+#+begin_src sh
+doas mount -t zfs zroot/home/djwilcox/desktop@29-04-2026
+#+end_src
+
+copy files from the mount point to the desktop
+
+#+begin_src sh
+cp ~/mnt/great-ideas.org ~/desktop
+#+end_src
+
+unmount the mount point
+
+#+begin_src sh
+umount ~/mnt
+#+end_src
