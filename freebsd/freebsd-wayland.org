@@ -387,6 +387,12 @@ pkg install $(cat prime-list-xps-2026.txt)
 #+end_src
 
 #+begin_example
+FreeBSD-kernel-generic
+FreeBSD-set-base
+FreeBSD-set-devel
+FreeBSD-set-lib32
+FreeBSD-set-minimal
+FreeBSD-set-src
 ImageMagick7
 abook
 adwaita-qt5
@@ -419,6 +425,7 @@ git
 gmake
 gnome-themes-extra
 gpu-firmware-intel-kmod-kabylake
+graphviz
 gstreamer1-libav
 gstreamer1-plugins-bad
 gstreamer1-plugins-opus
@@ -480,6 +487,7 @@ translate-shell
 tree
 tree-sitter
 ts
+unbound
 wayland
 wayland-protocols
 wayland-utils
@@ -500,6 +508,7 @@ zip
 zsh
 zsh-completions
 zsh-syntax-highlighting
+
 #+end_example
 
 ** copy files into place
