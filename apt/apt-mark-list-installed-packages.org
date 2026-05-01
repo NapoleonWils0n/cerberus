@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* apt-mark list installed packages
+
+export a list of manually installed packages
+
+#+begin_src sh
+apt-mark showmanual > packages-list.txt
+#+end_src
+
+import package list on another machine
+
+#+begin_src sh
+xargs -a packages-list.txt doas apt install -y
+#+end_src
