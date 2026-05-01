@@ -405,7 +405,13 @@ gmake CC=cc CFLAGS+='-std=c11'
 install
 
 #+begin_src sh
-doas install -m 755 dwl /usr/local/bin/
+doas cp dwl /usr/local/bin/
+#+end_src
+
+make sure its executable
+
+#+begin_src sh
+doas chmod + /usr/local/bin/dwl
 #+end_src
 
 https://forums.freebsd.org/threads/building-dwl-fails-with-c99-illegal-option-p.92040/
