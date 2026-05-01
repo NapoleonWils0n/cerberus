@@ -1355,9 +1355,16 @@ server:
 	hide-version: yes
 	harden-glue: yes
 	harden-dnssec-stripped: yes
-	
+        module-config: "validator iterator"
+
+        # Ensure it's pointing to your updated anchor
+        auto-trust-anchor-file: "/usr/local/etc/unbound/root.key"
         # dont query localhost needed for dnscrypt-proxy
         do-not-query-localhost: no
+        # Reduce buffer size to avoid fragmentation issues on wifi
+        edns-buffer-size: 1232
+        do-ip4: yes
+        do-ip6: no
 
 include: "/usr/local/etc/unbound/forward.conf"
 #+END_SRC
@@ -1425,7 +1432,7 @@ ipv6_servers = false
 + choose a server
 
 #+BEGIN_SRC sh
-server_names = ['quad9-dnscrypt-ip4-filter-pri', 'google', 'cloudflare']
+server_names = ['quad9-dnscrypt-ip4-core', 'google', 'cloudflare']
 #+END_SRC
 
 + require_dnssec
@@ -1469,7 +1476,8 @@ The complete dnscrypt-proxy.toml file should look like this
 ## Remove the leading # first to enable this; lines starting with # are ignored.
 
 # server_names = ['scaleway-fr', 'google', 'yandex', 'cloudflare']
-server_names = ['quad9-dnscrypt-ip4-filter-pri', 'google', 'cloudflare']
+#server_names = ['quad9-dnscrypt-ip4-filter-pri', 'google', 'cloudflare']
+server_names = ['quad9-dnscrypt-ip4-core', 'google', 'cloudflare']
 
 
 ## List of local addresses and ports to listen to. Can be IPv4 and/or IPv6.
@@ -1916,7 +1924,7 @@ reject_ttl = 10
 
 ## Enable a DNS cache to reduce latency and outgoing traffic
 
-cache = true
+cache = false
 
 
 ## Cache size
