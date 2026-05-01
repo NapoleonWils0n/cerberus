@@ -402,12 +402,6 @@ make without xwayland
 gmake CC=cc CFLAGS+='-std=c11'
 #+end_src
 
-make without xwayland and match and let the compiler optimize specifically for your hardware.
-
-#+begin_src sh
-gmake CC=cc CFLAGS+='-std=c11 -march=native'
-#+end_src
-
 install
 
 #+begin_src sh
