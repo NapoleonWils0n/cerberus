@@ -867,10 +867,10 @@ static const Button buttons[] = {
 
 *** make dwl
 
-make without xwayland and match and let the compiler optimize specifically for your hardware.
+make without xwayland
 
 #+begin_src sh
-gmake CC=cc CFLAGS+='-std=c11 -march=native'
+gmake CC=cc CFLAGS+='-std=c11'
 #+end_src
 
 install
