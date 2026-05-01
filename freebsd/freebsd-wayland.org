@@ -1235,7 +1235,7 @@ This is where we need a new boot environment. I’ll name it after the release.
 run the bectl commands as root
 
 #+BEGIN_SRC sh
-bectl create 15.0-p0
+doas bectl create 15.0-p0
 #+END_SRC
 
 list the boot environments
@@ -1247,7 +1247,7 @@ bectl list
 Activate the new boot environment.
 
 #+BEGIN_SRC sh
-bectl activate 15.0-p0
+doas bectl activate 15.0-p0
 #+END_SRC
 
 list the boot environments
