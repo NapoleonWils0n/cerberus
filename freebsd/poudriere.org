@@ -5,22 +5,6 @@
 
 poudriere package building environment
 
-switch to root using either sudo or doas
-
-+ switch to root using sudo 
-
-#+BEGIN_SRC sh
-sudo su
-#+END_SRC
-
-+ or use doas to switch to root
-
-#+BEGIN_SRC sh
-doas su
-#+END_SRC
-
-the hash symbol # before a command indicates that the command needs to be run as root
-
 ** Create an SSL Certificate and Key
 
 When we build packages with poudriere, we want to be able to sign them with a private key. This will ensure all of our machines that the packages created are legitimate and that nobody is intercepting the connection to the build machine to serve malicious packages.
