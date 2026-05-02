@@ -2533,7 +2533,7 @@ add_new_resolv_conf() {
 protect your /etc/resolv.conf from being modified by setting the immutable (write-protection) attribute as root
 
 #+BEGIN_SRC sh
-chattr +i /etc/resolv.conf
+doas chattr +i /etc/resolv.conf
 #+END_SRC
 
 restart dnscrypt-proxy
