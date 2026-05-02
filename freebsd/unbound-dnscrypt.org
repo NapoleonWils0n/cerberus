@@ -75,23 +75,23 @@ doas /usr/local/etc/unbound/unbound.conf
 #=========================================================================#
 
 server:
-	verbosity: 1
-	access-control: 0.0.0.0/0 refuse
-	access-control: 127.0.0.0/8 allow
-	access-control: ::0/0 refuse
-	access-control: ::1 allow
-	access-control: ::ffff:127.0.0.1 allow
-	
-	# enable to not answer id.server and hostname.bind queries.
-	hide-identity: yes
-	hide-version: yes
-	harden-glue: yes
-	harden-dnssec-stripped: yes
+       verbosity: 1
+       access-control: 0.0.0.0/0 refuse
+       access-control: 127.0.0.0/8 allow
+       access-control: ::0/0 refuse
+       access-control: ::1 allow
+       access-control: ::ffff:127.0.0.1 allow
+       
+       # enable to not answer id.server and hostname.bind queries.
+       hide-identity: yes
+       hide-version: yes
+       harden-glue: yes
+       harden-dnssec-stripped: yes
 
-        # Ensure it's pointing to your updated anchor
-        auto-trust-anchor-file: "/usr/local/etc/unbound/root.key"
-        # dont query localhost needed for dnscrypt-proxy
-        do-not-query-localhost: no
+       # Ensure it's pointing to your updated anchor
+       auto-trust-anchor-file: "/usr/local/etc/unbound/root.key"
+       # dont query localhost needed for dnscrypt-proxy
+       do-not-query-localhost: no
 
 include: "/usr/local/etc/unbound/forward.conf"
 #+END_SRC
