@@ -1293,19 +1293,19 @@ enable unbound to start at boot
 We can use the sysrc command to disable the local_unbound service in /etc/rc.conf
 
 #+BEGIN_SRC sh
-sysrc local_unbound_enable="NO"
+doas sysrc local_unbound_enable="NO"
 #+END_SRC
 
 enable the unbound package dns server
 
 #+BEGIN_SRC sh
-sysrc unbound_enable="YES"
+doas sysrc unbound_enable="YES"
 #+END_SRC
 
 You can also edit the /etc/rc.conf as root to enable unbound
 
 #+BEGIN_SRC sh
-vi /etc/rc.conf
+doas vi /etc/rc.conf
 #+END_SRC
 
 the local_unbound service should be set to NO
@@ -1326,7 +1326,7 @@ Install the ca_root_nss package which contains the trusted internet root CA serv
 This is used by unbound to create the root.key file which is auto trusted
 
 #+BEGIN_SRC sh
-pkg install ca_root_nss
+doas pkg install ca_root_nss
 #+END_SRC
 
 *** unbound config
@@ -1394,7 +1394,7 @@ dnscrypt-proxy2 and dns over https
 install dnscrypt-proxy as root
 
 #+BEGIN_SRC sh
-pkg install dnscrypt-proxy2
+doas pkg install dnscrypt-proxy2
 #+END_SRC
 
 *** dnscrypt config
@@ -1403,7 +1403,7 @@ pkg install dnscrypt-proxy2
 edit the dnscrypt-proxy.toml as root
 
 #+BEGIN_SRC sh
-vi /usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
+doas vi /usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
 #+END_SRC
 
 + dnscrypt-proxy.toml file
@@ -2478,9 +2478,9 @@ privacy_level = 1
 use the sysrc command as root to add commands to /etc/rc.conf
 
 #+BEGIN_SRC sh
-sudo sysrc dnscrypt_proxy_enable="YES"
-sudo sysrc dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
-sudo sysrc dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
+doas sysrc dnscrypt_proxy_enable="YES"
+doas sysrc dnscrypt_proxy_pidfile="/var/run/dnscrypt-proxy.pid"
+doas sysrc dnscrypt_proxy_logfile="/var/log/dnscrypt-proxy.log"
 #+END_SRC
 
 we also need to enable unbound in the /etc/rc.conf
