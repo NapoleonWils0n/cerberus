@@ -1,5 +1,9 @@
 #+STARTUP: content
 * bash language server freebsd
+** resources
+
+[[https://github.com/bash-lsp/bash-language-server]]
+
 ** install packages
 
 #+begin_src sh
