@@ -419,7 +419,8 @@ doas vi /usr/local/etc/poudriere.d/port-list
 The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
 
 #+BEGIN_SRC sh
-net-p2p/rtorrent
+multimedia/ffmpeg
+
 #+END_SRC
 
 If you use specific make.conf options to build your ports, you can create a make.conf file for each jail within your /usr/local/etc/poudriere.d directory. For example, for our jail, we can create a make.conf file with this name:
