@@ -431,6 +431,7 @@ doas vi /usr/local/etc/poudriere.d/freebsd_15-0x64-make.conf
 
 #+BEGIN_SRC sh
 OPTIONS_UNSET+= DOCS NLS X11 EXAMPLES
+DISABLE_LICENSES=yes
 #+END_SRC
 
 set IGNORE_OSVERSION in pkg.conf

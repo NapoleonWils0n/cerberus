@@ -419,7 +419,8 @@ doas vi /usr/local/etc/poudriere.d/port-list
 The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
 
 #+BEGIN_SRC sh
-net-p2p/rtorrent
+multimedia/ffmpeg
+
 #+END_SRC
 
 If you use specific make.conf options to build your ports, you can create a make.conf file for each jail within your /usr/local/etc/poudriere.d directory. For example, for our jail, we can create a make.conf file with this name:
@@ -429,7 +430,8 @@ doas vi /usr/local/etc/poudriere.d/freebsd_15-0x64-make.conf
 #+END_SRC
 
 #+BEGIN_SRC sh
-OPTIONS_UNSET+= DOCS NLS X11 EXAMPLES
+DISABLE_LICENSES=yes
+multimedia_ffmpeg_SET= FDK_AAC JACK NONFREE SDL SRT
 #+END_SRC
 
 set IGNORE_OSVERSION in pkg.conf
@@ -572,13 +574,13 @@ pkg search ffmpeg
 make a note of the ffmpeg version built by poudriere
 
 #+begin_src sh
-ffmpeg-6.1.2_6,1               Realtime audio/video encoder/converter and streaming server
+ffmpeg-8.1,1              Realtime audio/video encoder/converter and streaming server
 #+end_src
 
 install ffmpeg
 
 #+begin_src sh
-doas pkg install ffmpeg-6.1.2_6,1
+doas pkg install ffmpeg-8.1,1
 #+end_src
 
 *** ffmpeg is already installed
