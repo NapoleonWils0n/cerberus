@@ -1,0 +1,121 @@
+#+STARTUP: content
+* zfs backup usb drive
+** identify the USB Drive
+
+#+begin_src sh
+doas geom disk list
+#+end_src
+
+** create the ZFS Pool
+
+disk listed as da0
+
+*** Create the partition table
+
+#+begin_src sh
+doas gpart create -s gpt da0
+#+end_src
+
+*** Create a single partition for the whole disk
+
+#+begin_src sh
+doas gpart add -t freebsd-zfs -l backup da0
+#+end_src
+
+*** Create the pool on the partition label (much safer!)
+
+#+begin_src sh
+doas zpool create -f -m /mnt/backup backup /dev/gpt/backup
+#+end_src
+
+** Set Recommended Backup Properties
+
+#+begin_src sh
+doas zfs set compression=lz4 backup
+#+end_src
+
+#+begin_src sh
+doas zfs set atime=off backup
+#+end_src
+
+check the settings
+
+#+begin_src sh
+zfs get compression,atime,mountpoint,mounted backup
+#+end_src
+
+** Adjust Permissions
+
+By default, the mountpoint will be owned by root.
+
+Change it so your user can write to it without doas:
+
+#+begin_src sh
+doas chown djwilcox:djwilcox /mnt/backup
+#+end_src
+
+** create snapshot
+
+#+begin_src sh
+doas zfs snapshot -r zroot/home/djwilcox@initial-backup
+#+end_src
+
+** send the snapshot
+
+#+begin_src sh
+doas zfs send -R zroot/home/djwilcox@initial-backup | doas zfs receive -vF backup/home-backup
+#+end_src
+
+To avoid mount conflicts, set the canmount property to noauto on the backup copy so it doesn't try to activate itself every time you plug in the USB:
+
+#+begin_src sh
+doas zfs set canmount=noauto backup/home-backup
+#+end_src
+
+dry run check all the snapshots have canmount
+
+#+begin_src sh
+zfs list -H -o name -r backup/home-backup | xargs -I {} echo "doas zfs set canmount=noauto {}"
+#+end_src
+
+apply canmount=noauto to the drive
+
+#+begin_src sh
+zfs list -H -o name -r backup/home-backup | xargs -L 1 doas zfs set canmount=noauto
+#+end_src
+
+** Incremental Backups
+
+After the first time, you only want to send the data that has changed.
+
+Create a New Snapshot
+
+#+begin_src sh
+doas zfs snapshot -r zroot/home/djwilcox@02-05-2026
+#+end_src
+
+Send Only the Difference
+
+#+begin_src sh
+doas zfs send -RI zroot/home/djwilcox@initial-backup zroot/home/djwilcox@02-05-2026 | doas zfs receive -vF backup/home-backup
+#+end_src
+** To Unplug Safely
+
+export the backup pool
+
+#+begin_src sh
+doas zpool export backup
+#+end_src
+
+use camcontrol to eject the drive
+
+#+begin_src sh
+doas camcontrol eject da0
+#+end_src
+
+** To Reconnect Later
+
+#+begin_src sh
+doas zpool import backup
+#+end_src
+
