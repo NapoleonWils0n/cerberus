@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* mixer set mic volume 
+
+#+begin_src sh
+mixer -f /dev/mixer3 mic.volume=1.0
+#+end_src
