@@ -1,0 +1,116 @@
+#+STARTUP: content
+* bash language server freebsd
+** install packages
+
+#+begin_src sh
+doas pkg install node npm hs-ShellCheck
+#+end_src
+
+** Configure a local prefix:
+
+#+begin_src sh
+mkdir -p ~/.local/bin
+#+end_src
+
+#+begin_src sh
+npm config set prefix '~/.local'
+#+end_src
+
+check the prefix is set
+
+#+begin_src sh
+npm config get prefix
+#+end_src
+
+** Install the bash-language-server
+
+#+begin_src sh
+npm install -g bash-language-server
+#+end_src
+
+** zshenv path
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+add ~/.local/bin to your path
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
+export PATH
+#+end_src
+
+** update the bash-language-server
+
+#+begin_src sh
+npm install -g bash-language-server@latest
+#+end_src
+
+** emacs treesitter and eglot
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; treesitter
+;; ----------------------------------------------------------------------------------
+
+(require 'treesit)
+
+;; Use `major-mode-remap-alist` for languages that have a Treesitter major mode.
+;; M-x treesit-install-language-grammar bash
+
+(setq treesit-language-source-alist
+      '((awk "https://github.com/Beaglefoot/tree-sitter-awk")
+        (bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (c "https://github.com/tree-sitter/tree-sitter-c")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (diff "https://github.com/the-mikedavis/tree-sitter-diff")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (make "https://github.com/tree-sitter-grammars/tree-sitter-make")
+        (nix "https://github.com/nix-community/tree-sitter-nix")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")
+        (xml "https://github.com/panicinc/tree-sitter-xml")))
+
+(setq major-mode-remap-alist
+      '((sh-mode . bash-ts-mode)
+        (rust-mode . rust-ts-mode)))
+
+;; treesitter explore open in side window
+(add-to-list 'display-buffer-alist
+             '("^*tree-sitter explorer *" display-buffer-in-side-window
+               (side . right)
+               (window-width . 0.50)))
+
+;; ----------------------------------------------------------------------------------
+;; eglot
+;; ----------------------------------------------------------------------------------
+
+;; Add local npm binaries to Emacs path
+(let ((local-npm-bin (expand-file-name "~/.local/bin")))
+  (add-to-list 'exec-path local-npm-bin)
+  (setenv "PATH" (concat local-npm-bin ":" (getenv "PATH"))))
+
+;; Configure Eglot to recognize and start the language servers.
+(with-eval-after-load 'eglot
+  ;; sh-mode (for shell scripts) uses 'bash-language-server' with a 'start' argument
+  (add-to-list 'eglot-server-programs
+               '(bash-ts-mode "bash-language-server" "start")))
+
+;; Automatically start Eglot when opening a relevant file
+(add-hook 'bash-ts-mode-hook 'eglot-ensure)
+
+;; ----------------------------------------------------------------------------------
+;; Rust and LSP (Eglot)
+;; ----------------------------------------------------------------------------------
+
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode)
+  :hook (rust-mode . eglot-ensure)
+  :config
+  (setq rust-format-on-save t))
+
+#+end_src
