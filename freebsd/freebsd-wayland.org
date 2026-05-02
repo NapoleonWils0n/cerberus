@@ -1340,7 +1340,7 @@ Create a unbound.conf configuration file for unbound
 switch to root and then create unbound.conf
 
 #+BEGIN_SRC sh
-doas /usr/local/etc/unbound/unbound.conf
+doas vi /usr/local/etc/unbound/unbound.conf
 #+END_SRC
 
 #+BEGIN_SRC sh
@@ -2536,6 +2536,12 @@ protect your /etc/resolv.conf from being modified by setting the immutable (writ
 chattr +i /etc/resolv.conf
 #+END_SRC
 
+restart dnscrypt-proxy
+
+#+begin_src sh
+doas service dnscrypt-proxy restart
+#+end_src
+
 restart unbound
 
 #+begin_src sh
@@ -2544,7 +2550,9 @@ doas service unbound restart
 
 *** dnscrypt check
 
+#+begin_src sh
 dnscrypt-proxy -resolve google.com -config /usr/local/etc/dnscrypt-proxy/dnscrypt-proxy.toml
+#+end_src
 
 website to test dnsec is working
 
