@@ -39,7 +39,13 @@ xz -dv FreeBSD-15.0-RELEASE-amd64-memstick.img.xz
 dd the image to a usb drive
 
 #+begin_src sh
-sudo dd if=FreeBSD-15.0-RELEASE-amd64-memstick.img of=/dev/da0 bs=1M conv=sync
+doas dd if=FreeBSD-15.0-RELEASE-amd64-memstick.img of=/dev/da0 bs=1M conv=sync
+#+end_src
+
+use camcontrol to eject the drive
+
+#+begin_src sh
+doas camcontrol eject da0
 #+end_src
 
 *** linux
