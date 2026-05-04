@@ -1,0 +1,23 @@
+#+STARTUP: content
+* ollama debian
+** install ollama
+
+download the script
+
+#+begin_src sh
+curl -fsSL https://ollama.com/install.sh -o install.sh
+#+end_src
+
+make it executable
+
+#+begin_src sh
+chmod +x install.sh
+#+end_src
+
+run the script as root to install ollama
+
+#+begin_src sh
+doas ./install.sh
+#+end_src
+
+
