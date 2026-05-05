@@ -1,14 +1,26 @@
 #+STARTUP: content
 * mcp-searxng-enhanced
 ** resources
+*** linux
 
 [[https://github.com/OvertliDS/mcp-searxng-enhanced]]
 
+*** Freebsd
+
+[[https://github.com/NapoleonWils0n/mcp-searxng-enhanced]]
+
 ** build mcp-searxng-enhanced
 *** download the git repo
+**** linux
 
 #+begin_src sh
 git clone https://github.com/OvertliDS/mcp-searxng-enhanced.git
+#+end_src
+
+**** Freebsd
+
+#+begin_src sh
+git clone https://github.com/NapoleonWils0n/mcp-searxng-enhanced.git
 #+end_src
 
 *** build mcp-searxng-enhanced linux

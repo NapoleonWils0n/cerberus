@@ -311,8 +311,43 @@ doas vi
 change username to your username
 
 #+begin_src conf
-# podman
-permit nopass :username cmd podman
+#=========================================================================#
+# doas.conf
+#=========================================================================#
+
+#=========================================================================#
+# permit user
+#=========================================================================#
+
+permit keepenv setenv { PATH } username
+
+
+#=========================================================================#
+# allow root to switch to our user
+#=========================================================================#
+
+permit nopass keepenv setenv { PATH } root as username
+
+
+#=========================================================================#
+# permit user - no pass
+#=========================================================================#
+
+permit nopass keepenv setenv { PATH } username
+
+
+#=========================================================================#
+# podman permit user - no pass
+#=========================================================================#
+
+permit nopass keepenv username cmd /usr/local/bin/podman
+
+
+#=========================================================================#
+# root as root
+#=========================================================================#
+
+permit nopass keepenv root as root
 #+end_src
 
 ** podman test
@@ -539,12 +574,12 @@ so you will need to use doas or sudo to edit the files
 ** mcp-searxng-enhanced
 *** resources
 
-[[https://github.com/OvertliDS/mcp-searxng-enhanced]]
+[[https://github.com/NapoleonWils0n/mcp-searxng-enhanced]]
 
 *** download the git repo
 
 #+begin_src sh
-git clone https://github.com/OvertliDS/mcp-searxng-enhanced.git
+git clone https://github.com/NapoleonWils0n/mcp-searxng-enhanced.git
 #+end_src
 
 *** build mcp-searxng-enhanced
@@ -554,7 +589,78 @@ cd mcp-searxng-enhanced
 #+end_src
 
 #+begin_src sh
-doas podman build --network host --os linux -t mcp-searxng-enhanced:local .
+doas podman build --network host -t mcp-searxng-enhanced:local .
+#+end_src
+
+*** emacs init.el
+
+#+begin_src sh
+vi ~/.config/emacs/init.el
+#+end_src
+
+Change usernname to yout username
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers 
+   `(("searxng" . (
+      :command "/home/username/bin/mcp-searxng-enhanced"
+      ))))
+  :config
+  (require 'mcp-hub))
+#+end_src
+
+**** create a bin directory
+
+#+begin_src sh
+mkdir -p ~/bin
+#+end_src
+
+**** zshenv add the bin directory to your shell path
+
+#+begin_src sh
+vi ~/.zshenv
+#+end_src
+
+#+begin_src sh
+#===============================================================================
+# ~/.zshenv
+#===============================================================================
+
+#===============================================================================
+# Path
+#===============================================================================
+
+typeset -U PATH path
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
+export PATH
+#+end_src
+
+**** mcp-searxng-enhanced script
+
+#+begin_src sh
+chmod +x ~/bin/mcp-searxng-enhanced
+#+end_src
+
+#+begin_src sh
+#!/bin/sh
+
+# Force unbuffered output so the stream isn't delayed
+export PYTHONUNBUFFERED=1
+
+# Filter the output:
+# 1. '--line-buffered' ensures Emacs gets the data immediately.
+# 2. '^{"jsonrpc"' matches only the start of valid MCP/JSON-RPC messages.
+exec /usr/local/bin/doas /usr/local/bin/podman run -i --rm --network=host \
+    -e "SEARXNG_URL=http://localhost:8080" \
+    -e "PYTHONUNBUFFERED=1" \
+    localhost/mcp-searxng-enhanced:local | grep --line-buffered '^{"jsonrpc"'
 #+end_src
 
 ** ubuntu
