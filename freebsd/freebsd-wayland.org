@@ -514,7 +514,6 @@ zip
 zsh
 zsh-completions
 zsh-syntax-highlighting
-
 #+end_example
 
 ** copy files into place
@@ -626,7 +625,7 @@ use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video ha
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
 
 #+begin_src sh
-doas sysrc kld_list="i915kms"
+doas sysrc kld_list+="i915kms"
 #+end_src
 
 or manually edit the config file
