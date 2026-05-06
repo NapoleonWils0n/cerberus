@@ -213,6 +213,19 @@ modprobe -r b43 brcmsmac bcma ssb
 modprobe wl
 #+end_src
 
+*** swapiness
+
+switch to root
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+sysctl vm.swappiness=10
+echo 'vm.swappiness=10' | tee -a /etc/sysctl.conf
+#+end_src
+
 ** missing firmware
 
 missing firmware on Mabook Pro retina 2015
