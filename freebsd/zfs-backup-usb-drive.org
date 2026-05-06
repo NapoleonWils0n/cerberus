@@ -84,6 +84,20 @@ apply canmount=noauto to the drive
 zfs list -H -o name -r backup/home-backup | xargs -L 1 doas zfs set canmount=noauto
 #+end_src
 
+Once thats working we can set the files to be mounted
+
+#+begin_src sh
+doas zfs set canmount=on backup/home-backup
+#+end_src
+
+#+begin_src sh
+zfs list -H -o name -r backup/home-backup | xargs -L 1 doas zfs set canmount=on
+#+end_src
+
+#+begin_src sh
+doas zfs mount backup/home-backup
+#+end_src
+
 ** Incremental Backups
 
 After the first time, you only want to send the data that has changed.
