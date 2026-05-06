@@ -591,6 +591,7 @@ chsh -s /usr/local/bin/zsh
 [[https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/movestack/movestack-0.8.patch]]
 
 *** packages install
+**** dell xps 15
 
 #+begin_src sh
 doas pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots019 libxkbcommon xcb-util-wm nvidia-driver nvidia-settings nvidia-drm-61-kmod libva-intel-driver libva-utils dwlb
@@ -599,13 +600,13 @@ doas pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinp
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
 
 #+begin_src sh
-sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64"
+doas sysrc kld_list+="i915kms nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64"
 #+end_src
 
 or manually edit the config file
 
 #+BEGIN_SRC sh
-sudo vi /etc/rc.conf
+doas vi /etc/rc.conf
 #+END_SRC
 
 then add the code below to /etc/rc.conf
@@ -613,6 +614,32 @@ then add the code below to /etc/rc.conf
 #+BEGIN_SRC sh
 kld_list="i915kms nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64"
 #+END_SRC
+
+**** macbook air 2011
+
+#+begin_src sh
+doas pkg install libva-intel-driver libva-utils drm-515-kmod 
+#+end_src
+
+use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
+
+we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
+
+#+begin_src sh
+doas sysrc kld_list="i915kms"
+#+end_src
+
+or manually edit the config file
+
+#+begin_src sh
+doas vi /etc/rc.conf
+#+end_src
+
+then add the code below to /etc/rc.conf
+
+#+begin_src sh
+kld_list="i915kms"
+#+end_src
 
 *** fstab
 
