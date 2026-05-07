@@ -1361,6 +1361,26 @@ This is used by unbound to create the root.key file which is auto trusted
 doas pkg install ca_root_nss
 #+END_SRC
 
+*** create the root.key
+
+change persmissions on the unound directory
+
+#+begin_src sh
+doas chown unbound:wheel /usr/local/etc/unbound
+#+end_src
+
+create the root.key
+
+#+begin_src sh
+doas -u unbound unbound-anchor -a "/usr/local/etc/unbound/root.key"
+#+end_src
+
+restart unbound
+
+#+begin_src sh
+doas service unbound restart
+#+end_src
+
 *** unbound config
 
 dnscrypt needs - do-not-query-localhost: no
