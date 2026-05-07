@@ -1363,6 +1363,8 @@ doas pkg install ca_root_nss
 
 *** create the root.key
 
+create the root.key if it doesnt exist
+
 change persmissions on the unound directory
 
 #+begin_src sh
