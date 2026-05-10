@@ -24,14 +24,46 @@ change into the git repo
 cd whisper.cpp
 #+end_src
 
-build
+create a directory for spirv
 
 #+begin_src sh
-cmake -B build -DGGML_VULKAN=1
+mkdir -p ./external/spirv/unified1/
+#+end_src
+
+fetch spirv.hpp
+
+#+begin_src sh
+fetch -o ./external/spirv/unified1/spirv.hpp https://raw.githubusercontent.com/KhronosGroup/SPIRV-Headers/main/include/spirv/unified1/spirv.hpp
+#+end_src
+
+remove the build directory if it exists
+
+#+begin_src sh
+rm -rf build
+#+end_src
+
+build whisper-cpp with vulkan
+
+#+begin_src sh
+cmake -B build -DGGML_VULKAN=ON \
+      -DCMAKE_CXX_FLAGS="-I$(pwd)/external" \
+      -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath,$(pwd)/build"
 cmake --build build --config Release
 #+end_src
 
-install to ~/bin
+create a whisper directory for the libraries
+
+#+begin_src sh
+mkdir -p ~/.local/lib/whisper
+#+end_src
+
+move the so files
+
+#+begin_src sh
+cp build/src/libwhisper.so* ~/.local/lib/whisper/
+#+end_src
+
+install to whisper-cli ~/bin
 
 #+begin_src sh
 cp build/bin/whisper-cli ~/bin/
@@ -63,7 +95,7 @@ mkdir -p ~/.local/share/whisper-models
 cp models/ggml-large-v3-q4_0.bin ~/.local/share/whisper-models/
 #+end_src
 
-*** Audio Format
+** Audio Format
 
 whisper.cpp is extremely fast, but it is "picky" about its input.
 
@@ -75,4 +107,123 @@ ffmpeg -i video.mp4 -vn -ar 16000 -ac 1 -c:a pcm_s16le audio.wav
 
 #+begin_src sh
 ~/bin/whisper-cli -m ~/.local/share/whisper-models/ggml-large-v3-q4_0.bin -f audio.wav
+#+end_src
+
+** transribe-audio script
+
+transcribe-audio script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# Wrapper for whisper-cpp to handle local library path
+#===============================================================================
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+[ -z "${1}" ] || echo "! ${1}"
+echo "Usage: $(basename "$0") -m model -f input
+
+Default formats: txt, srt, vtt
+To override: specify -o for each format: -o txt -o csv
+
+if you omit the -m option the default model will be used
+${HOME}/.local/share/whisper-models/ggml-large-v3-q4_0.bin"
+exit 1
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+NOTFILE_ERR='not a file'
+LIB_ERR='libraries not found'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':m:f:o:h' opt
+do
+  case ${opt} in
+     m) model="${OPTARG}"
+        [ -f "${model}" ] || usage "${model} ${NOTFILE_ERR}";;
+     f) input="${OPTARG}"
+        [ -f "${input}" ] || usage "${input} ${NOTFILE_ERR}";;
+     o) output="${output} -o${OPTARG}";;
+     h) usage;;
+     \?) OPTIND=$((OPTIND - 1)) # Handle passthrough of whisper-cpp options
+        break;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+
+#===============================================================================
+# input name
+#===============================================================================
+
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+
+#===============================================================================
+# output default
+#===============================================================================
+
+output_default="-otxt -osrt -ovtt"
+
+
+#===============================================================================
+# check if default model exists
+#===============================================================================
+
+model_default="${HOME}/.local/share/whisper-models/ggml-large-v3-q4_0.bin"
+[ -f "${model_default}" ] || usage "${model_default} ${NOTFILE_ERR}"
+
+
+#===============================================================================
+# check if libraries exist
+#===============================================================================
+
+lib_path="${HOME}/.local/lib/whisper"
+
+if [ -f "${lib_path}/libwhisper.so.1" ]; then
+    export LD_LIBRARY_PATH="${HOME}/.local/lib/whisper:$LD_LIBRARY_PATH"
+else
+    usage "${lib_path} ${LIB_ERR}"
+fi
+
+#===============================================================================
+# function
+#===============================================================================
+
+transcribe () {
+exec whisper-cli -np -m "${model:=${model_default}}" -f "${input}" -of "${input_name}" ${output:=${output_default}} "${@}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+transcribe "${@}"
 #+end_src
