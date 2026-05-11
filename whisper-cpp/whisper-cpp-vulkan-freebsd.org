@@ -44,23 +44,20 @@ rm -rf build
 
 build whisper-cpp with vulkan
 
+Configure CMake to build static libraries
+
 #+begin_src sh
-cmake -B build -DGGML_VULKAN=ON \
-      -DCMAKE_CXX_FLAGS="-I$(pwd)/external" \
-      -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath,$(pwd)/build"
-cmake --build build --config Release
+cmake -B build \
+  -DGGML_VULKAN=ON \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DWHISPER_ALL_EXTRAS=ON \
+  -DCMAKE_CXX_FLAGS="-I$(pwd)/external"
 #+end_src
 
-create a whisper directory for the libraries
+Build the binary (adjust -j for your CPU cores)
 
 #+begin_src sh
-mkdir -p ~/.local/lib/whisper
-#+end_src
-
-move the so files
-
-#+begin_src sh
-cp build/src/libwhisper.so* ~/.local/lib/whisper/
+cmake --build build -j$(sysctl -n hw.ncpu) --config Release
 #+end_src
 
 install to whisper-cli ~/bin
@@ -85,11 +82,13 @@ quantization the model
 ./build/bin/whisper-quantize models/ggml-large-v3.bin models/ggml-large-v3-q4_0.bin q4_0
 #+end_src
 
-where does the model need to be installed 
+create the whisper-models directory
 
 #+begin_src sh
 mkdir -p ~/.local/share/whisper-models
 #+end_src
+
+copy the model into the directory
 
 #+begin_src sh
 cp models/ggml-large-v3-q4_0.bin ~/.local/share/whisper-models/
@@ -126,10 +125,7 @@ transcribe-audio script
 
 usage () {
 [ -z "${1}" ] || echo "! ${1}"
-echo "Usage: $(basename "$0") -m model -f input
-
-Default formats: txt, srt, vtt
-To override: specify -o for each format: -o txt -o csv
+echo "Usage: $(basename "$0") -m model -f input -otxt -osrt -ovtt -ojf
 
 if you omit the -m option the default model will be used
 ${HOME}/.local/share/whisper-models/ggml-large-v3-q4_0.bin"
@@ -145,7 +141,6 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 NOTFILE_ERR='not a file'
-LIB_ERR='libraries not found'
 
 
 #===============================================================================
@@ -159,14 +154,13 @@ LIB_ERR='libraries not found'
 # getopts check options passed to script
 #===============================================================================
 
-while getopts ':m:f:o:h' opt
+while getopts ':m:f:h' opt
 do
   case ${opt} in
      m) model="${OPTARG}"
         [ -f "${model}" ] || usage "${model} ${NOTFILE_ERR}";;
      f) input="${OPTARG}"
         [ -f "${input}" ] || usage "${input} ${NOTFILE_ERR}";;
-     o) output="${output} -o${OPTARG}";;
      h) usage;;
      \?) OPTIND=$((OPTIND - 1)) # Handle passthrough of whisper-cpp options
         break;;
@@ -174,7 +168,6 @@ do
   esac
 done
 shift $((OPTIND-1))
-
 
 
 #===============================================================================
@@ -186,13 +179,6 @@ input_name="${input_nopath%.*}"
 
 
 #===============================================================================
-# output default
-#===============================================================================
-
-output_default="-otxt -osrt -ovtt"
-
-
-#===============================================================================
 # check if default model exists
 #===============================================================================
 
@@ -201,23 +187,11 @@ model_default="${HOME}/.local/share/whisper-models/ggml-large-v3-q4_0.bin"
 
 
 #===============================================================================
-# check if libraries exist
-#===============================================================================
-
-lib_path="${HOME}/.local/lib/whisper"
-
-if [ -f "${lib_path}/libwhisper.so.1" ]; then
-    export LD_LIBRARY_PATH="${HOME}/.local/lib/whisper:$LD_LIBRARY_PATH"
-else
-    usage "${lib_path} ${LIB_ERR}"
-fi
-
-#===============================================================================
 # function
 #===============================================================================
 
 transcribe () {
-exec whisper-cli -np -m "${model:=${model_default}}" -f "${input}" -of "${input_name}" ${output:=${output_default}} "${@}"
+exec whisper-cli -np -m "${model:=${model_default}}" -f "${input}" -of "${input_name}" "${@}"
 }
 
 
