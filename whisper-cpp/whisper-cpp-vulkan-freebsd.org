@@ -96,7 +96,7 @@ ffmpeg -i video.mp4 -vn -ar 16000 -ac 1 -c:a pcm_s16le audio.wav
 #+end_src
 
 #+begin_src sh
-whisper-cli -m ~/.local/share/whisper-models/ggml-large-v3-q4_0.bin -f audio.wav -otxt -osrt -ovtt 
+whisper-cli -m ~/.local/share/whisper-models/ggml-small.en.bin -f audio.wav -otxt -osrt -ovtt 
 #+end_src
 
 ** transribe-audio script
