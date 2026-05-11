@@ -66,9 +66,51 @@ install to whisper-cli ~/bin
 cp build/bin/whisper-cli ~/bin/
 #+end_src
 
-*** download the model
+*** download the models
+**** create the whisper-models directory
 
-steps to download the large mode
+#+begin_src sh
+mkdir -p ~/.local/share/whisper-models
+#+end_src
+
+**** small-en
+
+#+begin_src sh
+./models/download-ggml-model.sh small-en
+#+end_src
+
+copy the model into the whisper-models directory
+
+#+begin_src sh
+cp models/ggml-small.en.bin ~/.local/share/whisper-models/
+#+end_src
+
+**** medium-en
+
+#+begin_src sh
+./models/download-ggml-model.sh medium-en
+#+end_src
+
+copy the model into the whisper-models directory
+
+#+begin_src sh
+cp models/ggml-medium.en.bin ~/.local/share/whisper-models/
+#+end_src
+
+**** large-v3-turbo
+
+#+begin_src sh
+./models/download-ggml-model.sh large-v3-turbo
+#+end_src
+
+copy the model into the whisper-models directory
+
+#+begin_src sh
+cp models/ggml-large-v3-turbo.bin ~/.local/share/whisper-models/
+#+end_src
+
+
+**** large-v3
 
 #+begin_src sh
 ./models/download-ggml-model.sh large-v3
@@ -76,19 +118,13 @@ steps to download the large mode
 
 *** Quantization
 
-quantization the model
+quantization the large-v3 model
 
 #+begin_src sh
 ./build/bin/whisper-quantize models/ggml-large-v3.bin models/ggml-large-v3-q4_0.bin q4_0
 #+end_src
 
-create the whisper-models directory
-
-#+begin_src sh
-mkdir -p ~/.local/share/whisper-models
-#+end_src
-
-copy the model into the directory
+copy the model into the whisper-models directory
 
 #+begin_src sh
 cp models/ggml-large-v3-q4_0.bin ~/.local/share/whisper-models/
