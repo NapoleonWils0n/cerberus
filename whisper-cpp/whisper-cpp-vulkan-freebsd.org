@@ -105,7 +105,7 @@ ffmpeg -i video.mp4 -vn -ar 16000 -ac 1 -c:a pcm_s16le audio.wav
 #+end_src
 
 #+begin_src sh
-~/bin/whisper-cli -m ~/.local/share/whisper-models/ggml-large-v3-q4_0.bin -f audio.wav
+whisper-cli -m ~/.local/share/whisper-models/ggml-large-v3-q4_0.bin -f audio.wav -otxt -osrt -ovtt 
 #+end_src
 
 ** transribe-audio script
@@ -125,7 +125,7 @@ transcribe-audio script
 
 usage () {
 [ -z "${1}" ] || echo "! ${1}"
-echo "Usage: $(basename "$0") -m model -f input -otxt -osrt -ovtt -ojf
+echo "Usage: $(basename "$0") -m model -f input -otxt -osrt -ovtt
 
 if you omit the -m option the default model will be used
 ${HOME}/.local/share/whisper-models/ggml-large-v3-q4_0.bin"
