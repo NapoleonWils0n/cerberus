@@ -76,7 +76,7 @@ mkdir -p ~/.local/share/whisper-models
 **** small-en
 
 #+begin_src sh
-./models/download-ggml-model.sh small-en
+./models/download-ggml-model.sh small.en
 #+end_src
 
 copy the model into the whisper-models directory
@@ -107,7 +107,7 @@ transcribe-audio script
 #!/bin/sh
 
 #===============================================================================
-# Wrapper for whisper-cpp to handle local library path
+# Wrapper for whisper-cpp
 #===============================================================================
 
 #===============================================================================
