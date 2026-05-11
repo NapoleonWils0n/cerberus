@@ -135,7 +135,7 @@ NOTFILE_ERR='not a file'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check number of arguments passed to script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
