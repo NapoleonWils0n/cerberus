@@ -1,0 +1,288 @@
+#+STARTUP: content
+* Freebsd Podman Rocky Linux with Cuda
+** resources
+
+dockerhub rocky linux
+
+[[https://hub.docker.com/_/rockylinux?xk=ShowRecommendedBadge&xt=Disabled]]
+
+** devfs.rules
+
+edit the devfs.rules
+
+#+begin_src sh
+doas vi /etc/devfs.rules
+#+end_src
+
+add a new rule for podman containers
+
+#+begin_src conf
+[devfsrules_jail=4]
+add include $devfsrules_unhide_basic
+add include $devfsrules_unhide_login
+add path 'mixer*' unhide
+add path 'dsp*' unhide
+add path 'dri*' unhide
+add path 'drm*' unhide
+add path 'nvidia*' unhide
+add path 'speaker*' unhide
+#+end_src
+
+restart the devfs service
+
+#+begin_src sh
+doas service devfs restart
+#+end_src
+
+** pull the Rocky Linux Podman container
+
+#+begin_src sh
+doas podman pull --os linux docker.io/library/rockylinux:9.3
+#+end_src
+
+** dummy-uvm.so
+
+Create a directory for the Rocky Linux Podman files
+
+#+begin_src sh
+mkdir -p ~/podman/rockylinux
+#+end_src
+
+Create the uvm_ioctl_override.c file
+
+#+begin_src sh
+vi uvm_ioctl_override.c
+#+end_src
+
+Add the following code
+
+#+begin_src c
+#define _GNU_SOURCE
+
+#include <assert.h>
+#include <dlfcn.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#define NV_UVM_INITIALIZE   0x30000001
+#define NV_UVM_DEINITIALIZE 0x30000002
+#define NV_ERR_NOT_SUPPORTED 0x56
+
+struct NvUvmInitParams
+{
+  uint64_t flags __attribute__((aligned(8)));
+  uint32_t status;
+};
+
+// ioctl interception - unchanged from shkhln's original
+
+int (*libc_ioctl)(int fd, unsigned long request, ...) = NULL;
+
+int ioctl(int fd, unsigned long request, ...) {
+  if (!libc_ioctl) libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
+
+  va_list _args_;
+  va_start(_args_, request);
+  void* data = va_arg(_args_, void*);
+  va_end(_args_);
+
+  if (request == NV_UVM_INITIALIZE) {
+    struct NvUvmInitParams* params = (struct NvUvmInitParams*)data;
+    params->status = NV_ERR_NOT_SUPPORTED;
+    return 0;
+  }
+  if (request == NV_UVM_DEINITIALIZE) return 0;
+
+  return libc_ioctl(fd, request, data);
+}
+
+// path checks
+
+static int is_nvidia_uvm(const char* path) {
+  return path && strcmp("/dev/nvidia-uvm", path) == 0;
+}
+
+static int is_proc_task_comm(const char* path) {
+  if (!path) return 0;
+  if (strncmp(path, "/proc/self/task/", 16) != 0) return 0;
+  char* tail = strchr(path + 16, '/');
+  return (tail != NULL && strcmp(tail, "/comm") == 0);
+}
+
+// open() - the original hook, still needed as fallback
+
+int (*libc_open)(const char* path, int flags, ...) = NULL;
+
+int open(const char* path, int flags, ...) {
+  if (!libc_open) libc_open = dlsym(RTLD_NEXT, "open");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_open("/dev/null", flags, mode);
+  return libc_open(path, flags, mode);
+}
+
+// open64()
+
+int (*libc_open64)(const char* path, int flags, ...) = NULL;
+
+int open64(const char* path, int flags, ...) {
+  if (!libc_open64) libc_open64 = dlsym(RTLD_NEXT, "open64");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_open64("/dev/null", flags, mode);
+  return libc_open64(path, flags, mode);
+}
+
+// openat() - this is the important one, glibc 2.34+ uses this for everything
+
+int (*libc_openat)(int dirfd, const char* path, int flags, ...) = NULL;
+
+int openat(int dirfd, const char* path, int flags, ...) {
+  if (!libc_openat) libc_openat = dlsym(RTLD_NEXT, "openat");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_openat(dirfd, "/dev/null", flags, mode);
+  return libc_openat(dirfd, path, flags, mode);
+}
+
+// openat64()
+
+int (*libc_openat64)(int dirfd, const char* path, int flags, ...) = NULL;
+
+int openat64(int dirfd, const char* path, int flags, ...) {
+  if (!libc_openat64) libc_openat64 = dlsym(RTLD_NEXT, "openat64");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_openat64(dirfd, "/dev/null", flags, mode);
+  return libc_openat64(dirfd, path, flags, mode);
+}
+
+// fopen() - for /proc/self/task/*/comm writes on 570+ drivers
+
+FILE* (*libc_fopen)(const char* path, const char* mode) = NULL;
+
+FILE* fopen(const char* path, const char* mode) {
+  if (!libc_fopen) libc_fopen = dlsym(RTLD_NEXT, "fopen");
+  if (is_proc_task_comm(path)) return libc_fopen("/dev/null", mode);
+  return libc_fopen(path, mode);
+}
+
+FILE* (*libc_fopen64)(const char* path, const char* mode) = NULL;
+
+FILE* fopen64(const char* path, const char* mode) {
+  if (!libc_fopen64) libc_fopen64 = dlsym(RTLD_NEXT, "fopen64");
+  if (is_proc_task_comm(path)) return libc_fopen64("/dev/null", mode);
+  return libc_fopen64(path, mode);
+}
+#+end_src
+
+build the dummy-uvm.so with the podman container
+
+#+begin_src sh
+doas podman run --network host --rm -it --os linux -v .:/build:z docker.io/library/rockylinux:9.3 /bin/bash -c "dnf install -y gcc && gcc -m64 -std=c99 -O2 -fPIC -shared -o /build/dummy-uvm.so /build/uvm_ioctl_override.c -ldl"
+#+end_src
+
+change the permissions on the dummy-uvm.so file
+
+#+begin_src sh
+doas chown root:wheel dummy-uvm.so
+doas chmod 755 dummy-uvm.so
+#+end_src
+
+** compose.yaml
+
+Rocky Linux Podman compose.yaml for nvidia-smi
+
+Create the compose.yaml file
+
+#+begin_src sh
+vi compose.yaml
+#+end_src
+
+Add the following code
+
+#+begin_src yaml
+services:
+  gpu-app:
+    image: docker.io/library/rockylinux:9.3
+    platform: linux/amd64
+    container_name: rocky-gpu
+    os: linux
+    network_mode: host
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-modeset:/dev/nvidia-modeset
+    volumes:
+      # Individual library mounts to prevent glibc contamination
+      - /compat/linux/usr/lib64/libnvidia-ml.so.1:/usr/lib64/libnvidia-ml.so.1:ro
+      - /compat/linux/usr/lib64/libcuda.so.1:/usr/lib64/libcuda.so.1:ro
+      - /compat/linux/usr/lib64/libnvidia-ptxjitcompiler.so.1:/usr/lib64/libnvidia-ptxjitcompiler.so.1:ro
+      
+      # Binary and Shim
+      - /compat/linux/usr/bin/nvidia-smi:/usr/local/bin/nvidia-smi:ro
+      - ./dummy-uvm.so:/usr/lib64/dummy-uvm.so:ro
+      
+      # Essential FreeBSD Linuxulator / Jail mounts
+      - /compat/linux/proc:/proc 
+      - /compat/linux/sys:/sys
+      - /compat/linux/dev/fd:/dev/fd
+      
+      # SHM via named volume (Fixes ocijail /dev/shm bug)
+      - rocky-shm:/dev/shm
+
+    environment:
+      - LD_LIBRARY_PATH=/usr/lib64
+    
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        # Apply the jail shim
+        echo '/usr/lib64/dummy-uvm.so' > /etc/ld.so.preload
+        
+        # Run the actual command
+        /usr/local/bin/nvidia-smi
+
+volumes:
+  rocky-shm:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=1g,mode=1777"
+#+end_src
+
+Run the container
+
+#+begin_src sh
+doas podman-compose up -d
+#+end_src
+
