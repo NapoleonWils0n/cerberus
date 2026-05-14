@@ -685,6 +685,34 @@ mv linux-ffmpeg-rust-scripts-v4 bin
 
 **** compose.yaml
 
+we create a podman user with a id and gid of 1001
+
+make sure you are in the wheel operator and video group on Freebsd
+
+#+begin_src sh
+groups
+#+end_src
+
+output where username is your username
+
+#+begin_example
+wheel operator video username
+#+end_example
+
+on Freebsd you need to check you id by running the id command
+
+#+begin_src sh
+id
+#+end_src
+
+output
+
+#+begin_example
+uid=1001(username) gid=1001(username) groups=0(wheel),5(operator),44(video),1001(username)
+#+end_example
+
+compose.yaml for ffmpeg nvenc encoding
+
 #+begin_src yaml
 services:
   gpu-app:
