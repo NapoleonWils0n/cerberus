@@ -14,9 +14,19 @@ edit the devfs.rules
 doas vi /etc/devfs.rules
 #+end_src
 
-add a new rule for podman containers
+[localrules=5] is the freebsd rule to get the nvidia drivers and audio working with podman
+
+devfsrules_jail=4 is the rule for podman containers
 
 #+begin_src conf
+[localrules=5]
+add path 'da*' mode 0660 group operator
+add path 'dri/*' mode 0660 group video
+add path 'drm/*' mode 0660 group video
+add path 'input/*' mode 0660 group video
+add path 'input/event*' mode 0660 group video
+add path 'nvidia*' mode 0660 group video
+
 [devfsrules_jail=4]
 add include $devfsrules_unhide_basic
 add include $devfsrules_unhide_login
@@ -218,8 +228,185 @@ doas chmod 755 dummy-uvm.so
 #+end_src
 
 ** compose.yaml
+*** Rocky Linux Podman compose.yaml for nvidia-smi
+**** dummy-uvm.so
 
-Rocky Linux Podman compose.yaml for nvidia-smi
+Create a directory for the Rocky Linux Podman files
+
+#+begin_src sh
+mkdir -p ~/podman/rockylinux
+#+end_src
+
+Create the uvm_ioctl_override.c file
+
+#+begin_src sh
+vi uvm_ioctl_override.c
+#+end_src
+
+Add the following code
+
+#+begin_src c
+#define _GNU_SOURCE
+
+#include <assert.h>
+#include <dlfcn.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#define NV_UVM_INITIALIZE   0x30000001
+#define NV_UVM_DEINITIALIZE 0x30000002
+#define NV_ERR_NOT_SUPPORTED 0x56
+
+struct NvUvmInitParams
+{
+  uint64_t flags __attribute__((aligned(8)));
+  uint32_t status;
+};
+
+// ioctl interception - unchanged from shkhln's original
+
+int (*libc_ioctl)(int fd, unsigned long request, ...) = NULL;
+
+int ioctl(int fd, unsigned long request, ...) {
+  if (!libc_ioctl) libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
+
+  va_list _args_;
+  va_start(_args_, request);
+  void* data = va_arg(_args_, void*);
+  va_end(_args_);
+
+  if (request == NV_UVM_INITIALIZE) {
+    struct NvUvmInitParams* params = (struct NvUvmInitParams*)data;
+    params->status = NV_ERR_NOT_SUPPORTED;
+    return 0;
+  }
+  if (request == NV_UVM_DEINITIALIZE) return 0;
+
+  return libc_ioctl(fd, request, data);
+}
+
+// path checks
+
+static int is_nvidia_uvm(const char* path) {
+  return path && strcmp("/dev/nvidia-uvm", path) == 0;
+}
+
+static int is_proc_task_comm(const char* path) {
+  if (!path) return 0;
+  if (strncmp(path, "/proc/self/task/", 16) != 0) return 0;
+  char* tail = strchr(path + 16, '/');
+  return (tail != NULL && strcmp(tail, "/comm") == 0);
+}
+
+// open() - the original hook, still needed as fallback
+
+int (*libc_open)(const char* path, int flags, ...) = NULL;
+
+int open(const char* path, int flags, ...) {
+  if (!libc_open) libc_open = dlsym(RTLD_NEXT, "open");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_open("/dev/null", flags, mode);
+  return libc_open(path, flags, mode);
+}
+
+// open64()
+
+int (*libc_open64)(const char* path, int flags, ...) = NULL;
+
+int open64(const char* path, int flags, ...) {
+  if (!libc_open64) libc_open64 = dlsym(RTLD_NEXT, "open64");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_open64("/dev/null", flags, mode);
+  return libc_open64(path, flags, mode);
+}
+
+// openat() - this is the important one, glibc 2.34+ uses this for everything
+
+int (*libc_openat)(int dirfd, const char* path, int flags, ...) = NULL;
+
+int openat(int dirfd, const char* path, int flags, ...) {
+  if (!libc_openat) libc_openat = dlsym(RTLD_NEXT, "openat");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_openat(dirfd, "/dev/null", flags, mode);
+  return libc_openat(dirfd, path, flags, mode);
+}
+
+// openat64()
+
+int (*libc_openat64)(int dirfd, const char* path, int flags, ...) = NULL;
+
+int openat64(int dirfd, const char* path, int flags, ...) {
+  if (!libc_openat64) libc_openat64 = dlsym(RTLD_NEXT, "openat64");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_openat64(dirfd, "/dev/null", flags, mode);
+  return libc_openat64(dirfd, path, flags, mode);
+}
+
+// fopen() - for /proc/self/task/*/comm writes on 570+ drivers
+
+FILE* (*libc_fopen)(const char* path, const char* mode) = NULL;
+
+FILE* fopen(const char* path, const char* mode) {
+  if (!libc_fopen) libc_fopen = dlsym(RTLD_NEXT, "fopen");
+  if (is_proc_task_comm(path)) return libc_fopen("/dev/null", mode);
+  return libc_fopen(path, mode);
+}
+
+FILE* (*libc_fopen64)(const char* path, const char* mode) = NULL;
+
+FILE* fopen64(const char* path, const char* mode) {
+  if (!libc_fopen64) libc_fopen64 = dlsym(RTLD_NEXT, "fopen64");
+  if (is_proc_task_comm(path)) return libc_fopen64("/dev/null", mode);
+  return libc_fopen64(path, mode);
+}
+#+end_src
+
+build the dummy-uvm.so with the podman container
+
+#+begin_src sh
+doas podman run --network host --rm -it --os linux -v .:/build:z docker.io/library/rockylinux:9.3 /bin/bash -c "dnf install -y gcc && gcc -m64 -std=c99 -O2 -fPIC -shared -o /build/dummy-uvm.so /build/uvm_ioctl_override.c -ldl"
+#+end_src
+
+change the permissions on the dummy-uvm.so file
+
+#+begin_src sh
+doas chown root:wheel dummy-uvm.so
+doas chmod 755 dummy-uvm.so
+#+end_src
+
+**** compose.yaml
 
 Create the compose.yaml file
 
@@ -280,9 +467,398 @@ volumes:
       o: "size=1g,mode=1777"
 #+end_src
 
-Run the container
+**** Run the container
 
 #+begin_src sh
 doas podman-compose up -d
 #+end_src
 
+*** ffmpeg nvenc podman
+**** dummy-uvm.so
+
+Create a directory for the Rocky Linux Podman files
+
+#+begin_src sh
+mkdir -p ~/podman/linux-scripts
+#+end_src
+
+Create the uvm_ioctl_override.c file
+
+#+begin_src sh
+vi uvm_ioctl_override.c
+#+end_src
+
+Add the following code
+
+#+begin_src c
+#define _GNU_SOURCE
+
+#include <assert.h>
+#include <dlfcn.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#define NV_UVM_INITIALIZE   0x30000001
+#define NV_UVM_DEINITIALIZE 0x30000002
+#define NV_ERR_NOT_SUPPORTED 0x56
+
+struct NvUvmInitParams
+{
+  uint64_t flags __attribute__((aligned(8)));
+  uint32_t status;
+};
+
+// ioctl interception - unchanged from shkhln's original
+
+int (*libc_ioctl)(int fd, unsigned long request, ...) = NULL;
+
+int ioctl(int fd, unsigned long request, ...) {
+  if (!libc_ioctl) libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
+
+  va_list _args_;
+  va_start(_args_, request);
+  void* data = va_arg(_args_, void*);
+  va_end(_args_);
+
+  if (request == NV_UVM_INITIALIZE) {
+    struct NvUvmInitParams* params = (struct NvUvmInitParams*)data;
+    params->status = NV_ERR_NOT_SUPPORTED;
+    return 0;
+  }
+  if (request == NV_UVM_DEINITIALIZE) return 0;
+
+  return libc_ioctl(fd, request, data);
+}
+
+// path checks
+
+static int is_nvidia_uvm(const char* path) {
+  return path && strcmp("/dev/nvidia-uvm", path) == 0;
+}
+
+static int is_proc_task_comm(const char* path) {
+  if (!path) return 0;
+  if (strncmp(path, "/proc/self/task/", 16) != 0) return 0;
+  char* tail = strchr(path + 16, '/');
+  return (tail != NULL && strcmp(tail, "/comm") == 0);
+}
+
+// open() - the original hook, still needed as fallback
+
+int (*libc_open)(const char* path, int flags, ...) = NULL;
+
+int open(const char* path, int flags, ...) {
+  if (!libc_open) libc_open = dlsym(RTLD_NEXT, "open");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_open("/dev/null", flags, mode);
+  return libc_open(path, flags, mode);
+}
+
+// open64()
+
+int (*libc_open64)(const char* path, int flags, ...) = NULL;
+
+int open64(const char* path, int flags, ...) {
+  if (!libc_open64) libc_open64 = dlsym(RTLD_NEXT, "open64");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_open64("/dev/null", flags, mode);
+  return libc_open64(path, flags, mode);
+}
+
+// openat() - this is the important one, glibc 2.34+ uses this for everything
+
+int (*libc_openat)(int dirfd, const char* path, int flags, ...) = NULL;
+
+int openat(int dirfd, const char* path, int flags, ...) {
+  if (!libc_openat) libc_openat = dlsym(RTLD_NEXT, "openat");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_openat(dirfd, "/dev/null", flags, mode);
+  return libc_openat(dirfd, path, flags, mode);
+}
+
+// openat64()
+
+int (*libc_openat64)(int dirfd, const char* path, int flags, ...) = NULL;
+
+int openat64(int dirfd, const char* path, int flags, ...) {
+  if (!libc_openat64) libc_openat64 = dlsym(RTLD_NEXT, "openat64");
+
+  mode_t mode = 0;
+  va_list _args_;
+  va_start(_args_, flags);
+  if (flags & O_CREAT) mode = va_arg(_args_, int);
+  va_end(_args_);
+
+  if (is_nvidia_uvm(path) || is_proc_task_comm(path))
+    return libc_openat64(dirfd, "/dev/null", flags, mode);
+  return libc_openat64(dirfd, path, flags, mode);
+}
+
+// fopen() - for /proc/self/task/*/comm writes on 570+ drivers
+
+FILE* (*libc_fopen)(const char* path, const char* mode) = NULL;
+
+FILE* fopen(const char* path, const char* mode) {
+  if (!libc_fopen) libc_fopen = dlsym(RTLD_NEXT, "fopen");
+  if (is_proc_task_comm(path)) return libc_fopen("/dev/null", mode);
+  return libc_fopen(path, mode);
+}
+
+FILE* (*libc_fopen64)(const char* path, const char* mode) = NULL;
+
+FILE* fopen64(const char* path, const char* mode) {
+  if (!libc_fopen64) libc_fopen64 = dlsym(RTLD_NEXT, "fopen64");
+  if (is_proc_task_comm(path)) return libc_fopen64("/dev/null", mode);
+  return libc_fopen64(path, mode);
+}
+#+end_src
+
+build the dummy-uvm.so with the podman container
+
+#+begin_src sh
+doas podman run --network host --rm -it --os linux -v .:/build:z docker.io/library/rockylinux:9.3 /bin/bash -c "dnf install -y gcc && gcc -m64 -std=c99 -O2 -fPIC -shared -o /build/dummy-uvm.so /build/uvm_ioctl_override.c -ldl"
+#+end_src
+
+change the permissions on the dummy-uvm.so file
+
+#+begin_src sh
+doas chown root:wheel dummy-uvm.so
+doas chmod 755 dummy-uvm.so
+#+end_src
+
+**** mnt directory
+
+we create a mnt directory on the Freebsd host
+
+#+begin_src sh
+mkdir -p ~/mnt
+#+end_src
+
+this will be mounted to inside the podman container
+
+**** linux ffmpeg rust scripts
+
+[[https://github.com/NapoleonWils0n/ffmpeg-rust-scripts]]
+
+download the linux ffmpeg rust scripts
+
+#+begin_src sh
+fetch 'https://github.com/NapoleonWils0n/ffmpeg-rust-scripts/releases/download/v0.4.0/linux-ffmpeg-rust-scripts-v4.tar.gz'
+#+end_src
+
+extract the tar file
+
+#+begin_src sh
+tar xf linux-ffmpeg-rust-scripts-v4.tar.gz
+#+end_src
+
+rename the directory to bin
+
+#+begin_src sh
+mv linux-ffmpeg-rust-scripts-v4 bin
+#+end_src
+
+**** compose.yaml
+
+#+begin_src yaml
+services:
+  gpu-app:
+    image: docker.io/library/rockylinux:9.3
+    platform: linux/amd64
+    container_name: rocky-ffmpeg
+    os: linux
+    network_mode: host
+    stdin_open: true
+    tty: true
+    volumes:
+      # Mount the whole host lib directory to a NEUTRAL sub-folder
+      - /compat/linux/usr/lib64:/usr/lib64/nvidia-host:ro
+
+      # Binary, Shim, and User Scripts
+      - /compat/linux/usr/bin/nvidia-smi:/usr/local/bin/nvidia-smi:ro
+      - ./dummy-uvm.so:/usr/lib64/dummy-uvm.so:ro
+      
+      # Using /home/podman style paths to match the user
+      - ./bin:/home/podman/bin:ro
+      - ~/mnt:/home/podman/mnt:rw
+      
+      # Linuxulator / Jail essentials
+      - /compat/linux/proc:/proc
+      - /compat/linux/sys:/sys
+      - /compat/linux/dev/fd:/dev/fd
+      - rocky-shm:/dev/shm
+
+    environment:
+      # GLOBAL FIX: Set the path for everyone in the container
+      - LD_LIBRARY_PATH=/usr/lib64
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/podman/bin
+    
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        # 1. Setup GPU Shim
+        echo '/usr/lib64/dummy-uvm.so' > /etc/ld.so.preload
+
+        # We create 'video_host' with GID 44 to match FreeBSD's video group
+        groupadd -g 44 video_host || true
+        groupadd -g 1001 podman || true
+
+        # create podman user with same id as on freebsd
+        # add to root, wheel and the video group on podmad and freebsd
+        useradd -u 1001 -g 1001 -G 0,10,39,44 -m podman || true
+
+        # 3. Setup Shell Environment
+        cp /etc/skel/.bashrc /home/podman/.bashrc
+        cp /etc/skel/.bash_profile /home/podman/.bash_profile
+        
+        # Add the vars to .bashrc just to be safe for interactive sessions
+        {
+          echo 'export LD_LIBRARY_PATH=/usr/lib64:/usr/lib64/nvidia-host'
+          echo 'export LD_PRELOAD=/usr/lib64/dummy-uvm.so'
+          echo 'export PATH=$PATH:/home/podman/bin'
+        } >> /home/podman/.bashrc
+
+        # Ownership for internal home files only (no -R to protect host mounts)
+        chown podman:podman /home/podman /home/podman/.bashrc /home/podman/.bash_profile
+
+        # 4. Install FFmpeg
+        dnf install -y https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm \
+                       https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm
+        dnf config-manager --set-enabled crb
+        dnf install -y ffmpeg 
+
+        # 5. Hand off to bash
+        /bin/bash
+
+volumes:
+  rocky-shm:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=1g,mode=1777"
+#+end_src
+
+**** podman-compose up
+
+bring the container up
+
+#+begin_src sh
+doas podman-compose up -d
+#+end_src
+
+**** podman logs
+
+note you need to wait for exverything to be download
+
+so check the logs
+
+#+begin_src sh
+doas podman logs -f rocky-ffmpeg
+#+end_src
+
+when everything has install you can press ctrl c to exit
+
+**** enter the podman container
+
+#+begin_src sh
+doas podman exec -it -u podman rocky-ffmpeg /bin/bash
+#+end_src
+
+**** podman change directory into the ~/mnt directory
+
+change directory in the ~/mnt directory in the podman container
+
+#+begin_src sh
+cd ~/mnt
+#+end_src
+
+**** freebsd copy video to ~/mnt
+
+you can copy a video from the Freebsd host into the ~/mnt directory which is mounted in the podman container
+
+#+begin_src sh
+cp video.mp4 ~/mnt
+#+end_src
+
+**** podman process the video
+
+list the files in the ~/mnt directory and you will the video file copied from the Freebsd host
+
+#+begin_src sh
+ls -l 
+#+end_src
+
+output
+
+#+begin_example
+video.mp4
+#+end_example
+
+trim the video with the trim-clip script to create a 10 second test video clip
+
+#+begin_src sh
+trim-clip -s 00:00:00 -i video.mp4 -t 00:00:10
+#+end_src
+
+**** freebsd copy the video from the ~/mnt directory to the desktop
+
+#+begin_src sh
+cp ~/mnt/video-[00:00:00.000–00:00:10.000].mkv ~/desktop
+#+end_src
+
+check the video with ffmpeg 
+
+#+begin_src sh
+ffmpeg -i video-[00:00:00.000–00:00:10.000].mkv
+#+end_src
+
+You should see output similar to this showing hevc_nvenc
+
+#+begin_example
+ENCODER         : Lavc59.37.100 hevc_nvenc
+#+end_example
+
+#+begin_example
+Input #0, matroska,webm, from 'Agent_327_-_Operation_Barbershop-[mN0zPOpADL4]-2017-05-15-[00:00:00.000–00:00:10.000].mkv':
+  Metadata:
+    MINOR_VERSION   : 0
+    COMPATIBLE_BRANDS: iso6av01mp41
+    MAJOR_BRAND     : dash
+    ENCODER         : Lavf59.27.100
+  Duration: 00:00:10.01, start: 0.000000, bitrate: 8264 kb/s
+  Stream #0:0: Video: hevc (Main), yuv420p(tv, bt709, progressive), 2048x858 [SAR 1:1 DAR 1024:429], 24 fps, 24 tbr, 1k tbn (default)
+    Metadata:
+      HANDLER_NAME    : ISO Media file produced by Google Inc.
+      ENCODER         : Lavc59.37.100 hevc_nvenc
+      DURATION        : 00:00:10.000000000
+  Stream #0:1(eng): Audio: aac (LC), 48000 Hz, stereo, fltp (default)
+    Metadata:
+      ENCODER         : Lavc59.37.100 aac
+      DURATION        : 00:00:10.012000000
+#+end_example
