@@ -91,7 +91,7 @@ doas chown -R djwilcox:djwilcox /home/djwilcox/.ollama
 ** zfs snapshot dataset
 
 #+begin_src sh
-doas zfs snapshot zroot/home/djwilcox/desktop@29-04-2026
+doas zfs snapshot zroot/home/djwilcox@29-04-2026
 #+end_src
 
 ** zfs destroy zpool snapshot recursively
@@ -103,7 +103,7 @@ doas zfs destroy -R zroot@29-04-2026
 ** zfs destroy snapshot 
 
 #+begin_src sh
-doas zfs destroy zroot/home/djwilcox/desktop@29-04-2026
+doas zfs destroy zroot/home/djwilcox@29-04-2026
 #+end_src
 
 ** mount zfs snapshot
@@ -117,7 +117,7 @@ mkdir -p ~/mnt
 mount a zfs snapshot on the mount point
 
 #+begin_src sh
-doas mount -t zfs zroot/home/djwilcox/desktop@29-04-2026 /home/djwilcox/mnt
+doas mount -t zfs zroot/home/djwilcox@29-04-2026 /home/djwilcox/mnt
 #+end_src
 
 copy files from the mount point to the desktop

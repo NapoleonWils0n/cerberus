@@ -807,7 +807,7 @@ note you need to wait for exverything to be download
 so check the logs
 
 #+begin_src sh
-doas podman logs -f rocky-ffmpeg
+doas podman logs -f rocky-podman
 #+end_src
 
 when everything has install you can press ctrl c to exit
@@ -815,7 +815,7 @@ when everything has install you can press ctrl c to exit
 **** enter the podman container
 
 #+begin_src sh
-doas podman exec -it -u podman rocky-ffmpeg /bin/bash
+doas podman exec -it -u podman rocky-podman /bin/bash
 #+end_src
 
 **** podman change directory into the ~/mnt directory
