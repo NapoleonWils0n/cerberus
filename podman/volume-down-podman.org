@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* volumes down
+
+#+begin_src sh
+doas podman-compose down --volumes
+#+end_src
