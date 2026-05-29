@@ -73,7 +73,7 @@ PARAMETER top_p 0.95
 PARAMETER top_k 64
 
 # num_ctx for 4gb vram
-PARAMETER num_ctx 4096
+PARAMETER num_ctx 2048
 
 # template
 TEMPLATE """<|im_start|>system
