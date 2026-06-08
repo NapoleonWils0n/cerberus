@@ -207,7 +207,7 @@ append the following code to the end of the file.
 registries = ['docker.io', 'quay.io']
 #+end_src
 
-sasve and quit.
+save and quit.
 
 *** clone the invidious repository
 
