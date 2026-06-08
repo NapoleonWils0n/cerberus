@@ -218,6 +218,8 @@ git clone https://github.com/iv-org/invidious.git
 
 create the compose.yml file in invidious-podman directory
 
+channel fix
+
 #+begin_src yaml
 version: "3"
 services:
@@ -228,7 +230,7 @@ services:
     restart: unless-stopped
     # Remove "127.0.0.1:" if used from an external IP
     ports:
-      - "127.0.0.1:3000:3000"
+      - "3000:3000"
     environment:
       # Please read the following file for a comprehensive list of all available
       # configuration options and their associated syntax:
