@@ -150,26 +150,6 @@ sysctl kern.sched.topology_spec
 doas vi /vm/.templates/ubuntu.conf
 #+end_src
 
-#+begin_src conf
-# ubuntu
-loader="uefi"
-cpu="2"
-memory="2G"
-network0_type="virtio-net"
-network0_switch="public"
-disk0_type="virtio-blk"
-disk0_name="disk0.img"
-
-# Keep these for performance and clock sync
-utctime="yes"
-virt_random="yes"
-
-# Disable graphics to force the installer into the serial console
-graphics="no"
-#+end_src
-
-*** uefi notes
-
 You can use UEFI and add uefi_vars="yes" with Debian and it will work, no need to edit partition locations.
 
 On Ubuntu uefi variables aren't needed but it doesn't hurt.
@@ -177,13 +157,29 @@ On Ubuntu uefi variables aren't needed but it doesn't hurt.
 ubuntu-uefi.conf
 
 #+begin_src conf
+# =====================================================================
+# ubuntu
+# =====================================================================
+
 loader="uefi"
-cpu=6
-memory=8G
+cpu="4"
+memory="4G"
 network0_type="virtio-net"
 network0_switch="public"
-disk0_type="virtio-blk"
-disk0_name="disk0.img"
+
+# =====================================================================
+# Switch from file image to sparse Zvol block storage
+# =====================================================================
+disk0_type="nvme"
+disk0_name="disk0"
+disk0_dev="sparse-zvol"
+
+# =====================================================================
+# System context lines
+# =====================================================================
+
+utctime="yes"
+virt_random="yes"
 graphics="yes"
 xhci_mouse="yes"
 graphics_res="1920x1080"
@@ -202,33 +198,25 @@ doas vm create -t ubuntu -s 60G ubuntu
 doas vm install -f ubuntu ubuntu-26.04-live-server-amd64.iso
 #+end_src
 
-console
-
-#+begin_src sh
-doas vm console ubuntu
-#+end_src
-
-press return and enter your username and password
-
-the default escape sequence to exit the bhyve console and return to your FreeBSD shell is:
-~. (Tilde followed by a period).
-
 ** vm start
 
 #+begin_src sh
 doas vm start ubuntu
 #+end_src
 
-console
+** vnc
+
+intstall wlvncc.
 
 #+begin_src sh
-doas vm console ubuntu
+doas pkg install wlvncc
 #+end_src
 
-press return and enter your username and password
+log in with vnc.
 
-the default escape sequence to exit the bhyve console and return to your FreeBSD shell is:
-~. (Tilde followed by a period).
+#+begin_src sh
+wlvncc -s 127.0.0.1 5900
+#+end_src
 
 ** vm destroy
 
