@@ -1,0 +1,37 @@
+#+STARTUP: content
+* unbound adblock
+** download adblock
+
+#+begin_src sh
+wget -q -O- 'https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain&showintro=0&mimetype=plaintext' | \
+awk '{
+    print "local-zone: \"" $1 "\" redirect"
+    print "local-data: \"" $1 " A 127.0.0.1\""
+}' > unbound_ad_servers
+#+end_src
+
+** copy to the file to the unbound directory
+
+#+begin_src sh
+doas cp unbound_ad_servers /usr/local/etc/unbound
+#+end_src
+
+** change the permissions
+
+#+begin_src sh
+doas chown unbound:root /usr/local/etc/unbound/unbound_ad_servers
+#+end_src
+
+** unbound.conf
+
+edit the unbound.conf
+
+#+begin_src sh
+doas vi /usr/local/etc/unbound/unbound.conf
+#+end_src
+
+add the following code
+
+#+begin_src conf
+include: /usr/local/etc/unbound/unbound.conf
+#+end_src
