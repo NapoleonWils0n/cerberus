@@ -336,7 +336,6 @@ INVIDIOUS_COMPANION_KEY=$SECRET_COMPANION_KEY INVIDIOUS_HMAC_KEY=$SECRET_HMAC_KE
 podman-compose up -d
 #+end_src
 
-
 *** start invidious
 
 change directory into the invidious-podman directory
@@ -349,9 +348,15 @@ and run the start-invidious script
 
 *** login
 
+in the bhyve vm find your ip address
+
+#+begin_src sh
+ip a
+#+end_src
+
 open your browser to the address of invidious
 
-[[http://192.168.1.151:3000]]
+[[http://192.168.1.236:3000]]
 
 select login and add a user name and password
 
