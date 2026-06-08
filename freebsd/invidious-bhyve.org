@@ -194,6 +194,21 @@ wlvncc -s 127.0.0.1 5900
 sudo apt install git podman podman-compose pwgen
 #+end_src
 
+*** registeries
+
+#+begin_src sh
+sudo vi /etc/containers/registries.conf
+#+end_src
+
+append the following code to the end of the file.
+
+#+begin_src conf
+[registries.search]
+registries = ['docker.io', 'quay.io']
+#+end_src
+
+sasve and quit.
+
 *** clone the invidious repository
 
 create the invidious-podman directory
