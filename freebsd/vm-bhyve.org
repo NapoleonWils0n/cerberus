@@ -124,6 +124,7 @@ doas vm init
 #+begin_src sh
 doas vm switch create public
 doas vm switch add public lagg0
+doas ifconfig vm-public addm lagg0
 #+end_src
 
 ** vm-bhyve create
@@ -202,6 +203,12 @@ doas vm install -f ubuntu ubuntu-26.04-live-server-amd64.iso
 
 #+begin_src sh
 doas vm start ubuntu
+#+end_src
+
+** vm stop
+
+#+begin_src sh
+doas vm stop ubuntu
 #+end_src
 
 ** vnc

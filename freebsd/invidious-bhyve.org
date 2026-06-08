@@ -444,6 +444,18 @@ alternative method
 doas bhyvectl --vm=ubuntu --destroy
 #+end_src
 
+*** vm start
+
+#+begin_src sh
+doas vm start ubuntu
+#+end_src
+
+*** vm stop
+
+#+begin_src sh
+doas vm stop ubuntu
+#+end_src
+
 *** ssh
 
 copy your ssh keys to the vm and enter your password.
