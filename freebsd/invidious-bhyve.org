@@ -214,19 +214,36 @@ clone the invidious git repo
 git clone https://github.com/iv-org/invidious.git
 #+end_src
 
+change into the invidious directory
+
+#+begin_src sh
+cd invidious
+#+end_src
+
+Download the PR code into your existing directory
+
+#+begin_src sh
+git fetch origin pull/5736/head:channel-fix
+#+end_src
+
+Swap your working files over to the fix branch
+
+#+begin_src sh
+git checkout channel-fix
+#+end_src
+
 *** compose.yml
 
 create the compose.yml file in invidious-podman directory
-
-channel fix
 
 #+begin_src yaml
 version: "3"
 services:
 
   invidious:
-    image: quay.io/invidious/invidious:latest
+    #image: quay.io/invidious/invidious:latest
     # image: quay.io/invidious/invidious:latest-arm64 # ARM64/AArch64 devices
+    image: my-patched-invidious
     restart: unless-stopped
     # Remove "127.0.0.1:" if used from an external IP
     ports:
@@ -309,6 +326,16 @@ services:
 volumes:
   postgresdata:
   companioncache:
+#+end_src
+
+*** build invidious with the channel fix
+
+#+begin_src sh
+podman build \
+  -t my-patched-invidious \
+  --build-arg release=true \
+  -f docker/Dockerfile \
+  --from docker.io/crystallang/crystal:1.14.0-alpine .
 #+end_src
 
 *** start-invidious script
