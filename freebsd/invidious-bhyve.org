@@ -260,6 +260,16 @@ profile pasta /usr/bin/pasta{,.avx2} flags=(attach_disconnected) {
 }
 #+end_src
 
+*** loginctl
+
+log into the server with ssh
+
+set loginctl enable-linger with your username
+
+#+begin_src sh
+loginctl enable-linger djwilcox
+#+end_src
+
 *** clone the invidious repository
 
 create the invidious-podman directory
