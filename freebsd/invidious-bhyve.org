@@ -209,6 +209,57 @@ registries = ['docker.io', 'quay.io']
 
 save and quit.
 
+*** app armour
+
+#+begin_src sh
+sudo vi /etc/apparmor.d/usr.bin.pasta
+#+end_src
+
+add the following code 
+
+#+begin_src conf
+  signal receive set=term peer=podman,
+#+end_src
+
+usr.bin.pasta
+
+#+begin_src conf
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# PASST - Plug A Simple Socket Transport
+#  for qemu/UNIX domain socket mode
+#
+# PASTA - Pack A Subtle Tap Abstraction
+#  for network namespace/tap device mode
+#
+# contrib/apparmor/usr.bin.pasta - AppArmor profile for pasta(1)
+#
+# Copyright (c) 2022 Red Hat GmbH
+# Author: Stefano Brivio <sbrivio@redhat.com>
+
+abi <abi/4.0>,
+
+include <tunables/global>
+
+profile pasta /usr/bin/pasta{,.avx2} flags=(attach_disconnected) {
+  include <abstractions/pasta>
+
+  # podman
+  signal receive set=term peer=podman,
+
+  # Alternatively: include <abstractions/user-tmp>
+  /tmp/**				rw,	# tap_sock_unix_open(),
+						# tap_sock_unix_init(), pcap(),
+						# pidfile_open(),
+						# pidfile_write(),
+						# logfile_init(),
+						# pasta_open_ns()
+
+  owner @{HOME}/**			w,	# pcap(), pidfile_open(),
+						# pidfile_write()
+}
+#+end_src
+
 *** clone the invidious repository
 
 create the invidious-podman directory
