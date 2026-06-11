@@ -1,0 +1,15 @@
+#+STARTUP: content
+* gemma4 qat gguf unsloth
+** resources
+
+[[https://unsloth.ai/docs/models/gemma-4]]
+
+[[https://huggingface.co/collections/unsloth/gemma-4]]
+
+[[https://huggingface.co/unsloth/gemma-4-E2B-it-qat-GGUF/tree/main]]
+
+** pull the model
+
+#+begin_src sh
+ollama pull hf.co/unsloth/gemma-4-E2B-it-qat-GGUF:UD-Q2_K_XL
+#+end_src
