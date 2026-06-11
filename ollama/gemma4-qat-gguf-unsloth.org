@@ -8,8 +8,28 @@
 
 [[https://huggingface.co/unsloth/gemma-4-E2B-it-qat-GGUF/tree/main]]
 
-** pull the model
+** download the model
 
 #+begin_src sh
-ollama pull hf.co/unsloth/gemma-4-E2B-it-qat-GGUF:UD-Q2_K_XL
+curl -L -o gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf 'https://huggingface.co/unsloth/gemma-4-E2B-it-qat-GGUF/resolve/main/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf'
 #+end_src
+
+** modelfile
+
+Create the Modelfile in the same directory as the gguf files
+
+#+begin_src conf
+FROM ./gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf
+
+PARAMETER temperature 1.0
+PARAMETER top_p 0.95
+PARAMETER top_k 64
+PARAMETER num_gpu 35
+#+end_src
+
+** create the model
+
+#+begin_src sh
+ollama create gemma4-unsloth-text -f Modelfile
+#+end_src
+
