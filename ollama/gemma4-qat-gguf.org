@@ -42,6 +42,7 @@ FROM ./gemma-4-E2B_q4_0-it.gguf
 PARAMETER temperature 1.0
 PARAMETER top_p 0.95
 PARAMETER top_k 64
+PARAMETER num_gpu 24
 #+end_src
 
 ** create the model
