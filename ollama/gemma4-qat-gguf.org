@@ -1,0 +1,47 @@
+#+STARTUP: content
+* gemma 4 qat gguf
+** resources
+
+https://ollama.com/library/gemma4/tags
+
+[[https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-gguf]]
+
+** download the gguf files
+
+Download the gguf files
+
+#+begin_src sh
+curl -L -o gemma-4-E2B-it-mmproj.gguf 'https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-gguf/resolve/main/gemma-4-E2B-it-mmproj.gguf'
+#+end_src
+
+#+begin_src sh
+curl -L -o gemma-4-E2B_q4_0-it.gguf 'https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-gguf/resolve/main/gemma-4-E2B_q4_0-it.gguf'
+#+end_src
+
+** Modelfile
+
+Create the Modelfile in the same directory as the gguf files
+
+#+begin_src conf
+FROM ./gemma-4-E2B_q4_0-it.gguf
+ADAPTER ./gemma-4-E2B-it-mmproj.gguf
+
+PARAMETER temperature 1.0
+PARAMETER top_p 0.95
+PARAMETER top_k 64
+PARAMETER num_ctx 2048
+
+TEMPLATE """{{ if .System }}<|turn|>system
+{{ .System }}<turn|>
+{{ end }}{{ if .Prompt }}<|turn|>user
+{{ .Prompt }}<turn|>
+{{ end }}<|turn|>model
+{{ .Response }}<turn|>"""
+#+end_src
+
+** create the model
+
+#+begin_src sh
+ollama create gemma4-qat -f Modelfile
+#+end_src
+
