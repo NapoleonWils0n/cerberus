@@ -113,6 +113,7 @@ Send Only the Difference
 #+begin_src sh
 doas zfs send -RI zroot/home/djwilcox@initial-backup zroot/home/djwilcox@02-05-2026 | doas zfs receive -vF backup/home-backup
 #+end_src
+
 ** To Unplug Safely
 
 export the backup pool
