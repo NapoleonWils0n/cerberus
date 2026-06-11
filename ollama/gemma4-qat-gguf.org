@@ -29,7 +29,6 @@ ADAPTER ./gemma-4-E2B-it-mmproj.gguf
 PARAMETER temperature 1.0
 PARAMETER top_p 0.95
 PARAMETER top_k 64
-PARAMETER num_ctx 2048
 #+end_src
 
 ** create the model
