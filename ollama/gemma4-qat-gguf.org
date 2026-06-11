@@ -30,13 +30,6 @@ PARAMETER temperature 1.0
 PARAMETER top_p 0.95
 PARAMETER top_k 64
 PARAMETER num_ctx 2048
-
-TEMPLATE """{{ if .System }}<|turn|>system
-{{ .System }}<turn|>
-{{ end }}{{ if .Prompt }}<|turn|>user
-{{ .Prompt }}<turn|>
-{{ end }}<|turn|>model
-{{ .Response }}<turn|>"""
 #+end_src
 
 ** create the model
