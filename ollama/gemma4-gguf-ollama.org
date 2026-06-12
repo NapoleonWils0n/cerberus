@@ -42,7 +42,7 @@ TEMPLATE """<|im_start|>system
 create the modelfile
 
 #+begin_src sh
-ollama create gemma4-text -f modelfiles/gemma-4-E2B-text.modelfile
+ollama create gemma4-bartowski -f gemma-4-E2B-text.modelfile
 #+end_src
 
 ** gemma4 HauhauCS uncensored

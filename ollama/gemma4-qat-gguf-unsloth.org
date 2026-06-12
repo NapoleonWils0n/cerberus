@@ -18,6 +18,8 @@ curl -L -o gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf 'https://huggingface.co/unsloth/ge
 
 Create the Modelfile in the same directory as the gguf files
 
+gemma-4-E2B-it-qat-UD-Q4_K_XL.modelfile
+
 #+begin_src conf
 FROM ./gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf
 
@@ -30,6 +32,6 @@ PARAMETER num_gpu 35
 ** create the model
 
 #+begin_src sh
-ollama create gemma4-unsloth-text -f Modelfile
+ollama create gemma4-unsloth-text -f gemma-4-E2B-it-qat-UD-Q4_K_XL.modelfile
 #+end_src
 
