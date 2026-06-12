@@ -32,6 +32,6 @@ PARAMETER num_gpu 35
 ** create the model
 
 #+begin_src sh
-ollama create gemma4-unsloth-text -f gemma-4-E2B-it-qat-UD-Q4_K_XL.modelfile
+ollama create gemma4-unsloth -f gemma-4-E2B-it-qat-UD-Q4_K_XL.modelfile
 #+end_src
 
