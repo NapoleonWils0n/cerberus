@@ -764,6 +764,255 @@ clean:
 
 #+end_src
 
+*** invidious.lua
+
+Create the mpv scripts directory
+
+#+begin_src sh
+mkdir -p ~/.config/mpv/scripts
+#+end_src
+
+Note in the invidious.lua script you will need to change the ip address to the address of your Bhyve VM,
+you also need curl and jq installed
+
+#+begin_src sh
+doas pkg install curl jq
+#+end_src
+
+Create the invidious.lua script
+
+#+begin_src sh
+vi ~/.config/mpv/scripts/invidious.lua
+#+end_src
+
+#+begin_src lua
+-- Hook early into the loading phase before network initialization
+mp.add_hook("on_load", 50, function()
+    local path = mp.get_property("path", "")
+    
+    -- Intercept the browser address bar watch link
+    if path:find("192%.168%.1%.236:3000/watch%?v=") then
+        local video_id = path:match("v=([^&]+)")
+        if video_id then
+            mp.msg.info("Querying Invidious API with jq filter...")
+            
+            -- Halt the rigid loader loop so mpv doesn't panic
+            mp.set_property("path", "")
+            
+            local api_url = "http://192.168.1.236:3000/api/v1/videos/" .. video_id
+            
+            -- Single network call: jq extracts the title on line 1, followed by all available itags below it
+            local shell_command = "curl -s '" .. api_url .. "' | jq -r '.title, .adaptiveFormats[].itag, .formatStreams[].itag' 2>/dev/null"
+            
+            mp.command_native_async({
+                name = "subprocess",
+                capture_stdout = true,
+                args = { "sh", "-c", shell_command }
+            }, function(success, res)
+                if not success or not res.stdout or res.stdout == "" then
+                    mp.msg.error("Invidious API or jq parsing failed.")
+                    return
+                end
+                
+                -- Extract the title (which is always the very first line of the jq output)
+                local first_newline = res.stdout:find("\n")
+                local video_title = ""
+                local itag_payload = res.stdout
+                
+                if first_newline then
+                    video_title = res.stdout:sub(1, first_newline - 1)
+                    itag_payload = res.stdout:sub(first_newline + 1)
+                end
+                
+                -- Ordered preferences: 1080p60 VP9, 1080p30 VP9, 1080p60 H264, 1080p30 H264, 720p60 VP9, 720p30 VP9
+                local target_itags = { "303", "248", "299", "137", "302", "247" }
+                local chosen_itag = nil
+                
+                -- Check the clean list returned by jq for our preferred formats
+                for _, itag in ipairs(target_itags) do
+                    if itag_payload:find(itag) then
+                        chosen_itag = itag
+                        break
+                    end
+                end
+                
+                -- Absolute emergency fallback if the video is ancient and has no HD adaptive formats
+                if not chosen_itag then
+                    chosen_itag = "18" 
+                    mp.msg.warn("No preferred HD tracks found. Using fallback progressive track.")
+                else
+                    mp.msg.info("Matched Available Format! Chosen itag: " .. chosen_itag)
+                end
+                
+                local video_track = "http://192.168.1.236:3000/latest_version?id=" .. video_id .. "&local=true&itag=" .. chosen_itag
+                local audio_track = "http://192.168.1.236:3000/latest_version?id=" .. video_id .. "&local=true&itag=251"
+                
+                -- Handle the audio track injection right when the file finishes loading
+                local function inject_audio()
+                    mp.commandv("audio-add", audio_track, "auto", "External Audio")
+                    mp.set_property("aid", "1")
+                    mp.unregister_event(inject_audio)
+                end
+                mp.register_event("file-loaded", inject_audio)
+                
+                -- Safely launch the validated track and bind options using a native table dictionary.
+                -- This protects commas and quotes inside the title string from breaking the parameters array.
+                if video_title ~= "" then
+                    mp.command_native({
+                        name = "loadfile",
+                        url = video_track,
+                        flags = "replace",
+                        options = {
+                            ["demuxer-lavf-format"] = "matroska,webm",
+                            ["ytdl"] = "no",
+                            ["force-media-title"] = video_title,
+                            ["title"] = video_title
+                        }
+                    })
+                else
+                    mp.command_native({
+                        name = "loadfile",
+                        url = video_track,
+                        flags = "replace",
+                        options = {
+                            ["demuxer-lavf-format"] = "matroska,webm",
+                            ["ytdl"] = "no"
+                        }
+                    })
+                end
+            end)
+        end
+    end
+end)
+#+end_src
+
+*** mpv.conf
+
+create the mpv directory
+
+#+begin_src sh
+mkdir -p ~/.config/mpv
+#+end_src
+
+create the mpv.conf file
+
+#+begin_src sh
+vi ~/.config/mpv/mpv.conf
+#+end_src
+
+#+begin_src conf
+#===============================================================================
+# mpv mpv.conf
+#===============================================================================
+
+# list profiles with: mpv --profile=help
+
+#===============================================================================
+# load hwdec profile automatically
+#===============================================================================
+
+profile=hwdec 
+
+
+#===============================================================================
+# hardware acceleration profile
+#===============================================================================
+
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
+vo=gpu
+gpu-context=wayland
+hwdec=vaapi
+
+
+#===============================================================================
+# msg-level
+#===============================================================================
+
+msg-level=ffmpeg=fatal
+
+
+#===============================================================================
+# cache no for internet streams
+#===============================================================================
+
+cache=no
+
+
+#===============================================================================
+# yt-dlp best format 1080 or less
+#===============================================================================
+
+ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+
+
+#===============================================================================
+# show milliseconds in the on screen display
+#===============================================================================
+
+osd-fractions
+
+
+#===============================================================================
+# youtube subs - J to switch to subs
+#===============================================================================
+
+sub-auto=fuzzy
+ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
+sub-font='NotoColorEmoji'
+
+
+#===============================================================================
+# screenshot timecode
+#===============================================================================
+
+screenshot-template="%F-[%P]v%#01n"
+
+
+#===============================================================================
+# cache profile: mpv --profile=cache
+#===============================================================================
+
+[cache]
+profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+
+
+#===============================================================================
+# youtube conditional auto profile match any youtube url
+#===============================================================================
+
+[youtube]
+profile-desc="youtube hardware acceleration, cache"
+profile-cond=path:find('youtu%.?be') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=yes
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+
+
+#===============================================================================
+# invidious conditional auto profile match any invidious url
+#===============================================================================
+
+[invidious]
+profile-desc="invidious hardware acceleration, cache"
+profile-cond=path:find('http://192.168.1.236:3000') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=yes
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+#+end_src
+
 *** podman remove all containers
 
 #+begin_src sh
