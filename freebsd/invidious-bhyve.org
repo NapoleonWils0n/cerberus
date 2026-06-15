@@ -272,6 +272,18 @@ loginctl enable-linger djwilcox
 
 *** clone the invidious repository
 
+create the podman directory in your home
+
+#+begin_src sh
+mkdir -p ~/podman
+#+end_src
+
+change directory into the podman directory
+
+#+begin_src sh
+cd ~/podman
+#+end_src
+
 create the invidious-podman directory
 
 #+begin_src sh
