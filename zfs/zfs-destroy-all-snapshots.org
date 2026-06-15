@@ -1,0 +1,35 @@
+#+STARTUP: content
+* zfs destroy all snapshots
+** destroy all snapshots for a specific dataset
+*** dry run destroy all snapshots for a specific dataset
+
+#+begin_src sh
+zfs destroy -nvR zroot@%
+#+end_src
+
+-n: Dry run (do not actually delete anything).
+
+-v: Verbose mode (list out every single snapshot targeted).
+
+@%: The percent sign is a wild card token representing all snapshots on that specific dataset path.
+
+*** destroy all snapshots for a specific dataset
+
+#+begin_src sh
+doas zfs destroy -f -vR zroot@%
+#+end_src
+
+** delete ALL snapshots across the entire system
+*** dry run delete ALL snapshots across the entire system
+
+If you want to clear absolutely every ZFS snapshot across all datasets and pools, you can query zfs list to grab the names, strip out the headers, and pipe them directly into zfs destroy.
+
+#+begin_src sh
+zfs list -H -t snapshot -o name | xargs -n 1 echo zfs destroy -v
+#+end_src
+
+*** delete ALL snapshots across the entire system
+
+#+begin_src sh
+zfs list -H -t snapshot -o name | xargs -n 1 doas zfs destroy -v
+#+end_src
