@@ -126,7 +126,7 @@ sysctl kern.sched.topology_spec
 *** vm config
 
 #+begin_src sh
-doas vi /vm/.templates/ubuntu.conf
+doas vi /home/djwilcox/vm/.templates/ubuntu.conf
 #+end_src
 
 #+begin_src conf
