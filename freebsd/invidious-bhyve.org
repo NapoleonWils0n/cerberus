@@ -642,6 +642,128 @@ log in with ssh.
 ssh djwilcox@192.168.1.236
 #+end_src
 
+*** laggpf
+
+#+begin_src sh
+doas vi /usr/local/etc/rc.d/laggpf
+#+end_src
+
+#+begin_src conf
+#!/bin/sh
+
+# PROVIDE: laggpf
+# REQUIRE: devd pf routing
+# KEYWORD: nojail
+
+. /etc/rc.subr
+
+name=laggpf
+desc="Wait for network devices or the network being up"
+rcvar=laggpf_enable 
+
+start_cmd="${name}_start"
+stop_cmd=":"
+
+load_rc_config $name 
+: ${laggpf_enable:=no} 
+: ${laggpf_msg="Nothing started."} 
+
+laggpf_start()
+{
+    service netif restart lagg0
+    service pf restart
+    ifconfig vm-public addm lagg0 2>/dev/null || true
+}
+
+run_rc_command "$1"
+
+#+end_src
+
+*** Makefile
+
+#+begin_src makefile
+#===============================================================================
+# FILE: Makefile
+# Project: Invidious
+#===============================================================================
+
+
+#===============================================================================
+# PHONY
+#===============================================================================
+
+.PHONY: all clean
+
+
+#===============================================================================
+# commands
+#===============================================================================
+
+# vm name
+VM_NAME     	:= ubuntu
+VM_START     	:= start
+VM_STOP     	:= stop
+
+# server name set in ~/.ssh/config
+SERVER     	:= loki
+SERVER_IP	:= 192.168.1.236
+PORT		:= 22
+
+REMOTE_DIR	:= 'podman/invidious-podman/'
+PODMAN_START 	:= './start-invidious'
+PODMAN_STOP 	:= 'podman-compose down'
+
+REMOTE_START	:= 'cd $(REMOTE_DIR); $(PODMAN_START)'
+REMOTE_STOP	:= 'cd $(REMOTE_DIR); $(PODMAN_STOP)'
+
+
+
+#===============================================================================
+# default target
+#===============================================================================
+
+all: ssh
+
+
+#===============================================================================
+# start the vm
+#===============================================================================
+
+vm: 
+	doas vm $(VM_START) $(VM_NAME)
+
+
+#===============================================================================
+# netcat
+#===============================================================================
+
+netcat: vm
+	@echo "Probing $(SERVER) SSH port $(PORT)..."
+	@until nc -z -w 2 $(SERVER_IP) $(PORT) 2>/dev/null; do \
+		echo "Guest OS booting up... waiting for SSH service..."; \
+		sleep 1; \
+	done
+	@echo "SSH daemon is online."
+
+
+#===============================================================================
+# start the vm
+#===============================================================================
+
+ssh: netcat
+	ssh $(SERVER) $(REMOTE_START)
+
+
+#===============================================================================
+# Clean 
+#===============================================================================
+
+clean:
+	ssh $(SERVER) $(REMOTE_STOP)
+	doas vm $(VM_STOP) $(VM_NAME)
+
+#+end_src
+
 *** podman remove all containers
 
 #+begin_src sh
