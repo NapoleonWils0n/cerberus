@@ -33,7 +33,7 @@ Mount the boot env
 doas bectl mount 15-1 /tmp/upgrade-15.1
 #+end_src
 
-*** kld list
+*** 2) kld list
 
 I would suggest disabling the DRM driver during the upgrade. That way it won't interfere or cause problems during the upgrade. Once you have the base OS completely upgraded you can focus on upgrading packages, including any from the kmods repositories.
  
@@ -51,27 +51,13 @@ and just use a temporary kld_list during the upgrade
 kld_list="linux linux64"
 #+end_src
 
-note when do i need to remove temporary kld list and re enable the original
-
-remove the temporary kld list
-
-#+begin_src sh
-kld_list="linux linux64"
-#+end_src
-
-uncomment the original kld list
-
-#+begin_src conf
-kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
-#+end_src
-
-*** 2) First, update pkg(8) itself to ensure you have the latest version:
+*** 3) First, update pkg(8) itself to ensure you have the latest version:
 
 #+begin_src sh
 doas pkg upgrade -yr FreeBSD-ports pkg
 #+end_src
 
-*** 3) Second, upgrade the base system
+*** 4) Second, upgrade the base system
 
 Create a temporary repository configuration that points exactly to the 15.1-RC1 package repository:
 
@@ -83,7 +69,7 @@ echo 'FreeBSD-base: {
 }' | doas tee /tmp/upgrade-15.1/upgrade.conf
 #+end_src
 
-*** 4) Then upgrade the base system:
+*** 5) Then upgrade the base system:
 
 #+begin_src sh
 doas pkg -r /tmp/upgrade-15.1 \
@@ -91,7 +77,7 @@ doas pkg -r /tmp/upgrade-15.1 \
       -o IGNORE_OSVERSION=yes upgrade -r FreeBSD-base
 #+end_src
 
-*** 5) after upgrade 
+*** 6) after upgrade 
 
 After the upgrade, review any messages printed by pkg(8). Some base packages may require additional configuration steps (e.g., running ‘service setup‘). Follow those instructions as needed.
 
@@ -103,7 +89,7 @@ doas pkg -r /tmp/upgrade-15.1 \
       upgrade -r FreeBSD-ports-kmods
 #+end_src
 
-*** 6) uefi bootloader
+*** 7) uefi bootloader
 
 Identify the EFI System Partition (ESP) where the boot loader resides by executing the following command:
 
@@ -128,7 +114,7 @@ Unreferenced Variables:
 [djwilcox@pollux ~/desktop]
 #+end_example
 
-*** 7) Mounting the ESP
+*** 8) Mounting the ESP
 
 Backup the loader.efi
 
@@ -142,7 +128,7 @@ If the ESP is not already mounted at /boot/efi, mount the partition listed in th
 mount_msdosfs /dev/nda0p1 /boot/efi
 #+end_src
 
-*** 8) Install the Boot Loader
+*** 9) Install the Boot Loader
 
 Note that some installations may not have freebsd/loader.efi.
 
@@ -155,7 +141,7 @@ doas cp /boot/loader.efi /boot/efi/efi/freebsd/loader.efi
 shutdown -r now
 #+end_src
 
-*** 9) check for configuration file updates that may have been installed as ‘.pkgnew‘ files:
+*** 10) check for configuration file updates that may have been installed as ‘.pkgnew‘ files:
 
 #+begin_src sh
 find /etc /usr/local/etc -name '*.pkgnew' -ls
@@ -169,7 +155,7 @@ After verifying the configuration files, remove the temporary repository configu
 doas rm -r /tmp/upgrade-15.1
 #+end_src
 
-*** 10) activate the new boot env
+*** 11) activate the new boot env
 
 #+begin_src sh
 doas bectl umount 15-1
@@ -182,7 +168,7 @@ Finally, reboot to load the new kernel and userland:
 doas shutdown -r now
 #+end_src
 
-*** 11) upgrade kmods
+*** 12) upgrade kmods
 
 #+begin_src sh
 doas pkg upgrade -r FreeBSD-ports-kmods
@@ -191,7 +177,19 @@ doas pkg upgrade -r FreeBSD-ports-kmods
 Open /etc/rc.conf right there in the text prompt,
 drop the safe line, and uncomment your original massive graphic kld_list.
 
-*** 12) How to Determine Your Base System Type
+remove the temporary kld list
+
+#+begin_src sh
+kld_list="linux linux64"
+#+end_src
+
+uncomment the original kld list
+
+#+begin_src conf
+kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
+#+end_src
+
+*** 13) How to Determine Your Base System Type
 
 Run the following command:
 
