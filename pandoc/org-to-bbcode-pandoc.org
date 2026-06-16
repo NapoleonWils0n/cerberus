@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* org to bbcode for the freebsd forum
+
+#+begin_src sh
+pandoc -f org -t bbcode input.org -o output.txt
+#+end_src
