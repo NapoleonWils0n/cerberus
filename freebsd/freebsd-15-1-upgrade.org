@@ -145,12 +145,6 @@ find /etc /usr/local/etc -name '*.pkgnew' -ls
 
 If such files exist, manually compare them with the originals (e.g. ‘diff /etc/rc.conf /etc/rc.conf.pkgnew‘) and merge any necessary changes.
 
-After verifying the configuration files, remove the temporary repository configuration:
-
-#+begin_src sh
-doas rm -r /tmp/upgrade-15.1
-#+end_src
-
 *** 11) activate the new boot env
 
 #+begin_src sh
