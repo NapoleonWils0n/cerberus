@@ -140,10 +140,29 @@ doas cp /boot/loader.efi /boot/efi/efi/freebsd/loader.efi
 *** 10) check for configuration file updates that may have been installed as ‘.pkgnew‘ files:
 
 #+begin_src sh
-find /etc /usr/local/etc -name '*.pkgnew' -ls
+doas find /etc /usr/local/etc -name '*.pkgnew' -ls
 #+end_src
 
 If such files exist, manually compare them with the originals (e.g. ‘diff /etc/rc.conf /etc/rc.conf.pkgnew‘) and merge any necessary changes.
+
+#+begin_example
+[i] Yes Master ? doas find /etc /usr/local/etc -name '*.pkgnew' -ls
+525415        1 lrwxr-xr-x    1 root                             wheel                                  14  8 Jun 19:53 /etc/unbound.pkgnew -> ../var/unbound
+#+end_example
+
+Since we arent using the built in version of unbound and using the pkg version
+
+We can back up the directory and then delete it
+
+#+begin_src sh
+cp -r /etc/unbound.pkgnew ~/desktop
+#+end_src
+
+Remove the unbound.pkgnew
+
+#+begin_src sh
+doas rm -rf /etc/unbound.pkgnew
+#+end_src
 
 *** 11) activate the new boot env
 
