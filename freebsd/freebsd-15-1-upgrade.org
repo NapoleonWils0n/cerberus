@@ -137,10 +137,6 @@ doas cp /boot/loader.efi /boot/efi/efi/boot/bootx64.efi
 doas cp /boot/loader.efi /boot/efi/efi/freebsd/loader.efi
 #+end_src
 
-#+begin_src sh
-shutdown -r now
-#+end_src
-
 *** 10) check for configuration file updates that may have been installed as ‘.pkgnew‘ files:
 
 #+begin_src sh
