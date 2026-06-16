@@ -1,0 +1,214 @@
+#+STARTUP: content
+* freebsd 15.1 upgrade
+** resources
+
+[[https://www.freebsd.org/releases/15.1R/upgrading/]]
+
+[[https://forums.freebsd.org/threads/404-for-15-1-release-installation-instructions.102973/#post-763920]]
+
+[[https://www.reddit.com/r/freebsd/comments/1u6xu2i/freebsd_151release_now_available/]]
+
+[[https://www.reddit.com/r/freebsd/comments/1u6nrz5/beware_of_upgrades_to_151/]]
+
+[[https://vermaden.wordpress.com/tag/pkg/]]
+
+[[https://lists.freebsd.org/archives/freebsd-stable/2026-May/004103.html]]
+
+[[https://forums.freebsd.org/threads/upgrading-to-a-new-release-with-pkgbase.102878/#post-762650]]
+
+[[https://vermaden.wordpress.com/2025/10/20/brave-new-pkgbase-world/]]
+
+** upgrade
+*** 1) bectl boot env
+
+Create the 15-1 boot env
+
+#+begin_src sh
+doas bectl create 15-1
+#+end_src
+
+Mount the boot env
+
+#+begin_src sh
+doas bectl mount 15-1 /tmp/upgrade-15.1
+#+end_src
+
+*** kld list
+
+I would suggest disabling the DRM driver during the upgrade. That way it won't interfere or cause problems during the upgrade. Once you have the base OS completely upgraded you can focus on upgrading packages, including any from the kmods repositories.
+ 
+This is what I had to do though I actually uninstalled it and reinstalled after going through the rest of the upgrade process cause 15.1 would only start with a page fault.
+
+So comment out the kld_list
+
+#+begin_src conf
+#kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
+#+end_src
+
+and just use a temporary kld_list during the upgrade
+
+#+begin_src sh
+kld_list="linux linux64"
+#+end_src
+
+note when do i need to remove temporary kld list and re enable the original
+
+remove the temporary kld list
+
+#+begin_src sh
+kld_list="linux linux64"
+#+end_src
+
+uncomment the original kld list
+
+#+begin_src conf
+kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
+#+end_src
+
+*** 2) First, update pkg(8) itself to ensure you have the latest version:
+
+#+begin_src sh
+doas pkg upgrade -yr FreeBSD-ports pkg
+#+end_src
+
+*** 3) Second, upgrade the base system
+
+Create a temporary repository configuration that points exactly to the 15.1-RC1 package repository:
+
+Create the upgrade.conf file
+
+#+begin_src sh
+echo 'FreeBSD-base: {
+    url: "pkg+https://pkg.FreeBSD.org/${ABI}/base_release_1"
+}' | doas tee /tmp/upgrade-15.1/upgrade.conf
+#+end_src
+
+*** 4) Then upgrade the base system:
+
+#+begin_src sh
+doas pkg -r /tmp/upgrade-15.1 \
+      -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos,/tmp/upgrade-15.1 \
+      -o IGNORE_OSVERSION=yes upgrade -r FreeBSD-base
+#+end_src
+
+*** 5) after upgrade 
+
+After the upgrade, review any messages printed by pkg(8). Some base packages may require additional configuration steps (e.g., running ‘service setup‘). Follow those instructions as needed.
+
+Third, update any third-party kernel modules (kmods) that you may have installed from packages (e.g. drm-kmod, acpi_call). Use the same temporary repository configuration:
+
+#+begin_src sh
+doas pkg -r /tmp/upgrade-15.1 \
+      -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos,/tmp/upgrade-15.1 \
+      upgrade -r FreeBSD-ports-kmods
+#+end_src
+
+*** 6) uefi bootloader
+
+Identify the EFI System Partition (ESP) where the boot loader resides by executing the following command:
+
+#+begin_src sh
+doas efibootmgr -v
+#+end_src
+
+#+begin_example
+[i] Yes Master ? doas efibootmgr -v
+Boot to FW : false
+BootCurrent: 0001
+Timeout    : 0 seconds
+BootOrder  : 0001
++Boot0001* UEFI: Micron 2300 NVMe 1024GB, Partition 1 HD(1,GPT,01b224cb-3a84-11f1-93f9-0050b610e975,0x28,0x82000)/File(\EFI\Boot\BootX64.efi)
+                                                         gpt/efiboot0:/EFI/Boot/BootX64.efi /boot/efi//EFI/Boot/BootX64.efi
+                                                     VenHw(2d6447ef-3bc9-41a0-ac19-4d51d01b4ce6,4d006900630072006f006e002000320033003000300020004e0056004d00650020003100300032003400470042000000)
+
+
+Unreferenced Variables:
+ Boot0006  FreeBSD HD(1,GPT,56ac6e30-904d-11ee-88b9-0050b610e975,0x28,0x82000)/File(\efi\freebsd\loader.efi)
+ Boot0000* ubuntu HD(1,GPT,b3006ff6-1fa2-4aad-9ec6-8b7437b4545f,0x800,0x100000)/File(\EFI\ubuntu\shimx64.efi)
+[djwilcox@pollux ~/desktop]
+#+end_example
+
+*** 7) Mounting the ESP
+
+Backup the loader.efi
+
+#+begin_src sh
+cp -r /boot/efi ~/desktop
+#+end_src
+
+If the ESP is not already mounted at /boot/efi, mount the partition listed in the efibootmgr output:
+
+#+begin_src sh
+mount_msdosfs /dev/nda0p1 /boot/efi
+#+end_src
+
+*** 8) Install the Boot Loader
+
+Note that some installations may not have freebsd/loader.efi.
+
+#+begin_src sh
+doas cp /boot/loader.efi /boot/efi/efi/boot/bootx64.efi
+doas cp /boot/loader.efi /boot/efi/efi/freebsd/loader.efi
+#+end_src
+
+#+begin_src sh
+shutdown -r now
+#+end_src
+
+*** 9) check for configuration file updates that may have been installed as ‘.pkgnew‘ files:
+
+#+begin_src sh
+find /etc /usr/local/etc -name '*.pkgnew' -ls
+#+end_src
+
+If such files exist, manually compare them with the originals (e.g. ‘diff /etc/rc.conf /etc/rc.conf.pkgnew‘) and merge any necessary changes.
+
+After verifying the configuration files, remove the temporary repository configuration:
+
+#+begin_src sh
+doas rm -r /tmp/upgrade-15.1
+#+end_src
+
+*** 10) activate the new boot env
+
+#+begin_src sh
+doas bectl umount 15-1
+doas bectl activate 15-1
+#+end_src
+
+Finally, reboot to load the new kernel and userland:
+
+#+begin_src sh
+doas shutdown -r now
+#+end_src
+
+*** 11) upgrade kmods
+
+#+begin_src sh
+doas pkg upgrade -r FreeBSD-ports-kmods
+#+end_src
+
+Open /etc/rc.conf right there in the text prompt,
+drop the safe line, and uncomment your original massive graphic kld_list.
+
+*** 12) How to Determine Your Base System Type
+
+Run the following command:
+
+#+begin_src sh
+doas pkg which /usr/bin/uname
+#+end_src
+
+if the output shows a package name starting with ‘FreeBSD-‘ (for example ‘FreeBSD-runtime-15.0‘), then your base system is managed by pkg (pkgbase). If the output says ‘/usr/bin/uname was not installed by a package‘, then your system uses the traditional layout (freebsd-update(8)
+is the appropriate upgrade method).
+
+To check whether you have any third-party kernel modules (kmods) installed from packages, run the following command:
+
+#+begin_src sh
+doas pkg which $(kldstat -v | awk -F '[()]' '/\.ko/ {print $2}')
+#+end_src
+
+Modules located in ‘/boot/kernel/‘ (such as ‘zfs.ko‘) are part of the base system packages, and belong to a ‘FreeBSD-kernel-*‘ package. Modules located in ‘/boot/modules/‘ (such as ‘sysctlinfo.k‘) are third-party kmods installed from the ports/pkg repository. If the command shows any packages with names that do not start with ‘FreeBSD-‘, those are third-party kmods. If no such packages appear, you have no third-party kmods installed.
+
+I assume that when FreeBSD 15.1-RELEASE will be released – even more detailed instructions could be available in the Release Notes document.
+
