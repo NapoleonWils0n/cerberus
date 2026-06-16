@@ -183,6 +183,30 @@ doas shutdown -r now
 doas pkg upgrade -r FreeBSD-ports-kmods
 #+end_src
 
+Force an absolute repository database download refresh
+
+#+begin_src sh
+doas pkg update -f
+#+end_src
+
+Upgrade your kmods using the global flag instead of targeting a locked repo string name
+
+#+begin_src sh
+doas pkg upgrade -y
+#+end_src
+
+Ignore is version
+
+#+begin_src sh
+doas pkg -o IGNORE_OSVERSION=yes update -f
+#+end_src
+
+upgrade pkg
+
+#+begin_src sh
+doas pkg -o IGNORE_OSVERSION=yes upgrade -y pkg
+#+end_src
+
 Open /etc/rc.conf right there in the text prompt,
 drop the safe line, and uncomment your original massive graphic kld_list.
 
@@ -197,6 +221,7 @@ uncomment the original kld list
 #+begin_src conf
 kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
 #+end_src
+
 
 *** 13) How to Determine Your Base System Type
 
