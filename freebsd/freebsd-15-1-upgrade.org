@@ -70,7 +70,7 @@ doas pkg install git
 use poudriere to pull ports
 
 #+begin_src sh
-doas poudriere ports -c -p local -m git+https
+doas poudriere ports -c -p local -m git+https -B branches/2026Q2
 #+end_src
 
 *** create the distfiles directory
@@ -403,173 +403,6 @@ PKG_REPO_SIGNING_KEY=/usr/local/etc/ssl/keys/poudriere.key
 #HTML_TRACK_REMAINING=yes
 #+END_SRC
 
-**** Creating the Build Environment
-
-#+BEGIN_SRC sh
-doas poudriere jail -c -j freebsd_15-1x64 -v 15.1-RELEASE
-#+END_SRC
-
-This will take awhile to complete, so be patient.  
-When you are finished, you can see the installed jail by typing:
-
-#+BEGIN_SRC sh
-doas poudriere jail -l
-#+END_SRC
-
-Again, this procedure will take awhile because the entire ports tree must be fetched and extracted. When it is finished, we can view our ports tree by typing:
-
-#+BEGIN_SRC sh
-poudriere ports -l
-#+END_SRC
-
-**** Creating a Port Building List and Setting Port Options
-
-We will be creating a list of ports that we can pass directly to the command.  
-
-#+BEGIN_SRC sh
-doas vi /usr/local/etc/poudriere.d/port-list 
-#+END_SRC
-
-The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
-
-#+BEGIN_SRC sh
-x11/nvidia-driver
-graphics/nvidia-drm-66-kmod
-x11/nvidia-settings
-
-#+END_SRC
-
-If you use specific make.conf options to build your ports, you can create a make.conf file for each jail within your /usr/local/etc/poudriere.d directory. For example, for our jail, we can create a make.conf file with this name:
-
-#+BEGIN_SRC sh
-doas vi /usr/local/etc/poudriere.d/freebsd_15-1x64-make.conf
-#+END_SRC
-
-#+BEGIN_SRC sh
-OPTIONS_UNSET+= DOCS NLS EXAMPLES
-DISABLE_LICENSES=yes
-#+END_SRC
-
-set IGNORE_OSVERSION in pkg.conf
-
-#+begin_src sh
-doas vi /usr/local/etc/pkg.conf
-#+end_src
-
-#+begin_src conf
-IGNORE_OSVERSION = true;
-#+end_src
-
-Afterwards, we can configure each of our ports, which will create files with the options we selected.
-
-You can configure anything which has not been already configured using the options command. We should pass in both the port tree we created (using the -p option) and the jail we are setting these options for (using the -j option). We also must specify the list of ports we want to configure using the -f option.
-
-Our command will look like this:
-
-#+BEGIN_SRC sh
-doas poudriere options -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
-#+END_SRC
-
-You will see a dialog for each of the ports on the list and any dependencies that do not have corresponding options set in the -options directory. The specifications in your make.conf file will be preselected in the selection screens. Select all of the options you would like to use.
-
-If you wish to reconfigure the options for your ports in the future, you can re-run the command above with the -c option. This will show you all of the available configuration options, regardless of whether you have made a selection in the past:
-
-#+BEGIN_SRC sh
-doas poudriere options -c -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
-#+END_SRC
-
-bulk build with no user input
-
-#+BEGIN_SRC sh
-doas poudriere bulk -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
-#+END_SRC
-
-**** Building the Ports
-
-Now, we are finally ready to start building ports.
-
-The last thing we need to do is ensure that both our jail and ports tree are up-to-date. This probably won't be an issue the first time you build ports since we just created both the ports tree and the jail, but it is good to get in the habit to do this each time you run a build.
-
-To update your jail, type:
-
-#+BEGIN_SRC sh
-doas poudriere jail -u -j freebsd_15-0x64
-#+END_SRC
-
-To update your ports tree, type:
-
-#+BEGIN_SRC sh
-poudriere ports -u -p local
-#+END_SRC
-
-Once that is complete, we can kick off the bulk build process.
-
-#+BEGIN_SRC sh
-doas poudriere bulk -j freebsd_15-0x64 -p local -f /usr/local/etc/poudriere.d/port-list
-#+END_SRC
-
-This will start up a number of workers (depending on your poudriere.conf file or the number of CPUs available) and begin building the ports.
-
-At any time during the build process, you can get information about the progress by holding the CTRL key and hitting t:
-
-#+BEGIN_SRC sh
-CTRL-t
-#+END_SRC
-
-*** Configuring pkg Clients to Use a Poudriere Repository
-	
-Now that you have packages built and a repository configured to serve your packages, you can configure your clients to use your the server as the source of their packages.
-Configuring the Build Server to Use Its Own Package Repo
-
-We can begin by configuring the build server to use the packages it has been building.
-
-First, we need to make a directory to hold our repository configuration files:
-
-#+BEGIN_SRC sh
-doas mkdir -p /usr/local/etc/pkg/repos
-#+END_SRC
-
-Inside this directory, we can create our repository configuration file. It must end in .conf, so we will call it poudriere.conf to reflect its purpose:
-
-#+BEGIN_SRC sh
-doas vi /usr/local/etc/pkg/repos/poudriere.conf
-#+END_SRC
-
-We will define the repository name as poudriere once again. Inside the definition, we will point to the location on disk where our packages are stored. This should be a directory that combines your jail name and port tree name with a dash. Check your filesystem to be certain. We will also set up signature validation of our packages by pointing to the certificate we created.
-
-In the end, your file should look something like this:
-
-#+BEGIN_SRC sh
-Poudriere: {
-    url: "file:///usr/local/poudriere/data/packages/freebsd_15-1x64-local"
-    mirror_type: "srv",
-    signature_type: "pubkey",
-    pubkey: "/usr/local/etc/ssl/certs/poudriere.cert",
-    enabled: yes,
-    priority: 100
-}
-#+END_SRC
-
-At this point, you need to make a decision. If you want to prefer your compiled packages and fall back on the packages provided by the main FreeBSD repositories, you can set a priority here, telling it to prefer packages out of this repository. This will cause our local repository to take priority over the official repositories.
-
-Keep in mind that mixing packages in this way can have some complicated consequences. If the official repositories have a package version that is higher than your local repository version, your compiled package may be replaced by the generic one from the official repositories (until you rebuild with poudriere and reinstall with pkg). Also, the official packages may assume that dependent packages are built in a certain way and may not function when mixed with your custom packages.
-
-If you choose to mix these two package sources, be prepared to carefully audit each install to ensure that you are not accidentally causing undesirable behavior.
-
-To mix packages, add a priority setting to your repository definition, specifying that the local repo has a higher precedence
-
-Update the repo info:
-
-#+BEGIN_SRC sh
-doas pkg update
-#+END_SRC
-
-*** nvidia install
-
-#+begin_src sh
-doas pkg install linux-widevine-cdm
-#+end_src
-
 ** upgrade
 *** 1) bectl boot env
 
@@ -730,50 +563,172 @@ doas shutdown -r now
 #+end_src
 
 *** 12) update kmods
+**** Creating the Build Environment
 
-press 3 at the boot menu
+#+BEGIN_SRC sh
+doas poudriere jail -c -j freebsd_15-1x64 -v 15.1-RELEASE
+#+END_SRC
+
+This will take awhile to complete, so be patient.  
+When you are finished, you can see the installed jail by typing:
+
+#+BEGIN_SRC sh
+doas poudriere jail -l
+#+END_SRC
+
+Again, this procedure will take awhile because the entire ports tree must be fetched and extracted. When it is finished, we can view our ports tree by typing:
+
+#+BEGIN_SRC sh
+poudriere ports -l
+#+END_SRC
+
+**** Creating a Port Building List and Setting Port Options
+
+We will be creating a list of ports that we can pass directly to the command.  
+
+#+BEGIN_SRC sh
+doas vi /usr/local/etc/poudriere.d/port-list 
+#+END_SRC
+
+The file create should list the port category followed by a slash and the port name to reflect its location within the ports tree, like this:
+
+#+BEGIN_SRC sh
+x11/nvidia-driver
+graphics/nvidia-drm-66-kmod
+x11/nvidia-settings
+
+#+END_SRC
+
+If you use specific make.conf options to build your ports, you can create a make.conf file for each jail within your /usr/local/etc/poudriere.d directory. For example, for our jail, we can create a make.conf file with this name:
+
+#+BEGIN_SRC sh
+doas vi /usr/local/etc/poudriere.d/freebsd_15-1x64-make.conf
+#+END_SRC
+
+#+BEGIN_SRC sh
+OPTIONS_UNSET+= DOCS NLS EXAMPLES
+DISABLE_LICENSES=yes
+#+END_SRC
+
+set IGNORE_OSVERSION in pkg.conf
 
 #+begin_src sh
-disable-module nvidia-drm
-boot
+doas vi /usr/local/etc/pkg.conf
 #+end_src
+
+#+begin_src conf
+IGNORE_OSVERSION = true;
+#+end_src
+
+Afterwards, we can configure each of our ports, which will create files with the options we selected.
+
+You can configure anything which has not been already configured using the options command. We should pass in both the port tree we created (using the -p option) and the jail we are setting these options for (using the -j option). We also must specify the list of ports we want to configure using the -f option.
+
+Our command will look like this:
+
+#+BEGIN_SRC sh
+doas poudriere options -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
+#+END_SRC
+
+You will see a dialog for each of the ports on the list and any dependencies that do not have corresponding options set in the -options directory. The specifications in your make.conf file will be preselected in the selection screens. Select all of the options you would like to use.
+
+If you wish to reconfigure the options for your ports in the future, you can re-run the command above with the -c option. This will show you all of the available configuration options, regardless of whether you have made a selection in the past:
+
+#+BEGIN_SRC sh
+doas poudriere options -c -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
+#+END_SRC
+
+bulk build with no user input
+
+#+BEGIN_SRC sh
+doas poudriere bulk -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
+#+END_SRC
+
+**** Building the Ports
+
+Now, we are finally ready to start building ports.
+
+The last thing we need to do is ensure that both our jail and ports tree are up-to-date. This probably won't be an issue the first time you build ports since we just created both the ports tree and the jail, but it is good to get in the habit to do this each time you run a build.
+
+To update your jail, type:
+
+#+BEGIN_SRC sh
+doas poudriere jail -u -j freebsd_15-0x64
+#+END_SRC
+
+To update your ports tree, type:
+
+#+BEGIN_SRC sh
+poudriere ports -u -p local
+#+END_SRC
+
+Once that is complete, we can kick off the bulk build process.
+
+#+BEGIN_SRC sh
+doas poudriere bulk -j freebsd_15-0x64 -p local -f /usr/local/etc/poudriere.d/port-list
+#+END_SRC
+
+This will start up a number of workers (depending on your poudriere.conf file or the number of CPUs available) and begin building the ports.
+
+At any time during the build process, you can get information about the progress by holding the CTRL key and hitting t:
+
+#+BEGIN_SRC sh
+CTRL-t
+#+END_SRC
+
+**** Configuring pkg Clients to Use a Poudriere Repository
+	
+Now that you have packages built and a repository configured to serve your packages, you can configure your clients to use your the server as the source of their packages.
+Configuring the Build Server to Use Its Own Package Repo
+
+We can begin by configuring the build server to use the packages it has been building.
+
+First, we need to make a directory to hold our repository configuration files:
+
+#+BEGIN_SRC sh
+doas mkdir -p /usr/local/etc/pkg/repos
+#+END_SRC
+
+Inside this directory, we can create our repository configuration file. It must end in .conf, so we will call it poudriere.conf to reflect its purpose:
+
+#+BEGIN_SRC sh
+doas vi /usr/local/etc/pkg/repos/poudriere.conf
+#+END_SRC
+
+We will define the repository name as poudriere once again. Inside the definition, we will point to the location on disk where our packages are stored. This should be a directory that combines your jail name and port tree name with a dash. Check your filesystem to be certain. We will also set up signature validation of our packages by pointing to the certificate we created.
+
+In the end, your file should look something like this:
+
+#+BEGIN_SRC sh
+Poudriere: {
+    url: "file:///usr/local/poudriere/data/packages/freebsd_15-1x64-local"
+    mirror_type: "srv",
+    signature_type: "pubkey",
+    pubkey: "/usr/local/etc/ssl/certs/poudriere.cert",
+    enabled: yes,
+    priority: 100
+}
+#+END_SRC
+
+At this point, you need to make a decision. If you want to prefer your compiled packages and fall back on the packages provided by the main FreeBSD repositories, you can set a priority here, telling it to prefer packages out of this repository. This will cause our local repository to take priority over the official repositories.
+
+Keep in mind that mixing packages in this way can have some complicated consequences. If the official repositories have a package version that is higher than your local repository version, your compiled package may be replaced by the generic one from the official repositories (until you rebuild with poudriere and reinstall with pkg). Also, the official packages may assume that dependent packages are built in a certain way and may not function when mixed with your custom packages.
+
+If you choose to mix these two package sources, be prepared to carefully audit each install to ensure that you are not accidentally causing undesirable behavior.
+
+To mix packages, add a priority setting to your repository definition, specifying that the local repo has a higher precedence
+
+Update the repo info:
+
+#+BEGIN_SRC sh
+doas pkg update
+#+END_SRC
+
+**** nvidia install
 
 #+begin_src sh
-doas vi /etc/rc.conf
+doas pkg install nvidia-driver nvidia-drm-66-kmod nvidia-settings
 #+end_src
-
-#+begin_src sh
-#kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
-kld_list="linux linux64"
-#+end_src
-
-# 1. Update your databases using the custom repository directory flags
-#+begin_src sh
-doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos -o IGNORE_OSVERSION=yes update -f
-#+end_src
-
-# 3. Drop the legacy, crashing driver module
-#+begin_src sh
-doas pkg delete -y 'nvidia*kmod*'
-#+end_src
-
-# 2. Tell pkg exactly where the configs are when calling the kmods repo upgrade
-#+begin_src sh
-doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos upgrade -y -r FreeBSD-ports-kmods
-#+end_src
-
-# 4. Pull down the fresh 15.1 module matching your new kernel framework
-#+begin_src sh
-doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos install -y nvidia-drm-kmod nvidia-driver nvidia-settings
-#+end_src
-
-# 5. Perform the final structural package sync across the board
-#+begin_src sh
-doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos upgrade -y
-#+end_src
-
-delete the tmp kld list
-uncomment the original and reboot
 
 *** 13) How to Determine Your Base System Type
 
