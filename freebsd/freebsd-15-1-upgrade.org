@@ -595,7 +595,6 @@ The file create should list the port category followed by a slash and the port n
 #+BEGIN_SRC sh
 x11/nvidia-driver
 graphics/nvidia-drm-66-kmod
-x11/nvidia-settings
 
 #+END_SRC
 
