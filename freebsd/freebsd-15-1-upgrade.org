@@ -62,13 +62,13 @@ doas pkg install poudriere
 *** create the distfiles directory
 
 #+BEGIN_SRC sh
-mkdir -p /usr/ports/distfiles
+doas mkdir -p /usr/ports/distfiles
 #+END_SRC
 
 edit the poudriere.conf file
 
 #+BEGIN_SRC sh
-vi /usr/local/etc/poudriere.conf
+doas vi /usr/local/etc/poudriere.conf
 #+END_SRC
 
 change the poudriere.conf so it looks like this
