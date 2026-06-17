@@ -726,6 +726,14 @@ doas pkg update
 
 **** nvidia install
 
+remove the old nvidia packages
+
+#+begin_src sh
+doas pkg delete -y nvidia-driver 'nvidia*kmod*' nvidia-settings
+#+end_src
+
+Install the new nvidia packages
+
 #+begin_src sh
 doas pkg install nvidia-driver nvidia-drm-66-kmod nvidia-settings
 #+end_src
