@@ -560,7 +560,7 @@ doas pkg install git
 use poudriere to pull ports
 
 #+begin_src sh
-doas poudriere ports -c -p local -m git+https -B branches/2026Q2
+doas poudriere ports -c -p local -m git+https -B 2026Q2
 #+end_src
 
 **** Creating the Build Environment
