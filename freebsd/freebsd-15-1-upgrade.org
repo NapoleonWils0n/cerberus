@@ -177,51 +177,51 @@ Finally, reboot to load the new kernel and userland:
 doas shutdown -r now
 #+end_src
 
-*** 12) upgrade kmods
+*** 12) update kmods
+
+press 3 at the boot menu
 
 #+begin_src sh
-doas pkg upgrade -r FreeBSD-ports-kmods
+disable-module nvidia-drm
+boot
 #+end_src
 
-Force an absolute repository database download refresh
-
 #+begin_src sh
-doas pkg update -f
+doas vi /etc/rc.conf
 #+end_src
 
-Upgrade your kmods using the global flag instead of targeting a locked repo string name
-
 #+begin_src sh
-doas pkg upgrade -y
-#+end_src
-
-Ignore is version
-
-#+begin_src sh
-doas pkg -o IGNORE_OSVERSION=yes update -f
-#+end_src
-
-upgrade pkg
-
-#+begin_src sh
-doas pkg -o IGNORE_OSVERSION=yes upgrade -y pkg
-#+end_src
-
-Open /etc/rc.conf right there in the text prompt,
-drop the safe line, and uncomment your original massive graphic kld_list.
-
-remove the temporary kld list
-
-#+begin_src sh
+#kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
 kld_list="linux linux64"
 #+end_src
 
-uncomment the original kld list
-
-#+begin_src conf
-kld_list="nvidia-modeset nvidia-drm nvidia_gsp_tu10x_fw linux linux64 i915kms ext2fs mac_priority fusefs vmm nmdm"
+# 1. Update your databases using the custom repository directory flags
+#+begin_src sh
+doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos -o IGNORE_OSVERSION=yes update -f
 #+end_src
 
+# 3. Drop the legacy, crashing driver module
+#+begin_src sh
+doas pkg delete -y 'nvidia*kmod*'
+#+end_src
+
+# 2. Tell pkg exactly where the configs are when calling the kmods repo upgrade
+#+begin_src sh
+doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos upgrade -y -r FreeBSD-ports-kmods
+#+end_src
+
+# 4. Pull down the fresh 15.1 module matching your new kernel framework
+#+begin_src sh
+doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos install -y nvidia-drm-kmod nvidia-driver nvidia-settings
+#+end_src
+
+# 5. Perform the final structural package sync across the board
+#+begin_src sh
+doas pkg -o REPOS_DIR=/etc/pkg,/usr/local/etc/pkg/repos upgrade -y
+#+end_src
+
+delete the tmp kld list
+uncomment the original and reboot
 
 *** 13) How to Determine Your Base System Type
 
