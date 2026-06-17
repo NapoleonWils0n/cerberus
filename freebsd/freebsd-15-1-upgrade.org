@@ -59,20 +59,6 @@ We now have the SSL components we need to sign packages and verify the signature
 doas pkg install poudriere
 #+END_SRC
 
-*** ports install
-
-install git
-
-#+begin_src sh
-doas pkg install git
-#+end_src
-
-use poudriere to pull ports
-
-#+begin_src sh
-doas poudriere ports -c -p local -m git+https -B branches/2026Q2
-#+end_src
-
 *** create the distfiles directory
 
 #+BEGIN_SRC sh
@@ -563,6 +549,20 @@ doas shutdown -r now
 #+end_src
 
 *** 12) update kmods
+**** ports install
+
+install git
+
+#+begin_src sh
+doas pkg install git
+#+end_src
+
+use poudriere to pull ports
+
+#+begin_src sh
+doas poudriere ports -c -p local -m git+https -B branches/2026Q2
+#+end_src
+
 **** Creating the Build Environment
 
 #+BEGIN_SRC sh
