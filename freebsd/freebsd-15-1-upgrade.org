@@ -639,7 +639,7 @@ The last thing we need to do is ensure that both our jail and ports tree are up-
 To update your jail, type:
 
 #+BEGIN_SRC sh
-doas poudriere jail -u -j freebsd_15-0x64
+doas poudriere jail -u -j freebsd_15-1x64
 #+END_SRC
 
 To update your ports tree, type:
@@ -651,7 +651,7 @@ poudriere ports -u -p local
 Once that is complete, we can kick off the bulk build process.
 
 #+BEGIN_SRC sh
-doas poudriere bulk -j freebsd_15-0x64 -p local -f /usr/local/etc/poudriere.d/port-list
+doas poudriere bulk -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
 This will start up a number of workers (depending on your poudriere.conf file or the number of CPUs available) and begin building the ports.
