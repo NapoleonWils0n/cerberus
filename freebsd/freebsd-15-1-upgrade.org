@@ -624,27 +624,13 @@ Afterwards, we can configure each of our ports, which will create files with the
 
 You can configure anything which has not been already configured using the options command. We should pass in both the port tree we created (using the -p option) and the jail we are setting these options for (using the -j option). We also must specify the list of ports we want to configure using the -f option.
 
-Our command will look like this:
-
-#+BEGIN_SRC sh
-doas poudriere options -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
-#+END_SRC
-
-You will see a dialog for each of the ports on the list and any dependencies that do not have corresponding options set in the -options directory. The specifications in your make.conf file will be preselected in the selection screens. Select all of the options you would like to use.
-
-If you wish to reconfigure the options for your ports in the future, you can re-run the command above with the -c option. This will show you all of the available configuration options, regardless of whether you have made a selection in the past:
-
-#+BEGIN_SRC sh
-doas poudriere options -c -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
-#+END_SRC
-
 bulk build with no user input
 
 #+BEGIN_SRC sh
 doas poudriere bulk -j freebsd_15-1x64 -p local -f /usr/local/etc/poudriere.d/port-list
 #+END_SRC
 
-**** Building the Ports
+**** Updating the Ports
 
 Now, we are finally ready to start building ports.
 
