@@ -1,23 +1,5 @@
 #+STARTUP: content
 * freebsd 15.1 upgrade
-** resources
-
-[[https://www.freebsd.org/releases/15.1R/upgrading/]]
-
-[[https://forums.freebsd.org/threads/404-for-15-1-release-installation-instructions.102973/#post-763920]]
-
-[[https://www.reddit.com/r/freebsd/comments/1u6xu2i/freebsd_151release_now_available/]]
-
-[[https://www.reddit.com/r/freebsd/comments/1u6nrz5/beware_of_upgrades_to_151/]]
-
-[[https://vermaden.wordpress.com/tag/pkg/]]
-
-[[https://lists.freebsd.org/archives/freebsd-stable/2026-May/004103.html]]
-
-[[https://forums.freebsd.org/threads/upgrading-to-a-new-release-with-pkgbase.102878/#post-762650]]
-
-[[https://vermaden.wordpress.com/2025/10/20/brave-new-pkgbase-world/]]
-
 ** poudriere
 *** Create an SSL Certificate and Key
 
