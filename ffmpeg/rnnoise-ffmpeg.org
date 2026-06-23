@@ -2,6 +2,8 @@
 * rnnoise ffmpeg
 ** sh.rnnn download
 
+[[https://github.com/GregorR/rnnoise-models]]
+
 On Freebsd use fetch to download sh.rnn
 
 #+begin_src sh
