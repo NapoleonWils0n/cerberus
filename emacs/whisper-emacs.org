@@ -1,0 +1,246 @@
+#+STARTUP: content
+* whisper.el emacs
+** resources
+
+whisper.cpp
+
+[[https://github.com/ggml-org/whisper.cpp]]
+
+Whisper-Cpp build with Vulkan
+
+[[https://github.com/NapoleonWils0n/cerberus/blob/master/whisper-cpp/whisper-cpp-vulkan-freebsd.org]]
+
+Sacha Chua's fork of whisper.el
+
+[[https://github.com/sachac/whisper.el]]
+
+Sacha Chua's blog post
+
+[[https://sachachua.com/blog/2026/01/using-whisper-el-to-capture-text-to-speech-in-emacs/]]
+
+Sacha Chua's youtube video
+
+[[https://www.youtube.com/watch?v=LtfxMFW0574]]
+
+** whisper.el set up 
+
+#+begin_src sh
+mkdir -p ~/video/whisper
+#+end_src
+
+*** whisper.cpp clone git repository
+
+#+begin_src sh
+git clone https://github.com/ggml-org/whisper.cpp.git
+#+end_src
+
+**** Freebsd cmake install
+
+#+begin_src sh
+doas pkg install cmake
+#+end_src
+
+**** Linux install cmake and other packages
+
+#+begin_src sh
+sudo apt install git cmake build-essential libvulkan-dev glslang-dev glslang-tools
+#+end_src
+
+**** build
+***** change into the git repo
+
+#+begin_src sh
+cd whisper.cpp
+#+end_src
+
+***** create a directory for spirv
+
+#+begin_src sh
+mkdir -p ./external/spirv/unified1/
+#+end_src
+
+***** fetch spirv.hpp
+
+#+begin_src sh
+fetch -o ./external/spirv/unified1/spirv.hpp https://raw.githubusercontent.com/KhronosGroup/SPIRV-Headers/main/include/spirv/unified1/spirv.hpp
+#+end_src
+
+***** remove the build directory if it exists
+
+#+begin_src sh
+rm -rf build
+#+end_src
+
+***** Freebsd build whisper-cpp with vulkan
+
+Configure CMake to build static libraries
+
+#+begin_src sh
+cmake -B build \
+  -DGGML_VULKAN=ON \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DWHISPER_ALL_EXTRAS=ON \
+  -DCMAKE_CXX_FLAGS="-I$(pwd)/external"
+#+end_src
+
+Build the binary (adjust -j for your CPU cores)
+
+#+begin_src sh
+cmake --build build -j$(sysctl -n hw.ncpu) --config Release
+#+end_src
+
+***** Linux build whisper-cpp with vulkan
+
+Configure CMake to build static libraries
+
+#+begin_src sh
+cmake -B build \
+      -DGGML_VULKAN=1 \
+      -DWHISPER_BUILD_TESTS=OFF \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DCMAKE_BUILD_TYPE=Release
+#+end_src
+
+Build the binary (adjust -j for your CPU cores)
+
+#+begin_src sh
+cmake --build build -j$(nprocs) --config Release
+#+end_src
+
+***** install to whisper-cli ~/bin
+
+#+begin_src sh
+cp build/bin/whisper-cli ~/bin/
+#+end_src
+
+*** download the models
+**** create the whisper-models directory
+
+#+begin_src sh
+mkdir -p ~/.local/share/whisper-models
+#+end_src
+
+**** small-en
+
+#+begin_src sh
+./models/download-ggml-model.sh small.en
+#+end_src
+
+copy the model into the whisper-models directory
+
+#+begin_src sh
+cp models/ggml-small.en.bin ~/.local/share/whisper-models/
+#+end_src
+
+*** Create the whisper recording directory
+
+#+begin_src sh
+mkdir -p ~/video/whisper
+#+end_src
+
+*** sh.rnnn download
+
+On Freebsd use fetch to download sh.rnn
+
+#+begin_src sh
+fetch https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
+#+end_src
+
+On Linux use wget to download sh.rnn
+
+#+begin_src sh
+wget https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
+#+end_src
+
+*** create the rnnoise directory
+
+create the rnnoise directory to store the sh.rnnn file
+
+#+begin_src sh
+mkdir -p ~/.local/share/rnnoise
+#+end_src
+
+copy the sh.rnnn file into the directory
+
+#+begin_src sh
+cp sh.rnnn ~/.local/share/rnnoise
+#+end_src
+
+** whisper.el code
+
+#+begin_example
+~/.config/emacs/init.el
+#+end_example
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; whisper-cpp
+;; ----------------------------------------------------------------------------------
+
+(use-package whisper
+  ;; Leverage the built-in package-vc features to clone the exact fork branch
+  :vc (:url "https://github.com/sachac/whisper.el"
+       :branch "whisper-insert-text-at-point-function")
+  :ensure t
+  :bind ("C-c w" . whisper-run)
+  :config
+  (setq whisper-install-whispercpp nil)
+  (setq whisper-model "small")
+  (setq whisper-language "en")
+  (setq whisper-return-cursor-to-start nil)
+  ;; Explicitly tell ffmpeg to use the Open Sound System driver for FreeBSD
+  (setq whisper--ffmpeg-input-format "oss")
+  ;; Point to your primary system microphone device (usually /dev/dsp)
+  (setq whisper--ffmpeg-input-device "/dev/dsp3")
+
+  ;; set the recording directory
+  (defvar my-whisper-dir (expand-file-name "~/video/whisper/"))
+  
+  (defun my-whisper-set-temp-filename ()
+    "Generate a unique timestamped filename inside the custom archive folder."
+    ;; Create the directory dynamically if it doesn't exist yet
+    (unless (file-directory-p my-whisper-dir)
+      (make-directory my-whisper-dir t))
+    (setq whisper--temp-file (expand-file-name
+                              (format-time-string "%Y-%m-%d-%H-%M-%S.wav")
+                              my-whisper-dir)))
+
+  ;; Use the correct hook name evaluated right before recording starts
+  (add-hook 'whisper-before-recording-hook #'my-whisper-set-temp-filename)
+
+  ;; ffmpeg wth rnnoise, noise gate, compressor and limiter
+  (defun whisper--record-command (output-file)
+      "Produces FFmpeg command to run with RNNoise and audio enhancement filters."
+      (unless (executable-find "ffmpeg")
+        (error "Needs FFmpeg to record audio"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-format)
+        (error "Set a suitable value for whisper--ffmpeg-input-format"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        (error "Set a suitable value for whisper--ffmpeg-input-device"))
+  
+      `("ffmpeg"
+        "-hide_banner"
+        ,@(unless whisper--ffmpeg-input-file
+            (list "-f" whisper--ffmpeg-input-format))
+        "-i" ,(or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        ,@(when (and (not whisper--ffmpeg-input-file) whisper-recording-timeout)
+            (list "-t" (number-to-string whisper-recording-timeout)))
+        "-af" ,(concat "arnndn=m=" (expand-file-name "~/.local/share/rnnoise/sh.rnnn") 
+                       ",agate=threshold=0.05:range=0.03:attack=25:release=150"
+                       ",acompressor=threshold=0.125:ratio=10:attack=6:release=60"
+                       ",volume=7.5dB"
+                       ",alimiter=level_out=0.79:release=60")
+        "-ar" "16000"
+        "-y" ,output-file))
+
+  (defun whisper-command (file)
+      (list "whisper-cli"
+            "-m" (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin")
+            "-l" whisper-language
+            "-np"
+            "-nt"
+            "-f" file))
+  (setq whisper-insert-text-at-point-function #'insert))
+#+end_src
+
+

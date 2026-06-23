@@ -17,32 +17,31 @@ doas pkg install cmake
 #+end_src
 
 *** build
-
-change into the git repo
+**** change into the git repo
 
 #+begin_src sh
 cd whisper.cpp
 #+end_src
 
-create a directory for spirv
+**** create a directory for spirv
 
 #+begin_src sh
 mkdir -p ./external/spirv/unified1/
 #+end_src
 
-fetch spirv.hpp
+**** fetch spirv.hpp
 
 #+begin_src sh
 fetch -o ./external/spirv/unified1/spirv.hpp https://raw.githubusercontent.com/KhronosGroup/SPIRV-Headers/main/include/spirv/unified1/spirv.hpp
 #+end_src
 
-remove the build directory if it exists
+**** remove the build directory if it exists
 
 #+begin_src sh
 rm -rf build
 #+end_src
 
-build whisper-cpp with vulkan
+**** build whisper-cpp with vulkan
 
 Configure CMake to build static libraries
 
@@ -54,13 +53,13 @@ cmake -B build \
   -DCMAKE_CXX_FLAGS="-I$(pwd)/external"
 #+end_src
 
-Build the binary (adjust -j for your CPU cores)
+**** Build the binary (adjust -j for your CPU cores)
 
 #+begin_src sh
 cmake --build build -j$(sysctl -n hw.ncpu) --config Release
 #+end_src
 
-install to whisper-cli ~/bin
+**** install to whisper-cli ~/bin
 
 #+begin_src sh
 cp build/bin/whisper-cli ~/bin/

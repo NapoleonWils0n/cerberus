@@ -1,0 +1,54 @@
+#+STARTUP: content
+* rnnoise ffmpeg
+** sh.rnnn download
+
+On Freebsd use fetch to download sh.rnn
+
+#+begin_src sh
+fetch https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
+#+end_src
+
+On Linux use wget to download sh.rnn
+
+#+begin_src sh
+wget https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
+#+end_src
+
+** create the rnnoise directory
+
+create the rnnoise directory to store the sh.rnnn file
+
+#+begin_src sh
+mkdir -p ~/.local/share/rnnoise
+#+end_src
+
+copy the sh.rnnn file into the directory
+
+#+begin_src sh
+cp sh.rnnn ~/.local/share/rnnoise
+#+end_src
+
+** ffmpeg record the mic with no filters
+
+Recording the mic on freebsd with no filters
+
+#+begin_src sh
+ffmpeg -hide_banner -f oss -i /dev/dsp3 nofilter.wav
+#+end_src
+
+** ffmpeg record the mic with rnnoise
+
+Recording the mic on freebsd with rnnoise
+
+#+begin_src sh
+ffmpeg -hide_banner -f oss -i /dev/dsp3 -af "arnndn=m=${HOME}/.local/share/rnnoise/sh.rnnn" filter.wav
+#+end_src
+
+** ffmpeg record the mic with rnnoise, noise gate, compressor and a limiter
+
+Recording the mic on freebsd with rnnoise, noise gate, compressor and a limiter
+
+#+begin_src sh
+ffmpeg -hide_banner -f oss -i /dev/dsp3 -af "arnndn=m=${HOME}/.local/share/rnnoise/sh.rnnn,agate=threshold=0.05:range=0.03:attack=25:release=150,acompressor=threshold=0.125:ratio=10:attack=6:release=60,volume=7.5dB,alimiter=level_out=0.79:release=60" combined-filters.wav
+#+end_src
+
