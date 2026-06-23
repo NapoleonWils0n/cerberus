@@ -61,8 +61,16 @@ mkdir -p ./external/spirv/unified1/
 
 ***** fetch spirv.hpp
 
+Freebsd
+
 #+begin_src sh
 fetch -o ./external/spirv/unified1/spirv.hpp https://raw.githubusercontent.com/KhronosGroup/SPIRV-Headers/main/include/spirv/unified1/spirv.hpp
+#+end_src
+
+Linux
+
+#+begin_src sh
+curl -o ./external/spirv/unified1/spirv.hpp https://raw.githubusercontent.com/KhronosGroup/SPIRV-Headers/main/include/spirv/unified1/spirv.hpp
 #+end_src
 
 ***** remove the build directory if it exists
@@ -130,12 +138,6 @@ copy the model into the whisper-models directory
 
 #+begin_src sh
 cp models/ggml-small.en.bin ~/.local/share/whisper-models/
-#+end_src
-
-*** Create the whisper recording directory
-
-#+begin_src sh
-mkdir -p ~/video/whisper
 #+end_src
 
 *** sh.rnnn download
