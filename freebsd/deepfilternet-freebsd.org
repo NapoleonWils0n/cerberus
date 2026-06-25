@@ -1,0 +1,104 @@
+#+STARTUP: content
+* deepfilternet freebsd
+** resources
+
+[[https://github.com/rikorose/deepfilternet]]
+
+[[https://github.com/Rikorose/DeepFilterNet/tree/main/ladspa]]
+
+[[https://github.com/Rikorose/DeepFilterNet/blob/main/ladspa/filter-chain-configs/deepfilter-stereo-sink.conf]]
+
+** packages
+
+install the required packages
+
+#+begin_src sh
+doas pkg install rust pkgconf hdf5 alsa-lib jackit pipewire ladspa
+#+end_src
+
+** git clone repo
+
+clone the git repository
+
+#+begin_src sh
+git clone https://github.com/rikorose/deepfilternet.git
+#+end_src
+
+change directory into the deepfilter git repository
+
+#+begin_src sh
+cd deepfilternet
+#+end_src
+
+** deepfilternet build
+
+#+begin_src sh
+PYO3_PYTHON=/usr/local/bin/python3.11 cargo build --release \
+  --bin deep-filter \
+  --no-default-features \
+  --features bin,tract,wav-utils,transforms
+#+end_src
+
+#+begin_src sh
+cp target/release/deep-filter ~/bin
+#+end_src
+
+** build ladspa
+
+#+begin_src sh
+cd ladspa
+#+end_src
+
+#+begin_src sh
+PYO3_PYTHON=/usr/local/bin/python3.11 cargo build --release
+#+end_src
+
+#+begin_src sh
+cd ../
+#+end_src
+
+#+begin_src sh
+mkdir -p ~/.ladspa
+#+end_src
+
+#+begin_src sh
+cp target/release/libdeep_filter_ladspa.so ~/.ladspa
+#+end_src
+
+** model
+
+#+begin_src sh
+mkdir -p ~/.local/share/deepfilternet
+#+end_src
+
+#+begin_src sh
+cp models/DeepFilterNet3_onnx.tar.gz ~/.local/share/deepfilternet
+#+end_src
+
+** deepfilter-net
+*** default
+
+#+begin_src sh
+deep-filter \
+--model ~/.local/share/deepfilternet/DeepFilterNet3_onnx.tar.gz \
+--atten-lim-db 70 \
+--pf \
+--pf-beta 0.05 \
+-o enhanced_audio \
+input.wav
+#+end_src
+
+*** atten-lim-db 20
+
+#+begin_src sh
+deep-filter \
+--model ~/.local/share/deepfilternet/DeepFilterNet3_onnx.tar.gz \
+--atten-lim-db 20 \
+--min-db-thresh=-5 \
+-D \
+--pf \
+--pf-beta 0.02 \
+-o enhanced_audio_v2 \
+input.wav
+#+end_src
+
