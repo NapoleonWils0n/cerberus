@@ -58,11 +58,7 @@ cd ../
 #+end_src
 
 #+begin_src sh
-mkdir -p ~/.ladspa
-#+end_src
-
-#+begin_src sh
-cp target/release/libdeep_filter_ladspa.so ~/.ladspa
+doas cp target/release/libdeep_filter_ladspa.so /usr/local/lib/ladspa
 #+end_src
 
 ** model
