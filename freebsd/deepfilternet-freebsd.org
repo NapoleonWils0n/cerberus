@@ -84,12 +84,12 @@ deep-filter \
 input.wav
 #+end_src
 
-*** atten-lim-db 20
+*** atten-lim-db 35
 
 #+begin_src sh
 deep-filter \
 --model ~/.local/share/deepfilternet/DeepFilterNet3_onnx.tar.gz \
---atten-lim-db 20 \
+--atten-lim-db 35 \
 --min-db-thresh=-5 \
 -D \
 --pf \
