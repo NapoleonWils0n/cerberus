@@ -3,10 +3,18 @@
 
 the yt-dlp shebang points to python3
 
-so we need to create a symlink from python 3.9 to python3
+option 1 install the python3 meta package that creates the symlink
 
 #+begin_src sh
-sudo ln -s /usr/local/bin/python3.9 /usr/local/bin/python3
+doas pkg install python3
+#+end_src
+
+option 2 manually create a symlink
+
+so we need to create a symlink from python 3.11 to python3
+
+#+begin_src sh
+sudo ln -s /usr/local/bin/python3.11 /usr/local/bin/python3
 #+end_src
 
 edit your ~/.zshenv
