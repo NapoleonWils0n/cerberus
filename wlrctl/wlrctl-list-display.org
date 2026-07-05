@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* wlrctl list displays
+
+#+begin_src sh
+wlrctl output list
+#+end_src
