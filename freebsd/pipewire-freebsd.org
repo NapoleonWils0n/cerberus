@@ -1,0 +1,85 @@
+#+STARTUP: content
+* pipewire freebsd
+** packages
+
+You need the following packages install
+
+#+begin_src sh
+doas pkg install grim slurp
+#+end_src
+
+slurp is use by the window picker to select the screen
+
+** zshenv
+
+You need to set the following in your ~/.zshenv config
+
+#+begin_src sh
+export XDG_CURRENT_DESKTOP=wlroots
+#+end_src
+
+** start pipewire
+
+#+begin_src sh
+pipewire &
+/usr/local/libexec/xdg-desktop-portal -r &
+/usr/local/libexec/xdg-desktop-portal-wlr -r &
+#+end_src
+
+** stop pipewire
+
+#+begin_src sh
+killall -9 xdg-desktop-portal xdg-desktop-portal-wlr pipewire 2>/dev/null
+#+end_src
+
+** wlr.portal
+
+The wlr.portal is used when XDG_CURRENT_DESKTOP=wlroots is set
+and you start screen sharing
+
+#+begin_example
+/usr/local/share/xdg-desktop-portal/portals/wlr.portal
+#+end_example
+
+#+begin_src conf
+[portal]
+DBusName=org.freedesktop.impl.portal.desktop.wlr
+Interfaces=org.freedesktop.impl.portal.Screenshot;org.freedesktop.impl.portal.ScreenCast;
+UseIn=wlroots;sway;Wayfire;river;phosh;Hyprland;
+#+end_src
+
+** xdg-desktop-portal-wlr
+
+#+begin_src sh
+mkdir -p ~/.config/xdg-desktop-portal-wlr/
+#+end_src
+
+#+begin_src sh
+vi ~/.config/xdg-desktop-portal-wlr/config
+#+end_src
+
+#+begin_src conf
+[screencast]
+output_name=eDP-1
+max_fps=30
+chooser_type=simple
+chooser_cmd=slurp -f %o -or
+#+end_src
+
+** portals.conf
+
+#+begin_src sh
+mkdir -p ~/.config/xdg-desktop-portal/
+#+end_src
+
+#+begin_src sh
+vi ~/.config/xdg-desktop-portal/portals.conf
+#+end_src
+
+#+begin_src conf
+[preferred]
+default=wlr
+org.freedesktop.impl.portal.ScreenCast=wlr
+org.freedesktop.impl.portal.Screenshot=wlr
+#+end_src
+
