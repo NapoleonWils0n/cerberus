@@ -158,6 +158,7 @@ audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
     -i "${video_url}" \
     -i "${audio_url}" \
     -c:a copy -c:v copy \
+    -map 0:0 -map 1:0 \
     -tune zerolatency \
     -f matroska /tmp/relay
 }
@@ -188,6 +189,7 @@ audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
     -i "${audio_url}" \
     ${duration_arg} \
     -c:a copy -c:v copy \
+    -map 0:0 -map 1:0 \
     -tune zerolatency \
     -f matroska /tmp/relay
 }
