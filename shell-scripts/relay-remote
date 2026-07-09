@@ -2,7 +2,7 @@
 
 
 #===============================================================================
-# relay-local stream a local video to a named pipe
+# relay-remote stream a remote video to a named pipe
 #===============================================================================
 
 
@@ -63,6 +63,33 @@ shift $((OPTIND-1))
 
 
 #===============================================================================
+# url
+#===============================================================================
+
+# yt-dlp url
+url=$(yt-dlp -f b -g --no-playlist "${input}")
+
+# check number of stream links
+streamcount=$(echo "${url}" | awk 'END{print NR}')
+
+
+#===============================================================================
+# one stream containing audio and video
+#===============================================================================
+
+one_stream () {
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-y \
+-i "${url}" \
+-c:a copy -c:v copy \
+-tune zerolatency \
+-f matroska /tmp/relay
+}
+
+
+#===============================================================================
 # calculate duration using your sexagesimal math
 #===============================================================================
 
@@ -89,23 +116,6 @@ get_duration() {
 
 
 #===============================================================================
-# one stream containing audio and video
-#===============================================================================
-
-one_stream () {
-ffmpeg \
--hide_banner \
--stats -v panic \
--y \
--re \
--i "${input}" \
--c:a copy -c:v copy \
--tune zerolatency \
--f matroska /tmp/relay
-}
-
-
-#===============================================================================
 # trim video using stream copying
 #===============================================================================
 
@@ -123,8 +133,7 @@ one_stream_trim () {
     -stats -v panic \
     -y \
     -ss "${start}" \
-    -re \
-    -i "${input}" \
+    -i "${url}" \
     ${duration_arg} \
     -c:a copy -c:v copy \
     -tune zerolatency \
@@ -133,12 +142,70 @@ one_stream_trim () {
 
 
 #===============================================================================
-# case statement check if playing the whole video or trimming
+# two streams containing audio and video
 #===============================================================================
 
-# start, end, or both were provided
+# copy audio and video streams
+two_streams () {
+video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -y \
+    -i "${video_url}" \
+    -i "${audio_url}" \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f matroska /tmp/relay
+}
+
+
+#===============================================================================
+# trim two streams containing audio and video
+#===============================================================================
+
+two_streams_trim () {
+video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+
+    if [ -n "${start}" ] && [ -n "${end}" ]; then
+        duration=$(get_duration "${start}" "${end}")
+        duration_arg="-t ${duration}"
+    elif [ -n "${end}" ]; then
+        duration_arg="-t ${end}"
+    fi
+
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -y \
+    -ss "${start}" \
+    -i "${video_url}" \
+    -i "${audio_url}" \
+    ${duration_arg} \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f matroska /tmp/relay
+}
+
+#===============================================================================
+# case statement check for number of streams
+#===============================================================================
+
 if [ -n "${start}" ] || [ -n "${end}" ]; then
-    one_stream_trim
+    case "${streamcount}" in
+        1) one_stream_trim ;;
+        2) two_streams_trim ;;
+        *) usage ;;
+    esac
 else
-    one_stream
+    case "${streamcount}" in
+        1) one_stream ;;
+        2) two_streams ;;
+        *) usage ;;
+    esac
 fi
