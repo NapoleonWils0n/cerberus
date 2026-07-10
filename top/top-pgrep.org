@@ -1,0 +1,22 @@
+#+STARTUP: showall
+* top pgrep 
+
+Top only show stats for one process
+
+Use pgrep to find the pid of a process
+
+#+begin_src sh
+pgrep ffmpeg
+#+end_src
+
+Process id
+
+#+begin_example
+88628
+#+end_example
+
+Use top with the -p option and the process id
+
+#+begin_src sh
+top -p 88628
+#+end_src
