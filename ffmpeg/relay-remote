@@ -79,7 +79,7 @@ flush_pipe () {
 #===============================================================================
 
 # yt-dlp url
-url=$(yt-dlp -g --no-playlist -f "bv*[height<=1080]/bv*[height<=720]/bv" "${input}")
+url=$(yt-dlp -g --no-playlist -f "(bv*[height<=1080]/bv*[height<=720]/bv)+bestaudio/best" "${input}")
 
 # check number of stream links
 streamcount=$(echo "${url}" | awk 'END{print NR}')
