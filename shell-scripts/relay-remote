@@ -63,6 +63,18 @@ shift $((OPTIND-1))
 
 
 #===============================================================================
+# Flush named pipe without blocking
+#===============================================================================
+
+flush_pipe () {
+    if [ -p /tmp/relay ]; then
+        # Read everything currently in the pipe buffer and discard it
+        dd if=/tmp/relay of=/dev/null iflag=nonblock status=none 2>/dev/null || true
+    fi
+}
+
+
+#===============================================================================
 # url
 #===============================================================================
 
@@ -199,12 +211,14 @@ audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
 #===============================================================================
 
 if [ -n "${start}" ] || [ -n "${end}" ]; then
+    flush_pipe
     case "${streamcount}" in
         1) one_stream_trim ;;
         2) two_streams_trim ;;
         *) usage ;;
     esac
 else
+    flush_pipe
     case "${streamcount}" in
         1) one_stream ;;
         2) two_streams ;;
