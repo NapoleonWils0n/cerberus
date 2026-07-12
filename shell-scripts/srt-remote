@@ -205,7 +205,7 @@ two_streams_trim () {
 # case statement check for number of streams
 #===============================================================================
 
-if [ -n "${start}" ] || [ -n "${end}" ]; then
+if [ -z "${start}" ] && [ -z "${end}" ]; then
    case "${streamcount}" in
        1) one_stream;; # single stream
        2) two_streams;; # audio and video stream
