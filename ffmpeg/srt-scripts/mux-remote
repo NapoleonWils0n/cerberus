@@ -1,0 +1,224 @@
+#!/bin/sh
+
+
+#===============================================================================
+# mux-remote - stream a remote video with srt, video must be h264/aac
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -u input -s 00:00:00 -t 00:00:00 -i ip/dns -p port -o -
+-o - : optional argument sends the output to stdout"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts 'u:i:p:s:t:h' opt
+do
+  case ${opt} in
+     u) input="${OPTARG}";;
+     i) ip="${OPTARG}";;
+     p) port="${OPTARG}";;
+     s) start="${OPTARG}";;
+     t) end="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# defaults
+#===============================================================================
+
+# default ip
+ip_default='192.168.1.131'
+
+# default port
+port_default='6882'
+
+# default output
+output_default="srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
+
+
+#===============================================================================
+# url
+#===============================================================================
+
+# yt-dlp url - h264/aac 1080 or less
+url=$(yt-dlp -g --no-playlist -S "vcodec:h264,res:1080,acodec:aac" -f "bv+ba/b" "${input}")
+
+# check number of stream links
+streamcount=$(echo "${url}" | awk 'END{print NR}')
+
+
+#===============================================================================
+# calculate duration using sexagesimal math
+#===============================================================================
+
+get_duration() {
+    printf "%s %s\n" "$1" "$2" | awk '
+        {
+          start = $1
+          end = $2
+          if (start ~ /:/) {
+            split(start, t, ":")
+            sseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          if (end ~ /:/) {
+            split(end, t, ":")
+            eseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          duration = eseconds - sseconds
+          printf("%s\n"), duration
+        }' \
+    | awk -F. '
+        NF==1 { printf("%02d:%02d:%02d\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60) }\
+        NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }'
+}
+
+
+#===============================================================================
+# one stream container audio and video
+#===============================================================================
+
+one_stream () {
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -i "${url}" \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# one stream container audio and video - trim with stream copy
+#===============================================================================
+
+one_stream_trim () {
+    # calculate duration
+    if [ -n "${start}" ] && [ -n "${end}" ]; then
+        duration=$(get_duration "${start}" "${end}")
+        duration_arg="-t ${duration}"
+    elif [ -n "${end}" ]; then
+        duration_arg="-t ${end}"
+    fi
+
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -ss "${start}" \
+    -i "${url}" \
+    ${duration_arg} \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# two streams containing audio and video
+#===============================================================================
+
+two_streams () {
+    video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+    audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+    
+    # ffmpeg join audio and video and stream
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -i "${video_url}" \
+    -i "${audio_url}" \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -map 0:0 -map 1:0 \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# two streams containing audio and video - trim with stream copy
+#===============================================================================
+
+two_streams_trim () {
+    video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+    audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+    
+    # calculate duration
+    if [ -n "${start}" ] && [ -n "${end}" ]; then
+        duration=$(get_duration "${start}" "${end}")
+        duration_arg="-t ${duration}"
+    elif [ -n "${end}" ]; then
+        duration_arg="-t ${end}"
+    fi
+    
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -ss "${start}" \
+    -i "${video_url}" \
+    -i "${audio_url}" \
+    ${duration_arg} \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -map 0:0 -map 1:0 \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# case statement check for number of streams
+#===============================================================================
+
+if [ -z "${start}" ] && [ -z "${end}" ]; then
+   case "${streamcount}" in
+       1) one_stream;; # single stream
+       2) two_streams;; # audio and video stream
+       *) usage;;
+   esac
+else
+   case "${streamcount}" in
+       1) one_stream_trim;; # single stream
+       2) two_streams_trim;; # audio and video stream
+       *) usage;;
+   esac
+fi    
