@@ -1,0 +1,798 @@
+#+STARTUP: content
+* obs media source srt
+** h264/aac
+
+The files or stream must be h264/aac for streaming to work.
+
+** obs studio settings
+*** advanced settings
+
+Open the obs studio settings / advanced section.
+
+Under the Network section
+
+1) Change IP Family to: IPv4 Only
+
+2) Change Bind to IP: to your lan ip address
+
+*** media source
+
+Add a media source to a scene.
+
+1) Uncheck: Local file.
+
+2) Check: Restart playback when source becomes active
+
+3) Set: Network Buffering to 2 MB
+
+4) Input: add the srt code below.
+
+Change the ip address to your lan ip address of the machine OBS is running on.
+
+And change the port if needed and make sure its open in your firewall.
+
+#+begin_src sh
+srt://192.168.1.131:6882?mode=listener
+#+end_src
+
+5) Set: Reconnect Delay to 1 S
+
+6) Check: Use hardware decoding when available.
+
+7) Check: Show nothing when playback ends.
+
+8) Check: Close file when inactive
+
+** scripts
+*** mux-local
+
+#+begin_src sh
+#!/bin/sh
+
+
+#===============================================================================
+# mux-local - stream a local video with srt, video must be h264/aac
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -f input -s 00:00:00 -t 00:00:00 -i ip -p port -o -
+-o - : optional argument sends the output to stdout"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts 'f:i:p:s:t:o:h' opt
+do
+  case ${opt} in
+     f) input="${OPTARG}";;
+     i) ip="${OPTARG}";;
+     p) port="${OPTARG}";;
+     s) start="${OPTARG}";;
+     t) end="${OPTARG}";;
+     o) output="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# defaults
+#===============================================================================
+
+# default ip
+ip_default='192.168.1.131'
+
+# default port
+port_default='6882'
+
+# default output
+output_default="srt://${ip:=${ip_default}}:${port:=${port_default}}"
+
+
+#===============================================================================
+# calculate duration using sexagesimal math
+#===============================================================================
+
+get_duration() {
+    printf "%s %s\n" "$1" "$2" | awk '
+        {
+          start = $1
+          end = $2
+          if (start ~ /:/) {
+            split(start, t, ":")
+            sseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          if (end ~ /:/) {
+            split(end, t, ":")
+            eseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          duration = eseconds - sseconds
+          printf("%s\n"), duration
+        }' \
+    | awk -F. '
+        NF==1 { printf("%02d:%02d:%02d\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60) }\
+        NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }'
+}
+
+
+#===============================================================================
+# one stream containing audio and video
+#===============================================================================
+
+one_stream () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -y \
+    -re \
+    -i "${input}" \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# one stream container audio and video - trim with stream copy
+#===============================================================================
+
+one_stream_trim () {
+    if [ -n "${start}" ] && [ -n "${end}" ]; then
+        duration=$(get_duration "${start}" "${end}")
+        duration_arg="-t ${duration}"
+    elif [ -n "${end}" ]; then
+        duration_arg="-t ${end}"
+    fi
+
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -y \
+    -ss "${start}" \
+    -re \
+    -i "${input}" \
+    ${duration_arg} \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# case statement check if playing the whole video or trimming
+#===============================================================================
+
+# start, end, or both were provided
+if [ -n "${start}" ] || [ -n "${end}" ]; then
+    one_stream_trim
+else
+    one_stream
+fi
+#+end_src
+
+*** mux-remote
+
+#+begin_src sh
+#!/bin/sh
+
+
+#===============================================================================
+# mux-remote - stream a remote video with srt, video must be h264/aac
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -u input -s 00:00:00 -t 00:00:00 -i ip/dns -p port -o -
+-o - : optional argument sends the output to stdout"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts 'u:i:p:s:t:h' opt
+do
+  case ${opt} in
+     u) input="${OPTARG}";;
+     i) ip="${OPTARG}";;
+     p) port="${OPTARG}";;
+     s) start="${OPTARG}";;
+     t) end="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# defaults
+#===============================================================================
+
+# default ip
+ip_default='192.168.1.131'
+
+# default port
+port_default='6882'
+
+# default output
+output_default="srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
+
+
+#===============================================================================
+# url
+#===============================================================================
+
+# yt-dlp url - h264/aac 1080 or less
+url=$(yt-dlp -g --no-playlist -S "vcodec:h264,res:1080,acodec:aac" -f "bv+ba/b" "${input}")
+
+# check number of stream links
+streamcount=$(echo "${url}" | awk 'END{print NR}')
+
+
+#===============================================================================
+# calculate duration using sexagesimal math
+#===============================================================================
+
+get_duration() {
+    printf "%s %s\n" "$1" "$2" | awk '
+        {
+          start = $1
+          end = $2
+          if (start ~ /:/) {
+            split(start, t, ":")
+            sseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          if (end ~ /:/) {
+            split(end, t, ":")
+            eseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          duration = eseconds - sseconds
+          printf("%s\n"), duration
+        }' \
+    | awk -F. '
+        NF==1 { printf("%02d:%02d:%02d\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60) }\
+        NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }'
+}
+
+
+#===============================================================================
+# one stream container audio and video
+#===============================================================================
+
+one_stream () {
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -i "${url}" \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# one stream container audio and video - trim with stream copy
+#===============================================================================
+
+one_stream_trim () {
+    # calculate duration
+    if [ -n "${start}" ] && [ -n "${end}" ]; then
+        duration=$(get_duration "${start}" "${end}")
+        duration_arg="-t ${duration}"
+    elif [ -n "${end}" ]; then
+        duration_arg="-t ${end}"
+    fi
+
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -ss "${start}" \
+    -i "${url}" \
+    ${duration_arg} \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# two streams containing audio and video
+#===============================================================================
+
+two_streams () {
+    video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+    audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+    
+    # ffmpeg join audio and video and stream
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -i "${video_url}" \
+    -i "${audio_url}" \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -map 0:0 -map 1:0 \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# two streams containing audio and video - trim with stream copy
+#===============================================================================
+
+two_streams_trim () {
+    video_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
+    audio_url=$(echo "${url}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $2}')
+    
+    # calculate duration
+    if [ -n "${start}" ] && [ -n "${end}" ]; then
+        duration=$(get_duration "${start}" "${end}")
+        duration_arg="-t ${duration}"
+    elif [ -n "${end}" ]; then
+        duration_arg="-t ${end}"
+    fi
+    
+    # shellcheck disable=SC2086
+    ffmpeg \
+    -hide_banner \
+    -y \
+    -re \
+    -ss "${start}" \
+    -i "${video_url}" \
+    -i "${audio_url}" \
+    ${duration_arg} \
+    -c:a copy -c:v copy \
+    -tune zerolatency \
+    -map 0:0 -map 1:0 \
+    -f mpegts "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# case statement check for number of streams
+#===============================================================================
+
+if [ -z "${start}" ] && [ -z "${end}" ]; then
+   case "${streamcount}" in
+       1) one_stream;; # single stream
+       2) two_streams;; # audio and video stream
+       ,*) usage;;
+   esac
+else
+   case "${streamcount}" in
+       1) one_stream_trim;; # single stream
+       2) two_streams_trim;; # audio and video stream
+       ,*) usage;;
+   esac
+fi    
+#+end_src
+
+*** mux-play
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# mux-play - receive a srt stream with mpv
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i ip -p port"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts 'i:p:h' opt
+do
+  case ${opt} in
+     i) ip="${OPTARG}";;
+     p) port="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# defaults
+#===============================================================================
+
+# default ip
+ip_default='192.168.1.131'
+
+# default port
+port_default='6882'
+
+
+#===============================================================================
+# srt_recv function
+#===============================================================================
+
+srt_recv () {
+srt-live-transmit "srt://${ip:=${ip_default}}:${port:=${port_default}}?mode=listener" file://con | mpv --fs -
+}
+
+#===============================================================================
+# run srt_recv function
+#===============================================================================
+
+srt_recv
+#+end_src
+
+** makefiles
+*** local
+
+#+begin_src makefile
+#===============================================================================
+# Makefile: mux-local
+#===============================================================================
+
+#===============================================================================
+# Makefile: usage
+#
+# 1) Edit the 'Videos' section and change videos and timestamps.
+# 2) Edit the 'Commands' section and change the ip and port.
+# 3) Edit the 'Last video to play' section and set it to the last video.
+# 4) Edit the 'Video sequence' so it matches the 'Videos' section.
+#===============================================================================
+
+
+#===============================================================================
+# Phony
+#===============================================================================
+
+.PHONY: all clean play
+
+
+#===============================================================================
+# Videos
+#===============================================================================
+
+#===============================================================================
+# VIDEO-1: Big Buck Bunny
+#===============================================================================
+
+VIDEO-1		:= ${HOME}/desktop/Big_Buck_Bunny.mkv
+VIDEO-1-TIME	:= -s 00:03:05 -t 00:03:20
+
+#===============================================================================
+# VIDEO-2: Big Buck Bunny
+#===============================================================================
+
+VIDEO-2		:= ${HOME}/desktop/Big_Buck_Bunny.mkv
+VIDEO-2-TIME	:= -s 00:05:15 -t 00:05:40
+
+#===============================================================================
+# VIDEO-3: Big Buck Bunny
+#===============================================================================
+
+VIDEO-3		:= ${HOME}/desktop/Big_Buck_Bunny.mkv
+VIDEO-3-TIME	:= -s 00:06:19 -t 00:06:40
+
+#===============================================================================
+# VIDEO-4: Charge
+#===============================================================================
+
+VIDEO-4		:= ${HOME}/desktop/Charge.mkv
+VIDEO-4-TIME	:= -s 00:00:00 -t 00:00:38
+
+
+#===============================================================================
+# Commands
+#===============================================================================
+
+#===============================================================================
+# Stdout
+#===============================================================================
+
+OUTPUT		:= -o -
+
+#===============================================================================
+# Srt listener ip address
+#===============================================================================
+
+IP		:= 192.168.1.131
+
+#===============================================================================
+# Srt listener port
+#===============================================================================
+
+PORT		:= 6882
+
+
+#===============================================================================
+# Last video to play
+#===============================================================================
+
+TARGET		:= video-4
+
+
+#===============================================================================
+# Default target
+#===============================================================================
+
+all: play
+
+
+#===============================================================================
+# Stream all the clips sequentially
+#===============================================================================
+
+play:
+	@( $(MAKE) $(TARGET) ) | srt-live-transmit file://con srt://$(IP):$(PORT)
+
+
+#===============================================================================
+# Video sequence
+#===============================================================================
+
+#===============================================================================
+# First video in sequence
+#===============================================================================
+
+video-1: 
+	@mux-local -f $(VIDEO-1) $(VIDEO-1-TIME) $(OUTPUT)
+
+#===============================================================================
+# Second video in sequence
+#===============================================================================
+
+video-2: video-1
+	@mux-local -f $(VIDEO-2) $(VIDEO-2-TIME) $(OUTPUT)
+
+#===============================================================================
+# Third video in sequence
+#===============================================================================
+
+video-3: video-2
+	@mux-local -f $(VIDEO-3) $(VIDEO-3-TIME) $(OUTPUT)
+
+#===============================================================================
+# Last video in sequence
+#===============================================================================
+
+video-4: video-3
+	@mux-local -f $(VIDEO-4) $(VIDEO-4-TIME) $(OUTPUT)
+
+
+#===============================================================================
+# Clean
+#===============================================================================
+
+clean:
+	@echo 'does nothing'
+#+end_src
+
+*** remote
+
+#+begin_src makefile
+#===============================================================================
+# Makefile: mux-remote 
+#===============================================================================
+
+
+#===============================================================================
+# Makefile: usage
+#
+# 1) Edit the 'Videos' section and change videos and timestamps.
+# 2) Edit the 'Commands' section and change the ip and port.
+# 3) Edit the 'Last video to play' section and set it to the last video.
+# 4) Edit the 'Video sequence' so it matches the 'Videos' section.
+#===============================================================================
+
+
+#===============================================================================
+# PHONY
+#===============================================================================
+
+.PHONY: all clean
+
+
+#===============================================================================
+# Videos
+#===============================================================================
+
+#===============================================================================
+# VIDEO-1: agent 327
+#===============================================================================
+
+VIDEO-1		:= 'https://www.youtube.com/watch?v=mN0zPOpADL4'
+VIDEO-1-TIME	:= -s 00:00:08 -t 00:00:16
+
+#===============================================================================
+# VIDEO-2: big buck bunny
+#===============================================================================
+
+VIDEO-2		:= 'https://www.youtube.com/watch?v=YE7VzlLtp-4'
+VIDEO-2-TIME	:= -s 00:01:24 -t 00:01:52
+
+#===============================================================================
+# VIDEO-3: charge
+#===============================================================================
+
+VIDEO-3		:= 'https://www.youtube.com/watch?v=UXqq0ZvbOnk'
+VIDEO-3-TIME	:= -s 00:00:58 -t 00:01:21
+
+
+#===============================================================================
+# Commands
+#===============================================================================
+
+#===============================================================================
+# Stdout
+#===============================================================================
+
+OUTPUT		:= -o -
+
+#===============================================================================
+# Srt listener ip address
+#===============================================================================
+
+IP		:= 192.168.1.131
+
+#===============================================================================
+# Srt listener port
+#===============================================================================
+
+PORT		:= 6882
+
+
+#===============================================================================
+# Last video to play
+#===============================================================================
+
+TARGET		:= video-3
+
+
+#===============================================================================
+# Default target
+#===============================================================================
+
+all: play
+
+
+#===============================================================================
+# Stream all the clips sequentially
+#===============================================================================
+
+play:
+	@( $(MAKE) $(TARGET) ) | srt-live-transmit file://con srt://$(IP):$(PORT)
+
+
+#===============================================================================
+# Video sequence
+#===============================================================================
+
+#===============================================================================
+# First video in sequence
+#===============================================================================
+
+video-1: 
+	mux-remote -u $(VIDEO-1) $(VIDEO-1-TIME) $(OUTPUT)
+
+#===============================================================================
+# Second video in sequence
+#===============================================================================
+
+video-2: video-1
+	mux-remote -u $(VIDEO-2) $(VIDEO-2-TIME) $(OUTPUT)
+
+#===============================================================================
+# Last video in sequence
+#===============================================================================
+
+video-3: video-2
+	mux-remote -u $(VIDEO-3) $(VIDEO-3-TIME) $(OUTPUT)
+
+
+#===============================================================================
+# Clean
+#===============================================================================
+
+clean:
+	@rm -f /tmp/relay
+#+end_src
+
+** yt-dlp h264/aac 1080
+
+Download single file or playlist
+
+#+begin_src sh
+yt-dlp -f "bv*[vcodec^=avc1][height<=1080]+ba[acodec^=mp4a]/b[vcodec^=avc1][acodec^=mp4a][height<=1080]" 'the url'
+#+end_src
+
+Download single file only
+
+#+begin_src sh
+yt-dlp --no-playlist -f "bv*[vcodec^=avc1][height<=1080]+ba[acodec^=mp4a]/b[vcodec^=avc1][acodec^=mp4a][height<=1080]" 'the url'
+#+end_src
+
+
