@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* yt-dlp h264/aac 1080 download
+
+Download single file or playlist
+
+#+begin_src sh
+yt-dlp -f "bv*[vcodec^=avc1][height<=1080]+ba[acodec^=mp4a]/b[vcodec^=avc1][acodec^=mp4a][height<=1080]" 'the url'
+#+end_src
+
+Download single file only
+
+#+begin_src sh
+yt-dlp --no-playlist -f "bv*[vcodec^=avc1][height<=1080]+ba[acodec^=mp4a]/b[vcodec^=avc1][acodec^=mp4a][height<=1080]" 'the url'
+#+end_src
+
+
