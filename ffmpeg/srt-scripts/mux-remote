@@ -41,7 +41,7 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check options passed to script
 #===============================================================================
 
-while getopts 'u:i:p:s:t:h' opt
+while getopts 'u:i:p:s:t:o:h' opt
 do
   case ${opt} in
      u) input="${OPTARG}";;
@@ -49,6 +49,7 @@ do
      p) port="${OPTARG}";;
      s) start="${OPTARG}";;
      t) end="${OPTARG}";;
+     o) output="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
      :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
