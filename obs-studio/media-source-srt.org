@@ -64,8 +64,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -f input -s 00:00:00 -t 00:00:00 -i ip -p port -o -
--o - : optional argument sends the output to stdout"
+$(basename "$0") -f input -s 00:00:00 -t 00:00:00 -i ip -p port"
 exit 2
 }
 
@@ -90,7 +89,7 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check options passed to script
 #===============================================================================
 
-while getopts 'f:i:p:s:t:o:h' opt
+while getopts 'f:i:p:s:t:h' opt
 do
   case ${opt} in
      f) input="${OPTARG}";;
@@ -98,7 +97,6 @@ do
      p) port="${OPTARG}";;
      s) start="${OPTARG}";;
      t) end="${OPTARG}";;
-     o) output="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
      :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
@@ -116,9 +114,6 @@ ip_default='192.168.1.131'
 
 # default port
 port_default='6882'
-
-# default output
-output_default="srt://${ip:=${ip_default}}:${port:=${port_default}}"
 
 
 #===============================================================================
@@ -160,7 +155,7 @@ one_stream () {
     -i "${input}" \
     -c:a copy -c:v copy \
     -tune zerolatency \
-    -f mpegts "${output:=${output_default}}"
+    -f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}"
 }
 
 
@@ -187,7 +182,7 @@ one_stream_trim () {
     ${duration_arg} \
     -c:a copy -c:v copy \
     -tune zerolatency \
-    -f mpegts "${output:=${output_default}}"
+    -f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}"
 }
 
 
@@ -223,8 +218,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -u input -s 00:00:00 -t 00:00:00 -i ip/dns -p port -o -
--o - : optional argument sends the output to stdout"
+$(basename "$0") -u input -s 00:00:00 -t 00:00:00 -i ip/dns -p port"
 exit 2
 }
 
@@ -274,9 +268,6 @@ ip_default='192.168.1.131'
 
 # default port
 port_default='6882'
-
-# default output
-output_default="srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
 
 
 #===============================================================================
@@ -328,7 +319,7 @@ one_stream () {
     -i "${url}" \
     -c:a copy -c:v copy \
     -tune zerolatency \
-    -f mpegts "${output:=${output_default}}"
+    -f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
 }
 
 
@@ -355,7 +346,7 @@ one_stream_trim () {
     ${duration_arg} \
     -c:a copy -c:v copy \
     -tune zerolatency \
-    -f mpegts "${output:=${output_default}}"
+    -f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
 }
 
 
@@ -377,7 +368,7 @@ two_streams () {
     -c:a copy -c:v copy \
     -tune zerolatency \
     -map 0:0 -map 1:0 \
-    -f mpegts "${output:=${output_default}}"
+    -f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
 }
 
 
@@ -409,7 +400,7 @@ two_streams_trim () {
     -c:a copy -c:v copy \
     -tune zerolatency \
     -map 0:0 -map 1:0 \
-    -f mpegts "${output:=${output_default}}"
+    -f mpegts "srt://${ip:=${ip_default}}:${port:=${port_default}}?pkt_size=1316"
 }
 
 
@@ -520,8 +511,7 @@ srt_recv
 #
 # 1) Edit the 'Videos' section and change videos and timestamps.
 # 2) Edit the 'Commands' section and change the ip and port.
-# 3) Edit the 'Last video to play' section and set it to the last video.
-# 4) Edit the 'Video sequence' so it matches the 'Videos' section.
+# 3) Edit the 'Video sequence' so it matches the 'Videos' section.
 #===============================================================================
 
 
@@ -529,7 +519,7 @@ srt_recv
 # Phony
 #===============================================================================
 
-.PHONY: all clean play
+.PHONY: all clean
 
 
 #===============================================================================
@@ -570,12 +560,6 @@ VIDEO-4-TIME	:= -s 00:00:00 -t 00:00:38
 #===============================================================================
 
 #===============================================================================
-# Stdout
-#===============================================================================
-
-OUTPUT		:= -o -
-
-#===============================================================================
 # Srt listener ip address
 #===============================================================================
 
@@ -589,25 +573,10 @@ PORT		:= 6882
 
 
 #===============================================================================
-# Last video to play
-#===============================================================================
-
-TARGET		:= video-4
-
-
-#===============================================================================
 # Default target
 #===============================================================================
 
-all: play
-
-
-#===============================================================================
-# Stream all the clips sequentially
-#===============================================================================
-
-play:
-	@( $(MAKE) $(TARGET) ) | srt-live-transmit file://con srt://$(IP):$(PORT)
+all: video-4
 
 
 #===============================================================================
@@ -619,28 +588,28 @@ play:
 #===============================================================================
 
 video-1: 
-	@mux-local -f $(VIDEO-1) $(VIDEO-1-TIME) $(OUTPUT)
+	@mux-local -f $(VIDEO-1) $(VIDEO-1-TIME)
 
 #===============================================================================
 # Second video in sequence
 #===============================================================================
 
 video-2: video-1
-	@mux-local -f $(VIDEO-2) $(VIDEO-2-TIME) $(OUTPUT)
+	@mux-local -f $(VIDEO-2) $(VIDEO-2-TIME)
 
 #===============================================================================
 # Third video in sequence
 #===============================================================================
 
 video-3: video-2
-	@mux-local -f $(VIDEO-3) $(VIDEO-3-TIME) $(OUTPUT)
+	@mux-local -f $(VIDEO-3) $(VIDEO-3-TIME)
 
 #===============================================================================
 # Last video in sequence
 #===============================================================================
 
 video-4: video-3
-	@mux-local -f $(VIDEO-4) $(VIDEO-4-TIME) $(OUTPUT)
+	@mux-local -f $(VIDEO-4) $(VIDEO-4-TIME)
 
 
 #===============================================================================
@@ -664,8 +633,7 @@ clean:
 #
 # 1) Edit the 'Videos' section and change videos and timestamps.
 # 2) Edit the 'Commands' section and change the ip and port.
-# 3) Edit the 'Last video to play' section and set it to the last video.
-# 4) Edit the 'Video sequence' so it matches the 'Videos' section.
+# 3) Edit the 'Video sequence' so it matches the 'Videos' section.
 #===============================================================================
 
 
@@ -707,12 +675,6 @@ VIDEO-3-TIME	:= -s 00:00:58 -t 00:01:21
 #===============================================================================
 
 #===============================================================================
-# Stdout
-#===============================================================================
-
-OUTPUT		:= -o -
-
-#===============================================================================
 # Srt listener ip address
 #===============================================================================
 
@@ -726,25 +688,10 @@ PORT		:= 6882
 
 
 #===============================================================================
-# Last video to play
-#===============================================================================
-
-TARGET		:= video-3
-
-
-#===============================================================================
 # Default target
 #===============================================================================
 
-all: play
-
-
-#===============================================================================
-# Stream all the clips sequentially
-#===============================================================================
-
-play:
-	@( $(MAKE) $(TARGET) ) | srt-live-transmit file://con srt://$(IP):$(PORT)
+all: video-3
 
 
 #===============================================================================
@@ -756,21 +703,21 @@ play:
 #===============================================================================
 
 video-1: 
-	mux-remote -u $(VIDEO-1) $(VIDEO-1-TIME) $(OUTPUT)
+	mux-remote -u $(VIDEO-1) $(VIDEO-1-TIME)
 
 #===============================================================================
 # Second video in sequence
 #===============================================================================
 
 video-2: video-1
-	mux-remote -u $(VIDEO-2) $(VIDEO-2-TIME) $(OUTPUT)
+	mux-remote -u $(VIDEO-2) $(VIDEO-2-TIME)
 
 #===============================================================================
 # Last video in sequence
 #===============================================================================
 
 video-3: video-2
-	mux-remote -u $(VIDEO-3) $(VIDEO-3-TIME) $(OUTPUT)
+	mux-remote -u $(VIDEO-3) $(VIDEO-3-TIME)
 
 
 #===============================================================================
@@ -778,7 +725,7 @@ video-3: video-2
 #===============================================================================
 
 clean:
-	@rm -f /tmp/relay
+	@echo 'does nothing'
 #+end_src
 
 ** yt-dlp h264/aac 1080
