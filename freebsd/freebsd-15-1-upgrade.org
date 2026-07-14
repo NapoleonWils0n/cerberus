@@ -626,7 +626,7 @@ doas poudriere jail -u -j freebsd_15-1x64
 To update your ports tree, type:
 
 #+BEGIN_SRC sh
-poudriere ports -u -p local
+doas poudriere ports -u -p local
 #+END_SRC
 
 Once that is complete, we can kick off the bulk build process.
@@ -727,7 +727,6 @@ Modules located in ‘/boot/kernel/‘ (such as ‘zfs.ko‘) are part of the ba
 I assume that when FreeBSD 15.1-RELEASE will be released – even more detailed instructions could be available in the Release Notes document.
 
 ** Uninstall Poudriere Nvidia drivers and install PKG version
-
 *** switch to single user mode 
 
 Turn the computer on 
