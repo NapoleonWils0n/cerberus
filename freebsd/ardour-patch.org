@@ -431,18 +431,17 @@ When 2026Q2 gets official upstream updates, you won't be able to just run poudri
 cd /usr/local/poudriere/ports/local
 #+end_src
 
-Switch back to the base branch and pull updates
+To update your ports tree to the next quarterly branch, type:
 
-#+begin_src sh
-doas git checkout 2026Q2
-doas git pull
-#+end_src
+#+BEGIN_SRC sh
+doas poudriere ports -u -p local -B 2026Q3
+#+END_SRC
 
 Switch back to your custom branch and replay your patches on top of the new updates
 
 #+begin_src sh
 doas git checkout ardour-patches
-doas git rebase 2026Q2
+doas git rebase 2026Q3
 #+end_src
 
 ** delete branch
@@ -457,13 +456,7 @@ cd /usr/local/poudriere/ports/local
 doas git reset --hard HEAD
 #+end_src
 
-# 2. Switch back to your official quarterly branch
-
-#+begin_src sh
-doas git checkout 2026Q2
-#+end_src
-
-# 3. Delete the custom ardour branch safely
+# 2. Delete the custom ardour branch safely
 
 #+begin_src sh
 doas git branch -D ardour-patches
