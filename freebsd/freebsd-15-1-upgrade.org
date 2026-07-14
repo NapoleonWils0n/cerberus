@@ -726,3 +726,56 @@ Modules located in ‘/boot/kernel/‘ (such as ‘zfs.ko‘) are part of the ba
 
 I assume that when FreeBSD 15.1-RELEASE will be released – even more detailed instructions could be available in the Release Notes document.
 
+** Uninstall Poudriere Nvidia drivers and install PKG version
+*** Unload the active driver modules
+
+If you are currently running your desktop environment, drop to a TTY or stop your display manager
+
+Unload the active kernel modules so they aren't locked during deletion:
+
+#+begin_src sh
+doas kldunload nvidia-modeset nvidia-drm nvidia
+#+end_src
+
+*** Remove the Poudriere-built packages
+
+Uninstall the custom packages.
+
+#+begin_src sh
+doas pkg delete -y nvidia-driver 'nvidia*kmod*' nvidia-settings
+#+end_src
+
+*** Remove entries from your Poudriere port-list
+
+Edit your port-list file:
+
+#+begin_src sh
+doas vi /usr/local/etc/poudriere.d/port-list
+#+end_src
+
+Delete these two lines so Poudriere stops compiling them on future bulk runs:
+
+#+begin_src sh
+x11/nvidia-driver
+graphics/nvidia-drm-66-kmod
+#+end_src
+
+*** Update your local package database
+
+Ensure your local pkg cache is completely synchronized with the upstream FreeBSD repositories:
+
+#+begin_src sh
+doas pkg update -f
+#+end_src
+
+*** Install the Nvidia pkg packages
+
+#+begin_src sh
+doas pkg install nvidia-driver nvidia-drm-66-kmod nvidia-settings
+#+end_src
+
+*** Reboot
+
+#+begin_src sh
+doas shutdown -r now
+#+end_src
