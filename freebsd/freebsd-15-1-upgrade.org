@@ -623,10 +623,16 @@ To update your jail, type:
 doas poudriere jail -u -j freebsd_15-1x64
 #+END_SRC
 
-To update your ports tree to the next quarterly branch, type:
+delete the old ports tree
+
+#+begin_src sh
+doas poudriere ports -d -p local
+#+end_src
+
+download the new quarterly branch
 
 #+BEGIN_SRC sh
-doas poudriere ports -u -p local -B 2026Q3
+doas poudriere ports -c -p local -m git+https -B 2026Q3
 #+END_SRC
 
 Once that is complete, we can kick off the bulk build process.
