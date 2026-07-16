@@ -98,3 +98,16 @@ deep-filter \
 input.wav
 #+end_src
 
+*** atten-lim-db 12
+
+#+begin_src sh
+deep-filter \
+--model ~/.local/share/deepfilternet/DeepFilterNet3_onnx.tar.gz \
+--atten-lim-db 12 \
+--min-db-thresh -35 \
+-D \
+--pf \
+--pf-beta 0.02 \
+-o enhanced_audio_v12-35 \
+input.wav
+#+end_src
