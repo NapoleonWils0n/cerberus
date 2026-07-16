@@ -71,6 +71,30 @@ mkdir -p ~/.local/share/deepfilternet
 cp models/DeepFilterNet3_onnx.tar.gz ~/.local/share/deepfilternet
 #+end_src
 
+** DeepFilterNet Parameter Tuning Guide
+*** --min-db-thresh (Minimum DB Threshold)
+
+The threshold below which the filter treats audio as complete noise/silence.
+
+- *The Danger*: If set too high (e.g., -10 dB), it will aggressively mute/slice your actual speech (especially the quiet, trailing ends of words like "s" or "t").
+
+- *How to set*:
+  1. Open the audio in Sonic Visualiser.
+  2. Set the vertical Scale to *dB*.
+  3. Find the peak decibel level of the speech (e.g., if peaks are around -15 dB).
+  4. Set =--min-db-thresh= at least *15 to 20 dB lower* than the speech peaks (e.g., -30 dB or -35 dB) to ensure the tails of words are preserved.
+
+*** --atten-lim-db (Attenuation Limit in dB)
+
+Controls how aggressively background noise is reduced.
+
+- *The Danger*: Setting this too high (e.g., 20 dB or more) can make the remaining voice sound artificial, metallic, or heavily "gated" if the background noise changes abruptly.
+
+- *How to set*:
+  - *12 dB to 15 dB (Recommended)*: Provides a very natural-sounding reduction. The background noise is pushed down cleanly without turning the background into "dead/vacuum silence".
+
+  - *18 dB to 20 dB*: Use only for extremely noisy files where complete noise removal is prioritized over vocal naturalness.
+
 ** deepfilter-net
 *** default
 
