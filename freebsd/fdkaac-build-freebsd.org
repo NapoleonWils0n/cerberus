@@ -1,0 +1,166 @@
+#+STARTUP: content
+* fdkaac build freebsd 
+** resources
+
+[[https://github.com/nu774/fdkaac]]
+
+** packages
+
+Install the required packages
+
+#+begin_src sh
+doas pkg install git autoconf automake libtool pkgconf fdk-aac
+#+end_src
+
+** clone the git repository
+
+Clone the fdkaac git repository
+
+#+begin_src sh
+git clone https://github.com/nu774/fdkaac.git
+#+end_src
+
+** change into the git repository
+
+#+begin_src sh
+cd fdkaac
+#+end_src
+
+** create the configure file
+
+#+begin_src sh
+autoreconf -i
+#+end_src
+
+** configure and make
+
+Run the configure script
+
+#+begin_src sh
+./configure
+#+end_src
+
+make
+
+#+begin_src sh
+make
+#+end_src
+
+** copy the fdkaac binary into your bin directory
+
+#+begin_src sh
+cp fdkaac ~/bin
+#+end_src
+
+** fdkaac help
+
+Show the fdkaac help
+
+#+begin_src sh
+fdkaac -h
+#+end_src
+
+Help output
+
+#+begin_example
+fdkaac 1.0.8
+Usage: fdkaac [options] input_file
+Options:
+ -h, --help                    Print this help message
+ -p, --profile <n>             Profile (audio object type)
+                                 2: MPEG-4 AAC LC (default)
+                                 5: MPEG-4 HE-AAC (SBR)
+                                29: MPEG-4 HE-AAC v2 (SBR+PS)
+                                23: MPEG-4 AAC LD
+                                39: MPEG-4 AAC ELD
+ -b, --bitrate <n>             Bitrate in bits per seconds (for CBR)
+ -m, --bitrate-mode <n>        Bitrate configuration
+                                 0: CBR (default)
+                                 1-5: VBR
+                               (VBR mode 1 is tuned for HE-AAC v2
+                                VBR mode 2 is tuned for HE-AAC
+                                VBR mode 3 or greater is for AAC LC)
+ -w, --bandwidth <n>           Frequency bandwidth in Hz (AAC LC only)
+ -a, --afterburner <n>         Afterburner
+                                 0: Off
+                                 1: On(default)
+ -L, --lowdelay-sbr <-1|0|1>   Configure SBR activity on AAC ELD
+                                -1: Use ELD SBR auto configurator
+                                 0: Disable SBR on ELD (default)
+                                 1: Enable SBR on ELD
+ -s, --sbr-ratio <0|1|2>       Controls activation of downsampled SBR
+                                 0: Use lib default (default)
+                                 1: downsampled SBR (default for ELD+SBR)
+                                 2: dual-rate SBR (default for HE-AAC)
+ -f, --transport-format <n>    Transport format
+                                 0: RAW (default, muxed into M4A)
+                                 1: ADIF
+                                 2: ADTS
+                                 6: LATM MCP=1
+                                 7: LATM MCP=0
+                                10: LOAS/LATM (LATM within LOAS)
+ -C, --adts-crc-check          Add CRC protection on ADTS header
+ -h, --header-period <n>       StreamMuxConfig/PCE repetition period in
+                               transport layer
+
+ -o <filename>                 Output filename
+ -G, --gapless-mode <n>        Encoder delay signaling for gapless playback
+                                 0: iTunSMPB (default)
+                                 1: ISO standard (edts + sgpd)
+                                 2: Both
+ --include-sbr-delay           Count SBR decoder delay in encoder delay
+                               This is not iTunes compatible, but is default
+                               behavior of FDK library.
+ -I, --ignorelength            Ignore length of WAV header
+ -S, --silent                  Don't print progress messages
+ --moov-before-mdat            Place moov box before mdat box on m4a output
+ --no-timestamp                Don't inject timestamp in the file
+
+Options for raw (headerless) input:
+ -R, --raw                     Treat input as raw (by default WAV is
+                               assumed)
+ --raw-channels <n>            Number of channels (default: 2)
+ --raw-rate     <n>            Sample rate (default: 44100)
+ --raw-format   <spec>         Sample format, default is "S16L".
+                               Spec is as follows:
+                                1st char: S(igned)|U(nsigned)|F(loat)
+                                2nd part: bits per channel
+                                Last char: L(ittle)|B(ig)
+                               Last char can be omitted, in which case L is
+                               assumed. Spec is case insensitive, therefore
+                               "u16b" is same as "U16B".
+
+Tagging options:
+ --title <string>
+ --artist <string>
+ --album <string>
+ --genre <string>
+ --date <string>
+ --composer <string>
+ --grouping <string>
+ --comment <string>
+ --album-artist <string>
+ --track <number[/total]>
+ --disk <number[/total]>
+ --tempo <n>
+ --tag <fcc>:<value>          Set iTunes predefined tag with four char code.
+ --tag-from-file <fcc>:<filename>
+                              Same as above, but value is read from file.
+ --long-tag <name>:<value>    Set arbitrary tag as iTunes custom metadata.
+ --tag-from-json <filename[?dot_notation]>
+                              Read tags from JSON. By default, tags are
+                              assumed to be direct children of the root
+                              object(dictionary).
+                              Optionally, position of the dictionary
+                              that contains tags can be specified with
+                              dotted notation.
+                              Example:
+                                --tag-from-json /path/to/json?format.tags
+#+end_example
+
+** fdkaac usage
+
+#+begin_src sh
+fdkaac -m 5 input.wav -o output.m4a
+#+end_src
+
