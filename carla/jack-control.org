@@ -1,0 +1,25 @@
+#+STARTUP: content
+* jack control
+
+Set the options for Cadence
+
+1) Switch the master driver to OSS
+
+#+begin_src sh
+jack_control ds oss
+#+end_src
+
+2) Set the sample rate, buffer size, and periods
+
+#+begin_src sh
+jack_control dps rate 48000
+jack_control dps period 1024
+jack_control dps nperiods 3
+#+end_src
+
+3) Set your specific capture and playback devices
+
+#+begin_src sh
+jack_control dps capture /dev/dsp3
+jack_control dps playback /dev/dsp1
+#+end_src
