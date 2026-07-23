@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* yt-dlp download section
+
+download from 00:00:00 to 1 minute
+
+#+begin_src sh
+yt-dlp --download-sections "*00:00-01:00" 'the url'
+#+end_src
