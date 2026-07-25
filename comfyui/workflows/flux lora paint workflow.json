@@ -1,7 +1,7 @@
 {
   "3": {
     "inputs": {
-      "seed": 390868422392822,
+      "seed": 869354162033679,
       "steps": 25,
       "cfg": 1,
       "sampler_name": "dpmpp_2m",
@@ -86,7 +86,7 @@
   },
   "11": {
     "inputs": {
-      "guidance": 3.5,
+      "guidance": 3,
       "conditioning": [
         "38",
         0
@@ -129,7 +129,7 @@
   "28": {
     "inputs": {
       "lora_name": "boreal-v2.safetensors",
-      "strength_model": 0.8,
+      "strength_model": 0.2,
       "model": [
         "25",
         0
