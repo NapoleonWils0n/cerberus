@@ -1,0 +1,24 @@
+#+STARTUP: showall
+* disable emoji picker firefox
+** about:config
+
+Open firefox and about:config
+
+#+begin_example
+about:config
+#+end_example
+
+Search for 
+
+#+begin_example
+widget.gtk.native-emoji-dialog
+#+end_example
+
+and change it to false
+
+** user.js
+
+#+begin_src js
+// disable emoji picker
+user_pref("widget.gtk.native-emoji-dialog", false);
+#+end_src
