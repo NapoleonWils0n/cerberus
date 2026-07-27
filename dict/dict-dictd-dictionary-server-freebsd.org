@@ -1,0 +1,297 @@
+#+STARTUP: content
+* dict dictd dictionary server freebsd
+** resources
+
+[[https://rockyhotas.github.io/freebsd/2026/04/12/freebsd-dictd.html]]
+
+** packages
+
+#+begin_src sh
+doas pkg install dict dictd bsdtar
+#+end_src
+
+** enable dictd
+
+#+begin_src sh
+doas sysrc dictd_enable="YES"
+#+end_src
+
+or manually edit your rc.conf
+
+#+begin_src sh
+doas vi /etc/rc.conf
+#+end_src
+
+#+begin_src conf
+dictd_enable="YES"
+#+end_src
+
+** create the dictd directory
+
+Create the dictd directory
+
+#+begin_src sh
+doas mkdir -p /usr/local/share/dictd
+#+end_src
+
+** config files
+*** dict
+
+#+begin_src sh
+doas vi /usr/local/etc/dict.conf
+#+end_src
+
+#+begin_src conf
+#=========================================================================#
+# This file is used to specify the dict servers to talk to.  See the
+# CONFIGURATION section of dict(1) for the full syntax.
+#
+# A list of public dict servers is available at
+#	https://dict-servers.catflap.org/
+# but one of the following should work.
+#
+#=========================================================================#
+
+server localhost
+server dict.org
+server dict.catflap.org
+server dict.trit.net
+#+end_src
+
+*** dictd
+
+#+begin_src sh
+doas vi /usr/local/etc/dictd.conf
+#+end_src
+
+#+begin_src conf
+#=========================================================================#
+# /usr/local/etc/dictd.conf
+#=========================================================================#
+
+global {
+    listen_to 127.0.0.1
+    port 2628
+    pid_file "/var/run/dictd.pid"
+}
+
+database gcide {
+    data "/usr/local/share/dictd/gcide.dict.dz"
+    index "/usr/local/share/dictd/gcide.index"
+}
+
+database jargon {
+    data "/usr/local/share/dictd/jargon.dict.dz"
+    index "/usr/local/share/dictd/jargon.index"
+}
+
+database foldoc {
+    data "/usr/local/share/dictd/foldoc.dict.dz"
+    index "/usr/local/share/dictd/foldoc.index"
+}
+
+database wn {
+    data "/usr/local/share/dictd/wn.dict.dz"
+    index "/usr/local/share/dictd/wn.index"
+}
+
+database moby-thesaurus {
+    data "/usr/local/share/dictd/moby-thesaurus.dict"
+    index "/usr/local/share/dictd/moby-thesaurus.index"
+}
+#+end_src
+
+** dictionaries
+*** create dict-files directory
+
+#+begin_src sh
+mkdir -p dict-files
+#+end_src
+
+#+begin_src sh
+cd dict-files
+#+end_src
+
+*** gcide
+
+https://ftp.debian.org/debian/pool/main/d/dict-gcide/
+
+fetch the latest deb file
+
+#+begin_src sh
+fetch 'https://ftp.debian.org/debian/pool/main/d/dict-gcide/dict-gcide_0.48.5+nmu4_all.deb'
+#+end_src
+
+extract the file
+
+#+begin_src sh
+ar x dict-gcide_*.deb
+tar -xf data.tar.*
+doas mv usr/share/dictd/gcide.* /usr/local/share/dictd/
+#+end_src
+
+remove files and directory
+
+#+begin_src sh
+rm control.tar.xz data.tar.xz debian-binary
+#+end_src
+
+#+begin_src sh
+rm -r usr
+#+end_src
+
+*** wordnet
+
+https://ftp.debian.org/debian/pool/main/w/wordnet/
+
+fetch the latest deb file
+
+#+begin_src sh
+fetch 'https://ftp.debian.org/debian/pool/main/w/wordnet/dict-wn_3.0-41_all.deb'
+#+end_src
+
+extract the file
+
+#+begin_src sh
+ar x dict-wn_*.deb
+tar -xf data.tar.*
+doas mv usr/share/dictd/wn.* /usr/local/share/dictd/
+#+end_src
+
+remove files and directory
+
+#+begin_src sh
+rm control.tar.xz data.tar.xz debian-binary
+#+end_src
+
+#+begin_src sh
+rm -r usr
+#+end_src
+
+*** jargon
+
+https://ftp.debian.org/debian/pool/main/d/dict-jargon/
+
+fetch the latest deb file
+
+#+begin_src sh
+fetch 'https://ftp.debian.org/debian/pool/main/d/dict-jargon/dict-jargon_4.4.7-5_all.deb'
+#+end_src
+
+extract the file
+
+#+begin_src sh
+ar x dict-jargon_*.deb
+tar -xf data.tar.*
+doas mv usr/share/dictd/jargon.* /usr/local/share/dictd/
+#+end_src
+
+remove files and directory
+
+#+begin_src sh
+rm control.tar.xz data.tar.xz debian-binary
+#+end_src
+
+#+begin_src sh
+rm -r usr
+#+end_src
+
+*** foldoc
+
+https://ftp.debian.org/debian/pool/main/d/dict-foldoc/
+
+#+begin_src sh
+fetch 'https://ftp.debian.org/debian/pool/main/d/dict-foldoc/dict-foldoc_20250211-1_all.deb'
+#+end_src
+
+extract the file
+
+#+begin_src sh
+ar x dict-foldoc_*.deb
+tar -xf data.tar.*
+doas mv usr/share/dictd/foldoc.* /usr/local/share/dictd/
+#+end_src
+
+remove files and directory
+
+#+begin_src sh
+rm control.tar.xz data.tar.xz debian-binary
+#+end_src
+
+#+begin_src sh
+rm -r usr
+#+end_src
+
+*** dict-moby-thesaurus
+
+https://aur.archlinux.org/packages/dict-moby-thesaurus
+
+#+begin_src sh
+fetch 'https://github.com/ferdnyc/dictd-dicts/raw/master/moby-thesaurus.dict'
+#+end_src
+
+#+begin_src sh
+fetch 'https://github.com/ferdnyc/dictd-dicts/raw/master/moby-thesaurus.index'
+#+end_src
+
+#+begin_src sh
+doas cp moby-thesaurus.* /usr/local/share/dictd/
+#+end_src
+
+** change permissions
+
+Chown the directory
+
+#+begin_src sh
+doas chown -R nobody:nobody /usr/local/share/dictd
+#+end_src
+
+Chmod the files
+
+#+begin_src sh
+doas chmod 644 /usr/local/share/dictd/*
+#+end_src
+
+** start dictd
+
+#+begin_src sh
+doas service dictd start
+#+end_src
+
+** dict query
+*** query dict running on localhost
+
+#+begin_src sh
+dict -h localhost idea
+#+end_src
+
+*** query a database
+
+#+begin_src sh
+dict -h localhost -d gcide idea
+dict -h localhost -d wn idea
+#+end_src
+
+*** list databases
+
+#+begin_src sh
+dict -h localhost -D
+#+end_src
+
+#+begin_example
+gcide          The Collaborative International Dictionary of English v.0.48
+jargon         The Jargon File (version 4.4.7, 29 Dec 2003)
+foldoc         The Free On-line Dictionary of Computing (11 February 2025)
+wn             WordNet (r) 3.0 (2006)
+moby-thesaurus Moby Thesaurus II by Grady Ward, 1.0
+#+end_example
+
+** emacs init.el
+
+#+begin_example
+~/.config/emacs/init.el
+#+end_example
+
+#+begin_src emacs-lisp
+(setq dictionary-server "localhost")
+#+end_src
