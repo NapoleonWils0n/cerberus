@@ -1,5 +1,9 @@
 #+STARTUP: content
 * mpv nv-sglrun
+** hardware accelerated playback with nv-sglrun
+
+Using mpv with nv-sglrun for hardware accelerated playback
+
 ** nv-sglrun
 
 Check the supported codecs
