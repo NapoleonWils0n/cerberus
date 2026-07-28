@@ -4,6 +4,12 @@
 
 Using mpv with nv-sglrun for hardware accelerated playback
 
+** packages
+
+#+begin_src sh
+doas pkg install libc6-shim mpv
+#+end_src
+
 ** nv-sglrun
 
 Check the supported codecs
