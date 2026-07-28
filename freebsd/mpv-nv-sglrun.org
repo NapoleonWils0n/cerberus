@@ -1,6 +1,6 @@
 #+STARTUP: content
 * mpv nv-sglrun
-** hardware accelerated playback with nv-sglrun
+** hardware accelerated playback with nv-sglrun and mpv
 
 Using mpv with nv-sglrun for hardware accelerated playback
 
