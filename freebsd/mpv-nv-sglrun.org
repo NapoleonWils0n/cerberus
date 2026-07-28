@@ -1,0 +1,270 @@
+#+STARTUP: content
+* mpv nv-sglrun
+** nv-sglrun
+
+Check the supported codecs
+
+#+begin_src sh
+nv-sglrun env LIBVA_DRIVER_NAME=nvidia-drm vainfo
+#+end_src
+
+** mpv.conf
+*** nvdec-copy section
+
+Use nvdec-copy
+
+#+begin_src conf
+#===============================================================================
+# hardware acceleration profile
+#===============================================================================
+
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
+vo=gpu
+gpu-context=wayland
+hwdec=nvdec-copy
+#+end_src
+
+*** yt-dlp section
+
+yt-dlp format select hardware supported codecs with a fallback
+
+#+begin_src conf
+#===============================================================================
+# yt-dlp format
+# Prefers HW-supported codecs (H.264/VP9/HEVC/VP8) up to 1080p SDR (8-bit nv12).
+# Fallbacks: 1) 10-bit stream, 2) Any 1080p stream (e.g. AV1 SW), 3) Best pre-merged.
+#===============================================================================
+
+ytdl-format="bv*[vcodec~='(?i)^(avc1|vp09|vp9|vp8|h264|hevc|h265)'][dynamic_range=SDR][height<=?1080]+ba/bv*[vcodec~='(?i)^(avc1|vp09|vp9|vp8|h264|hevc|h265)'][height<=?1080]+ba/bv*[height<=?1080]+ba/best[height<=?1080]/best"
+#+end_src
+
+*** mpv.conf full config
+
+#+begin_src conf
+#===============================================================================
+# mpv mpv.conf
+#===============================================================================
+
+# list profiles with: mpv --profile=help
+
+#===============================================================================
+# load hwdec profile automatically
+#===============================================================================
+
+profile=hwdec 
+
+
+#===============================================================================
+# hardware acceleration profile
+#===============================================================================
+
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
+vo=gpu
+gpu-context=wayland
+hwdec=nvdec-copy
+#hwdec=vaapi
+
+
+#===============================================================================
+# msg-level
+#===============================================================================
+
+msg-level=ffmpeg=fatal
+
+
+#===============================================================================
+# cache no for internet streams
+#===============================================================================
+
+cache=no
+
+
+#===============================================================================
+# yt-dlp format
+# Prefers HW-supported codecs (H.264/VP9/HEVC/VP8) up to 1080p SDR (8-bit nv12).
+# Fallbacks: 1) 10-bit stream, 2) Any 1080p stream (e.g. AV1 SW), 3) Best pre-merged.
+#===============================================================================
+
+ytdl-format="bv*[vcodec~='(?i)^(avc1|vp09|vp9|vp8|h264|hevc|h265)'][dynamic_range=SDR][height<=?1080]+ba/bv*[vcodec~='(?i)^(avc1|vp09|vp9|vp8|h264|hevc|h265)'][height<=?1080]+ba/bv*[height<=?1080]+ba/best[height<=?1080]/best"
+
+
+#===============================================================================
+# show milliseconds in the on screen display
+#===============================================================================
+
+osd-fractions
+
+
+#===============================================================================
+# youtube subs - J to switch to subs
+#===============================================================================
+
+sub-auto=fuzzy
+ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
+sub-font='NotoColorEmoji'
+
+
+#===============================================================================
+# screenshot timecode
+#===============================================================================
+
+screenshot-template="%F-[%P]v%#01n"
+
+
+#===============================================================================
+# cache profile: mpv --profile=cache
+#===============================================================================
+
+[cache]
+profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+
+
+#===============================================================================
+# youtube conditional auto profile match any youtube url
+#===============================================================================
+
+[youtube]
+profile-desc="youtube hardware acceleration, cache"
+profile-cond=path:find('youtu%.?be') ~= nil
+#profile-cond=path:find('youtu%.?be') ~= nil or path:find('googlevideo%.com') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=yes
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+
+
+#===============================================================================
+# invidious conditional auto profile match any invidious url
+#===============================================================================
+
+[invidious]
+profile-desc="invidious hardware acceleration, cache"
+profile-cond=path:find('http://192.168.1.236:3000') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=yes
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+
+
+#===============================================================================
+# archive.org conditional auto profile match any archive.org url
+#===============================================================================
+
+[archive]
+profile-desc="archive hardware acceleration, cache"
+profile-cond=path:find('archive.org') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+
+
+#===============================================================================
+# bbc iplayer conditional auto profile match any bbc iplayer url
+#===============================================================================
+
+[iplayer]
+profile-desc="iplayer hardware acceleration, cache"
+profile-cond=path:find('bbc.co.uk/iplayer') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=yes
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+
+
+#===============================================================================
+# bbc iplayer conditional auto profile match any bbc iplayer url
+#===============================================================================
+
+[bbc]
+profile-desc="bbc hardware acceleration, cache"
+profile-cond=path:find('bbc:pips:service') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=yes
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
+#+end_src
+
+** create the bin directory
+
+#+begin_src sh
+mkdir -p ~/bin
+#+end_src
+
+** zshenv
+
+Set you shell path to include the ~/bin directory first in the path
+
+#+begin_src conf
+#===============================================================================
+# Path
+#===============================================================================
+
+typeset -U PATH path
+path=("$HOME/bin" "$HOME/.local/bin" "/usr/local/bin" "$path[@]")
+export PATH
+#+end_src
+
+** mpv script
+
+Copy the mpv script to ~/bin
+
+#+begin_src sh
+cp mpv ~/bin
+#+end_src
+
+Make it executable 
+
+#+begin_src sh
+chmod +x ~/bin/mpv
+#+end_src
+
+mpv script
+
+#+begin_src sh
+#!/bin/sh
+
+#===============================================================================
+# mpv wrapper script to use nv-sglrun and nvdec-copy
+#===============================================================================
+
+#===============================================================================
+# ~/.config/mpv/mpv.conf
+# vo=gpu
+# gpu-context=wayland
+# hwdec=nvdec-copy
+#===============================================================================
+
+#===============================================================================
+# exit if no arguments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || exit 0
+
+#===============================================================================
+# run the wrapper-freebsd script
+#===============================================================================
+
+nv-sglrun /usr/local/bin/mpv "${@}"
+#+end_src
