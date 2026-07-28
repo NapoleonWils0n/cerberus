@@ -9,6 +9,16 @@ nv-sglrun env LIBVA_DRIVER_NAME=nvidia-drm vainfo
 #+end_src
 
 ** mpv.conf
+*** create the mpv directory and config file
+
+#+begin_src sh
+mkdir -p ~/.config/mpv
+#+end_src
+
+#+begin_src sh
+vi ~/.config/mpv/mpv.conf
+#+end_src
+
 *** nvdec-copy section
 
 Use nvdec-copy
