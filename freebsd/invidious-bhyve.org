@@ -313,8 +313,8 @@ version: "3"
 services:
 
   invidious:
-    #image: quay.io/invidious/invidious:latest
-    image: quay.io/invidious/invidious:latest-arm64 # ARM64/AArch64 devices
+    image: quay.io/invidious/invidious:latest
+    #image: quay.io/invidious/invidious:latest-arm64 # ARM64/AArch64 devices
     restart: unless-stopped
     # Remove "127.0.0.1:" if used from an external IP
     ports:
