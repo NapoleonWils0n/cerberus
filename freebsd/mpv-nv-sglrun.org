@@ -286,7 +286,7 @@ mpv script
 # run the wrapper-freebsd script
 #===============================================================================
 
-nv-sglrun /usr/local/bin/mpv "${@}"
+exec nv-sglrun /usr/local/bin/mpv "${@}"
 #+end_src
 
 ** run rehash
