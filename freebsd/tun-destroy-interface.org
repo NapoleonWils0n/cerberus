@@ -1,0 +1,7 @@
+#+STARTUP: showall
+* tun destroy interface
+
+#+begin_src sh
+doas ifconfig tun0 inet delete
+doas ifconfig tun0 destroy
+#+end_src
