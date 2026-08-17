@@ -1,0 +1,44 @@
+#+STARTUP: content
+* comm
+** comm cheat sheet
+
+#+begin_example
+comm -13 file1 file2	Lines only in file2 (New additions)
+comm -23 file1 file2	Lines only in file1 (Deletions/Removals)
+comm -12 file1 file2	Lines present in both files (Intersections)
+#+end_example
+
+** man page
+
+NAME
+     comm – select or reject lines common to two files
+
+SYNOPSIS
+     comm [-123i] file1 file2
+
+DESCRIPTION
+     The comm utility reads file1 and file2, which should be sorted lexically,
+     and produces three text columns as output: lines only in file1; lines
+     only in file2; and lines in both files.
+
+     The filename ``-'' means the standard input.
+
+     The following options are available:
+
+     -1      Suppress printing of column 1, lines only in file1.
+
+     -2      Suppress printing of column 2, lines only in file2.
+
+     -3      Suppress printing of column 3, lines common to both.
+
+     -i      Case insensitive comparison of lines.
+
+     Each column will have a number of tab characters prepended to it equal to
+     the number of lower numbered columns that are being printed.  For
+     example, if column number two is being suppressed, lines printed in
+     column number one will not have any tabs preceding them, and lines
+     printed in column number three will have one.
+
+     The comm utility assumes that the files are lexically sorted; all
+     characters participate in line comparisons.
+
