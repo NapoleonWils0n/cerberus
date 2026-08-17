@@ -1,0 +1,6 @@
+#+STARTUP: showall
+* unified diff
+
+#+begin_src sh
+diff -u file1 file2
+#+end_src
