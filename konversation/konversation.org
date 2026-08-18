@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* konversation
+
+Use /query instead of /msg
+
+#+begin_example
+/query [MG]-Longstores XDCC SEND 115
+#+end_example
