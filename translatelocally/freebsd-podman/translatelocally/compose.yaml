@@ -1,0 +1,410 @@
+#===============================================================================
+# FILE: compose.yaml
+# Project: translatelocally-nix
+#===============================================================================
+
+
+#===============================================================================
+# Services Configuration
+#===============================================================================
+
+services:
+  nix:
+    # Build using the local lightweight Dockerfile
+    build:
+      context: .
+
+      # use networking from the freebsd host
+      network: host
+
+      # HOST_USER set from .env is your user on Freebsd
+      args:
+        - HOST_USER=${HOST_USER}
+        - HOST_UID=${HOST_UID}
+
+    # image name
+    image: localhost/translatelocally-nix
+
+
+    # platform linux
+    platform: linux/amd64
+
+    # container name
+    container_name: translatelocally-nix
+
+    # os linux
+    os: linux
+
+    # use networking from the freebsd host
+    network_mode: host
+
+    # stdin and tty
+    stdin_open: true
+    tty: true
+
+    # SIGKILL so the container stops cleaning using: doas podman-compose down
+    stop_signal: SIGKILL
+
+
+    # tmpfs
+    tmpfs:
+          - /usr/lib64/nvidia:rw,mode=0755
+
+#===============================================================================
+# Volume Mounts (Host Bindings & Jail Sockets)
+#===============================================================================
+
+    volumes:
+
+      #=========================================================================
+      # Host Library and Nvidia bindings
+      #=========================================================================
+
+      # linuxulator libraries
+      - /compat/linux/usr/lib64:/usr/lib64/nvidia-host:ro
+      - /compat/linux/lib64:/lib64:ro
+
+      # nvidia-smi needs to be added to the shell path
+      - /compat/linux/usr/bin/nvidia-smi:/usr/local/bin/nvidia-smi:ro
+
+      # dummy-uvm.so
+      - ../../../assets/dummy-uvm/dummy-uvm.so:/usr/lib64/dummy-uvm.so:ro
+      
+
+      #=========================================================================
+      # Jail Sockets & Runtime Essentials
+      #=========================================================================
+
+      # linuxulator directories
+      - /compat/linux/proc:/proc
+      - /compat/linux/sys:/sys
+      - /compat/linux/dev/fd:/dev/fd
+
+      # tmpfs
+      - nix-shm:/dev/shm
+
+      #=========================================================================
+      # Persistent Nix Store & State volume
+      #=========================================================================
+
+      - nix-store:/nix
+
+      #=========================================================================
+      # /tmp directory for pulseaudio.socket
+      #=========================================================================
+
+      - /tmp:/tmp:ro
+
+
+      #=========================================================================
+      # XDG_RUNTIME_DIR for wayland socket
+      #=========================================================================
+
+      - ${HOST_XDG_RUNTIME_DIR}:/run/user/${HOST_UID}:ro
+
+
+      #=========================================================================
+      # nix-writeable-run
+      #=========================================================================
+
+      # xdg runtime dir in the container
+      - nix-writeable-run:/run/user/${HOST_UID}-writeable:rw
+
+
+      #=========================================================================
+      # AUTOMATED PERSISTENT APPLICATION CONFIG WORKSPACE
+      #=========================================================================
+
+      # config
+      - ./dotfiles/config:/home/${HOST_USER}/.config:rw
+
+      # cache
+      - ./dotfiles/cache:/home/${HOST_USER}/.cache:rw
+
+      # local
+      - ./dotfiles/local:/home/${HOST_USER}/.local:rw
+
+      # Nix Flakes Cache (Overlays .cache/nix with a native container volume)
+      - nix-cache:/home/${HOST_USER}/.cache/nix
+
+      #=========================================================================
+      # Nix Configuration File
+      #=========================================================================
+
+      # nix.conf
+      - ./dotfiles/config/nix:/etc/nix:ro
+
+      #=========================================================================
+      # App mounts
+      #=========================================================================
+
+      # bin directory mounted from host in .env file
+      - ./${HOST_BIN}:/home/${HOST_USER}/${HOST_BIN}:ro
+
+      # workspace directory mounted from host
+      - ./workspace:/home/${HOST_USER}/workspace:rw
+
+
+#===============================================================================
+# Entrypoint & Shell Initialization
+#===============================================================================
+
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        #=======================================================================
+        # Explicitly create the nested dconf directory structure first
+        #=======================================================================
+
+        # tmp directory
+        mkdir -p /home/${HOST_USER}/tmp
+
+        # local share
+        mkdir -p /home/${HOST_USER}/.local/share
+
+
+        #=======================================================================
+        # CREATE WRITEABLE RUNTIME ENVIRONMENT (Bypasses read-only host mount)
+        #=======================================================================
+
+        # xdg runtime dir
+        mkdir -p /run/user/${HOST_UID}-writeable
+        chmod 700 /run/user/${HOST_UID}-writeable
+
+
+        #=======================================================================
+        # Symlink the display socket from the read-only path into the writeable one
+        #=======================================================================
+
+        # wayland socket
+        wayland () {
+        if [ -S /run/user/${HOST_UID}/wayland-0 ]; then
+          ln -sf /run/user/${HOST_UID}/wayland-0 /run/user/${HOST_UID}-writeable/wayland-0
+        fi
+        }
+
+
+        # X11 socket
+        x11 () {
+        if [ -S /tmp/.X11-unix/X0 ]; then
+          mkdir -p /home/${HOST_USER}/tmp/.X11-unix
+          ln -sf /tmp/.X11-unix/X0 /home/${HOST_USER}/tmp/.X11-unix/X0
+        fi
+        }
+
+
+        # HOST_XDG_SESSION_TYPE set in .env
+        case "${HOST_XDG_SESSION_TYPE}" in
+            wayland) wayland;;
+            x11) x11;;
+        esac
+
+
+        #=======================================================================
+        # FIXED: Explicitly handle Pulse Audio paths using correct absolute locations
+        #=======================================================================
+
+        if [ -d /run/user/${HOST_UID}/pulse ]; then
+          mkdir -p /run/user/${HOST_UID}-writeable/pulse
+          chmod 700 /run/user/${HOST_UID}-writeable/pulse
+          if [ -S /run/user/${HOST_UID}/pulse/native ]; then
+            ln -sf /run/user/${HOST_UID}/pulse/native /run/user/${HOST_UID}-writeable/pulse/native
+          fi
+        fi
+
+
+        #=======================================================================
+        # FIXED: Explicitly handle D-Bus paths using correct absolute locations
+        #=======================================================================
+
+        if [ -d /run/user/${HOST_UID}/dbus-1 ]; then
+          mkdir -p /run/user/${HOST_UID}-writeable/dbus-1
+          chmod 700 /run/user/${HOST_UID}-writeable/dbus-1
+          if [ -d /run/user/${HOST_UID}/dbus-1/services ]; then
+            ln -sf /run/user/${HOST_UID}/dbus-1/services /run/user/${HOST_UID}-writeable/dbus-1/services
+          fi
+        fi
+
+
+        #=======================================================================
+        # Symlink XDG session handle if present
+        #=======================================================================
+
+        if [ -e /run/user/${HOST_UID}/xdg_session.0 ]; then
+          ln -sf /run/user/${HOST_UID}/xdg_session.0 /run/user/${HOST_UID}-writeable/xdg_session.0
+        fi
+
+
+        #=======================================================================
+        # Fix ownership of Podman-created root configuration space
+        #=======================================================================
+
+        # chown the xdg runtime dir
+        chown -R ${HOST_USER}:${HOST_USER} /run/user/${HOST_UID}-writeable
+        chown -R ${HOST_USER}:${HOST_USER} /home/${HOST_USER}/tmp
+
+        # chmod the tmp directory
+        chmod 755 /home/${HOST_USER}/tmp
+
+
+        #=======================================================================
+        # Ensure Nix cache volume is owned by non-root user
+        #=======================================================================
+
+        mkdir -p /home/${HOST_USER}/.cache/nix
+        chown -R ${HOST_USER}:${HOST_USER} /home/${HOST_USER}/.cache/nix
+
+
+        #=======================================================================
+        # ISOLATE NVIDIA LIBRARIES VIA SYMLINKS
+        #=======================================================================
+
+        mkdir -p /usr/lib64/nvidia
+
+        # Symlink all NVIDIA and CUDA libraries from nvidia-host into /usr/lib64/nvidia
+        for lib in /usr/lib64/nvidia-host/*nvidia* \
+                   /usr/lib64/nvidia-host/libcuda* \
+                   /usr/lib64/nvidia-host/libnv* \
+                   /usr/lib64/nvidia-host/libEGL_nvidia* \
+                   /usr/lib64/nvidia-host/libGLES*nvidia*; do
+          if [ -e "$lib" ]; then
+            ln -sf "$lib" /usr/lib64/nvidia/
+          fi
+        done
+
+
+        #=======================================================================
+        # Append environment parameters into .bashrc to survive runuser switch
+        #=======================================================================
+
+        # nix daemon-socket
+        mkdir -p /nix/var/nix/daemon-socket
+        chown -R root:nix-users /nix/var/nix/daemon-socket
+        chmod 775 /nix/var/nix/daemon-socket
+
+        # start the nix-daemon
+        nix-daemon --daemon &
+
+        # Touch and set permission BEFORE appending
+        touch /home/${HOST_USER}/.bashrc
+        chmod 644 /home/${HOST_USER}/.bashrc
+
+        {
+
+          # append the linuxulator libraries to the LD_LIBRARY_PATH 
+          echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/nvidia'
+
+          # LD_PRELOAD the dummy-uvm.so for the gpu
+          echo 'export LD_PRELOAD=/usr/lib64/dummy-uvm.so'
+
+          # export the DBUS_SESSION_BUS_ADDRESS
+          echo 'export DBUS_SESSION_BUS_ADDRESS='"${HOST_DBUS_SESSION_BUS_ADDRESS}"''
+
+          # set the TMPDIR to ~/tmp
+          echo 'export TMPDIR=/home/'"${HOST_USER}"'/tmp'
+
+          # CONDITIONAL DISPLAY BACKEND (Wayland vs X11)
+          if [ "${HOST_XDG_SESSION_TYPE}" = "wayland" ]; then
+            echo 'export WAYLAND_DISPLAY=wayland-0'
+            echo 'export QT_QPA_PLATFORM=wayland'
+            echo 'export GDK_BACKEND=wayland'
+          else
+            echo 'export DISPLAY=:0'
+            echo 'export QT_QPA_PLATFORM=xcb'
+            echo 'export GDK_BACKEND=x11'
+          fi
+
+          # export the xdg directories
+          echo 'export XDG_RUNTIME_DIR=/run/user/'"${HOST_UID}"'-writeable'
+          echo 'export XDG_CONFIG_HOME=/home/'"${HOST_USER}"'/.config'
+          echo 'export XDG_CACHE_HOME=/home/'"${HOST_USER}"'/.cache'
+          echo 'export XDG_DATA_HOME=/home/'"${HOST_USER}"'/.local/share'
+          echo 'export XDG_DATA_DIRS="/home/'"${HOST_USER}"'/.local/state/nix/profiles/profile/share:$XDG_DATA_DIRS"'
+
+          # set up the dark theme
+          echo 'export GTK_THEME=Adwaita-dark:dark'
+          echo 'export QT_QPA_PLATFORMTHEME="qt5ct"'
+          echo 'export QT_QPA_PLATFORMTHEME="qt6ct"'
+
+          # lang
+          echo 'export LANG='"${HOST_LANG}"''
+          echo 'export LC_COLLATE=C'
+
+          # user and home
+          echo 'export NIX_REMOTE=daemon'
+          echo 'export USER='"${HOST_USER}"''
+          echo 'export HOME=/home/'"${HOST_USER}"''
+          echo 'export PATH=/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/usr/local/bin:/home/'"${HOST_USER}"'/.local/state/nix/profiles/profile/bin:$PATH'
+
+          # fontconfig
+          echo 'export FONTCONFIG_FILE=/home/'"${HOST_USER}"'/.config/fontconfig/fonts.conf'
+
+          # nix dont manage shell
+          echo 'if [ -f "/home/'"${HOST_USER}"'/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" ]; then'
+          echo '    . "/home/'"${HOST_USER}"'/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh"'
+          echo 'fi'
+
+        } > /home/${HOST_USER}/.bashrc
+
+        # add bashrc to profile
+        echo '[ -f ~/.bashrc ] && . ~/.bashrc' > /home/${HOST_USER}/.profile
+
+        #=======================================================================
+        # Switch from root to our user
+        #=======================================================================
+
+        # chmod the home directory
+        chmod 755 /home
+        chmod 755 /home/${HOST_USER}
+        chmod 644 /home/${HOST_USER}/.bashrc
+        chown -R ${HOST_USER}:${HOST_USER} /home/${HOST_USER}
+
+        # exec /bin/sh
+        exec /bin/sh
+
+
+#===============================================================================
+# Named Volumes Definition
+#===============================================================================
+
+volumes:
+
+  #=========================================================================
+  # Shared Memory Volume
+  # Provides 1GB of tmpfs space 
+  #=========================================================================
+
+  nix-shm:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=1g,mode=1777"
+
+
+  #=========================================================================
+  # Writeable Runtime Directory
+  # Isolated tmpfs layer to bypass the read-only FreeBSD host XDG mount
+  #=========================================================================
+
+  nix-writeable-run:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=16m,mode=0700"
+
+
+  #=========================================================================
+  # Persistent Nix store volume
+  #=========================================================================
+
+  nix-store:
+
+
+  #=========================================================================
+  # Dedicated volume for Nix Flakes SQLite evaluation & fetcher caches
+  #=========================================================================
+
+  nix-cache:
+

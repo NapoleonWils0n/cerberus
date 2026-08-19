@@ -1,0 +1,101 @@
+#!/bin/sh
+
+#===============================================================================
+# file: wrapper-freebsd
+# project: wrapper-freebsd script that run wrapper-podman
+#===============================================================================
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# script usage
+$(basename "$0") -j jail -a application -c compose.yaml -e .env -p on|off
+-p on = enable audio on the freebsd host for the jail
+"
+exit 2
+}
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':j:a:c:e:p:h' opt
+do
+  case ${opt} in
+     j) jail="${OPTARG}";;
+     a) app="${OPTARG}";;
+     c) compose="${OPTARG}";;
+     e) env="${OPTARG}";;
+     p) audio="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# start audio if -p on option is specified
+#===============================================================================
+
+# default audio on
+audio_default="on"
+
+# start audio
+audio () {
+pgrep pulseaudio || pulseaudio --start --daemonize 2>/dev/null
+}
+
+# check if pulseaudio should be started
+case "${audio:=${audio_default}}" in
+    on) audio;;
+    off) ;;
+    *) usage;;
+esac
+
+
+#===============================================================================
+#  Check if the container is already running. If not, spin it up backgrounded
+#===============================================================================
+
+if [ -z "$(doas podman ps -q -f name="${jail}")" ]; then
+    # Change directory to ensure podman-compose finds your compose.yaml path cleanly
+    doas podman-compose -f "${compose}" --env-file "${env}" up -d
+    
+    # Strictly wait until podman inspect confirms the jail is fully running
+    while [ "$(doas podman inspect --format '{{.State.Running}}' "${jail}" 2>/dev/null)" != "true" ]; do
+        :
+    done
+fi
+
+
+#===============================================================================
+# Resolve jail IDs and execute command
+#===============================================================================
+
+# find the podman id
+full_id=$(doas podman ps -q --no-trunc -f name="${jail}")
+
+# Ensure jls has registered the long ID string before moving forward
+jail_id=""
+while [ -z "${jail_id}" ]; do
+    jail_id=$(doas jls jid name | awk -v id="${full_id}" '$2 == id {print $1}')
+done
+
+# Use jexec to run the wrapper-podman script in the podman container
+doas jexec -u "${USER}" "${jail_id}" /bin/sh -ilc "${HOME}/bin/wrapper-podman -a ${app}" -- "${@}"

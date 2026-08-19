@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=translatelocally-nix
+Comment=translate
+GenericName=translate
+Keywords=Internet;
+Exec=sh -c "wrapper-freebsd-nix -j translatelocally-nix -a "${HOME}/.local/state/nix/profiles/profile/bin/translateLocally" -c "${HOME}/podman/freebsd-nixpkgs/containers/translation/translatelocally/compose.yaml" -e "${HOME}/podman/freebsd-nixpkgs/containers/translation/translatelocally/.env" %U"
+Terminal=false
+Type=Application
+Icon=terminal
+Categories=Network;
+StartupNotify=true
