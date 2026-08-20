@@ -4,5 +4,5 @@
 dolphin file manager install with ffmpeg thumbnail support
 
 #+begin_src sh
-doas pkg install dolphin kdegraphics-thumbnailers ffmpegthumbs
+doas pkg install dolphin kdegraphics-thumbnailers kdemultimedia-ffmpegthumbs ffmpegthumbnailer
 #+end_src
