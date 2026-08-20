@@ -1,0 +1,8 @@
+#+STARTUP: showall
+* dolphin file manager
+
+dolphin file manager install with ffmpeg thumbnail support
+
+#+begin_src sh
+doas pkg install dolphin kdegraphics-thumbnailers ffmpegthumbs
+#+end_src
