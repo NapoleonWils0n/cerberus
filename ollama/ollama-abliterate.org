@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* llama abliterate
+
+Ollama pull
+
+#+begin_src sh
+ollama pull huihui_ai/llama3.2-abliterate:3b
+#+end_src
+
+Ollama run
+
+#+begin_src sh
+ollama run huihui_ai/llama3.2-abliterate:3b
+#+end_src
