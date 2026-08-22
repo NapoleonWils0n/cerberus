@@ -1,0 +1,13 @@
+#+STARTUP: showall
+* Graph-Easy
+** Freebsd install
+
+#+begin_src sh
+doas pkg install p5-Graph-Easy
+#+end_src
+
+** Graph-Easy usage
+
+#+begin_src sh
+graph-easy --as=ascii input.dot > output.txt
+#+end_src
