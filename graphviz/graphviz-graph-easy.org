@@ -1,0 +1,53 @@
+#+STARTUP: content
+* graphviz and graph-easy
+** graphviz
+
+input.dot
+
+#+begin_src dot
+digraph FreeBSD_Nixpkgs {
+  rankdir=LR;
+  node [shape=box];
+
+  Browsers -> "Firefox";
+  Browsers -> "TorBrowser";
+
+  Firefox [label="Firefox with DRM"]
+  TorBrowser [label="Tor Browser with access to Downloads directory"]
+  Konversation [label="Konversation with xdcc/dcc file download"]
+  Searxng [label="Searxng self hosted search"]
+  Handbrake [label="Handbrake with nvenc"]
+
+  Rust [label="Rust\n* naersk & rust-overlay\n* x86_64-musl static build\n* x86_64-mingw32 cross-compile"]
+  ffmpeg [label="ffmpeg\n* fdkaac\n* yt-dlp"]
+  Latex [label="Latex\n* biber\n* ghostscript"]
+
+  Development -> "flakes";
+  "flakes" -> "C";
+  "flakes" -> "ffmpeg";
+  "flakes" -> "Latex";
+  "flakes" -> "Rust";
+
+  IRC -> "Konversation";
+  Video -> "Handbrake";
+  Web -> "Searxng";
+
+  { rank=same; Browsers; Development; IRC; Video; Web; }
+}
+#+end_src
+
+** graph-easy
+
+#+begin_src sh
+graph-easy --as=ascii input.dot > output.txt
+#+end_src
+
+** freebsd forum 
+
+When adding as a forum post you disable BB Code by clicking the [] icon
+
+Then paste in the ascii text surrounded by
+
+#+begin_example
+[CODE=text] ... [/CODE]
+#+end_example
