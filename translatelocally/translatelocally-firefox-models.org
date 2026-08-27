@@ -1,0 +1,1174 @@
+#+STARTUP: content
+* translatelocally firefox models
+
+use firefox translation models with translatelocally
+
+** download the firefox models.json file
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/db/models.json'
+#+end_src
+
+*** get the baseUrl from the models.json file
+
+open the models.json file
+
+#+begin_src sh
+vi models.json
+#+end_src
+
+and copy the baseUrl
+
+#+begin_src json
+"baseUrl": "https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data",
+#+end_src
+
+extract the base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data
+#+end_example
+
+** search for a language
+
+In the models.json file search for a language such as english to italian
+and italian to english using the country code
+
+[[https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes]]
+
+** languages
+*** french
+**** english to french
+
+search for en-fr
+
+#+begin_example
+en-fr
+#+end_example
+
+#+begin_src json
+    "en-fr": [
+      {
+        "architecture": "base-memory",
+        "releaseStatus": "Release",
+        "sourceLanguage": "en",
+        "targetLanguage": "fr",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/lex.50.50.enfr.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/model.enfr.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "6322e296d4fecfe395a8d5723da4ec37ecbe6d7613bb1dfcf4b28e2a47498b68"
+          },
+          "vocab": {
+            "path": "models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/vocab.enfr.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 31248966,
+          "encoderParameters": 10646820,
+          "decoderParameters": 8314144
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 48.8533,
+            "chrf": 70.8001,
+            "chrfpp": 68.8238,
+            "comet22": 0.8653,
+            "llm-ref": 4.458,
+            "metricx24-qe": 2.2298,
+            "metricx24": 2.1715,
+            "spbleu": 53.8402
+          }
+        }
+      }
+    ],
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/lex.50.50.enfr.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/model.enfr.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "6322e296d4fecfe395a8d5723da4ec37ecbe6d7613bb1dfcf4b28e2a47498b68"
+          },
+          "vocab": {
+            "path": "models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/vocab.enfr.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/lex.50.50.enfr.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/model.enfr.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/vocab.enfr.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p english-french
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/lex.50.50.enfr.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/model.enfr.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-fr/retrain_hr_NLIxDbE1TBGyOTI-zwZagw/exported/vocab.enfr.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.enfr.spm.gz > english-french/vocab.enfr.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.enfr.intgemm.alphas.bin.gz > english-french/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.enfr.s2t.bin.gz > english-french/lex.50.50.enfr.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi english-french/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "English-French",
+  "shortName": "en-fr",
+  "type": "base",
+  "src": "English",
+  "trg": "French",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi english-french/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.enfr.spm
+  - vocab.enfr.spm
+shortlist:
+  - lex.50.50.enfr.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf english-french.tar.gz english-french
+#+end_src
+
+**** french to english
+
+search for fr-en
+
+#+begin_example
+fr-en
+#+end_example
+
+#+begin_src json
+    "fr-en": [
+      {
+        "architecture": "base-memory",
+        "releaseStatus": "Release",
+        "sourceLanguage": "fr",
+        "targetLanguage": "en",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/lex.50.50.fren.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/model.fren.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "15f997bc0d13808b0b0fbd0786e684a3c8a52adcd8071844b76123fdacbf2b90"
+          },
+          "vocab": {
+            "path": "models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/vocab.fren.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 31248966,
+          "encoderParameters": 10646820,
+          "decoderParameters": 8314144
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 42.9512,
+            "chrf": 68.0661,
+            "chrfpp": 66.379,
+            "comet22": 0.886,
+            "llm-ref": 4.542,
+            "metricx24-qe": 2.345,
+            "metricx24": 2.3208,
+            "spbleu": 46.947
+          }
+        }
+      }
+    ],
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/lex.50.50.fren.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/model.fren.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "15f997bc0d13808b0b0fbd0786e684a3c8a52adcd8071844b76123fdacbf2b90"
+          },
+          "vocab": {
+            "path": "models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/vocab.fren.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/lex.50.50.fren.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/model.fren.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/vocab.fren.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p french-english
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/lex.50.50.fren.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/model.fren.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/fr-en/retrain_hr_EFgIftH_RrCyzl5gjemVNg/exported/vocab.fren.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.fren.spm.gz > french-english/vocab.fren.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.fren.intgemm.alphas.bin.gz > french-english/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.fren.s2t.bin.gz > french-english/lex.50.50.fren.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi french-english/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "French-English",
+  "shortName": "fr-en",
+  "type": "base",
+  "src": "French",
+  "trg": "English",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi french-english/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.fren.spm
+  - vocab.fren.spm
+shortlist:
+  - lex.50.50.fren.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf french-english.tar.gz french-english
+#+end_src
+
+*** german
+**** english to german
+
+search for en-de
+
+#+begin_example
+en-de
+#+end_example
+
+#+begin_src json
+    "en-de": [
+      {
+        "architecture": "base-memory",
+        "releaseStatus": "Release",
+        "sourceLanguage": "en",
+        "targetLanguage": "de",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/lex.50.50.ende.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/model.ende.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "8df29d9494d19f47fd5d97c6a73474c6f657e9f81c1a607c431d02befdf3810f"
+          },
+          "vocab": {
+            "path": "models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/vocab.ende.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 31248966,
+          "encoderParameters": 10646820,
+          "decoderParameters": 8314144
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 39.6541,
+            "chrf": 65.9441,
+            "chrfpp": 63.5545,
+            "comet22": 0.867,
+            "llm-ref": 4.452,
+            "metricx24-qe": 0.9237,
+            "metricx24": 1.0491,
+            "spbleu": 46.4352
+          }
+        }
+      }
+    ],
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/lex.50.50.ende.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/model.ende.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "8df29d9494d19f47fd5d97c6a73474c6f657e9f81c1a607c431d02befdf3810f"
+          },
+          "vocab": {
+            "path": "models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/vocab.ende.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/lex.50.50.ende.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/model.ende.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/vocab.ende.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p english-german
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/lex.50.50.ende.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/model.ende.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-de/retrain_hr_fix_names_SCgGhxUPQ2WAECHLRtzrMg/exported/vocab.ende.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.ende.spm.gz > english-german/vocab.ende.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.ende.intgemm.alphas.bin.gz > english-german/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.ende.s2t.bin.gz > english-german/lex.50.50.ende.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi english-german/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "English-german",
+  "shortName": "en-de",
+  "type": "base",
+  "src": "English",
+  "trg": "German",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi english-german/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.ende.spm
+  - vocab.ende.spm
+shortlist:
+  - lex.50.50.ende.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf english-german.tar.gz english-german
+#+end_src
+
+**** german to english
+
+search for it-en
+
+#+begin_example
+de-en
+#+end_example
+
+#+begin_src json
+    "de-en": [
+      {
+        "architecture": "base",
+        "releaseStatus": null,
+        "sourceLanguage": "de",
+        "targetLanguage": "en",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/lex.50.50.deen.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/model.deen.intgemm.alphas.bin.gz",
+            "uncompressedSize": 42992955,
+            "uncompressedHash": "8e8d6dea65ba238cebd6dd5cf55a461f7a75aeb056380b01a4ff589a69104ba2"
+          },
+          "vocab": {
+            "path": "models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/vocab.deen.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 42686774,
+          "encoderParameters": 18914340,
+          "decoderParameters": 7388432
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 38.9556,
+            "chrf": 66.0589,
+            "chrfpp": 64.1523,
+            "comet22": 0.8775,
+            "llm-ref": 4.462,
+            "metricx24-qe": 2.5092,
+            "metricx24": 2.6037,
+            "spbleu": 43.3356
+          }
+        }
+      },
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/lex.50.50.deen.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/model.deen.intgemm.alphas.bin.gz",
+            "uncompressedSize": 42992955,
+            "uncompressedHash": "8e8d6dea65ba238cebd6dd5cf55a461f7a75aeb056380b01a4ff589a69104ba2"
+          },
+          "vocab": {
+            "path": "models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/vocab.deen.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/lex.50.50.deen.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/model.deen.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/vocab.deen.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p german-english
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/lex.50.50.deen.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/model.deen.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/de-en/llmaat_pretrain_nllb50m_ZNXyv1GbQsqpuUKBTaQQDw/exported/vocab.deen.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.deen.spm.gz > german-english/vocab.deen.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.deen.intgemm.alphas.bin.gz > german-english/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.deen.s2t.bin.gz > german-english/lex.50.50.deen.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi german-english/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "German-English",
+  "shortName": "de-en",
+  "type": "base",
+  "src": "German",
+  "trg": "English",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi german-english/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.deen.spm
+  - vocab.deen.spm
+shortlist:
+  - lex.50.50.deen.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf german-english.tar.gz german-english
+#+end_src
+
+*** italian
+**** english to italian
+
+search for en-it
+
+#+begin_example
+en-it
+#+end_example
+
+#+begin_src json
+    "en-it": [
+      {
+        "architecture": "base-memory",
+        "releaseStatus": "Release",
+        "sourceLanguage": "en",
+        "targetLanguage": "it",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/lex.50.50.enit.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/model.enit.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "248f47568788ecc351da7e5e07064d4153b4f71e011364ae2c931ffeec4d1cc2"
+          },
+          "vocab": {
+            "path": "models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/vocab.enit.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 31248966,
+          "encoderParameters": 10646820,
+          "decoderParameters": 8314144
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 29.3895,
+            "chrf": 59.1425,
+            "chrfpp": 56.3636,
+            "comet22": 0.8655,
+            "llm-ref": 4.466,
+            "metricx24-qe": 2.3018,
+            "metricx24": 2.3682,
+            "spbleu": 35.7941
+          }
+        }
+      }
+    ],
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/lex.50.50.enit.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/model.enit.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "248f47568788ecc351da7e5e07064d4153b4f71e011364ae2c931ffeec4d1cc2"
+          },
+          "vocab": {
+            "path": "models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/vocab.enit.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/lex.50.50.enit.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/model.enit.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/vocab.enit.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p english-italian
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/lex.50.50.enit.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/model.enit.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-it/retrain_hr_fix_names_GPSr_u8PSmC9fOx1ZDCHoA/exported/vocab.enit.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.enit.spm.gz > english-italian/vocab.enit.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.enit.intgemm.alphas.bin.gz > english-italian/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.enit.s2t.bin.gz > english-italian/lex.50.50.enit.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi english-italian/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "English-Italian",
+  "shortName": "en-it",
+  "type": "base",
+  "src": "English",
+  "trg": "Italian",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi english-italian/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.enit.spm
+  - vocab.enit.spm
+shortlist:
+  - lex.50.50.enit.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf english-italian.tar.gz english-italian
+#+end_src
+
+**** italian to english
+
+search for it-en
+
+#+begin_example
+it-en
+#+end_example
+
+#+begin_src json
+    "it-en": [
+      {
+        "architecture": "base-memory",
+        "releaseStatus": "Release",
+        "sourceLanguage": "it",
+        "targetLanguage": "en",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/lex.50.50.iten.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/model.iten.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "21b70978ce2f3b4da7a06b5de86a09abe3acd30b9eee1b2ebb3582b9bad790bf"
+          },
+          "vocab": {
+            "path": "models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/vocab.iten.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 31248966,
+          "encoderParameters": 10646820,
+          "decoderParameters": 8314144
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 30.6533,
+            "chrf": 60.9395,
+            "chrfpp": 58.8087,
+            "comet22": 0.8691,
+            "llm-ref": 4.524,
+            "metricx24-qe": 2.3839,
+            "metricx24": 2.6993,
+            "spbleu": 35.559
+          }
+        }
+      }
+    ],
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/lex.50.50.iten.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/model.iten.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "21b70978ce2f3b4da7a06b5de86a09abe3acd30b9eee1b2ebb3582b9bad790bf"
+          },
+          "vocab": {
+            "path": "models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/vocab.iten.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/lex.50.50.iten.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/model.iten.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/vocab.iten.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p italian-english
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/lex.50.50.iten.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/model.iten.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/it-en/retrain_hr_d1nPDwVeSD6t-HdtWA4xNg/exported/vocab.iten.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.iten.spm.gz > italian-english/vocab.iten.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.iten.intgemm.alphas.bin.gz > italian-english/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.iten.s2t.bin.gz > italian-english/lex.50.50.iten.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi italian-english/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "Italian-English",
+  "shortName": "it-en",
+  "type": "base",
+  "src": "Italian",
+  "trg": "English",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi italian-english/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.iten.spm
+  - vocab.iten.spm
+shortlist:
+  - lex.50.50.iten.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf italian-english.tar.gz italian-english
+#+end_src
