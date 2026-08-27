@@ -36,6 +36,19 @@ and italian to english using the country code
 
 [[https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes]]
 
+** installing language tar.gz files
+
+copy the tar.gz for a language to 
+
+#+begin_src sh
+cp *.tar.gz ~/podman/freebsd-nixpkgs/containers/translation/translatelocally/workspace
+#+end_src
+
+open the edit menu / translator settings
+
+then click the languages tab and click the import model button
+then select the tar.gz from the workspace directory click open and then ok
+
 ** languages
 *** french
 **** english to french
