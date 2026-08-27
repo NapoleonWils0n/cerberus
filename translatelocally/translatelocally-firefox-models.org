@@ -1172,3 +1172,403 @@ Archive the directory into the final .tar.gz package:
 #+begin_src sh
 tar -czvf italian-english.tar.gz italian-english
 #+end_src
+*** japanese
+**** english to japanese
+
+search for en-ja
+
+#+begin_example
+en-ja
+#+end_example
+
+#+begin_src json
+    "en-ja": [
+      {
+        "architecture": "base",
+        "releaseStatus": null,
+        "sourceLanguage": "en",
+        "targetLanguage": "ja",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/lex.50.50.enja.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/model.enja.intgemm.alphas.bin.gz",
+            "uncompressedSize": 59376955,
+            "uncompressedHash": "ab8ab5b81f3796fa13b536de4a30a936a6e66ff731d70059cef74cac622539de"
+          },
+          "srcVocab": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/srcvocab.enja.spm.gz"
+          },
+          "trgVocab": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/trgvocab.enja.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 59070773,
+          "encoderParameters": 35298340,
+          "decoderParameters": 23772433
+        },
+        "metrics": {
+          "flores200-plus": {
+            "chrf": 42.5562,
+            "chrfpp": 33.5556,
+            "comet22": 0.8935,
+            "llm-ref": 4.44,
+            "metricx24-qe": 2.4988,
+            "metricx24": 2.8329,
+            "spbleu": 32.3975
+          }
+        }
+      },
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/lex.50.50.enja.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/model.enja.intgemm.alphas.bin.gz",
+            "uncompressedSize": 59376955,
+            "uncompressedHash": "ab8ab5b81f3796fa13b536de4a30a936a6e66ff731d70059cef74cac622539de"
+          },
+          "srcVocab": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/srcvocab.enja.spm.gz"
+          },
+          "trgVocab": {
+            "path": "models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/trgvocab.enja.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/lex.50.50.enja.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/model.enja.intgemm.alphas.bin.gz
+#+end_example
+
+srcvocab
+
+#+begin_example
+models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/srcvocab.enja.spm.gz
+#+end_example
+
+targetvocab
+
+#+begin_example
+models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/trgvocab.enja.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p english-japanese
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/lex.50.50.enja.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/model.enja.intgemm.alphas.bin.gz'
+#+end_src
+
+srcvocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/srcvocab.enja.spm.gz'
+#+end_src
+
+targetvocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ja/cjk_split_vocabs_no_hplt_lr0002_GOw3mqKQQMOYdiWtjay4wA/exported/trgvocab.enja.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+Decompress source vocabulary (English)
+
+#+begin_src sh
+gunzip -c srcvocab.enja.spm.gz > english-japanese/srcvocab.enja.spm
+#+end_src
+
+Decompress target vocabulary (Japanese)
+
+#+begin_src sh
+gunzip -c trgvocab.enja.spm.gz > english-japanese/trgvocab.enja.spm
+#+end_src
+
+Decompress model weights
+
+#+begin_src sh
+gunzip -c model.enja.intgemm.alphas.bin.gz > english-japanese/model.bin
+#+end_src
+
+Decompress lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.enja.s2t.bin.gz > english-japanese/lex.50.50.enja.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi english-japanese/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "English-Japanese",
+  "shortName": "en-it",
+  "type": "base",
+  "src": "English",
+  "trg": "Japanese",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi english-japanese/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - srcvocab.enja.spm
+  - trgvocab.enja.spm
+shortlist:
+  - lex.50.50.enja.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf english-japanese.tar.gz english-japanese
+#+end_src
+
+**** japanese to english
+
+search for ja-en
+
+#+begin_example
+ja-en
+#+end_example
+
+#+begin_src json
+    "ja-en": [
+      {
+        "architecture": "base",
+        "releaseStatus": "Release Desktop",
+        "sourceLanguage": "ja",
+        "targetLanguage": "en",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/lex.50.50.jaen.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/model.jaen.intgemm.alphas.bin.gz",
+            "uncompressedSize": 59504955,
+            "uncompressedHash": "a9bf800679bba570520e1161d7b4fbfcb957add32ca35812134add85689752ad"
+          },
+          "vocab": {
+            "path": "models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/vocab.jaen.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 59102774,
+          "encoderParameters": 18914340,
+          "decoderParameters": 7420432
+        },
+        "metrics": {
+          "flores200-plus": {
+            "chrf": 56.3558,
+            "chrfpp": 53.4194,
+            "comet22": 0.8621,
+            "llm-ref": 4.298,
+            "metricx24-qe": 1.9488,
+            "metricx24": 2.4295,
+            "spbleu": 29.1417
+          }
+        }
+      },
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/lex.50.50.jaen.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/model.jaen.intgemm.alphas.bin.gz",
+            "uncompressedSize": 59504955,
+            "uncompressedHash": "a9bf800679bba570520e1161d7b4fbfcb957add32ca35812134add85689752ad"
+          },
+          "vocab": {
+            "path": "models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/vocab.jaen.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/lex.50.50.jaen.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/model.jaen.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/vocab.jaen.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p japanese-english
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/lex.50.50.jaen.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/model.jaen.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/ja-en/cjk_icu_base_U4VUAW3STh-bF0Sr-dX69g/exported/vocab.jaen.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.jaen.spm.gz > japanese-english/vocab.jaen.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.jaen.intgemm.alphas.bin.gz > japanese-english/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.jaen.s2t.bin.gz > japanese-english/lex.50.50.jaen.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi japanese-english/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "Japanese-English",
+  "shortName": "ja-en",
+  "type": "base",
+  "src": "Japanese",
+  "trg": "English",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi japanese-english/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.jaen.spm
+  - vocab.jaen.spm
+shortlist:
+  - lex.50.50.jaen.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf japanese-english.tar.gz japanese-english
+#+end_src
