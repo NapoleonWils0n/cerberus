@@ -1572,3 +1572,379 @@ Archive the directory into the final .tar.gz package:
 #+begin_src sh
 tar -czvf japanese-english.tar.gz japanese-english
 #+end_src
+*** russian
+**** english to russian
+
+search for en-ru
+
+#+begin_example
+en-ru
+#+end_example
+
+#+begin_src json
+    "en-ru": [
+      {
+        "architecture": "base",
+        "releaseStatus": "Release Desktop",
+        "sourceLanguage": "en",
+        "targetLanguage": "ru",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/lex.50.50.enru.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/model.enru.intgemm.alphas.bin.gz",
+            "uncompressedSize": 42992955,
+            "uncompressedHash": "0ef9a209c5edc46692750e7505b3695655b1c7c3ec73058b641201ef18c481ce"
+          },
+          "vocab": {
+            "path": "models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/vocab.enru.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 42686774,
+          "encoderParameters": 18914340,
+          "decoderParameters": 7388432
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 31.2472,
+            "chrf": 58.8674,
+            "chrfpp": 56.0746,
+            "comet22": 0.8764,
+            "llm-ref": 4.416,
+            "metricx24-qe": 2.2939,
+            "metricx24": 2.5004,
+            "spbleu": 40.3498
+          }
+        }
+      },
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/lex.50.50.enru.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/model.enru.intgemm.alphas.bin.gz",
+            "uncompressedSize": 42992955,
+            "uncompressedHash": "0ef9a209c5edc46692750e7505b3695655b1c7c3ec73058b641201ef18c481ce"
+          },
+          "vocab": {
+            "path": "models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/vocab.enru.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/lex.50.50.enru.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/model.enru.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/vocab.enru.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p english-russian
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/lex.50.50.enru.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/model.enru.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-ru/student_base_AYqN3ysXRp2EGkEqeaA5Rg/exported/vocab.enru.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.enru.spm.gz > english-russian/vocab.enru.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.enru.intgemm.alphas.bin.gz > english-russian/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.enru.s2t.bin.gz > english-russian/lex.50.50.enru.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi english-russian/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "English-Russian",
+  "shortName": "en-it",
+  "type": "base",
+  "src": "English",
+  "trg": "Russian",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi english-russian/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.enru.spm
+  - vocab.enru.spm
+shortlist:
+  - lex.50.50.enru.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf english-russian.tar.gz english-russian
+#+end_src
+
+**** russian to english
+
+search for ru-en
+
+#+begin_example
+ru-en
+#+end_example
+
+#+begin_src json
+    "ru-en": [
+      {
+        "architecture": "base-memory",
+        "releaseStatus": null,
+        "sourceLanguage": "ru",
+        "targetLanguage": "en",
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/lex.50.50.ruen.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/model.ruen.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "aa0efa194b3dbd2da129ba0b8db8ef139126cb0914e57072f62061294746f1e2"
+          },
+          "vocab": {
+            "path": "models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/vocab.ruen.spm.gz"
+          }
+        },
+        "modelStatistics": {
+          "parameters": 31248966,
+          "encoderParameters": 10646820,
+          "decoderParameters": 8314144
+        },
+        "metrics": {
+          "flores200-plus": {
+            "bleu": 31.8771,
+            "chrf": 60.7106,
+            "chrfpp": 58.6184,
+            "comet22": 0.8497,
+            "llm-ref": 4.406,
+            "metricx24-qe": 2.8461,
+            "metricx24": 3.0849,
+            "spbleu": 35.9252
+          }
+        }
+      },
+#+end_src
+
+***** extract the relative urls from the code
+
+#+begin_src json
+        "files": {
+          "lexicalShortlist": {
+            "path": "models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/lex.50.50.ruen.s2t.bin.gz"
+          },
+          "model": {
+            "path": "models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/model.ruen.intgemm.alphas.bin.gz",
+            "uncompressedSize": 31561787,
+            "uncompressedHash": "aa0efa194b3dbd2da129ba0b8db8ef139126cb0914e57072f62061294746f1e2"
+          },
+          "vocab": {
+            "path": "models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/vocab.ruen.spm.gz"
+          }
+        },
+#+end_src
+
+lexicalShortlist
+
+#+begin_example
+models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/lex.50.50.ruen.s2t.bin.gz
+#+end_example
+
+model
+
+#+begin_example
+models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/model.ruen.intgemm.alphas.bin.gz
+#+end_example
+
+vocab
+
+#+begin_example
+models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/vocab.ruen.spm.gz
+#+end_example
+
+***** create the models file directory
+
+#+begin_src sh
+mkdir -p russian-english
+#+end_src
+
+***** Prepend the baseurl to each of the relative links
+
+Base url
+
+#+begin_example
+https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/
+#+end_example
+
+And download with wget
+
+lexicalShortlist
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/lex.50.50.ruen.s2t.bin.gz'
+#+end_src
+
+model
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/model.ruen.intgemm.alphas.bin.gz'
+#+end_src
+
+vocab
+
+#+begin_src sh
+wget 'https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/ru-en/next26_RSpwfHrcSUC_rKTnhOEXzw/exported/vocab.ruen.spm.gz'
+#+end_src
+
+***** extract the files into the directory
+
+Decompress and rename the vocabulary file
+
+#+begin_src sh
+gunzip -c vocab.ruen.spm.gz > russian-english/vocab.ruen.spm
+#+end_src
+
+Move the binary model weights
+
+#+begin_src sh
+gunzip -c model.ruen.intgemm.alphas.bin.gz > russian-english/model.bin
+#+end_src
+
+Decompress the lexical shortlist
+
+#+begin_src sh
+gunzip -c lex.50.50.ruen.s2t.bin.gz > russian-english/lex.50.50.ruen.s2t.bin
+#+end_src
+
+***** Create the model_info.json file
+
+Create the model_info.json file.
+
+#+begin_src sh
+vi russian-english/model_info.json
+#+end_src
+
+Add the following code to the file.
+
+#+begin_src json
+{
+  "modelName": "Russian-English",
+  "shortName": "ru-en",
+  "type": "base",
+  "src": "Russian",
+  "trg": "English",
+  "version": 1.0,
+  "API": 1.0
+}
+#+end_src
+
+***** Create config.intgemm8bitalpha.yml
+
+#+begin_src sh
+vi russian-english/config.intgemm8bitalpha.yml
+#+end_src
+
+#+begin_src yaml
+models:
+  - model.bin
+vocabs:
+  - vocab.ruen.spm
+  - vocab.ruen.spm
+shortlist:
+  - lex.50.50.ruen.s2t.bin
+  - 50
+  - 50
+  - false
+gemm-precision: int8shiftAlphaAll
+#+end_src
+
+***** Package the Model
+
+Archive the directory into the final .tar.gz package:
+
+#+begin_src sh
+tar -czvf russian-english.tar.gz russian-english
+#+end_src
