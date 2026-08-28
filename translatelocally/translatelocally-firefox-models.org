@@ -38,11 +38,17 @@ and italian to english using the country code
 
 ** installing language tar.gz files
 
+for the freebsd-nixpkgs project 
+
+[[https://github.com/NapoleonWils0n/freebsd-nixpkgs#translation-1]]
+
 copy the tar.gz for a language to 
 
 #+begin_src sh
 cp *.tar.gz ~/podman/freebsd-nixpkgs/containers/translation/translatelocally/workspace
 #+end_src
+
+if you aren't using the freebsd-nixpkgs project you can import the file from anywhere on your file system
 
 open the edit menu / translator settings
 
