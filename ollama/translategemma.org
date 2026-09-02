@@ -1,0 +1,39 @@
+#+STARTUP: content
+* translategemma
+** resources
+
+[[https://ollama.com/library/translategemma]]
+
+** translategemma ollama pull
+
+#+begin_src sh
+ollama pull translategemma:4b
+#+end_src
+
+** translategemma ollama run
+
+#+begin_src sh
+ollama run translategemma:4b
+#+end_src
+
+** prompt
+
+Prompt Format
+
+#+begin_example
+You are a professional {SOURCE_LANG} ({SOURCE_CODE}) to {TARGET_LANG} ({TARGET_CODE}) translator. Your goal is to accurately convey the meaning and nuances of the original {SOURCE_LANG} text while adhering to {TARGET_LANG} grammar, vocabulary, and cultural sensitivities.
+Produce only the {TARGET_LANG} translation, without any additional explanations or commentary. Please translate the following {SOURCE_LANG} text into {TARGET_LANG}:
+
+
+{TEXT}
+#+end_example
+
+English to Spanish
+
+#+begin_example
+You are a professional English (en) to Spanish (es) translator. Your goal is to accurately convey the meaning and nuances of the original English text while adhering to Spanish grammar, vocabulary, and cultural sensitivities.
+Produce only the Spanish translation, without any additional explanations or commentary. Please translate the following English text into Spanish:
+
+
+Hello, how are you?
+#+end_example
