@@ -8,10 +8,18 @@ Interact with tmux from Emacs.
 
 ** emamux
 
-keyboard shortcut
+Keyboard shortcut
+
+The first time you run the keyboard shortcut you will be prompted to a tmux pane to send the command to
 
 #+begin_example
 C-`
+#+end_example
+
+If you want to switch to another tmux pane prefix the keyboard shortcut with C-u
+
+#+begin_example
+C-u C-`
 #+end_example
 
 add the following code to your init.el
