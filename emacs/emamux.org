@@ -1,0 +1,42 @@
+#+STARTUP: content
+* emamux.el emacs
+** resources
+
+Interact with tmux from Emacs.
+
+[[https://github.com/emacsorphanage/emamux]]
+
+** emamux
+
+keyboard shortcut
+
+#+begin_example
+C-`
+#+end_example
+
+add the following code to your init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emamux
+;; ----------------------------------------------------------------------------------
+
+(defun my/emamux-smart-send ()
+  "Send active visual selection, or the current line if no selection."
+  (interactive)
+  (if (and (bound-and-true-p evil-mode) (evil-visual-state-p))
+      (progn
+        (emamux:send-region (region-beginning) (region-end))
+        (evil-exit-visual-state))
+    (emamux:send-region (line-beginning-position) (line-end-position))))
+
+(use-package emamux
+  :demand t
+  :config
+  ;; Global binding for normal/insert modes
+  (global-set-key (kbd "C-`") 'my/emamux-smart-send)
+
+  ;; Explicitly bind in Evil visual state so visual selections work
+  (with-eval-after-load 'evil
+    (define-key evil-visual-state-map (kbd "C-`") 'my/emamux-smart-send)))
+#+end_src
