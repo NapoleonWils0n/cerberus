@@ -154,7 +154,7 @@ make edits and commit them one by one
 [[https://codeberg.org/dwl/dwl-patches/src/branch/main/patches/movestack]]
 
 #+begin_src sh
-wget https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/movestack/movestack.patch
+curl -L -o movestack.patch 'https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/movestack/movestack-0.8.patch'
 #+end_src
 
 #+begin_src sh
