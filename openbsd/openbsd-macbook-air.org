@@ -1,0 +1,674 @@
+#+STARTUP: content
+* openbsd bhyve
+** resources
+
+[[https://www.c0ffee.net/blog/openbsd-on-a-laptop/]]
+
+** install
+
+press i for install
+
+press l for language
+
+press uk
+
+system hostname = talos
+
+network select vio0
+
+ipv4 = autoconf
+
+ipv6 = none
+
+nertwork interface to configure = default
+
+password for root = root
+
+start ssh = yes
+
+xwindows = yes
+
+do you want the x windows to be started by xenodm = no
+
+change the default console to com0
+
+set up a user = add your username
+
+full name = 
+
+password = dan
+
+allow root ssh login = no
+
+timezone gb = yes
+
+which disk is root = sd0 
+
+encypt the root disk with passphrase or keyfile = no
+
+encrypt = root
+
+no valid mbr or gpt = whole disk gpt G
+
+Partition = auto A
+
+location of sets = cd0
+
+pathname to the sets = default
+
+select sets: -game* -xserv*
+
+press done on the next screen
+
+directory does not contain SHA256.sig continue without verfication = yes
+
+location of sets = done
+
+reboot
+
+** doas 
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+echo "permit keepenv :wheel" > /etc/doas.conf
+#+end_src
+
+#+begin_src sh
+chmod 600 /etc/doas.conf
+doas -C /etc/doas.conf
+#+end_src
+
+** search for packages
+
+#+begin_src sh
+pkg_info -Q wayland
+#+end_src
+
+** wayland
+
+#+begin_src sh
+doas pkg_add wlroots wayland-protocols seatd foot git gmake dbus
+#+end_src
+
+Add your user to the _seatd group and enable the seatd daemon to handle display/input device access:
+
+#+begin_src sh
+doas usermod -G staff djwilcox
+doas usermod -G _seatd djwilcox
+doas rcctl enable seatd
+doas rcctl start seatd
+doas rcctl enable messagebus
+doas rcctl start messagebus
+#+end_src
+
+** dwl and dwlb
+*** dwlb
+
+[[https://github.com/kolunmi/dwlb]]
+
+#+begin_src sh
+git clone https://github.com/kolunmi/dwlb.git
+#+end_src
+
+#+begin_src sh
+doas pkg_add fcft tllist
+#+end_src
+
+#+begin_src sh
+cd dwlb
+#+end_src
+
+# Replace memfd_create with OpenBSD's shm_mkstemp equivalent
+
+#+begin_src sh
+sed -i 's|int fd = memfd_create("surface", MFD_CLOEXEC);|char template[] = "/tmp/dwlb-XXXXXX"; int fd = shm_mkstemp(template);|g' dwlb.c
+#+end_src
+
+#+begin_src sh
+sed -i 's/-lrt//g' Makefile config.mk 2>/dev/null || true
+#+end_src
+
+#+begin_src sh
+gmake
+#+end_src
+
+#+begin_src sh
+doas cp dwlb /usr/local/bin
+#+end_src
+
+*** dwl
+
+[[https://codeberg.org/dwl/dwl]]
+
+#+begin_src sh
+curl -L -o dwl-v0.8.tar.gz 'https://codeberg.org/dwl/dwl/archive/v0.8.tar.gz'
+#+end_src
+
+#+begin_src sh
+tar -xzvf dwl-v0.8.tar.gz
+#+end_src
+
+**** movestack 
+
+[[https://codeberg.org/dwl/dwl-patches/src/branch/main/patches/movestack]]
+
+#+begin_src sh
+curl -L -o movestack.patch 'https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/movestack/movestack-0.8.patch'
+#+end_src
+
+#+begin_src sh
+cd dwl
+#+end_src
+
+#+begin_src sh
+patch -p1 < ../movestack.patch
+#+end_src
+
+**** copy config.def.h to config.h
+
+copy config.def.h to config.h
+
+#+BEGIN_SRC sh
+cp config.def.h config.h
+#+END_SRC
+
+**** make file
+
+#+begin_src sh
+sed -i'' -e s/_POSIX_C_SOURCE=200809L/_XOPEN_SOURCE=700/ Makefile
+#+end_src
+
+**** config
+
+config.h
+
+#+begin_src c
+/* Taken from https://github.com/djpohly/dwl/issues/466 */
+#define COLOR(hex)    { ((hex >> 24) & 0xFF) / 255.0f, \
+                        ((hex >> 16) & 0xFF) / 255.0f, \
+                        ((hex >> 8) & 0xFF) / 255.0f, \
+                        (hex & 0xFF) / 255.0f }
+/* appearance */
+static const int sloppyfocus               = 1;  /* focus follows mouse */
+static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
+static const unsigned int borderpx         = 1;  /* border pixel of windows */
+static const float rootcolor[]             = COLOR(0x222222ff);
+static const float bordercolor[]           = COLOR(0x444444ff);
+static const float focuscolor[]            = COLOR(0x005577ff);
+static const float urgentcolor[]           = COLOR(0xff0000ff);
+/* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
+static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f}; /* You can also use glsl colors */
+
+/* tagging - TAGCOUNT must be no greater than 31 */
+#define TAGCOUNT (9)
+
+/* logging */
+static int log_level = WLR_ERROR;
+
+static const Rule rules[] = {
+	/* app_id             title       tags mask     isfloating   monitor */
+	{ "mpv",  NULL,           0,       1,           0 },
+    /* default/example rule: can be changed but cannot be eliminated; at least one rule must exist */
+};
+
+/* layout(s) */
+static const Layout layouts[] = {
+	/* symbol     arrange function */
+	{ "[]=",      tile },
+	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "[M]",      monocle },
+};
+
+/* monitors */
+/* (x=-1, y=-1) is reserved as an "autoconfigure" monitor position indicator
+ ,* WARNING: negative values other than (-1, -1) cause problems with Xwayland clients due to
+ ,* https://gitlab.freedesktop.org/xorg/xserver/-/issues/899 */
+static const MonitorRule monrules[] = {
+   /* name        mfact  nmaster scale layout       rotate/reflect                x    y
+    ,* example of a HiDPI laptop monitor:
+    { "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 }, */
+	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	/* default monitor rule: can be changed but cannot be eliminated; at least one monitor rule must exist */
+};
+
+/* keyboard */
+static const struct xkb_rule_names xkb_rules = {
+	/* can specify fields: rules, model, layout, variant, options */
+	/* example:
+	.options = "ctrl:nocaps",
+	,*/
+
+	.model = NULL,
+	.rules = NULL,
+
+/*	.model = "104",
+	.rules = "evdev",
+,*/
+	.layout = "gb",
+	.variant = "macintosh",
+	.options = "custom:alt_win_ctrl,caps:none",
+};
+
+static const int repeat_rate = 35;
+static const int repeat_delay = 400;
+
+/* Trackpad */
+static const int tap_to_click = 1;
+static const int tap_and_drag = 1;
+static const int drag_lock = 1;
+static const int natural_scrolling = 0;
+static const int disable_while_typing = 1;
+static const int left_handed = 0;
+static const int middle_button_emulation = 0;
+/* You can choose between:
+LIBINPUT_CONFIG_SCROLL_NO_SCROLL
+LIBINPUT_CONFIG_SCROLL_2FG
+LIBINPUT_CONFIG_SCROLL_EDGE
+LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN
+,*/
+static const enum libinput_config_scroll_method scroll_method = LIBINPUT_CONFIG_SCROLL_2FG;
+
+/* You can choose between:
+LIBINPUT_CONFIG_CLICK_METHOD_NONE
+LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS
+LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER
+,*/
+static const enum libinput_config_click_method click_method = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
+
+/* You can choose between:
+LIBINPUT_CONFIG_SEND_EVENTS_ENABLED
+LIBINPUT_CONFIG_SEND_EVENTS_DISABLED
+LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE
+,*/
+static const uint32_t send_events_mode = LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
+
+/* You can choose between:
+LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT
+LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE
+,*/
+static const enum libinput_config_accel_profile accel_profile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
+static const double accel_speed = 1.0;
+
+
+/* You can choose between:
+LIBINPUT_CONFIG_TAP_MAP_LRM -- 1/2/3 finger tap maps to left/right/middle
+LIBINPUT_CONFIG_TAP_MAP_LMR -- 1/2/3 finger tap maps to left/middle/right
+,*/
+static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TAP_MAP_LRM;
+
+/* If you want to use the windows key for MODKEY, use WLR_MODIFIER_LOGO */
+#define MODKEY WLR_MODIFIER_LOGO
+
+#define TAGKEYS(KEY,SKEY,TAG) \
+	{ MODKEY,                    KEY,            view,            {.ui = 1 << TAG} }, \
+	{ MODKEY|WLR_MODIFIER_CTRL,  KEY,            toggleview,      {.ui = 1 << TAG} }, \
+	{ MODKEY|WLR_MODIFIER_SHIFT, SKEY,           tag,             {.ui = 1 << TAG} }, \
+	{ MODKEY|WLR_MODIFIER_CTRL|WLR_MODIFIER_SHIFT,SKEY,toggletag, {.ui = 1 << TAG} }
+
+/* helper for spawning shell commands in the pre dwm-5.0 fashion */
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
+/* commands */
+static const char *termcmd[] = { "/usr/local/bin/alacritty", NULL };
+static const char *menucmd[] = { "/usr/local/bin/tofi-drun", NULL };
+
+static const Key keys[] = {
+	/* Note that Shift changes certain key codes: 2 -> at, etc. */
+	/* modifier                  key                  function          argument */
+	{ MODKEY,                    XKB_KEY_a,           spawn,            {.v = menucmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,      spawn,            {.v = termcmd} },
+	{ MODKEY,                    XKB_KEY_j,           focusstack,       {.i = +1} },
+	{ MODKEY,                    XKB_KEY_k,           focusstack,       {.i = -1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,           movestack,        {.i = +1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,           movestack,        {.i = -1} },
+	{ MODKEY,                    XKB_KEY_i,           incnmaster,       {.i = +1} },
+	{ MODKEY,                    XKB_KEY_d,           incnmaster,       {.i = -1} },
+	{ MODKEY,                    XKB_KEY_h,           setmfact,         {.f = -0.05f} },
+	{ MODKEY,                    XKB_KEY_l,           setmfact,         {.f = +0.05f} },
+	{ MODKEY,                    XKB_KEY_Return,      zoom,             {0} },
+	{ MODKEY,                    XKB_KEY_Tab,         view,             {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_c,           killclient,       {0} },
+	{ MODKEY,                    XKB_KEY_t,           setlayout,        {.v = &layouts[0]} },
+	{ MODKEY,                    XKB_KEY_f,           setlayout,        {.v = &layouts[1]} },
+	{ MODKEY,                    XKB_KEY_m,           setlayout,        {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_space,       setlayout,        {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,       togglefloating,   {0} },
+	{ MODKEY,                    XKB_KEY_e,           togglefullscreen, {0} },
+	{ MODKEY,                    XKB_KEY_0,           view,             {.ui = ~0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright,  tag,              {.ui = ~0} },
+	{ MODKEY,                    XKB_KEY_comma,       focusmon,         {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY,                    XKB_KEY_period,      focusmon,         {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,        tagmon,           {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,     tagmon,           {.i = WLR_DIRECTION_RIGHT} },
+	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                        0),
+	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                            1),
+	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                    2),
+	TAGKEYS(          XKB_KEY_4, XKB_KEY_dollar,                        3),
+	TAGKEYS(          XKB_KEY_5, XKB_KEY_percent,                       4),
+	TAGKEYS(          XKB_KEY_6, XKB_KEY_asciicircum,                   5),
+	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                     6),
+	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                      7),
+	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                     8),
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,           quit,             {0} },
+
+	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
+	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
+	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
+	 ,* do not remove them.
+	 ,*/
+#define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
+	CHVT(1), CHVT(2), CHVT(3), CHVT(4), CHVT(5), CHVT(6),
+	CHVT(7), CHVT(8), CHVT(9), CHVT(10), CHVT(11), CHVT(12),
+};
+
+static const Button buttons[] = {
+	{ MODKEY, BTN_LEFT,   moveresize,     {.ui = CurMove} },
+	{ MODKEY, BTN_MIDDLE, togglefloating, {0} },
+	{ MODKEY, BTN_RIGHT,  moveresize,     {.ui = CurResize} },
+};
+#+end_src
+
+**** make
+
+#+begin_src sh
+gmake CC=cc CFLAGS+='-std=c11'
+#+end_src
+
+#+begin_src sh
+doas gmake install
+#+end_src
+
+#+begin_src sh
+doas cp dwl /usr/local/bin/
+#+end_src
+
+** tofi
+
+[[https://github.com/philj56/tofi]]
+
+#+begin_src sh
+doas pkg_add meson ninja cairo pango libxkbcommon
+#+end_src
+
+#+begin_src sh
+git clone https://github.com/philj56/tofi.git
+#+end_src
+
+#+begin_src sh
+cd tofi
+#+end_src
+
+#+begin_src sh
+meson setup --reconfigure --prefix=/usr/local build
+#+end_src
+
+#+begin_src sh
+doas ninja -C build install
+#+end_src
+
+** fonts
+
+#+begin_src sh
+doas pkg_add fira-fonts
+#+end_src
+
+** tofi config
+
+#+begin_src sh
+vi ~/.config/tofi/config
+#+end_src
+
+#+begin_src conf
+anchor = top
+#output = "eDP-1"
+border-width = 0
+drun-launch = true
+font = "/usr/local/share/fonts/fira/FiraMono-Bold.ttf"
+font-size = 12
+height = 32
+hint-font = false
+horizontal = true
+min-input-width = 0
+num-results = 10
+outline-width = 0
+padding-bottom = 0
+padding-left = 0
+padding-right = 0
+padding-top = 0
+prompt-color = #eee8d5
+prompt-text = ""
+input-color = #eee8d5
+result-spacing = 18
+selection-color = #002b36
+default-result-color = #eee8d5
+text-color = #eee8d5
+width = 100%
+default-result-background = #073642
+selection-background = #268bd2
+background-color = #005577 
+#background-color = #2b2b2b
+prompt-background=#002b36
+selection-background-padding = 4
+#selection-background-corner-radius = 6
+default-result-background-padding = 4
+#default-result-background-corner-radius = 6
+#+end_src
+
+** dwl-start
+
+#+begin_src sh
+#!/bin/sh
+
+# start dwl with dbus
+exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"' 2>/dev/null
+#+end_src
+
+#+begin_src sh
+doas cp dwl-start /usr/local/bin
+#+end_src
+
+** ssh
+
+#+begin_src sh
+doas rcctl enable sshd
+doas rcctl start sshd
+#+end_src
+
+#+begin_src sh
+doas rcctl check sshd
+#+end_src
+
+#+begin_src sh
+# Stop the running SSH daemon
+doas rcctl stop sshd
+
+# Disable it from starting automatically on reboot
+doas rcctl disable sshd
+#+end_src
+
+** profile
+** xkb
+*** rules
+**** evdev
+
+#+begin_src conf
+! option = symbols
+  custom:alt_win_ctrl = +custom(alt_win_ctrl)
+
+! include %S/evdev
+#+end_src
+
+**** evdev.xml
+
+#+begin_src xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>gb</name>
+      </configItem>
+      <variantList>
+        <variant>
+          <configItem>
+            <name>alt_win_ctrl</name>
+            <shortDescription>alt_win_ctrl</shortDescription>
+            <description>GB(alt_win_ctrl)</description>
+          </configItem>
+        </variant>
+      </variantList>
+    </layout>
+  </layoutList>
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>custom</name>
+        <description>custom options</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>custom:alt_win_ctrl</name>
+          <description>Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>
+#+end_src
+
+*** symbols
+**** custom
+
+#+begin_src conf
+// Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
+partial modifier_keys
+xkb_symbols "alt_win_ctrl" {
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+    key <AE03> { [ 3, numbersign, sterling ] };
+
+    // Key under Escape: section (unshifted), plusminus (shifted)
+    key <TLDE> { [ grave, asciitilde, plusminus ] };
+
+    // Key next to Left Shift: grave (unshifted), asciitilde (shifted)
+
+    key <LSGT> { [ section, plusminus ] };
+};
+#+end_src
+
+**** gb
+
+#+begin_src conf
+default partial alphanumeric_keys 
+xkb_symbols "alt_win_ctrl" {
+
+    // mac swap alt_win_ctrl
+
+    // include "macintosh_vndr/gb"
+
+    name[Group1]= "alt_win_ctrl - Mac";
+
+    key <LALT> { [ Super_L ] };
+    key <LWIN> { [ Control_L, Control_L ] };
+    key <LCTL> { [ Alt_L, Meta_L ] };
+    key <AE03> { [ 3, numbersign, sterling ] };
+
+    // Key under Escape: section (unshifted), plusminus (shifted)
+    key <TLDE> { [ grave, asciitilde, plusminus ] };
+
+    // Key next to Left Shift: grave (unshifted), asciitilde (shifted)
+    key <LSGT> { [ section, plusminus ] };
+};
+#+end_src
+
+** keymap
+
+show the keymap
+
+#+begin_src sh
+wsconsctl keyboard.map
+#+end_src
+
+works
+
+#+begin_src conf
+doas tee /etc/wsconsctl.conf << 'EOF'
+keyboard.encoding=uk
+keyboard.map+="keycode 53 = grave asciitilde plusminus"
+keyboard.map+="keycode 50 = section plusminus"
+keyboard.map+="keycode 100 = section plusminus"
+keyboard.map+="keycode 31 = 2 at twosuperior cent"
+keyboard.map+="keycode 52 = apostrophe quotedbl section Agrave"
+
+keyboard1.encoding=uk
+keyboard1.map+="keycode 53 = grave asciitilde plusminus"
+keyboard1.map+="keycode 50 = section plusminus"
+keyboard1.map+="keycode 100 = section plusminus"
+keyboard1.map+="keycode 31 = 2 at twosuperior cent"
+keyboard1.map+="keycode 52 = apostrophe quotedbl section Agrave"
+EOF
+#+end_src
+
+new
+
+#+begin_src conf
+doas tee /etc/wsconsctl.conf << 'EOF'
+keyboard.encoding=uk
+keyboard.map+="keycode 53 = grave asciitilde plusminus"
+keyboard.map+="keycode 50 = section plusminus"
+keyboard.map+="keycode 100 = backslash bar sterling thorn"
+keyboard.map+="keycode 31 = 2 at twosuperior cent"
+keyboard.map+="keycode 52 = apostrophe quotedbl section Agrave"
+keyboard.map+="keycode 32 = 3 numbersign sterling threesuperior"
+
+keyboard1.encoding=uk
+keyboard1.map+="keycode 53 = grave asciitilde plusminus"
+keyboard1.map+="keycode 50 = section plusminus"
+keyboard1.map+="keycode 100 = backslash bar sterling thorn"
+keyboard1.map+="keycode 31 = 2 at twosuperior cent"
+keyboard1.map+="keycode 52 = apostrophe quotedbl section Agrave"
+keyboard1.map+="keycode 32 = 3 numbersign sterling threesuperior"
+EOF
+#+end_src
+
+uk
+
+#+begin_src sh
+doas tee /etc/wsconsctl.conf << 'EOF'
+keyboard.encoding=uk
+EOF
+#+end_src
+
+
+#+begin_src sh
+doas wsconsctl -f /etc/wsconsctl.conf
+#+end_src
+
+** locale
+
+[[https://oneofus.la/have-emacs-will-hack/2018-05-28-lispm-keyboard-layout-openbsd-console.html]]
+
+doas vi /etc/login.conf
+
+#+begin_src conf
+default:\
+	:setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C,LC_TIME=en_GB.UTF-8,LC_NUMERIC=en_GB.UTF-8,LC_MONETARY=en_GB.UTF-8,LC_MESSAGES=en_GB.UTF-8:\
+	:capability...
+#+end_src
+
+#+begin_src sh
+doas cap_mkdb /etc/login.conf
+#+end_src
+
+** tmux
+
+tmux config location
+
+#+begin_example
+~/.tmux.conf
+#+end_example

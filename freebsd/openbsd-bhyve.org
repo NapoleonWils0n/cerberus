@@ -1,0 +1,212 @@
+#+STARTUP: content
+* openbsd bhyve
+** resources
+
+[[https://www.c0ffee.net/blog/openbsd-on-a-laptop/]]
+
+** openbsd.conf template
+
+#+begin_src conf
+# =====================================================================
+# openbsd
+# =====================================================================
+
+loader="uefi"
+cpu="4"
+memory="4G"
+network0_type="virtio-net"
+network0_switch="public"
+
+
+# =====================================================================
+# Sparse Zvol block storage
+# =====================================================================
+
+disk0_type="virtio-blk"
+disk0_name="disk0"
+disk0_dev="sparse-zvol"
+
+
+# =====================================================================
+# System & Graphics Settings
+# =====================================================================
+
+utctime="yes"
+virt_random="yes"
+bhyve_options="-w"
+
+graphics="yes"
+xhci_mouse="yes"
+graphics_res="1920x1080"
+graphics_wait="no"
+#+end_src
+
+** vm install
+
+#+begin_src sh
+doas vm create -t openbsd -s 60G openbsd
+#+end_src
+
+** vm install
+
+#+begin_src sh
+doas vm install -f openbsd install79.iso
+#+end_src
+
+** vm start
+
+#+begin_src sh
+doas vm start openbsd
+#+end_src
+
+** vm stop
+
+#+begin_src sh
+doas vm stop ubuntu
+#+end_src
+
+** vnc
+
+log in with vnc.
+
+#+begin_src sh
+wlvncc -s 127.0.0.1 5900
+#+end_src
+
+** install
+
+press i for install
+
+press l for language
+
+press uk
+
+system hostname = talos
+
+network select vio0
+
+ipv4 = autoconf
+
+ipv6 = none
+
+nertwork interface to configure = default
+
+password for root = root
+
+start ssh = yes
+
+xwindows = yes
+
+do you want the x windows to be started by xenodm = no
+
+change the default console to com0
+
+set up a user = add your username
+
+full name = 
+
+password = dan
+
+allow root ssh login = no
+
+timezone gb = yes
+
+which disk is root = sd0 
+
+encypt the root disk with passphrase or keyfile = no
+
+encrypt = root
+
+no valid mbr or gpt = whole disk gpt G
+
+Partition = auto A
+
+location of sets = cd0
+
+pathname to the sets = default
+
+select sets: -game* -xserv*
+
+press done on the next screen
+
+directory does not contain SHA256.sig continue without verfication = yes
+
+location of sets = done
+
+reboot
+
+** connect with vnc
+
+#+begin_src sh
+wlvncc -s 127.0.0.1 5900
+#+end_src
+
+login
+
+ifconfig
+
+192.168.1.238
+
+** close the vnc window
+
+close the vnc window with
+
+#+begin_example
+Ctrl shift c
+#+end_example
+
+control c the the window with the console running
+
+stop the vm
+
+#+begin_src sh
+doas vm stop openbsd
+#+end_src
+
+start the vm
+
+#+begin_src sh
+doas vm start openbsd
+#+end_src
+
+** ssh config
+
+#+begin_example
+~/.ssh/config
+#+end_example
+
+#+begin_src config
+# bhyve openbsd
+host talos
+user djwilcox
+port 22
+hostname 192.168.1.238
+#+end_src
+
+#+begin_src sh
+ssh talos
+#+end_src
+
+accept finger print
+
+** doas 
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+echo "permit keepenv :wheel" > /etc/doas.conf
+#+end_src
+
+#+begin_src sh
+chmod 600 /etc/doas.conf
+doas -C /etc/doas.conf
+#+end_src
+
+** search for packages
+
+#+begin_src sh
+pkg_info -Q wayland
+#+end_src
+
