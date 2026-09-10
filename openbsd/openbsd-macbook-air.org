@@ -820,5 +820,5 @@ doas pkg_add -u
 doas pkg_add ffmpeg yt-dlp mpv zsh zsh-syntax-highlighting \
 abook aspell aria2 bat dict-server dict-client fd fdk-aac ffmpegthumbnailer firefox gcc shellcheck \
 pandoc imv jq mpd mpc ncmpc oath-toolkit openvpn qbittorrent ripgrep rsync syncthing tree tree-sitter \
-wget wl-clipboard zathura zathura-pdf-mupdf syncthing emacs-30.2p3-pgtk intel-vaapi-driver
+wget wl-clipboard zathura zathura-pdf-mupdf syncthing emacs-30.2p3-pgtk intel-vaapi-driver playerctl
 #+end_src
