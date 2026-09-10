@@ -77,12 +77,17 @@ su -
 #+end_src
 
 #+begin_src sh
-echo "permit keepenv :wheel" > /etc/doas.conf
+echo "permit persist keepenv setenv { PATH } djwilcox" > /etc/doas.conf
 #+end_src
 
 #+begin_src sh
 chmod 600 /etc/doas.conf
-doas -C /etc/doas.conf
+#+end_src
+
+check config
+
+#+begin_src sh
+doas doas -C /etc/doas.conf
 #+end_src
 
 ** search for packages
@@ -100,8 +105,18 @@ doas pkg_add wlroots wayland-protocols seatd foot git gmake dbus
 Add your user to the _seatd group and enable the seatd daemon to handle display/input device access:
 
 #+begin_src sh
-doas usermod -G staff djwilcox
-doas usermod -G _seatd djwilcox
+doas usermod -G wheel,staff,_seatd,operator djwilcox
+#+end_src
+
+check you have been added to the groups
+
+#+begin_src sh
+groups djwilcox
+#+end_src
+
+enable seatd and messagebus
+
+#+begin_src sh
 doas rcctl enable seatd
 doas rcctl start seatd
 doas rcctl enable messagebus
@@ -676,3 +691,127 @@ tmux config location
 #+begin_example
 ~/.tmux.conf
 #+end_example
+
+** apmd
+
+apmd power
+
+#+begin_src sh
+doas rcctl enable apmd
+doas rcctl set apmd flags -A -z 15
+doas rcctl start apmd
+#+end_src
+
+check the flags have been applied
+
+#+begin_src sh
+rcctl get apmd flags
+#+end_src
+
+** login.conf
+
+#+begin_src sh
+doas vi /etc/login.conf
+#+end_src
+
+default
+
+#+begin_src conf
+staff:\
+	:datasize-cur=1536M:\
+	:datasize-max=infinity:\
+	:maxproc-max=512:\
+	:maxproc-cur=256:\
+	:ignorenologin:\
+	:requirehome@:\
+	:tc=default:
+#+end_src
+
+new
+
+#+begin_src sh
+staff:\
+	:datasize-cur=3072M:\
+	:datasize-max=3072M:\
+	:maxproc-max=1024:\
+	:maxproc-cur=512:\
+	:openfiles-cur=2048:\
+	:openfiles-max=4096:\
+        :stacksize-cur=32M:\
+        :ignorenologin:\
+        :requirehome@:\
+	:tc=default:
+#+end_src
+
+** /etc/sysctl.conf
+
+#+begin_src sh
+doas vi /etc/sysctl.conf
+#+end_src
+
+#+begin_src conf
+# shared memory limits (chrome needs a ton)
+kern.shminfo.shmall=3145728
+kern.shminfo.shmmax=2147483647
+kern.shminfo.shmmni=1024
+
+# semaphores
+kern.shminfo.shmseg=1024
+kern.seminfo.semmns=4096
+kern.seminfo.semmni=1024
+
+kern.maxproc=32768
+kern.maxfiles=65535
+kern.bufcachepercent=90
+kern.maxvnodes=262144
+kern.somaxconn=2048
+#+end_src
+
+** fstab
+
+You can greatly improve disk performance by enabling softupdates and the noatime option for all your local partitions in /etc/fstab. Add the softdep,noatime options to each partition (except swap) as I've demonstrated below. Don't copy and paste this directly, as your disk identifier will be different.
+
+#+begin_src sh
+doas vi /etc/fstab
+#+end_src
+
+#+begin_src conf
+0364c44477d30004.b none swap sw
+0364c44477d30004.a / ffs rw,softdep,noatime 1 1
+0364c44477d30004.l /home ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.d /tmp ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.f /usr ffs rw,softdep,noatime,nodev 1 2
+0364c44477d30004.g /usr/X11R6 ffs rw,softdep,noatime,nodev 1 2
+0364c44477d30004.h /usr/local ffs rw,softdep,noatime,wxallowed,nodev 1 2
+0364c44477d30004.k /usr/obj ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.j /usr/src ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.e /var ffs rw,softdep,noatime,nodev,nosuid 1 2
+#+end_src
+
+** audio video recording
+
+add the following to sysctl.conf
+
+#+begin_src sh
+kern.audio.record=1
+kern.video.record=1
+#+end_src
+
+** foot terminal
+
+[[https://codeberg.org/dnkl/foot]]
+
+[[https://wiki.gentoo.org/wiki/Foot]]
+
+#+begin_src sh
+mkdir -p ~/.config/foot
+cp /etc/xdg/foot/foot.ini ~/.config/foot
+#+end_src
+
+
+** pkg update
+
+#+begin_src sh
+doas pkg_add -u
+#+end_src
+
