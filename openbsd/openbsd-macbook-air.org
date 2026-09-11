@@ -832,3 +832,93 @@ change shell
 #+begin_src sh
 chsh -s /usr/local/bin/zsh
 #+end_src
+
+** ports
+
+[[https://www.openbsd.org/faq/ports/ports.html]]
+
+download the ports tree
+
+#+begin_src sh
+cd /tmp
+ftp https://cdn.openbsd.org/pub/OpenBSD/$(uname -r)/{ports.tar.gz,SHA256.sig}
+signify -Cp /etc/signify/openbsd-$(uname -r | cut -c 1,3)-base.pub -x SHA256.sig ports.tar.gz
+#+end_src
+
+extract the ports
+
+#+begin_src sh
+cd /usr
+doas tar xzf /tmp/ports.tar.gz
+#+end_src
+
+chown the ports tree
+
+#+begin_src sh
+doas chown -R ${USER}:${USER} /usr/ports
+#+end_src
+
+For example, you could add the following lines to /etc/mk.conf: 
+
+#+begin_src sh
+doas vi /etc/mk.conf
+#+end_src
+
+#+begin_src sh
+WRKOBJDIR=/usr/obj/ports
+DISTDIR=/usr/distfiles
+PACKAGE_REPOSITORY=/usr/packages
+#+end_src
+
+create the packages directories and change the permissions
+
+#+begin_src sh
+doas mkdir -p /usr/obj/ports /usr/distfiles /usr/packages
+doas chown -R ${USER}:${USER} /usr/distfiles /usr/packages
+#+end_src
+
+Open /usr/ports/multimedia/mpv/Makefile
+in your editor and locate the CONFIGURE_ARGS definition.
+
+#+begin_src sh
+cd /usr/ports/multimedia/mpv
+#+end_src
+
+#+begin_src makefile
+-Ddmabuf-wayland=disabled \
+-Degl-wayland=disabled \
+-Dvaapi-wayland=disabled \
+-Dwayland=disabled \
+#+end_src
+
+change to 
+
+#+begin_src makefile
+-Ddmabuf-wayland=enabled \
+-Degl-wayland=enabled \
+-Dvaapi-wayland=enabled \
+-Dwayland=enabled \
+#+end_src
+
+Add wayland/wayland and wayland/wayland-protocols to BUILD_DEPENDS:
+
+#+begin_src make
+BUILD_DEPENDS += wayland/wayland-protocols
+#+end_src
+
+Add wayland/wayland to LIB_DEPENDS:
+
+#+begin_src makefile
+LIB_DEPENDS += wayland/wayland,-main
+#+end_src
+
+Updates/verifies package file lists if needed
+Compiles mpv
+Replaces the official package with your custom build
+
+#+begin_src sh
+cd /usr/ports/multimedia/mpv
+make plist                     
+make                           
+doas make reinstall clean      
+#+end_src
