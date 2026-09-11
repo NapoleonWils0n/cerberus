@@ -837,6 +837,8 @@ chsh -s /usr/local/bin/zsh
 
 [[https://www.openbsd.org/faq/ports/ports.html]]
 
+[[https://github.com/openbsd/ports/blob/master/multimedia/mpv/Makefile]]
+
 download the ports tree
 
 #+begin_src sh
