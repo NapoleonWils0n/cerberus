@@ -1,0 +1,10 @@
+#+STARTUP: content
+* openbsd manuall install set
+
+install set manually
+
+#+begin_src sh
+cd /tmp
+ftp https://cdn.openbsd.org/pub/OpenBSD/7.9/amd64/xserv79.tgz
+doas tar -C / -zxvpf /var/tmp/xserv79.tgz
+#+end_src
