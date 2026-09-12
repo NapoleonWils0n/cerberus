@@ -891,29 +891,29 @@ create the directory structure with the zsh shell
 mkdir -p "${HOME}"/ports/{wrkobjdir,distdir,plist,bulk_cookies,update_cookies,pkgrepo}
 #+end_src
 
-csv 
+csv make sure you are in the /src directory
 
 #+begin_src sh
 cd /usr
 #+end_src
 
 #+begin_example
-CVSROOT=anoncvs@anoncvs.comstyle.com:/cvs
-reposync rsync://anoncvs.comstyle.com/cvs/
-Location: Toronto, Canada.
-Maintained by Brad Smith.
-Protocols: ssh, ssh port 2022.
-Updated hourly.
+CVSROOT=anoncvs@anoncvs.fr.openbsd.org:/cvs
+reposync rsync://anoncvs.fr.openbsd.org/openbsd-cvs/
+Location: Paris, France.
+Maintained by Landry Breuil, Antoine Jacoutot.
+Protocols: ssh.
+Updated every 2 hours from main server.
 SSH fingerprints:
-(RSA) SHA256:vYSNKOoCHReBzmdJy3SiULg7YyEZVoib3X3jGJShezA
-(ECDSA) SHA256:W2WEQDka4xicJzeQY0Nm0iCv3h2xZLzfp+TT1UvtBTw
-(ED25519) SHA256:cqNaOU0KSmJ/S7jrV4UbZ6WkkyXWZ07rhWK8yrRZUV0
+(RSA) SHA256:d3o82eY/kIfUfmhVpwFu7Do1I7+Wol/tvWmm6Ye9HZ4
+(ECDSA) SHA256:WXN4m8NHd4vcTqxmzLMMVenSh6gp8060nv39JIiCSss
+(ED25519) SHA256:STeC5WGChnZjIi5Rb+XTAQSbKXQJ+B9wxhaacYNff7k
 #+end_example
 
 checkout ports
 
 #+begin_src sh
-cvs -qd anoncsv@anoncvs.comstyle.com:/cvs checkout -rOPENBSD_7_9 -P ports
+cvs -qd anoncvs@anoncvs.fr.openbsd.org:/cvs checkout -rOPENBSD_7_9 -P ports
 #+end_src
 
 update
