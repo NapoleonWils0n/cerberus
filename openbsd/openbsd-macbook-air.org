@@ -897,10 +897,23 @@ csv
 cd /usr
 #+end_src
 
+#+begin_example
+CVSROOT=anoncvs@anoncvs.comstyle.com:/cvs
+reposync rsync://anoncvs.comstyle.com/cvs/
+Location: Toronto, Canada.
+Maintained by Brad Smith.
+Protocols: ssh, ssh port 2022.
+Updated hourly.
+SSH fingerprints:
+(RSA) SHA256:vYSNKOoCHReBzmdJy3SiULg7YyEZVoib3X3jGJShezA
+(ECDSA) SHA256:W2WEQDka4xicJzeQY0Nm0iCv3h2xZLzfp+TT1UvtBTw
+(ED25519) SHA256:cqNaOU0KSmJ/S7jrV4UbZ6WkkyXWZ07rhWK8yrRZUV0
+#+end_example
+
 checkout ports
 
 #+begin_src sh
-cvs -qd anonymous@anoncvs13.openbsd.org:/cvs get -rOPENBSD_7_9 -P ports
+cvs -qd anoncsv@anoncvs.comstyle.com:/cvs checkout -rOPENBSD_7_9 -P ports
 #+end_src
 
 update
