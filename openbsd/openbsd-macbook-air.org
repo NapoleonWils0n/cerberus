@@ -841,6 +841,12 @@ chsh -s /usr/local/bin/zsh
 
 [[https://github.com/openbsd/ports/blob/master/multimedia/mpv/Makefile]]
 
+Avoid running cvs(1) as root. The /usr/src directory (where your source will typically go) is writable by the wsrc group by default, so add users that need to use cvs(1) to that group. 
+
+#+begin_src sh
+doas user mod -G wsrc djwilcox
+#+end_src
+
 download the ports tree
 
 #+begin_src sh
@@ -883,6 +889,24 @@ create the directory structure with the zsh shell
 
 #+begin_src sh
 mkdir -p "${HOME}"/ports/{wrkobjdir,distdir,plist,bulk_cookies,update_cookies,pkgrepo}
+#+end_src
+
+csv 
+
+#+begin_src sh
+cd /usr
+#+end_src
+
+checkout ports
+
+#+begin_src sh
+cvs -qd anonymous@anoncvs13.openbsd.org:/cvs get -rOPENBSD_7_9 -P ports
+#+end_src
+
+update
+
+#+begin_src sh
+cvs -q up -rOPENBSD_7_9 -Pd
 #+end_src
 
 Open /usr/ports/multimedia/mpv/Makefile
