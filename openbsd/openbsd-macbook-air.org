@@ -330,7 +330,7 @@ static const char *termcmd[] = { "/usr/local/bin/foot", NULL };
 static const char *menucmd[] = { "/usr/local/bin/tofi-drun", NULL };
 static const char *volumeup[]   = { "/usr/bin/sndioctl", "output.level=+0.05", NULL };
 static const char *volumedown[] = { "/usr/bin/sndioctl", "output.level=-0.05", NULL };
-static const char *mutevolume[] = { "/usr/bin/sndioctl", "output.level=mutetoggle", NULL };
+static const char *mutevolume[] = { "/usr/bin/sndioctl", "output.mute=!", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: 2 -> at, etc. */
@@ -825,7 +825,7 @@ doas pkg_add ffmpeg yt-dlp mpv zsh zsh-syntax-highlighting \
 abook aspell aria2 bat dict-server dict-client fd fdk-aac ffmpegthumbnailer firefox gcc shellcheck \
 pandoc imv jq mpd mpc ncmpc oath-toolkit openvpn qbittorrent ripgrep rsync syncthing tree tree-sitter \
 wget wl-clipboard zathura zathura-pdf-mupdf syncthing emacs-30.2p3-pgtk intel-vaapi-driver playerctl iosevka noto-emoji \
-qt5 qt5ct qt6ct curl node clang-tools-extra libva-utils
+qt5 qt5ct qt6ct curl node clang-tools-extra libva-utils adwaita-qt adwaita-qt6
 #+end_src
 
 ** zsh
