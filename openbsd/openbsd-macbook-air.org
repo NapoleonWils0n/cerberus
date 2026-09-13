@@ -9,6 +9,7 @@
 [[https://www.openbsdhandbook.com/]]
 
 ** install
+*** set up
 
 press i for install
 
@@ -70,7 +71,7 @@ location of sets = done
 
 reboot
 
-** doas 
+*** doas 
 
 #+begin_src sh
 su -
@@ -123,8 +124,8 @@ doas rcctl enable messagebus
 doas rcctl start messagebus
 #+end_src
 
-** dwl and dwlb
-*** dwlb
+*** dwl and dwlb
+**** dwlb
 
 [[https://github.com/kolunmi/dwlb]]
 
@@ -158,7 +159,7 @@ gmake
 doas cp dwlb /usr/local/bin
 #+end_src
 
-*** dwl
+**** dwl
 
 [[https://codeberg.org/dwl/dwl]]
 
@@ -170,7 +171,7 @@ curl -L -o dwl-v0.8.tar.gz 'https://codeberg.org/dwl/dwl/archive/v0.8.tar.gz'
 tar -xzvf dwl-v0.8.tar.gz
 #+end_src
 
-**** movestack 
+***** movestack 
 
 [[https://codeberg.org/dwl/dwl-patches/src/branch/main/patches/movestack]]
 
@@ -186,7 +187,7 @@ cd dwl
 patch -p1 < ../movestack.patch
 #+end_src
 
-**** copy config.def.h to config.h
+***** copy config.def.h to config.h
 
 copy config.def.h to config.h
 
@@ -194,13 +195,13 @@ copy config.def.h to config.h
 cp config.def.h config.h
 #+END_SRC
 
-**** make file
+***** make file
 
 #+begin_src sh
 sed -i'' -e s/_POSIX_C_SOURCE=200809L/_XOPEN_SOURCE=700/ Makefile
 #+end_src
 
-**** config
+***** config
 
 config.h
 
@@ -393,7 +394,7 @@ static const Button buttons[] = {
 };
 #+end_src
 
-**** make
+***** make
 
 #+begin_src sh
 gmake CC=cc CFLAGS+='-std=c11'
@@ -407,7 +408,20 @@ doas gmake install
 doas cp dwl /usr/local/bin/
 #+end_src
 
-** tofi
+***** dwl-start
+
+#+begin_src sh
+#!/bin/sh
+
+# start dwl with dbus
+exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"' 2>/dev/null
+#+end_src
+
+#+begin_src sh
+doas cp dwl-start /usr/local/bin
+#+end_src
+
+**** tofi
 
 [[https://github.com/philj56/tofi]]
 
@@ -431,13 +445,7 @@ meson setup --reconfigure --prefix=/usr/local build
 doas ninja -C build install
 #+end_src
 
-** fonts
-
-#+begin_src sh
-doas pkg_add fira-fonts
-#+end_src
-
-** tofi config
+**** tofi config
 
 #+begin_src sh
 vi ~/.config/tofi/config
@@ -479,17 +487,10 @@ default-result-background-padding = 4
 #default-result-background-corner-radius = 6
 #+end_src
 
-** dwl-start
+** fonts
 
 #+begin_src sh
-#!/bin/sh
-
-# start dwl with dbus
-exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"' 2>/dev/null
-#+end_src
-
-#+begin_src sh
-doas cp dwl-start /usr/local/bin
+doas pkg_add fira-fonts
 #+end_src
 
 ** ssh
@@ -511,7 +512,6 @@ doas rcctl stop sshd
 doas rcctl disable sshd
 #+end_src
 
-** profile
 ** xkb
 *** rules
 **** evdev
@@ -608,7 +608,7 @@ xkb_symbols "alt_win_ctrl" {
 };
 #+end_src
 
-** keymap
+** wsconsctl
 
 show the keymap
 
@@ -647,20 +647,33 @@ doas wsconsctl -f /etc/wsconsctl.conf
 
 reboot to apply
 
-** locale
+** login.conf
+
+#+begin_src sh
+doas vi /etc/login.conf
+#+end_src
+
+#+begin_src sh
+staff:\
+        :setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C:\
+	:datasize-cur=3072M:\
+	:datasize-max=3072M:\
+	:maxproc-max=1024:\
+	:maxproc-cur=512:\
+	:openfiles-cur=2048:\
+	:openfiles-max=4096:\
+        :stacksize-cur=32M:\
+        :ignorenologin:\
+        :requirehome@:\
+	:tc=default:
+#+end_src
 
 [[https://oneofus.la/have-emacs-will-hack/2018-05-28-lispm-keyboard-layout-openbsd-console.html]]
-
-doas vi /etc/login.conf
 
 #+begin_src conf
 default:\
 	:setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C,LC_TIME=en_GB.UTF-8,LC_NUMERIC=en_GB.UTF-8,LC_MONETARY=en_GB.UTF-8,LC_MESSAGES=en_GB.UTF-8:\
 	:capability...
-#+end_src
-
-#+begin_src sh
-doas cap_mkdb /etc/login.conf
 #+end_src
 
 ** tmux
@@ -685,42 +698,6 @@ check the flags have been applied
 
 #+begin_src sh
 rcctl get apmd flags
-#+end_src
-
-** login.conf
-
-#+begin_src sh
-doas vi /etc/login.conf
-#+end_src
-
-default
-
-#+begin_src conf
-staff:\
-	:datasize-cur=1536M:\
-	:datasize-max=infinity:\
-	:maxproc-max=512:\
-	:maxproc-cur=256:\
-	:ignorenologin:\
-	:requirehome@:\
-	:tc=default:
-#+end_src
-
-new
-
-#+begin_src sh
-staff:\
-        :setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C:\
-	:datasize-cur=3072M:\
-	:datasize-max=3072M:\
-	:maxproc-max=1024:\
-	:maxproc-cur=512:\
-	:openfiles-cur=2048:\
-	:openfiles-max=4096:\
-        :stacksize-cur=32M:\
-        :ignorenologin:\
-        :requirehome@:\
-	:tc=default:
 #+end_src
 
 ** /etc/sysctl.conf
@@ -1014,7 +991,6 @@ set the keyboard to backlight to 100%
 #+begin_src sh
 wsconsctl keyboard.backlight=100
 #+end_src
-
 
 ** screen brightness
 
