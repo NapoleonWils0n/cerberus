@@ -616,7 +616,9 @@ show the keymap
 wsconsctl keyboard.map
 #+end_src
 
-works
+#+begin_example
+/etc/wsconsctl.conf
+#+end_example
 
 #+begin_src conf
 doas tee /etc/wsconsctl.conf << 'EOF'
@@ -633,36 +635,8 @@ keyboard1.map+="keycode 50 = section plusminus"
 keyboard1.map+="keycode 100 = section plusminus"
 keyboard1.map+="keycode 31 = 2 at twosuperior cent"
 keyboard1.map+="keycode 52 = apostrophe quotedbl section Agrave"
-EOF
-#+end_src
 
-new
-
-#+begin_src conf
-doas tee /etc/wsconsctl.conf << 'EOF'
-keyboard.encoding=uk
-keyboard.map+="keycode 53 = grave asciitilde plusminus"
-keyboard.map+="keycode 50 = section plusminus"
-keyboard.map+="keycode 100 = backslash bar sterling thorn"
-keyboard.map+="keycode 31 = 2 at twosuperior cent"
-keyboard.map+="keycode 52 = apostrophe quotedbl section Agrave"
-keyboard.map+="keycode 32 = 3 numbersign sterling threesuperior"
-
-keyboard1.encoding=uk
-keyboard1.map+="keycode 53 = grave asciitilde plusminus"
-keyboard1.map+="keycode 50 = section plusminus"
-keyboard1.map+="keycode 100 = backslash bar sterling thorn"
-keyboard1.map+="keycode 31 = 2 at twosuperior cent"
-keyboard1.map+="keycode 52 = apostrophe quotedbl section Agrave"
-keyboard1.map+="keycode 32 = 3 numbersign sterling threesuperior"
-EOF
-#+end_src
-
-uk
-
-#+begin_src sh
-doas tee /etc/wsconsctl.conf << 'EOF'
-keyboard.encoding=uk
+display.brightness=100%
 EOF
 #+end_src
 
@@ -670,6 +644,8 @@ EOF
 #+begin_src sh
 doas wsconsctl -f /etc/wsconsctl.conf
 #+end_src
+
+reboot to apply
 
 ** locale
 
@@ -1017,3 +993,33 @@ doas bioctl -P sd1
 Old passphrase: 
 New passphrase: 
 Re-type passphrase:
+
+** keyboard backlight
+
+set the keyboard to 0 to turn the keyboard backlight off
+
+#+begin_src sh
+wsconsctl keyboard.backlight=0
+#+end_src
+
+set the keyboard to backlight to 50%
+
+#+begin_src sh
+wsconsctl keyboard.backlight=50
+#+end_src
+
+
+set the keyboard to backlight to 100%
+
+#+begin_src sh
+wsconsctl keyboard.backlight=100
+#+end_src
+
+
+** screen brightness
+
+set the display brightness to 100%
+
+#+begin_src sh
+wsconsctl display.brightness=100
+#+end_src
