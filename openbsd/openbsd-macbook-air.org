@@ -973,3 +973,47 @@ make plist
 make                           
 doas make reinstall clean      
 #+end_src
+
+** passwd
+*** change user passwd
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+passwd
+#+end_src
+
+*** change root password
+
+#+begin_src sh
+doas passwd root
+#+end_src
+
+** change softraid password
+
+list the disk
+
+#+begin_src sh
+sysctl hw.disknames
+#+end_src
+
+the ouput shows
+
+#+begin_example
+sd0
+sd1
+#+end_example
+
+where sd0 is the origin disk
+
+and sd1 is the softraid crypo volume
+
+#+begin_src sh
+doas bioctl -P sd1
+#+end_src
+
+Old passphrase: 
+New passphrase: 
+Re-type passphrase:
