@@ -259,15 +259,10 @@ static const struct xkb_rule_names xkb_rules = {
 	/* example:
 	.options = "ctrl:nocaps",
 	,*/
-
-	.model = NULL,
-	.rules = NULL,
-
-/*	.model = "104",
+	.model = "104",
 	.rules = "evdev",
-,*/
 	.layout = "gb",
-	.variant = "macintosh",
+	.variant = "mac",
 	.options = "custom:alt_win_ctrl,caps:none",
 };
 
@@ -331,14 +326,22 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] = { "/usr/local/bin/alacritty", NULL };
+static const char *termcmd[] = { "/usr/local/bin/foot", NULL };
 static const char *menucmd[] = { "/usr/local/bin/tofi-drun", NULL };
+static const char *volumeup[]   = { "/usr/bin/sndioctl", "output.level=+0.05", NULL };
+static const char *volumedown[] = { "/usr/bin/sndioctl", "output.level=-0.05", NULL };
+static const char *mutevolume[] = { "/usr/bin/sndioctl", "output.level=mutetoggle", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: 2 -> at, etc. */
 	/* modifier                  key                  function          argument */
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
+	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
 	{ MODKEY,                    XKB_KEY_a,           spawn,            {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,      spawn,            {.v = termcmd} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,      spawn,            SHCMD("emacsclient -a \"\" -c") },
+	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_space,       spawn,            SHCMD("playerctl play-pause") },
 	{ MODKEY,                    XKB_KEY_j,           focusstack,       {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,           focusstack,       {.i = -1} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,           movestack,        {.i = +1} },
