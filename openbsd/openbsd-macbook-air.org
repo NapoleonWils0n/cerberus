@@ -91,12 +91,6 @@ check config
 doas doas -C /etc/doas.conf
 #+end_src
 
-** search for packages
-
-#+begin_src sh
-pkg_info -Q wayland
-#+end_src
-
 ** wayland
 
 #+begin_src sh
@@ -124,7 +118,7 @@ doas rcctl enable messagebus
 doas rcctl start messagebus
 #+end_src
 
-*** dwl and dwlb
+*** dwl dwlb tofi
 **** dwlb
 
 [[https://github.com/kolunmi/dwlb]]
@@ -487,34 +481,10 @@ default-result-background-padding = 4
 #default-result-background-corner-radius = 6
 #+end_src
 
-** fonts
-
-#+begin_src sh
-doas pkg_add fira-fonts
-#+end_src
-
-** ssh
-
-#+begin_src sh
-doas rcctl enable sshd
-doas rcctl start sshd
-#+end_src
-
-#+begin_src sh
-doas rcctl check sshd
-#+end_src
-
-#+begin_src sh
-# Stop the running SSH daemon
-doas rcctl stop sshd
-
-# Disable it from starting automatically on reboot
-doas rcctl disable sshd
-#+end_src
-
-** xkb
-*** rules
-**** evdev
+** keyboard
+*** xkb
+**** rules
+***** evdev
 
 #+begin_src conf
 ! option = symbols
@@ -523,7 +493,7 @@ doas rcctl disable sshd
 ! include %S/evdev
 #+end_src
 
-**** evdev.xml
+***** evdev.xml
 
 #+begin_src xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -562,8 +532,8 @@ doas rcctl disable sshd
 </xkbConfigRegistry>
 #+end_src
 
-*** symbols
-**** custom
+**** symbols
+***** custom
 
 #+begin_src conf
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
@@ -583,7 +553,7 @@ xkb_symbols "alt_win_ctrl" {
 };
 #+end_src
 
-**** gb
+***** gb
 
 #+begin_src conf
 default partial alphanumeric_keys 
@@ -608,7 +578,7 @@ xkb_symbols "alt_win_ctrl" {
 };
 #+end_src
 
-** wsconsctl
+*** wsconsctl
 
 show the keymap
 
@@ -646,6 +616,25 @@ doas wsconsctl -f /etc/wsconsctl.conf
 #+end_src
 
 reboot to apply
+
+** ssh
+
+#+begin_src sh
+doas rcctl enable sshd
+doas rcctl start sshd
+#+end_src
+
+#+begin_src sh
+doas rcctl check sshd
+#+end_src
+
+#+begin_src sh
+# Stop the running SSH daemon
+doas rcctl stop sshd
+
+# Disable it from starting automatically on reboot
+doas rcctl disable sshd
+#+end_src
 
 ** login.conf
 
@@ -765,7 +754,14 @@ mkdir -p ~/.config/foot
 cp /etc/xdg/foot/foot.ini ~/.config/foot
 #+end_src
 
-** pkg update
+** pkg commands
+*** search for packages
+
+#+begin_src sh
+pkg_info -Q wayland
+#+end_src
+
+*** update packages
 
 #+begin_src sh
 doas pkg_add -u
@@ -778,7 +774,7 @@ doas pkg_add ffmpeg yt-dlp mpv zsh zsh-syntax-highlighting \
 abook aspell aria2 bat dict-server dict-client fd fdk-aac ffmpegthumbnailer firefox gcc shellcheck \
 pandoc imv jq mpd mpc ncmpc oath-toolkit openvpn qbittorrent ripgrep rsync syncthing tree tree-sitter \
 wget wl-clipboard zathura zathura-pdf-mupdf syncthing emacs-30.2p3-pgtk intel-vaapi-driver playerctl iosevka noto-emoji \
-qt5 qt5ct qt6ct curl node clang-tools-extra libva-utils adwaita-qt adwaita-qt6 libnotify grim slurp
+qt5 qt5ct qt6ct curl node clang-tools-extra libva-utils adwaita-qt adwaita-qt6 libnotify grim slurp fira-fonts
 #+end_src
 
 ** zsh
@@ -789,6 +785,78 @@ change shell
 chsh -s /usr/local/bin/zsh
 #+end_src
 
+** passwd
+*** change user passwd
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+passwd
+#+end_src
+
+*** change root password
+
+#+begin_src sh
+doas passwd root
+#+end_src
+
+** change softraid password
+
+list the disk
+
+#+begin_src sh
+sysctl hw.disknames
+#+end_src
+
+the ouput shows
+
+#+begin_example
+sd0
+sd1
+#+end_example
+
+where sd0 is the origin disk
+
+and sd1 is the softraid crypo volume
+
+#+begin_src sh
+doas bioctl -P sd1
+#+end_src
+
+Old passphrase: 
+New passphrase: 
+Re-type passphrase:
+
+** keyboard backlight
+
+set the keyboard to 0 to turn the keyboard backlight off
+
+#+begin_src sh
+wsconsctl keyboard.backlight=0
+#+end_src
+
+set the keyboard to backlight to 50%
+
+#+begin_src sh
+wsconsctl keyboard.backlight=50
+#+end_src
+
+
+set the keyboard to backlight to 100%
+
+#+begin_src sh
+wsconsctl keyboard.backlight=100
+#+end_src
+
+** screen brightness
+
+set the display brightness to 100%
+
+#+begin_src sh
+wsconsctl display.brightness=100
+#+end_src
 ** ports
 
 [[https://www.openbsd.org/faq/ports/ports.html]]
@@ -927,75 +995,3 @@ make
 doas make reinstall clean      
 #+end_src
 
-** passwd
-*** change user passwd
-
-#+begin_src sh
-su -
-#+end_src
-
-#+begin_src sh
-passwd
-#+end_src
-
-*** change root password
-
-#+begin_src sh
-doas passwd root
-#+end_src
-
-** change softraid password
-
-list the disk
-
-#+begin_src sh
-sysctl hw.disknames
-#+end_src
-
-the ouput shows
-
-#+begin_example
-sd0
-sd1
-#+end_example
-
-where sd0 is the origin disk
-
-and sd1 is the softraid crypo volume
-
-#+begin_src sh
-doas bioctl -P sd1
-#+end_src
-
-Old passphrase: 
-New passphrase: 
-Re-type passphrase:
-
-** keyboard backlight
-
-set the keyboard to 0 to turn the keyboard backlight off
-
-#+begin_src sh
-wsconsctl keyboard.backlight=0
-#+end_src
-
-set the keyboard to backlight to 50%
-
-#+begin_src sh
-wsconsctl keyboard.backlight=50
-#+end_src
-
-
-set the keyboard to backlight to 100%
-
-#+begin_src sh
-wsconsctl keyboard.backlight=100
-#+end_src
-
-** screen brightness
-
-set the display brightness to 100%
-
-#+begin_src sh
-wsconsctl display.brightness=100
-#+end_src
