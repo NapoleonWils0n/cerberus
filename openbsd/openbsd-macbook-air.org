@@ -481,10 +481,11 @@ default-result-background-padding = 4
 #default-result-background-corner-radius = 6
 #+end_src
 
-** keyboard
-*** xkb
-**** rules
-***** evdev
+** desktop
+*** keyboard
+**** xkb
+***** rules
+****** evdev
 
 #+begin_src conf
 ! option = symbols
@@ -493,7 +494,7 @@ default-result-background-padding = 4
 ! include %S/evdev
 #+end_src
 
-***** evdev.xml
+****** evdev.xml
 
 #+begin_src xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -532,8 +533,8 @@ default-result-background-padding = 4
 </xkbConfigRegistry>
 #+end_src
 
-**** symbols
-***** custom
+***** symbols
+****** custom
 
 #+begin_src conf
 // Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
@@ -553,7 +554,7 @@ xkb_symbols "alt_win_ctrl" {
 };
 #+end_src
 
-***** gb
+****** gb
 
 #+begin_src conf
 default partial alphanumeric_keys 
@@ -578,7 +579,7 @@ xkb_symbols "alt_win_ctrl" {
 };
 #+end_src
 
-*** wsconsctl
+**** wsconsctl
 
 show the keymap
 
@@ -617,7 +618,87 @@ doas wsconsctl -f /etc/wsconsctl.conf
 
 reboot to apply
 
-** ssh
+**** keyboard backlight
+
+set the keyboard to 0 to turn the keyboard backlight off
+
+#+begin_src sh
+wsconsctl keyboard.backlight=0
+#+end_src
+
+set the keyboard to backlight to 50%
+
+#+begin_src sh
+wsconsctl keyboard.backlight=50
+#+end_src
+
+
+set the keyboard to backlight to 100%
+
+#+begin_src sh
+wsconsctl keyboard.backlight=100
+#+end_src
+
+*** display screen brightness
+
+set the display brightness to 100%
+
+#+begin_src sh
+wsconsctl display.brightness=100
+#+end_src
+
+*** tmux
+
+tmux config location
+
+#+begin_example
+~/.tmux.conf
+#+end_example
+
+*** foot terminal
+
+[[https://codeberg.org/dnkl/foot]]
+
+[[https://wiki.gentoo.org/wiki/Foot]]
+
+#+begin_src sh
+mkdir -p ~/.config/foot
+cp /etc/xdg/foot/foot.ini ~/.config/foot
+#+end_src
+
+*** pkg commands
+**** search for packages
+
+#+begin_src sh
+pkg_info -Q wayland
+#+end_src
+
+**** update packages
+
+#+begin_src sh
+doas pkg_add -u
+#+end_src
+
+*** packages
+
+#+begin_src sh
+doas pkg_add ffmpeg yt-dlp mpv zsh zsh-syntax-highlighting \
+abook aspell aria2 bat dict-server dict-client fd fdk-aac ffmpegthumbnailer firefox gcc shellcheck \
+pandoc imv jq mpd mpc ncmpc oath-toolkit openvpn qbittorrent ripgrep rsync syncthing tree tree-sitter \
+wget wl-clipboard zathura zathura-pdf-mupdf syncthing emacs-30.2p3-pgtk intel-vaapi-driver playerctl iosevka noto-emoji \
+qt5 qt5ct qt6ct curl node clang-tools-extra libva-utils adwaita-qt adwaita-qt6 libnotify grim slurp fira-fonts
+#+end_src
+
+*** zsh
+
+change shell
+
+#+begin_src sh
+chsh -s /usr/local/bin/zsh
+#+end_src
+
+** system configuration
+*** ssh
 
 #+begin_src sh
 doas rcctl enable sshd
@@ -636,7 +717,7 @@ doas rcctl stop sshd
 doas rcctl disable sshd
 #+end_src
 
-** login.conf
+*** login.conf
 
 #+begin_src sh
 doas vi /etc/login.conf
@@ -665,15 +746,7 @@ default:\
 	:capability...
 #+end_src
 
-** tmux
-
-tmux config location
-
-#+begin_example
-~/.tmux.conf
-#+end_example
-
-** apmd
+*** apmd
 
 apmd power
 
@@ -689,104 +762,9 @@ check the flags have been applied
 rcctl get apmd flags
 #+end_src
 
-** /etc/sysctl.conf
-
-#+begin_src sh
-doas vi /etc/sysctl.conf
-#+end_src
-
-#+begin_src conf
-# shared memory limits (chrome needs a ton)
-kern.shminfo.shmall=3145728
-kern.shminfo.shmmax=2147483647
-kern.shminfo.shmmni=1024
-
-# semaphores
-kern.shminfo.shmseg=1024
-kern.seminfo.semmns=4096
-kern.seminfo.semmni=1024
-
-kern.maxproc=32768
-kern.maxfiles=65535
-kern.bufcachepercent=90
-kern.maxvnodes=262144
-kern.somaxconn=2048
-#+end_src
-
-** fstab
-
-You can greatly improve disk performance by enabling softupdates and the noatime option for all your local partitions in /etc/fstab. Add the softdep,noatime options to each partition (except swap) as I've demonstrated below. Don't copy and paste this directly, as your disk identifier will be different.
-
-#+begin_src sh
-doas vi /etc/fstab
-#+end_src
-
-#+begin_src conf
-0364c44477d30004.b none swap sw
-0364c44477d30004.a / ffs rw,softdep,noatime 1 1
-0364c44477d30004.l /home ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.d /tmp ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.f /usr ffs rw,softdep,noatime,nodev 1 2
-0364c44477d30004.g /usr/X11R6 ffs rw,softdep,noatime,nodev 1 2
-0364c44477d30004.h /usr/local ffs rw,softdep,noatime,wxallowed,nodev 1 2
-0364c44477d30004.k /usr/obj ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.j /usr/src ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.e /var ffs rw,softdep,noatime,nodev,nosuid 1 2
-#+end_src
-
-** audio video recording
-
-add the following to sysctl.conf
-
-#+begin_src sh
-kern.audio.record=1
-kern.video.record=1
-#+end_src
-
-** foot terminal
-
-[[https://codeberg.org/dnkl/foot]]
-
-[[https://wiki.gentoo.org/wiki/Foot]]
-
-#+begin_src sh
-mkdir -p ~/.config/foot
-cp /etc/xdg/foot/foot.ini ~/.config/foot
-#+end_src
-
-** pkg commands
-*** search for packages
-
-#+begin_src sh
-pkg_info -Q wayland
-#+end_src
-
-*** update packages
-
-#+begin_src sh
-doas pkg_add -u
-#+end_src
-
-** packages
-
-#+begin_src sh
-doas pkg_add ffmpeg yt-dlp mpv zsh zsh-syntax-highlighting \
-abook aspell aria2 bat dict-server dict-client fd fdk-aac ffmpegthumbnailer firefox gcc shellcheck \
-pandoc imv jq mpd mpc ncmpc oath-toolkit openvpn qbittorrent ripgrep rsync syncthing tree tree-sitter \
-wget wl-clipboard zathura zathura-pdf-mupdf syncthing emacs-30.2p3-pgtk intel-vaapi-driver playerctl iosevka noto-emoji \
-qt5 qt5ct qt6ct curl node clang-tools-extra libva-utils adwaita-qt adwaita-qt6 libnotify grim slurp fira-fonts
-#+end_src
-
-** zsh
-
-change shell
-
-#+begin_src sh
-chsh -s /usr/local/bin/zsh
-#+end_src
-
-** passwd
-*** change user passwd
+** security
+*** passwd
+**** change user passwd
 
 #+begin_src sh
 su -
@@ -796,13 +774,13 @@ su -
 passwd
 #+end_src
 
-*** change root password
+**** change root password
 
 #+begin_src sh
 doas passwd root
 #+end_src
 
-** change softraid password
+*** change softraid password
 
 list the disk
 
@@ -829,34 +807,61 @@ Old passphrase:
 New passphrase: 
 Re-type passphrase:
 
-** keyboard backlight
+** general settings
+*** audio video recording
 
-set the keyboard to 0 to turn the keyboard backlight off
-
-#+begin_src sh
-wsconsctl keyboard.backlight=0
-#+end_src
-
-set the keyboard to backlight to 50%
+add the following to sysctl.conf
 
 #+begin_src sh
-wsconsctl keyboard.backlight=50
+kern.audio.record=1
+kern.video.record=1
 #+end_src
 
+*** fstab
 
-set the keyboard to backlight to 100%
+You can greatly improve disk performance by enabling softupdates and the noatime option for all your local partitions in /etc/fstab. Add the softdep,noatime options to each partition (except swap) as I've demonstrated below. Don't copy and paste this directly, as your disk identifier will be different.
 
 #+begin_src sh
-wsconsctl keyboard.backlight=100
+doas vi /etc/fstab
 #+end_src
 
-** screen brightness
+#+begin_src conf
+0364c44477d30004.b none swap sw
+0364c44477d30004.a / ffs rw,softdep,noatime 1 1
+0364c44477d30004.l /home ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.d /tmp ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.f /usr ffs rw,softdep,noatime,nodev 1 2
+0364c44477d30004.g /usr/X11R6 ffs rw,softdep,noatime,nodev 1 2
+0364c44477d30004.h /usr/local ffs rw,softdep,noatime,wxallowed,nodev 1 2
+0364c44477d30004.k /usr/obj ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.j /usr/src ffs rw,softdep,noatime,nodev,nosuid 1 2
+0364c44477d30004.e /var ffs rw,softdep,noatime,nodev,nosuid 1 2
+#+end_src
 
-set the display brightness to 100%
+*** /etc/sysctl.conf
 
 #+begin_src sh
-wsconsctl display.brightness=100
+doas vi /etc/sysctl.conf
 #+end_src
+
+#+begin_src conf
+# shared memory limits (chrome needs a ton)
+kern.shminfo.shmall=3145728
+kern.shminfo.shmmax=2147483647
+kern.shminfo.shmmni=1024
+
+# semaphores
+kern.shminfo.shmseg=1024
+kern.seminfo.semmns=4096
+kern.seminfo.semmni=1024
+
+kern.maxproc=32768
+kern.maxfiles=65535
+kern.bufcachepercent=90
+kern.maxvnodes=262144
+kern.somaxconn=2048
+#+end_src
+
 ** ports
 
 [[https://www.openbsd.org/faq/ports/ports.html]]
