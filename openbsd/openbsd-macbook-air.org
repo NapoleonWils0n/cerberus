@@ -807,6 +807,63 @@ Old passphrase:
 New passphrase: 
 Re-type passphrase:
 
+*** pf
+
+#+begin_src sh
+doas vi /etc/pf.conf
+#+end_src
+
+#+begin_src conf
+# Macros
+tcp_services = "{ 6881, 22000, 8080 }"
+udp_services = "{ 6882, 22000, 21027 }"
+lan_net      = "192.168.1.0/24"
+
+# Options
+set block-policy drop
+set skip on lo0
+
+# Normalization & Anti-Spoofing
+match in all scrub (no-df)
+antispoof quick for egress
+block in quick on egress from { no-route, urpf-failed } to any
+
+# Protect package builds (OpenBSD default)
+block return out log proto { tcp udp } user _pbuild
+
+# Default rule
+block drop all
+
+# Allow all outbound traffic
+pass out quick inet
+
+# Inbound rules
+pass in on egress proto tcp from $lan_net to egress port ssh
+pass in on egress proto tcp to egress port $tcp_services
+pass in on egress proto udp to egress port $udp_services
+#+end_src
+
+#+begin_src sh
+doas pfctl -f /etc/pf.conf
+#+end_src
+
+** mpd
+
+enable mpd
+
+#+begin_src sh
+doas rcctl enable mpd
+doas rcctl set mpd user djwilcox
+doas rcctl set mpd flags "/home/djwilcox/.config/mpd/mpd.conf"
+doas rcctl start mpd
+#+end_src
+
+one start mpd
+
+#+begin_src sh
+doas rcctl -f start mpd
+#+end_src
+
 ** general settings
 *** audio video recording
 
