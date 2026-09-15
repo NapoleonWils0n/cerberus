@@ -849,7 +849,7 @@ doas pfctl -f /etc/pf.conf
 
 ** mpd
 
-enable mpd
+enable mpd and run as our user with our config
 
 #+begin_src sh
 doas rcctl enable mpd
@@ -858,7 +858,31 @@ doas rcctl set mpd flags "/home/djwilcox/.config/mpd/mpd.conf"
 doas rcctl start mpd
 #+end_src
 
-one start mpd
+to define settings but not have the service autostart
+
+manually edit the rc.conf.local
+
+#+begin_src sh
+doas vi /etc/rc.conf.local
+#+end_src
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus mpd
+#+end_src
+
+and remove mpd from the pkg_scripts
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus 
+#+end_src
+
+start mpd without it being enabled 
 
 #+begin_src sh
 doas rcctl -f start mpd
