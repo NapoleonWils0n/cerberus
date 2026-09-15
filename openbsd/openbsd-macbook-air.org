@@ -189,6 +189,30 @@ copy config.def.h to config.h
 cp config.def.h config.h
 #+END_SRC
 
+***** xwayland
+
+edit config.mk and make sure xwayland is enabled for mpv
+
+#+begin_src c
+_VERSION = 0.5
+VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
+
+PKG_CONFIG = pkg-config
+
+# paths
+PREFIX = /usr/local
+MANDIR = $(PREFIX)/share/man
+DATADIR = $(PREFIX)/share
+
+#XWAYLAND =
+#XLIBS =
+# Uncomment to build XWayland support
+XWAYLAND = -DXWAYLAND
+XLIBS = xcb xcb-icccm
+
+CC = gcc
+#+end_src
+
 ***** make file
 
 #+begin_src sh
@@ -389,6 +413,14 @@ static const Button buttons[] = {
 #+end_src
 
 ***** make
+
+make for xwayland, needed for mpv
+
+#+begin_src sh
+gmake CC=cc CFLAGS+='-std=c11' XWAYLAND="-DXWAYLAND" XLIBS="xcb xcb-icccm"
+#+end_src
+
+make without xwayland
 
 #+begin_src sh
 gmake CC=cc CFLAGS+='-std=c11'
@@ -888,6 +920,14 @@ start mpd without it being enabled
 doas rcctl -f start mpd
 #+end_src
 
+** mpv
+
+Toggle Floating / Tiled:
+
+#+begin_example
+Alt + Shift + Space
+#+end_example
+
 ** general settings
 *** audio video recording
 
@@ -989,7 +1029,6 @@ ports directory in home
 #+begin_src sh
 WRKOBJDIR=/home/djwilcox/ports/wrkobjdir
 DISTDIR=/home/djwilcox/ports/distdir
-PLIST_DB=/home/djwilcox/ports/plist
 BULK_COOKIES_DIR=/home/djwilcox/ports/bulk_cookies
 UPDATE_COOKIES_DIR=/home/djwilcox/ports/update_cookies
 PACKAGE_REPOSITORY=/home/djwilcox/ports/pkgrepo
@@ -1031,53 +1070,3 @@ update
 #+begin_src sh
 cvs -q up -rOPENBSD_7_9 -Pd
 #+end_src
-
-Open /usr/ports/multimedia/mpv/Makefile
-in your editor and locate the CONFIGURE_ARGS definition.
-
-#+begin_src sh
-cd /usr/ports/multimedia/mpv
-#+end_src
-
-#+begin_src makefile
--Ddmabuf-wayland=disabled \
--Degl-wayland=disabled \
--Dvaapi-wayland=disabled \
--Dwayland=disabled \
-#+end_src
-
-change to 
-
-#+begin_src makefile
--Ddmabuf-wayland=enabled \
--Degl-wayland=enabled \
--Dvaapi-wayland=enabled \
--Dwayland=enabled \
-#+end_src
-
-Add wayland/wayland and wayland/wayland-protocols to BUILD_DEPENDS:
-
-#+begin_src make
-BUILD_DEPENDS += wayland/wayland-protocols
-#+end_src
-
-Add wayland/wayland to LIB_DEPENDS:
-
-#+begin_src makefile
-LIB_DEPENDS += wayland/wayland,-main
-#+end_src
-
-Updates/verifies package file lists if needed
-
-Compiles mpv
-
-Replaces the official package with your custom build
-
-#+begin_src sh
-cd /usr/ports/multimedia/mpv
-make patch
-make plist                     
-make                           
-doas make reinstall clean      
-#+end_src
-
