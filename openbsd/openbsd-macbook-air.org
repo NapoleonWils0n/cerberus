@@ -997,6 +997,38 @@ Toggle Floating / Tiled:
 Alt + Shift + Space
 #+end_example
 
+*** mpv mpris build
+
+clone the git repository
+
+#+begin_src sh
+git clone https://github.com/hoyon/mpv-mpris.git
+#+end_src
+
+change into the mpv-mpris directory
+
+#+begin_src sh
+cd mpv-mpris
+#+end_src
+
+make
+
+#+begin_src sh
+gmake
+#+end_src
+
+create the mpv scripts directory
+
+#+begin_src sh
+mkdir -p ~/.config/mpv/scripts
+#+end_src
+
+copy the mpris.so into the scripts directory
+
+#+begin_src sh
+cp mpris.so ~/.config/mpv/scripts
+#+end_src
+
 ** general settings
 *** audio video recording
 
