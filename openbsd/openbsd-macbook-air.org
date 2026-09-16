@@ -92,6 +92,7 @@ doas doas -C /etc/doas.conf
 #+end_src
 
 ** wayland
+*** wayland seatd
 
 #+begin_src sh
 doas pkg_add wlroots wayland-protocols seatd foot git gmake dbus
@@ -918,6 +919,74 @@ start mpd without it being enabled
 
 #+begin_src sh
 doas rcctl -f start mpd
+#+end_src
+
+** syncthing
+
+#+begin_src sh
+doas rcctl enable syncthing
+doas rcctl set syncthing user djwilcox
+doas rcctl start syncthing
+#+end_src
+
+change the openfiles settings in login.conf
+
+#+begin_src sh
+doas vi /etc/login.conf
+#+end_src
+
+add the following openfiles settings
+
+#+begin_src conf
+	:openfiles-cur=32768:\
+	:openfiles-max=65536:\
+#+end_src
+
+#+begin_src conf
+staff:\
+        :setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C:\
+	:datasize-cur=3072M:\
+	:datasize-max=3072M:\
+	:maxproc-max=1024:\
+	:maxproc-cur=512:\
+	:openfiles-cur=32768:\
+	:openfiles-max=65536:\
+        :stacksize-cur=32M:\
+	:ignorenologin:\
+	:requirehome@:\
+	:tc=default:
+#+end_src
+
+to define settings but not have the service autostart
+
+manually edit the rc.conf.local
+
+#+begin_src sh
+doas vi /etc/rc.conf.local
+#+end_src
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus syncthing
+syncthing_user=djwilcox
+#+end_src
+
+and remove syncthing from the pkg_scripts
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus 
+syncthing_user=djwilcox
+#+end_src
+
+start syncthing without it being enabled 
+
+#+begin_src sh
+doas rcctl -f start syncthing
 #+end_src
 
 ** mpv
