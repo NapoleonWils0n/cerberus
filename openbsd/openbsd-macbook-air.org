@@ -1029,6 +1029,18 @@ copy the mpris.so into the scripts directory
 cp mpris.so ~/.config/mpv/scripts
 #+end_src
 
+** firefox
+
+change the unveil downloads directory
+
+#+begin_src sh
+doas vi /etc/firefox/unveil.main
+#+end_src
+
+#+begin_src conf
+~/downloads rwc
+#+end_src
+
 ** general settings
 *** audio video recording
 
