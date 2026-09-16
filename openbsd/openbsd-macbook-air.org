@@ -441,7 +441,7 @@ doas cp dwl /usr/local/bin/
 #!/bin/sh
 
 # start dwl with dbus
-exec dbus-launch --exit-with-session dwl -s 'dwlb -font "monospace:size=16"' 2>/dev/null
+exec dbus-run-session dwl -s 'dwlb -font "monospace:size=16"'
 #+end_src
 
 #+begin_src sh
