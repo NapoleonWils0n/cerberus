@@ -433,10 +433,6 @@ gmake CC=cc CFLAGS+='-std=c11'
 doas gmake install
 #+end_src
 
-#+begin_src sh
-doas cp dwl /usr/local/bin/
-#+end_src
-
 ***** dwl-start
 
 #+begin_src sh
