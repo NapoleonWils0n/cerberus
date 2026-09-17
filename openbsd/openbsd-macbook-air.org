@@ -348,9 +348,10 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* commands */
 static const char *termcmd[] = { "/usr/local/bin/foot", NULL };
 static const char *menucmd[] = { "/usr/local/bin/tofi-drun", NULL };
-static const char *volumeup[]   = { "/usr/bin/sndioctl", "output.level=+0.05", NULL };
+static const char *volumeup[] = { "/usr/bin/sndioctl", "output.level=+0.05", NULL };
 static const char *volumedown[] = { "/usr/bin/sndioctl", "output.level=-0.05", NULL };
 static const char *mutevolume[] = { "/usr/bin/sndioctl", "output.mute=!", NULL };
+static const char *wlrwhichkey[] = { "/usr/local/bin/wlr-which-key",  NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: 2 -> at, etc. */
@@ -358,6 +359,7 @@ static const Key keys[] = {
 	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn, {.v = volumeup   } },
 	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn, {.v = volumedown } },
 	{ 0,                         XKB_KEY_XF86AudioMute, spawn, {.v = mutevolume } },
+	{ MODKEY,                    XKB_KEY_z,          spawn,          {.v = wlrwhichkey} },
 	{ MODKEY,                    XKB_KEY_a,           spawn,            {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,      spawn,            {.v = termcmd} },
 	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,      spawn,            SHCMD("emacsclient -a \"\" -c") },
@@ -880,7 +882,8 @@ pass in on egress proto udp to egress port $udp_services
 doas pfctl -f /etc/pf.conf
 #+end_src
 
-** mpd
+** applications
+*** mpd
 
 enable mpd and run as our user with our config
 
@@ -921,7 +924,7 @@ start mpd without it being enabled
 doas rcctl -f start mpd
 #+end_src
 
-** syncthing
+*** syncthing
 
 #+begin_src sh
 doas rcctl enable syncthing
@@ -989,7 +992,7 @@ start syncthing without it being enabled
 doas rcctl -f start syncthing
 #+end_src
 
-** mpv
+*** mpv
 
 Toggle Floating / Tiled:
 
@@ -997,7 +1000,7 @@ Toggle Floating / Tiled:
 Alt + Shift + Space
 #+end_example
 
-*** mpv mpris build
+**** mpv mpris build
 
 clone the git repository
 
@@ -1029,7 +1032,7 @@ copy the mpris.so into the scripts directory
 cp mpris.so ~/.config/mpv/scripts
 #+end_src
 
-** firefox
+*** firefox
 
 change the unveil downloads directory
 
@@ -1039,6 +1042,34 @@ doas vi /etc/firefox/unveil.main
 
 #+begin_src conf
 ~/downloads rwc
+#+end_src
+
+*** wlr-which-key
+
+[[https://github.com/MaxVerevkin/wlr-which-key]]
+
+clone wlr-which-key
+
+#+begin_src sh
+git clone https://github.com/MaxVerevkin/wlr-which-key.git
+#+end_src
+
+change into the wlr-which-key directory
+
+#+begin_src sh
+cd wlr-which-key
+#+end_src
+
+build wlr-which-key
+
+#+begin_src sh
+cargo build --release --locked
+#+end_src
+
+copy wlr-which-key to your bin directory
+
+#+begin_src sh
+doas cp target/release/wlr-which-key /usr/local/bin
 #+end_src
 
 ** general settings
