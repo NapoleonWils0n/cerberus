@@ -710,6 +710,32 @@ pkg_info -Q wayland
 doas pkg_add -u
 #+end_src
 
+**** remove unused dependencies
+
+Preview automatic packages that would be removed
+
+#+begin_src sh
+doas pkg_delete -an
+#+end_src
+
+Remove them only after the preview is acceptable
+
+#+begin_src sh
+doas pkg_delete -an
+#+end_src
+
+**** create a list of manually installed packages
+
+#+begin_src sh
+pkg_info -mz > openbsd-packages.txt
+#+end_src
+
+installed the packages
+
+#+begin_src sh
+doas pkg_add -l installed-package-stems.txt
+#+end_src
+
 *** packages
 
 #+begin_src sh
