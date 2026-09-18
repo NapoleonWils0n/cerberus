@@ -1094,6 +1094,142 @@ copy wlr-which-key to your bin directory
 doas cp target/release/wlr-which-key /usr/local/bin
 #+end_src
 
+** networking
+*** wifi
+**** resources
+
+[[https://www.openbsd.org/faq/faq6.html]]
+
+[[https://www.openbsdhandbook.com/networking/#wireless-networking]]
+
+[[https://www.openbsd-desktop.rocks/posts/wi-fi-connection/]]
+
+**** connect to a wifi network
+***** ifconfig
+
+check the wifi adaptors name with ifconfig
+
+#+begin_src sh
+iconfig
+#+end_src
+
+in my case its
+
+#+begin_example
+run0
+#+end_example
+
+***** hostname
+
+find you hostame
+
+#+begin_src sh
+hostname
+#+end_src
+
+in my case the hostname is talos
+
+***** scan for wifi networks
+
+make sure the wireless network device is up
+
+#+begin_src sh
+doas ifconfig run0 up
+#+end_src
+
+scan for wireless networks
+
+#+begin_src sh
+doas ifconfig run0 scan
+#+end_src
+
+***** hostname.if file
+
+create the hostname.if configuration file
+
+where hostname is your hostname and if is your wireless network device
+
+#+begin_src sh
+doas vi /etc/hostname.if
+#+end_src
+
+for example if my hostname was talos and the wireless network interface is run0
+
+i would create the following file
+
+#+begin_src sh
+doas vi /etc/talos.run0
+#+end_src
+
+define the access points
+
+#+begin_src conf
+join home-net wpakey 'passwordhere'
+join work-net wpakey 'passwordhere'
+join cafe-wifi
+inet autoconf
+
+#+end_src
+
+where home-net, work-net and cafe-wifi are the ssid of the wifi network
+wpakey is the authentic method and 'passwordhere' is the ssid password in single quotes
+
+Ensure there is a newline character after the last directive
+
+Note that inet autoconf should be after the other configuration lines,
+as the network adapter will not be able to send a DHCP request until it is configured. 
+
+At runtime, automatic access point selection can be temporarily overridden with the ifconfig nwid command: 
+
+#+begin_src sh
+ifconfig run0 nwid home-net
+#+end_src
+
+If the given network already exists on the join list, its WPA password will be used automatically, if required.
+The ifconfig -nwid command moves the interface back into automatic access point selection mode: 
+
+#+begin_src sh
+ifconfig run0 -nwid
+#+end_src
+
+***** permissions
+
+In the example below hostname is your hostname and if is the name of the wireless network interface
+
+Restrict file access because it contains network credentials:
+
+#+begin_src sh
+doas chown root:wheel /etc/hostname.if
+#+end_src
+
+Preserve administrative ownership
+
+#+begin_src sh
+doas chmod 600 /etc/hostname.if
+#+end_src
+
+in my case my network name is talos and wireless network interface is called run0
+
+so for my set up i would run the following commands
+
+Restrict file access because it contains network credentials:
+
+#+begin_src sh
+doas chown root:wheel /etc/talos.run0
+#+end_src
+
+Preserve administrative ownership
+
+#+begin_src sh
+doas chmod 600 /etc/talos.run0
+#+end_src
+
+***** restart networking
+
+#+begin_src sh
+doas sh /etc/netstart
+#+end_src
+
 ** general settings
 *** audio video recording
 
