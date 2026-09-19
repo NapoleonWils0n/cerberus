@@ -1,4 +1,4 @@
-#+STARTUP: content
+#+STARTUP: show2levels
 * openbsd bhyve
 ** resources
 
