@@ -1217,6 +1217,15 @@ doas chmod 640 /etc/hostname.trunk0
 
 ***** restart networking
 
+when setting up the trunk interface up for the first time take both interfaces down
+
+#+begin_src sh
+doas ifconfig axe0 down
+doas ifconfig run0 down
+#+end_src
+
+restart networking
+
 #+begin_src sh
 doas sh /etc/netstart
 #+end_src
