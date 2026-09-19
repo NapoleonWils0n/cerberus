@@ -1230,6 +1230,65 @@ restart networking
 doas sh /etc/netstart
 #+end_src
 
+***** hotplug
+****** hotplug attach
+
+Create /etc/hotplug/attach
+so OpenBSD automatically runs /etc/netstart and adds the interface to trunk0 upon insertion:
+
+#+begin_src sh
+doas mkdir -p /etc/hotplug
+#+end_src
+
+#+begin_src sh
+doas tee /etc/hotplug/attach >/dev/null << 'EOF'
+#!/bin/sh
+dev=$2
+
+case $dev in
+run0|axe0)
+    sh /etc/netstart $dev
+    ifconfig trunk0 trunkport $dev
+    ;;
+esac
+EOF
+#+end_src
+
+#+begin_src sh
+doas chmod 755 /etc/hotplug/attach
+#+end_src
+
+****** hotplug dettach
+
+Create /etc/hotplug/detach to cleanly remove the port from trunk0 when unplugged:
+
+#+begin_src sh
+doas tee /etc/hotplug/detach >/dev/null << 'EOF'
+#!/bin/sh
+dev=$2
+
+case $dev in
+run0|axe0)
+    ifconfig trunk0 -trunkport $dev 2>/dev/null
+    ;;
+esac
+EOF
+#+end_src
+
+#+begin_src sh
+doas chmod 755 /etc/hotplug/detach
+#+end_src
+
+****** enable hotplug
+
+#+begin_src sh
+doas rcctl enable hotplugd
+#+end_src
+
+#+begin_src sh
+doas rcctl start hotplugd
+#+end_src
+
 ***** scan for wifi networks
 
 make sure the wireless network device is up
