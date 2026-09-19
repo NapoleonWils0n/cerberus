@@ -1276,7 +1276,22 @@ list the boot environments
 bectl list
 #+END_SRC
 
-Activate the new boot environment.
+install the package updates in the existing boot environment.
+
+#+BEGIN_SRC sh
+pkg update
+pkg upgrade
+#+END_SRC
+
+create a zfs snapshot
+
+#+BEGIN_SRC sh
+zfs snapshot -r zroot@15.0-p0
+#+END_SRC
+
+If you want to revert to the boot environment you created
+
+activate the boot environment you want to revert to
 
 #+BEGIN_SRC sh
 doas bectl activate 15.0-p0
@@ -1291,22 +1306,7 @@ bectl list
 While the default environment has an N, indicating it’s active now,
 the 15.0-p0 environment has an R, so it will be active after a reboot.
 
-Reboot. After the reboot, you’ll see the new environment is running.
-
-**** install updates in new boot environment
-
-check for package updates
-
-#+BEGIN_SRC sh
-pkg update
-pkg upgrade
-#+END_SRC
-
-create a zfs snapshot
-
-#+BEGIN_SRC sh
-zfs snapshot -r zroot@14.0-p0
-#+END_SRC
+Reboot. After the reboot, you’ll see the environment is running.
 
 ** unbound dns server
 
