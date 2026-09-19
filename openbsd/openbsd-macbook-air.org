@@ -766,11 +766,15 @@ doas rcctl start sshd
 doas rcctl check sshd
 #+end_src
 
-#+begin_src sh
-# Stop the running SSH daemon
-doas rcctl stop sshd
+Stop the running SSH daemon
 
-# Disable it from starting automatically on reboot
+#+begin_src sh
+doas rcctl stop sshd
+#+end_src
+
+If you want to disable ssh from starting automatically on reboot
+
+#+begin_src sh
 doas rcctl disable sshd
 #+end_src
 
@@ -817,281 +821,6 @@ check the flags have been applied
 
 #+begin_src sh
 rcctl get apmd flags
-#+end_src
-
-** security
-*** passwd
-**** change user passwd
-
-#+begin_src sh
-su -
-#+end_src
-
-#+begin_src sh
-passwd
-#+end_src
-
-**** change root password
-
-#+begin_src sh
-doas passwd root
-#+end_src
-
-*** change softraid password
-
-list the disk
-
-#+begin_src sh
-sysctl hw.disknames
-#+end_src
-
-the ouput shows
-
-#+begin_example
-sd0
-sd1
-#+end_example
-
-where sd0 is the origin disk
-
-and sd1 is the softraid crypo volume
-
-#+begin_src sh
-doas bioctl -P sd1
-#+end_src
-
-Old passphrase: 
-New passphrase: 
-Re-type passphrase:
-
-*** pf
-
-#+begin_src sh
-doas vi /etc/pf.conf
-#+end_src
-
-#+begin_src conf
-# Macros
-tcp_services = "{ 6881, 22000, 8080 }"
-udp_services = "{ 6882, 22000, 21027 }"
-lan_net      = "192.168.1.0/24"
-
-# Options
-set block-policy drop
-set skip on lo0
-
-# Normalization & Anti-Spoofing
-match in all scrub (no-df)
-antispoof quick for egress
-block in quick on egress from { no-route, urpf-failed } to any
-
-# Protect package builds (OpenBSD default)
-block return out log proto { tcp udp } user _pbuild
-
-# Default rule
-block drop all
-
-# Allow all outbound traffic
-pass out quick inet
-
-# Inbound rules
-pass in on egress proto tcp from $lan_net to egress port ssh
-pass in on egress proto tcp to egress port $tcp_services
-pass in on egress proto udp to egress port $udp_services
-#+end_src
-
-#+begin_src sh
-doas pfctl -f /etc/pf.conf
-#+end_src
-
-** applications
-*** mpd
-
-enable mpd and run as our user with our config
-
-#+begin_src sh
-doas rcctl enable mpd
-doas rcctl set mpd user djwilcox
-doas rcctl set mpd flags "/home/djwilcox/.config/mpd/mpd.conf"
-doas rcctl start mpd
-#+end_src
-
-to define settings but not have the service autostart
-
-manually edit the rc.conf.local
-
-#+begin_src sh
-doas vi /etc/rc.conf.local
-#+end_src
-
-#+begin_src conf
-apmd_flags=-A -z 15
-mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
-mpd_user=djwilcox
-pkg_scripts=seatd messagebus mpd
-#+end_src
-
-and remove mpd from the pkg_scripts
-
-#+begin_src conf
-apmd_flags=-A -z 15
-mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
-mpd_user=djwilcox
-pkg_scripts=seatd messagebus 
-#+end_src
-
-start mpd without it being enabled 
-
-#+begin_src sh
-doas rcctl -f start mpd
-#+end_src
-
-*** syncthing
-
-#+begin_src sh
-doas rcctl enable syncthing
-doas rcctl set syncthing user djwilcox
-doas rcctl start syncthing
-#+end_src
-
-change the openfiles settings in login.conf
-
-#+begin_src sh
-doas vi /etc/login.conf
-#+end_src
-
-add the following openfiles settings
-
-#+begin_src conf
-	:openfiles-cur=32768:\
-	:openfiles-max=65536:\
-#+end_src
-
-#+begin_src conf
-staff:\
-        :setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C:\
-	:datasize-cur=3072M:\
-	:datasize-max=3072M:\
-	:maxproc-max=1024:\
-	:maxproc-cur=512:\
-	:openfiles-cur=32768:\
-	:openfiles-max=65536:\
-        :stacksize-cur=32M:\
-	:ignorenologin:\
-	:requirehome@:\
-	:tc=default:
-#+end_src
-
-to define settings but not have the service autostart
-
-manually edit the rc.conf.local
-
-#+begin_src sh
-doas vi /etc/rc.conf.local
-#+end_src
-
-#+begin_src conf
-apmd_flags=-A -z 15
-mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
-mpd_user=djwilcox
-pkg_scripts=seatd messagebus syncthing
-syncthing_user=djwilcox
-#+end_src
-
-and remove syncthing from the pkg_scripts
-
-#+begin_src conf
-apmd_flags=-A -z 15
-mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
-mpd_user=djwilcox
-pkg_scripts=seatd messagebus 
-syncthing_user=djwilcox
-#+end_src
-
-start syncthing without it being enabled 
-
-#+begin_src sh
-doas rcctl -f start syncthing
-#+end_src
-
-*** mpv
-
-Toggle Floating / Tiled:
-
-#+begin_example
-Alt + Shift + Space
-#+end_example
-
-**** mpv mpris build
-
-clone the git repository
-
-#+begin_src sh
-git clone https://github.com/hoyon/mpv-mpris.git
-#+end_src
-
-change into the mpv-mpris directory
-
-#+begin_src sh
-cd mpv-mpris
-#+end_src
-
-make
-
-#+begin_src sh
-gmake
-#+end_src
-
-create the mpv scripts directory
-
-#+begin_src sh
-mkdir -p ~/.config/mpv/scripts
-#+end_src
-
-copy the mpris.so into the scripts directory
-
-#+begin_src sh
-cp mpris.so ~/.config/mpv/scripts
-#+end_src
-
-*** firefox
-
-change the unveil downloads directory
-
-#+begin_src sh
-doas vi /etc/firefox/unveil.main
-#+end_src
-
-#+begin_src conf
-~/downloads rwc
-#+end_src
-
-*** wlr-which-key
-
-[[https://github.com/MaxVerevkin/wlr-which-key]]
-
-clone wlr-which-key
-
-#+begin_src sh
-git clone https://github.com/MaxVerevkin/wlr-which-key.git
-#+end_src
-
-change into the wlr-which-key directory
-
-#+begin_src sh
-cd wlr-which-key
-#+end_src
-
-build wlr-which-key
-
-#+begin_src sh
-cargo build --release --locked
-#+end_src
-
-copy wlr-which-key to your bin directory
-
-#+begin_src sh
-doas cp target/release/wlr-which-key /usr/local/bin
 #+end_src
 
 ** networking
@@ -1316,6 +1045,286 @@ The ifconfig -nwid command moves the interface back into automatic access point 
 
 #+begin_src sh
 ifconfig run0 -nwid
+#+end_src
+
+** security
+*** passwd
+**** change user passwd
+
+#+begin_src sh
+su -
+#+end_src
+
+#+begin_src sh
+passwd
+#+end_src
+
+**** change root password
+
+#+begin_src sh
+doas passwd root
+#+end_src
+
+*** change softraid password
+
+list the disk
+
+#+begin_src sh
+sysctl hw.disknames
+#+end_src
+
+the ouput shows
+
+#+begin_example
+sd0
+sd1
+#+end_example
+
+where sd0 is the origin disk
+
+and sd1 is the softraid crypo volume
+
+#+begin_src sh
+doas bioctl -P sd1
+#+end_src
+
+Old passphrase: 
+New passphrase: 
+Re-type passphrase:
+
+*** pf
+
+#+begin_src sh
+doas vi /etc/pf.conf
+#+end_src
+
+#+begin_src conf
+#	$OpenBSD: pf.conf,v 1.55 2017/12/03 20:40:04 sthen Exp $
+#
+# See pf.conf(5) and /etc/examples/pf.conf
+
+# Macros
+tcp_services = "{ 6881, 22000, 8080 }"
+udp_services = "{ 6882, 22000, 21027 }"
+lan_net      = "192.168.1.0/24"
+ext_if       = "trunk0"
+
+# Options
+set block-policy drop
+set skip on { lo0 axe0 run0 }
+
+# Normalization & Anti-Spoofing
+match in all scrub (no-df)
+antispoof quick for $ext_if
+block in quick on $ext_if from { no-route, urpf-failed } to any
+
+# Protect package builds (OpenBSD default)
+block return out log proto { tcp udp } user _pbuild
+
+# Default rule
+block drop all
+
+# Allow all outbound traffic
+pass out quick on $ext_if inet keep state
+
+# Inbound rules
+pass in on $ext_if proto tcp from $lan_net to ($ext_if) port ssh
+pass in on $ext_if proto tcp to ($ext_if) port $tcp_services
+pass in on $ext_if proto udp to ($ext_if) port $udp_services
+#+end_src
+
+#+begin_src sh
+doas pfctl -f /etc/pf.conf
+#+end_src
+
+** applications
+*** mpd
+
+enable mpd and run as our user with our config
+
+#+begin_src sh
+doas rcctl enable mpd
+doas rcctl set mpd user djwilcox
+doas rcctl set mpd flags "/home/djwilcox/.config/mpd/mpd.conf"
+doas rcctl start mpd
+#+end_src
+
+to define settings but not have the service autostart
+
+manually edit the rc.conf.local
+
+#+begin_src sh
+doas vi /etc/rc.conf.local
+#+end_src
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus mpd
+#+end_src
+
+and remove mpd from the pkg_scripts
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus 
+#+end_src
+
+start mpd without it being enabled 
+
+#+begin_src sh
+doas rcctl -f start mpd
+#+end_src
+
+*** syncthing
+
+#+begin_src sh
+doas rcctl enable syncthing
+doas rcctl set syncthing user djwilcox
+doas rcctl start syncthing
+#+end_src
+
+change the openfiles settings in login.conf
+
+#+begin_src sh
+doas vi /etc/login.conf
+#+end_src
+
+add the following openfiles settings
+
+#+begin_src conf
+	:openfiles-cur=32768:\
+	:openfiles-max=65536:\
+#+end_src
+
+#+begin_src conf
+staff:\
+        :setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C:\
+	:datasize-cur=3072M:\
+	:datasize-max=3072M:\
+	:maxproc-max=1024:\
+	:maxproc-cur=512:\
+	:openfiles-cur=32768:\
+	:openfiles-max=65536:\
+        :stacksize-cur=32M:\
+	:ignorenologin:\
+	:requirehome@:\
+	:tc=default:
+#+end_src
+
+to define settings but not have the service autostart
+
+manually edit the rc.conf.local
+
+#+begin_src sh
+doas vi /etc/rc.conf.local
+#+end_src
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus syncthing
+syncthing_user=djwilcox
+#+end_src
+
+and remove syncthing from the pkg_scripts
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus 
+syncthing_user=djwilcox
+#+end_src
+
+start syncthing without it being enabled 
+
+#+begin_src sh
+doas rcctl -f start syncthing
+#+end_src
+
+*** mpv
+
+Toggle Floating / Tiled:
+
+#+begin_example
+Alt + Shift + Space
+#+end_example
+
+**** mpv mpris build
+
+clone the git repository
+
+#+begin_src sh
+git clone https://github.com/hoyon/mpv-mpris.git
+#+end_src
+
+change into the mpv-mpris directory
+
+#+begin_src sh
+cd mpv-mpris
+#+end_src
+
+make
+
+#+begin_src sh
+gmake
+#+end_src
+
+create the mpv scripts directory
+
+#+begin_src sh
+mkdir -p ~/.config/mpv/scripts
+#+end_src
+
+copy the mpris.so into the scripts directory
+
+#+begin_src sh
+cp mpris.so ~/.config/mpv/scripts
+#+end_src
+
+*** firefox
+
+change the unveil downloads directory
+
+#+begin_src sh
+doas vi /etc/firefox/unveil.main
+#+end_src
+
+#+begin_src conf
+~/downloads rwc
+#+end_src
+
+*** wlr-which-key
+
+[[https://github.com/MaxVerevkin/wlr-which-key]]
+
+clone wlr-which-key
+
+#+begin_src sh
+git clone https://github.com/MaxVerevkin/wlr-which-key.git
+#+end_src
+
+change into the wlr-which-key directory
+
+#+begin_src sh
+cd wlr-which-key
+#+end_src
+
+build wlr-which-key
+
+#+begin_src sh
+cargo build --release --locked
+#+end_src
+
+copy wlr-which-key to your bin directory
+
+#+begin_src sh
+doas cp target/release/wlr-which-key /usr/local/bin
 #+end_src
 
 ** general settings
