@@ -978,7 +978,7 @@ doas ifconfig run0 scan
 At runtime, automatic access point selection can be temporarily overridden with the ifconfig nwid command: 
 
 #+begin_src sh
-ifconfig run0 nwid home-net
+doas ifconfig trunk0 nwid home-net
 #+end_src
 
 If the given network already exists on the join list, its WPA password will be used automatically, if required.
@@ -986,6 +986,28 @@ The ifconfig -nwid command moves the interface back into automatic access point 
 
 #+begin_src sh
 doas ifconfig trunk0 -nwid
+#+end_src
+
+***** switching back to ethernet
+
+unplug the external wifi card and plug ethernet back in
+
+take the trunk0 interface down
+
+#+begin_src sh
+doas ifconfig trunk0 down
+#+end_src
+
+bring the trunk0 interface back up
+
+#+begin_src sh
+doas ifconfig trunk0 up
+#+end_src
+
+bring the axe0 interface up
+
+#+begin_src sh
+doas ifconfig axe0 up
 #+end_src
 
 ** security
