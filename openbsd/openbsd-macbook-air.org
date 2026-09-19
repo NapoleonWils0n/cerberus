@@ -1119,15 +1119,107 @@ in my case its
 run0
 #+end_example
 
-***** hostname
-
-find you hostame
+and my ethernet device is
 
 #+begin_src sh
-hostname
+axe0
 #+end_src
 
-in my case the hostname is talos
+***** hostname.if file
+****** wireless
+
+create the hostname.if configuration file
+where if is the name of your wireless device
+
+for example if my wireless network interface is run0
+
+i would create the following file
+
+#+begin_src sh
+doas vi /etc/hostname.run0
+#+end_src
+
+define the access points
+
+#+begin_src conf
+join home-net wpakey 'passwordhere'
+join work-net wpakey 'passwordhere'
+join cafe-wifi
+up
+#+end_src
+
+where home-net, work-net and cafe-wifi are the ssid of the wifi network
+wpakey is the authentic method and 'passwordhere' is the ssid password in single quotes
+
+****** ethernet
+
+check the name of your ethernet device
+
+#+begin_src sh
+ifconfig
+#+end_src
+
+my ethernet devices is axe0
+
+echo up into the hostname ethernet device name file
+
+#+begin_src sh
+echo up | doas tee /etc/hostname.axe0
+#+end_src
+
+***** permissions
+
+In the example below run0 is the name of my wireless network interface
+
+Restrict file access because it contains network credentials:
+
+#+begin_src sh
+doas chown root:wheel /etc/hostname.run0
+#+end_src
+
+Preserve administrative ownership
+
+#+begin_src sh
+doas chmod 640 /etc/hostname.run0
+#+end_src
+
+***** trunk interface
+
+Trunks are virtual interfaces consisting of one or more network interfaces.
+
+In this section, our example will be a laptop with a wired axe0 interface and a wireless run0 interface.
+
+We will build a trunk(4) interface using both of them. 
+
+create the trunkfile
+
+#+begin_src sh
+doas vi /etc/hostname.trunk0
+#+end_src
+
+#+begin_src conf
+trunkproto failover trunkport axe0
+trunkport run0
+inet autoconf
+#+end_src
+
+Restrict file access because it contains network credentials:
+
+#+begin_src sh
+doas chown root:wheel /etc/hostname.trunk0
+#+end_src
+
+Preserve administrative ownership
+
+#+begin_src sh
+doas chmod 640 /etc/hostname.trunk0
+#+end_src
+
+***** restart networking
+
+#+begin_src sh
+doas sh /etc/netstart
+#+end_src
 
 ***** scan for wifi networks
 
@@ -1143,41 +1235,7 @@ scan for wireless networks
 doas ifconfig run0 scan
 #+end_src
 
-***** hostname.if file
-
-create the hostname.if configuration file
-
-where hostname is your hostname and if is your wireless network device
-
-#+begin_src sh
-doas vi /etc/hostname.if
-#+end_src
-
-for example if my hostname was talos and the wireless network interface is run0
-
-i would create the following file
-
-#+begin_src sh
-doas vi /etc/talos.run0
-#+end_src
-
-define the access points
-
-#+begin_src conf
-join home-net wpakey 'passwordhere'
-join work-net wpakey 'passwordhere'
-join cafe-wifi
-inet autoconf
-
-#+end_src
-
-where home-net, work-net and cafe-wifi are the ssid of the wifi network
-wpakey is the authentic method and 'passwordhere' is the ssid password in single quotes
-
-Ensure there is a newline character after the last directive
-
-Note that inet autoconf should be after the other configuration lines,
-as the network adapter will not be able to send a DHCP request until it is configured. 
+***** wifi interface
 
 At runtime, automatic access point selection can be temporarily overridden with the ifconfig nwid command: 
 
@@ -1190,44 +1248,6 @@ The ifconfig -nwid command moves the interface back into automatic access point 
 
 #+begin_src sh
 ifconfig run0 -nwid
-#+end_src
-
-***** permissions
-
-In the example below hostname is your hostname and if is the name of the wireless network interface
-
-Restrict file access because it contains network credentials:
-
-#+begin_src sh
-doas chown root:wheel /etc/hostname.if
-#+end_src
-
-Preserve administrative ownership
-
-#+begin_src sh
-doas chmod 600 /etc/hostname.if
-#+end_src
-
-in my case my network name is talos and wireless network interface is called run0
-
-so for my set up i would run the following commands
-
-Restrict file access because it contains network credentials:
-
-#+begin_src sh
-doas chown root:wheel /etc/talos.run0
-#+end_src
-
-Preserve administrative ownership
-
-#+begin_src sh
-doas chmod 600 /etc/talos.run0
-#+end_src
-
-***** restart networking
-
-#+begin_src sh
-doas sh /etc/netstart
 #+end_src
 
 ** general settings
