@@ -1,0 +1,138 @@
+#+STARTUP: content
+* encrypted device openbsd
+** list disks
+
+list disknames
+
+#+begin_src sh
+sysctl hw.disknames
+#+end_src
+
+Detailed Hardware Model & Size Information
+
+#+begin_src sh
+dmesg | grep -E '^(sd|wd|nvme|cd)[0-9]'
+#+end_src
+
+list active softraid volumes
+
+#+begin_src sh
+doas bioctl softraid0
+#+end_src
+
+** use dd to create a 128mb disk image
+
+#+BEGIN_SRC sh
+dd if=/dev/zero of=disk.img bs=1M count=128
+#+END_SRC
+
+** attach vnd loopback device
+
+list attached loopback devices
+
+#+begin_src sh
+doas vnconfig -l
+#+end_src
+
+attach disk.img to a vnd loopback device
+
+#+BEGIN_SRC sh
+doas vnconfig vnd0 disk.img
+#+END_SRC
+
+check the disk.img is attached
+
+#+begin_src sh
+doas vnconfig -l
+#+end_src
+
+** initialize MBR and RAID partition on vnd0
+
+Initialize default MBR partition table:
+
+#+BEGIN_SRC sh
+doas fdisk -iy vnd0
+#+END_SRC
+
+Write a disklabel spanning all free space as a RAID partition
+
+#+BEGIN_SRC sh
+echo 'RAID *' | doas disklabel -wAT- vnd0
+#+END_SRC
+
+** bioctl
+
+initialize softraid crypto volume
+
+Passphrase authentication
+
+#+BEGIN_SRC sh
+doas bioctl -c C -l vnd0a softraid0
+#+END_SRC
+
+Note the softraid pseudo-disk device name created in the output (e.g., sd2).
+
+Attach an existing volume later:
+
+#+BEGIN_SRC sh
+doas bioctl -c C -l vnd0a softraid0
+#+END_SRC
+
+** newfs
+
+Initialize an OpenBSD disklabel on the softraid volume (~sd2~) spanning partition ~a~:
+
+#+BEGIN_SRC sh
+doas disklabel -wA sd2
+#+END_SRC
+
+check the partion exists
+
+#+begin_src sh
+ls -l /dev/rsd2a
+#+end_src
+
+Format partition ~a~ with FFS (Fast File System):
+
+#+BEGIN_SRC sh
+doas newfs /dev/rsd2a
+#+END_SRC
+
+** mount
+
+#+BEGIN_SRC sh
+mkdir -p ~/mnt
+doas mount /dev/sd2a /home/djwilcox/mnt
+#+END_SRC
+
+change the permissions
+
+#+begin_src sh
+doas chown -R djwilcox:djwilcox /home/djwilcox/mnt
+#+end_src
+
+Verify mount status:
+
+#+BEGIN_SRC sh
+df -h ~/mnt
+#+END_SRC
+
+** unmount
+
+Unmount the file system
+
+#+begin_src sh
+doas umount /home/djwilcox/mnt
+#+end_src
+
+detach the softraid crypto volume
+
+#+begin_src sh
+doas bioctl -d sd2
+#+end_src
+
+unconfigure the loopback device:
+
+#+BEGIN_SRC sh
+doas vnconfig -u vnd0
+#+END_SRC
