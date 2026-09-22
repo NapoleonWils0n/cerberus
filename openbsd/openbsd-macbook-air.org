@@ -766,18 +766,6 @@ doas rcctl start sshd
 doas rcctl check sshd
 #+end_src
 
-Stop the running SSH daemon
-
-#+begin_src sh
-doas rcctl stop sshd
-#+end_src
-
-If you want to disable ssh from starting automatically on reboot
-
-#+begin_src sh
-doas rcctl disable sshd
-#+end_src
-
 *** login.conf
 
 #+begin_src sh
@@ -1057,6 +1045,20 @@ Re-type passphrase:
 
 *** pf
 
+After set up we will disable sshd
+
+Stop the running SSH daemon
+
+#+begin_src sh
+doas rcctl stop sshd
+#+end_src
+
+If you want to disable ssh from starting automatically on reboot
+
+#+begin_src sh
+doas rcctl disable sshd
+#+end_src
+
 #+begin_src sh
 doas vi /etc/pf.conf
 #+end_src
@@ -1091,7 +1093,7 @@ block drop all
 pass out quick on $ext_if inet keep state
 
 # Inbound rules
-pass in on $ext_if proto tcp from $lan_net to ($ext_if) port ssh
+#pass in on $ext_if proto tcp from $lan_net to ($ext_if) port ssh
 pass in on $ext_if proto tcp to ($ext_if) port $tcp_services
 pass in on $ext_if proto udp to ($ext_if) port $udp_services
 #+end_src
