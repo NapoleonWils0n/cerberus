@@ -1293,6 +1293,21 @@ doas cp target/release/wlr-which-key /usr/local/bin
 #+end_src
 
 ** general settings
+*** rc.conf.local
+
+#+begin_src sh
+doas vi /etc/rc.conf.local
+#+end_src
+
+#+begin_src conf
+apmd_flags=-A -z 15
+mpd_flags=/home/djwilcox/.config/mpd/mpd.conf
+mpd_user=djwilcox
+pkg_scripts=seatd messagebus 
+sshd_flags=NO
+syncthing_user=djwilcox
+#+end_src
+
 *** audio video recording
 
 add the following to sysctl.conf
@@ -1300,51 +1315,6 @@ add the following to sysctl.conf
 #+begin_src sh
 kern.audio.record=1
 kern.video.record=1
-#+end_src
-
-*** fstab
-
-You can greatly improve disk performance by enabling softupdates and the noatime option for all your local partitions in /etc/fstab. Add the softdep,noatime options to each partition (except swap) as I've demonstrated below. Don't copy and paste this directly, as your disk identifier will be different.
-
-#+begin_src sh
-doas vi /etc/fstab
-#+end_src
-
-#+begin_src conf
-0364c44477d30004.b none swap sw
-0364c44477d30004.a / ffs rw,softdep,noatime 1 1
-0364c44477d30004.l /home ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.d /tmp ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.f /usr ffs rw,softdep,noatime,nodev 1 2
-0364c44477d30004.g /usr/X11R6 ffs rw,softdep,noatime,nodev 1 2
-0364c44477d30004.h /usr/local ffs rw,softdep,noatime,wxallowed,nodev 1 2
-0364c44477d30004.k /usr/obj ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.j /usr/src ffs rw,softdep,noatime,nodev,nosuid 1 2
-0364c44477d30004.e /var ffs rw,softdep,noatime,nodev,nosuid 1 2
-#+end_src
-
-*** /etc/sysctl.conf
-
-#+begin_src sh
-doas vi /etc/sysctl.conf
-#+end_src
-
-#+begin_src conf
-# shared memory limits (chrome needs a ton)
-kern.shminfo.shmall=3145728
-kern.shminfo.shmmax=2147483647
-kern.shminfo.shmmni=1024
-
-# semaphores
-kern.shminfo.shmseg=1024
-kern.seminfo.semmns=4096
-kern.seminfo.semmni=1024
-
-kern.maxproc=32768
-kern.maxfiles=65535
-kern.bufcachepercent=90
-kern.maxvnodes=262144
-kern.somaxconn=2048
 #+end_src
 
 ** ports
