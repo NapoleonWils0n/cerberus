@@ -144,6 +144,8 @@ doas vnconfig -u vnd0
 
 #===============================================================================
 # ossuary
+#
+# openbsd encrypted container
 #===============================================================================
 
 
@@ -156,7 +158,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 echo "\
 $(basename "$0") -m mount -f container
-$(basename "$0") -m umount -f container"
+$(basename "$0") -m umount"
 exit 1
 }
 
@@ -183,6 +185,23 @@ REQ_ARG_ERR='requires an argument'
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# mount point
+mount_point='/home/djwilcox/mnt'
+
+# vnode and device names
+vnode='vnd0'
+device='sd2'
+
+# derived partition nodes
+vnode_partition="${vnode}a"
+device_partition="/dev/${device}a"
+
+
 #===============================================================================
 # getopts check options passed to script
 #===============================================================================
@@ -206,31 +225,37 @@ shift $((OPTIND-1))
 
 # mount function
 mount_container () {
+    # check if container exists
+    [ -n "${container}" ] || usage "Container path required (-f)"
     [ -f "${container}" ] || usage "Container file not found"
 
+    # check if mount point exists
+    [ -d "${mount_point}" ] || usage "Mount point directory does not exist: ${mount_point}"
+
     # attach the container to a vnd loopback device
-    vnconfig vnd0 "${container}"
+    vnconfig "${vnode}" "${container}" || exit 1
 
     # Attach the volume
-    bioctl -c C -l vnd0a softraid0
+    bioctl -c C -l "${vnode_partition}" softraid0 || { vnconfig -u "${vnode}"; exit 1; }
 
     # mount the device
-    mount /dev/sd2a /home/djwilcox/mnt
+    mount "${device_partition}" "${mount_point}" || { bioctl -d "${device}"; vnconfig -u "${vnode}"; exit 1; }
 
 }
 
 # umount function
 umount_container () {
-    [ -n "${container}" ] || usage "Container path required (-f)"
+    # check if mount point exists
+    [ -d "${mount_point}" ] || usage "Mount point directory does not exist: ${mount_point}"
 
     # unmount device
-    umount /home/djwilcox/mnt
+    umount "${mount_point}" || exit 1
 
     # detach the softraid crypto volume
-    bioctl -d sd2
+    bioctl -d "${device}"
 
     # unconfigure the loopback device
-    vnconfig -u vnd0
+    vnconfig -u "${vnode}"
 }
 
 #===============================================================================
@@ -240,6 +265,6 @@ umount_container () {
 case "${action}" in
     mount) mount_container;;
     umount) umount_container;;
-    *) usage;;
+    ,*) usage;;
 esac
 #+end_src
