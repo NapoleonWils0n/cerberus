@@ -178,11 +178,11 @@ doas cp dwlb /usr/local/bin
 [[https://codeberg.org/dwl/dwl]]
 
 #+begin_src sh
-curl -L -o dwl-v0.8.tar.gz 'https://codeberg.org/dwl/dwl/archive/v0.8.tar.gz'
+curl -L -o dwl-v0.9.tar.gz 'https://codeberg.org/dwl/dwl/archive/v0.9.tar.gz'
 #+end_src
 
 #+begin_src sh
-tar -xzvf dwl-v0.8.tar.gz
+tar -xzvf dwl-v0.9.tar.gz
 #+end_src
 
 ***** movestack 
