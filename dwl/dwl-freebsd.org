@@ -41,26 +41,26 @@ Build dependencies:
 ** packages install
 
 #+begin_src sh
-sudo pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots020 libxkbcommon xcb-util-wm
+doas pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots020 libxkbcommon xcb-util-wm
 #+end_src
 
 ** drivers
 *** dell xps 15 2019
 
 #+begin_SRC sh
-sudo pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils
+doas pkg install nvidia-driver nvidia-settings nvidia-drm-515-kmod libva-intel-driver libva-utils
 #+END_SRC
 
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
 
 #+begin_src sh
-sudo sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
+doas sysrc kld_list+="i915kms nvidia-modeset nvidia-drm linux linux64"
 #+end_src
 
 or manually edit the config file
 
 #+BEGIN_SRC sh
-sudo vi /etc/rc.conf
+doas vi /etc/rc.conf
 #+END_SRC
 
 then add the code below to /etc/rc.conf
@@ -72,7 +72,7 @@ kld_list="i915kms nvidia-modeset nvidia-drm linux linux64"
 *** macbook air 2011 
 
 #+begin_SRC sh
-sudo pkg install libva-intel-driver libva-utils drm-515-kmod 
+doas pkg install libva-intel-driver libva-utils drm-515-kmod 
 #+END_SRC
 
 use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video hardware accleration
@@ -80,13 +80,13 @@ use libva-intel-driver and drm-515-kmod instead of xf86-video-intel for video ha
 we also need to edit /etc/rc.conf and add the path to the i915kms.ko file
 
 #+begin_src sh
-sudo sysrc kld_list="i915kms"
+doas sysrc kld_list="i915kms"
 #+end_src
 
 or manually edit the config file
 
 #+BEGIN_SRC sh
-sudo vi /etc/rc.conf
+doas vi /etc/rc.conf
 #+END_SRC
 
 then add the code below to /etc/rc.conf
@@ -107,8 +107,8 @@ proc /proc procfs rw 0 0
 The seatd daemon helps manage access to shared system devices for non-root users in compositors; this includes graphics cards. For traditional X11 managers, seatd is not needed, such as both Plasma and GNOME, but for the Wayland compositors discussed here, it will need enabled on the system and be running before starting a compositor environment. To enable and start the seatd daemon now, and on system initialization:
 
 #+begin_src sh
-sudo sysrc seatd_enable="YES"
-sudo sysrc dbus_enable="YES"
+doas sysrc seatd_enable="YES"
+doas sysrc dbus_enable="YES"
 #+end_src
 
 [[https://docs.freebsd.org/en/books/handbook/wayland/]]
@@ -126,7 +126,7 @@ dwlb dwl bar
 freebsd dwlb install
 
 #+begin_src sh
-sudo pkg install dwlb
+doas pkg install dwlb
 #+end_src
 
 ** git clone dwl
@@ -307,7 +307,7 @@ static const Key keys[] = {
 freebsd
 
 #+begin_src sh
-sudo pkg install wlrctl
+doas pkg install wlrctl
 #+end_src
 
 *** config.h
