@@ -41,7 +41,7 @@ Build dependencies:
 ** packages install
 
 #+begin_src sh
-sudo pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots019 libxkbcommon xcb-util-wm
+sudo pkg install seatd evdev-proto wayland-protocols gmake pkgconf libxcb libinput wayland wlroots020 libxkbcommon xcb-util-wm
 #+end_src
 
 ** drivers
@@ -180,7 +180,7 @@ sed -i'' -e s/_POSIX_C_SOURCE=200809L/_XOPEN_SOURCE=700/ Makefile
 edit config.mk and make sure xwayland is enabled
 
 #+begin_src c
-_VERSION = 0.5
+_VERSION = 0.9-dev
 VERSION  = `git describe --tags --dirty 2>/dev/null || echo $(_VERSION)`
 
 PKG_CONFIG = pkg-config
@@ -190,40 +190,32 @@ PREFIX = /usr/local
 MANDIR = $(PREFIX)/share/man
 DATADIR = $(PREFIX)/share
 
-#XWAYLAND =
-#XLIBS =
+WLR_INCS = `$(PKG_CONFIG) --cflags wlroots-0.20`
+WLR_LIBS = `$(PKG_CONFIG) --libs wlroots-0.20`
+
+# Allow using an alternative wlroots installation
+# This has to have all the includes required by wlroots, e.g:
+# Assuming wlroots git repo is "${PWD}/wlroots" and you only ran "meson setup build && ninja -C build"
+#WLR_INCS = -I/usr/include/pixman-1 -I/usr/include/elogind -I/usr/include/libdrm \
+#	-I$(PWD)/wlroots/include
+# Set -rpath to avoid using the wrong library.
+#WLR_LIBS = -Wl,-rpath,$(PWD)/wlroots/build -L$(PWD)/wlroots/build -lwlroots-0.20
+
+# Assuming you ran "meson setup --prefix ${PWD}/0.20 build && ninja -C build install"
+#WLR_INCS = -I/usr/include/pixman-1 -I/usr/include/elogind -I/usr/include/libdrm \
+#	-I$(PWD)/wlroots/0.20/include/wlroots-0.20
+#WLR_LIBS = -Wl,-rpath,$(PWD)/wlroots/0.20/lib64 -L$(PWD)/wlroots/0.20/lib64 -lwlroots-0.20
+
+XWAYLAND =
+XLIBS =
 # Uncomment to build XWayland support
 XWAYLAND = -DXWAYLAND
 XLIBS = xcb xcb-icccm
 
-CC = gcc
-#+end_src
-
-** dwl.c focus
-
-
-dwl.c change line 606 from
-
-#+begin_src c
-case WLR_BUTTON_PRESSED:
-#+end_src
-
-to
-
-#+begin_src c
-case WL_POINTER_BUTTON_STATE_PRESSED:
-#+end_src
-
-change Line 627 from 
-
-#+begin_src c
-case WLR_BUTTON_RELEASED:
-#+end_src
-
-to
-
-#+begin_src c
-case WL_POINTER_BUTTON_STATE_RELEASED:
+# dwl itself only uses C99 features, but wlroots' headers use anonymous unions (C11).
+# To avoid warnings about them, we do not use -std=c99 and instead of using the
+# gmake default 'CC=c99', we use cc.
+CC = cc
 #+end_src
 
 ** keyboard set up
@@ -262,59 +254,14 @@ static const char *termcmd[] = { "alacritty", NULL };
 static const char *menucmd[] = { "tofi-drun", NULL };
 #+end_src
 
-** firefox and mpv
+** mpv
 
 #+begin_src c
 static const Rule rules[] = {
-	/* app_id     title       tags mask     isfloating   monitor */
-	/* examples:
-	{ "Gimp",     NULL,       0,            1,           -1 },
-	,*/
-	{ "firefox",  NULL,       0,            0,           -1 },
-	{ "mpv",  NULL,           0,            1,           0 },
+	/* app_id             title       tags mask     isfloating   monitor */
+	{ "mpv",  NULL,           0,       1,           0 },
+    /* default/example rule: can be changed but cannot be eliminated; at least one rule must exist */
 };
-#+end_src
-
-** emacs and keyboard shortcuts
-
-#+begin_src c
-static const Key keys[] = {
-	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
-	/* modifier                  key                 function        argument */
-	{ MODKEY,                    XKB_KEY_a,          spawn,          {.v = menucmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,     spawn,          SHCMD("emacsclient --alternate-editor= --create-frame") },
-	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
-	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
-	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
-	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
-	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
-	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
-	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
-	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
-	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
-	{ MODKEY,                    XKB_KEY_s,         togglefullscreen, {0} },
-	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
-	{ MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
-	{ MODKEY,                    XKB_KEY_period,     focusmon,       {.i = WLR_DIRECTION_RIGHT} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,       tagmon,         {.i = WLR_DIRECTION_LEFT} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,    tagmon,         {.i = WLR_DIRECTION_RIGHT} },
-	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
-	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
-	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
-	TAGKEYS(          XKB_KEY_4, XKB_KEY_dollar,                     3),
-	TAGKEYS(          XKB_KEY_5, XKB_KEY_percent,                    4),
-	TAGKEYS(          XKB_KEY_6, XKB_KEY_asciicircum,                5),
-	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
-	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
-	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
 #+end_src
 
 ** libinput scroll
@@ -326,6 +273,13 @@ LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE
 ,*/
 static const enum libinput_config_accel_profile accel_profile = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
 static const double accel_speed = 1.0;
+#+end_src
+
+** repeat rate and repeat delay
+
+#+begin_src c
+static const int repeat_rate = 35;
+static const int repeat_delay = 400;
 #+end_src
 
 ** media keys
@@ -370,6 +324,56 @@ static const char *cursorright[]    = { "/usr/local/bin/wlrctl",   "pointer", "m
 	{ MODKEY,                    XKB_KEY_period,     spawn,          {.v = cursorright} },
 #+end_src
 
+** keyboard shortcuts
+
+#+begin_src c
+static const Key keys[] = {
+	/* modifier                  key                  function          argument */
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume, spawn,   {.v = volumeup   } },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume, spawn,   {.v = volumedown } },
+	{ 0,                         XKB_KEY_XF86AudioMute, spawn,          {.v = mutevolume } },
+	{ MODKEY,                    XKB_KEY_z,           spawn,            {.v = wlrwhichkey} },
+	{ MODKEY,                    XKB_KEY_a,           spawn,            {.v = menucmd} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,      spawn,            {.v = termcmd} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_Return,      spawn,            SHCMD("emacsclient -a= -c") },
+	{ MODKEY|WLR_MODIFIER_ALT,  XKB_KEY_space,        spawn,            SHCMD("playerctl play-pause") },
+	{ MODKEY,                    XKB_KEY_j,           focusstack,       {.i = +1} },
+	{ MODKEY,                    XKB_KEY_k,           focusstack,       {.i = -1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,           movestack,        {.i = +1} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,           movestack,        {.i = -1} },
+	{ MODKEY,                    XKB_KEY_i,           incnmaster,       {.i = +1} },
+	{ MODKEY,                    XKB_KEY_d,           incnmaster,       {.i = -1} },
+	{ MODKEY,                    XKB_KEY_h,           setmfact,         {.f = -0.05f} },
+	{ MODKEY,                    XKB_KEY_l,           setmfact,         {.f = +0.05f} },
+	{ MODKEY,                    XKB_KEY_Return,      zoom,             {0} },
+	{ MODKEY,                    XKB_KEY_Tab,         view,             {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,           killclient,       {0} },
+	{ MODKEY,                    XKB_KEY_t,           setlayout,        {.v = &layouts[0]} },
+	{ MODKEY,                    XKB_KEY_f,           setlayout,        {.v = &layouts[1]} },
+	{ MODKEY,                    XKB_KEY_m,           setlayout,        {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_space,       setlayout,        {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,       togglefloating,   {0} },
+	{ MODKEY,                    XKB_KEY_s,           togglefullscreen, {0} },
+	{ MODKEY,                    XKB_KEY_0,           view,             {.ui = ~0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_0,           tag,              {.ui = ~0} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_comma,       focusmon,         {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_period,      focusmon,         {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY,                    XKB_KEY_comma,       spawn,            {.v = cursorleft} },
+	{ MODKEY,                    XKB_KEY_period,      spawn,            {.v = cursorright} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,        tagmon,           {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,     tagmon,           {.i = WLR_DIRECTION_RIGHT} },
+	TAGKEYS(                     XKB_KEY_1,           0),
+	TAGKEYS(                     XKB_KEY_2,           1),
+	TAGKEYS(                     XKB_KEY_3,           2),
+	TAGKEYS(                     XKB_KEY_4,           3),
+	TAGKEYS(                     XKB_KEY_5,           4),
+	TAGKEYS(                     XKB_KEY_6,           5),
+	TAGKEYS(                     XKB_KEY_7,           6),
+	TAGKEYS(                     XKB_KEY_8,           7),
+	TAGKEYS(                     XKB_KEY_9,           8),
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,           quit,             {0} },
+#+end_src
+
 ** merge changes into master branch
 
 #+BEGIN_SRC sh
@@ -393,13 +397,13 @@ cd dwl
 make for xwayland
 
 #+begin_src sh
-gmake CC=cc CFLAGS+='-std=c11' XWAYLAND="-DXWAYLAND" XLIBS="xcb xcb-icccm"
+gmake CC=cc CFLAGS+='-std=c11 -Wno-strict-prototypes' XWAYLAND="-DXWAYLAND" XLIBS="xcb xcb-icccm"
 #+end_src
 
 make without xwayland
 
 #+begin_src sh
-gmake CC=cc CFLAGS+='-std=c11'
+gmake CC=cc CFLAGS+='-std=c11 -Wno-strict-prototypes'
 #+end_src
 
 install
