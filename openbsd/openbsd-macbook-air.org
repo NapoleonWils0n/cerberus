@@ -17,7 +17,7 @@ press l for language
 
 press uk
 
-system hostname = talos
+system hostname = 
 
 network select vio0
 
@@ -41,7 +41,7 @@ set up a user = add your username
 
 full name = 
 
-password = dan
+password = 
 
 allow root ssh login = no
 
