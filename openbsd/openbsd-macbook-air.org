@@ -1398,13 +1398,50 @@ sshd_flags=NO
 syncthing_user=djwilcox
 #+end_src
 
-*** audio video recording
+*** enable audio recording
 
-add the following to sysctl.conf
+Temporarily enable audio recording for the mic and desktop audio
 
 #+begin_src sh
-kern.audio.record=1
-kern.video.record=1
+doas sysctl kern.audio.record=1
+#+end_src
+
+Permanently enable audio recording for the mic and desktop audio
+
+#+begin_src sh
+echo "kern.audio.record=1" | doas tee -a /etc/sysctl.conf
+#+end_src
+
+enable an audio monitoring device to record desktop audio
+
+#+begin_src sh
+doas rcctl set sndiod flags "-s default -m play,rec -s mon -m mon"
+#+end_src
+
+restart sndiod
+
+#+begin_src sh
+doas rcctl restart sndiod
+#+end_src
+
+record desktop audio
+
+#+begin_src sh
+aucat -f snd/mon -o test.wav
+#+end_src
+
+*** enable video record for the webcam
+
+Temporarily enable video recording for the webcam
+
+#+begin_src sh
+doas sysctl kern.video.record=1
+#+end_src
+
+Permanently enable video recording for the webcam
+
+#+begin_src sh
+echo "kern.video.record=1" | doas tee -a /etc/sysctl.conf
 #+end_src
 
 ** ports
