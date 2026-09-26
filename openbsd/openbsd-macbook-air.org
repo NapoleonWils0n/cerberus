@@ -845,15 +845,41 @@ chsh -s /usr/local/bin/zsh
 #+end_src
 
 ** system configuration
-*** ssh
+*** apmd
+
+apmd power
 
 #+begin_src sh
-doas rcctl enable sshd
-doas rcctl start sshd
+doas rcctl enable apmd
+doas rcctl set apmd flags -A -z 15
+doas rcctl start apmd
 #+end_src
 
+check the flags have been applied
+
 #+begin_src sh
-doas rcctl check sshd
+rcctl get apmd flags
+#+end_src
+
+*** fstab
+
+add noatime to your fstab
+
+#+begin_src sh
+doas vi /etc/fstab
+#+end_src
+
+#+begin_src conf
+6e192b11574e6f52.b none swap sw
+6e192b11574e6f52.a / ffs rw,noatime 1 1
+6e192b11574e6f52.l /home ffs rw,noatime,nodev,nosuid 1 2
+6e192b11574e6f52.d /tmp ffs rw,noatime,nodev,nosuid 1 2
+6e192b11574e6f52.f /usr ffs rw,noatime,nodev 1 2
+6e192b11574e6f52.g /usr/X11R6 ffs rw,noatime,nodev 1 2
+6e192b11574e6f52.h /usr/local ffs rw,noatime,wxallowed,nodev 1 2
+6e192b11574e6f52.k /usr/obj ffs rw,noatime,nodev,nosuid 1 2
+6e192b11574e6f52.j /usr/src ffs rw,noatime,nodev,nosuid 1 2
+6e192b11574e6f52.e /var ffs rw,noatime,nodev,nosuid 1 2
 #+end_src
 
 *** login.conf
@@ -885,20 +911,48 @@ default:\
 	:capability...
 #+end_src
 
-*** apmd
-
-apmd power
+*** ssh
 
 #+begin_src sh
-doas rcctl enable apmd
-doas rcctl set apmd flags -A -z 15
-doas rcctl start apmd
+doas rcctl enable sshd
+doas rcctl start sshd
 #+end_src
 
-check the flags have been applied
+#+begin_src sh
+doas rcctl check sshd
+#+end_src
+
+*** sysctl.conf
 
 #+begin_src sh
-rcctl get apmd flags
+doas vi /etc/sysctl.conf
+#+end_src
+
+#+begin_src conf
+#===============================================================================
+# /etc/sysctl.conf - Scaled for 4 GB RAM MacBook Air
+#===============================================================================
+
+# Keep buffer cache moderate (Default is 20%. Cap at 25% so apps have ~3 GB RAM)
+kern.bufcachepercent=25
+
+# Process and file descriptor limits scaled for 4 GB
+kern.maxproc=4096
+kern.maxfiles=16384
+
+# Shared Memory (SysV SHM) limits scaled for 4 GB RAM (2 GB max SHM allocation)
+# 524288 pages @ 4KB = 2 GB max total shared memory
+kern.shminfo.shmall=524288
+kern.shminfo.shmmax=1073741824
+kern.shminfo.shmmni=1024
+kern.shminfo.shmseg=1024
+
+# Semaphores
+kern.seminfo.semmns=4096
+kern.seminfo.semmni=1024
+
+# Network socket listen queue
+kern.somaxconn=1024
 #+end_src
 
 ** networking
