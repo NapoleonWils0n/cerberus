@@ -7,6 +7,60 @@
 [[https://www.openbsdhandbook.com/]]
 
 ** install
+*** openbsd download
+
+[[https://www.openbsd.org/faq/faq4.html]]
+
+Download the latest version of Openbsd
+
+#+begin_src sh
+wget 'https://cdn.openbsd.org/pub/OpenBSD/7.9/amd64/install79.img'
+#+end_src
+
+**** Freebsd dd 
+
+Plug in the usb thumb drive 
+
+Find the disk name
+
+#+begin_src sh
+geom disk list
+#+end_src
+
+In my case the thumb drive is da0
+
+#+begin_src sh
+doas dd if=install*.img of=/dev/da0 bs=1M
+#+end_src
+
+use camcontrol to eject the drive
+
+#+begin_src sh
+doas camcontrol eject da0
+#+end_src
+
+**** Linux dd 
+
+Plug in the usb thumb drive 
+
+Find the disk name
+
+#+begin_src sh
+lsblk
+#+end_src
+
+In my case the thumb drive is sda
+
+#+begin_src sh
+doas dd if=install*.img of=/dev/sda bs=1M
+#+end_src
+
+**** Boot the Mac
+
+Plug in the usb thumb drive power on the mac and press alt
+
+Select the Openbsd partition which should be the one on the far right
+
 *** set up
 
 press i for install
