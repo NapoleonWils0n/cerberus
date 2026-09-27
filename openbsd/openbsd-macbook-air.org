@@ -850,6 +850,30 @@ change shell
 chsh -s /usr/local/bin/zsh
 #+end_src
 
+*** create the xdg directories
+
+Create the directories for the xdg settings, the mnt directory to mount an encrypted disk images.
+
+And the torrents directories for qbittorrent.
+
+#+begin_src sh
+mkdir -p "${HOME}"/{bin,desktop,documents,Downloads,mnt,music,pictures,video,torrents/{complete,downloading}}
+#+end_src
+
+*** change the directory permissions 
+
+change the directory permissions on the home directory to 700
+
+#+begin_src sh
+chmod 700 "${HOME}"
+#+end_src
+
+change the directory permissions on the subdirectories in home to 700
+
+#+begin_src sh
+chmod 700 "${HOME}"/{bin,desktop,documents,Downloads,mnt,music,pictures,video,torrents}
+#+end_src
+
 ** system configuration
 *** apmd
 
