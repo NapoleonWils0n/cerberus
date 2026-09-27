@@ -1,0 +1,9 @@
+#+STARTUP: showall
+* resize transparent svg
+
+#+begin_src sh
+magick -density 300 OpenBSD_Logo_-_Cartoon_Puffy_with_textual_logo_below.svg \
+-background white -alpha remove -alpha off \
+-resize 1280x720 -gravity center -extent 1280x720 \
+thumbnail.png
+#+end_src
