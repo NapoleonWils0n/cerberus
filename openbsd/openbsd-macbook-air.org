@@ -605,6 +605,12 @@ default-result-background-padding = 4
 ** desktop
 *** keyboard
 **** xkb
+***** create the xkb directories
+
+#+begin_src sh
+mkdir -p ~/.config/xkb/{compat,keycodes,rules,symbols,types}
+#+end_src
+
 ***** rules
 ****** evdev
 
@@ -811,7 +817,7 @@ doas pkg_delete -an
 Remove them only after the preview is acceptable
 
 #+begin_src sh
-doas pkg_delete -an
+doas pkg_delete -a
 #+end_src
 
 **** create a list of manually installed packages
@@ -823,7 +829,7 @@ pkg_info -mz > openbsd-packages.txt
 installed the packages
 
 #+begin_src sh
-doas pkg_add -l installed-package-stems.txt
+doas pkg_add -l openbsd-packages.txt
 #+end_src
 
 *** packages
@@ -903,14 +909,6 @@ staff:\
 	:tc=default:
 #+end_src
 
-[[https://oneofus.la/have-emacs-will-hack/2018-05-28-lispm-keyboard-layout-openbsd-console.html]]
-
-#+begin_src conf
-default:\
-	:setenv=LANG=en_GB.UTF-8,LC_CTYPE=en_GB.UTF-8,LC_COLLATE=C,LC_TIME=en_GB.UTF-8,LC_NUMERIC=en_GB.UTF-8,LC_MONETARY=en_GB.UTF-8,LC_MESSAGES=en_GB.UTF-8:\
-	:capability...
-#+end_src
-
 *** ssh
 
 #+begin_src sh
@@ -971,7 +969,7 @@ kern.somaxconn=1024
 check the wifi adaptors name with ifconfig
 
 #+begin_src sh
-iconfig
+ifconfig
 #+end_src
 
 in my case its
@@ -1249,6 +1247,20 @@ doas pfctl -f /etc/pf.conf
 ** applications
 *** mpd
 
+create the mpd directory and files
+
+#+begin_src sh
+mkdir -p ~/.config/mpd
+#+end_src
+
+#+begin_src sh
+mkdir -p ~/.config/mpd/playlists
+#+end_src
+
+#+begin_src sh
+touch ~/.config/mpd/{mpd.conf,mpd.db,mpd.log,mpd.pid,mpdstate,socket}
+#+end_src
+
 enable mpd and run as our user with our config
 
 #+begin_src sh
@@ -1286,6 +1298,12 @@ start mpd without it being enabled
 
 #+begin_src sh
 doas rcctl -f start mpd
+#+end_src
+
+stop mpd without it being enabled 
+
+#+begin_src sh
+doas rcctl -f stop mpd
 #+end_src
 
 *** syncthing
@@ -1354,6 +1372,12 @@ start syncthing without it being enabled
 
 #+begin_src sh
 doas rcctl -f start syncthing
+#+end_src
+
+stop syncthing without it being enabled 
+
+#+begin_src sh
+doas rcctl -f start stop
 #+end_src
 
 *** mpv
