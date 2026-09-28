@@ -134,3 +134,21 @@ doas camcontrol eject da0
 doas zpool import backup
 #+end_src
 
+** destroy drive and start again
+*** Destroy the ZFS Pool
+
+#+begin_src sh
+doas zpool destroy backup
+#+end_src
+
+*** Clear the Partition Table on da0
+
+#+begin_src sh
+doas gpart destroy -F da0
+#+end_src
+
+*** Zero Out corrupt/residual ZFS Labels 
+
+#+begin_src sh
+doas dd if=/dev/zero of=/dev/da0 bs=1M count=10
+#+end_src
