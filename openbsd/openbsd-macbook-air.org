@@ -1546,6 +1546,177 @@ Permanently enable video recording for the webcam
 echo "kern.video.record=1" | doas tee -a /etc/sysctl.conf
 #+end_src
 
+** base system patching with syspatch
+*** Applying Patches
+
+To fetch and apply all available binary patches for the current release:
+
+#+begin_src sh
+doas syspatch
+#+end_src
+
+*** Checking for Available Patches
+
+To check whether any patches are available without applying them, use the -c (check) flag:
+
+#+begin_src sh
+doas syspatch -c
+#+end_src
+
+This lists unapplied patches without installing them.
+
+Inspect the output to determine which patches are available.
+
+*** Viewing Installed Patches
+
+To list all currently applied patches:
+
+#+begin_src sh
+doas syspatch -l
+#+end_src
+
+Each entry corresponds to a binary patch matching an official erratum.
+
+Patches are stored under /var/syspatch/.
+
+*** Removing a Patch
+
+To revert the most recently installed binary patch:
+
+#+begin_src sh
+doas syspatch -r
+#+end_src
+
+*** Rebooting After Patches
+
+If a patch modifies the kernel or other early-boot components, syspatch will display:
+
+#+begin_example
+Relinking to create unique kernel... done; reboot to load the new kernel
+#+end_example
+
+It is safe to reboot after any syspatch run if unsure:
+
+#+begin_src sh
+doas reboot
+#+end_src
+
+** Installing Firmware
+
+To install all required firmware files for the currently running system:
+
+#+begin_src sh
+doas fw_update
+#+end_src
+
+*** Updating Firmware After an Upgrade 
+
+After a system upgrade (via sysupgrade or manual installation), firmware files must be updated to match the new kernel. This is handled automatically at first boot: fw_update is invoked by the system if any required firmware is missing or incompatible.
+
+To manually ensure that all firmware is current:
+
+#+begin_src sh
+doas fw_update
+#+end_src
+
+*** Verifying Installed Firmware 
+
+Installed firmware files are located in:
+
+etc/firmware/ — contains binary firmware blobs
+/var/db/pkg — records installed packages, including firmware packages
+
+To list the installed firmware:
+
+#+begin_src sh
+doas ls /etc/firmware/
+#+end_src
+
+*** Removing Unused Firmware
+
+To remove firmware that is no longer needed:
+
+#+begin_src sh
+doas fw_update -d
+#+end_src
+
+This deletes firmware that is not required by a detected driver.
+
+Use fw_update -dn first to preview the changes.
+
+#+begin_src sh
+doas fw_update -dn
+#+end_src
+
+** System Upgrades with sysupgrade
+
+The OpenBSD base system is released twice per year. Upgrading to OpenBSD 7.9 from the preceding release can be performed automatically using the sysupgrade(8) utility. This tool automates fetching and installing the next release; administrators must still complete the release-specific preparation and post-upgrade instructions.
+
+sysupgrade(8) supports release upgrades and snapshot upgrades. It does not apply binary patches to an installed release; use syspatch(8) for that task.
+
+Before upgrading, back up the system and read the release-specific upgrade guide . Check available disk space and any configuration or package changes required for that release. Supported release upgrades proceed one release at a time.
+
+*** Performing an Upgrade
+
+To upgrade to the next available release:
+
+#+begin_src sh
+doas sysupgrade
+#+end_src
+
+This command performs the following operations:
+
+Downloads all install sets for the new release from the configured mirror
+Verifies their integrity
+Reboots into a temporary upgrade kernel
+Installs the new sets in place
+Reboots into the upgraded system
+
+During this process, no manual interaction is required unless custom disk layouts or system configurations are in use. A reboot is always required to complete the upgrade.
+
+*** Upgrading to a Specific Version
+
+On a release system, sysupgrade normally selects the next release. To specify a target release:
+
+#+begin_src sh
+doas sysupgrade -R 7.9
+#+end_src
+
+Only upgrades to the immediately following release are supported.
+
+For a system several releases behind, perform and complete each intermediate upgrade.
+
+*** Post-Upgrade Actions
+
+After the system boots into the new release, the following maintenance tasks are triggered automatically:
+
+fw_update(8) runs to install or update firmware matching the new kernel
+sysmerge(8) is run to reconcile configuration files in /etc
+
+Run sysmerge(8) to handle configuration changes that could not be merged automatically. Follow any file-removal instructions in the release-specific upgrade guide. Then update third-party packages with pkg_add(1) and apply available binary patches with syspatch(8) :
+
+Review configuration changes that need manual handling
+
+#+begin_src sh
+doas sysmerge
+#+end_src
+
+Update third-party packages for the new release
+
+#+begin_src sh
+doas pkg_add -u
+#+end_src
+
+Apply available binary patches to the base system
+
+#+begin_src sh
+doas syspatch
+#+end_src
+
+Restart affected services after updating packages.
+
+Reboot if a binary patch requests it, then verify the running system. The recording includes that final reboot and verification.
+
 ** ports
 
 [[https://www.openbsd.org/faq/ports/ports.html]]
