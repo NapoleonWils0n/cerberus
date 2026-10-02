@@ -1,0 +1,16 @@
+#+STARTUP: showall
+* csv to markdown python
+
+#+begin_src python
+python3 -c '
+import csv, sys
+reader = csv.reader(sys.stdin)
+headers = next(reader, None)
+for row in reader:
+    if not row: continue
+    print(f"## {row[0]}")
+    for h, val in zip(headers[1:], row[1:]):
+        print(f"{h}: {val}")
+    print()
+' < input.csv > output.md
+#+end_src
