@@ -1,0 +1,14 @@
+#+STARTUP: showall
+* awk split text on period
+
+split text on a period
+
+#+begin_src sh
+awk '{for(i=1;i<=NF;i++) if($i~/\.$/) print $i; else printf "%s ", $i}' input.txt
+#+end_src
+
+split text on a period and add a newline after each period
+
+#+begin_src sh
+awk '{for(i=1;i<=NF;i++) if($i~/\.$/) print $i "\n"; else printf "%s ", $i}' input.txt
+#+end_src
