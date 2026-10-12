@@ -123,7 +123,7 @@ Pipewire Makefile for Wayland wlroots
 # PHONY
 #===============================================================================
 
-.PHONY: all clean pipwire_start
+.PHONY: all clean pipewire_start
 
 
 #===============================================================================
