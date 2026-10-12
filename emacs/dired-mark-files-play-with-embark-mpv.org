@@ -1,0 +1,24 @@
+#+STARTUP: showall
+* dired mark file and play with embark and mpv
+
+open a directory of video files with dired
+
+mark all the file by pressing asterix and then period
+
+#+begin_example
+* .
+#+end_example
+
+enter the file extension for the video to mark the files
+
+run embark-act to act on all the files by pressing ctrl comman
+
+#+begin_example
+ctrl ,
+#+end_example
+
+add all the video files to a mpv playlist and play them by pressing l
+
+#+begin_example
+l
+#+end_example
