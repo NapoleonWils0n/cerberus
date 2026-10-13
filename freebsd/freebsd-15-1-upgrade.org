@@ -785,6 +785,30 @@ Poudriere: {
 }
 #+end_src
 
+*** ethernet adaptor fix
+
+im using a ethernet adaptor and it didnt show up with ifconfig
+
+heres the fix
+
+start devd
+
+#+begin_src sh
+service devd start
+#+end_src
+
+bring up the ethernet interface
+
+#+begin_src sh
+ifconfig ue0 up
+#+end_src
+
+use dhclient to get and ip address
+
+#+begin_src sh
+dhclient ue0
+#+end_src
+
 *** Update your local package database
 
 Ensure your local pkg cache is completely synchronized with the upstream FreeBSD repositories:
