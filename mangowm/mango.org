@@ -4,25 +4,47 @@
 
 [[https://mangowm.github.io/]]
 
+[[https://mangowm.github.io/docs/installation/#building-from-source]]
+
 [[https://github.com/mangowm/mangobar]]
 
-** install
+** packages
 
 #+begin_src sh
-doas pkg install mango mangobar
+doas pkg install mangobar git meson ninja pkgconf wlroots020 wayland xwayland wayland-protocols libinput libdrm libxkbcommon pixman libdisplay-info libliftoff hwdata seatd pcre2 pango libcjson libxcb
 #+end_src
 
-*** mangowm config
+** swayfx build
 
 #+begin_src sh
-mkdir -p ~/.config/mango
+git clone -b 0.5 https://github.com/wlrfx/scenefx.git
+cd scenefx
+meson setup build -Dprefix=/usr/local
+ninja -C build
+doas ninja -C build install
+#+end_src
+
+** mango build
+
+#+begin_src sh
+git clone https://github.com/mangowm/mango.git
+cd mango
+meson setup build -Dprefix=/usr/local
+ninja -C build
+doas ninja -C build install
+#+end_src
+
+** mango config
+
+#+begin_src sh
+mkdir -p ~/.config/mango/
 #+end_src
 
 #+begin_src sh
-cp /usr/local/etc/mango/config.conf.sample ~/.config/mango/config.conf
+cp /usr/local/etc/mango/config.toml ~/.config/mango/
 #+end_src
 
-*** mangobar config
+** mangobar config
 
 Before using mangobar run the following commands as user:
 
@@ -35,7 +57,7 @@ cp /usr/local/share/mangobar/config.jsonc ~/.config/mangobar/config.jsonc
 cp /usr/local/share/mangobar/style.css ~/.config/mangobar/style.css
 #+end_src
 
-*** mango-start
+** mango-start
 
 #+begin_src sh
 #!/bin/sh
@@ -44,7 +66,7 @@ cp /usr/local/share/mangobar/style.css ~/.config/mangobar/style.css
 exec dbus-run-session mango
 #+end_src
 
-*** check config
+** check config
 
 You can check your configuration for errors without starting mangowm:
 
