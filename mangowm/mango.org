@@ -1,0 +1,53 @@
+#+STARTUP: content
+* mangowm
+** resources
+
+[[https://mangowm.github.io/]]
+
+[[https://github.com/mangowm/mangobar]]
+
+** install
+
+#+begin_src sh
+doas pkg install mango mangobar
+#+end_src
+
+*** mangowm config
+
+#+begin_src sh
+mkdir -p ~/.config/mango
+#+end_src
+
+#+begin_src sh
+cp /usr/local/etc/mango/config.conf.sample ~/.config/mango/config.conf
+#+end_src
+
+*** mangobar config
+
+Before using mangobar run the following commands as user:
+
+#+begin_src sh
+mkdir -p ~/.config/mangobar
+#+end_src
+
+#+begin_src sh
+cp /usr/local/share/mangobar/config.jsonc ~/.config/mangobar/config.jsonc
+cp /usr/local/share/mangobar/style.css ~/.config/mangobar/style.css
+#+end_src
+
+*** mango-start
+
+#+begin_src sh
+#!/bin/sh
+
+# start mango with dbus
+exec dbus-run-session mango
+#+end_src
+
+*** check config
+
+You can check your configuration for errors without starting mangowm:
+
+#+begin_src sh
+mango -c ~/.config/mango/config.conf -p
+#+end_src
