@@ -71,5 +71,5 @@ exec dbus-run-session mango
 You can check your configuration for errors without starting mangowm:
 
 #+begin_src sh
-mango -c ~/.config/mango/config.conf -p
+mango -c ~/.config/mango/config.toml -p
 #+end_src
