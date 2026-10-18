@@ -1,0 +1,26 @@
+#+STARTUP: content
+* referer origin yt-dlp
+** browser
+
+1) open the browser developer tools by pressing F12
+2) open the network inspector
+3) play the video
+4) find and copy the playlist url which may not have a m3u8 extension, it may be called x-mpegurl
+5) Right Click on the .m3u8 request or one of the video segment requests (.ts or .mp4 files).
+6) in the contextual menu select copy and then copy value, copy request headers
+7) paste into a text file
+8) look for the origin and referer
+
+#+begin_example
+Origin: https://example.com
+Referer: https://example.com/
+#+end_example
+   
+** yt-dlp command
+
+add the referer, origin and playlist url below
+
+#+begin_src sh
+yt-dlp --referer "https://example.com/" --add-header "Origin: https://example.com/" "https://example.com/playlist.m3u8" -o example.mkv
+#+end_src
+
