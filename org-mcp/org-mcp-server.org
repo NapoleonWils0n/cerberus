@@ -1,0 +1,72 @@
+#+STARTUP: content
+* org mcp server
+** resources
+
+[[https://github.com/szaffarano/org-mcp-server]]
+
+** cargo build
+
+clone the git repository and build
+
+#+begin_src sh
+git clone https://github.com/szaffarano/org-mcp-server
+cd org-mcp-server
+cargo build --release
+#+end_src
+
+copy the binaries to your bin directory
+
+#+begin_src sh
+cp target/release/org-mcp-server ~/bin
+cp target/release/org-cli ~/bin
+#+end_src
+
+** config
+
+create the config directory
+
+#+begin_src sh
+mkdir -p ~/.config/org-mcp/
+#+end_src
+
+create the config file
+
+#+begin_src sh
+vi ~/.config/org-mcp/config.toml
+#+end_src
+
+#+begin_src toml
+[org]
+org_directory = "~/git/cerberus"
+org_todo_keywords = ["TODO", "|", "DONE"]
+org_auto_created_property = false
+org_auto_closed_timestamp = false
+
+[logging]
+level = "info"
+file = "~/.local/share/org-mcp-server/logs/server.log"
+
+[cli]
+default_format = "plain"  # plain | json
+#+end_src
+
+** emacs mcp
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; mcp server
+;; ----------------------------------------------------------------------------------
+
+(use-package mcp
+  :after gptel
+  :custom
+  (mcp-hub-servers 
+   `(("searxng" . (
+      :command "/home/djwilcox/bin/mcp-searxng-enhanced"
+      ))
+     ("org-mode" . (
+      :command "/home/djwilcox/bin/org-mcp-server"
+      ))))
+  :config
+  (require 'mcp-hub))
+#+end_src
