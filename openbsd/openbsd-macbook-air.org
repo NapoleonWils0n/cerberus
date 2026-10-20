@@ -1717,6 +1717,29 @@ Restart affected services after updating packages.
 
 Reboot if a binary patch requests it, then verify the running system. The recording includes that final reboot and verification.
 
+** booting into single user mode
+
+at the openbsd boot loader enter the following to boot to single user mode
+
+#+begin_src sh
+boot -s
+#+end_src
+
+press enter to use sh as the shell
+
+mount the file system as write
+
+#+begin_src sh
+mount -uw /
+mount -a
+#+end_src
+
+export the term to use vi to edit files
+
+#+begin_src sh
+export TERM=vt220
+#+end_src
+
 ** ports
 
 [[https://www.openbsd.org/faq/ports/ports.html]]
