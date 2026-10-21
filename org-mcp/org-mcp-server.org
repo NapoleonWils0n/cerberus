@@ -141,7 +141,7 @@ default_format = "plain"  # plain | json
 When the user asks to find an org file about a topic, use `org-search` to locate it.
 Automatically prepend `~/git/cerberus/` to the returned relative file path and print the file path,
 then read the text of that file using the read_file tool.
-And follow any instructions the user gives you in regard to the file")
+After reading, if the user requested a specific section or steps, output that section's exact text verbatim rather than summarizing.")
                '(web-search . "Use the mcp-searxng tools to answer the prompt.")))
 
 
@@ -219,6 +219,29 @@ And follow any instructions the user gives you in regard to the file")
                      :type string
                      :description "Path to the file to read. Supports relative paths and ~."))
  :category "filesystem")
+
+
+;; ----------------------------------------------------------------------------------
+;; gptel-tools search directories
+;; ----------------------------------------------------------------------------------
+
+(gptel-make-tool
+ :function (lambda (path query)
+             (let* ((resolved-path (expand-file-name path))
+                    (files (directory-files-recursively resolved-path "" t)))
+               (seq-filter (lambda (file)
+                             (string-match-p (regexp-quote query) file))
+                           files)))
+ :name "search_directories"
+ :description "Search for files within a given directory path that match a query string."
+ :args '((:name "path"
+          :type string
+          :description "The directory path to look inside (supports ~, absolute paths, or relative paths).")
+         (:name "query"
+          :type string
+          :description "The subject or keyword to search for."))
+ :category "filesystem")
+
 
 ;; ----------------------------------------------------------------------------------
 ;; gptel-tools edit file
