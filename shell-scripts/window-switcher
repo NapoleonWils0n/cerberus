@@ -1,0 +1,4 @@
+#!/bin/sh
+
+input=$(wlrctl toplevel list | awk -F': ' '{print $2}' | tofi --output="$(mmsg get cursorpos | jq -r '.monitor')")
+wlrctl toplevel activate title:"${input}"
