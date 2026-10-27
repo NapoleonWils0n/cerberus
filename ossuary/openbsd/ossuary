@@ -1,0 +1,127 @@
+#!/bin/sh
+
+#===============================================================================
+# ossuary
+#
+# openbsd encrypted container
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+echo "\
+$(basename "$0") -m mount -f container
+$(basename "$0") -m umount"
+exit 1
+}
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+ROOT_ERR="$(basename "$0") must be run as root"
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+
+
+#===============================================================================
+# check if script is run as root
+#===============================================================================
+
+[ "$(id -u)" -eq 0 ] || usage "${ROOT_ERR}"
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# mount point
+mount_point='/home/djwilcox/mnt'
+
+# vnode and device names
+vnode='vnd0'
+device='sd2'
+
+# derived partition nodes
+vnode_partition="${vnode}a"
+device_partition="/dev/${device}a"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':m:f:h' opt
+do
+  case ${opt} in
+     m) action="${OPTARG}";;
+     f) container="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# mount function
+mount_container () {
+    # check if container exists
+    [ -n "${container}" ] || usage "Container path required (-f)"
+    [ -f "${container}" ] || usage "Container file not found"
+
+    # check if mount point exists
+    [ -d "${mount_point}" ] || usage "Mount point directory does not exist: ${mount_point}"
+
+    # attach the container to a vnd loopback device
+    vnconfig "${vnode}" "${container}" || exit 1
+
+    # Attach the volume
+    bioctl -c C -l "${vnode_partition}" softraid0 || { vnconfig -u "${vnode}"; exit 1; }
+
+    # mount the device
+    mount "${device_partition}" "${mount_point}" || { bioctl -d "${device}"; vnconfig -u "${vnode}"; exit 1; }
+
+}
+
+# umount function
+umount_container () {
+    # check if mount point exists
+    [ -d "${mount_point}" ] || usage "Mount point directory does not exist: ${mount_point}"
+
+    # unmount device
+    umount "${mount_point}" || exit 1
+
+    # detach the softraid crypto volume
+    bioctl -d "${device}"
+
+    # unconfigure the loopback device
+    vnconfig -u "${vnode}"
+}
+
+#===============================================================================
+# mount and umount case statement
+#===============================================================================
+
+case "${action}" in
+    mount) mount_container;;
+    umount) umount_container;;
+    *) usage;;
+esac
