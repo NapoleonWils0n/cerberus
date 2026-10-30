@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# switch audio devices
+usage="usage: $(basename "$0") [ speakers | headphones | usb | current ]"
+
+# check to see if script was run as root
+[ "$(id -u)" = "0" ] || { printf "%s\n" "$0 must be run as root"; exit 1; }
+
+# check if 1 argument is passed to the script
+[ $# = 1 ] || { printf "%s\n" "$usage"; exit 1; }
+
+# case statement
+input="$1"
+case "$input" in
+  speakers)
+        sysctl hw.snd.default_unit=0
+        break;;
+  headphones)
+        sysctl hw.snd.default_unit=1
+        break;;
+  usb)
+        sysctl hw.snd.default_unit=2
+        break;;
+  current)
+        cat /dev/sndstat
+        break;;
+  *)    printf "%s\n" "$usage";;
+esac

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# check number of args
+[ $# -gt 0 ] || exit
+
+# infile, infile name
+infile="${1}"
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+output="${infile_name}.json"
+
+# ogr2ogr
+ogr2ogr -f geojson "${output}" "${infile}" -oo X_POSSIBLE_NAMES=longitude -oo Y_POSSIBLE_NAMES=latitude -oo KEEP_GEOM_COLUMNS=NO

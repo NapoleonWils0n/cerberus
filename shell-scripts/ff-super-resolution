@@ -1,0 +1,107 @@
+#!/bin/sh
+
+#===============================================================================
+# ffmpeg super resolution
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# ffmpeg super resolution
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -o outfile.mov
+-i infile.(mp4|mkv|mov|m4v|webm)
+-o outfile.mov :optional agument # if option not provided defaults to infile-name-super-resolution-date-time"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# defaults for variables if not defined
+outfile_default="${infile_name}-super-resolution-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+
+#===============================================================================
+# functions
+#===============================================================================
+
+# selinux fix
+# create the /tmp/data directory and set permissions
+# mkdir -p /tmp/data
+# chmod 777 /tmp/data
+
+# we then map /tmp/data to /data in the docker container
+# /tmp/data:/data
+
+# if you arenet using selinunx change /tmp/data:/data to "$PWD":/data below and omit creating the directory
+
+superresolution () {
+podman run \
+--rm \
+--gpus all -u "$(id -u)":"$(id -g)" \
+--privileged -v /tmp/data:/data -w /data \
+-i miratmu/ffmpeg-tensorflow \
+-hide_banner \
+-stats -v panic \
+-i "${infile}" \
+-filter_complex '[0:v] format=pix_fmts=yuv420p, extractplanes=y+u+v [y][u][v]; [y] sr=dnn_backend=tensorflow:scale_factor=2:model=/models/espcn.pb [y_scaled]; [u] scale=iw*2:ih*2 [u_scaled]; [v] scale=iw*2:ih*2 [v_scaled]; [y_scaled][u_scaled][v_scaled] mergeplanes=0x001020:yuv420p [merged]' \
+-map '[merged]' -map '0:a' \
+-sws_flags lanczos \
+-c:v libx264 -crf 17 \
+-c:a copy \
+-pix_fmt yuv420p -movflags +faststart \
+-f mp4 \
+"${outfile:=${outfile_default}}"
+}
+
+# run the superresolution function
+superresolution "${infile}"

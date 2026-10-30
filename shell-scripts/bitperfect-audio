@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# toggle bitperfect audio off and on
+usage="usage: $(basename "$0") [ on | off | current ]"
+
+#device="dev.pcm.0.bitperfect" # speakers
+#device="dev.pcm.1.bitperfect" # headphones
+device="dev.pcm.2.bitperfect" # usb
+
+# check to see if script was run as root
+[ "$(id -u)" = "0" ] || echo "$0 must be run as root"; exit 1; ]
+
+# check if 1 argument is passed to the script
+[ $# = 1 ] || { echo "$usage"; exit 1; }
+
+# case statement
+input="$1"
+case "$input" in
+  on)
+        sysctl ${device}=1
+        break;;
+  off)
+        sysctl ${device}=0
+        break;;
+  current)
+        bitperfect=$(sysctl $device | awk {'print $2}')
+	[ "$bitperfect" = 0 ] && echo "bitperfect audio off" || echo "bitperfect audio on"
+        break;;
+  *)    echo "$usage";;
+esac
