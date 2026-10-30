@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# punch send audio links to mpd
+
+# script usage
+usage()
+{
+echo "\
+$(basename "$0") -i url"
+exit 2
+}
+
+# error messages
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+# mpd host socket
+host="${HOME}/.config/mpd/socket"
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# yt function
+audio () {
+    if [ -z "$(mpc --host="${host}" current)" ]; then # nothing playing
+        if [ -z "$(mpc --host="${host}" playlist)" ]; then # playlist empty
+           mpc --host="${host}" add "${input}"
+           mpc --host="${host}" play 
+	   notify-send "Now Playing ♫" "${input}"
+	else # playlist not empty so clear add url and play
+           mpc --host="${host}" clear
+	   mpc --host="${host}" add "${input}"
+           mpc --host="${host}" play 
+	   notify-send "Now Playing ♫" "${input}"
+	fi
+    else # audio playing insert url and play next
+        mpc --host="${host}" add "${input}" 
+	notify-send "Queuing ♫" "${input}" 2>/dev/null
+    fi
+}
+
+# run the audio function with the url
+audio "${input}"
