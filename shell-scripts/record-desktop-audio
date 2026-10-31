@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# record desktop audio with sox and virtual oss
+
+sox -r 48k -b 16 -v 0.99 -t oss /dev/dsp -t wav out.wav
