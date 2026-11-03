@@ -206,11 +206,11 @@ use whisper-server
   (setq whisper--ffmpeg-input-device "/dev/dsp3")
 
   ;; set the recording directory
-  (defvar my-whisper-dir (expand-file-name "~/video/whisper/"))
-  
+  (defvar my-whisper-dir (expand-file-name "/tmp/whisper/"))
+
   (defun my-whisper-set-temp-filename ()
     "Generate a unique timestamped filename inside the custom archive folder."
-    ;; Create the directory dynamically if it doesn't exist yet
+    ;; Create the directory dynamically if it doesn't exist yet (nil parents=t)
     (unless (file-directory-p my-whisper-dir)
       (make-directory my-whisper-dir t))
     (setq whisper--temp-file (expand-file-name
