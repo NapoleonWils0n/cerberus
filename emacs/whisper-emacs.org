@@ -183,9 +183,9 @@ cp sh.rnnn ~/.local/share/rnnoise
 use whisper-server
 
 #+begin_src emacs-lisp
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; whisper-cpp
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 ;; note: run the following command to install the package
 ;; M-x package-vc-install RET https://github.com/sachac/whisper.el RET
@@ -254,17 +254,17 @@ use whisper-server
 (setq whisper-server-mode 'local)) ;; whisper use package end
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; set whisper output directory
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (with-eval-after-load 'whisper
   (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; run commands or insert text
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (with-eval-after-load 'whisper
   (setq whisper-insert-text-at-point
@@ -272,9 +272,9 @@ use whisper-server
           insert)))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; Bind C-z globally to whisper-run, overriding Evil mode's default binding
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd "C-z") 'whisper-run)
@@ -283,9 +283,9 @@ use whisper-server
   (define-key evil-motion-state-map (kbd "C-z") 'whisper-run))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; handle whisper commands with whisper-server
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (defun my-whisper-handle-commands (text)
   (interactive (list (if (region-active-p)
@@ -321,16 +321,16 @@ use whisper-server
     (or text "")))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; Load default bookmarks so bookmark-alist is populated
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (bookmark-maybe-load-default-file)
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; my whisper commands
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (defvar my-whisper-commands
   `(("commands" . commands-sidebar)
@@ -340,28 +340,31 @@ use whisper-server
     ("save buffer" . save-buffer)
     ("kill buffer" . kill-buffer)
     ("mark paragraph" . mark-paragraph)
+    ("dictionary" . dictionary-lookup-definition)
+    ("spelling" . ispell)
+    ("undo" . undo-tree-visualize)
     ("mpv" . hydra-mpv/body)
     ("open video" . dired-find-file-mpv)
-    ("status" . magit-status)
     ("expand" . expand-region)))
 
 
-;;----------------------------------------------------------------------------------
-;; open side window and list voice commands and actions
-;;----------------------------------------------------------------------------------
+
+;; ----------------------------------------------------------------------------------
+;; open side window and list voice commands
+;; ----------------------------------------------------------------------------------
+
 
 (defun commands-sidebar ()
-  "Display available Whisper voice commands in a neat side window on the right."
+  "Display available Whisper voice commands in a simple side window on the right."
   (interactive)
   (let ((buf (get-buffer-create "*Whisper Commands*")))
     (with-current-buffer buf
       (let ((inhibit-read-only t))
         (erase-buffer)
-        (insert "╔════════════════════════════╦════════════════════════════╗\n")
-        (insert "║ Phrase                     ║ Action                     ║\n")
-        (insert "╠════════════════════════════╬════════════════════════════╣\n")
+        (insert "Voice Commands\n")
+        (insert "--------------\n")
         
-        ;; Sort commands so bookmarks appear at the very bottom
+        ;; Sort commands so bookmarks appear at the bottom
         (let ((sorted-commands
                (sort (copy-sequence my-whisper-commands)
                      (lambda (a b)
@@ -370,33 +373,17 @@ use whisper-server
                          (and (not a-bm) b-bm))))))
           
           (dolist (cmd sorted-commands)
-            (let* ((phrase (car cmd))
-                   (action-fn (cdr cmd))
-                   (action-str
-                    (cond
-                     ((symbolp action-fn) (symbol-name action-fn))
-                     ((assoc phrase bookmark-alist) (format "bookmark-jump \"%s\"" phrase))
-                     (t "function")))
-                   (line (format "║ %-26s ║ %-26s ║\n" 
-                                 (truncate-string-to-width phrase 26 nil nil t)
-                                 (truncate-string-to-width action-str 26 nil nil t))))
-              (insert line))))
+            (insert (car cmd) "\n")))
         
-        (insert "╚════════════════════════════╩════════════════════════════╝\n")
-        
-        ;; Ensure it opens at the top of the buffer
         (goto-char (point-min))
-        
-        (special-mode))
+        (special-mode)))
       
-      (display-buffer-in-side-window
-       buf '((side . right)
-             (window-width . 0.45))))))
+      ;; Open via display-buffer so display-buffer-alist handles the 20% width rule
+      (display-buffer buf)))
 
-
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (dolist (bm bookmark-alist)
   (let ((bm-name (car bm)))
@@ -404,9 +391,9 @@ use whisper-server
                  (cons bm-name (lambda () (interactive) (bookmark-jump bm-name))))))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; fix common voice errors
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (defvar my-common-edits
   '(
@@ -459,17 +446,17 @@ use whisper-server
           (replace-match correction t t))))))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; fix common errors
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (with-eval-after-load 'whisper
   (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
 
 
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 ;; display recording icons in the buffer
-;;----------------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------------
 
 (defvar whisper--current-overlay nil
   "Overlay to show whisper status at point.")
