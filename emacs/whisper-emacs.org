@@ -184,16 +184,40 @@ use whisper-server
 
 #+begin_src emacs-lisp
 ;; ----------------------------------------------------------------------------------
+;; phony
+;; ----------------------------------------------------------------------------------
+
+;; clone the phony repository
+;; mkdir -p ~/git/sacha
+;; cd ~/git/sacha
+;; git clone https://github.com/sachac/phony.el.git
+
+(use-package phony
+  :load-path "~/git/sacha/phony.el"
+  :init
+  (server-mode 1)
+	(setq phony-export-function #'ignore)  ; don't actually use Talon for the recognition
+	(setq phony-parser-literal-comparator #'sacha-phony-compare-literal)
+  :config
+  (phony-mode 1))
+
+
+;; phony additional commands
+;; ~/.config/emacs/lisp/sacha-phony.el
+(require 'sacha-phony) 
+
+;; ----------------------------------------------------------------------------------
 ;; whisper-cpp
 ;; ----------------------------------------------------------------------------------
 
-;; note: run the following command to install the package
-;; M-x package-vc-install RET https://github.com/sachac/whisper.el RET
+;; clone the whisper repository
+;; mkdir -p ~/git/sacha
+;; cd ~/git/sacha
+;; git clone https://github.com/sachac/whisper.el.git
 
 (use-package whisper
   ;; Leverage the built-in package-vc features to clone the exact fork branch
-  :vc (:url "https://github.com/sachac/whisper.el"
-       :branch "master")
+  :load-path "~/git/sacha/whisper.el"
   :ensure t
   :config
   (setq whisper-install-whispercpp nil)
@@ -253,235 +277,17 @@ use whisper-server
 
 (setq whisper-server-mode 'local)) ;; whisper use package end
 
-
-;; ----------------------------------------------------------------------------------
-;; set whisper output directory
-;; ----------------------------------------------------------------------------------
-
-(with-eval-after-load 'whisper
-  (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
-
-
-;; ----------------------------------------------------------------------------------
-;; run commands or insert text
-;; ----------------------------------------------------------------------------------
-
-(with-eval-after-load 'whisper
-  (setq whisper-insert-text-at-point
-        '(my-whisper-handle-commands
-          insert)))
-
-
-;; ----------------------------------------------------------------------------------
-;; Bind C-z globally to whisper-run, overriding Evil mode's default binding
-;; ----------------------------------------------------------------------------------
-
-(with-eval-after-load 'evil
-  (define-key evil-normal-state-map (kbd "C-z") 'whisper-run)
-  (define-key evil-insert-state-map (kbd "C-z") 'whisper-run)
-  (define-key evil-visual-state-map (kbd "C-z") 'whisper-run)
-  (define-key evil-motion-state-map (kbd "C-z") 'whisper-run))
-
-
-;; ----------------------------------------------------------------------------------
-;; handle whisper commands with whisper-server
-;; ----------------------------------------------------------------------------------
-
-(defun my-whisper-handle-commands (text)
-  (interactive (list (if (region-active-p)
-                         (buffer-substring (region-beginning) (region-end))
-                       (buffer-substring (line-beginning-position) (line-end-position)))))
-  ;; Clean up leading spaces, quotes, or punctuation returned by the server
-  (setq text (replace-regexp-in-string "^[[:space:]\"',.!?]+" "" text))
-  (let (done entry func num-args)
-    (while (and text (not (string= text "")) (not done))
-      (setq entry
-            (seq-find
-             (lambda (row)
-               (string-match (format "^\\(?:%s\\)\\>" (car row)) (downcase text)))
-             my-whisper-commands))
-      (if (null entry)
-          (setq done t)
-        (setq func (cdr entry))
-        (setq num-args (and func (func-arity func)))
-        (cond
-         ((commandp func)
-          (setq text (replace-match "" nil nil text))
-          (call-interactively func))
-         ((and (functionp func) (>= (cdr num-args) 1))
-          (unless (match-string 1 text)
-            (setq text (replace-match "" nil nil text)))
-          (setq text (funcall func (or (match-string 1 text) text))))
-         ((functionp func)
-          (setq text (replace-match "" nil nil text))
-          (funcall func))))
-      (when (string-match "^[[:space:]\\.?,]+\\(?:and \\)?" text)
-        (setq text (replace-match "" nil nil text))))
-    (when (string= text "") (setq text nil))
-    (or text "")))
-
-
-;; ----------------------------------------------------------------------------------
-;; Load default bookmarks so bookmark-alist is populated
-;; ----------------------------------------------------------------------------------
-
-(bookmark-maybe-load-default-file)
-
-
-;; ----------------------------------------------------------------------------------
-;; my whisper commands
-;; ----------------------------------------------------------------------------------
-
-(defvar my-whisper-commands
-  `(("commands" . commands-sidebar)
-    ("scroll up" . scroll-down-command)
-    ("scroll down" . scroll-up-command)
-    ("mark buffer" . mark-whole-buffer)
-    ("save buffer" . save-buffer)
-    ("kill buffer" . kill-buffer)
-    ("mark paragraph" . mark-paragraph)
-    ("dictionary" . dictionary-lookup-definition)
-    ("spelling" . ispell)
-    ("undo" . undo-tree-visualize)
-    ("mpv" . hydra-mpv/body)
-    ("open video" . dired-find-file-mpv)
-    ("expand" . expand-region)))
-
-
-
-;; ----------------------------------------------------------------------------------
-;; open side window and list voice commands
-;; ----------------------------------------------------------------------------------
-
-
-(defun commands-sidebar ()
-  "Display available Whisper voice commands in a simple side window on the right."
-  (interactive)
-  (let ((buf (get-buffer-create "*Whisper Commands*")))
-    (with-current-buffer buf
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (insert "Voice Commands\n")
-        (insert "--------------\n")
-        
-        ;; Sort commands so bookmarks appear at the bottom
-        (let ((sorted-commands
-               (sort (copy-sequence my-whisper-commands)
-                     (lambda (a b)
-                       (let ((a-bm (assoc (car a) bookmark-alist))
-                             (b-bm (assoc (car b) bookmark-alist)))
-                         (and (not a-bm) b-bm))))))
-          
-          (dolist (cmd sorted-commands)
-            (insert (car cmd) "\n")))
-        
-        (goto-char (point-min))
-        (special-mode)))
-      
-      ;; Open via display-buffer so display-buffer-alist handles the 20% width rule
-      (display-buffer buf)))
-
-;; ----------------------------------------------------------------------------------
-;; Dynamically inject all bookmarks from ~/.config/emacs/bookmarks into whisper commands
-;; ----------------------------------------------------------------------------------
-
-(dolist (bm bookmark-alist)
-  (let ((bm-name (car bm)))
-    (add-to-list 'my-whisper-commands
-                 (cons bm-name (lambda () (interactive) (bookmark-jump bm-name))))))
-
-
-;; ----------------------------------------------------------------------------------
-;; fix common voice errors
-;; ----------------------------------------------------------------------------------
-
-(defvar my-common-edits
-  '(
-    ("dotfiles" "dot files")
-    ("changelog" "change log")
-    )
-  "Commonly-misrecognized words or words that need special capitalization.")
-
-(defun my-find-next-fix-point ()
-  (when (re-search-forward
-         (format "\\_<\\(%s\\)\\_>"
-                 (downcase
-                  (string-join
-                   (seq-mapcat
-                    (lambda (o)
-                      (if (listp o)
-                          (if (string= (car o) "") (cdr o) o)
-                        (list o)))
-                    my-common-edits)
-                   "\\|")))
-         nil t)
-    (goto-char (match-beginning 0))
-    (seq-find
-     (lambda (o)
-       (if (listp o)
-           (seq-find (lambda (s)
-                       (save-match-data
-                         (string-match
-                          (format "\\_<%s\\>" (downcase s))
-                          (downcase (match-string 0))))) o)
-         (string= (downcase o) (downcase (match-string 0)))))
-     my-common-edits)))
-
-(defun my-fix-common-errors ()
-  (interactive)
-  (let (done entry correction)
-    (while (and
-            (not done)
-            (setq entry (my-find-next-fix-point)))
-      (setq correction (if (listp entry) (car entry) entry))
-      (if (let ((case-fold-search nil))
-            (looking-at (regexp-quote correction)))
-          (forward-word 1)
-        (if (called-interactively-p 'any)
-            (let* ((c (read-char (format "%s (yn.): " correction))))
-              (cond
-               ((= c ?y) (replace-match correction t t))
-               ((= c ?n) (goto-char (match-end 0)))
-               ((= c ?.) (setq done t))))
-          (replace-match correction t t))))))
-
-
-;; ----------------------------------------------------------------------------------
-;; fix common errors
-;; ----------------------------------------------------------------------------------
-
-(with-eval-after-load 'whisper
-  (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
-
-
-;; ----------------------------------------------------------------------------------
-;; display recording icons in the buffer
-;; ----------------------------------------------------------------------------------
-
-(defvar whisper--current-overlay nil
-  "Overlay to show whisper status at point.")
-
-(advice-add 'whisper--setup-mode-line :override
-  (lambda (command phase)
-    (when whisper-show-progress-in-mode-line
-      (with-current-buffer (or whisper--point-buffer (current-buffer))
-        (if (eq command :show)
-            (let ((pos (point)))
-              (when (and whisper--current-overlay
-                         (overlay-buffer whisper--current-overlay))
-                (delete-overlay whisper--current-overlay))
-              (setq whisper--current-overlay (make-overlay pos pos))
-              (let* ((ind (whisper--mode-line-indicator phase))
-                     (ind-string (cond
-                                   ((stringp ind) ind)
-                                   ((eq (car-safe ind) :eval) (eval (nth 1 ind)))
-                                   (t ""))))
-                ;; Removed the leading space inside the concat
-                (overlay-put whisper--current-overlay 'after-string
-                             (concat ind-string " "))))
-          (when whisper--current-overlay
-            (delete-overlay whisper--current-overlay)
-            (setq whisper--current-overlay nil)))))))
+;; whisper additional commands
+;; ~/.config/emacs/lisp/speech.el
+(require 'whisper-speech) 
 #+end_src
 
+** lisp 
 
+additional lisp files for whisper
+
++ sacha-phony.el
+
++ whisper-speech.el
+
+[[https://github.com/NapoleonWils0n/freebsd-dotfiles-xps/tree/master/.config/emacs/lisp]]
