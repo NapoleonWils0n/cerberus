@@ -1,0 +1,73 @@
+#+STARTUP: content
+* tree sitter org
+** resources
+
+[[https://github.com/Idorobots/tree-sitter-org]]
+
+** packages
+
+freebsd packages
+
+#+begin_src sh
+doas pkg install git llvm tree-sitter-cli
+#+end_src
+
+** tree-sitter-org build
+
+clone the tree-sitter-org git repository
+
+#+begin_src sh
+git clone https://github.com/Idorobots/tree-sitter-org.git
+#+end_src
+
+change into the tree-sitter-org directory
+
+#+begin_src sh
+cd tree-sitter-org
+#+end_src
+
+run tree-sitter generate
+
+#+begin_src sh
+tree-sitter generate --abi latest
+#+end_src
+
+change into the src directory
+
+#+begin_src sh
+cd src
+#+end_src
+
+build libtree-sitter-org.so
+
+#+begin_src sh
+cc -shared -fPIC -O2 -I. parser.c scanner.c -o libtree-sitter-org.so
+#+end_src
+
+*** tree-sitter-org install
+
+create the tree-sitter directory if it doesnt exist
+
+#+begin_src sh
+mkdir -p ~/.config/emacs/tree-sitter
+#+end_src
+
+ccopy the libtree-sitter-org.so into the tree-sitter directory
+
+#+begin_src sh
+cp libtree-sitter-org.so ~/.config/emacs/tree-sitter
+#+end_src
+
+*** emacs init.el
+
+enable a hook for the org tree-sitter mode
+
+add the following code to your emacs init.el
+
+#+begin_src emacs-lisp
+;; org mode hook for tree-sitter-org
+(add-hook 'org-mode-hook
+          (lambda ()
+            (when (treesit-ready-p 'org)
+              (treesit-parser-create 'org))))
+#+end_src
