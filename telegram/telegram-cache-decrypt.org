@@ -1,0 +1,67 @@
+#+STARTUP: content
+* telegram-cache-decrypt
+** information
+
+decrypt telegram-desktop videos
+
+** resources
+
+[[https://github.com/Overmiind/telegram-cache-decrypt]]
+
+** telegram-desktop install freebsd
+
+install telegram-desktop and python3
+
+#+begin_src sh
+doas pkg install telegram-desktop python3
+#+end_src
+
+** telegram-cache-decrypt
+
+clone the git repository
+
+#+begin_src sh
+git clone https://github.com/Overmiind/telegram-cache-decrypt
+#+end_src
+
+change into the git repository
+
+#+begin_src sh
+cd telegram-cache-decrypt
+#+end_src
+
+create a python virtual enviornment
+
+#+begin_src sh
+python3 -m venv tg-decrypt-env
+source tg-decrypt-env/bin/activate
+#+end_src
+
+use pip to install the requirements
+
+#+begin_src sh
+pip install --upgrade pip
+pip install -r requirements.txt
+#+end_src
+
+** usage
+
+change into the git repository
+
+#+begin_src sh
+cd telegram-cache-decrypt
+#+end_src
+
+activate the python virtual enviornment
+
+#+begin_src sh
+source tg-decrypt-env/bin/activate
+#+end_src
+
+run the command to extract the videos to ~/downloads
+
+#+begin_src sh
+python3 tgvideos.py ~/downloads \
+  -c ~/.local/share/TelegramDesktop/tdata/user_data/media_cache \
+  -k ~/.local/share/TelegramDesktop/tdata/key_datas
+#+end_src
