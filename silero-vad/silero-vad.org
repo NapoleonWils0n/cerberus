@@ -1,0 +1,1579 @@
+#+STARTUP: content
+* silero vad freebsd
+** resources
+
+[[https://github.com/snakers4/silero-vad]]
+
+[[https://sachachua.com/blog/2026/01/queue-multiple-transcriptions-with-whisper-el-speech-recognition/]]
+
+[[https://sachachua.com/blog/2026/01/using-silero-voice-activity-detection-to-automatically-queue-multiple-transcriptions-with-natrys-whisper-el/]]
+
+** packages
+
+#+begin_src sh
+doas pkg install py312-onnxruntime py312-soundfile py312-numpy
+#+end_src
+
+py312-numpy used by Imath and is a dependency
+
+** model download 
+
+#+begin_src sh
+curl -L -o silero_vad.onnx https://github.com/snakers4/silero-vad/raw/master/src/silero_vad/data/silero_vad.onnx
+#+end_src
+
+#+begin_src sh
+mkdir -p ~/.local/share/silero
+#+end_src
+
+#+begin_src sh
+cp silero_vad.onnx ~/.local/share/silero
+#+end_src
+
+** speech-input-vad.el
+
+#+begin_src emacs-lisp
+;;; speech-input-vad.el --- Silero voice activity detection  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2026  Sacha Chua
+
+;; Author: Sacha Chua <sacha@sachachua.com>
+;; Keywords: multimedia
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;
+
+;;; Code:
+
+(defvar speech-input-vad-events-process nil)
+(defvar speech-input-vad-events-dir (file-name-directory (or load-file-name (buffer-file-name))))
+(defvar speech-input-vad-events-command
+  `("python3"
+    ,(expand-file-name "vad-events.py" speech-input-vad-events-dir)))
+
+(defvar speech-input-vad-on-end-functions nil)
+(defvar speech-input-vad-on-start-functions nil)
+(defvar speech-input-vad-debug nil "Non-nil means display a message on start and end.")
+
+(defun speech-input-vad-toggle-debug ()
+  "Toggle `speech-input-vad-debug'."
+  (interactive)
+  (setq speech-input-vad-debug (not speech-input-vad-debug))
+  (message (if speech-input-vad-debug
+               "Debugging VAD."
+             "Stopped debugging VAD.")))
+
+(defun speech-input-vad-events-filter (proc string)
+  (cond
+   ((string-match "^START" string)
+    (when speech-input-vad-debug (message "speech start"))
+    (run-hooks 'speech-input-vad-on-start-functions))
+   ((string-match "^END" string)
+    (when speech-input-vad-debug (message "speech stop"))
+    (run-hooks 'speech-input-vad-on-end-functions))))
+
+;;;###autoload
+(defun speech-input-vad-start ()
+  "Start the process if it's not already running."
+  (interactive)
+  (unless (process-live-p speech-input-vad-events-process)
+    (let ((process-environment
+           (cons "AUDIODEV=/dev/dsp3" process-environment)))
+      (setq speech-input-vad-events-process
+            (make-process
+             :name "vad-events"
+             :command speech-input-vad-events-command
+             :buffer (get-buffer-create "*vad-events*")
+             :stderr (get-buffer-create "*vad-events-err*")
+             :filter #'speech-input-vad-events-filter)))))
+
+(defun speech-input-vad-stop ()
+  (interactive)
+  (when (process-live-p speech-input-vad-events-process)
+    (kill-process speech-input-vad-events-process)))
+
+(defun speech-input-vad-stop-recording-once ()
+  (remove-hook 'speech-input-vad-on-end-functions 'speech-input-vad-stop-recording-once)
+  (speech-input-stop-recording))
+
+;;;###autoload
+(defun speech-input-vad-record-one-turn (callback &optional filename)
+  "Call CALLBACK with the filename of the recording."
+  (speech-input-vad-start)
+  (add-hook 'speech-input-vad-on-end-functions 'speech-input-vad-stop-recording-once)
+  (speech-input-start-recording callback filename))
+
+
+(provide 'speech-input-vad)
+;;; speech-input-vad.el ends here
+#+end_src
+
+** silero-vad.el
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
+
+;; ----------------------------------------------------------------------------------
+;; VAD Handlers
+;; ----------------------------------------------------------------------------------
+
+(defun my-sacha-vad-start-handler ()
+  "Automatically start whisper recording when speech begins, unless already busy."
+  (unless (or (whisper-recording-p) 
+              (whisper-transcribing-p)
+              (get-process "whisper-recording"))
+    (when (fboundp 'my-whisper-set-temp-filename)
+      (my-whisper-set-temp-filename))
+    (setq sacha-whisper-current-mode 'command)
+    (whisper-run)))
+
+(defun my-sacha-vad-end-handler ()
+  "Automatically queue and continue when speech pauses."
+  (when (whisper-recording-p)
+    (my-whisper-continue)))
+
+(with-eval-after-load 'speech-input-vad
+  (add-hook 'speech-input-vad-on-start-functions #'my-sacha-vad-start-handler)
+  (add-hook 'speech-input-vad-on-end-functions #'my-sacha-vad-end-handler))
+
+
+;;(speech-input-vad-start)
+
+;; ----------------------------------------------------------------------------------
+;; Queue Core & Controls
+;; ----------------------------------------------------------------------------------
+
+(defvar my-whisper--queue nil)
+(defvar-local my-whisper--queue-item nil)
+
+(defun my-whisper-continue (&optional arg)
+  "Send what we've got so far for transcription and then continue recording."
+  (interactive "P")
+  (require 'whisper)
+  (if arg
+      (my-whisper-done)
+    (setq whisper--marker (point-marker) whisper--point-buffer (current-buffer))
+    (when (process-live-p whisper--recording-process)
+      (unless (string= (plist-get (car (last my-whisper--queue)) :file)
+                       whisper--temp-file)
+        (add-to-list 'my-whisper--queue
+                     (list :file whisper--temp-file
+                           :buffer (format "*result: %s*" (file-name-base whisper--temp-file)))
+                     t))
+      (set-process-sentinel whisper--recording-process
+                            (lambda (_process _event)
+                              (my-whisper-process-queue)))
+      (interrupt-process whisper--recording-process))
+    (run-hooks 'whisper-before-transcription-hook)
+    (whisper--setup-mode-line :show 'recording)
+    (whisper--record-audio)))
+
+(defun my-whisper-done ()
+  (interactive)
+  (when (process-live-p whisper--recording-process)
+    (add-to-list 'my-whisper--queue
+                 (list :file whisper--temp-file
+                       :buffer (format "*result: %s*" (file-name-base whisper--temp-file)))
+                 t)
+    (set-process-sentinel whisper--recording-process
+                          (lambda (_process _event)
+                            (my-whisper-process-queue)))
+    (whisper--setup-mode-line :hide 'recording)
+    (interrupt-process whisper--recording-process)))
+
+(defun my-whisper-discard ()
+  "Ignore the previous recording."
+  (interactive)
+  (when (process-live-p whisper--recording-process)
+    (set-process-sentinel whisper--recording-process
+                          (lambda (_process _event)
+                            (when (file-exists-p whisper--temp-file)
+                              (delete-file whisper--temp-file))
+                            (my-whisper-process-queue)))
+    (interrupt-process whisper--recording-process)))
+
+(defun my-whisper-discard-and-continue ()
+  "Ignore the previous recording and continue."
+  (interactive)
+  (if (process-live-p whisper--recording-process)
+      (progn
+        (set-process-sentinel whisper--recording-process
+                              (lambda (_process _event)
+                                (my-whisper-process-queue)
+                                (my-whisper-continue)))
+        (interrupt-process whisper--recording-process))
+    (my-whisper-continue)))
+
+
+;; ----------------------------------------------------------------------------------
+;; Queue Processing (Sacha Chua's Buffer-Native Pattern)
+;; ----------------------------------------------------------------------------------
+
+(defun my-whisper-process-queue-result ()
+  "Process items in queue that have completed results."
+  (while (and my-whisper--queue (plist-get (car my-whisper--queue) :results))
+    (let* ((o (pop my-whisper--queue))
+           (text (plist-get o :results)))
+      (unless (bound-and-true-p my-whisper-target-markers)
+        (setq whisper--marker (point-marker)
+              whisper--point-buffer (current-buffer)))
+      (when (get-buffer (plist-get o :buffer))
+        (with-current-buffer (plist-get o :buffer)
+          (erase-buffer)
+          (insert text)))
+      ;; Dispatch text to Phony / Dictation
+      (when (fboundp 'sacha-whisper-dispatcher)
+        (sacha-whisper-dispatcher text)))))
+
+(defun my-whisper-process-queue ()
+  "Process pending items in `my-whisper--queue` using curl."
+  (let (o)
+    (while (setq o (seq-find (lambda (item) 
+                               (and (plist-get item :file)
+                                    (not (plist-get item :process))
+                                    (not (plist-get item :results))))
+                             my-whisper--queue))
+      (let* ((headers (list "Content-Type: multipart/form-data"))
+             (params (list (concat "file=@" (plist-get o :file))
+                           "temperature=0.0"
+                           "temperature_inc=0.2"
+                           "response_format=json"
+                           (concat "model=" whisper-model)
+                           (concat "language=" whisper-language)))
+             (url my-whisper-url-format)
+             (command `("curl" "-s" ,url
+                        ,@(mapcan (lambda (h) (list "-H" h)) headers)
+                        ,@(mapcan (lambda (p) (list "-F" p)) params))))
+        
+        ;; Prepare process output buffer
+        (with-current-buffer (get-buffer-create (plist-get o :buffer))
+          (erase-buffer))
+        
+        ;; Start curl process
+        (plist-put
+         o :process
+         (make-process
+          :name "whisper-curl"
+          :command command
+          :buffer (plist-get o :buffer)
+          :coding 'utf-8
+          :sentinel
+          (lambda (process event)
+            (when (string-equal "finished\n" event)
+              (with-current-buffer (process-buffer process)
+                (let ((current my-whisper--queue-item))
+                  (when (and current (get-buffer (plist-get current :buffer)))
+                    (goto-char (point-min))
+                    (let ((parsed (condition-case nil
+                                      (json-parse-buffer)
+                                    (error nil))))
+                      (plist-put current :results
+                                 (or (and (hash-table-p parsed) (gethash "text" parsed))
+                                     (string-trim (buffer-string))
+                                     "(error)")))))))
+            (my-whisper-process-queue-result))))
+        
+        (plist-put o :command (string-join command " "))
+        
+        ;; Set buffer-local item so sentinel finds it in (process-buffer process)
+        (with-current-buffer (process-buffer (plist-get o :process))
+          (setq-local my-whisper--queue-item o))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; Queue Management & Maintenance
+;; ----------------------------------------------------------------------------------
+
+(defun my-whisper-reprocess-queue ()
+  (interactive)
+  (setq whisper--marker (point-marker) whisper--point-buffer (current-buffer))
+  (mapc (lambda (o)
+          (when (process-live-p (plist-get o :process))
+            (kill-process (plist-get o :process)))
+          (when (get-buffer (plist-get o :buffer))
+            (kill-buffer (plist-get o :buffer)))
+          (plist-put o :process nil)
+          (plist-put o :results nil))
+        my-whisper--queue)
+  (my-whisper-process-queue))
+
+(defun my-whisper-clear-queue ()
+  (interactive)
+  (mapc (lambda (o)
+          (when (process-live-p (plist-get o :process))
+            (kill-process (plist-get o :process)))
+          (when (get-buffer (plist-get o :buffer))
+            (kill-buffer (plist-get o :buffer)))
+          (plist-put o :process nil)
+          (plist-put o :results nil))
+        my-whisper--queue)
+  (setq my-whisper--queue nil))
+
+(provide 'silero-vad)
+#+end_src
+
+** phony-speech-commands.el
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
+;; ----------------------------------------------------------------------------------
+;; phony-speech-commands.el
+;; https://github.com/sachac/phony.el
+;; ----------------------------------------------------------------------------------
+
+
+;; ----------------------------------------------------------------------------------
+;; require phony-parser
+;; ----------------------------------------------------------------------------------
+
+(require 'phony-parser)
+(require 'phony-stdlib)
+(define-error 'sacha-phony-not-parsed "Sentence not parsed." 'error)
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-parser--sanitize
+;; ----------------------------------------------------------------------------------
+
+;; updated regex
+(defun sacha-phony-parser--sanitize (s)
+  "Lowercase, remove leading quotes/punctuation, and trim whitespace."
+  (let* ((cleaned (replace-regexp-in-string "^[[:space:]\"',.!?]+" "" s))
+         (lowered (downcase cleaned)))
+    (string-trim (replace-regexp-in-string "[,\\.!?:]" "" lowered))))
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-compare-literal
+;; ----------------------------------------------------------------------------------
+
+;;;###autoload
+(defun sacha-phony-compare-literal (a b)
+  "Ignore case and ending punctuation."
+  (string= (sacha-phony-parser--sanitize a)
+           (sacha-phony-parser--sanitize b)))
+
+
+;; ----------------------------------------------------------------------------------
+;; sacha-phony-evaluate
+;; ----------------------------------------------------------------------------------
+
+;;;###autoload
+;; updated code
+(defun sacha-phony-evaluate (sentence)
+  "Evaluate SENTENCE using phony.el definitions after sanitizing.
+Throw 'not-parsed if not parsed."
+  (let* ((clean-sentence (sacha-phony-parser--sanitize sentence))
+         (parses (phony-parser--parse-utterance clean-sentence)))
+    (unless parses
+      (signal 'sacha-phony-not-parsed sentence))
+    (phony--evaluate-ast (caar parses))))
+
+;; ----------------------------------------------------------------------------------
+;; sacha-whisper-phony
+;; ----------------------------------------------------------------------------------
+
+;;;###autoload
+(defun sacha-whisper-phony (text)
+  "Evaluate TEXT using phony.el definitions.
+Lower-case the first letter of TEXT to match command definitions.
+Useful in `speech-input-commands'."
+  (sacha-phony-evaluate
+	 (concat (downcase (substring text 0 1))
+					 (if (> (length text) 1) (substring text 1) "")))
+  "")
+
+
+;; ----------------------------------------------------------------------------------
+;; speech-input-phony-process
+;; ----------------------------------------------------------------------------------
+
+(defun speech-input-phony-process (text)
+  "Evaluate TEXT via phony. Pass cleaned text through if not parsed,
+unless the buffer is read-only."
+  (let* ((processed-text 
+          ;; Dynamically convert any numeric digits to words
+          (replace-regexp-in-string 
+           "\\b[0-9]+\\b" 
+           (lambda (match)
+             (sacha-number-to-words (string-to-number match)))
+           text)))
+    (condition-case err
+        (progn
+          ;; Lowercase the first letter to match command definitions
+          (sacha-phony-evaluate
+           (concat (downcase (substring processed-text 0 1))
+                   (if (> (length processed-text) 1) (substring processed-text 1) "")))
+          ;; Return empty string if successfully parsed & executed
+          "")
+      (sacha-phony-not-parsed
+       (if buffer-read-only
+           (progn
+             (message "Buffer is read-only; suppressing text insertion.")
+             "")
+         (string-trim text "[ \t\n\r]+" nil)))
+      (error
+       (signal (car err) (cdr err))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; phony numbers
+;; ----------------------------------------------------------------------------------
+
+(defun sacha-number-to-words (n)
+  "Convert integer N to English words for phony-stdlib parsing."
+  (cond
+   ((< n 10)
+    (nth n '("zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine")))
+   ((< n 20)
+    (nth (- n 10) '("ten" "eleven" "twelve" "thirteen" "fourteen" "fifteen" "sixteen" "seventeen" "eighteen" "nineteen")))
+   ((< n 100)
+    (let ((tens (floor n 10))
+          (rem (% n 10))
+          (tens-words '("" "" "twenty" "thirty" "forty" "fifty" "sixty" "seventy" "eighty" "ninety")))
+      (if (= rem 0)
+          (nth tens tens-words)
+        (concat (nth tens tens-words) " " (sacha-number-to-words rem)))))
+   ((< n 1000)
+    (let ((hundreds (floor n 100))
+          (rem (% n 100)))
+      (if (= rem 0)
+          (concat (sacha-number-to-words hundreds) " hundred")
+        (concat (sacha-number-to-words hundreds) " hundred and " (sacha-number-to-words rem)))))
+   (t (number-to-string n))))
+
+
+;; ----------------------------------------------------------------------------------
+;; phony-define-open-rule
+;; ----------------------------------------------------------------------------------
+
+;; open rule target
+(phony-define-open-rule target)
+
+;; region
+(phony-defun target-region "region"
+	:contributes-to target
+	(when (region-active-p)
+	  (cons (region-beginning) (region-end))))
+
+;; sentence
+(phony-defun target-sentence "sentence"
+	:contributes-to target
+	(bounds-of-thing-at-point 'sentence))
+
+;; buffer
+(phony-defun target-buffer "buffer"
+	:contributes-to target
+	(bounds-of-thing-at-point 'buffer))
+
+;; current line
+(phony-defun current-line "line"
+  :contributes-to target
+  (bounds-of-thing-at-point 'line))
+
+
+;; ----------------------------------------------------------------------------------
+;; command definitions
+;; ----------------------------------------------------------------------------------
+
+
+;; ----------------------------------------------------------------------------------
+;; dired commands
+;; ----------------------------------------------------------------------------------
+
+;; dired open file
+(phony-defun sacha-phony-open-file ("open file")
+  "Open file under cursor"
+  (dired-find-file))
+
+;; ----------------------------------------------------------------------------------
+;; go to line number
+;; ----------------------------------------------------------------------------------
+
+;; go to line N
+(phony-defun sacha-phony-goto-line ("go to line" (n number))
+  "Go to line N"
+  (goto-line n))
+
+
+;; ----------------------------------------------------------------------------------
+;; buffer commands
+;; ----------------------------------------------------------------------------------
+
+;; save buffer
+(phony-defun sacha-phony-save-buffer ("save buffer")
+  "Save current buffer"
+  (save-buffer))
+
+;; kill buffer
+(phony-defun sacha-phony-kill-buffer ("kill buffer")
+  "Close current buffer"
+  (kill-current-buffer))
+
+;; mark buffer
+(phony-defun sacha-phony-mark-buffer ("mark buffer")
+  "Select full buffer"
+  (mark-whole-buffer))
+
+;; list buffers
+(phony-defun sacha-phony-list-buffers ("list buffers")
+  "List open buffers"
+  (list-buffers))
+
+;; switch buffer
+(phony-defun sacha-phony-switch-buffer ("switch buffer")
+  "Switch active buffer"
+  (consult-buffer))
+
+
+;; ----------------------------------------------------------------------------------
+;; window commands
+;; ----------------------------------------------------------------------------------
+
+;; switch to other window
+(phony-defun sacha-phony-other-window ("other window")
+  "Switch window"
+  (other-window 1))
+
+;; delete window
+(phony-defun sacha-phony-delete-window ("delete window")
+  "Close window"
+  (delete-window))
+
+;; delete other window
+(phony-defun sacha-phony-delete-other-window ("delete other window")
+  "Close other window"
+  (delete-other-windows))
+
+;; toggle side window
+(phony-defun sacha-phony-toggle-side-window ("toggle side window")
+  "Toggle side window"
+  (window-toggle-side-windows))
+
+
+;; ----------------------------------------------------------------------------------
+;; delete commands
+;; ----------------------------------------------------------------------------------
+
+;; delete N number of lines 
+(phony-defun sacha-phony-delete-lines ("delete" (n number) "lines")
+  "Delete N lines"
+  (when (numberp n)
+    (dotimes (i n)
+      (delete-line))))
+
+;; delete target
+(phony-defun sacha-phony-delete-current ("delete" (bounds target))
+  "Delete target bounds"
+  (delete-region (car bounds) (cdr bounds)))
+
+;; delete N number of words
+(phony-defun sacha-phony-delete-words ("delete" (n number) "words")
+  "Delete N words"
+  (let ((start (point)))
+    (forward-word n)
+    (delete-region start (point))))
+
+;; delete a single word
+(phony-defun sacha-phony-delete-single-word ("delete" "word")
+  "Delete single word"
+  (let ((start (point)))
+    (forward-word 1)
+    (delete-region start (point))))
+
+
+;; ----------------------------------------------------------------------------------
+;; undo + redo
+;; ----------------------------------------------------------------------------------
+
+;; undo
+(phony-defun sacha-phony-undo ("undo")
+  "Undo last action"
+  (undo))
+
+;; redo
+(phony-defun sacha-phony-redo ("redo")
+  "Redo action"
+  (undo-redo))
+
+;; undo tree
+(phony-defun sacha-phony-undo-tree ("undo tree")
+  "Show undo tree"
+  (undo-tree-visualize))
+
+
+;; ----------------------------------------------------------------------------------
+;; copy + paste
+;; ----------------------------------------------------------------------------------
+
+;; Copy current line or active region
+(phony-defun sacha-phony-yank ("yank")
+  "Yank line or region"
+  (if (region-active-p)
+      (kill-ring-save (region-beginning) (region-end))
+    (kill-ring-save (line-beginning-position) (line-end-position))))
+
+;; Copy line specifically
+(phony-defun sacha-phony-yank-line ("yank line")
+  "Yank current line"
+  (kill-ring-save (line-beginning-position)
+                  (line-end-position)))
+
+;; Paste
+(phony-defun sacha-phony-paste ("paste")
+  "Paste from kill ring"
+  (yank))
+
+
+;; ----------------------------------------------------------------------------------
+;; control c control c
+;; ----------------------------------------------------------------------------------
+
+;; control c control c
+(phony-defun sacha-phony-ctrl-c-ctrl-c ("execute")
+  "Run org-ctrl-c-ctrl-c"
+  (call-interactively #'org-ctrl-c-ctrl-c))
+
+
+;; ----------------------------------------------------------------------------------
+;; paragraph commands
+;; ----------------------------------------------------------------------------------
+
+;; forward paragraph
+(phony-defun sacha-phony-forward-paragraph ("next paragraph")
+  "Go to next paragraph"
+  (forward-paragraph))
+
+;; forward paragraph
+(phony-defun sacha-phony-backwards-paragraph ("previous paragraph")
+  "Go to prev paragraph"
+  (backward-paragraph))
+
+
+;; ----------------------------------------------------------------------------------
+;; scroll commands
+;; ----------------------------------------------------------------------------------
+
+;; scroll up
+(phony-defun sacha-phony-scroll-up ("scroll up")
+ "Scroll page up"
+ (scroll-up-command))
+
+;; scroll down
+(phony-defun sacha-phony-scroll-down ("scroll down")
+  "Scroll page down"
+  (scroll-down-command))
+
+;; scroll to top of buffer
+(phony-defun sacha-phony-scroll-top ("top")
+  "Go to the first line of the buffer"
+  (beginning-of-buffer))
+
+;; scroll to bottom of buffer
+(phony-defun sacha-phony-scroll-bottom ("bottom")
+  "Go to the last line of the buffer"
+  (end-of-buffer))
+
+
+;; ----------------------------------------------------------------------------------
+;; cursor commands
+;; ----------------------------------------------------------------------------------
+
+;; cursor move N number of lines up
+(phony-defun sacha-phony-cursor-up-lines ("cursor" "up" (n number))
+  "Cursor up N lines"
+  (dotimes (i n)
+    (evil-previous-line)))
+
+;; cursor move N number of lines down
+(phony-defun sacha-phony-cursor-down-lines ("cursor" "down" (n number))
+  "Cursor down N lines"
+  (dotimes (i n)
+    (evil-next-line)))
+
+
+;; ----------------------------------------------------------------------------------
+;; check spelling
+;; ----------------------------------------------------------------------------------
+
+;; spell check word
+(phony-defun sacha-phony-ispell-word ("spell check word")
+  "Spell check word"
+  (ispell-word))
+
+;; spell check buffer
+(phony-defun sacha-phony-ispell-buffer ("spell check buffer")
+  "Spell check buffer"
+  (ispell-buffer))
+
+
+;; ----------------------------------------------------------------------------------
+;; dictionary look up definition of current word
+;; ----------------------------------------------------------------------------------
+
+(phony-defun sacha-phony-dictionary ("dictionary")
+  "Look up definition"
+  (dictionary-lookup-definition))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode headings
+;; ----------------------------------------------------------------------------------
+
+;; org-insert-heading
+(phony-defun sacha-phony-insert-heading ("insert heading")
+  "Insert new heading"
+  (org-insert-heading))
+
+;; org-insert-subheading
+(phony-defun sacha-phony-insert-subheading ("insert subheading")
+  "Insert subheading"
+  (call-interactively #'org-insert-subheading))
+
+;; org-next-visible-heading
+(phony-defun sacha-phony-next-heading ("next heading")
+  "Jump to next heading"
+  (org-next-visible-heading))
+
+;; org-previous-visible-heading
+(phony-defun sacha-phony-previous-heading ("previous heading")
+  "Jump to prev heading"
+  (org-previous-visible-heading))
+
+
+;; ----------------------------------------------------------------------------------
+;; narrow + widen commands
+;; ----------------------------------------------------------------------------------
+
+;; narrow org tree
+(phony-defun sacha-phony-narrow ("narrow")
+  "Narrow subtree"
+  (org-narrow-to-subtree))
+
+;; widen org tree
+(phony-defun sacha-phony-widen ("widen")
+  "Widen subtree"
+  (widen))
+
+
+;; ----------------------------------------------------------------------------------
+;; org mode source blocks
+;; ----------------------------------------------------------------------------------
+
+;; org edit source block
+(phony-defun sacha-phony-edit-block ("edit block")
+  "Edit source block"
+  (org-edit-special))
+
+;; org exit source block
+(phony-defun sacha-phony-exit-block ("exit block")
+  "Exit source block"
+  (org-edit-src-exit))
+
+;; org next source block
+(phony-defun sacha-phony-next-src-block ("next source block")
+  "Jump to next block"
+  (org-babel-next-src-block))
+
+;; org previous source block
+(phony-defun sacha-phony-previous-src-block ("previous source block")
+  "Jump to prev block"
+  (org-babel-previous-src-block))
+
+
+;; ----------------------------------------------------------------------------------
+;; org babel tangle
+;; ----------------------------------------------------------------------------------
+
+;; org babel tangle block
+(phony-defun sacha-phony-tangle-block ("tangle block")
+  "Tangle babel block"
+  (let ((current-prefix-arg '(4)))
+    (call-interactively #'org-babel-tangle)))
+
+;; org babel tangle file
+(phony-defun sacha-phony-tangle-file ("tangle file")
+  "Tangle current file"
+  (when buffer-file-name
+    (org-babel-tangle-file buffer-file-name)))
+
+
+;; ----------------------------------------------------------------------------------
+;; org todo state
+;; ----------------------------------------------------------------------------------
+
+;; org to do state
+(phony-defun sacha-phony-org-todo-state ("to do state")
+  "Change TODO state of an item."
+  (org-todo))
+
+
+;; ----------------------------------------------------------------------------------
+;; tab commands
+;; ----------------------------------------------------------------------------------
+
+;; new tab
+(phony-defun sacha-phony-new-tab ("new tab")
+  "Open new tab"
+  (tab-bar-new-tab))
+
+;; close tab
+(phony-defun sacha-phony-close-tab ("close tab")
+  "Close current tab"
+  (tab-bar-close-tab))
+
+;; move tab forwards
+(phony-defun sacha-phony-move-tab-forwards ("move tab forwards")
+  "Move tab right"
+  (tab-bar-move-tab 1))
+
+;; move tab backwards
+(phony-defun sacha-phony-move-tab-backwards ("move tab backwards")
+  "Move tab left"
+  (tab-bar-move-tab-backward))
+
+;; next tab
+(phony-defun sacha-phony-next-tab ("next tab")
+  "Switch to next tab"
+  (tab-bar-switch-to-next-tab))
+
+;; previous tab
+(phony-defun sacha-phony-previous-tab ("previous tab")
+  "Switch to prev tab"
+  (tab-bar-switch-to-prev-tab))
+
+;; first tab
+(phony-defun sacha-phony-first-tab ("first tab")
+  "Switch to first tab"
+  (tab-bar-select-tab 1))
+
+;; last tab
+(phony-defun sacha-phony-last-tab ("last tab")
+  "Switch to last tab"
+  (tab-bar-switch-to-last-tab))
+;; ----------------------------------------------------------------------------------
+;; display-line-numbers-mode
+;; ----------------------------------------------------------------------------------
+
+;; toggle display line numbers
+(phony-defun sacha-phony-line-number ("line numbers")
+  "Toggle line numbers"
+  (display-line-numbers-mode 'toggle))
+
+
+;; ----------------------------------------------------------------------------------
+;; magit stage and commit
+;; ----------------------------------------------------------------------------------
+
+;; magit stage and commit
+(defun sacha-phony-magit-stage-and-commit ()
+  "Stage all modified and untracked changes silently, then open the commit message buffer."
+  (interactive)
+  (magit-status)
+    (magit-with-toplevel
+      (call-process "git" nil nil nil "add" "-A"))
+    (magit-refresh)
+    (magit-commit-create))
+
+(phony-defun sacha-phony-git-commit ("git" "commit")
+  "Magit stage & commit"
+  (sacha-phony-magit-stage-and-commit))
+
+
+;; ----------------------------------------------------------------------------------
+;; treesitter commands
+;; ----------------------------------------------------------------------------------
+
+;; treesitter explore mode
+(phony-defun sacha-phony-treesitter ("tree sitter")
+  "Explore tree-sitter"
+  (treesit-explore-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; selection commands
+;; ----------------------------------------------------------------------------------
+
+;; select paragraph
+(phony-defun sacha-phony-select-paragraph ("select" "paragraph")
+  "Select paragraph"
+  (mark-paragraph))
+
+;; select subtree
+(phony-defun sacha-phony-select-subtree ("select" "subtree")
+  "select subtree"
+  (org-mark-subtree))
+
+(phony-defun sacha-phony-select-sub-tree ("select" "sub tree")
+  "Select subtree"
+  (org-mark-subtree))
+
+;; select line
+(phony-defun sacha-phony-select-line ("select" "line")
+  "Select line"
+	(goto-char (line-beginning-position))
+	(push-mark)
+	(goto-char (line-end-position))
+	(activate-mark))
+
+;; select x number of lines
+(phony-defun sacha-phony-select-lines ("select" (n number) "lines")
+  "Select N number of lines"
+  (goto-char (line-beginning-position))
+  (push-mark)
+  (forward-line (1- n))
+  (goto-char (line-end-position))
+  (activate-mark))
+
+;; select contents
+(phony-defun sacha-phony-select-contents ("select" "contents")
+  "Select contents"
+	(org-back-to-heading)
+	(org-end-of-meta-data)
+	(push-mark)
+	(org-end-of-subtree)
+	(activate-mark))
+
+;; select element
+(phony-defun sacha-phony-select-element ("select" "element")
+  "Select element"
+  (org-mark-element))
+
+;; select element contents
+(phony-defun sacha-phony-select-element-contents ("select" "element" "contents")
+  "Select element contents"
+	(let ((elem (org-element-context)))
+		(goto-char (or (org-element-contents-begin elem)
+		 (org-element-begin elem)))
+		(push-mark)
+		(goto-char (or (org-element-contents-end elem)
+		 (org-element-end elem)))
+		(activate-mark)))
+
+
+;; toggle text to a list
+(defun sacha-mark-list ()
+	"Mark the current list."
+	(let ((list (org-list-struct)))
+		(goto-char (caar list))
+		(push-mark)
+		(goto-char (car (last (car list))))
+		(activate-mark)))
+
+(phony-defun pick-list ("pick" "list")
+	(sacha-mark-list))
+
+(phony-defun toggle-list ("toggle" "list")
+	(unless (region-active-p)
+		(if (org-list-struct)
+				(sacha-mark-list)
+			(mark-paragraph)))
+	(org-toggle-item nil))
+
+
+;; ----------------------------------------------------------------------------------
+;; help buffer
+;; ----------------------------------------------------------------------------------
+
+;; help buffer
+(phony-defun sacha-phony-help-buffer ("help")
+  "Open Emacs help"
+  (help-for-help))
+
+
+;; ----------------------------------------------------------------------------------
+;; bookmarks voice commands
+;; ----------------------------------------------------------------------------------
+
+(bookmark-maybe-load-default-file)
+
+(dolist (bm bookmark-alist)
+  (let* ((bm-name (car bm))
+         ;; Convert the bookmark name into a valid symbol name for the function identifier
+         (sym-name (intern (format "bookmark-%s" (string-replace " " "-" (downcase bm-name)))))
+         (docstring (format "Jump to bookmark %s." bm-name)))
+    (eval `(phony-defun ,sym-name (,bm-name)
+             (bookmark-jump ,bm-name)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; fix common voice errors
+;; ----------------------------------------------------------------------------------
+
+;; fix miss spoken commands
+(defvar my-common-edits
+  '(
+    ("previous tab" "previous time")
+    ("next tab" "next time")
+    ("new tab" "new time")
+    ("new tab" "new tap")
+    ("move tab" "move tap")
+    ("last tab" "last time")
+    ("first tab" "first time")
+    ("save buffer" "safe buffer")
+    ("element" "elements")
+    ("widen" "wyden")
+    ("widen" "biden")
+    ("edit block" "edit lock")
+    ("exit block" "edit lock")
+    ("exit block" "exit lock")
+    ("git commit" "get commit")
+    ("dotfiles" "dot files")
+    ("changelog" "change log")
+    )
+  "Commonly-misrecognized words or words that need special capitalization.")
+
+
+(defun my-find-next-fix-point ()
+  (when (re-search-forward
+         (format "\\_<\\(%s\\)\\_>"
+                 (downcase
+                  (string-join
+                   (seq-mapcat
+                    (lambda (o)
+                      (if (listp o)
+                          (if (string= (car o) "") (cdr o) o)
+                        (list o)))
+                    my-common-edits)
+                   "\\|")))
+         nil t)
+    (goto-char (match-beginning 0))
+    (seq-find
+     (lambda (o)
+       (if (listp o)
+           (seq-find (lambda (s)
+                       (save-match-data
+                         (string-match
+                          (format "\\_<%s\\>" (downcase s))
+                          (downcase (match-string 0))))) o)
+         (string= (downcase o) (downcase (match-string 0)))))
+     my-common-edits)))
+
+(defun my-fix-common-errors ()
+  (interactive)
+  (let (done entry correction)
+    (while (and
+            (not done)
+            (setq entry (my-find-next-fix-point)))
+      (setq correction (if (listp entry) (car entry) entry))
+      (if (let ((case-fold-search nil))
+            (looking-at (regexp-quote correction)))
+          (forward-word 1)
+        (if (called-interactively-p 'any)
+            (let* ((c (read-char (format "%s (yn.): " correction))))
+              (cond
+               ((= c ?y) (replace-match correction t t))
+               ((= c ?n) (goto-char (match-end 0)))
+               ((= c ?.) (setq done t))))
+          (replace-match correction t t))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; fix common errors
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'whisper
+  (add-hook 'whisper-after-transcription-hook #'my-fix-common-errors -100))
+
+
+;; ----------------------------------------------------------------------------------
+;; voice command help buffer
+;; ----------------------------------------------------------------------------------
+
+;; phony speech commands help
+(defun phony-speech-commands--get-help-content ()
+  "Parse source buffer and return the formatted help text string."
+  (let* ((source-buf (or (get-buffer "phony-speech-commands.el")
+                         (find-buffer-visiting (locate-library "phony-speech-commands"))))
+         (source-content (if source-buf
+                             (with-current-buffer source-buf (buffer-string))
+                           (let ((file-path (or (locate-library "phony-speech-commands")
+                                                (expand-file-name "phony-speech-commands.el" default-directory))))
+                             (if (file-exists-p file-path)
+                                 (with-temp-buffer
+                                   (insert-file-contents file-path)
+                                   (buffer-string))
+                               ""))))
+         results)
+    (with-temp-buffer
+      (insert source-content)
+      (goto-char (point-min))
+      (when (search-forward ";; command definitions" nil t)
+        (while (< (point) (point-max))
+          (condition-case nil
+              (let* ((form (read (current-buffer)))
+                     (op (car-safe form)))
+                (when (eq op 'phony-defun)
+                  (let* ((pattern (nth 2 form))
+                         (body (nthcdr 3 form))
+                         (body (if (keywordp (car body)) (nthcdr 2 body) body))
+                         (docstring (when (stringp (car body)) (car body)))
+                         (pattern-str
+                          (cond
+                           ((stringp pattern) pattern)
+                           ((listp pattern)
+                            (mapconcat (lambda (item)
+                                         (cond
+                                          ((stringp item) item)
+                                          ((listp item) (format "<%s>" (car item)))
+                                          ((symbolp item) (symbol-name item))
+                                          (t "")))
+                                       pattern
+                                       " "))
+                           (t ""))))
+                    (when (and pattern-str (not (string-empty-p pattern-str)) docstring)
+                      (push (format "%s\n  %s\n\n" pattern-str docstring) results)))))
+            (end-of-file (goto-char (point-max)))
+            (error (forward-char 1))))))
+    (with-temp-buffer
+      (insert "Voice Commands Help\n\n")
+      (dolist (item (nreverse results))
+        (insert item))
+      (buffer-string))))
+
+;; phony speech commands help side window
+(defun phony-speech-commands-display-side-window (buf)
+  "Display BUF in a side window taking 15% on the right."
+  (display-buffer
+   buf
+   '(display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.20))))
+
+;; phony speech command help
+(defun phony-speech-commands-help ()
+  "Create a side window listing voice commands and their docstrings."
+  (interactive)
+  (let ((content (phony-speech-commands--get-help-content))
+        (buf (get-buffer-create "*Voice Commands Help*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert content)
+        (goto-char (point-min)))
+      ;; 1. Make the buffer read-only so text cannot be entered
+      (setq buffer-read-only t)
+      ;; 2. Bind 'q' to close the window (works in standard and Evil states)
+      (local-set-key (kbd "q") (lambda () (interactive) (quit-window t)))
+      (when (bound-and-true-p evil-mode)
+        (evil-local-set-key 'normal (kbd "q") (lambda () (interactive) (quit-window t)))))
+    (phony-speech-commands-display-side-window buf)))
+
+;; toggle voice command help side window
+(phony-defun sacha-phony-toggle-help-window ("voice")
+  "Toggle help side window"
+  (let ((win (get-buffer-window "*Voice Commands Help*" t)))
+    (if win
+        (delete-window win)
+      (phony-speech-commands-help))))
+
+
+;; ----------------------------------------------------------------------------------
+;; provide phony-speech-commands
+;; ----------------------------------------------------------------------------------
+
+(provide 'phony-speech-commands)
+#+end_src
+
+** vad-events.py
+
+#+begin_src python
+#!/usr/local/bin/python3
+import sys
+import subprocess
+import numpy as np
+import onnxruntime as ort
+from datetime import datetime, timedelta
+import os
+
+class SileroVADONNX:
+    def __init__(self, model_path, sample_rate=16000):
+        self.sample_rate = sample_rate
+        opts = ort.SessionOptions()
+        opts.inter_op_num_threads = 1
+        opts.intra_op_num_threads = 1
+        opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        self.session = ort.InferenceSession(model_path, opts, providers=['CPUExecutionProvider'])
+        self.state = np.zeros((2, 1, 128), dtype=np.float32)
+        self.context = np.zeros((1, 64), dtype=np.float32)
+
+    def __call__(self, chunk_pcm32):
+        if len(chunk_pcm32.shape) == 1:
+            chunk_pcm32 = np.expand_dims(chunk_pcm32, axis=0)
+
+        model_input = np.hstack([self.context, chunk_pcm32])
+        sr = np.array(self.sample_rate, dtype=np.int64)
+        inputs = {
+            'input': model_input,
+            'state': self.state,
+            'sr': sr
+        }
+        out, self.state = self.session.run(None, inputs)
+        self.context = chunk_pcm32[:, -64:]
+        return out[0][0]
+
+def main():
+    model_path = os.path.expanduser("~/.local/share/silero/silero_vad.onnx")
+    if not os.path.exists(model_path):
+        print(f"Error: Silero ONNX model not found at {model_path}", file=sys.stderr)
+        sys.exit(1)
+
+    vad = SileroVADONNX(model_path)
+    
+    # Stream raw audio chunks from OSS device using ffmpeg with gain
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-hide_banner",
+        "-fflags", "nobuffer",
+        "-flags", "low_delay",
+        "-f", "oss",
+        "-i", "/dev/dsp3",
+        "-af", "volume=5dB",
+        "-ar", "16000",
+        "-ac", "1",
+        "-f", "s16le",
+        "pipe:1"
+    ]
+    
+    process = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    stream_start_time = datetime.now()
+    
+    chunk_size_bytes = 1024  # 512 samples * 2 bytes per sample
+    triggered = False
+    silence_frames = 0
+    silence_threshold = 15  # ~500ms of consecutive low probability
+
+    def format_iso_with_offset(seconds):
+        event_time = stream_start_time + timedelta(seconds=seconds)
+        return event_time.astimezone().isoformat(timespec='milliseconds')
+
+    try:
+        while True:
+            raw_data = process.stdout.read(chunk_size_bytes)
+            if not raw_data:
+                break
+                
+            if len(raw_data) < chunk_size_bytes:
+                raw_data = raw_data + b'\x00' * (chunk_size_bytes - len(raw_data))
+
+            audio_chunk = np.frombuffer(raw_data, dtype=np.int16).astype(np.float32) / 32768.0
+            speech_prob = vad(audio_chunk[:512])
+            current_time_sec = (datetime.now() - stream_start_time).total_seconds()
+
+            if speech_prob > 0.5:
+                silence_frames = 0
+                if not triggered:
+                    triggered = True
+                    print(f"START {format_iso_with_offset(current_time_sec)}", flush=True)
+            else:
+                if triggered:
+                    silence_frames += 1
+                    if silence_frames >= silence_threshold:
+                        triggered = False
+                        silence_frames = 0
+                        print(f"END {format_iso_with_offset(current_time_sec)}", flush=True)
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        process.terminate()
+
+if __name__ == "__main__":
+    main()
+#+end_src
+
+** vad_driver.py
+
+#+begin_src python
+#!/usr/local/bin/python3
+import sys
+import numpy as np
+import onnxruntime as ort
+import os
+
+class SileroVADONNX:
+    def __init__(self, model_path, sample_rate=16000):
+        self.sample_rate = sample_rate
+        opts = ort.SessionOptions()
+        opts.inter_op_num_threads = 1
+        opts.intra_op_num_threads = 1
+        self.session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
+        
+        # Silero VAD state tensor: [2, 1, 128]
+        self.state = np.zeros((2, 1, 128), dtype=np.float32)
+        # Context buffer: last 64 samples of the previous frame (initialized to zeros)
+        self.context = np.zeros((1, 64), dtype=np.float32)
+
+    def __call__(self, chunk_pcm32):
+        if len(chunk_pcm32.shape) == 1:
+            chunk_pcm32 = np.expand_dims(chunk_pcm32, axis=0)
+
+        # Prepend 64-sample context to the 512-sample current frame -> total 576 samples
+        model_input = np.hstack([self.context, chunk_pcm32])
+
+        sr = np.array(self.sample_rate, dtype=np.int64)
+        inputs = {
+            'input': model_input,
+            'state': self.state,
+            'sr': sr
+        }
+        
+        out, self.state = self.session.run(None, inputs)
+        
+        # Save the last 64 samples of the current chunk as context for the next iteration
+        self.context = chunk_pcm32[:, -64:]
+        
+        return out[0][0]
+
+def main():
+    model_path = os.path.expanduser("~/.local/share/silero/silero_vad.onnx")
+    if not os.path.exists(model_path):
+        print(f"Error: Silero ONNX model not found at {model_path}", file=sys.stderr)
+        sys.exit(1)
+
+    vad = SileroVADONNX(model_path)
+    chunk_size_bytes = 1024  # 512 samples * 2 bytes per sample (16-bit int)
+
+    triggered = False
+    silence_frames = 0
+    silence_threshold = 15  # ~500ms of consecutive low probability before END
+
+    while True:
+        raw_data = sys.stdin.buffer.read(chunk_size_bytes)
+        if not raw_data:
+            break
+            
+        if len(raw_data) < chunk_size_bytes:
+            raw_data = raw_data + b'\x00' * (chunk_size_bytes - len(raw_data))
+
+        audio_chunk = np.frombuffer(raw_data, dtype=np.int16).astype(np.float32) / 32768.0
+        speech_prob = vad(audio_chunk[:512])
+
+        # Debug print to stderr to verify probabilities rise when speaking
+        print(f"Prob: {speech_prob:.4f}", file=sys.stderr, flush=True)
+
+        if speech_prob > 0.3:
+            silence_frames = 0
+            if not triggered:
+                triggered = True
+                print("START", flush=True)
+        else:
+            if triggered:
+                silence_frames += 1
+                if silence_frames >= silence_threshold:
+                    triggered = False
+                    silence_frames = 0
+                    print("END", flush=True)
+
+if __name__ == "__main__":
+    main()
+#+end_src
+
+** emacs init.el
+
+#+begin_src emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; phony
+;; ----------------------------------------------------------------------------------
+
+;; clone the phony repository
+;; mkdir -p ~/git/emacs
+;; cd ~/git/emacs
+;; git clone https://github.com/sachac/phony.el.git
+
+(use-package phony
+  :load-path "~/git/emacs/phony.el"
+  :init
+  (server-mode 1)
+	(setq phony-export-function #'ignore)  ; don't actually use Talon for the recognition
+	(setq phony-parser-literal-comparator #'sacha-phony-compare-literal)
+  :config
+  (phony-mode 1))
+
+
+;; phony additional commands
+;; ~/.config/emacs/lisp/phony-speech-commands.el
+(require 'phony-speech-commands) 
+
+;; ----------------------------------------------------------------------------------
+;; whisper-cpp
+;; ----------------------------------------------------------------------------------
+
+;; clone the whisper repository
+;; mkdir -p ~/git/emacs
+;; cd ~/git/emacs
+;; git clone https://github.com/sachac/whisper.el.git
+
+(use-package whisper
+  ;; Leverage the built-in package-vc features to clone the exact fork branch
+  :load-path "~/git/emacs/whisper.el"
+  :ensure t
+  :config
+  (setq whisper-install-whispercpp nil)
+  (setq whisper-model "small")
+  (setq whisper-language "en")
+  (setq whisper-return-cursor-to-start nil)
+  ;; Explicitly tell ffmpeg to use the Open Sound System driver for FreeBSD
+  (setq whisper--ffmpeg-input-format "oss")
+  ;; Point to your primary system microphone device (usually /dev/dsp)
+  (setq whisper--ffmpeg-input-device "/dev/dsp3")
+
+  ;; set the recording directory
+  (defvar my-whisper-dir (expand-file-name "/tmp/whisper/"))
+
+  ;; whisper url format
+  (defvar my-whisper-url-format "http://127.0.0.1:8642/inference")
+
+  (defun my-whisper-set-temp-filename ()
+    "Generate a unique timestamped filename inside the custom archive folder."
+    ;; Create the directory dynamically if it doesn't exist yet (nil parents=t)
+    (unless (file-directory-p my-whisper-dir)
+      (make-directory my-whisper-dir t))
+    (setq whisper--temp-file (expand-file-name
+                              (format-time-string "%Y-%m-%d-%H-%M-%S.wav")
+                              my-whisper-dir)))
+
+  ;; execute whisper-before-transcription-hook with with-eval-after-load
+  (setq whisper-before-transcription-hook nil)
+
+  ;; ffmpeg wth rnnoise, noise gate, compressor and limiter
+  (defun whisper--record-command (output-file)
+      "Produces FFmpeg command to run with RNNoise and audio enhancement filters."
+      (unless (executable-find "ffmpeg")
+        (error "Needs FFmpeg to record audio"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-format)
+        (error "Set a suitable value for whisper--ffmpeg-input-format"))
+      (unless (or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        (error "Set a suitable value for whisper--ffmpeg-input-device"))
+  
+      `("ffmpeg"
+        "-hide_banner"
+        ,@(unless whisper--ffmpeg-input-file
+            (list "-f" whisper--ffmpeg-input-format))
+        "-i" ,(or whisper--ffmpeg-input-file whisper--ffmpeg-input-device)
+        ,@(when (and (not whisper--ffmpeg-input-file) whisper-recording-timeout)
+            (list "-t" (number-to-string whisper-recording-timeout)))
+        "-af" ,(concat "arnndn=m=" (expand-file-name "~/.local/share/rnnoise/sh.rnnn") 
+                       ",agate=threshold=0.05:range=0.03:attack=25:release=150"
+                       ",acompressor=threshold=0.125:ratio=10:attack=6:release=60"
+                       ",volume=7.5dB"
+                       ",alimiter=level_out=0.79:release=60")
+        "-ar" "16000"
+        "-y" ,output-file))
+
+(defun whisper--find-whispercpp-server ()
+    (expand-file-name "~/bin/whisper-server"))
+
+(defun whisper--model-file (&rest _)
+    (expand-file-name "~/.local/share/whisper-models/ggml-small.en.bin"))
+
+(setq whisper-server-mode 'local)) ;; whisper use package end
+
+
+;; ----------------------------------------------------------------------------------
+;; set whisper output directory
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'whisper
+  (add-hook 'whisper-before-transcription-hook #'my-whisper-set-temp-filename))
+
+
+;; ----------------------------------------------------------------------------------
+;; whisper dictation and command modes
+;; ----------------------------------------------------------------------------------
+
+(with-eval-after-load 'whisper
+
+  (defvar sacha-whisper-current-mode 'command
+    "Active whisper mode: either 'command or 'dictation.")
+
+  (defun sacha-whisper-dictation-processor (text)
+    "Trim leading/trailing whitespace and explicitly insert the text."
+    (let ((clean-text (string-trim text "[ \t\n\r]+" nil)))
+      (when (> (length clean-text) 0)
+        (insert clean-text))))
+
+  (defun sacha-whisper-dispatcher (text)
+    "Route TEXT based on `sacha-whisper-current-mode'."
+    (if (eq sacha-whisper-current-mode 'dictation)
+        (sacha-whisper-dictation-processor text)
+      (speech-input-phony-process text)))
+
+  ;; Set the global handler
+  (setq whisper-insert-text-at-point #'sacha-whisper-dispatcher)
+
+  (defun sacha-whisper-command-mode (arg)
+    "Run Whisper in command mode."
+    (interactive "P")
+    (setq sacha-whisper-current-mode 'command)
+    (whisper-run arg))
+
+  (defun sacha-whisper-dictation-mode (arg)
+    "Run Whisper in pure dictation mode."
+    (interactive "P")
+    (setq sacha-whisper-current-mode 'dictation)
+    (whisper-run arg)))
+
+
+;; ----------------------------------------------------------------------------------
+;; display recording icons in the buffer
+;; ----------------------------------------------------------------------------------
+
+(defvar whisper--current-overlay nil
+  "Overlay to show whisper status at point.")
+
+(advice-add 'whisper--setup-mode-line :override
+  (lambda (command phase)
+    (when whisper-show-progress-in-mode-line
+      (with-current-buffer (or whisper--point-buffer (current-buffer))
+        (if (eq command :show)
+            (let ((pos (point)))
+              (when (and whisper--current-overlay
+                         (overlay-buffer whisper--current-overlay))
+                (delete-overlay whisper--current-overlay))
+              (setq whisper--current-overlay (make-overlay pos pos))
+              (let* ((ind (whisper--mode-line-indicator phase))
+                     (ind-string (cond
+                                   ((stringp ind) ind)
+                                   ((eq (car-safe ind) :eval) (eval (nth 1 ind)))
+                                   (t ""))))
+                ;; Removed the leading space inside the concat
+                (overlay-put whisper--current-overlay 'after-string
+                             (concat ind-string " "))))
+          (when whisper--current-overlay
+            (delete-overlay whisper--current-overlay)
+            (setq whisper--current-overlay nil)))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; speech detection - vad
+;; ----------------------------------------------------------------------------------
+
+;; speech-input-vad
+(require 'speech-input-vad)
+
+;; silero-vad
+(require 'silero-vad)
+
+#+end_src
+
+** sox
+
+#+begin_src sh
+sox -t oss /dev/dsp3 -r 48000 -c 2 -b 16 -e signed-integer -t raw - rate 16000 channels 1 gain 5 | python3 vad_driver.py
+#+end_src
+
